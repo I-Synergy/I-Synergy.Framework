@@ -126,7 +126,6 @@
     <Compile Include="Adapters\IFrameAdapter.cs" />
     <Compile Include="Application\ApplicationHandlers.cs" />
     <Compile Include="Application\BaseApplication.cs" />
-    <Compile Include="Application\ConfigBase.cs" />
     <Compile Include="Behaviours\AuthorizationBehaviour.cs" />
     <Compile Include="Behaviours\NumericTextBoxBehavior.cs" />
     <Compile Include="Common\DeferredNavigation.cs" />
