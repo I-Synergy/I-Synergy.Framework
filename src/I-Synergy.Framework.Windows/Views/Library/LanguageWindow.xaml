@@ -1,0 +1,27 @@
+﻿<w:Window xmlns:w="using:ISynergy.Controls"
+    x:Class="ISynergy.Views.Library.LanguageWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ISynergy.Views.Library"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Converters="using:ISynergy.Converters"
+    mc:Ignorable="d"
+    Title="{Binding Title}"
+    PrimaryButtonCommand="{Binding Submit_Command}"
+    SecondaryButtonCommand="{Binding Close_Command}"
+    PrimaryButtonStyle="{StaticResource DefaultButtonStyle}"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}">
+
+    <w:Window.Resources>
+        <Converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
+    </w:Window.Resources>
+    
+    <StackPanel Orientation="Vertical" Margin="10">
+        <TextBlock Text="{CustomResource Generic_Language_Select}" />
+        <RadioButton x:Name="Button_Language_nl" Content="{CustomResource Generic_Language_Dutch}" Command="{Binding SetLanguage_Command}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="nl" GroupName="Language" IsChecked="{Binding Language, ConverterParameter=nl, Converter={StaticResource StringToBooleanConverter}}" />
+        <RadioButton x:Name="Button_Language_en" Content="{CustomResource Generic_Language_English}" Command="{Binding SetLanguage_Command}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="en" GroupName="Language" IsChecked="{Binding Language, ConverterParameter=en, Converter={StaticResource StringToBooleanConverter}}" />
+        <RadioButton x:Name="Button_Language_de" Content="{CustomResource Generic_Language_German}" Command="{Binding SetLanguage_Command}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="de" GroupName="Language" IsChecked="{Binding Language, ConverterParameter=de, Converter={StaticResource StringToBooleanConverter}}" IsEnabled="False" />
+        <RadioButton x:Name="Button_Language_fr" Content="{CustomResource Generic_Language_French}" Command="{Binding SetLanguage_Command}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="fr" GroupName="Language" IsChecked="{Binding Language, ConverterParameter=fr, Converter={StaticResource StringToBooleanConverter}}" IsEnabled="False" />
+    </StackPanel>
+</w:Window>

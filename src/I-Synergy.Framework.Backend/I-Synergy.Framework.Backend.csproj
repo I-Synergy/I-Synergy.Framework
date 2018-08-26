@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>ISynergy.Framework</RootNamespace>
+    <LangVersion>7.1</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <NeutralLanguage>en</NeutralLanguage>
+    <AssemblyVersion>2018.0.0.0</AssemblyVersion>
+    <FileVersion>2018.0.0.0</FileVersion>
+    <Authors>Ismail Hassani</Authors>
+    <Company>International Intelligence</Company>
+    <Product>I-Synergy Corporate Business Management</Product>
+    <Copyright>Copyright (c) 2008-2018 International Intelligence</Copyright>
+    <PackageProjectUrl>https://www.i-synergy.nl</PackageProjectUrl>
+    <PackageIconUrl>https://app.i-synergy.nl/favicon.ico</PackageIconUrl>
+    <Version>2018.0.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\output\I-Synergy.Framework.Backend\debug</OutputPath>
+    <DocumentationFile>..\..\output\I-Synergy.Framework.Backend\debug\I-Synergy.Framework.Backend.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\output\I-Synergy.Framework.Backend\release</OutputPath>
+    <DocumentationFile>..\..\output\I-Synergy.Framework.Backend\release\I-Synergy.Framework.Backend.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.Introspection" Version="2.0.0-rc3-final" />
+    <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0-rc3-final" />
+    <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
+    <PackageReference Include="I-Synergy.Framework.Core" Version="2018.0.1" />
+    <PackageReference Include="Mapster" Version="3.1.8" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.4.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.SnapshotCollector" Version="1.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.1.1" />
+    <PackageReference Include="OpenIddict" Version="2.0.0-rc3-final" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.0-rc3-final" />
+    <PackageReference Include="OpenIddict.Mvc" Version="2.0.0-rc3-final" />
+    <PackageReference Include="PubnubPCL" Version="4.0.21" />
+    <PackageReference Include="Sendgrid" Version="9.9.0" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Business\Base\" />
+  </ItemGroup>
+</Project>

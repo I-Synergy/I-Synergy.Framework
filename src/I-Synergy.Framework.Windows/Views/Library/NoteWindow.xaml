@@ -1,0 +1,19 @@
+﻿<w:Window xmlns:w="using:ISynergy.Controls"
+    x:Class="ISynergy.Views.Library.NoteWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="{Binding Title}"
+    Width="500" 
+    Height="290"
+    Template="{StaticResource WindowTemplate}"
+    PrimaryButtonCommand="{Binding Submit_Command}"
+    PrimaryButtonCommandParameter="{Binding SelectedItem}"
+    SecondaryButtonCommand="{Binding Close_Command}">
+
+    <Grid Margin="10">
+        <TextBox x:Name="TextBox_Memo" Header="{CustomResource Generic_Note}" Text="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultNoteTextBoxStyle}" Height="125" />
+    </Grid>
+</w:Window>

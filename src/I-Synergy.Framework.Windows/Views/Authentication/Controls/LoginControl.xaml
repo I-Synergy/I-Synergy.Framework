@@ -1,0 +1,30 @@
+﻿<UserControl
+    x:Class="ISynergy.Views.Authentication.Controls.LoginControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="using:ISynergy.Controls"
+    mc:Ignorable="d" Unloaded="UserControl_Unloaded">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBox" x:Key="AutoSuggestTextBoxStyle">
+            <Setter Property="CharacterCasing" Value="Lower"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid>
+        <StackPanel Margin="2,10" VerticalAlignment="Center">
+            <TextBlock Text="{CustomResource  Generic_Login}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource Accent_Brush}" />
+
+            <AutoSuggestBox x:Name="TextBox_Username" Header="{CustomResource Generic_Username}" ToolTipService.ToolTip="{CustomResource  Generic_Email}" Text="{Binding Username, Mode=TwoWay}" TextChanged="TextBox_Username_TextChanged" QuerySubmitted="TextBox_Username_QuerySubmitted" SuggestionChosen="TextBox_Username_SuggestionChosen"/>
+            <PasswordBox x:Name="TextBox_Password" Header="{CustomResource Generic_Password}" ToolTipService.ToolTip="{CustomResource  Generic_Password}" Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Uid="TextBox_Password" InputScope="Password" PasswordRevealMode="Peek" KeyDown="TextBox_Password_KeyDown" />
+
+            <CheckBox x:Name="CheckBox_AutoLogin" IsChecked="{Binding AutoLogin, Mode=TwoWay}" Content="{CustomResource Authentication_AutoLogin}" VerticalContentAlignment="Center" />
+            <HyperlinkButton x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{CustomResource Generic_Password_Forgot}" Command="{Binding ForgotPassword_Command}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
+            <TextBlock x:Name="TextBox_CapsLockOn" Grid.Row="2" Text="{CustomResource Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
+
+            <Button x:Name="Button_Submit" Content="{CustomResource Generic_Login}" Margin ="5,25" HorizontalAlignment="Right" Command="{Binding Submit_Command}" IsEnabled="{Binding Busy.IsEnabled}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

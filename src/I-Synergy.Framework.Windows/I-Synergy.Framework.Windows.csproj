@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{035D0B2D-A55D-42ED-A654-44661E48A2F7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ISynergy.Framework</RootNamespace>
+    <AssemblyName>I-Synergy.Framework.Windows</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\I-Synergy.Framework.Windows\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <LangVersion>7.1</LangVersion>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>..\..\output\I-Synergy.Framework.Windows\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <LangVersion>7.1</LangVersion>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\I-Synergy.Framework.Windows\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>..\..\output\I-Synergy.Framework.Windows\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <LangVersion>7.1</LangVersion>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\I-Synergy.Framework.Windows\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <OutputPath>..\..\output\I-Synergy.Framework.Windows\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <LangVersion>7.1</LangVersion>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\I-Synergy.Framework.Windows\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>..\..\output\I-Synergy.Framework.Windows\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <LangVersion>7.1</LangVersion>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Actions\CloseFlyoutAction.cs" />
+    <Compile Include="Actions\OpenFlyoutAction.cs" />
+    <Compile Include="Adapters\FrameAdapter.cs" />
+    <Compile Include="Adapters\IFrameAdapter.cs" />
+    <Compile Include="Application\ApplicationHandlers.cs" />
+    <Compile Include="Application\BaseApplication.cs" />
+    <Compile Include="Application\ConfigBase.cs" />
+    <Compile Include="Behaviours\AuthorizationBehaviour.cs" />
+    <Compile Include="Behaviours\NumericTextBoxBehavior.cs" />
+    <Compile Include="Common\DeferredNavigation.cs" />
+    <Compile Include="Common\DialogBox.cs" />
+    <Compile Include="Common\Result.cs" />
+    <Compile Include="Controls\Menu\Base_Menu.xaml.cs">
+      <DependentUpon>Base_Menu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CompositionShadow.xaml.cs">
+      <DependentUpon>CompositionShadow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IconRadioButton.cs" />
+    <Compile Include="Controls\TextBox\DecimalTextBox.cs" />
+    <Compile Include="Controls\TextBox\IntegerTextBox.cs" />
+    <Compile Include="Controls\TextBox\TextBoxAttached.cs" />
+    <Compile Include="Controls\Tiles\Tile.xaml.cs">
+      <DependentUpon>Tile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\View.cs" />
+    <Compile Include="Controls\Window.cs" />
+    <Compile Include="Converters\BooleanConverters.cs" />
+    <Compile Include="Converters\ByteConverters.cs" />
+    <Compile Include="Converters\ClaimsConverters.cs" />
+    <Compile Include="Converters\ColorConverters.cs" />
+    <Compile Include="Converters\CurrencyConverters.cs" />
+    <Compile Include="Converters\DashboardConverters.cs" />
+    <Compile Include="Converters\DateTimeOffsetConverters.cs" />
+    <Compile Include="Converters\DecimalConverters.cs" />
+    <Compile Include="Converters\DoubleConverters.cs" />
+    <Compile Include="Converters\EnumConverters.cs" />
+    <Compile Include="Converters\GuidConverters.cs" />
+    <Compile Include="Converters\IntegerConverters.cs" />
+    <Compile Include="Converters\NullObjectConverters.cs" />
+    <Compile Include="Converters\PageConverters.cs" />
+    <Compile Include="Converters\ResourceConverters.cs" />
+    <Compile Include="Converters\StateConverters.cs" />
+    <Compile Include="Converters\StringConverters.cs" />
+    <Compile Include="Dialogs\ContentDialogFactory.cs" />
+    <Compile Include="Dialogs\ContentDialogWrapper.cs" />
+    <Compile Include="Dialogs\FileOpen\FileOpenPickerSettings.cs" />
+    <Compile Include="Dialogs\FileOpen\FileOpenPickerWrapper.cs" />
+    <Compile Include="Dialogs\FileSave\FileSavePickerSettings.cs" />
+    <Compile Include="Dialogs\FileSave\FileSavePickerWrapper.cs" />
+    <Compile Include="Dialogs\Folder\FolderPickerSettings.cs" />
+    <Compile Include="Dialogs\Folder\FolderPickerWrapper.cs" />
+    <Compile Include="Dialogs\IContentDialog.cs" />
+    <Compile Include="Dialogs\IContentDialogFactory.cs" />
+    <Compile Include="Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="Extensions\ResourceExtensions.cs" />
+    <Compile Include="Extensions\SettingsStorageExtensions.cs" />
+    <Compile Include="Helpers\ColorHelper.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Helpers\ImagePicker.cs" />
+    <Compile Include="Helpers\JsonHelper.cs" />
+    <Compile Include="Helpers\NavigationAnimationHelpers.cs" />
+    <Compile Include="Helpers\NavigationHelper.cs" />
+    <Compile Include="Helpers\SingletonHelper.cs" />
+    <Compile Include="Helpers\TitleBarHelper.cs" />
+    <Compile Include="Helpers\UploadImageHelper.cs" />
+    <Compile Include="Helpers\VisualHelpers.cs" />
+    <Compile Include="Locators\DialogTypeLocator.cs" />
+    <Compile Include="Locators\DialogTypeLocatorCache.cs" />
+    <Compile Include="Locators\IDialogTypeLocator.cs" />
+    <Compile Include="Locators\IoCServiceLocator.cs" />
+    <Compile Include="Models\NavigationItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Base\AuthenticationServiceBase.cs" />
+    <Compile Include="Services\Base\FileServiceBase.cs" />
+    <Compile Include="Services\Base\UIVisualizerServiceBase.cs" />
+    <Compile Include="Services\Base\WindowServiceBase.cs" />
+    <Compile Include="Services\BusyService.cs" />
+    <Compile Include="Services\ConverterService.cs" />
+    <Compile Include="Services\CustomResourceLoader.cs" />
+    <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\DownloadFileService.cs" />
+    <Compile Include="Services\InfoService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\TelemetryService.cs" />
+    <Compile Include="Services\ThemeSelectorService.cs" />
+    <Compile Include="Services\UIVisualizerService.cs" />
+    <Compile Include="Services\UpdateService.cs" />
+    <Compile Include="Services\WindowService.cs" />
+    <Compile Include="Settings\FileDialogSettings.cs" />
+    <Compile Include="Settings\FolderBrowserDialogSettings.cs" />
+    <Compile Include="Settings\MessageBoxSettings.cs" />
+    <Compile Include="Settings\OpenFileDialogSettings.cs" />
+    <Compile Include="Settings\SaveFileDialogSettings.cs" />
+    <Compile Include="Triggers\BooleanDataTrigger.cs" />
+    <Compile Include="Triggers\DecimalDataTrigger.cs" />
+    <Compile Include="Triggers\IntegerDataTrigger.cs" />
+    <Compile Include="Triggers\ObjectDataTrigger.cs" />
+    <Compile Include="ViewModels\Application\ShellViewModelBase.cs" />
+    <Compile Include="ViewModels\Base\MessageBoxViewModel.cs" />
+    <Compile Include="Views\Authentication\Controls\LoginControl.xaml.cs">
+      <DependentUpon>LoginControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Authentication\Controls\SignUpControl.xaml.cs">
+      <DependentUpon>SignUpControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Authentication\ForgotPasswordWindow.xaml.cs">
+      <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Authentication\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Authentication\PincodeWindow.xaml.cs">
+      <DependentUpon>PincodeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Authentication\TagWindow.xaml.cs">
+      <DependentUpon>TagWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Base\Controls\BaseDialogButtons.xaml.cs">
+      <DependentUpon>BaseDialogButtons.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Library\LanguageWindow.xaml.cs">
+      <DependentUpon>LanguageWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Library\MapsWindow.xaml.cs">
+      <DependentUpon>MapsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Library\NoteWindow.xaml.cs">
+      <DependentUpon>NoteWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Library\ThemeWindow.xaml.cs">
+      <DependentUpon>ThemeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\ISynergy.Framework.Windows.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommonServiceLocator">
+      <Version>2.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="Flurl">
+      <Version>2.8.0</Version>
+    </PackageReference>
+    <PackageReference Include="Flurl.Http">
+      <Version>2.3.2</Version>
+    </PackageReference>
+    <PackageReference Include="I-Synergy.Framework.Core">
+      <Version>2018.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Mapster">
+      <Version>3.1.8</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.ApplicationInsights">
+      <Version>2.7.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.1.7</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>4.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
+      <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmLightLibsStd10">
+      <Version>5.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog">
+      <Version>2.7.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt">
+      <Version>5.2.4</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\Menu\Base_Menu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\CompositionShadow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Tiles\Tile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Authentication\Controls\LoginControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Authentication\Controls\SignUpControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Authentication\ForgotPasswordWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Authentication\LoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Authentication\PincodeWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Authentication\TagWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Base\Controls\BaseDialogButtons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Library\LanguageWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Library\MapsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Library\NoteWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Library\ThemeWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ShellView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0' ">
+    <VisualStudioVersion>15.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup>
+    <SDKReferenceDirectoryRoot>..\..\libs;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,29 @@
+﻿<UserControl
+    x:Class="ISynergy.Views.Authentication.Controls.SignUpControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Converters="using:ISynergy.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="using:ISynergy.Controls"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Converters:BooleanToStringConverter x:Key="BooleanToStringConverter" True="True" False="False" />
+        <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel Margin="2,10" VerticalAlignment="Center">
+            <TextBlock Text="{CustomResource Generic_Register}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource Accent_Brush}" TextWrapping="Wrap" />
+
+            <TextBox x:Name="Text_CompanyName" Header="{CustomResource Relation_Companyname}" Text="{Binding Registration_Name, Mode=TwoWay}" />
+            <TextBox x:Name="Text_Email" Header="{CustomResource Generic_Email}" CharacterCasing="Lower" Text="{Binding Registration_Mail, Mode=TwoWay}" ToolTipService.ToolTip="{CustomResource Generic_Email}" InputScope="EmailSmtpAddress" />
+            <ComboBox x:Name="ComboBox_TimeZone" Header="{CustomResource Generic_TimeZone}" ItemsSource="{Binding TimeZones}" SelectedValuePath="Id" DisplayMemberPath="DisplayName" SelectedValue="{Binding Registration_TimeZone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <PasswordBox x:Name="Text_Password" Header="{CustomResource Generic_Password}" ToolTipService.ToolTip="{CustomResource Generic_Password}" Password="{Binding Registration_Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <PasswordBox x:Name="Text_Password_Retype" Header="{CustomResource Generic_Password_Retype}" ToolTipService.ToolTip="{CustomResource Generic_Password_Retype}" Password="{Binding Registration_Password_Check, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Button x:Name="Button_Register" Content="{CustomResource Generic_Register}" Margin ="5,25" Grid.Row="2" HorizontalAlignment="Left" Command="{Binding Register_Command}" IsEnabled="{Binding Busy.IsEnabled}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,2 @@
+signtool sign /f i-synergy.pfx /p dr6betrac2uNu6ubRu8rathapuwehabR /d "I-Synergy dll's" /t http://timestamp.verisign.com/scripts/timstamp.dll ..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\*.dll
+nuget pack I-Synergy.Framework.Backend.nuspec

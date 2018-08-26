@@ -1,0 +1,77 @@
+﻿<v:View xmlns:v="using:ISynergy.Controls.Views"
+    x:Class="ISynergy.Views.ShellView"
+    x:Name="MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Converters="using:ISynergy.Converters"
+    DataContext="{Binding ShellViewModel, Source={StaticResource Locator}}"
+    IsEnabled="{Binding Busy.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+    mc:Ignorable="d">
+
+    <v:View.Background>
+        <ImageBrush Opacity="0.10" Stretch="UniformToFill" ImageSource="{Binding Wallpaper, Mode=OneWay}" />
+    </v:View.Background>
+    
+    <v:View.Resources>
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
+        <Converters:BooleanToStringConverter x:Key="BooleanToStringConverter" True="{CustomResource Generic_Logoff}" False="{CustomResource Generic_Login}" />
+    </v:View.Resources>
+    
+    <RelativePanel>
+        <TextBlock x:Name="TextBox_Title" 
+                   Text="{Binding Context.Title}" 
+                   Margin="55,8,8,8" 
+                   RelativePanel.AlignLeftWithPanel="True" 
+                   RelativePanel.AlignTopWithPanel="True" />
+
+        <Rectangle x:Name="Rectangle_Title" Fill="{StaticResource NavigationViewDefaultPaneBackground}" 
+                   Width="48" 
+                   Height="32" 
+                   RelativePanel.AlignLeftWithPanel="True" 
+                   RelativePanel.AlignTopWithPanel="True"/>
+        
+        <NavigationView x:Name="RootNavigationView"
+                        RelativePanel.AlignLeftWithPanel="True" 
+                        RelativePanel.AlignRightWithPanel="True" 
+                        RelativePanel.AlignBottomWithPanel="True" 
+                        RelativePanel.Below="Rectangle_Title"
+                        AlwaysShowHeader="False"
+                        IsSettingsVisible="False"
+                        ExpandedModeThresholdWidth="1920"
+                        MenuItemsSource="{Binding PrimaryItems}"
+                        MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
+                        SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        ItemInvoked="NavigationItemInvoked">
+           
+            <NavigationView.PaneFooter>
+                <NavigationViewList 
+                    ItemsSource="{Binding SecondaryItems}"
+                    ItemTemplate="{StaticResource NavigationViewItemTemplate}"
+                    IsItemClickEnabled="True"
+                    SelectionMode="Single"
+                    ItemClick="NavigationViewList_ItemClick"
+                    VerticalContentAlignment="Bottom"/>
+            </NavigationView.PaneFooter>
+
+            <NavigationView.Content>
+                <Frame x:Name="ContentRootFrame" Navigated="ContentRootFrame_Navigated" IsEnabled="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBooleanConverter}}">
+                    <Frame.ContentTransitions>
+                        <TransitionCollection>
+                            <NavigationThemeTransition/>
+                        </TransitionCollection>
+                    </Frame.ContentTransitions>
+                </Frame>
+            </NavigationView.Content>
+        </NavigationView>
+
+        <Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.75" />
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Height="48" Width="48" />
+                <TextBlock FontSize="16" Text="{Binding Busy.BusyMessage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </Grid>
+    </RelativePanel>
+</v:View>
