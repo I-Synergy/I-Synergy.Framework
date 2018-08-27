@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>I-Synergy.Framework.Backend</id>
-    <version>2018.0.2</version>
+    <version>2018.0.0</version>
     <authors>Ismail Hassani</authors>
     <owners>International Intelligence</owners>
     <iconUrl>https://app.i-synergy.nl/favicon.ico</iconUrl>
@@ -17,7 +17,6 @@
       <dependency id="I-Synergy.Framework.Core" version="2018.*" />
       <dependency id="AspNet.Security.OAuth.Introspection" version="2.0.0-rc3-final" />
       <dependency id="AspNet.Security.OAuth.Validation" version="2.0.0-rc3-final" />
-      <dependency id="BundlerMinifier.Core" version="2.8.391" />
       <dependency id="Mapster" version="3.1.8" />
       <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.4.1" />
       <dependency id="Microsoft.ApplicationInsights.SnapshotCollector" version="1.3.0" />

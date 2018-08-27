@@ -85,6 +85,7 @@ namespace ISynergy
             AddAuthorization(services);
             AddMultiTenancy(services);
             AddMultiTenantActionFilter(services);
+            AddMessageService(services);
             AddServices(services);
             AddIdentity(services);
             AddLogging(services);
@@ -261,10 +262,14 @@ namespace ISynergy
             //services.AddScoped(typeof(TenantActionFilter));
         }
 
+        protected virtual void AddMessageService(IServiceCollection services)
+        {
+            //services.AddScoped<IEmailSender, MessageService>();
+            //services.AddScoped<ISmsSender, MessageService>();
+        }
+
         protected virtual void AddServices(IServiceCollection services)
         {
-            services.AddScoped<IEmailSender, MessageService>();
-            services.AddScoped<ISmsSender, MessageService>();
             services.AddScoped<IFactoryService, FactoryService>();
         }
 

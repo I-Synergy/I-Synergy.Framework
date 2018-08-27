@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>I-Synergy.Framework.Windows</id>
-    <version>2018.0.2</version>
+    <version>2018.0.0</version>
     <authors>Ismail Hassani</authors>
     <owners>International Intelligence</owners>
     <iconUrl>https://app.i-synergy.nl/favicon.ico</iconUrl>
@@ -20,7 +20,6 @@
       <dependency id="Flurl.Http" version="2.3.2" />
       <dependency id="Mapster" version="3.1.8" />
       <dependency id="Microsoft.ApplicationInsights" version="2.7.2" />
-      <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.1.7" />
       <dependency id="Microsoft.Toolkit.Uwp.UI.Controls" version="4.0.0" />
       <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.0" />
       <dependency id="MvvmLightLibsStd10" version="5.4.1" />
