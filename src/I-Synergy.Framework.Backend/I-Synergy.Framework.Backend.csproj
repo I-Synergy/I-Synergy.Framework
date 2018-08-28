@@ -48,4 +48,7 @@
   <ItemGroup>
     <Folder Include="Business\Base\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj" />
+  </ItemGroup>
 </Project>
