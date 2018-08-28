@@ -1,5 +1,6 @@
 ﻿using ISynergy.Models.Base;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Models.Accounts
@@ -39,9 +40,9 @@ namespace ISynergy.Models.Accounts
         /// Gets or sets the Modules property value.
         /// </summary>
         [Required]
-        public int Modules
+        public List<Module> Modules
         {
-            get { return GetValue<int>(); }
+            get { return GetValue<List<Module>>(); }
             set { SetValue(value); }
         }
 

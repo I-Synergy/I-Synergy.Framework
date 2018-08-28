@@ -1,4 +1,6 @@
-﻿using ISynergy.Models.General;
+﻿using ISynergy.Models.Accounts;
+using ISynergy.Models.General;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.ViewModels.Account
@@ -15,7 +17,7 @@ namespace ISynergy.ViewModels.Account
 
         [Required]
         [Display(Name = "Modules")]
-        public int Modules { get; set; }
+        public List<Module> Modules { get; set; }
 
         [Required]
         [Range(1, 100, ErrorMessage = "Value should be between 1 and 100.")]

@@ -1,4 +1,5 @@
-﻿using ISynergy.Models.Base;
+﻿using ISynergy.Models.Accounts;
+using ISynergy.Models.Base;
 using System;
 using System.Collections.Generic;
 
@@ -9,9 +10,9 @@ namespace ISynergy.Models.General
         /// <summary>
         /// Gets or sets the Modules property value.
         /// </summary>
-        public int Modules
+        public List<string> Modules
         {
-            get { return GetValue<int>(); }
+            get { return GetValue<List<string>>(); }
             set { SetValue(value); }
         }
 
@@ -24,7 +25,7 @@ namespace ISynergy.Models.General
             set { SetValue(value); }
         }
 
-        public AuthInfo(int modules, List<string> roles)
+        public AuthInfo(List<string> modules, List<string> roles)
         {
             Modules = modules;
             Roles = roles;
@@ -112,9 +113,9 @@ namespace ISynergy.Models.General
         /// <summary>
         /// Gets or sets the Modules property value.
         /// </summary>
-        public int Modules
+        public List<string> Modules
         {
-            get { return GetValue<int>(); }
+            get { return GetValue<List<string>>(); }
             set { SetValue(value); }
         }
 

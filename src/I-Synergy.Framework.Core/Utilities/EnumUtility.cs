@@ -25,6 +25,7 @@ namespace ISynergy.Utilities
             //if (!typeof(T).IsEnumEx()) throw new ArgumentException($"Type {nameof(T)} is no enum.");
 
             var enumType = typeof(T);
+
             foreach (var name in Enum.GetNames(enumType).EnsureNotNull())
             {
                 var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetRuntimeField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();

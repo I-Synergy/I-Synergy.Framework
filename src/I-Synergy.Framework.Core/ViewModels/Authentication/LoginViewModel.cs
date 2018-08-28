@@ -206,9 +206,9 @@ namespace ISynergy.ViewModels.Authentication
         /// <summary>
         /// Gets or sets the Registration_Modules property value.
         /// </summary>
-        public int Registration_Modules
+        public List<Module> Registration_Modules
         {
-            get { return GetValue<int>(); }
+            get { return GetValue<List<Module>>(); }
             set { SetValue(value); }
         }
 

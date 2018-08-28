@@ -115,7 +115,7 @@ namespace ISynergy.Controllers.Base
                     LicenseName = model.Licensename,
                     Email = model.Email,
                     Password = model.Password,
-                    Modules = (int)model.Modules,
+                    Modules = model.Modules,
                     UsersAllowed = model.Users
                 })
                 .ConfigureAwait(false))
