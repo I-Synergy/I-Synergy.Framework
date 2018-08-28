@@ -124,7 +124,6 @@
     <Compile Include="Actions\OpenFlyoutAction.cs" />
     <Compile Include="Adapters\FrameAdapter.cs" />
     <Compile Include="Adapters\IFrameAdapter.cs" />
-    <Compile Include="Application\ApplicationHandlers.cs" />
     <Compile Include="Application\BaseApplication.cs" />
     <Compile Include="Behaviours\AuthorizationBehaviour.cs" />
     <Compile Include="Behaviours\NumericTextBoxBehavior.cs" />
