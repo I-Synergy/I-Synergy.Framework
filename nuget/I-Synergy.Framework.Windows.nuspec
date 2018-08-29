@@ -30,7 +30,5 @@
 
   <files>
     <file src="..\output\I-Synergy.Framework.Windows\Release\I-Synergy.Framework.Windows**" target="lib\uap10.0" />
-    <file src="..\output\I-Synergy.Framework.Windows\Release\I-Synergy.Framework.Core.dll" target="lib\uap10.0" />
-    <file src="..\output\I-Synergy.Framework.Windows\Release\I-Synergy.Framework.Core.pdb" target="lib\uap10.0" />
   </files>
 </package>
