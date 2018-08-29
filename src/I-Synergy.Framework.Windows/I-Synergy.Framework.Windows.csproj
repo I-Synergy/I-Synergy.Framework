@@ -266,9 +266,6 @@
     <PackageReference Include="Flurl.Http">
       <Version>2.3.2</Version>
     </PackageReference>
-    <PackageReference Include="I-Synergy.Framework.Core">
-      <Version>2018.0.1</Version>
-    </PackageReference>
     <PackageReference Include="Mapster">
       <Version>3.1.8</Version>
     </PackageReference>
@@ -358,6 +355,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj">
+      <Project>{af5c981b-7e8c-46d0-85ae-b9942f63a4d2}</Project>
+      <Name>I-Synergy.Framework.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0' ">
     <VisualStudioVersion>15.0</VisualStudioVersion>

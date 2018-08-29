@@ -10,8 +10,6 @@ namespace ISynergy.Common
     {
         public static UserInfo ConvertClaimsToUserInfo(IEnumerable<System.Security.Claims.Claim> claims)
         {
-            string modules = string.Join(",", claims.Where(q => q.Type == ClaimTypes.ModulesType).Select(q => q.Value));
-
             var result = new UserInfo()
             {
                 Account_Id = Guid.Parse(claims.Where(q => q.Type == ClaimTypes.AccountIdType).Select(q => q.Value).Single()),
@@ -23,10 +21,9 @@ namespace ISynergy.Common
                 Email = claims.Where(q => q.Type == ClaimTypes.UserNameType).Select(q => q.Value).Single(),
                 License_Expration = DateTimeOffset.Parse(claims.Where(q => q.Type == ClaimTypes.LicenseExprationType).Select(q => q.Value).Single(), CultureInfo.InvariantCulture),
                 License_Users = int.Parse(claims.Where(q => q.Type == ClaimTypes.LicenseUsersType).Select(q => q.Value).Single()),
-                Roles = claims.Where(q => q.Type == ClaimTypes.RoleType).Select(q => q.Value).ToList()
+                Roles = claims.Where(q => q.Type == ClaimTypes.RoleType).Select(q => q.Value).ToList(),
+                Modules = claims.Where(q => q.Type == ClaimTypes.ModulesType).Select(q => q.Value).ToList()
             };
-
-            if (int.TryParse(modules, out int _modules)) result.Modules = _modules;
 
             return result;
         }

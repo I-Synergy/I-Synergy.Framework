@@ -14,7 +14,6 @@
     <projectUrl>https://www.i-synergy.nl</projectUrl>
 
     <dependencies>
-      <dependency id="I-Synergy.Framework.Core" version="2018.*" />
       <dependency id="AspNet.Security.OAuth.Introspection" version="2.0.0-rc3-final" />
       <dependency id="AspNet.Security.OAuth.Validation" version="2.0.0-rc3-final" />
       <dependency id="Mapster" version="3.1.8" />
@@ -38,5 +37,7 @@
     <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Backend.dll" target="lib\netstandard2.0" />
     <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Backend.pdb" target="lib\netstandard2.0" />
     <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Backend.xml" target="lib\netstandard2.0" />
+    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Core.dll" target="lib\netstandard2.0" />
+    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Core.pdb" target="lib\netstandard2.0" />
   </files>
 </package>
