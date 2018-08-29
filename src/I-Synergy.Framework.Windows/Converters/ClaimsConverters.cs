@@ -10,13 +10,13 @@ namespace ISynergy.Common
     {
         public static UserInfo ConvertClaimsToUserInfo(IEnumerable<System.Security.Claims.Claim> claims)
         {
-            var result = new UserInfo()
+            var result = new UserInfo
             {
                 Account_Id = Guid.Parse(claims.Where(q => q.Type == ClaimTypes.AccountIdType).Select(q => q.Value).Single()),
                 Account_Description = claims.Where(q => q.Type == ClaimTypes.AccountDescriptionType).Select(q => q.Value).Single(),
-                TimeZoneId = claims.Where(q => q.Type == ClaimTypes.TimeZoneType).Select(q => q.Value).Single(),
+                TimeZoneId = claims.Where(q => q.Type == ClaimTypes.TimeZoneType).Select(q => q.Value).SingleOrDefault() ?? "W. Europe Standard Time",
                 User_Id = Guid.Parse(claims.Where(q => q.Type == ClaimTypes.UserIdType).Select(q => q.Value).Single()),
-                RfidUid = int.Parse(claims.Where(q => q.Type == ClaimTypes.RfidUidType).Select(q => q.Value).Single()),
+                RfidUid = int.Parse(claims.Where(q => q.Type == ClaimTypes.RfidUidType).Select(q => q.Value).SingleOrDefault() ?? "0"),
                 Username = claims.Where(q => q.Type == ClaimTypes.UserNameType).Select(q => q.Value).Single(),
                 Email = claims.Where(q => q.Type == ClaimTypes.UserNameType).Select(q => q.Value).Single(),
                 License_Expration = DateTimeOffset.Parse(claims.Where(q => q.Type == ClaimTypes.LicenseExprationType).Select(q => q.Value).Single(), CultureInfo.InvariantCulture),
