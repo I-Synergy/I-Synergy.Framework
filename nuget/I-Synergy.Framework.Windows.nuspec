@@ -14,7 +14,6 @@
     <projectUrl>https://www.i-synergy.nl</projectUrl>
 
     <dependencies>
-      <dependency id="I-Synergy.Framework.Core" version="2018.*" />
       <dependency id="CommonServiceLocator" version="2.0.4" />
       <dependency id="Flurl" version="2.8.0" />
       <dependency id="Flurl.Http" version="2.3.2" />
@@ -31,5 +30,7 @@
 
   <files>
     <file src="..\output\I-Synergy.Framework.Windows\Release\I-Synergy.Framework.Windows**" target="lib\uap10.0" />
+    <file src="..\output\I-Synergy.Framework.Windows\Release\I-Synergy.Framework.Core.dll" target="lib\uap10.0" />
+    <file src="..\output\I-Synergy.Framework.Windows\Release\I-Synergy.Framework.Core.pdb" target="lib\uap10.0" />
   </files>
 </package>
