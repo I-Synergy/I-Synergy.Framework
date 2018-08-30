@@ -26,6 +26,7 @@ namespace ISynergy.ViewModels.Authentication
             : base(context, busy)
         {
             TimeZones = TimeZoneInfo.GetSystemTimeZones().ToList();
+            Registration_TimeZone = "W. Europe Standard Time";
 
             LoginVisible = true;
 
