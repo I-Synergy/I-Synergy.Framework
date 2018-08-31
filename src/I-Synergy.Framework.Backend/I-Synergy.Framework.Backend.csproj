@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>ISynergy.Framework</RootNamespace>
@@ -16,7 +15,6 @@
     <PackageIconUrl>https://app.i-synergy.nl/favicon.ico</PackageIconUrl>
     <Version>2018.0.0</Version>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\output\I-Synergy.Framework.Backend\debug</OutputPath>
     <DocumentationFile>..\..\output\I-Synergy.Framework.Backend\debug\I-Synergy.Framework.Backend.xml</DocumentationFile>
@@ -25,7 +23,6 @@
     <OutputPath>..\..\output\I-Synergy.Framework.Backend\release</OutputPath>
     <DocumentationFile>..\..\output\I-Synergy.Framework.Backend\release\I-Synergy.Framework.Backend.xml</DocumentationFile>
   </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OAuth.Introspection" Version="2.0.0-rc3-final" />
     <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0-rc3-final" />
