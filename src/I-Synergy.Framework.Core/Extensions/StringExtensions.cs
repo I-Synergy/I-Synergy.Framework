@@ -250,5 +250,25 @@ namespace ISynergy.Extensions
             // Return length of text before whitespace
             return i + 1;
         }
+
+        public static string Remove(this string s, IEnumerable<char> chars)
+        {
+            return new string(s.Where(c => !chars.Contains(c)).ToArray());
+        }
+
+        public static byte[] GetBytes(this string value, int start, int NumBytes)
+        {
+            StringBuilder g = new StringBuilder(value);
+            byte[] Bytes = new byte[NumBytes];
+            string temp;
+            int CharPos = start;
+            for (int i = 0; i < NumBytes; i++)
+            {
+                temp = g[CharPos++].ToString();
+                temp += g[CharPos++].ToString();
+                Bytes[i] = byte.Parse(temp, System.Globalization.NumberStyles.HexNumber);
+            }
+            return Bytes;
+        }
     }
 }
