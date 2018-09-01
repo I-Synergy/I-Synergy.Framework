@@ -358,7 +358,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj">
-      <Project>{12177513-1156-4165-a465-5a450b7325bd}</Project>
+      <Project>{b9d1a0b3-6482-4026-ad5c-b1ca0b6a2447}</Project>
       <Name>I-Synergy.Framework.Core</Name>
     </ProjectReference>
   </ItemGroup>
