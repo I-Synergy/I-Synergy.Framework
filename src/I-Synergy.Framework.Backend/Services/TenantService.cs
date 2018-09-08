@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ISynergy.Library;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 
 namespace ISynergy.Services
@@ -17,7 +20,15 @@ namespace ISynergy.Services
         public Guid TenantId => RetrieveTenantId();
         public string UserName => RetrieveUserName();
 
-        public void SetTenant(Guid tenantId, string username) => throw new NotImplementedException();
+        public void SetTenant(Guid tenantId, string username)
+        {
+            GenericIdentity identity = new GenericIdentity(username);
+            ClaimsIdentity claimIdentity = new ClaimsIdentity(identity);
+            claimIdentity.AddClaim(new Claim(ClaimTypes.AccountIdType, tenantId.ToString()));
+            claimIdentity.AddClaim(new Claim(ClaimTypes.UserNameType, username));
+            GenericPrincipal principal = new GenericPrincipal(claimIdentity, new string[] { "Client" });
+            httpContextAccessor.HttpContext.User = principal;
+        }
 
         private Guid RetrieveTenantId()
         {

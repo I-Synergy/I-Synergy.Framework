@@ -8,6 +8,8 @@
         public const string Claim_ConnectionString = "Claim_ConnectionString";
         public const string Claim_Modules = "Claim_Modules";
 
+        public const string TenantId = "TenantId";
+
         public const string PasswordRegEx = @"(?=^.{6,}$)(?=[^\d]*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])";
         public const string RfidUidRegeEx = @"^[A-F0-9]{8}$";
         public const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ssZ";

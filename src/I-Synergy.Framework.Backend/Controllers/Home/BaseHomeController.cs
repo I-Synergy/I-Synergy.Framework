@@ -13,20 +13,23 @@ namespace ISynergy.Controllers.Base
     [AllowAnonymous]
     public abstract class BaseHomeController : Controller
     {
-        public BaseHomeController()
+        protected IHostingEnvironment _environment;
+
+        public BaseHomeController(IHostingEnvironment environment)
             : base()
         {
+            _environment = environment;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Index()
+        public virtual IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult Error()
+        public virtual IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
