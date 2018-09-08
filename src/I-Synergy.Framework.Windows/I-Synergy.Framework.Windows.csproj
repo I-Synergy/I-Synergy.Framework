@@ -34,7 +34,7 @@
     <OutputPath>..\..\output\I-Synergy.Framework.Windows\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;1591</NoWarn>
     <DebugType>pdbonly</DebugType>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>

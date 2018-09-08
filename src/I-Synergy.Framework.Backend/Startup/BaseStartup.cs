@@ -59,7 +59,6 @@ namespace ISynergy
         protected IConfigurationRoot _configurationRoot { get; set; }
         protected IConfiguration _configuration { get; }
         protected IMemoryCache _cache { get; }
-        protected IFactoryService _factory { get; }
         protected CultureInfo _culture { get; }
 
         public BaseStartup(IHostingEnvironment environment, IConfiguration configuration)

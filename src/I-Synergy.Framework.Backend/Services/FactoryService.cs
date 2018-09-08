@@ -8,6 +8,11 @@ namespace ISynergy.Services
 {
     public class FactoryService : IFactoryService
     {
+        public FactoryService()
+        {
+
+        }
+
         public string Name { get; set; }
         public string Keywords { get; set; }
         public string Title { get; set; }
