@@ -16,18 +16,19 @@
     <dependencies>
       <dependency id="AspNet.Security.OAuth.Introspection" version="2.0.0-rc3-final" />
       <dependency id="AspNet.Security.OAuth.Validation" version="2.0.0-rc3-final" />
-      <dependency id="Mapster" version="3.1.8" />
+      <dependency id="BundlerMinifier.Core" version="2.8.391" />
+      <dependency id="Mapster" version="3.2.0" />
       <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.4.1" />
       <dependency id="Microsoft.ApplicationInsights.SnapshotCollector" version="1.3.0" />
       <dependency id="Microsoft.AspNetCore.All" version="2.1.3" />
       <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="2.1.3" />
       <dependency id="Microsoft.AspNetCore.Mvc.Core" version="2.1.2" />
       <dependency id="Microsoft.Extensions.Configuration.UserSecrets" version="2.1.1" />
+      <dependency id="Microsoft.Extensions.DependencyInjection" version="2.1.1" />
+      <dependency id="Microsoft.Extensions.Logging" version="2.1.1" />
       <dependency id="OpenIddict" version="2.0.0-rc3-final" />
       <dependency id="OpenIddict.EntityFrameworkCore" version="2.0.0-rc3-final" />
       <dependency id="OpenIddict.Mvc" version="2.0.0-rc3-final" />
-      <dependency id="Serilog" version="2.7.1" />
-      <dependency id="Serilog.AspNetCore" version="2.1.1" />
       <dependency id="Swashbuckle.AspNetCore" version="3.0.0" />
     </dependencies>
   </metadata>

@@ -11,7 +11,7 @@ using ISynergy.ViewModels;
 using ISynergy.ViewModels.Base;
 using ISynergy.Views;
 using Microsoft.ApplicationInsights;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -43,7 +43,7 @@ namespace ISynergy
         /// Gets the <see cref="ILogger"/> for the application.
         /// </summary>
         /// <value>A <see cref="ILogger"/> instance.</value>
-        protected readonly ILogger _logger = new LoggerConfiguration().CreateLogger();
+        protected readonly ILogger _logger = new LoggerFactory().CreateLogger<BaseApplication>();
 
         /// <summary>
         /// Gets the default DryIoc <see cref="IContainer"/> for the application.
@@ -288,10 +288,10 @@ namespace ISynergy
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             //ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(1024, 768);
 
-            _logger.Information(Gratification.Gratify());
-            _logger.Information("Starting application");
+            _logger.LogInformation(Gratification.Gratify());
+            _logger.LogInformation("Starting application");
 
-            _logger.Information("Allow 404 errors in Flurl");
+            _logger.LogInformation("Allow 404 errors in Flurl");
             FlurlHttp.Configure(c =>
             {
                 c.Timeout = TimeSpan.FromSeconds(30);
@@ -358,7 +358,7 @@ namespace ISynergy
                 context.WebUrl = previewWebUrl;
             }
 
-            logger.Information("Update settings");
+            logger.LogInformation("Update settings");
             ServiceLocator.Current.GetInstance<ISettingsServiceBase>().CheckForUpgrade();
 
             string culture = ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Culture;

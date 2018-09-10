@@ -1,6 +1,5 @@
 ﻿using CommonServiceLocator;
 using ISynergy.Library;
-using Serilog;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
@@ -13,8 +12,6 @@ namespace ISynergy.Services
     /// </summary>
     public class DialogService : IDialogService
     {
-        private static readonly ILogger Logger = new LoggerConfiguration().CreateLogger();
-
         public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "")
         {
             return ShowAsync(error.Message, title != "" ? title : ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
