@@ -14,7 +14,6 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.SnapshotCollector;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -25,9 +24,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenIddict.Abstractions;
@@ -38,7 +34,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ISynergy
@@ -80,6 +75,7 @@ namespace ISynergy
             AddOptions(services);
             AddCaching(services);
             AddDbServices(services);
+            AddDataProtectionService(services);
             AddAuthentication(services);
             AddAuthorization(services);
             AddMultiTenancy(services);
@@ -131,37 +127,16 @@ namespace ISynergy
             services.AddMemoryCache();
         }
 
+        protected virtual void AddDataProtectionService(IServiceCollection services)
+        {
+            services.AddDataProtection();
+        }
+
         protected virtual void AddAuthentication(IServiceCollection services)
         {
             services.AddSingleton<IAuthenticationSchemeProvider, MultipleAuthenticationSchemeProvider>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ClaimsAccessor>();
-
-            if (!_environment.IsDevelopment())
-            {
-                services.Configure<AzureBlobSetting>(_configurationRoot.GetSection(nameof(AzureBlobSetting)).BindWithReload);
-
-                var blobSetting = new AzureBlobSetting();
-                var KeysContainer = "keys";
-                var KeysFile = "keys.xml";
-
-                _configurationRoot.GetSection(nameof(AzureBlobSetting)).Bind(blobSetting);
-
-                var storageAccount = new CloudStorageAccount(new StorageCredentials(blobSetting.AccountName, blobSetting.AccountKey), true);
-                var client = storageAccount.CreateCloudBlobClient();
-                var container = client.GetContainerReference(KeysContainer);
-
-                // The container must exist before calling the DataProtection APIs.
-                // The specific file within the container does not have to exist,
-                // as it will be created on-demand.
-                container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
-
-                services.AddDataProtection().PersistKeysToAzureBlobStorage(container, KeysFile);
-            }
-            else
-            {
-                services.AddDataProtection();
-            }
 
             // Register the OpenIddict services.
             services.AddOpenIddict()
