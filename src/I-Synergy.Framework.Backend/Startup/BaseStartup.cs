@@ -1,17 +1,12 @@
 ﻿using AspNet.Security.OpenIdConnect.Primitives;
 using ISynergy.Accessors;
 using ISynergy.Extensions;
-using ISynergy.Factories;
 using ISynergy.Filters;
 using ISynergy.Helpers;
-using ISynergy.Initializers;
 using ISynergy.Interfaces;
 using ISynergy.Options;
 using ISynergy.Providers;
 using ISynergy.Services;
-using Microsoft.ApplicationInsights.AspNetCore;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.ApplicationInsights.SnapshotCollector;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -442,11 +437,11 @@ namespace ISynergy
         protected virtual void AddTelemetry(IServiceCollection services)
         {
             // Configure SnapshotCollector from application settings
-            services.Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
+            //services.Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
 
             // Add SnapshotCollector telemetry processor.
-            services.AddSingleton<ITelemetryInitializer, UserInfoTelemetryInitializer>();
-            services.AddSingleton<ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory>();
+            //services.AddSingleton<ITelemetryInitializer, UserInfoTelemetryInitializer>();
+            //services.AddSingleton<ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory>();
         }
 
         protected async Task UpdateOpenIddictTablesAsync(TDbContext context)
