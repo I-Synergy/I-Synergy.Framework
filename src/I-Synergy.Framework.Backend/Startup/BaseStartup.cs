@@ -47,7 +47,6 @@ namespace ISynergy
         protected const string userinfoEndpointPath = "/api/userinfo";
 
         protected IHostingEnvironment _environment { get; }
-        protected IConfigurationRoot _configurationRoot { get; set; }
         protected IConfiguration _configuration { get; }
         protected IMemoryCache _cache { get; }
         protected CultureInfo _culture { get; }
@@ -122,10 +121,10 @@ namespace ISynergy
         {
             services.AddOptions();
 
-            services.Configure<EnviromentalSettings>(_configurationRoot.GetSection(nameof(EnviromentalSettings)).BindWithReload);
-            services.Configure<MessageServiceOptions>(_configurationRoot.GetSection(nameof(MessageServiceOptions)).BindWithReload);
-            services.Configure<Websites>(_configurationRoot.GetSection(nameof(Websites)).BindWithReload);
-            services.Configure<AuthMessageSenderOptions>(_configurationRoot);
+            services.Configure<EnviromentalSettings>(_configuration.GetSection(nameof(EnviromentalSettings)).BindWithReload);
+            services.Configure<MessageServiceOptions>(_configuration.GetSection(nameof(MessageServiceOptions)).BindWithReload);
+            services.Configure<Websites>(_configuration.GetSection(nameof(Websites)).BindWithReload);
+            services.Configure<AuthMessageSenderOptions>(_configuration);
         }
 
         protected virtual void AddLocalization(IServiceCollection services)
@@ -260,7 +259,7 @@ namespace ISynergy
 
         protected virtual void AddDbServices(IServiceCollection services)
         {
-            string DataConnection = _configurationRoot.GetConnectionString("ConnectionString");
+            string DataConnection = _configuration.GetConnectionString("ConnectionString");
 
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<TDbContext>(options =>
