@@ -9,6 +9,7 @@ using ISynergy.Providers;
 using ISynergy.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -88,6 +89,21 @@ namespace ISynergy
             AddRouting(services);
             AddSwaggerGeneration(services);
             AddTelemetry(services);
+        }
+
+        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseMvc();
         }
 
         protected virtual void AddPubNubService(IServiceCollection services)
@@ -246,11 +262,6 @@ namespace ISynergy
         {
             string DataConnection = _configurationRoot.GetConnectionString("ConnectionString");
 
-            if (!_environment.IsDevelopment())
-            {
-                DataConnection = Environment.GetEnvironmentVariable("SQLAZURECONNSTR_ConnectionString");
-            }
-
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<TDbContext>(options =>
                 {
@@ -350,7 +361,8 @@ namespace ISynergy
         {
             services.Configure<MvcOptions>(options =>
             {
-                if (!_environment.IsDevelopment()) options.Filters.Add(new RequireHttpsAttribute());
+                if (!_environment.IsDevelopment())
+                    options.Filters.Add(new RequireHttpsAttribute());
             });
 
             services.AddMvc(options =>
@@ -361,6 +373,7 @@ namespace ISynergy
 
                 options.Filters.Add(new AuthorizeFilter(policy));
             })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization()
                 .AddJsonOptions(options =>
@@ -415,7 +428,7 @@ namespace ISynergy
                         Version = "v1"
                     });
 
-                    var xmlDocPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+                    var xmlDocPath = Path.ChangeExtension(Assembly.GetEntryAssembly().Location, ".xml");
                     options.IncludeXmlComments(xmlDocPath);
                     options.OperationFilter<AuthorizeCheckOperationFilter>();
                     options.AddSecurityDefinition(Constants.SecuritySchemeKey, new OAuth2Scheme
