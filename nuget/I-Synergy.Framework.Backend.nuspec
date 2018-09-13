@@ -19,10 +19,11 @@
       <dependency id="BundlerMinifier.Core" version="2.8.391" />
       <dependency id="Mapster" version="3.2.0" />
       <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.4.1" />
-      <dependency id="Microsoft.ApplicationInsights.SnapshotCollector" version="1.3.0" />
       <dependency id="Microsoft.AspNetCore.All" version="2.1.4" />
       <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="2.1.3" />
       <dependency id="Microsoft.AspNetCore.Mvc.Core" version="2.1.2" />
+      <dependency id="Microsoft.AspNetCore.SignalR" version="1.0.3" />
+      <dependency id="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" version="1.0.3" />
       <dependency id="Microsoft.Extensions.Configuration.UserSecrets" version="2.1.1" />
       <dependency id="Microsoft.Extensions.DependencyInjection" version="2.1.1" />
       <dependency id="Microsoft.Extensions.Logging" version="2.1.1" />
