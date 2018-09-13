@@ -83,7 +83,7 @@ namespace ISynergy
             AddMappers(services);
             AddPaymentClient(services);
             AddCloudStorage(services);
-            AddPubNubService(services);
+            AddSignalR(services);
             AddMvc(services);
             AddRouting(services);
             AddSwaggerGeneration(services);
@@ -105,10 +105,17 @@ namespace ISynergy
             app.UseMvc();
         }
 
-        protected virtual void AddPubNubService(IServiceCollection services)
+        protected virtual void AddSignalR(IServiceCollection services)
         {
             //services.Configure<PubNubSettings>(_configurationRoot.GetSection(nameof(PubNubSettings)).BindWithReload);
             //services.AddScoped<IPubNubService, PubNubService>();
+
+            //services.AddConnections();
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            })
+            .AddMessagePackProtocol();
         }
 
         protected virtual void AddCloudStorage(IServiceCollection services)
