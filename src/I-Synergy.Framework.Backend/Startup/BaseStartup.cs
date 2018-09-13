@@ -200,12 +200,6 @@ namespace ISynergy
                     // This allows flowing large OpenID Connect requests even when using
                     // an external authentication provider like Google, Facebook or Twitter.
                     //options.EnableRequestCaching();
-
-                    // During development, you can disable the HTTPS requirement.
-                    if (_environment.IsDevelopment())
-                    {
-                        options.DisableHttpsRequirement();
-                    }
                 });
 
             // Register the OpenIddict validation handler.
@@ -358,12 +352,6 @@ namespace ISynergy
 
         protected virtual void AddMvc(IServiceCollection services)
         {
-            services.Configure<MvcOptions>(options =>
-            {
-                if (!_environment.IsDevelopment())
-                    options.Filters.Add(new RequireHttpsAttribute());
-            });
-
             services.AddMvc(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
