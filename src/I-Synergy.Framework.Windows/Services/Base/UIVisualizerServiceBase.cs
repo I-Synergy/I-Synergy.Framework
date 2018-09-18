@@ -25,7 +25,7 @@ namespace ISynergy.Services
             where TViewModel : IViewModelDialog<TEntity>
             where TEntity : class, new()
         {
-            if (viewmodel == null) viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Current.GetInstance(typeof(TViewModel));
+            if (viewmodel is null) viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Current.GetInstance(typeof(TViewModel));
 
             return ShowDialogAsync((ISynergy.Controls.Window)ServiceLocator.Current.GetInstance(typeof(TWindow)), viewmodel);
         }

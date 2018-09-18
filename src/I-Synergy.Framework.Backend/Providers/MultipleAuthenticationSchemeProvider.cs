@@ -22,13 +22,16 @@ namespace ISynergy.Providers
         {
             var request = httpContextAccessor.HttpContext?.Request;
 
-            if (request == null)
+            if (request is null)
             {
                 throw new ArgumentNullException("The HTTP request cannot be retrieved.");
             }
 
             // For API requests, use authentication tokens.
-            if (request.Path.StartsWithSegments("/api") || request.Path.StartsWithSegments("/oauth") || request.Path.StartsWithSegments("/account"))
+            if (request.Path.StartsWithSegments("/api") ||
+                request.Path.StartsWithSegments("/monitor") ||
+                request.Path.StartsWithSegments("/oauth") || 
+                request.Path.StartsWithSegments("/account"))
             {
                 return GetSchemeAsync(OAuthValidationDefaults.AuthenticationScheme);
             }

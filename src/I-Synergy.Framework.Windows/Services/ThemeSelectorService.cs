@@ -100,7 +100,7 @@ namespace ISynergy.Services
 
             var themeName = ApplicationData.Current.LocalSettings.Values[SettingsKey];
 
-            if (themeName == null)
+            if (themeName is null)
             {
                 cacheTheme = Application.Current.RequestedTheme == ApplicationTheme.Dark ? ElementTheme.Dark : ElementTheme.Light;
             }

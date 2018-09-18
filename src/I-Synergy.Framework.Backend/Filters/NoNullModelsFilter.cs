@@ -18,15 +18,15 @@ namespace ISynergy.Filters
                 .Where(p =>
                 {
                     var parameterInfo = (p as ControllerParameterDescriptor)?.ParameterInfo;
-                    if (parameterInfo == null) return false;
-                    return parameterInfo.IsOptional && parameterInfo.DefaultValue == null;
+                    if (parameterInfo is null) return false;
+                    return parameterInfo.IsOptional && parameterInfo.DefaultValue is null;
                 })
                 .Select(p => p.Name)
                 .ToList();
 
-            if (context.ActionArguments.Any(arg => arg.Value == null && !optionalParameters.Contains(arg.Key)))
+            if (context.ActionArguments.Any(arg => arg.Value is null && !optionalParameters.Contains(arg.Key)))
             {
-                var args = context.ActionArguments.Where(arg => arg.Value == null).ToList();
+                var args = context.ActionArguments.Where(arg => arg.Value is null).ToList();
                 foreach (var arg in args.EnsureNotNull())
                 {
                     context.ModelState.TryAddModelError(arg.Key, $"The {arg.Key} field is required.");

@@ -12,6 +12,7 @@ namespace ISynergy
         string ApiUrl { get; set; }
         string AccountUrl { get; set; }
         string WebUrl { get; set; }
+        string MonitorUrl { get; set; }
         string Client_Id { get; set; }
         string Client_Secret { get; set; }
         string Environment { get; set; }

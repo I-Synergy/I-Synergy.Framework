@@ -46,7 +46,7 @@ namespace ISynergy.Behaviours
         {
             TextBox tb = associatedObject as TextBox;
 
-            if (tb == null)
+            if (tb is null)
             {
                 throw new ArgumentException("NumericTextBoxBehavior can only be used with a TextBox.");
             }
@@ -57,7 +57,7 @@ namespace ISynergy.Behaviours
 
             tb.TextChanged += TbOnTextChanged;
 
-            if (tb.InputScope == null)
+            if (tb.InputScope is null)
             {
                 var inputScope = new InputScope();
                 inputScope.Names.Add(new InputScopeName(InputScopeNameValue.Number));

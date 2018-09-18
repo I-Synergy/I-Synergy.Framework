@@ -24,7 +24,7 @@ namespace ISynergy.Services
 
         public async Task LoginAsync()
         {
-            if (Context.CurrentProfile?.Identity == null || Context.CurrentProfile?.Identity.IsAuthenticated == false)
+            if (Context.CurrentProfile?.Identity is null || Context.CurrentProfile?.Identity.IsAuthenticated == false)
             {
                 await Busy.StartBusyAsync();
 

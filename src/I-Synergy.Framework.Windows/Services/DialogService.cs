@@ -106,7 +106,7 @@ namespace ISynergy.Services
 
             var command = await messageDialog.ShowAsync();
 
-            if(command == null && cancelCommand != null)
+            if(command is null && cancelCommand != null)
             {
                 // back button was pressed
                 // invoke the UICommand

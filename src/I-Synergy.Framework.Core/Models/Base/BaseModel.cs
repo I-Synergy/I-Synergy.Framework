@@ -97,7 +97,7 @@ namespace ISynergy.Models.Base
         {
             get
             {
-                if (_errorsContainer == null)
+                if (_errorsContainer is null)
                 {
                     _errorsContainer =
                         new ErrorsContainer<string>(pn => this.RaiseErrorsChanged(pn));
@@ -123,7 +123,7 @@ namespace ISynergy.Models.Base
 
             var propertyInfo = this.GetType().GetRuntimeProperty(propertyName);
 
-            if (propertyInfo == null)
+            if (propertyInfo is null)
                 throw new ArgumentException("Invalid property name", propertyName);
 
             var propertyErrors = new List<string>();

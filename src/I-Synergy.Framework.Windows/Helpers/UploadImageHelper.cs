@@ -25,7 +25,7 @@ namespace ISynergy.Helpers
 
         private static async Task<string> SaveImageAsync(StorageFile file)
         {
-            if (file == null)
+            if (file is null)
             {
                 return string.Empty;
             }

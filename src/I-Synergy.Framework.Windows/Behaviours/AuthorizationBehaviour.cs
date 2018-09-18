@@ -40,10 +40,10 @@ namespace ISynergy.Behaviours
         {
             if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
-                if (_authenticationProvider == null)
+                if (_authenticationProvider is null)
                     _authenticationProvider = ServiceLocator.Current.GetInstance<IAuthenticationProvider>();
 
-                if (_authenticationProvider == null)
+                if (_authenticationProvider is null)
                     throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");
             }
         }

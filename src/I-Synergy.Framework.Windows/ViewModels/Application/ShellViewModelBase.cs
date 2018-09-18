@@ -331,7 +331,7 @@ namespace ISynergy.ViewModels
         {
             ServiceLocator.Current.GetInstance<ITelemetryService>().TrackEvent(SetApplicationWallpaper);
 
-            if (ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper == null || ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper.Length == 0)
+            if (ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper is null || ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper.Length == 0)
             {
                 var result = await ServiceLocator.Current.GetInstance<IFileService>().BrowseFileAsync(
                     ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Filetypes_Images"),

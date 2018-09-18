@@ -219,7 +219,7 @@ namespace ISynergy.Business.Base
         {
             Argument.IsNotNull(nameof(email), email);
 
-            return await UserManager.FindByEmailAsync(email).ConfigureAwait(false) == null;
+            return await UserManager.FindByEmailAsync(email).ConfigureAwait(false) is null;
         }
 
         public async Task<IdentityResult> ExternalLoginUserAsync(ExternalLoginInfo info, TUser user)
@@ -252,7 +252,7 @@ namespace ISynergy.Business.Base
 
             var adminRole = await RoleManager.FindByNameAsync(Administrator.ToString()).ConfigureAwait(false);
 
-            if (adminRole == null)
+            if (adminRole is null)
             {
                 adminRole = new IdentityRole(Administrator.ToString());
                 await RoleManager.CreateAsync(adminRole).ConfigureAwait(false);
@@ -269,7 +269,7 @@ namespace ISynergy.Business.Base
 
             var userRole = await RoleManager.FindByNameAsync(User.ToString()).ConfigureAwait(false);
 
-            if (userRole == null)
+            if (userRole is null)
             {
                 userRole = new IdentityRole(User.ToString());
                 identityResult = await RoleManager.CreateAsync(userRole).ConfigureAwait(false);
@@ -464,7 +464,7 @@ namespace ISynergy.Business.Base
             // Retrieve the profile of the logged in user.
             var userProfile = await GetUsersAsync(user).ConfigureAwait(false);
 
-            if (userProfile == null) return null;
+            if (userProfile is null) return null;
 
             // Create a new authentication ticket.
             return await CreateTicketAsync(request, userProfile).ConfigureAwait(false);
@@ -497,7 +497,7 @@ namespace ISynergy.Business.Base
 
                 account = await GetAccountAsync(user.Account_Id).ConfigureAwait(false);
 
-                if (account == null)
+                if (account is null)
                 {
                     throw new OpenIdConnectException(new OpenIdConnectResponse
                     {
@@ -507,7 +507,7 @@ namespace ISynergy.Business.Base
                 }
 
                 roles = await UserManager.GetRolesAsync(user).ConfigureAwait(false);
-                if (roles == null)
+                if (roles is null)
                 {
                     throw new OpenIdConnectException(new OpenIdConnectResponse
                     {
@@ -552,7 +552,7 @@ namespace ISynergy.Business.Base
         {
             TUser user = await UserManager.FindByNameAsync(request.Username).ConfigureAwait(false);
 
-            if (user == null)
+            if (user is null)
             {
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
@@ -637,7 +637,7 @@ namespace ISynergy.Business.Base
             // var user = Manager.SignInManager.ValidateSecurityStampAsync(info.Principal);
             TUser user = await UserManager.GetUserAsync(info.Principal).ConfigureAwait(false);
 
-            if (user == null)
+            if (user is null)
             {
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
@@ -667,7 +667,7 @@ namespace ISynergy.Business.Base
             // var user = Manager.SignInManager.ValidateSecurityStampAsync(info.Principal);
             TUser user = await UserManager.FindByNameAsync(clientid).ConfigureAwait(false);
 
-            if (user == null)
+            if (user is null)
             {
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {

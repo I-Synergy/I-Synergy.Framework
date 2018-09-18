@@ -28,7 +28,7 @@ namespace ISynergy.Services
         /// <returns>Resolved service object.</returns>
         protected override object DoGetInstance(Type serviceType, string key)
         {
-            if (serviceType == null) throw new ArgumentNullException("serviceType");
+            if (serviceType is null) throw new ArgumentNullException("serviceType");
             return Container.Resolve(serviceType, key);
         }
 
@@ -39,7 +39,7 @@ namespace ISynergy.Services
         /// <returns>Returns enumerable which will return resolved service objects.</returns>
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
-            if (serviceType == null) throw new ArgumentNullException("serviceType");
+            if (serviceType is null) throw new ArgumentNullException("serviceType");
             return Container.ResolveMany<object>(serviceType);
         }
     }

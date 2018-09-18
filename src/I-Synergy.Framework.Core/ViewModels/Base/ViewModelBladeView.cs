@@ -79,7 +79,7 @@ namespace ISynergy.ViewModels.Base
         {
             if(message.Viewmodel != null)
             {
-                if(message.Viewmodel.Owner == null)
+                if(message.Viewmodel.Owner is null)
                 {
                     message.Viewmodel.Owner = message.Owner;
                 }

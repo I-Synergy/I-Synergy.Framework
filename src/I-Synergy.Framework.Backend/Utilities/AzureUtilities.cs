@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Utilities
                 _vaultSettings.Value.ClientSecret);
             AuthenticationResult result = await authContext.AcquireTokenAsync(resource, clientCred);
 
-            if (result == null)
+            if (result is null)
                 throw new InvalidOperationException("Failed to obtain the JWT token");
 
             return result.AccessToken;

@@ -26,7 +26,7 @@ namespace ISynergy.Dialogs
         /// </returns>
         public Type Locate(IViewModel viewModel)
         {
-            if (viewModel == null)
+            if (viewModel is null)
                 throw new ArgumentNullException(nameof(viewModel));
 
             Type viewModelType = viewModel.GetType();
@@ -42,7 +42,7 @@ namespace ISynergy.Dialogs
 
             dialogType = GetAssemblyFromType(viewModelType).GetType(dialogName);
 
-            if (dialogType == null)
+            if (dialogType is null)
                 throw new TypeLoadException(AppendInfoAboutDialogTypeLocators($"Dialog with name '{dialogName}' is missing."));
 
             Cache.Add(viewModelType, dialogType);

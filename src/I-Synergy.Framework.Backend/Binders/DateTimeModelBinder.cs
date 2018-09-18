@@ -31,7 +31,7 @@ namespace ISynergy.Binders
             if (valueResult == ValueProviderResult.None)
                 return Task.CompletedTask;
 
-            if (valueResult.FirstValue == null)
+            if (valueResult.FirstValue is null)
                 return Task.CompletedTask;
 
 

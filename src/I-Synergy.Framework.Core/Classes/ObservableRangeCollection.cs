@@ -39,7 +39,7 @@ namespace ISynergy
         {
             if (notificationMode != NotifyCollectionChangedAction.Add && notificationMode != NotifyCollectionChangedAction.Reset)
                 throw new ArgumentException("Mode must be either Add or Reset for AddRange.", nameof(notificationMode));
-            if (collection == null)
+            if (collection is null)
                 throw new ArgumentNullException(nameof(collection));
 
             CheckReentrancy();
@@ -73,7 +73,7 @@ namespace ISynergy
         {
             if (notificationMode != NotifyCollectionChangedAction.Remove && notificationMode != NotifyCollectionChangedAction.Reset)
                 throw new ArgumentException("Mode must be either Remove or Reset for RemoveRange.", nameof(notificationMode));
-            if (collection == null)
+            if (collection is null)
                 throw new ArgumentNullException(nameof(collection));
 
             CheckReentrancy();
@@ -114,7 +114,7 @@ namespace ISynergy
         /// </summary> 
         public void ReplaceRange(IEnumerable<T> collection)
         {
-            if (collection == null)
+            if (collection is null)
                 throw new ArgumentNullException(nameof(collection));
 
             Items.Clear();

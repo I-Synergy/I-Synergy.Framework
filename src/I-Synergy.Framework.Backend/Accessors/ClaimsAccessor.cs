@@ -50,7 +50,7 @@ namespace ISynergy.Accessors
             if (claims.Count > 1)
                 throw new DuplicateClaimException(claimType);
 
-            if (claims == null || claims.Count == 0)
+            if (claims is null || claims.Count == 0)
                 throw new ClaimNotFoundException(claimType);
 
             return claims.Single();

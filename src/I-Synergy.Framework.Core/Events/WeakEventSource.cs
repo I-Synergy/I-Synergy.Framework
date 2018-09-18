@@ -99,7 +99,7 @@ namespace ISynergy
                 if (_weakTarget != null)
                 {
                     target = _weakTarget.Target;
-                    if (target == null)
+                    if (target is null)
                         return false;
                 }
                 _openHandler(target, sender, e);

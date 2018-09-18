@@ -11,7 +11,7 @@ namespace ISynergy.Helpers
         public static DependencyObject FindChild(DependencyObject parent, string name)
         {
             // confirm parent and name are valid.
-            if (parent == null || string.IsNullOrEmpty(name)) return null;
+            if (parent is null || string.IsNullOrEmpty(name)) return null;
 
             if (parent is FrameworkElement && (parent as FrameworkElement).Name == name) return parent;
 
@@ -35,7 +35,7 @@ namespace ISynergy.Helpers
         public static T FindChild<T>(DependencyObject parent) where T : DependencyObject
         {
             // confirm parent is valid.
-            if (parent == null) return null;
+            if (parent is null) return null;
             if (parent is T) return parent as T;
 
             DependencyObject foundChild = null;

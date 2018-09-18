@@ -55,7 +55,7 @@ namespace ISynergy.Extensions
 
             var props = attributes?.GetType().GetProperties().ToDictionary(x => x.Name, x => x.GetValue(attributes));
 
-            var attrs = (props == null)
+            var attrs = (props is null)
                 ? string.Empty
                 : string.Join(" ", props.Select(x => string.Format("{0}=\"{1}\"", x.Key, x.Value)));
 

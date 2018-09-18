@@ -228,14 +228,14 @@ namespace ISynergy.ViewModels.Authentication
 
             if (LoginVisible)
             {
-                if (Username == null || Username.Length < 3)
+                if (Username is null || Username.Length < 3)
                 {
                     await ServiceLocator.Current.GetInstance<IDialogService>()
                         .ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_UsernameSize"));
                     result = false;
                 }
 
-                if (Password == null || Password.Length < 6)
+                if (Password is null || Password.Length < 6)
                 {
                     await ServiceLocator.Current.GetInstance<IDialogService>()
                         .ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_PasswordSize"));
@@ -246,14 +246,14 @@ namespace ISynergy.ViewModels.Authentication
             }
             else
             {
-                if (Registration_Name == null || Registration_Name.Length < 3)
+                if (Registration_Name is null || Registration_Name.Length < 3)
                 {
                     await ServiceLocator.Current.GetInstance<IDialogService>()
                         .ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_LicenseNameSize"));
                     result = false;
                 }
 
-                if (Registration_Mail == null || !NetworkHandler.IsValidEMail(Registration_Mail))
+                if (Registration_Mail is null || !NetworkHandler.IsValidEMail(Registration_Mail))
                 {
                     await ServiceLocator.Current.GetInstance<IDialogService>()
                         .ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Invalid_Email"));
@@ -267,7 +267,7 @@ namespace ISynergy.ViewModels.Authentication
                     result = false;
                 }
 
-                if (Registration_Password == null || Registration_Password.Length < 6)
+                if (Registration_Password is null || Registration_Password.Length < 6)
                 {
                     await ServiceLocator.Current.GetInstance<IDialogService>()
                         .ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_PasswordSize"));
@@ -283,7 +283,7 @@ namespace ISynergy.ViewModels.Authentication
                     result = false;
                 }
 
-                if (Registration_Password_Check == null || Registration_Password_Check.Length < 6)
+                if (Registration_Password_Check is null || Registration_Password_Check.Length < 6)
                 {
                     await ServiceLocator.Current.GetInstance<IDialogService>()
                         .ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_PasswordSize"));
@@ -326,7 +326,7 @@ namespace ISynergy.ViewModels.Authentication
             {
                 List<string> users = JsonConvert.DeserializeObject<List<string>>(ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Users);
 
-                if (users == null) users = new List<string>();
+                if (users is null) users = new List<string>();
 
                 if (!users.Contains(Username))
                 {

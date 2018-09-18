@@ -192,7 +192,7 @@ namespace ISynergy.Controllers.Base
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
-            if (code == null)
+            if (code is null)
             {
                 throw new ApplicationException("A code must be supplied for password reset.");
             }

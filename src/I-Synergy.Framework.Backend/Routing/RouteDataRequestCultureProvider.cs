@@ -11,7 +11,7 @@ namespace ISynergy.Routing
 
         public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
-            if (httpContext == null)
+            if (httpContext is null)
             {
                 throw new ArgumentNullException(nameof(httpContext));
             }
@@ -21,7 +21,7 @@ namespace ISynergy.Routing
 
             uiCulture = culture = httpContext.Request.Path.Value.Split('/')[1]?.ToString();
 
-            if (culture == null)
+            if (culture is null)
             {
                 return ZeroResultTask;
             }

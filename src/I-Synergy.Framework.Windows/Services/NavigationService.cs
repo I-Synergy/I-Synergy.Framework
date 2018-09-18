@@ -25,7 +25,7 @@ namespace ISynergy.Services
         {
             get
             {
-                if (_frame == null)
+                if (_frame is null)
                 {
                     _frame = Window.Current.Content as Frame;
                 }

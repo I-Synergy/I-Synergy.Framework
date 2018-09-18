@@ -74,7 +74,7 @@ namespace ISynergy.Extensions
         {
             var ret = new List<string>();
 
-            if (positions == null) { ret.Add(self); return ret; }
+            if (positions is null) { ret.Add(self); return ret; }
 
             var poses = positions.Distinct().OrderBy(n => n).ToList();
 
