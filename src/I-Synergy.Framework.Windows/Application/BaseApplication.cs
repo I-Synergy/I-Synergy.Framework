@@ -164,7 +164,7 @@ namespace ISynergy
 
             }
 
-            if (rootFrame.Content == null)
+            if (rootFrame.Content is null)
             {
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
@@ -363,7 +363,7 @@ namespace ISynergy
 
             string culture = ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Culture;
 
-            if (culture == null) culture = "en";
+            if (culture is null) culture = "en";
 
             CultureInfo.CurrentCulture = new CultureInfo(culture);
             CultureInfo.CurrentUICulture = new CultureInfo(culture);

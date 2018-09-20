@@ -10,7 +10,7 @@ namespace ISynergy.Extensions
             var connection = httpRequest.HttpContext.Connection;
 
             // for in memory server or when dealing with default connection info
-            if (connection.RemoteIpAddress == null && connection.LocalIpAddress == null)
+            if (connection.RemoteIpAddress is null && connection.LocalIpAddress is null)
                 return true;
 
             if (connection.RemoteIpAddress != null)

@@ -22,7 +22,7 @@ namespace ISynergy.Extensions
         {
             Argument.IsNotNull("list", list);
 
-            if (item == null)
+            if (item is null)
             {
                 return false;
             }
@@ -74,7 +74,7 @@ namespace ISynergy.Extensions
         {
             Argument.IsNotNull("list", list);
 
-            if (item == null)
+            if (item is null)
             {
                 return false;
             }
@@ -266,7 +266,7 @@ namespace ISynergy.Extensions
         /// <param name="action">The action.</param>
         public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
         {
-            if (items == null) return;
+            if (items is null) return;
             foreach (var item in items.EnsureNotNull()) action(item);
         }
 

@@ -152,7 +152,7 @@ namespace ISynergy.Converters
 
         public virtual object Convert(object value, Type targetType, object parameter, string culture)
         {
-            if (value == null)
+            if (value is null)
             {
                 return False;
             }

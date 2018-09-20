@@ -18,7 +18,7 @@ namespace ISynergy.Controls
         {
             Messenger.Default.Register<CloseWindowsMessage>(this, (e) =>
             {
-                if(DataContext == null || DataContext.Equals(e.ViewModel)) Close();
+                if(DataContext is null || DataContext.Equals(e.ViewModel)) Close();
             });
         }
 

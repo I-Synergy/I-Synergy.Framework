@@ -23,7 +23,7 @@ namespace ISynergy.Initializers
         public void Initialize(ITelemetry telemetry)
         {
             var httpContext = httpContextAccessor.HttpContext;
-            if (httpContext?.User == null) return;
+            if (httpContext?.User is null) return;
 
             var userName = httpContext.User.Identity.Name;
             if (!string.IsNullOrEmpty(userName)) telemetry.Context.User.AuthenticatedUserId = userName;

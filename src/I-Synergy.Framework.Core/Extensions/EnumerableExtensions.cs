@@ -141,7 +141,7 @@ namespace ISynergy.Extensions
                 {
                     temp = pia[i].GetValue(item) ?? DBNull.Value;
 
-                    if (temp == null || (temp.GetType().Name == "Char" && ((char)temp).Equals('\0')))
+                    if (temp is null || (temp.GetType().Name == "Char" && ((char)temp).Equals('\0')))
                     {
                         dr[pia[i].Name] = (object)DBNull.Value;
                     }

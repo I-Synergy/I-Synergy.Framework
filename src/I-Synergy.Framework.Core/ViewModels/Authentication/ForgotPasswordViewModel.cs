@@ -52,7 +52,7 @@ namespace ISynergy.ViewModels.Authentication
         {
             bool result = true;
 
-            if (EmailAddress == null || !NetworkHandler.IsValidEMail(EmailAddress))
+            if (EmailAddress is null || !NetworkHandler.IsValidEMail(EmailAddress))
             {
                 await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Invalid_Email"));
                 result = false;

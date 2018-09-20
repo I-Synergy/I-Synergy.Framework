@@ -65,7 +65,7 @@ namespace ISynergy.Converters
 
         public string GetDescription(Enum value)
         {
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException("value");
             }
@@ -132,7 +132,7 @@ namespace ISynergy.Converters
 
         public string GetDescription(Enum value)
         {
-            if (value == null)
+            if (value is null)
             {
                 throw new ArgumentNullException("value");
             }

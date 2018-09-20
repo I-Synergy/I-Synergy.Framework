@@ -169,7 +169,7 @@ namespace ISynergy.Models.Base
         /// </exception>
         public static string ExtractPropertyName<T>(Expression<Func<T>> propertyExpression)
         {
-            if (propertyExpression == null)
+            if (propertyExpression is null)
                 throw new ArgumentNullException(nameof(propertyExpression));
 
             return ExtractPropertyNameFromLambda(propertyExpression);
@@ -193,7 +193,7 @@ namespace ISynergy.Models.Base
                 throw new ArgumentException("The expression is not a member access expression.", nameof(expression));
 
             var property = memberExpression.Member as PropertyInfo;
-            if (property == null)
+            if (property is null)
                 throw new ArgumentException("The member access expression does not access a property.", nameof(expression));
 
             var getMethod = property.GetMethod;

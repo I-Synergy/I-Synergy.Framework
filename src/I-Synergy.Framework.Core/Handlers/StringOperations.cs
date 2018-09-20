@@ -96,14 +96,14 @@ namespace ISynergy.Common.Handlers
             {
                 string s1 = x as string;
 
-                if (s1 == null)
+                if (s1 is null)
                 {
                     return 0;
                 }
 
                 string s2 = y as string;
 
-                if (s2 == null)
+                if (s2 is null)
                 {
                     return 0;
                 }

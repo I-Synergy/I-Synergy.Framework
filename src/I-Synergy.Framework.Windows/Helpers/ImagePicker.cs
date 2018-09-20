@@ -29,7 +29,7 @@ namespace ISynergy.Helpers
 
         private async Task<byte[]> LoadImageAsync(StorageFile file)
         {
-            if (file == null)
+            if (file is null)
             {
                 return null;
             }

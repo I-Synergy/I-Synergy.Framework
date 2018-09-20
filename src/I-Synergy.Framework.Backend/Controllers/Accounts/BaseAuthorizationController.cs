@@ -49,7 +49,7 @@ namespace ISynergy.Controllers.Base
 
             // Retrieve the application details from the database.
             var application = await _appManager.FindByClientIdAsync(request.ClientId, cancellationToken);
-            if (application == null)
+            if (application is null)
             {
                 return View("Error", new ErrorViewModel
                 {

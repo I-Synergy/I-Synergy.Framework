@@ -37,20 +37,20 @@ namespace ISynergy.Common
     {
         public T Value { get; private set; }
 
-        static public Result<T> Ok(T result = default(T))
+        static public Result<T> Ok(T result = default)
         {
             return Ok(null, null, result);
         }
-        static public Result<T> Ok(string message = null, string description = null, T result = default(T))
+        static public Result<T> Ok(string message = null, string description = null, T result = default)
         {
             return new Result<T> { IsOk = true, Message = message, Description = description, Value = result };
         }
 
-        static public Result<T> Error(string message = null, string description = null, T result = default(T))
+        static public Result<T> Error(string message = null, string description = null, T result = default)
         {
             return new Result<T> { IsOk = false, Message = message, Description = description, Value = result };
         }
-        static public Result<T> Error(Exception ex, T result = default(T))
+        static public Result<T> Error(Exception ex, T result = default)
         {
             return new Result<T> { IsOk = false, Message = ex.Message, Description = ex.ToString(), Exception = ex, Value = result };
         }

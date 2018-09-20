@@ -42,7 +42,7 @@ namespace ISynergy.Core.Classes
 
             var propertyInfo = this.GetType().GetRuntimeProperty(propertyName);
 
-            if (propertyInfo == null)
+            if (propertyInfo is null)
                 throw new ArgumentException("Invalid property name", propertyName);
 
             var propertyErrors = new List<string>();

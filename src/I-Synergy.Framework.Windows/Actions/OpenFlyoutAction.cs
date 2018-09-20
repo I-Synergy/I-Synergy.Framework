@@ -143,7 +143,7 @@ namespace ISynergy.Actions
         /// <returns>True if the command is successfully executed; else false.</returns>
         public object Execute(object sender, object parameter)
         {
-            if (Command == null)
+            if (Command is null)
             {
                 return false;
             }

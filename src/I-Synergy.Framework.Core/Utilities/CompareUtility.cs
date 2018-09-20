@@ -21,8 +21,8 @@ namespace ISynergy.Utilities
                 if (!object.Equals(oOldValue, oNewValue))
                 {
                     // Handle the display values when the underlying value is null
-                    var sOldValue = oOldValue == null ? "null" : oOldValue.ToString();
-                    var sNewValue = oNewValue == null ? "null" : oNewValue.ToString();
+                    var sOldValue = oOldValue is null ? "null" : oOldValue.ToString();
+                    var sNewValue = oNewValue is null ? "null" : oNewValue.ToString();
 
                     result.Add("Property " + oProperty.Name + " was: " + sOldValue + "; is: " + sNewValue);
                 }

@@ -69,7 +69,7 @@ namespace ISynergy.Views.Authentication.Controls
                 case VirtualKey.Enter:
                     //UIElement FocusedElement = Keyboard.FocusedElement as UIElement;
 
-                    //if ((FocusedElement == null) == false)
+                    //if ((FocusedElement is null) == false)
                     //{
                     //    if (FocusedElement.Uid == "Button_Submit" | FocusedElement.Uid == "TextBox_Password")
                     //    {

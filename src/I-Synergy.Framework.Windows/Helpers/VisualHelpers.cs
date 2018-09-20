@@ -184,7 +184,7 @@ namespace ISynergy.Helpers
 
             int count = VisualTreeHelper.GetChildrenCount(root);
 
-            for (int i = 0; i < count && child == null; i++)
+            for (int i = 0; i < count && child is null; i++)
             {
                 var current = (FrameworkElement)VisualTreeHelper.GetChild(root, i);
                 if (current != null && current.Name != null && current.Name == name)

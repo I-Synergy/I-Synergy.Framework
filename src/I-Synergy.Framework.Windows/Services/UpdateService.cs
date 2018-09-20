@@ -19,7 +19,7 @@ namespace ISynergy.Services
         {
             updates = null;
 
-            if (context == null)
+            if (context is null)
             {
                 context = StoreContext.GetDefault();
             }

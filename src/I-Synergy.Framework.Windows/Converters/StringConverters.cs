@@ -10,10 +10,10 @@ namespace ISynergy.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            if (value == null)
+            if (value is null)
                 return null;
 
-            if (parameter == null)
+            if (parameter is null)
                 return value;
 
             return string.Format((string)parameter, value);

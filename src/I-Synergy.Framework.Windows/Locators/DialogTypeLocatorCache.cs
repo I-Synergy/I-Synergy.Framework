@@ -25,9 +25,9 @@ namespace ISynergy.Dialogs
         /// <param name="dialogType">Type of the dialog.</param>
         internal void Add(Type viewModelType, Type dialogType)
         {
-            if (viewModelType == null)
+            if (viewModelType is null)
                 throw new ArgumentNullException(nameof(viewModelType));
-            if (dialogType == null)
+            if (dialogType is null)
                 throw new ArgumentNullException(nameof(dialogType));
             if (cache.ContainsKey(viewModelType))
                 throw new ArgumentException($"View model of type '{viewModelType}' is already added.", nameof(viewModelType));
@@ -42,7 +42,7 @@ namespace ISynergy.Dialogs
         /// <returns>The dialog type if found; otherwise null.</returns>
         internal Type Get(Type viewModelType)
         {
-            if (viewModelType == null)
+            if (viewModelType is null)
                 throw new ArgumentNullException(nameof(viewModelType));
 
             Type dialogType;

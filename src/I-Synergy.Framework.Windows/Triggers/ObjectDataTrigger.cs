@@ -52,7 +52,7 @@ namespace ISynergy.Triggers
         {
             Argument.IsNotNull(nameof(target), target);
 
-            if (!(target is ObjectDataTrigger trigger) || dataValue == null) return;
+            if (!(target is ObjectDataTrigger trigger) || dataValue is null) return;
             trigger.SetActive(dataValue.Equals(triggerValue));
         }
     }

@@ -8,7 +8,7 @@ namespace ISynergy.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            if ((decimal)value == 0 || value == null)
+            if ((decimal)value == 0 || value is null)
             {
                 return Visibility.Collapsed;
             }

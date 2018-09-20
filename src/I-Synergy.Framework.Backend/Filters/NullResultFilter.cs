@@ -19,7 +19,7 @@ namespace ISynergy.Filters
             if (!(context.Result is ObjectResult))
                 return;
 
-            if (((ObjectResult)context.Result).Value == null)
+            if (((ObjectResult)context.Result).Value is null)
                 context.Result = new NotFoundResult();
         }
     }

@@ -25,7 +25,7 @@ namespace ISynergy.Extensions
         public static T FindParent<T>(this DependencyObject startNode) where T : DependencyObject
         {
             DependencyObject parentObject = VisualTreeHelper.GetParent(startNode);
-            if (parentObject == null) return null;
+            if (parentObject is null) return null;
 
             if (parentObject is T parent)
             {

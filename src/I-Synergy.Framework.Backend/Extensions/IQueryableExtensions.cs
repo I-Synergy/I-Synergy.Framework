@@ -17,7 +17,7 @@ namespace ISynergy.Extensions
         /// <param name="query"></param>
         /// <param name="pagesize">Has to be greater than 0.</param>
         /// <param name="cancellationToken"/>
-        public static async Task<int> CountPagesAsync<TEntity>(this IQueryable<TEntity> query, int pagesize, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<int> CountPagesAsync<TEntity>(this IQueryable<TEntity> query, int pagesize, CancellationToken cancellationToken = default)
         {
             if (pagesize < 1)
                 throw new ArgumentOutOfRangeException("Value must be greater than 0.", "pagesize");

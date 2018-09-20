@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Library
 {
-    public class PubNubEventNames
+    public class MonitorEventNames
     {
         public const string Connected = nameof(Connected);
-        public const string UserId = nameof(UserId);
+        public const string Disconnected = nameof(Disconnected);
         public const string RefreshDashboard = nameof(RefreshDashboard);
     }
 }

@@ -17,7 +17,7 @@ namespace ISynergy.Common.Helpers
         /// <returns>The name of the property.</returns>
         public static string GetPropertyName<T, TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
-            if (propertyExpression == null)
+            if (propertyExpression is null)
                 throw new ArgumentNullException(nameof(propertyExpression));
 
             var member = (MemberExpression)propertyExpression.Body;

@@ -15,7 +15,7 @@ namespace ISynergy
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNull(string paramName, object paramValue)
         {
-            if (paramValue == null)
+            if (paramValue is null)
             {
                 var error = string.Format("Argument '{0}' cannot be null", paramName.ToString());
                 throw new ArgumentNullException(paramName, error);
@@ -99,7 +99,7 @@ namespace ISynergy
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNullOrEmptyArray(string paramName, Array paramValue)
         {
-            if ((paramValue == null) || (paramValue.Length == 0))
+            if ((paramValue is null) || (paramValue.Length == 0))
             {
                 var error = string.Format("Argument '{0}' cannot be null or an empty array", paramName.ToString());
                 throw new ArgumentException(error, paramName);

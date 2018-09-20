@@ -23,7 +23,7 @@ namespace ISynergy.Services
         {
             get
             {
-                if (_client == null)
+                if (_client is null)
                 {
                     _client = new FlurlClient();
                 }
@@ -55,7 +55,7 @@ namespace ISynergy.Services
                     {
                         await AuthenticateWithRefreshTokenAsync(_context.CurrentProfile?.Token.refresh_token);
 
-                        if (_context.CurrentProfile?.Token == null)
+                        if (_context.CurrentProfile?.Token is null)
                         {
                             result = false;
 

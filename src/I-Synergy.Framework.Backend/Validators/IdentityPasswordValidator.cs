@@ -25,7 +25,7 @@ namespace ISynergy.Validators
             if (!result.Succeeded)
                 return result;
 
-            if (options.RequiredRegexMatch == null || options.RequiredRegexMatch.IsMatch(password))
+            if (options.RequiredRegexMatch is null || options.RequiredRegexMatch.IsMatch(password))
                 return IdentityResult.Success;
 
             // Todo: Move to IdentityErrorDescriber.
