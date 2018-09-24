@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
 using ISynergy.Services;
 using ISynergy.ViewModels.Base;
@@ -13,7 +12,7 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Pin");
+                return SynergyService.Language.GetString("Generic_Pin");
             }
         }
 
@@ -35,14 +34,16 @@ namespace ISynergy.ViewModels.Library
             private set { SetValue(value); }
         }
 
-        public PincodeViewModel(IContext context, IBusyService busy)
-            : base(context, busy)
+        public PincodeViewModel(
+            IContext context,
+            ISynergyService synergyService)
+            : base(context, synergyService)
         {
         }
 
         public override Task SubmitAsync(object e)
         {
-            if (Pincode.Equals(ServiceLocator.Current.GetInstance<ISettingsServiceBase>().GetSetting("PointOfSales_Pincode", "0000")))
+            if (Pincode.Equals(SynergyService.Settings.GetSetting("PointOfSales_Pincode", "0000")))
             {
                 Result = true;
             }

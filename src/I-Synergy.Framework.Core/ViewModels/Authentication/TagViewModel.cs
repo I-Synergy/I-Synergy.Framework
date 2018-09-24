@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
 using ISynergy.Services;
@@ -15,7 +14,7 @@ namespace ISynergy.ViewModels.Authentication
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_ScanTag");
+                return SynergyService.Language.GetString("Generic_ScanTag");
             }
         }
 
@@ -38,8 +37,11 @@ namespace ISynergy.ViewModels.Authentication
         }
 
 
-        public TagViewModel(IContext context, IBusyService busy, bool loginVisible = true)
-            : base(context, busy)
+        public TagViewModel(
+            IContext context,
+            ISynergyService synergyService,
+            bool loginVisible = true)
+            : base(context, synergyService)
         {
             IsLoginVisible = loginVisible;
 

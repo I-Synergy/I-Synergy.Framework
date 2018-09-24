@@ -13,7 +13,7 @@ namespace ISynergy.Views.Authentication.Controls
 {
     public sealed partial class LoginControl : UserControl
     {
-        private LoginViewModel ViewModel => DataContext as LoginViewModel;
+        private ILoginViewModel ViewModel => DataContext as ILoginViewModel;
 
         public LoginControl()
         {

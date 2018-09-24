@@ -55,7 +55,10 @@ namespace ISynergy.ViewModels.Base
         public RelayCommand Back_Command { get; private set; }
         public RelayCommand Next_Command { get; private set; }
 
-        public ViewModelBladeWizard(IContext context, IBusyService busy) : base(context, busy)
+        public ViewModelBladeWizard(
+            IContext context,
+            ISynergyService synergyService)
+            : base(context, synergyService) 
         {
             Back_Command = new RelayCommand(() => PerformBackAction());
             Next_Command = new RelayCommand(() => PerformNextAction());

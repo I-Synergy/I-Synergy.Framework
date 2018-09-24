@@ -5,6 +5,6 @@ namespace ISynergy.ViewModels
 {
     public interface IShellViewModel : IViewModel
     {
-        Task InitializeAsync(object frame);
+        Task InitializeAsync(object parameter);
     }
 }

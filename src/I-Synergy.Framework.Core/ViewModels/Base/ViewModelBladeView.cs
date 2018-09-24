@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using Flurl.Http;
+﻿using Flurl.Http;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Models.Base;
@@ -52,8 +51,7 @@ namespace ISynergy.ViewModels.Base
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
-
-
+        
         public RelayCommand Add_Command { get; set; }
         public RelayCommand<TEntity> Edit_Command { get; set; }
         public RelayCommand<TEntity> Delete_Command { get; set; }
@@ -61,8 +59,10 @@ namespace ISynergy.ViewModels.Base
         public RelayCommand<object> Search_Command { get; set; }
         public RelayCommand<TEntity> Submit_Command { get; set; }
 
-        public ViewModelBladeView(IContext context, IBusyService busy)
-            : base(context, busy)
+        public ViewModelBladeView(
+            IContext context,
+            ISynergyService synergyService)
+            : base(context, synergyService)
         {
             Blades = new ObservableCollection<IView>();
 
@@ -102,7 +102,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Validation_Failed"));
+                    await SynergyService.Dialog.ShowErrorAsync(SynergyService.Language.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }
@@ -124,12 +124,12 @@ namespace ISynergy.ViewModels.Base
             }
             else
             {
-                item = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_This_Item");
+                item = SynergyService.Language.GetString("Generic_This_Item");
             }
 
-            if (await ServiceLocator.Current.GetInstance<IDialogService>().ShowAsync(
-                                string.Format(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Item_Remove"), item),
-                                ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Operation_Delete"),
+            if (await SynergyService.Dialog.ShowAsync(
+                                string.Format(SynergyService.Language.GetString("Warning_Item_Remove"), item),
+                                SynergyService.Language.GetString("Generic_Operation_Delete"),
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 try
@@ -140,7 +140,7 @@ namespace ISynergy.ViewModels.Base
                 {
                     if (ex.Call.Exception.Message.Contains(Exception_Constants.Error_547))
                     {
-                        await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_No_Remove_547_Error"));
+                        await SynergyService.Dialog.ShowErrorAsync(SynergyService.Language.GetString("Warning_No_Remove_547_Error"));
                     }
                 }
             }
@@ -159,7 +159,7 @@ namespace ISynergy.ViewModels.Base
             {
                 viewmodel.Owner = this;
 
-                var view = ServiceLocator.Current.GetInstance<INavigationService>().GetNavigationBlade(viewmodel.GetType().FullName, viewmodel);
+                var view = SynergyService.Navigation.GetNavigationBlade(viewmodel.GetType().FullName, viewmodel);
 
                 if (!Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
                 {
@@ -211,14 +211,14 @@ namespace ISynergy.ViewModels.Base
 
             try
             {
-                await Busy.StartBusyAsync();
+                await SynergyService.Busy.StartBusyAsync();
 
                 Items = new ObservableCollection<TEntity>(await RetrieveItemsAsync() ?? new List<TEntity>());
                 result = true;
             }
             finally
             {
-                await Busy.EndBusyAsync();
+                await SynergyService.Busy.EndBusyAsync();
             }
 
             return result;

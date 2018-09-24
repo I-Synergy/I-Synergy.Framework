@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using ISynergy.Models.Base;
 using ISynergy.Services;
 using System.Threading.Tasks;
@@ -29,8 +28,10 @@ namespace ISynergy.ViewModels.Base
 
         public RelayCommand<TEntity> Submit_Command { get; set; }
 
-        public ViewModelNavigation(IContext context, IBusyService busy)
-            : base(context, busy)
+        public ViewModelNavigation(
+            IContext context,
+            ISynergyService synergyService)
+            : base(context, synergyService)
         {
             SelectedItem = new TEntity();
             IsNew = true;
@@ -49,7 +50,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Validation_Failed"));
+                    await SynergyService.Dialog.ShowErrorAsync(SynergyService.Language.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }
@@ -63,8 +64,8 @@ namespace ISynergy.ViewModels.Base
         //{
         //    if (!e.Handled)
         //    {
-        //        if (ServiceLocator.Current.GetInstance<INavigationService>().CanGoBack)
-        //            ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
+        //        if (NavigationService.CanGoBack)
+        //            NavigationService.GoBack();
 
         //        e.Handled = true;
         //    }
@@ -78,8 +79,8 @@ namespace ISynergy.ViewModels.Base
         //    {
         //        IsCancelled = true;
 
-        //        if (ServiceLocator.Current.GetInstance<INavigationService>().CanGoBack)
-        //            ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
+        //        if (NavigationService.CanGoBack)
+        //            NavigationService.GoBack();
 
         //        e.Handled = true;
         //    }

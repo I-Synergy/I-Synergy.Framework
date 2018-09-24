@@ -1,5 +1,4 @@
-﻿using ISynergy.Common;
-using Windows.Foundation;
+﻿using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Dialogs

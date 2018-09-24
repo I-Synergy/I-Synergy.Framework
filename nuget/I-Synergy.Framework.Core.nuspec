@@ -22,7 +22,6 @@
       <dependency id="System.ComponentModel.Annotations" version="4.5.0" />
       <dependency id="Microsoft.Extensions.DependencyInjection" version="2.1.1" />
       <dependency id="Microsoft.Extensions.Logging" version="2.1.1" />
-      <dependency id="CommonServiceLocator" version="2.0.4" />
       <dependency id="MvvmLightLibsStd10" version="5.4.1.1" />
     </dependencies>
   </metadata>

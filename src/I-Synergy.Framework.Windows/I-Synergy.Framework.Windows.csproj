@@ -188,7 +188,6 @@
     <Compile Include="Locators\DialogTypeLocator.cs" />
     <Compile Include="Locators\DialogTypeLocatorCache.cs" />
     <Compile Include="Locators\IDialogTypeLocator.cs" />
-    <Compile Include="Locators\IoCServiceLocator.cs" />
     <Compile Include="Models\NavigationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Base\AuthenticationServiceBase.cs" />
@@ -199,9 +198,9 @@
     <Compile Include="Services\ConverterService.cs" />
     <Compile Include="Services\CustomResourceLoader.cs" />
     <Compile Include="Services\DialogService.cs" />
-    <Compile Include="Services\DownloadFileService.cs" />
     <Compile Include="Services\InfoService.cs" />
     <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\SynergyService.cs" />
     <Compile Include="Services\TelemetryService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\UIVisualizerService.cs" />
@@ -257,9 +256,6 @@
     <EmbeddedResource Include="Properties\ISynergy.Framework.Windows.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommonServiceLocator">
-      <Version>2.0.4</Version>
-    </PackageReference>
     <PackageReference Include="Flurl">
       <Version>2.8.0</Version>
     </PackageReference>

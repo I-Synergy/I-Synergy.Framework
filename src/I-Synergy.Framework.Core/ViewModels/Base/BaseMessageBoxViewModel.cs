@@ -106,11 +106,15 @@ namespace ISynergy.ViewModels.Library
         public RelayCommand Yes_Command { get; set; }
         public RelayCommand No_Command { get; set; }
 
-        public BaseMessageBoxViewModel(IContext context, IBusyService busy, string message, string title,
+        public BaseMessageBoxViewModel(
+            IContext context,
+            ISynergyService synergyService, 
+            string message, 
+            string title,
             MessageBoxButton button = MessageBoxButton.OK,
             MessageBoxImage image = MessageBoxImage.Information,
             MessageBoxResult result = MessageBoxResult.OK)
-        : base(context, busy)
+            : base(context, synergyService)
         {
             Title = title;
             Message = message;

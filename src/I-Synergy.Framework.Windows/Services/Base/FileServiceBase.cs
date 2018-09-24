@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ISynergy.Services.Base
+﻿namespace ISynergy.Services.Base
 {
     /// <summary>
     /// Base class for file services.

@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
 using ISynergy.Services;
 using ISynergy.ViewModels.Base;
@@ -13,12 +12,15 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Note");
+                return SynergyService.Language.GetString("Generic_Note");
             }
         }
 
-        public NoteViewModel(IContext context, IBusyService busy, string note)
-            : base(context, busy)
+        public NoteViewModel(
+            IContext context,
+            ISynergyService synergyService,
+            string note)
+            : base(context, synergyService)
         {
             SelectedItem = note;
         }

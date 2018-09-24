@@ -1,5 +1,4 @@
 ﻿using ISynergy.Extensions;
-using ISynergy.Library;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

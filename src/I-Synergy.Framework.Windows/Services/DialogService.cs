@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using ISynergy.Library;
+﻿using ISynergy.Library;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
@@ -12,47 +11,54 @@ namespace ISynergy.Services
     /// </summary>
     public class DialogService : IDialogService
     {
+        public ILanguageService LanguageService { get; }
+
+        public DialogService(ILanguageService languageService)
+        {
+            LanguageService = languageService;
+        }
+
         public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "")
         {
-            return ShowAsync(error.Message, title != "" ? title : ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
+            return ShowAsync(error.Message, title != "" ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "")
         {
-            return ShowAsync(message, title != "" ? title : ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
+            return ShowAsync(message, title != "" ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "")
         {
-            return ShowAsync(message, title != "" ? title : ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleInfo"), MessageBoxButton.OK, MessageBoxImage.Information);
+            return ShowAsync(message, title != "" ? title : LanguageService.GetString("TitleInfo"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "")
         {
-            return ShowAsync(message, title != "" ? title : ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            return ShowAsync(message, title != "" ? title : LanguageService.GetString("TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         public Task ShowGreetingAsync(string name)
         {
             if(DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
             {
-                return ShowAsync(string.Format(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Greeting_Night"), name),
-                    ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return ShowAsync(string.Format(LanguageService.GetString("Generic_Greeting_Night"), name),
+                    LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
             {
-                return ShowAsync(string.Format(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Greeting_Morning"), name),
-                    ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return ShowAsync(string.Format(LanguageService.GetString("Generic_Greeting_Morning"), name),
+                    LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
             {
-                return ShowAsync(string.Format(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Greeting_Afternoon"), name),
-                    ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return ShowAsync(string.Format(LanguageService.GetString("Generic_Greeting_Afternoon"), name),
+                    LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                return ShowAsync(string.Format(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Greeting_Evening"), name),
-                    ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return ShowAsync(string.Format(LanguageService.GetString("Generic_Greeting_Evening"), name),
+                    LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -62,10 +68,10 @@ namespace ISynergy.Services
             MessageBoxButton buttons = MessageBoxButton.OK, 
             MessageBoxImage image = MessageBoxImage.Information)
         {
-            var yesCommand = new UICommand(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Yes"), cmd => { });
-            var noCommand = new UICommand(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_No"), cmd => { });
-            var okCommand = new UICommand(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Ok"), cmd => { });
-            var cancelCommand = new UICommand(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Cancel"), cmd => { });
+            var yesCommand = new UICommand(LanguageService.GetString("Generic_Yes"), cmd => { });
+            var noCommand = new UICommand(LanguageService.GetString("Generic_No"), cmd => { });
+            var okCommand = new UICommand(LanguageService.GetString("Generic_Ok"), cmd => { });
+            var cancelCommand = new UICommand(LanguageService.GetString("Generic_Cancel"), cmd => { });
 
             var messageDialog = new MessageDialog(message, title)
             {

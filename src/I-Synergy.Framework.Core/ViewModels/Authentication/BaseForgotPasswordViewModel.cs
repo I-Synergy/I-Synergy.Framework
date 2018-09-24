@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Common.Handlers;
 using ISynergy.Events;
 using ISynergy.Services;
@@ -8,9 +7,18 @@ using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Authentication
 {
-    public class ForgotPasswordViewModel : ViewModelDialog<object>
+    public abstract class BaseForgotPasswordViewModel : ViewModelDialog<object>, IForgotPasswordViewModel
     {
-        public override string Title { get { return ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Password_Forgot"); } }
+        public override string Title { get { return SynergyService.Language.GetString("Generic_Password_Forgot"); } }
+
+        public BaseForgotPasswordViewModel(
+            IContext context,
+            ISynergyService synergyService)
+            : base(context, synergyService)
+        {
+            EmailAddress = "";
+        }
+
 
         /// <summary>
         /// Gets or sets the EmailAddress property value.
@@ -42,34 +50,42 @@ namespace ISynergy.ViewModels.Authentication
             set { SetValue(value); }
         }
 
-        public ForgotPasswordViewModel(IContext context, IBusyService busy)
-            : base(context, busy)
-        {
-            EmailAddress = "";
-        }
-
         private async Task<bool> CheckFields()
         {
             bool result = true;
 
             if (EmailAddress is null || !NetworkHandler.IsValidEMail(EmailAddress))
             {
-                await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Invalid_Email"));
+                await DialogService.ShowErrorAsync(SynergyService.Language.GetString("Warning_Invalid_Email"));
                 result = false;
             }
 
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// public override Task<bool> ResetPasswordAsync()
+        /// {
+        ///     return RestService?.ForgotPasswordExternal(EmailAddress);
+        /// }
+        /// </code>
+        /// </example>
+        /// <returns></returns>
+        public abstract Task<bool> ResetPasswordAsync();
+
         public override async Task SubmitAsync(object e)
         {
             if (await CheckFields())
             {
-                await Busy.StartBusyAsync();
+                await SynergyService.Busy.StartBusyAsync();
 
-                var result = await ServiceLocator.Current.GetInstance<IBaseRestService>()?.ForgotPasswordExternal(EmailAddress);
+                var result = await ResetPasswordAsync();
 
-                await Busy.EndBusyAsync();
+                await SynergyService.Busy.EndBusyAsync();
 
                 Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             }

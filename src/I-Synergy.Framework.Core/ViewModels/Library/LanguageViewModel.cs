@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
 using ISynergy.Services;
@@ -14,7 +13,7 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Language");
+                return SynergyService.Language.GetString("Generic_Language");
             }
         }
 
@@ -29,12 +28,14 @@ namespace ISynergy.ViewModels.Library
 
         public RelayCommand<string> SetLanguage_Command { get; set; }
 
-        public LanguageViewModel(IContext context, IBusyService busy)
-        : base(context, busy)
+        public LanguageViewModel(
+            IContext context,
+            ISynergyService synergyService)
+            : base(context, synergyService)
         {
             SetLanguage_Command = new RelayCommand<string>(SetLanguage);
 
-            Language = ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Culture;
+            Language = SynergyService.Settings.Application_Culture;
         }
 
         private void SetLanguage(string language)
@@ -44,7 +45,7 @@ namespace ISynergy.ViewModels.Library
 
         public override Task SubmitAsync(object e)
         {
-            ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Culture = Language;
+            SynergyService.Settings.Application_Culture = Language;
             Messenger.Default.Send(new OnSubmittanceMessage(this, null));
 
             return Task.CompletedTask;

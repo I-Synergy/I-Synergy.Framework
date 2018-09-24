@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using CommonServiceLocator;
 
 namespace ISynergy.Services
 {
@@ -25,7 +24,7 @@ namespace ISynergy.Services
 
             foreach (var item in roles.EnsureNotNull())
             {
-                item.Description = ServiceLocator.Current.GetInstance<ILanguageService>().GetString($"Role_{item.Name}");
+                item.Description = LanguageService.GetString($"Role_{item.Name}");
                 result.Add(item);
             }
 

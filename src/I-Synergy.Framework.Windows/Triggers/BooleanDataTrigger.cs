@@ -1,5 +1,4 @@
-﻿using ISynergy.Common;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 
 namespace ISynergy.Triggers
 {

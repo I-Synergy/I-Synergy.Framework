@@ -6,7 +6,6 @@ using ISynergy.Models.General;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CommonServiceLocator;
 using ISynergy.Events;
 
 namespace ISynergy.Services
@@ -14,6 +13,8 @@ namespace ISynergy.Services
     public abstract partial class RestServiceBase
     {
         protected IContext _context;
+        protected ILanguageService LanguageService;
+        protected IDialogService DialogService;
         protected IFlurlClient _client;
 
         protected int retryCount = 3;
@@ -32,10 +33,15 @@ namespace ISynergy.Services
             }
         }
 
-        public RestServiceBase(IContext context)
+        public RestServiceBase(
+            IContext context, 
+            ILanguageService languageService, 
+            IDialogService dialogService)
         {
             _client = new FlurlClient();
             _context = context;
+            LanguageService = languageService;
+            DialogService = dialogService;
         }
 
         protected async Task<bool> IsTransient(Exception e)
@@ -470,25 +476,25 @@ namespace ISynergy.Services
                 {
                     if (api_ex.error == Globals.InvalidGrantError)
                     {
-                        await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_ACCOUNT_LOGIN_FAILED"));
+                        await DialogService.ShowErrorAsync(
+                            LanguageService.GetString("EX_ACCOUNT_LOGIN_FAILED"));
                     }
                     else if (api_ex.error == Globals.AuthenticationError || api_ex.error == Globals.UnauthorizedClientError)
                     {
-                        await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Current.GetInstance<ILanguageService>().GetString(api_ex.error_description));
+                        await DialogService.ShowErrorAsync(
+                            LanguageService.GetString(api_ex.error_description));
                     }
                     else
                     {
-                        await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_ACCOUNT_OTHER"));
+                        await DialogService.ShowErrorAsync(
+                            LanguageService.GetString("EX_ACCOUNT_OTHER"));
                     }
                 }
             }
             else
             {
-                await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_ACCOUNT_OTHER"));
+                await DialogService.ShowErrorAsync(
+                            LanguageService.GetString("EX_ACCOUNT_OTHER"));
             }
         }
 
@@ -528,8 +534,8 @@ namespace ISynergy.Services
 
                     if (ex != null)
                     {
-                        await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                                ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_ACCOUNT_LOGIN_FAILED"));
+                        await DialogService.ShowErrorAsync(
+                                LanguageService.GetString("EX_ACCOUNT_LOGIN_FAILED"));
                     }
                 }
 

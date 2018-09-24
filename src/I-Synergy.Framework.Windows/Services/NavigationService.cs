@@ -3,7 +3,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using ISynergy.ViewModels.Base;
-using CommonServiceLocator;
 using Windows.UI.Core;
 using System.Collections.Generic;
 using System.Linq;

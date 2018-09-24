@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>CS1573;CS1591;CS1712</NoWarn>
+  </PropertyGroup>
+</Project>

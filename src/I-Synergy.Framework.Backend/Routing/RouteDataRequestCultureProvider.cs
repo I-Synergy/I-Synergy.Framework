@@ -19,12 +19,16 @@ namespace ISynergy.Routing
             string culture = null;
             string uiCulture = null;
 
-            uiCulture = culture = httpContext.Request.Path.Value.Split('/')[1]?.ToString();
+            // Test if length of result complies with ISO2 country code,
+            // else return ZeroResultTask.
+            string pathTest = httpContext.Request.Path.Value.Split('/')[1]?.ToString();
 
-            if (culture is null)
+            if(pathTest is null || pathTest.Length != 2)
             {
                 return ZeroResultTask;
             }
+
+            uiCulture = culture = pathTest;
 
             var providerResultCulture = new ProviderCultureResult(culture, uiCulture);
 

@@ -22,6 +22,7 @@
 
         public const string View = "View";
         public const string Page = "Page";
+        public const string Window = "Window";
         public const string ViewModel = "ViewModel";
 
         public const string Documents = "documents";

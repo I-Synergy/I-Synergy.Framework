@@ -3,14 +3,12 @@ using ISynergy.Services;
 using ISynergy.ViewModels.Base;
 using ISynergy.Views.Library;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using ISynergy.Models;
-using CommonServiceLocator;
 using GalaSoft.MvvmLight.Command;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Messaging;
@@ -23,6 +21,9 @@ namespace ISynergy.ViewModels
 {
     public abstract class ShellViewModelBase : ViewModel
     {
+        public IAuthenticationService AuthenticationService { get; }
+        public IBusyService Busy => SynergyService.Busy;
+
         private const string SetApplicationColor = "Set Application Color";
         private const string SetApplicationWallpaper = "Set Application Wallpaper";
 
@@ -49,17 +50,20 @@ namespace ISynergy.ViewModels
         public RelayCommand Feedback_Command { get; set; }
         public RelayCommand<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
 
-        public ShellViewModelBase(IContext context, IBusyService busy)
-            : base(context, busy)
+        public ShellViewModelBase(
+            IContext context,
+            ISynergyService synergyService,
+            IAuthenticationService authenticationService)
+            : base(context, synergyService)
         {
+            AuthenticationService = authenticationService;
+
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
             RestartUpdate_Command = new RelayCommand(async () => await ShowDialogRestartAfterUpdate());
             StateChanged_Command = new RelayCommand<VisualStateChangedEventArgs>(args => GoToState(args.NewState.Name));
             Feedback_Command = new RelayCommand(async () => await CreateFeedbackAsync());
-
-            
 
             Messenger.Default.Register<AuthenticateUserMessageRequest>(this, async (request) => await ValidateTaskWithUserAsync(request));
             Messenger.Default.Register<AuthenticateUserMessageResult>(this, async (result) => await OnAuthenticateUserMessageResult(result));
@@ -69,6 +73,8 @@ namespace ISynergy.ViewModels
         protected abstract Task OnSubmittanceAsync(OnSubmittanceMessage e);
 
         protected abstract Task CreateFeedbackAsync();
+
+        public abstract Task InitializeAsync(object parameter);
 
         private async Task OnAuthenticateUserMessageResult(AuthenticateUserMessageResult result)
         {
@@ -80,7 +86,7 @@ namespace ISynergy.ViewModels
                 {
                     if (result.Property.ToString() == nameof(Login_Command) && result.IsAuthenticated)
                     {
-                        await ServiceLocator.Current.GetInstance<IDialogService>().ShowGreetingAsync(Context.CurrentProfile.Username);
+                        await SynergyService.Dialog.ShowGreetingAsync(Context.CurrentProfile.Username);
                         result.IsHandled = true;
                     }
                 }
@@ -99,8 +105,12 @@ namespace ISynergy.ViewModels
 
                 if (Context.Profiles?.Count > 0)
                 {
-                    TagViewModel tagVM = new TagViewModel(Context, Busy, request.EnableLogin);
-                    var tagResult = await ServiceLocator.Current.GetInstance<IUIVisualizerService>().ShowDialogAsync(typeof(ITagWindow), tagVM);
+                    TagViewModel tagVM = new TagViewModel(
+                        Context, 
+                        SynergyService, 
+                        request.EnableLogin);
+
+                    var tagResult = await SynergyService.UIVisualizer.ShowDialogAsync(typeof(ITagWindow), tagVM);
 
                     if (tagResult.HasValue && tagResult.Value && tagVM.IsValid)
                     {
@@ -127,8 +137,11 @@ namespace ISynergy.ViewModels
                     }
                     else if(!request.EnableLogin)
                     {
-                        PincodeViewModel pinVM = new PincodeViewModel(Context, Busy);
-                        var pinResult = await ServiceLocator.Current.GetInstance<IUIVisualizerService>().ShowDialogAsync(typeof(IPincodeWindow), pinVM);
+                        PincodeViewModel pinVM = new PincodeViewModel(
+                            Context,
+                            SynergyService);
+
+                        var pinResult = await SynergyService.UIVisualizer.ShowDialogAsync(typeof(IPincodeWindow), pinVM);
 
                         if (pinResult == true && pinVM.Result)
                         {
@@ -140,7 +153,7 @@ namespace ISynergy.ViewModels
                         }
                         else if(pinResult == true)
                         {
-                            await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Pincode_Invalid"));
+                            await SynergyService.Dialog.ShowErrorAsync(SynergyService.Language.GetString("Warning_Pincode_Invalid"));
                         }
                     }
                 }
@@ -153,13 +166,13 @@ namespace ISynergy.ViewModels
 
         public async Task ProcessLoginRequestAsync()
         {
-            ServiceLocator.Current.GetInstance<ISettingsServiceBase>().User_AutoLogin = false;
+            SynergyService.Settings.User_AutoLogin = false;
 
-            await ServiceLocator.Current.GetInstance<IAuthenticationService>().ProcessLoginRequestAsync();
+            await AuthenticationService.ProcessLoginRequestAsync();
 
             PopulateNavItems();
 
-            ServiceLocator.Current.GetInstance<INavigationService>().Navigate(typeof(LoginViewModel).FullName);
+            SynergyService.Navigation.Navigate(typeof(ILoginViewModel).FullName);
         }
 
         protected abstract void PopulateNavItems();
@@ -184,7 +197,7 @@ namespace ISynergy.ViewModels
 
         protected Task ShowDialogRestartAfterUpdate()
         {
-            return ServiceLocator.Current.GetInstance<IDialogService>().ShowInformationAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_UpdateRestart"));
+            return SynergyService.Dialog.ShowInformationAsync(SynergyService.Language.GetString("Generic_UpdateRestart"));
         }
 
         /// <summary>
@@ -277,25 +290,28 @@ namespace ISynergy.ViewModels
 
         protected void SaveLastUsername(string username)
         {
-            ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_User = username;
+            SynergyService.Settings.Application_User = username;
         }
 
         private void CurrentWallpaperChanged(object sender, EventArgs e)
         {
             if (sender != null && sender is byte[])
             {
-                ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper = sender as byte[];
+                SynergyService.Settings.Application_Wallpaper = sender as byte[];
             }
         }
 
         protected async Task OpenLanguageAsync()
         {
-            LanguageViewModel langVm = new LanguageViewModel(Context, Busy);
-            var result = await ServiceLocator.Current.GetInstance<IUIVisualizerService>().ShowDialogAsync(typeof(LanguageWindow), langVm);
+            LanguageViewModel langVm = new LanguageViewModel(
+                Context,
+                SynergyService);
+
+            var result = await SynergyService.UIVisualizer.ShowDialogAsync(typeof(LanguageWindow), langVm);
 
             if (result.HasValue && result.Value)
             {
-                if (await ServiceLocator.Current.GetInstance<IDialogService>().ShowAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (await SynergyService.Dialog.ShowAsync(SynergyService.Language.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await RestartApplication();
                 }
@@ -304,16 +320,19 @@ namespace ISynergy.ViewModels
 
         protected async Task OpenColorsAsync()
         {
-            ThemeViewModel langVm = new ThemeViewModel(Context, Busy);
-            var result = await ServiceLocator.Current.GetInstance<IUIVisualizerService>().ShowDialogAsync(typeof(ThemeWindow), langVm);
+            ThemeViewModel langVm = new ThemeViewModel(
+                Context,
+                SynergyService);
+
+            var result = await SynergyService.UIVisualizer.ShowDialogAsync(typeof(ThemeWindow), langVm);
 
             if (result.HasValue && result.Value)
             {
-                if (await ServiceLocator.Current.GetInstance<IDialogService>().ShowAsync(
-                ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Color_Change") +
+                if (await SynergyService.Dialog.ShowAsync(
+                SynergyService.Language.GetString("Warning_Color_Change") +
                 Environment.NewLine +
-                ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Do_you_want_to_do_it_now"),
-                ServiceLocator.Current.GetInstance<ILanguageService>().GetString("TitleQuestion"),
+                SynergyService.Language.GetString("Generic_Do_you_want_to_do_it_now"),
+                SynergyService.Language.GetString("TitleQuestion"),
                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await RestartApplication();
@@ -327,40 +346,11 @@ namespace ISynergy.ViewModels
             return Task.CompletedTask;
         }
 
-        protected async Task SetBackgroundAsync()
-        {
-            ServiceLocator.Current.GetInstance<ITelemetryService>().TrackEvent(SetApplicationWallpaper);
-
-            if (ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper is null || ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper.Length == 0)
-            {
-                var result = await ServiceLocator.Current.GetInstance<IFileService>().BrowseFileAsync(
-                    ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Filetypes_Images"),
-                    2 * 1024 * 1024,
-                    "2MB");
-
-                if (result != null)
-                {
-                    ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper = result.File;
-                    //Wallpaper = Images.ConvertByteArray2ImageSource(result.File);
-                }
-            }
-            else
-            {
-                if (await ServiceLocator.Current.GetInstance<IDialogService>()
-                    .ShowAsync(
-                        ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Wallpaper_Reset"), "Reset", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper = Array.Empty<byte>();
-                    Wallpaper = null;
-                }
-            }
-        }
-
         public async Task RestartApplication()
         {
-            await ServiceLocator.Current.GetInstance<IDialogService>().ShowInformationAsync("Please restart the application.");
+            await SynergyService.Dialog.ShowInformationAsync("Please restart the application.");
 
-            ServiceLocator.Current.GetInstance<IWindowService>().ExitApplication();
+            SynergyService.Window.ExitApplication();
         }
     }
 }
