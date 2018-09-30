@@ -1,5 +1,4 @@
-﻿using ISynergy.Models.Accounts;
-using ISynergy.Models.Base;
+﻿using ISynergy.Models.Base;
 using System;
 using System.Collections.Generic;
 

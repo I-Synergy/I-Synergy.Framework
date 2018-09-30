@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
 
-namespace ISynergy.Extensions
+namespace System
 {
     public static class ObjectExtensions
     {

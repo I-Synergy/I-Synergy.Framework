@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Library
+﻿namespace ISynergy
 {
     public class MonitorEventNames
     {

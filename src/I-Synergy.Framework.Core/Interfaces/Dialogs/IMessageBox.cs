@@ -1,4 +1,4 @@
-﻿using ISynergy.Library;
+﻿using ISynergy.Enumerations;
 
 namespace ISynergy.Dialogs
 {

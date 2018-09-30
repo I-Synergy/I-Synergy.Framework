@@ -11,7 +11,7 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2008-2018</copyright>
     <tags>I-Synergy Core Framework</tags>
-    <projectUrl>https://www.i-synergy.nl</projectUrl>
+    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy%20Framework</projectUrl>
 
     <dependencies>
       <dependency id="AspNet.Security.OpenIdConnect.Primitives" version="2.0.0-rc3-final" />
@@ -22,7 +22,6 @@
       <dependency id="System.ComponentModel.Annotations" version="4.5.0" />
       <dependency id="Microsoft.Extensions.DependencyInjection" version="2.1.1" />
       <dependency id="Microsoft.Extensions.Logging" version="2.1.1" />
-      <dependency id="CommonServiceLocator" version="2.0.4" />
       <dependency id="MvvmLightLibsStd10" version="5.4.1.1" />
     </dependencies>
   </metadata>

@@ -1,13 +1,13 @@
-﻿using ISynergy.Interfaces;
-using ISynergy.Extensions;
-using ISynergy.ViewModels.Manage;
+﻿using ISynergy.ViewModels.Manage;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text;
+using System.Collections;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using ISynergy.Senders;
 
 namespace ISynergy.Controllers.Base
 {

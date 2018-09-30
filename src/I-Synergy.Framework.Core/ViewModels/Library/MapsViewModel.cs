@@ -73,8 +73,11 @@ namespace ISynergy.ViewModels
             set { SetValue(value); }
         }
         
-        public MapsViewModel(IContext context, IBusyService busy, string name, string address)
-            : base(context, busy)
+        public MapsViewModel(
+            IContext context,
+            IBaseService baseService,
+            string name, string address)
+            : base(context, baseService)
         {
             Locations = new ObservableCollection<object>();
             Title = address;

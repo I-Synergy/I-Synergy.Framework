@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace ISynergy.Common.Handlers
+namespace ISynergy.Handlers
 {
-    public static class FileSystemObjectHandler
+    public static class FileSystemObject
     {
         public static string EnsureDirectoryExists(string path)
         {

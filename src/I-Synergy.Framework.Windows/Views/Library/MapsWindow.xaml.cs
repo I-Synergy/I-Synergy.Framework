@@ -1,7 +1,7 @@
-﻿using CommonServiceLocator;
-using ISynergy.Core.Views.Library;
+﻿using ISynergy.Core.Views.Library;
 using ISynergy.Services;
 using ISynergy.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,6 @@ using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Services.Maps;
 using Windows.UI.Xaml.Controls.Maps;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,6 +19,8 @@ namespace ISynergy.Views.Library
     /// </summary>
     public sealed partial class MapsWindow : IMapsWindow
     {
+        private MapsViewModel ViewModel => DataContext as MapsViewModel;
+
         public MapsWindow()
         {
             this.InitializeComponent();
@@ -34,7 +35,7 @@ namespace ISynergy.Views.Library
 
                 try
                 {
-                    await ServiceLocator.Current.GetInstance<IBusyService>().StartBusyAsync();
+                    await ActivatorUtilities.CreateInstance<IBusyService>(ViewModel.BaseService.ServiceProvider).StartBusyAsync();
 
                     Geopoint myLocation = new Geopoint(new BasicGeoposition { Latitude = 51.3774194, Longitude = 6.0791655 });
                     var MyLandmarks = new List<MapElement>();
@@ -120,7 +121,7 @@ namespace ISynergy.Views.Library
                 }
                 finally
                 {
-                    await ServiceLocator.Current.GetInstance<IBusyService>().EndBusyAsync();
+                    await ActivatorUtilities.CreateInstance<IBusyService>(ViewModel.BaseService.ServiceProvider).EndBusyAsync();
                 }
             }
         }

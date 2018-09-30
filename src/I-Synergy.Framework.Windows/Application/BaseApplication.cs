@@ -1,16 +1,13 @@
-﻿using CommonServiceLocator;
-using DryIoc;
-using Flurl.Http;
+﻿using Flurl.Http;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using ISynergy.Events;
-using ISynergy.Extensions;
 using ISynergy.Providers;
 using ISynergy.Services;
-using ISynergy.ViewModels;
 using ISynergy.ViewModels.Base;
 using ISynergy.Views;
 using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,7 +15,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -36,26 +32,24 @@ namespace ISynergy
 {
     public abstract class BaseApplication : Application
     {
-        private IContext _context { get; set; }
-        private bool _preview { get; set; }
+        public IServiceProvider ServiceProvider { get; internal set; }
+        public IServiceCollection ServiceCollection { get; internal set; }
+        public IContext Context { get; internal set; }
+        public ILogger Logger { get; internal set; }
 
-        /// <summary>
-        /// Gets the <see cref="ILogger"/> for the application.
-        /// </summary>
-        /// <value>A <see cref="ILogger"/> instance.</value>
-        protected readonly ILogger _logger = new LoggerFactory().CreateLogger<BaseApplication>();
+        public bool _preview { get; internal set; }
 
-        /// <summary>
-        /// Gets the default DryIoc <see cref="IContainer"/> for the application.
-        /// </summary>
-        /// <value>The default <see cref="IContainer"/> instance.</value>
-        protected IContainer _container { get; set; }
+        ///// <summary>
+        ///// Gets the default DryIoc <see cref="IContainer"/> for the application.
+        ///// </summary>
+        ///// <value>The default <see cref="IContainer"/> instance.</value>
+        //protected IContainer _container { get; set; }
 
-        /// <summary>
-        /// Creates the DryIoc <see cref="IContainer"/> that will be used as the default container.
-        /// </summary>
-        /// <returns>A new instance of <see cref="IContainer"/>.</returns>
-        private IContainer CreateContainer() => new Container(Rules.Default.WithConcreteTypeDynamicRegistrations());
+        ///// <summary>
+        ///// Creates the DryIoc <see cref="IContainer"/> that will be used as the default container.
+        ///// </summary>
+        ///// <returns>A new instance of <see cref="IContainer"/>.</returns>
+        //private IContainer CreateContainer() => new Container(Rules.Default.WithConcreteTypeDynamicRegistrations());
 
         public BaseApplication()
             : base()
@@ -261,37 +255,34 @@ namespace ISynergy
 #if PREVIEW
             _preview = true;
 #endif
+            ServiceCollection = new ServiceCollection();
+            ServiceCollection.AddLogging();
 
-            _container = CreateContainer();
+            ServiceCollection.AddSingleton<IBaseService, BaseService>();
+            ServiceCollection.AddSingleton<IBusyService, BusyService>();
+            ServiceCollection.AddSingleton<ITelemetryService, TelemetryService>();
+            ServiceCollection.AddSingleton<IUIVisualizerService, UIVisualizerService>();
+            ServiceCollection.AddSingleton<INavigationService, NavigationService>();
+            ServiceCollection.AddSingleton<IDialogService, DialogService>();
+            ServiceCollection.AddSingleton<IInfoService, InfoService>();
 
-            IoCServiceLocator serviceLocator = new IoCServiceLocator(_container);
-            ServiceLocator.SetLocatorProvider(() => serviceLocator);
+            ServiceCollection.AddScoped<IUpdateService, UpdateService>();
+            ServiceCollection.AddScoped<IAuthenticationProvider, AuthenticationProvider>();
+            ServiceCollection.AddScoped<IConverterService, ConverterService>();
+            
 
-            // register the locator in DryIoc as well
-            _container.UseInstance<IServiceLocator>(serviceLocator);
-            _container.UseInstance(_logger);
+            ServiceProvider = ServiceCollection.BuildServiceProvider();
 
-            _container.Register<IBusyService, BusyService>(Reuse.ScopedOrSingleton);
-            _container.Register<IDialogService, DialogService>();
-            _container.Register<ITelemetryService, TelemetryService>(Reuse.ScopedOrSingleton);
-            _container.Register<IAuthenticationProvider, AuthenticationProvider>();
-            _container.Register<IDownloadFileService, DownloadFileService>();
-            _container.Register<IUIVisualizerService, UIVisualizerService>(Reuse.ScopedOrSingleton);
-            _container.Register<INavigationService, NavigationService>(Reuse.ScopedOrSingleton);
-            _container.Register<IWindowService, WindowService>();
-            _container.Register<IInfoService, InfoService>();
-            _container.Register<IConverterService, ConverterService>();
-            _container.Register<IUpdateService, UpdateService>(Reuse.ScopedOrSingleton);
+            Logger = ServiceProvider.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
 
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             //ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(1024, 768);
 
-            _logger.LogInformation(Gratification.Gratify());
-            _logger.LogInformation("Starting application");
+            Logger.LogInformation("Starting application");
 
-            _logger.LogInformation("Allow 404 errors in Flurl");
+            Logger.LogInformation("Allow 404 errors in Flurl");
             FlurlHttp.Configure(c =>
             {
                 c.Timeout = TimeSpan.FromSeconds(30);
@@ -308,87 +299,58 @@ namespace ISynergy
             assemblies.Add(Assembly.Load("I-Synergy.Framework.Core"));
             assemblies.Add(Assembly.Load("I-Synergy.Framework.Windows"));
 
-            ////Register viewmodels
-            _container.RegisterMany(
-                assemblies,
-                serviceTypeCondition: t =>
-                    t.Name.EndsWith("ViewModel") &&
-                    t.GetInterface(nameof(IViewModel), false) != null,
-                ifAlreadyRegistered: IfAlreadyRegistered.Keep,
-                made: FactoryMethod.ConstructorWithResolvableArguments);
-
-            ////Register views
-            _container.RegisterMany(
-                assemblies,
-                serviceTypeCondition: t =>
-                    t.Name.EndsWith("View") &&
-                    t.GetInterface(nameof(IView), false) != null);
-
-            ////Register windows
-            _container.RegisterMany(
-                assemblies,
-                serviceTypeCondition: t =>
-                    t.Name.EndsWith("Window") &&
-                    t.GetInterface(nameof(IWindow), false) != null);
-
-            Register(assemblies.ToArray());
-            SetContext(
-                _context,
-                _logger,
-                _preview);
-        }
-
-        public virtual void SetContext(
-            IContext context,
-            ILogger logger,
-            bool preview,
-            string previewApiUrl = @"https://app-test.i-synergy.nl/api",
-            string previewAccountUrl = @"https://app-test.i-synergy.nl/account",
-            string previewTokenUrl = @"https://app-test.i-synergy.nl/oauth/token",
-            string previewWebUrl = @"http://test.i-synergy.nl/")
-        {
-            context = ServiceLocator.Current.GetInstance<IContext>();
-
-            if (preview)
-            {
-                context.Environment = ".preview";
-                context.ApiUrl = previewApiUrl;
-                context.AccountUrl = previewAccountUrl;
-                context.TokenUrl = previewTokenUrl;
-                context.WebUrl = previewWebUrl;
-            }
-
-            logger.LogInformation("Update settings");
-            ServiceLocator.Current.GetInstance<ISettingsServiceBase>().CheckForUpgrade();
-
-            string culture = ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Culture;
-
-            if (culture is null) culture = "en";
-
-            CultureInfo.CurrentCulture = new CultureInfo(culture);
-            CultureInfo.CurrentUICulture = new CultureInfo(culture);
-
-            context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
-
-            ((TelemetryClient)ServiceLocator.Current.GetInstance<ITelemetryService>().Client).InstrumentationKey = ServiceLocator.Current.GetInstance<ISettingsServiceBase>().ApplicationInsights_InstrumentationKey;
-            ((TelemetryClient)ServiceLocator.Current.GetInstance<ITelemetryService>().Client).Context.User.UserAgent = ServiceLocator.Current.GetInstance<IInfoService>().ProductName;
-            ((TelemetryClient)ServiceLocator.Current.GetInstance<ITelemetryService>().Client).Context.Session.Id = Guid.NewGuid().ToString();
-            ((TelemetryClient)ServiceLocator.Current.GetInstance<ITelemetryService>().Client).Context.Component.Version = ServiceLocator.Current.GetInstance<IInfoService>().ProductVersion.ToString();
-            ((TelemetryClient)ServiceLocator.Current.GetInstance<ITelemetryService>().Client).Context.Device.OperatingSystem = Environment.OSVersion.ToString();
-
-            CustomXamlResourceLoader.Current = new CustomResourceLoader(ServiceLocator.Current.GetInstance<ILanguageService>());
-        }
-
-        public void Register(Assembly[] assemblies)
-        {
             List<Type> viewTypes = new List<Type>();
+            List<Type> windowTypes = new List<Type>();
             List<Type> viewmodelTypes = new List<Type>();
 
-            foreach (var assembly in assemblies)
+            foreach (Assembly assembly in assemblies)
             {
-                viewTypes.AddRange(assembly.GetTypes().Where(q => q.Name.EndsWith(Constants.View) && q.GetInterface(nameof(IView), false) != null).ToList());
-                viewmodelTypes.AddRange(assembly.GetTypes().Where(q => q.Name.EndsWith(Constants.ViewModel) && q.GetInterface(nameof(IViewModel), false) != null).ToList());
+                viewmodelTypes.AddRange(assembly.GetTypes()
+                    .Where(q =>
+                        q.GetInterface(nameof(IViewModel), false) != null &&
+                        q.Name.EndsWith(Constants.ViewModel) &&
+                        q.Name != Constants.ViewModel &&
+                        !q.IsAbstract &&
+                        !q.IsInterface)
+                    .ToList());
+
+                viewTypes.AddRange(assembly.GetTypes()
+                    .Where(q =>
+                        q.GetInterface(nameof(IView), false) != null && (
+                        q.Name.EndsWith(Constants.View) ||
+                        q.Name.EndsWith(Constants.Page)) &&
+                        q.Name != Constants.View &&
+                        q.Name != Constants.Page &&
+                        !q.IsAbstract &&
+                        !q.IsInterface)
+                    .ToList());
+
+                windowTypes.AddRange(assembly.GetTypes()
+                    .Where(q =>
+                        q.GetInterface(nameof(IWindow), false) != null &&
+                        q.Name.EndsWith(Constants.Window) &&
+                        q.Name != Constants.Window &&
+                        !q.IsAbstract &&
+                        !q.IsInterface)
+                    .ToList());
             }
+
+            foreach (var item in viewmodelTypes.Distinct())
+            {
+                ServiceCollection.AddSingleton(item);
+            }
+
+            foreach (var item in viewTypes.Distinct())
+            {
+                ServiceCollection.AddSingleton(item);
+            }
+
+            foreach (var item in windowTypes.Distinct())
+            {
+                ServiceCollection.AddSingleton(item);
+            }
+
+            ServiceProvider = ServiceCollection.BuildServiceProvider();
 
             foreach (Type view in viewTypes)
             {
@@ -396,9 +358,57 @@ namespace ISynergy
 
                 if (viewmodel != null)
                 {
-                    ServiceLocator.Current.GetInstance<INavigationService>().Configure(viewmodel.FullName, view);
+                    ServiceProvider.GetService<INavigationService>().Configure(viewmodel.FullName, view);
                 }
             }
+
+            SetContext();
+        }
+
+        public virtual void SetContext(
+            string previewApiUrl = @"https://app-test.i-synergy.nl/api",
+            string previewAccountUrl = @"https://app-test.i-synergy.nl/account",
+            string previewTokenUrl = @"https://app-test.i-synergy.nl/oauth/token",
+            string previewWebUrl = @"http://test.i-synergy.nl/")
+        {
+            Context = ServiceProvider.GetService<IContext>();
+
+            if (_preview)
+            {
+                Context.Environment = ".preview";
+                Context.ApiUrl = previewApiUrl;
+                Context.AccountUrl = previewAccountUrl;
+                Context.TokenUrl = previewTokenUrl;
+                Context.WebUrl = previewWebUrl;
+            }
+
+            try
+            {
+                Logger.LogInformation("Update settings");
+                ServiceProvider.GetService<ISettingsServiceBase>().CheckForUpgrade();
+            }
+            catch (Exception ex)
+            {
+                // if update is not available, application should still continue.
+                Logger.LogError(ex.Message, ex);
+            }
+
+            string culture = ServiceProvider.GetService<ISettingsServiceBase>().Application_Culture;
+
+            if (culture is null) culture = "en";
+
+            CultureInfo.CurrentCulture = new CultureInfo(culture);
+            CultureInfo.CurrentUICulture = new CultureInfo(culture);
+
+            Context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+
+            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).InstrumentationKey = ServiceProvider.GetService<ISettingsServiceBase>().ApplicationInsights_InstrumentationKey;
+            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).Context.User.UserAgent = ServiceProvider.GetService<IInfoService>().ProductName;
+            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).Context.Session.Id = Guid.NewGuid().ToString();
+            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).Context.Component.Version = ServiceProvider.GetService<IInfoService>().ProductVersion.ToString();
+            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+
+            CustomXamlResourceLoader.Current = new CustomResourceLoader(ServiceProvider.GetService<ILanguageService>());
         }
 
         public virtual async Task HandleException(Exception ex)
@@ -407,52 +417,52 @@ namespace ISynergy
 
             if (!(connections != null && connections.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess))
             {
-                await ServiceLocator.Current.GetInstance<IDialogService>().ShowInformationAsync(
-                    ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_DEFAULT_INTERNET"));
+                await ServiceProvider.GetService<IDialogService>().ShowInformationAsync(
+                    ServiceProvider.GetService<ILanguageService>().GetString("EX_DEFAULT_INTERNET"));
             }
             else
             {
                 if (ex is NotImplementedException)
                 {
-                    await ServiceLocator.Current.GetInstance<IDialogService>().ShowInformationAsync(
-                        ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_FUTURE_MODULE"));
+                    await ServiceProvider.GetService<IDialogService>().ShowInformationAsync(
+                        ServiceProvider.GetService<ILanguageService>().GetString("EX_FUTURE_MODULE"));
                 }
                 else if (ex is UnauthorizedAccessException)
                 {
-                    await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(ex.Message);
+                    await ServiceProvider.GetService<IDialogService>().ShowErrorAsync(ex.Message);
                 }
                 else if (ex is IOException)
                 {
                     if (ex.Message.Contains("The process cannot access the file") && ex.Message.Contains("because it is being used by another process"))
                     {
-                        await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_FILEINUSE"));
+                        await ServiceProvider.GetService<IDialogService>().ShowErrorAsync(
+                            ServiceProvider.GetService<ILanguageService>().GetString("EX_FILEINUSE"));
                     }
                     else
                     {
-                        await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
+                        await ServiceProvider.GetService<IDialogService>().ShowErrorAsync(
+                            ServiceProvider.GetService<ILanguageService>().GetString("EX_DEFAULT"));
                     }
                 }
                 else if (ex is ArgumentException)
                 {
-                    await ServiceLocator.Current.GetInstance<IDialogService>().ShowWarningAsync(
+                    await ServiceProvider.GetService<IDialogService>().ShowWarningAsync(
                         string.Format(
-                            ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_ARGUMENTNULL"),
+                            ServiceProvider.GetService<ILanguageService>().GetString("EX_ARGUMENTNULL"),
                             ((ArgumentException)ex).ParamName)
                         );
                 }
                 else
                 {
-                    await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                        ServiceLocator.Current.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
+                    await ServiceProvider.GetService<IDialogService>().ShowErrorAsync(
+                        ServiceProvider.GetService<ILanguageService>().GetString("EX_DEFAULT"));
                 }
             }
 
             try
             {
-                ServiceLocator.Current.GetInstance<ITelemetryService>().TrackException(ex);
-                ServiceLocator.Current.GetInstance<ITelemetryService>().Flush();
+                ServiceProvider.GetService<ITelemetryService>().TrackException(ex);
+                ServiceProvider.GetService<ITelemetryService>().Flush();
             }
             catch { }
             finally

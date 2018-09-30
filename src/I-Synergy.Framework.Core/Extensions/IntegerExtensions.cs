@@ -1,10 +1,7 @@
 ﻿using ISynergy.Encryption;
 using ISynergy.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ISynergy.Extensions
+namespace System
 {
     public static class IntegerExtensions
     {
@@ -19,6 +16,42 @@ namespace ISynergy.Extensions
             string EncryptedGuid = ByteUtility.WriteBytesToString(strGuid, encryptedarray, 9);
             Guid.TryParse(EncryptedGuid, out Guid outg);
             return outg;
+        }
+
+        public static string GenerateAlphaNumericKey(this int self)
+        {
+            string vRawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
+            System.Text.StringBuilder vResult = new System.Text.StringBuilder();
+
+            for (int i = 1; i <= self; i++)
+            {
+                vResult.Append(vRawChars.Trim().Substring(
+                    Convert.ToInt32(
+                            new Random().Next(int.MaxValue) * (vRawChars.Length - 1)
+                            )
+                        , 1)
+                    );
+            }
+
+            return vResult.ToString();
+        }
+
+        public static string GenerateNumericKey(this int self)
+        {
+            string vRawChars = "0123456789";
+            System.Text.StringBuilder vResult = new System.Text.StringBuilder();
+
+            for (int i = 1; i <= self; i++)
+            {
+                vResult.Append(vRawChars.Trim().Substring(
+                    Convert.ToInt32(
+                        new Random().Next(int.MaxValue) * (vRawChars.Length - 1)
+                        )
+                    , 1)
+                );
+            }
+
+            return vResult.ToString();
         }
     }
 }

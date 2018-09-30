@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace ISynergy.Extensions
+namespace System.Collections
 {
     /// <summary>
     /// Extensions for the <see cref="IList"/> and <see cref="IList{T}"/> classes.

@@ -3,7 +3,6 @@ using ISynergy.Events;
 using ISynergy.ViewModels.Base;
 using System;
 using System.Threading.Tasks;
-using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;

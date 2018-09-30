@@ -1,4 +1,4 @@
-﻿using ISynergy.Common;
+﻿using System;
 using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.Storage;

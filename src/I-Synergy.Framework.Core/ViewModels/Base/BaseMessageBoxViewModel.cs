@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using ISynergy.Enumerations;
 using ISynergy.Events;
-using ISynergy.Library;
 using ISynergy.Services;
 using ISynergy.ViewModels.Base;
 using System.Threading.Tasks;
@@ -106,11 +106,15 @@ namespace ISynergy.ViewModels.Library
         public RelayCommand Yes_Command { get; set; }
         public RelayCommand No_Command { get; set; }
 
-        public BaseMessageBoxViewModel(IContext context, IBusyService busy, string message, string title,
+        public BaseMessageBoxViewModel(
+            IContext context,
+            IBaseService baseService, 
+            string message, 
+            string title,
             MessageBoxButton button = MessageBoxButton.OK,
             MessageBoxImage image = MessageBoxImage.Information,
             MessageBoxResult result = MessageBoxResult.OK)
-        : base(context, busy)
+            : base(context, baseService)
         {
             Title = title;
             Message = message;

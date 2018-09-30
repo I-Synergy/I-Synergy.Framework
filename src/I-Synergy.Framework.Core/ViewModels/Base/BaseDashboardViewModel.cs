@@ -1,13 +1,9 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Base
@@ -16,8 +12,10 @@ namespace ISynergy.ViewModels.Base
     {
         public RelayCommand<string> Tile_Command { get; set; }
 
-        public BaseDashboardViewModel(IContext context, IBusyService busy)
-            : base(context, busy)
+        public BaseDashboardViewModel(
+            IContext context,
+            IBaseService baseService)
+            : base(context, baseService)
         {
             Tile_Command = new RelayCommand<string>((e) => ExecuteTileCommand(e), CanExecuteTileCommand());
 
@@ -51,8 +49,8 @@ namespace ISynergy.ViewModels.Base
         {
             if (!e.Handled && !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
             {
-                if (ServiceLocator.Current.GetInstance<INavigationService>().CanGoBack)
-                    ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
+                if (BaseService.Navigation.CanGoBack)
+                    BaseService.Navigation.GoBack();
 
                 e.Handled = true;
             }
@@ -66,8 +64,8 @@ namespace ISynergy.ViewModels.Base
             {
                 IsCancelled = true;
 
-                if (ServiceLocator.Current.GetInstance<INavigationService>().CanGoBack)
-                    ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
+                if (BaseService.Navigation.CanGoBack)
+                    BaseService.Navigation.GoBack();
 
                 e.Handled = true;
             }

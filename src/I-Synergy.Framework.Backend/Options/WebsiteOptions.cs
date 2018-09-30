@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Options
 {
-    public class Websites
+    public class WebsiteOptions
     {
         public string HomePage { get; set; }
     }

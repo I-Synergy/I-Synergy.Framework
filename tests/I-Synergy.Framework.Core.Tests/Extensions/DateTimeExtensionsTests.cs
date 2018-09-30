@@ -1,5 +1,4 @@
-﻿using ISynergy.Library;
-using System;
+﻿using System;
 using Xunit;
 
 namespace ISynergy.Extensions.Tests

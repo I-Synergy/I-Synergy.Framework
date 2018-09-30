@@ -1,13 +1,197 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ISynergy.Extensions
+namespace System
 {
     public static class StringExtensions
     {
+        /// <summary>
+        /// Convert a hex string to a .NET Color object.
+        /// </summary>
+        /// <param name="self">a hex string: "FFFFFF", "#000000"</param>
+        public static Color HexStringToColor(this string self)
+        {
+            string hc = self.ExtractHexDigits();
+
+            if (hc.Length != 6)
+            {
+                // you can choose whether to throw an exception
+                //throw new ArgumentException("hexColor is not exactly 6 digits.");
+                return Color.Empty;
+            }
+
+            string r = hc.Substring(0, 2);
+            string g = hc.Substring(2, 2);
+            string b = hc.Substring(4, 2);
+
+            Color color = Color.Empty;
+
+            try
+            {
+                int ri
+                   = Int32.Parse(r, System.Globalization.NumberStyles.HexNumber);
+                int gi
+                   = Int32.Parse(g, System.Globalization.NumberStyles.HexNumber);
+                int bi
+                   = Int32.Parse(b, System.Globalization.NumberStyles.HexNumber);
+
+                color = Color.FromArgb(ri, gi, bi);
+            }
+            catch
+            {
+                // you can choose whether to throw an exception
+                //throw new ArgumentException("Conversion failed.");
+                return Color.Empty;
+            }
+
+            return color;
+        }
+
+        public static int CovertString2Numeric(this string self)
+        {
+            List<string> iChars = new List<string>();
+            string strResult = string.Empty;
+
+            foreach (string iChar in iChars.EnsureNotNull())
+            {
+                if (IsInteger(iChar) == true)
+                {
+                    strResult = strResult + iChar;
+                }
+            }
+
+            return Convert.ToInt32(strResult);
+        }
+
+        public static bool IsFloat(this string self)
+        {
+            try
+            {
+                return float.TryParse(self, out float output);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool IsDecimal(this string self)
+        {
+            try
+            {
+                return decimal.TryParse(self, out decimal output);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool IsInteger(this string self)
+        {
+            try
+            {
+                return int.TryParse(self, out int output);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static string IncreaseString2Long(this string self, long summand)
+        {
+            string numberString = string.Empty;
+            int codePos = self.Length;
+
+            // Go back from end of id to the begin while a char is a number
+            for (int i = self.Length - 1; i >= 0; i--)
+            {
+                if (Char.IsDigit(self.Substring(i, 1).ToCharArray()[0]))
+                {
+                    // if found char isdigit set the position one element back
+                    codePos--;
+                }
+                else
+                {
+                    // if we found a char we can break up
+                    break;
+                }
+            }
+
+            if (codePos < self.Length)
+            {
+                // the for-loop has found at least one numeric char at the end
+                numberString = self.Substring(codePos, self.Length - codePos);
+            }
+
+            if (numberString.Length == 0)
+            {
+                // no number was found at the and so we simply add the summand as string
+                return self + summand;
+            }
+            else
+            {
+                long num = long.Parse(numberString) + summand;
+                return self.Substring(0, codePos) + num.ToString();
+            }
+        }
+
+        public static string WordWrap(this string self, int width)
+        {
+            if (self.Length <= width)
+                return self;
+            // dont need to do anything
+
+            string sResult = self;
+            string sChar = null;
+            // temp holder for current string char
+            int iEn = 0;
+            int iLineNO = width;
+
+            while (sResult.Length >= iLineNO)
+            {
+                // work backwards from the max len to 1 looking for a space
+                for (iEn = iLineNO; iEn >= 1; iEn += -1)
+                {
+                    sChar = sResult.Substring(iEn, 1);
+                    // found a space
+                    if (sChar == " ")
+                    {
+                        sResult = sResult.Remove(iEn, 1);
+                        // Remove the space
+                        sResult = sResult.Insert(iEn, System.Environment.NewLine);
+                        // insert a line feed here,
+                        iLineNO += width;
+                        // increment
+                        break;
+                    }
+                }
+            }
+
+            return sResult;
+        }
+
+        /// <summary>
+        /// Extract only the hex digits from a string.
+        /// </summary>
+        public static string ExtractHexDigits(this string self)
+        {
+            // remove any characters that are not digits (like #)
+            Regex isHexDigit = new Regex("[abcdefABCDEF\\d]+", RegexOptions.Compiled);
+            string newnum = "";
+
+            foreach (char c in self.EnsureNotNull())
+                if (isHexDigit.IsMatch(c.ToString())) newnum += c.ToString();
+
+            return newnum;
+        }
+
         //identical to Ruby's chop
         public static string Chop(this string self)
         {

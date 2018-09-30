@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace ISynergy.Filters
 {

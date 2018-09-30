@@ -1,7 +1,7 @@
 ﻿using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 
-namespace ISynergy
+namespace ISynergy.Dialogs
 {
     /// <summary>
     /// Interface describing a content dialog.

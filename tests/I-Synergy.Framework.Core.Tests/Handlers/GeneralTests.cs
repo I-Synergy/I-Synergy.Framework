@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Common.Handlers.Tests
+﻿namespace ISynergy.Handlers.Tests
 {
     public class GeneralTests
     {

@@ -1,5 +1,4 @@
-﻿using ISynergy.Extensions;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using GalaSoft.MvvmLight;
 using System;
 using System.Collections;

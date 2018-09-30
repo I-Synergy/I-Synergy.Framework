@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Library
+﻿namespace ISynergy.Enumerations
 {
     public enum SoftwareEnvironments
     {

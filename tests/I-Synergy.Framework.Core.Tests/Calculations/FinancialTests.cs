@@ -1,8 +1,7 @@
-﻿using ISynergy.Library;
-using System;
+﻿using System;
 using Xunit;
 
-namespace ISynergy.Common.Calculations.Tests
+namespace ISynergy.Calculations.Tests
 {
     public class FinancialTests
     {

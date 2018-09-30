@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
-using ISynergy.Extensions;
+using System.Collections;
 
 namespace ISynergy.Filters
 {

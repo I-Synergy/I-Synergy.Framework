@@ -1,7 +1,6 @@
-﻿using ISynergy.Library;
-using Xunit;
+﻿using Xunit;
 
-namespace ISynergy.Common.Calculations.Tests
+namespace ISynergy.Calculations.Tests
 {
     public class MathematicTests
     {

@@ -1,7 +1,4 @@
-﻿using ISynergy.Extensions;
-using ISynergy.Helpers;
-using System;
-using System.Threading.Tasks;
+﻿using System;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.Storage;

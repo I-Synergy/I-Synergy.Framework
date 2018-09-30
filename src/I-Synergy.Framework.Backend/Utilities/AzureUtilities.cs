@@ -2,20 +2,18 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Utilities
+namespace ISynergy.Utilities
 {
     public class AzureUtilities
     {
         //this is an optional property to hold the secret after it is retrieved
         public string EncryptSecret { get; set; }
 
-        private readonly IOptions<AzureKeyVault> _vaultSettings;
+        private readonly IOptions<AzureKeyVaultOptions> _vaultSettings;
 
-        public AzureUtilities(IOptions<AzureKeyVault> vaultSettings)
+        public AzureUtilities(IOptions<AzureKeyVaultOptions> vaultSettings)
         {
             _vaultSettings = vaultSettings ?? throw new ArgumentNullException(nameof(vaultSettings));
         }

@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace ISynergy.Dialogs
+namespace ISynergy.Locators
 {
     /// <summary>
     /// Dialog type locator responsible for locating dialog types for specified view models based

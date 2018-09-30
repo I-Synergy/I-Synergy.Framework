@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ISynergy;
 
-namespace ISynergy.Extensions
+namespace System
 {
     public static class DateTimeOffsetExtensions
     {

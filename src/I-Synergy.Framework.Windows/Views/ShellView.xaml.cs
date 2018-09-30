@@ -1,13 +1,8 @@
-﻿using CommonServiceLocator;
-using System;
-using ISynergy.Models;
-using ISynergy.Services;
+﻿using ISynergy.Models;
 using ISynergy.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml.Input;
 using Windows.System;
 
@@ -20,8 +15,7 @@ namespace ISynergy.Views
     /// </summary>
     public sealed partial class ShellView : IView
     {
-        private IShellViewModel ViewModel => DataContext as IShellViewModel;
-        private IBusyService BusyService => ServiceLocator.Current.GetInstance<IBusyService>();
+        public IShellViewModel ViewModel => DataContext as IShellViewModel;
 
         public ShellView()
         {
@@ -39,6 +33,7 @@ namespace ISynergy.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
             await ViewModel.InitializeAsync(ContentRootFrame);
         }
 

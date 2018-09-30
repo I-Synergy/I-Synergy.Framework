@@ -1,8 +1,6 @@
-﻿using CommonServiceLocator;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Services.Store;
@@ -14,6 +12,17 @@ namespace ISynergy.Services
     {
         private StoreContext context = null;
         private IReadOnlyList<StorePackageUpdate> updates = null;
+
+        public IDialogService DialogService { get; }
+        public ILanguageService LanguageService { get; }
+
+        public UpdateService(
+            ILanguageService languageService,
+            IDialogService dialogService)
+        {
+            LanguageService = languageService;
+            DialogService = dialogService;
+        }
 
         public async Task<bool> CheckForUpdateAsync()
         {
@@ -125,8 +134,8 @@ namespace ISynergy.Services
         // to take, such as notifying the user and disabling features in your app.
         private Task HandleMandatoryPackageErrorAsync()
         {
-            return ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(
-                        ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_MandatoryUpdateFailed"));
+            return DialogService.ShowErrorAsync(
+                        LanguageService.GetString("Warning_MandatoryUpdateFailed"));
         }
     }
 }

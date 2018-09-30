@@ -1,4 +1,4 @@
-﻿using ISynergy.Common;
+﻿using System;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;

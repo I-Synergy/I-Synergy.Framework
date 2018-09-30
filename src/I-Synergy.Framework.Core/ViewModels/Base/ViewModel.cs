@@ -1,8 +1,6 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Models.Base;
-using ISynergy.Extensions;
 using ISynergy.Services;
 using System;
 using System.Collections.Generic;
@@ -12,6 +10,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ISynergy.Events;
+using System.Collections;
 
 namespace ISynergy.ViewModels.Base
 {
@@ -19,8 +18,8 @@ namespace ISynergy.ViewModels.Base
     {
         public delegate Task Submit_Action(object e);
 
-        public IContext Context { get; protected set; }
-        public IBusyService Busy { get; protected set; }
+        public IContext Context { get; }
+        public IBaseService BaseService { get; }
 
         public RelayCommand Close_Command { get; protected set; }
 
@@ -74,18 +73,18 @@ namespace ISynergy.ViewModels.Base
         /// </summary>
         public bool Mode_IsAdvanced
         {
-            get { return ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Advanced; }
+            get { return BaseService.ApplicationSettings.Application_Advanced; }
             set
             {
-                ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Advanced = value;
+                BaseService.ApplicationSettings.Application_Advanced = value;
 
                 if (value)
                 {
-                    Mode_ToolTip = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Advanced");
+                    Mode_ToolTip = BaseService.Language.GetString("Generic_Advanced");
                 }
                 else
                 {
-                    Mode_ToolTip = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Basic");
+                    Mode_ToolTip = BaseService.Language.GetString("Generic_Basic");
                 }
             }
         }
@@ -103,11 +102,11 @@ namespace ISynergy.ViewModels.Base
                 {
                     if (Mode_IsAdvanced)
                     {
-                        result = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Advanced");
+                        result = BaseService.Language.GetString("Generic_Advanced");
                     }
                     else
                     {
-                        result = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Basic");
+                        result = BaseService.Language.GetString("Generic_Basic");
                     }
                 }
 
@@ -115,19 +114,21 @@ namespace ISynergy.ViewModels.Base
             }
             set { SetValue(value); }
         }
-
-        public ViewModel(IContext context, IBusyService busy)
+        
+        public ViewModel(
+            IContext context, 
+            IBaseService baseService)
             : base()
         {
             base.PropertyChanged += OnPropertyChanged;
             base.ErrorsChanged += (s, e) => Errors = FlattenErrors();
 
             Context = context;
-            Busy = busy;
+            BaseService = baseService;
 
             TrackView();
 
-            Messenger.Default.Register<ExceptionHandledMessage>(this, i => Busy.EndBusyAsync());
+            Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.Busy.EndBusyAsync());
 
             Culture = Thread.CurrentThread.CurrentCulture;
             Culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
@@ -140,7 +141,7 @@ namespace ISynergy.ViewModels.Base
             Close_Command = new RelayCommand(() => Messenger.Default.Send(new OnCancellationMessage(this)));
         }
 
-        public virtual void TrackView() => ServiceLocator.Current.GetInstance<ITelemetryService>().TrackPageView(this.GetType().Name.Replace("ViewModel", ""));
+        public virtual void TrackView() => BaseService.Telemetry.TrackPageView(this.GetType().Name.Replace("ViewModel", ""));
 
         protected List<string> FlattenErrors()
         {
@@ -149,7 +150,7 @@ namespace ISynergy.ViewModels.Base
 
             foreach (string propertyName in allErrors.Keys)
             {
-                foreach (var errorString in allErrors[propertyName].EnsureNotNull())
+                foreach (string errorString in allErrors[propertyName].EnsureNotNull())
                 {
                     errors.Add(propertyName + ": " + errorString);
                 }
@@ -167,7 +168,7 @@ namespace ISynergy.ViewModels.Base
 
             if (attributes != null && attributes.Length > 0)
             {
-                description = ServiceLocator.Current.GetInstance<ILanguageService>().GetString(attributes[0].Description);
+                description = BaseService.Language.GetString(attributes[0].Description);
             }
 
             return description;

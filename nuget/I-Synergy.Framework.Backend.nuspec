@@ -11,7 +11,7 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2008-2018</copyright>
     <tags>I-Synergy Backend Framework</tags>
-    <projectUrl>https://www.i-synergy.nl</projectUrl>
+    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy%20Framework</projectUrl>
 
     <dependencies>
       <dependency id="AspNet.Security.OAuth.Introspection" version="2.0.0-rc3-final" />

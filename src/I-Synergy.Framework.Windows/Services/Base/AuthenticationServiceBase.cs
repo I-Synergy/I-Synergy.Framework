@@ -1,6 +1,4 @@
-﻿using CommonServiceLocator;
-using ISynergy.Common;
-using ISynergy.Extensions;
+﻿using ISynergy.Common;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -11,13 +9,24 @@ namespace ISynergy.Services
 {
     public abstract class AuthenticationServiceBase
     {
-        protected IContext Context;
-        protected IBusyService Busy;
+        public IContext Context { get; }
+        public IBusyService Busy { get; }
+        public ILanguageService Language { get; }
+        public ISettingsServiceBase Settings { get; }
+        public ITelemetryService Telemetry { get; }
 
-        public AuthenticationServiceBase(IContext context, IBusyService busy)
+        public AuthenticationServiceBase(
+            IContext context,
+            IBusyService busy,
+            ILanguageService language,
+            ISettingsServiceBase settings,
+            ITelemetryService telemetry)
         {
             Context = context;
             Busy = busy;
+            Language = language;
+            Settings = settings;
+            Telemetry = telemetry;
         }
 
         public abstract Task LogoutAsync();
@@ -30,7 +39,7 @@ namespace ISynergy.Services
 
                 if (Context.CurrentProfile?.Token != null)
                 {
-                    Busy.BusyMessage = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Authentication_Authenticating");
+                    Busy.BusyMessage = Language.GetString("Authentication_Authenticating");
 
                     var securityToken = new JwtSecurityToken(Context.CurrentProfile.Token.id_token);
 
@@ -45,10 +54,10 @@ namespace ISynergy.Services
                     Context.CurrentTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
 
 
-                    ServiceLocator.Current.GetInstance<ISettingsServiceBase>().User_RefreshToken = Context.CurrentProfile.Token.refresh_token;
+                    Settings.User_RefreshToken = Context.CurrentProfile.Token.refresh_token;
 
-                    ServiceLocator.Current.GetInstance<ITelemetryService>().Id = Context.CurrentProfile.UserInfo.Username;
-                    ServiceLocator.Current.GetInstance<ITelemetryService>().Account_Id = Context.CurrentProfile.UserInfo.User_Id.ToString();
+                    Telemetry.Id = Context.CurrentProfile.UserInfo.Username;
+                    Telemetry.Account_Id = Context.CurrentProfile.UserInfo.User_Id.ToString();
 
                     SetPrincipal(Context.CurrentProfile.UserInfo.Username, Context.CurrentProfile.UserInfo.Roles.ToArray());
 
@@ -58,7 +67,7 @@ namespace ISynergy.Services
                     Context.Profiles.Add(Context.CurrentProfile);
 
                     // Algemene data ophalen
-                    Busy.BusyMessage = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Authentication_Retrieve_masterdata");
+                    Busy.BusyMessage = Language.GetString("Authentication_Retrieve_masterdata");
 
                     //loading Masteritems
                     await LoadMasterItemsAsync();
@@ -67,7 +76,7 @@ namespace ISynergy.Services
                     await LoadUserItemsAsync();
 
                     //Loading settings
-                    Busy.BusyMessage = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Authentication_Retrieve_settings");
+                    Busy.BusyMessage = Language.GetString("Authentication_Retrieve_settings");
 
                     await LoadSettingsAsync();
                     await RefreshSettingsAsync();
@@ -91,7 +100,7 @@ namespace ISynergy.Services
 
         public abstract Task<bool> AuthenticationChangedAsync();
 
-        public Task LoadSettingsAsync() => ServiceLocator.Current.GetInstance<ISettingsServiceBase>().LoadSettings();
+        public Task LoadSettingsAsync() => Settings.LoadSettings();
 
         public abstract Task RefreshSettingsAsync();
 

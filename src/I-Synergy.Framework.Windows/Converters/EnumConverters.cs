@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using ISynergy.Extensions;
+﻿using ISynergy.Extensions;
 using ISynergy.Services;
 using System;
 using System.Collections;
@@ -8,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Markup;
 
 namespace ISynergy.Converters
 {
@@ -43,8 +43,15 @@ namespace ISynergy.Converters
         }
     }
 
-    public class EnumToArrayConverter : IValueConverter
+    public class EnumToArrayConverter : MarkupExtension, IValueConverter
     {
+        public ILanguageService LanguageService { get; }
+
+        public EnumToArrayConverter(ILanguageService languageService)
+        {
+            LanguageService = languageService;
+        }
+
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
             ArrayList list = new ArrayList();
@@ -75,7 +82,7 @@ namespace ISynergy.Converters
             DisplayAttribute[] attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
-                description = ServiceLocator.Current.GetInstance<ILanguageService>().GetString(attributes[0].Description);
+                description = LanguageService.GetString(attributes[0].Description);
 
             return description;
         }
@@ -118,8 +125,15 @@ namespace ISynergy.Converters
         }
     }
 
-    public class EnumToStringConverter : IValueConverter
+    public class EnumToStringConverter : MarkupExtension, IValueConverter
     {
+        public ILanguageService LanguageService { get; }
+
+        public EnumToStringConverter(ILanguageService languageService)
+        {
+            LanguageService = languageService;
+        }
+
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
             return GetDescription(Enum.Parse(value.GetType(), value.ToString()) as Enum);
@@ -143,7 +157,7 @@ namespace ISynergy.Converters
 
             if (attributes != null && attributes.Length > 0)
             {
-                description = ServiceLocator.Current.GetInstance<ILanguageService>().GetString(attributes[0].Description);
+                description = LanguageService.GetString(attributes[0].Description);
             }
 
             return description;

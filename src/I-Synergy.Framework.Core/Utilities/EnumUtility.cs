@@ -1,6 +1,6 @@
 ﻿using ISynergy.Exceptions;
-using ISynergy.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;

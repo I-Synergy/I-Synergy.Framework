@@ -1,5 +1,4 @@
-﻿using ISynergy.Common;
-using ISynergy.Helpers;
+﻿using ISynergy.Helpers;
 using System;
 using Windows.UI;
 using Windows.UI.Xaml.Data;

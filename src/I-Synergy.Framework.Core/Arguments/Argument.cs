@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace ISynergy
+namespace System
 {
     public static class Argument
     {

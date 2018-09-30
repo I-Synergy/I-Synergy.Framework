@@ -1,8 +1,4 @@
-﻿using CommonServiceLocator;
-using ISynergy.Services;
-using ISynergy.ViewModels.Authentication;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using ISynergy.ViewModels.Authentication;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;

@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 
-namespace ISynergy.Controllers
+namespace ISynergy.Controllers.Base
 {
     [Authorize]
     [Route("api/[controller]")]

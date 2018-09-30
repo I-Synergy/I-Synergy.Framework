@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using System.Threading;
-using Windows.UI.Xaml;
+﻿using System.Threading;
 using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Controls

@@ -1,9 +1,4 @@
-﻿// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
-using CommonServiceLocator;
-using ISynergy.Services;
-using ISynergy.ViewModels.Authentication;
-using Windows.UI.Xaml;
+﻿using ISynergy.ViewModels.Authentication;
 using Windows.UI.Xaml.Navigation;
 
 namespace ISynergy.Views.Authentication
@@ -13,7 +8,7 @@ namespace ISynergy.Views.Authentication
     /// </summary>
     public sealed partial class LoginView : ILoginView
     {
-        private LoginViewModel ViewModel => DataContext as LoginViewModel;
+        private ILoginViewModel ViewModel => DataContext as ILoginViewModel;
 
         public LoginView()
         {
@@ -22,8 +17,7 @@ namespace ISynergy.Views.Authentication
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            await ServiceLocator.Current.GetInstance<INavigationService>().CleanBackStackAsync();
-
+            await ViewModel.BaseService.Navigation.CleanBackStackAsync();
             await ViewModel.CheckAutoLogin();
         }
     }

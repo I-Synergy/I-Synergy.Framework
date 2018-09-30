@@ -3,8 +3,6 @@ using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ISynergy.Initializers
 {

@@ -1,4 +1,4 @@
-﻿using ISynergy.Library;
+﻿using ISynergy.Enumerations;
 using ISynergy.Services;
 using System;
 using Windows.UI.Xaml;
@@ -45,11 +45,15 @@ namespace ISynergy.ViewModels.Library
             set { SetValue(value); }
         }
 
-        public MessageBoxViewModel(IContext context, IBusyService busy, string message, string title,
+        public MessageBoxViewModel(
+            IContext context,
+            IBaseService synergyService,
+            string message, 
+            string title,
             MessageBoxButton button = MessageBoxButton.OK,
             MessageBoxImage image = MessageBoxImage.Information,
             MessageBoxResult result = MessageBoxResult.OK)
-        : base(context, busy, message, title, button, image, result)
+        : base(context, synergyService, message, title, button, image, result)
         {
             SetButtonVisibility(button);
             SetImageSource(image);

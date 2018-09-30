@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ISynergy.Interfaces
+namespace ISynergy
 {
     /// <summary>
     /// Marks a type as requiring asynchronous initialization and provides the result of that initialization.

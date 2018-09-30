@@ -1,10 +1,6 @@
 ﻿using ISynergy.Encryption;
-using ISynergy.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ISynergy.Extensions
+namespace System
 {
     public static class GuidExtensions
     {

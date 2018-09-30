@@ -1,6 +1,4 @@
 ﻿using ISynergy.Models.Base;
-using ISynergy.ViewModels.Base;
-using System;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;

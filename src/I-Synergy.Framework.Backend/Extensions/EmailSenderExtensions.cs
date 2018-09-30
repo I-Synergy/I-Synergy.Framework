@@ -1,4 +1,4 @@
-using ISynergy.Interfaces;
+using ISynergy.Senders;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 

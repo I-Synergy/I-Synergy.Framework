@@ -2,6 +2,14 @@
 {
     public class Constants
     {
+        public const int DefaultPageSize = 250;
+        public const int TopDimension = 5;
+
+        public const string Authorization = "Authorization";
+        public const string AuthenticationError = "authentication_error";
+        public const string InvalidGrantError = "invalid_grant";
+        public const string UnauthorizedClientError = "unauthorized_client";
+
         public const string SecuritySchemeKey = "OAuth2";
 
         // Claims
@@ -22,6 +30,7 @@
 
         public const string View = "View";
         public const string Page = "Page";
+        public const string Window = "Window";
         public const string ViewModel = "ViewModel";
 
         public const string Documents = "documents";
@@ -31,7 +40,7 @@
         public const string Relations = "relations";
     }
 
-    public class Exception_Constants
+    public class ExceptionConstants
     {
         public const string Error_547 = "The DELETE statement conflicted with the REFERENCE constraint";
     }

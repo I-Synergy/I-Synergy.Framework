@@ -1,12 +1,5 @@
-﻿using ISynergy.Core.Classes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
 
 namespace ISynergy.Services
 {

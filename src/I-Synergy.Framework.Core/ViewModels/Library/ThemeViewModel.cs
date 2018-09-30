@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
 using ISynergy.Services;
@@ -14,15 +13,17 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Colors");
+                return BaseService.Language.GetString("Generic_Colors");
             }
         }
 
         public RelayCommand<string> Color_Command { get; set; }
         public RelayCommand<byte[]> Background_Command { get; set; }
 
-        public ThemeViewModel(IContext context, IBusyService busy)
-        : base(context, busy)
+        public ThemeViewModel(
+            IContext context,
+            IBaseService baseService)
+            : base(context, baseService)
         {
             Color_Command = new RelayCommand<string>(async (e) => await SetColorAsync(e));
             Background_Command = new RelayCommand<byte[]>(async (e) => await SetWallpaperAsync(e));
@@ -30,14 +31,14 @@ namespace ISynergy.ViewModels.Library
 
         private Task SetColorAsync(string color)
         {
-            ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Color = color;
+            BaseService.ApplicationSettings.Application_Color = color;
             Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             return Task.CompletedTask;
         }
 
         private Task SetWallpaperAsync(byte[] wallpaper)
         {
-            ServiceLocator.Current.GetInstance<ISettingsServiceBase>().Application_Wallpaper = wallpaper;
+            BaseService.ApplicationSettings.Application_Wallpaper = wallpaper;
             Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             return Task.CompletedTask;
         }

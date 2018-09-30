@@ -1,5 +1,5 @@
-﻿using ISynergy.Interfaces;
-using ISynergy.Options;
+﻿using ISynergy.Options;
+using ISynergy.Senders;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 

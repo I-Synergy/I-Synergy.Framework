@@ -1,5 +1,4 @@
-﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using ISynergy.Models.Base;
 using ISynergy.Services;
 using System.Threading.Tasks;
@@ -38,8 +37,10 @@ namespace ISynergy.ViewModels.Base
 
         public RelayCommand<TEntity> Submit_Command { get; private set; }
 
-        public ViewModelBlade(IContext context, IBusyService busy)
-            : base(context, busy)
+        public ViewModelBlade(
+            IContext context,
+            IBaseService baseService)
+            : base(context, baseService)
         {
             SelectedItem = new TEntity();
             IsNew = true;
@@ -58,7 +59,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await ServiceLocator.Current.GetInstance<IDialogService>().ShowErrorAsync(ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Warning_Validation_Failed"));
+                    await BaseService.Dialog.ShowErrorAsync(BaseService.Language.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }

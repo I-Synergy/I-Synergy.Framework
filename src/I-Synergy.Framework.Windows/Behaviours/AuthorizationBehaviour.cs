@@ -1,10 +1,5 @@
-﻿using CommonServiceLocator;
-using Microsoft.Toolkit.Uwp.UI.Animations.Behaviors;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations.Behaviors;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -31,19 +26,19 @@ namespace ISynergy.Behaviours
         /// <summary>
         /// The authentication provider.
         /// </summary>
-        private static IAuthenticationProvider _authenticationProvider;
+        private static IAuthenticationProvider AuthenticationProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Authentication"/> class.
         /// </summary>
-        public Authorization()
+        public Authorization(IAuthenticationProvider authenticationProvider)
         {
             if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
-                if (_authenticationProvider is null)
-                    _authenticationProvider = ServiceLocator.Current.GetInstance<IAuthenticationProvider>();
+                if (AuthenticationProvider is null)
+                    AuthenticationProvider = authenticationProvider;
 
-                if (_authenticationProvider is null)
+                if (AuthenticationProvider is null)
                     throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");
             }
         }
@@ -87,7 +82,7 @@ namespace ISynergy.Behaviours
         /// <exception cref="InvalidOperationException">The <see cref="Action"/> is set to <see cref="AuthenticationAction.Disable"/> and the <see cref="Behavior{T}.AssociatedObject"/> is not a <see cref="Control"/>.</exception>
         protected override void OnAssociatedObjectLoaded()
         {
-            if (!_authenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
+            if (!AuthenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
             {
                 switch (Action)
                 {

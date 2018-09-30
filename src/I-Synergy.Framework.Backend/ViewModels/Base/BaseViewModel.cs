@@ -1,42 +1,35 @@
-﻿using ISynergy.Services;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Base
 {
     public abstract partial class BaseViewModel : PageModel, IBaseViewModel
     {
-        public CultureInfo Culture { get; protected set; }
-
-        public IFactoryService _factory { get; protected set; }
-        public IMemoryCache _cache { get; protected set; }
-        public IHostingEnvironment _environment { get; protected set; }
+        public CultureInfo Culture { get; }
+        public IMemoryCache Cache { get; }
+        public IHostingEnvironment Environment { get; }
         
-        public virtual string Title { get; set; }
-        public bool IsInitialized { get; set; }
+        public string Title { get; }
+        public bool IsInitialized { get; private set; }
 
         #region Constructors
-        public BaseViewModel(IFactoryService factory, IHostingEnvironment environment, IMemoryCache cache)
+        public BaseViewModel(IHostingEnvironment environment, IMemoryCache cache, string currencySymbol, string title)
             : base()
         {
-            _factory = factory;
-            _environment = environment;
-            _cache = cache;
+            Environment = environment;
+            Cache = cache;
 
             Culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
-            Culture.NumberFormat.CurrencySymbol = $"{_factory.CurrencySymbol} ";
+            Culture.NumberFormat.CurrencySymbol = $"{currencySymbol} ";
             Culture.NumberFormat.CurrencyNegativePattern = 1;
 
             System.Threading.Thread.CurrentThread.CurrentCulture = Culture;
             System.Threading.Thread.CurrentThread.CurrentUICulture = Culture;
 
-            //Title = _factory.Tenant.Name;
+            Title = title;
 
             IsInitialized = false;
         }
