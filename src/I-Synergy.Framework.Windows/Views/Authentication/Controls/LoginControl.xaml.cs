@@ -1,4 +1,4 @@
-﻿using ISynergy.Common.Handlers;
+﻿using ISynergy.Handlers;
 using ISynergy.ViewModels.Authentication;
 using System;
 using System.Linq;
@@ -131,7 +131,7 @@ namespace ISynergy.Views.Authentication.Controls
 
         private void TextBox_Username_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            if(NetworkHandler.IsValidEMail(args.SelectedItem.ToString()))
+            if(Network.IsValidEMail(args.SelectedItem.ToString()))
             {
                 sender.Text = args.SelectedItem.ToString();
             }

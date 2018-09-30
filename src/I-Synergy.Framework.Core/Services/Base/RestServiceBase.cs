@@ -474,12 +474,12 @@ namespace ISynergy.Services
 
                 if (api_ex != null)
                 {
-                    if (api_ex.error == Globals.InvalidGrantError)
+                    if (api_ex.error == Constants.InvalidGrantError)
                     {
                         await DialogService.ShowErrorAsync(
                             LanguageService.GetString("EX_ACCOUNT_LOGIN_FAILED"));
                     }
-                    else if (api_ex.error == Globals.AuthenticationError || api_ex.error == Globals.UnauthorizedClientError)
+                    else if (api_ex.error == Constants.AuthenticationError || api_ex.error == Constants.UnauthorizedClientError)
                     {
                         await DialogService.ShowErrorAsync(
                             LanguageService.GetString(api_ex.error_description));

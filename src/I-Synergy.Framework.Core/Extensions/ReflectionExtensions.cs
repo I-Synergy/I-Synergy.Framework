@@ -1,13 +1,12 @@
 ﻿using ISynergy.Attributes;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace ISynergy
+namespace System
 {
-    public static class Reflection
+    public static class ReflectionExtensions
     {
         public static string GetIdentityPropertyName<T>() where T : class
         {

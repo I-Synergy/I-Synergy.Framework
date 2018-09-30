@@ -2,11 +2,8 @@
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Base
@@ -17,8 +14,8 @@ namespace ISynergy.ViewModels.Base
 
         public BaseDashboardViewModel(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
             Tile_Command = new RelayCommand<string>((e) => ExecuteTileCommand(e), CanExecuteTileCommand());
 
@@ -52,8 +49,8 @@ namespace ISynergy.ViewModels.Base
         {
             if (!e.Handled && !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
             {
-                if (SynergyService.Navigation.CanGoBack)
-                    SynergyService.Navigation.GoBack();
+                if (BaseService.Navigation.CanGoBack)
+                    BaseService.Navigation.GoBack();
 
                 e.Handled = true;
             }
@@ -67,8 +64,8 @@ namespace ISynergy.ViewModels.Base
             {
                 IsCancelled = true;
 
-                if (SynergyService.Navigation.CanGoBack)
-                    SynergyService.Navigation.GoBack();
+                if (BaseService.Navigation.CanGoBack)
+                    BaseService.Navigation.GoBack();
 
                 e.Handled = true;
             }

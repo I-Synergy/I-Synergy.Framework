@@ -1,7 +1,7 @@
 ﻿using ISynergy.ViewModels.Base;
 using System;
 
-namespace ISynergy.Dialogs
+namespace ISynergy.Locators
 {
     /// <summary>
     /// Interface responsible for finding a dialog type matching a view model.

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace ISynergy
+namespace ISynergy.Events
 {
     public class WeakEventSource<TEventArgs>
     {

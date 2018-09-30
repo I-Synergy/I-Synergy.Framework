@@ -1,7 +1,4 @@
 ﻿using ISynergy.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ISynergy.Entities.Base
 {

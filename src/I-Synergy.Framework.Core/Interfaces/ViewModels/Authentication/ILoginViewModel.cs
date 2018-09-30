@@ -4,14 +4,13 @@ using ISynergy.Models.Accounts;
 using ISynergy.Services;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Authentication
 {
     public interface ILoginViewModel
     {
-        ISynergyService SynergyService { get; }
+        IBaseService BaseService { get; }
         bool AutoLogin { get; set; }
         RelayCommand ForgotPassword_Command { get; set; }
         RelayCommand<object> Submit_Command { get; set; }

@@ -1,4 +1,4 @@
-﻿using ISynergy.Core.Classes;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace ISynergy.Services

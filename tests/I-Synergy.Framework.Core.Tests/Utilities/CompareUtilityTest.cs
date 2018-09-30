@@ -1,7 +1,4 @@
-﻿using ISynergy.Library;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Xunit;
 
 namespace ISynergy.Utilities

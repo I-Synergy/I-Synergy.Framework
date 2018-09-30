@@ -13,7 +13,7 @@ namespace ISynergy.ViewModels.Base
     public interface IViewModel : IBaseModel
     {
         IContext Context { get; }
-        ISynergyService SynergyService { get; }
+        IBaseService BaseService { get; }
 
         bool CanClose { get; set; }
         bool IsCancelled { get; }

@@ -14,7 +14,7 @@ namespace ISynergy.ViewModels.Authentication
         {
             get
             {
-                return SynergyService.Language.GetString("Generic_ScanTag");
+                return BaseService.Language.GetString("Generic_ScanTag");
             }
         }
 
@@ -39,9 +39,9 @@ namespace ISynergy.ViewModels.Authentication
 
         public TagViewModel(
             IContext context,
-            ISynergyService synergyService,
+            IBaseService baseService,
             bool loginVisible = true)
-            : base(context, synergyService)
+            : base(context, baseService)
         {
             IsLoginVisible = loginVisible;
 

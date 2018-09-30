@@ -57,8 +57,8 @@ namespace ISynergy.ViewModels.Base
 
         public ViewModelBladeWizard(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService) 
+            IBaseService baseService)
+            : base(context, baseService) 
         {
             Back_Command = new RelayCommand(() => PerformBackAction());
             Next_Command = new RelayCommand(() => PerformNextAction());

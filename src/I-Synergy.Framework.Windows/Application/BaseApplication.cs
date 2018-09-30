@@ -2,10 +2,8 @@
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using ISynergy.Events;
-using ISynergy.Extensions;
 using ISynergy.Providers;
 using ISynergy.Services;
-using ISynergy.ViewModels;
 using ISynergy.ViewModels.Base;
 using ISynergy.Views;
 using Microsoft.ApplicationInsights;
@@ -17,7 +15,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -261,13 +258,12 @@ namespace ISynergy
             ServiceCollection = new ServiceCollection();
             ServiceCollection.AddLogging();
 
-            ServiceCollection.AddSingleton<ISynergyService, SynergyService>();
+            ServiceCollection.AddSingleton<IBaseService, BaseService>();
             ServiceCollection.AddSingleton<IBusyService, BusyService>();
             ServiceCollection.AddSingleton<ITelemetryService, TelemetryService>();
             ServiceCollection.AddSingleton<IUIVisualizerService, UIVisualizerService>();
             ServiceCollection.AddSingleton<INavigationService, NavigationService>();
             ServiceCollection.AddSingleton<IDialogService, DialogService>();
-            ServiceCollection.AddSingleton<IWindowService, WindowService>();
             ServiceCollection.AddSingleton<IInfoService, InfoService>();
 
             ServiceCollection.AddScoped<IUpdateService, UpdateService>();
@@ -284,7 +280,6 @@ namespace ISynergy
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             //ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(1024, 768);
 
-            Logger.LogInformation(Gratification.Gratify());
             Logger.LogInformation("Starting application");
 
             Logger.LogInformation("Allow 404 errors in Flurl");

@@ -1,39 +1,38 @@
-﻿using ISynergy.Library;
-using Xunit;
+﻿using Xunit;
 
-namespace ISynergy.Common.Calculations.Tests
+namespace ISynergy.Calculations.Tests
 {
     public class TaxesTests
     {
         [Fact]
-        [Trait(nameof(Calculations.Tax), Test.Unit)]
+        [Trait(nameof(Tax), Test.Unit)]
         public void CalcPriceExclVATTest()
         {
-            decimal result = Calculations.Tax.CalcPriceExclVAT(21, 121);
+            decimal result = Tax.CalcPriceExclVAT(21, 121);
             Assert.Equal(100, result);
         }
 
         [Fact]
-        [Trait(nameof(Calculations.Tax), Test.Unit)]
+        [Trait(nameof(Tax), Test.Unit)]
         public void CalcPriceInclVATTest()
         {
-            decimal result = Calculations.Tax.CalcPriceInclVAT(21, 100);
+            decimal result = Tax.CalcPriceInclVAT(21, 100);
             Assert.Equal(121, result);
         }
 
         [Fact]
-        [Trait(nameof(Calculations.Tax), Test.Unit)]
+        [Trait(nameof(Tax), Test.Unit)]
         public void CalcVATExclVATTest()
         {
-            decimal result = Calculations.Tax.CalcVATExclVAT(21, 100);
+            decimal result = Tax.CalcVATExclVAT(21, 100);
             Assert.Equal(21, result);
         }
 
         [Fact]
-        [Trait(nameof(Calculations.Tax), Test.Unit)]
+        [Trait(nameof(Tax), Test.Unit)]
         public void CalcVATInclVATTest()
         {
-            decimal result = Calculations.Tax.CalcVATInclVAT(21, 121);
+            decimal result = Tax.CalcVATInclVAT(21, 121);
             Assert.Equal(21, result);
         }
     }

@@ -30,8 +30,8 @@ namespace ISynergy.ViewModels.Base
 
         public ViewModelNavigation(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
             SelectedItem = new TEntity();
             IsNew = true;
@@ -50,7 +50,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await SynergyService.Dialog.ShowErrorAsync(SynergyService.Language.GetString("Warning_Validation_Failed"));
+                    await BaseService.Dialog.ShowErrorAsync(BaseService.Language.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }

@@ -1,5 +1,4 @@
-﻿using ISynergy.Core.Classes;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 
 namespace ISynergy

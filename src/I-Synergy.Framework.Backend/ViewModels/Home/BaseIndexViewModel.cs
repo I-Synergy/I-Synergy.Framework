@@ -1,18 +1,14 @@
-﻿using ISynergy.Services;
-using ISynergy.ViewModels.Base;
+﻿using ISynergy.ViewModels.Base;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace ISynergy.ViewModels.Home
 {
     public abstract class BaseIndexViewModel : BaseViewModel
     {
-        public BaseIndexViewModel(IFactoryService factory, IHostingEnvironment environment, IMemoryCache cache)
-            :base(factory, environment, cache)
+        public BaseIndexViewModel(IHostingEnvironment environment, IMemoryCache cache, string currencySymbol, string title)
+            :base(environment, cache, currencySymbol, title)
         {
         }
 

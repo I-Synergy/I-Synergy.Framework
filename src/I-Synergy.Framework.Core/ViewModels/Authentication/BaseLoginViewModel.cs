@@ -1,15 +1,13 @@
-﻿using ISynergy.Common.Handlers;
+﻿using ISynergy.Handlers;
 using ISynergy.Models.Accounts;
 using ISynergy.Services;
 using ISynergy.ViewModels.Base;
-using ISynergy.Views.Authentication;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Linq;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 using System;
 using ISynergy.Events;
 
@@ -23,8 +21,8 @@ namespace ISynergy.ViewModels.Authentication
 
         public BaseLoginViewModel(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
             Usernames = new List<string>();
             TimeZones = TimeZoneInfo.GetSystemTimeZones().ToList();
@@ -37,18 +35,18 @@ namespace ISynergy.ViewModels.Authentication
             Register_Command = new RelayCommand(async () => await RegisterAsync());
             ForgotPassword_Command = new RelayCommand(async () => await ForgotPasswordAsync());
 
-            if(SynergyService.Settings.Application_Users != null)
+            if(BaseService.ApplicationSettings.Application_Users != null)
             {
-                Usernames = JsonConvert.DeserializeObject<List<string>>(SynergyService.Settings.Application_Users);
+                Usernames = JsonConvert.DeserializeObject<List<string>>(BaseService.ApplicationSettings.Application_Users);
             }
             
-            Username = SynergyService.Settings.Application_User;
-            AutoLogin = SynergyService.Settings.User_AutoLogin;
+            Username = BaseService.ApplicationSettings.Application_User;
+            AutoLogin = BaseService.ApplicationSettings.User_AutoLogin;
         }
 
         public Task CheckAutoLogin()
         {
-            if (SynergyService.Settings.User_AutoLogin && !string.IsNullOrEmpty(SynergyService.Settings.User_RefreshToken))
+            if (BaseService.ApplicationSettings.User_AutoLogin && !string.IsNullOrEmpty(BaseService.ApplicationSettings.User_RefreshToken))
             {
                 if (Submit_Command.CanExecute(null)) Submit_Command.Execute(null);
             }
@@ -68,7 +66,7 @@ namespace ISynergy.ViewModels.Authentication
             }
         }
 
-        public override string Title { get { return SynergyService.Language.GetString("Generic_Login"); } }
+        public override string Title { get { return BaseService.Language.GetString("Generic_Login"); } }
         
         /// <summary>
         /// Gets or sets the Usernames property value.
@@ -235,47 +233,47 @@ namespace ISynergy.ViewModels.Authentication
             {
                 if (Username is null || Username.Length < 3)
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_UsernameSize"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_UsernameSize"));
                     result = false;
                 }
 
                 if (Password is null || Password.Length < 6)
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_PasswordSize"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_PasswordSize"));
                     result = false;
                 }
 
-                SynergyService.Settings.User_AutoLogin = AutoLogin;
+                BaseService.ApplicationSettings.User_AutoLogin = AutoLogin;
             }
             else
             {
                 if (Registration_Name is null || Registration_Name.Length < 3)
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_LicenseNameSize"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_LicenseNameSize"));
                     result = false;
                 }
 
-                if (Registration_Mail is null || !NetworkHandler.IsValidEMail(Registration_Mail))
+                if (Registration_Mail is null || !Network.IsValidEMail(Registration_Mail))
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_Invalid_Email"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_Invalid_Email"));
                     result = false;
                 }
 
                 if(string.IsNullOrEmpty(Registration_TimeZone))
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_NoTimeZone_Selected"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_NoTimeZone_Selected"));
                     result = false;
                 }
 
                 if (Registration_Password is null || Registration_Password.Length < 6)
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_PasswordSize"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_PasswordSize"));
                     result = false;
                 }
 
@@ -283,22 +281,22 @@ namespace ISynergy.ViewModels.Authentication
 
                 if (!passwordMatch.Success)
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_PasswordSize"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_PasswordSize"));
                     result = false;
                 }
 
                 if (Registration_Password_Check is null || Registration_Password_Check.Length < 6)
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_PasswordSize"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_PasswordSize"));
                     result = false;
                 }
 
                 if (!Registration_Password.Equals(Registration_Password_Check))
                 {
-                    await SynergyService.Dialog
-                        .ShowErrorAsync(SynergyService.Language.GetString("Warning_PasswordMatch"));
+                    await BaseService.Dialog
+                        .ShowErrorAsync(BaseService.Language.GetString("Warning_PasswordMatch"));
                     result = false;
                 }
             }
@@ -446,8 +444,8 @@ namespace ISynergy.ViewModels.Authentication
         {
             if (!e.Handled)
             {
-                if (SynergyService.Navigation.CanGoBack)
-                    SynergyService.Navigation.GoBack();
+                if (BaseService.Navigation.CanGoBack)
+                    BaseService.Navigation.GoBack();
 
                 e.Handled = true;
             }
@@ -461,8 +459,8 @@ namespace ISynergy.ViewModels.Authentication
             {
                 IsCancelled = true;
 
-                if (SynergyService.Navigation.CanGoBack)
-                    SynergyService.Navigation.GoBack();
+                if (BaseService.Navigation.CanGoBack)
+                    BaseService.Navigation.GoBack();
 
                 e.Handled = true;
             }

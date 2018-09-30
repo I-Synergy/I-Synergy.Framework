@@ -193,19 +193,17 @@
     <Compile Include="Services\Base\AuthenticationServiceBase.cs" />
     <Compile Include="Services\Base\FileServiceBase.cs" />
     <Compile Include="Services\Base\UIVisualizerServiceBase.cs" />
-    <Compile Include="Services\Base\WindowServiceBase.cs" />
     <Compile Include="Services\BusyService.cs" />
     <Compile Include="Services\ConverterService.cs" />
     <Compile Include="Services\CustomResourceLoader.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\InfoService.cs" />
     <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\SynergyService.cs" />
+    <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\TelemetryService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\UIVisualizerService.cs" />
     <Compile Include="Services\UpdateService.cs" />
-    <Compile Include="Services\WindowService.cs" />
     <Compile Include="Settings\FileDialogSettings.cs" />
     <Compile Include="Settings\FolderBrowserDialogSettings.cs" />
     <Compile Include="Settings\MessageBoxSettings.cs" />
@@ -357,7 +355,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj">
-      <Project>{b9d1a0b3-6482-4026-ad5c-b1ca0b6a2447}</Project>
+      <Project>{af5c981b-7e8c-46d0-85ae-b9942f63a4d2}</Project>
       <Name>I-Synergy.Framework.Core</Name>
     </ProjectReference>
   </ItemGroup>

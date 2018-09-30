@@ -1,6 +1,6 @@
-﻿namespace ISynergy.Helpers
+﻿namespace ISynergy.Options
 {
-    public class EnviromentalSettings
+    public class EnviromentalOptions
     {
         public enum Environments
         {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Options
+﻿namespace ISynergy.Options
 {
     public class AuthMessageSenderOptions
     {

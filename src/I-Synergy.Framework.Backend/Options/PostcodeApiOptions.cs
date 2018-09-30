@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Options
+﻿namespace ISynergy.Options
 {
-    public class PostcodeApiSettings
+    public class PostcodeApiOptions
     {
         public string Url { get; set; }
         public string Key { get; set; }

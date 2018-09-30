@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
-using ISynergy.Extensions;
 
-namespace ISynergy.Extensions
+namespace System.Data
 {
     public static class DataReaderExtensions
     {

@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Library.Helpers
+namespace ISynergy.Helpers
 {
     using EventTask = Tuple<SendOrPostCallback, object>;
     using EventQueue = ConcurrentQueue<Tuple<SendOrPostCallback, object>>;

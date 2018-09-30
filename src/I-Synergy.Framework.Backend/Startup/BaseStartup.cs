@@ -2,8 +2,6 @@
 using ISynergy.Accessors;
 using ISynergy.Extensions;
 using ISynergy.Filters;
-using ISynergy.Helpers;
-using ISynergy.Interfaces;
 using ISynergy.Options;
 using ISynergy.Providers;
 using ISynergy.Services;
@@ -46,18 +44,18 @@ namespace ISynergy
         protected const string logoutEndpointPath = "/oauth/logout";
         protected const string userinfoEndpointPath = "/api/userinfo";
 
-        protected IHostingEnvironment _environment { get; }
-        protected IConfiguration _configuration { get; }
-        protected IMemoryCache _cache { get; }
-        protected CultureInfo _culture { get; }
+        protected IHostingEnvironment Environment { get; }
+        protected IConfiguration Configuration { get; }
+        protected IMemoryCache Cache { get; }
+        protected CultureInfo Culture { get; }
 
         public BaseStartup(IHostingEnvironment environment, IConfiguration configuration)
         {
             Argument.IsNotNull(nameof(environment), environment);
             Argument.IsNotNull(nameof(configuration), configuration);
 
-            _environment = environment;
-            _configuration = configuration;
+            Environment = environment;
+            Configuration = configuration;
         }
 
         public Task Initialization { get; private set; }
@@ -95,22 +93,22 @@ namespace ISynergy
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
+                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
             app.UseMvc();
         }
 
         protected virtual void AddSignalR(IServiceCollection services)
         {
-            //services.Configure<PubNubSettings>(_configurationRoot.GetSection(nameof(PubNubSettings)).BindWithReload);
-            //services.AddScoped<IPubNubService, PubNubService>();
-
-            //services.AddConnections();
             services.AddSignalR(options =>
             {
                 options.EnableDetailedErrors = true;
@@ -118,20 +116,28 @@ namespace ISynergy
             .AddMessagePackProtocol();
         }
 
+        /// <summary>
+        /// AddCloudStorage
+        /// </summary>
+        /// <param name="services"></param>
+        /// /// <example>
+        /// <code>
+        /// services.Configure&lt;AzureDocumentSetting>(_configurationRoot.GetSection(nameof(AzureDocumentSetting)).BindWithReload);
+        /// services.AddScoped&lt;ICloudStorageService, CloudStorageService>();
+        /// </code>
+        /// </example>
         protected virtual void AddCloudStorage(IServiceCollection services)
         {
-            //services.Configure<AzureDocumentSetting>(_configurationRoot.GetSection(nameof(AzureDocumentSetting)).BindWithReload);
-            //services.AddScoped<ICloudStorageService, CloudStorageService>();
         }
 
         protected virtual void AddOptions(IServiceCollection services)
         {
             services.AddOptions();
 
-            services.Configure<EnviromentalSettings>(_configuration.GetSection(nameof(EnviromentalSettings)).BindWithReload);
-            services.Configure<MessageServiceOptions>(_configuration.GetSection(nameof(MessageServiceOptions)).BindWithReload);
-            services.Configure<Websites>(_configuration.GetSection(nameof(Websites)).BindWithReload);
-            services.Configure<AuthMessageSenderOptions>(_configuration);
+            services.Configure<EnviromentalOptions>(Configuration.GetSection(nameof(EnviromentalOptions)).BindWithReload);
+            services.Configure<MessageServiceOptions>(Configuration.GetSection(nameof(MessageServiceOptions)).BindWithReload);
+            services.Configure<WebsiteOptions>(Configuration.GetSection(nameof(WebsiteOptions)).BindWithReload);
+            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         protected virtual void AddLocalization(IServiceCollection services)
@@ -209,7 +215,7 @@ namespace ISynergy
                     //options.EnableRequestCaching();
 
                     // During development, you can disable the HTTPS requirement.
-                    if (_environment.IsDevelopment())
+                    if (Environment.IsDevelopment())
                     {
                         options.DisableHttpsRequirement();
                     }
@@ -248,25 +254,49 @@ namespace ISynergy
             services.AddSingleton<ITenantService, TenantService>();
         }
 
+        /// <summary>
+        /// AddMultiTenantActionFilter
+        /// </summary>
+        /// <param name="services"></param>
+        /// <example>
+        /// <code>
+        /// services.AddScoped(typeof(TenantActionFilter));
+        /// </code>
+        /// </example>
         protected virtual void AddMultiTenantActionFilter(IServiceCollection services)
         {
-            //services.AddScoped(typeof(TenantActionFilter));
         }
 
+        /// <summary>
+        /// AddMessageService
+        /// </summary>
+        /// <param name="services"></param>
+        /// <example>
+        /// <code>
+        /// services.AddScoped&lt;IEmailSender, MessageService>();
+        /// services.AddScoped&lt;ISmsSender, MessageService>();
+        /// </code>
+        /// </example>
         protected virtual void AddMessageService(IServiceCollection services)
         {
-            //services.AddScoped<IEmailSender, MessageService>();
-            //services.AddScoped<ISmsSender, MessageService>();
         }
 
+        /// <summary>
+        /// AddServices
+        /// </summary>
+        /// <param name="services"></param>
+        /// <example>
+        /// <code>
+        /// services.AddScoped&lt;IFactoryService, FactoryService>();
+        /// </code>
+        /// </example>
         protected virtual void AddServices(IServiceCollection services)
         {
-            services.AddScoped<IFactoryService, FactoryService>();
         }
 
         protected virtual void AddDbServices(IServiceCollection services)
         {
-            string DataConnection = _configuration.GetConnectionString("ConnectionString");
+            string DataConnection = Configuration.GetConnectionString("ConnectionString");
 
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<TDbContext>(options =>
@@ -344,30 +374,47 @@ namespace ISynergy
 
         protected virtual void AddLogging(IServiceCollection services)
         {
+            services.AddLogging();
         }
 
         protected abstract void AddManagers(IServiceCollection services);
         protected abstract void AddMappers(IServiceCollection services);
 
+
+        /// <summary>
+        /// AddPaymentClient
+        /// </summary>
+        /// <param name="services"></param>
+        /// <example>
+        /// <code>
+        /// services.Configure&lt;PaymentSettings>(_configurationRoot.GetSection(nameof(PaymentSettings)).BindWithReload);
+        ///
+        /// var paymentSettings = new PaymentSettings();
+        /// _configurationRoot.GetSection(nameof(PaymentSettings)).Bind(paymentSettings);
+        ///
+        /// services.AddScoped&lt;IPaymentClient>(i => new PaymentClient(paymentSettings.Mollie_Key));
+        /// services.AddScoped&lt;ICustomerClient>(i => new CustomerClient(paymentSettings.Mollie_Key));
+        /// services.AddScoped&lt;IMandateClient>(i => new MandateClient(paymentSettings.Mollie_Key));
+        /// services.AddScoped&lt;IRefundClient>(i => new RefundClient(paymentSettings.Mollie_Key));
+        /// services.AddScoped&lt;ISubscriptionClient>(i => new SubscriptionClient(paymentSettings.Mollie_Key));
+        /// </code>
+        /// </example>
         protected virtual void AddPaymentClient(IServiceCollection services)
         {
-            //services.Configure<PaymentSettings>(_configurationRoot.GetSection(nameof(PaymentSettings)).BindWithReload);
-
-            //var paymentSettings = new PaymentSettings();
-            //_configurationRoot.GetSection(nameof(PaymentSettings)).Bind(paymentSettings);
-
-            //services.AddScoped<IPaymentClient>(i => new PaymentClient(paymentSettings.Mollie_Key));
-            //services.AddScoped<ICustomerClient>(i => new CustomerClient(paymentSettings.Mollie_Key));
-            //services.AddScoped<IMandateClient>(i => new MandateClient(paymentSettings.Mollie_Key));
-            //services.AddScoped<IRefundClient>(i => new RefundClient(paymentSettings.Mollie_Key));
-            //services.AddScoped<ISubscriptionClient>(i => new SubscriptionClient(paymentSettings.Mollie_Key));
         }
 
-        protected virtual void AddMvc(IServiceCollection services)
+        protected virtual void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services.Configure<MvcOptions>(options =>
             {
-                if (!_environment.IsDevelopment())
+                if (!Environment.IsDevelopment())
                     options.Filters.Add(new RequireHttpsAttribute());
             });
 
@@ -380,6 +427,16 @@ namespace ISynergy
                 options.Filters.Add(new AuthorizeFilter(policy));
             })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddRazorPagesOptions(options =>
+                {
+                    if(authorizedRazorPages != null)
+                    {
+                        foreach (var page in authorizedRazorPages)
+                        {
+                            options.Conventions.AuthorizePage(page);
+                        }
+                    }
+                })
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization()
                 .AddJsonOptions(options =>
@@ -391,7 +448,7 @@ namespace ISynergy
 
                     // Don't include null objects in Json, but only for production environments.
                     jsonSettings.NullValueHandling =
-                        !_environment.IsDevelopment()
+                        !Environment.IsDevelopment()
                             ? NullValueHandling.Ignore
                             : NullValueHandling.Include;
 
@@ -423,7 +480,7 @@ namespace ISynergy
 
         protected virtual void AddSwaggerGeneration(IServiceCollection services)
         {
-            if (_environment.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 services.AddSwaggerGen(options =>
                 {
@@ -453,14 +510,22 @@ namespace ISynergy
             }
         }
 
+        /// <summary>
+        /// AddTelemetry
+        /// </summary>
+        /// <param name="services"></param>
+        /// <example>
+        /// <code>
+        /// // Configure SnapshotCollector from application settings
+        /// services.Configure&lt;SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
+        /// 
+        /// // Add SnapshotCollector telemetry processor.
+        /// services.AddSingleton&lt;ITelemetryInitializer, UserInfoTelemetryInitializer>();
+        /// services.AddSingleton&lt;ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory>();
+        /// </code>
+        /// </example>
         protected virtual void AddTelemetry(IServiceCollection services)
         {
-            // Configure SnapshotCollector from application settings
-            //services.Configure<SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
-
-            // Add SnapshotCollector telemetry processor.
-            //services.AddSingleton<ITelemetryInitializer, UserInfoTelemetryInitializer>();
-            //services.AddSingleton<ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory>();
         }
 
         protected async Task UpdateOpenIddictTablesAsync(TDbContext context)

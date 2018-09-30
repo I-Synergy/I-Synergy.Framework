@@ -13,7 +13,7 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return SynergyService.Language.GetString("Generic_Language");
+                return BaseService.Language.GetString("Generic_Language");
             }
         }
 
@@ -30,12 +30,12 @@ namespace ISynergy.ViewModels.Library
 
         public LanguageViewModel(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
             SetLanguage_Command = new RelayCommand<string>(SetLanguage);
 
-            Language = SynergyService.Settings.Application_Culture;
+            Language = BaseService.ApplicationSettings.Application_Culture;
         }
 
         private void SetLanguage(string language)
@@ -45,7 +45,7 @@ namespace ISynergy.ViewModels.Library
 
         public override Task SubmitAsync(object e)
         {
-            SynergyService.Settings.Application_Culture = Language;
+            BaseService.ApplicationSettings.Application_Culture = Language;
             Messenger.Default.Send(new OnSubmittanceMessage(this, null));
 
             return Task.CompletedTask;

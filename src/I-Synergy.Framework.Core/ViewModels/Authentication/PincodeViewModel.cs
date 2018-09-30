@@ -12,7 +12,7 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return SynergyService.Language.GetString("Generic_Pin");
+                return BaseService.Language.GetString("Generic_Pin");
             }
         }
 
@@ -36,14 +36,14 @@ namespace ISynergy.ViewModels.Library
 
         public PincodeViewModel(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
         }
 
         public override Task SubmitAsync(object e)
         {
-            if (Pincode.Equals(SynergyService.Settings.GetSetting("PointOfSales_Pincode", "0000")))
+            if (Pincode.Equals(BaseService.ApplicationSettings.GetSetting("PointOfSales_Pincode", "0000")))
             {
                 Result = true;
             }

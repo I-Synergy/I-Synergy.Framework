@@ -30,9 +30,15 @@ namespace ISynergy.Routing
 
             uiCulture = culture = pathTest;
 
-            var providerResultCulture = new ProviderCultureResult(culture, uiCulture);
-
-            return Task.FromResult(providerResultCulture);
+            try
+            {
+                ProviderCultureResult providerResultCulture = new ProviderCultureResult(culture, uiCulture);
+                return Task.FromResult(providerResultCulture);
+            }
+            catch (Exception)
+            {
+                return ZeroResultTask;
+            }
         }
     }
 }

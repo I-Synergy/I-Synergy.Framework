@@ -13,7 +13,7 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return SynergyService.Language.GetString("Generic_Colors");
+                return BaseService.Language.GetString("Generic_Colors");
             }
         }
 
@@ -22,8 +22,8 @@ namespace ISynergy.ViewModels.Library
 
         public ThemeViewModel(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
             Color_Command = new RelayCommand<string>(async (e) => await SetColorAsync(e));
             Background_Command = new RelayCommand<byte[]>(async (e) => await SetWallpaperAsync(e));
@@ -31,14 +31,14 @@ namespace ISynergy.ViewModels.Library
 
         private Task SetColorAsync(string color)
         {
-            SynergyService.Settings.Application_Color = color;
+            BaseService.ApplicationSettings.Application_Color = color;
             Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             return Task.CompletedTask;
         }
 
         private Task SetWallpaperAsync(byte[] wallpaper)
         {
-            SynergyService.Settings.Application_Wallpaper = wallpaper;
+            BaseService.ApplicationSettings.Application_Wallpaper = wallpaper;
             Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             return Task.CompletedTask;
         }

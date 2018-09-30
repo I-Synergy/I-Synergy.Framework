@@ -1,5 +1,4 @@
 ﻿using ISynergy.Models.Accounts;
-using ISynergy.Models.General;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

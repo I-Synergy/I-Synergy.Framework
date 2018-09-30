@@ -11,7 +11,7 @@ namespace ISynergy.Views.Library
         public ThemeWindow()
         {
             this.InitializeComponent();
-            this.PrimaryButtonText = ActivatorUtilities.CreateInstance<ILanguageService>(ViewModel.SynergyService.ServiceProvider).GetString("Generic_Cancel");
+            this.PrimaryButtonText = ActivatorUtilities.CreateInstance<ILanguageService>(ViewModel.BaseService.ServiceProvider).GetString("Generic_Cancel");
         }
     }
 }

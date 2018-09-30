@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace ISynergy.Common.Helpers
+namespace ISynergy.Helpers
 {
     /// <summary>
     /// Class containing methods for extracting member information using reflection.

@@ -1,6 +1,4 @@
-﻿using ISynergy.Services;
-using ISynergy.ViewModels.Authentication;
-using Windows.UI.Xaml;
+﻿using ISynergy.ViewModels.Authentication;
 using Windows.UI.Xaml.Navigation;
 
 namespace ISynergy.Views.Authentication
@@ -19,7 +17,7 @@ namespace ISynergy.Views.Authentication
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            await ViewModel.SynergyService.Navigation.CleanBackStackAsync();
+            await ViewModel.BaseService.Navigation.CleanBackStackAsync();
             await ViewModel.CheckAutoLogin();
         }
     }

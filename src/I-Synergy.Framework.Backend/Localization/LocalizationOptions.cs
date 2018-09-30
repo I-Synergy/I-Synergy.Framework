@@ -1,10 +1,8 @@
 ﻿using ISynergy.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace ISynergy.Localization
 {

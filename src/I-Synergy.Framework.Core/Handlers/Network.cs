@@ -2,9 +2,9 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ISynergy.Common.Handlers
+namespace ISynergy.Handlers
 {
-    public class NetworkHandler
+    public class Network
     {
         public static Task<bool> IsInternetConnectionAvailable()
         {

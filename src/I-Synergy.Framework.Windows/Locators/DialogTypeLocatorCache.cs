@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ISynergy.Dialogs
+namespace ISynergy.Locators
 {
     /// <summary>
     /// A cache holding the known mappings between view model types and dialog types.

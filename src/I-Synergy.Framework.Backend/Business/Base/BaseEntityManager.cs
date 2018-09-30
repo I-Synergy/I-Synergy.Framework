@@ -4,10 +4,8 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -67,8 +65,8 @@ namespace ISynergy.Business.Base
 
             int result = 0;
 
-            string targetPropertyName = Reflection.GetIdentityPropertyName<TEntity>();
-            object sourcePropertyValue = Reflection.GetIdentityValue(e);
+            string targetPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
+            object sourcePropertyValue = ReflectionExtensions.GetIdentityValue(e);
 
             if (targetPropertyName != null && sourcePropertyValue != null)
             {
@@ -124,7 +122,7 @@ namespace ISynergy.Business.Base
                         if (sqlException.Number == 547)
                         {
                             //The DELETE statement conflicted with the REFERENCE constraint
-                            throw new DbUpdateException(Exception_Constants.Error_547, ex);
+                            throw new DbUpdateException(ExceptionConstants.Error_547, ex);
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ISynergy.Interfaces
+namespace ISynergy.Senders
 {
     public interface ISmsSender
     {

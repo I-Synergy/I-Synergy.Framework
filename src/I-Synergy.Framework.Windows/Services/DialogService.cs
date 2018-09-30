@@ -1,4 +1,4 @@
-﻿using ISynergy.Library;
+﻿using ISynergy.Enumerations;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Popups;

@@ -75,9 +75,9 @@ namespace ISynergy.ViewModels
         
         public MapsViewModel(
             IContext context,
-            ISynergyService synergyService,
+            IBaseService baseService,
             string name, string address)
-            : base(context, synergyService)
+            : base(context, baseService)
         {
             Locations = new ObservableCollection<object>();
             Title = address;

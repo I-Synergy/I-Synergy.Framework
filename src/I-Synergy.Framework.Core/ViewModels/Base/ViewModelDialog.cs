@@ -34,8 +34,8 @@ namespace ISynergy.ViewModels.Base
 
         public ViewModelDialog(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
             SelectedItem = new TEntity();
             IsNew = true;
@@ -82,7 +82,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await DialogService.ShowErrorAsync(SynergyService.Language.GetString("Warning_Validation_Failed"));
+                    await DialogService.ShowErrorAsync(BaseService.Language.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }

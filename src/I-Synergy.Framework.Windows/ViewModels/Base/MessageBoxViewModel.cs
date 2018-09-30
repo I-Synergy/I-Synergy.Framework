@@ -1,4 +1,4 @@
-﻿using ISynergy.Library;
+﻿using ISynergy.Enumerations;
 using ISynergy.Services;
 using System;
 using Windows.UI.Xaml;
@@ -47,7 +47,7 @@ namespace ISynergy.ViewModels.Library
 
         public MessageBoxViewModel(
             IContext context,
-            ISynergyService synergyService,
+            IBaseService synergyService,
             string message, 
             string title,
             MessageBoxButton button = MessageBoxButton.OK,

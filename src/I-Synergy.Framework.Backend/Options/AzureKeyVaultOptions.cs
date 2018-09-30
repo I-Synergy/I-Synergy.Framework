@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Options
 {
-    public class AzureKeyVault
+    public class AzureKeyVaultOptions
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ISynergy.Common.Calculations
+namespace ISynergy.Calculations
 {
     public class Bank
     {
@@ -11,7 +11,7 @@ namespace ISynergy.Common.Calculations
                 return false;
             }
 
-            if (General.IsInteger(accountnumber) == false)
+            if (!accountnumber.IsInteger())
             {
                 return false;
             }

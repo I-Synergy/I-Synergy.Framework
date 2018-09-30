@@ -9,7 +9,6 @@ using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Services.Maps;
 using Windows.UI.Xaml.Controls.Maps;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -36,7 +35,7 @@ namespace ISynergy.Views.Library
 
                 try
                 {
-                    await ActivatorUtilities.CreateInstance<IBusyService>(ViewModel.SynergyService.ServiceProvider).StartBusyAsync();
+                    await ActivatorUtilities.CreateInstance<IBusyService>(ViewModel.BaseService.ServiceProvider).StartBusyAsync();
 
                     Geopoint myLocation = new Geopoint(new BasicGeoposition { Latitude = 51.3774194, Longitude = 6.0791655 });
                     var MyLandmarks = new List<MapElement>();
@@ -122,7 +121,7 @@ namespace ISynergy.Views.Library
                 }
                 finally
                 {
-                    await ActivatorUtilities.CreateInstance<IBusyService>(ViewModel.SynergyService.ServiceProvider).EndBusyAsync();
+                    await ActivatorUtilities.CreateInstance<IBusyService>(ViewModel.BaseService.ServiceProvider).EndBusyAsync();
                 }
             }
         }

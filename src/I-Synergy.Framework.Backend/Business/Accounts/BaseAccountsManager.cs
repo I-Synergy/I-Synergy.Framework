@@ -2,29 +2,25 @@
 using AspNet.Security.OpenIdConnect.Primitives;
 using AspNet.Security.OpenIdConnect.Server;
 using Mapster;
-using ISynergy.Business.Base;
-using ISynergy.Common;
 using ISynergy.Extensions;
-using ISynergy.Utilities;
 using ISynergy.Exceptions;
-using ISynergy.Library;
 using ISynergy.Models.Accounts;
-using ISynergy.Models.General;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Services;
 using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Abstractions;
 using ISynergy.Entities.Accounts;
+using ISynergy.Enumerations;
 
 namespace ISynergy.Business.Base
 {
@@ -501,7 +497,7 @@ namespace ISynergy.Business.Base
                 {
                     throw new OpenIdConnectException(new OpenIdConnectResponse
                     {
-                        Error = Globals.AuthenticationError,
+                        Error = Constants.AuthenticationError,
                         ErrorDescription = "EX_ACCOUNT_LICENSE_NOT_VALID"
                     });
                 }
@@ -511,7 +507,7 @@ namespace ISynergy.Business.Base
                 {
                     throw new OpenIdConnectException(new OpenIdConnectResponse
                     {
-                        Error = Globals.AuthenticationError,
+                        Error = Constants.AuthenticationError,
                         ErrorDescription = "EX_ACCOUNT_LOGIN_FAILED"
                     });
                 }
@@ -520,7 +516,7 @@ namespace ISynergy.Business.Base
                 {
                     throw new OpenIdConnectException(new OpenIdConnectResponse
                     {
-                        Error = Globals.AuthenticationError,
+                        Error = Constants.AuthenticationError,
                         ErrorDescription = "EX_ACCOUNT_NOT_ACTIVE"
                     });
                 }
@@ -529,7 +525,7 @@ namespace ISynergy.Business.Base
                 {
                     throw new OpenIdConnectException(new OpenIdConnectResponse
                     {
-                        Error = Globals.AuthenticationError,
+                        Error = Constants.AuthenticationError,
                         ErrorDescription = "EX_ACCOUNT_LICENSE_EXPIRED"
                     });
                 }
@@ -556,7 +552,7 @@ namespace ISynergy.Business.Base
             {
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
-                    Error = Globals.AuthenticationError,
+                    Error = Constants.AuthenticationError,
                     ErrorDescription = "EX_ACCOUNT_LOGIN_FAILED"
                 });
             }
@@ -584,7 +580,7 @@ namespace ISynergy.Business.Base
 
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
-                    Error = Globals.AuthenticationError,
+                    Error = Constants.AuthenticationError,
                     ErrorDescription = "EX_ACCOUNT_LOCKED"
                 });
             }
@@ -597,7 +593,7 @@ namespace ISynergy.Business.Base
 
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
-                    Error = Globals.AuthenticationError,
+                    Error = Constants.AuthenticationError,
                     ErrorDescription = "EX_ACCOUNT_LOCKED"
                 });
             }
@@ -610,7 +606,7 @@ namespace ISynergy.Business.Base
 
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
-                    Error = Globals.AuthenticationError,
+                    Error = Constants.AuthenticationError,
                     ErrorDescription = "EX_ACCOUNT_2FACTOR"
                 });
             }
@@ -623,7 +619,7 @@ namespace ISynergy.Business.Base
 
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
-                    Error = Globals.AuthenticationError,
+                    Error = Constants.AuthenticationError,
                     ErrorDescription = "EX_ACCOUNT_LOGIN_FAILED"
                 });
             }
@@ -641,7 +637,7 @@ namespace ISynergy.Business.Base
             {
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
-                    Error = Globals.AuthenticationError,
+                    Error = Constants.AuthenticationError,
                     ErrorDescription = "EX_ACCOUNT_LOGIN_FAILED"
                 });
             }
@@ -651,7 +647,7 @@ namespace ISynergy.Business.Base
             {
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
-                    Error = Globals.AuthenticationError,
+                    Error = Constants.AuthenticationError,
                     ErrorDescription = "EX_ACCOUNT_LOCKED"
                 });
             }
@@ -671,7 +667,7 @@ namespace ISynergy.Business.Base
             {
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
-                    Error = Globals.AuthenticationError,
+                    Error = Constants.AuthenticationError,
                     ErrorDescription = "EX_ACCOUNT_LOGIN_FAILED"
                 });
             }

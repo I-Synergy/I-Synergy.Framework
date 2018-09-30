@@ -1,22 +1,18 @@
-﻿using ISynergy.Interfaces;
-using ISynergy.Extensions;
-using ISynergy.Models.Accounts;
+﻿using ISynergy.Models.Accounts;
 using ISynergy.Options;
+using ISynergy.Senders;
 using ISynergy.ViewModels.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace ISynergy.Controllers.Base
 {
@@ -25,13 +21,13 @@ namespace ISynergy.Controllers.Base
     {
         protected IEmailSender EmailSender { get; }
         protected ISmsSender SmsSender { get; }
-        protected Websites Websites { get; }
+        protected WebsiteOptions Websites { get; }
         protected ILogger Logger { get; }
 
         public BaseAccountController(
             IEmailSender emailSender,
             ISmsSender smsSender,
-            IOptions<Websites> websiteSettings,
+            IOptions<WebsiteOptions> websiteSettings,
             ILoggerFactory loggerFactory)
         {
             EmailSender = emailSender;

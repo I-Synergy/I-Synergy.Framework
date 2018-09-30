@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ISynergy.Common.Types
+namespace ISynergy.Events
 {
     public class ViewModelEventArgs<T> : EventArgs
     {

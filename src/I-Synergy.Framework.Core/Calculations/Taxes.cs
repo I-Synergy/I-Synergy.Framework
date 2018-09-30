@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Common.Calculations
+﻿namespace ISynergy.Calculations
 {
     public class Tax
     {

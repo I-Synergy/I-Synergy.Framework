@@ -1,16 +1,34 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace ISynergy.Extensions
+namespace System.Collections
 {
     /// <summary>
     /// Extensions for the <see cref="ICollection"/> and <see cref="Collection{T}"/> classes.
     /// </summary>
     public static class CollectionExtensions
     {
+        //Linked list style enumerator
+        public static IEnumerable<TSource> FromHierarchy<TSource>(
+            this TSource source,
+            Func<TSource, TSource> nextItem,
+            Func<TSource, bool> canContinue)
+        {
+            for (var current = source; canContinue(current); current = nextItem(current))
+            {
+                yield return current;
+            }
+        }
+
+        public static IEnumerable<TSource> FromHierarchy<TSource>(
+            this TSource source,
+            Func<TSource, TSource> nextItem)
+            where TSource : class
+        {
+            return FromHierarchy(source, nextItem, s => s != null);
+        }
+
         /// <summary>
         /// Determines whether the item can be moved up in the list.
         /// </summary>

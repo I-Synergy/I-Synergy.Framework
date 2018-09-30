@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace ISynergy.Core.Classes
+namespace System
 {
     public abstract class ObservableClass : ObservableObject
     {

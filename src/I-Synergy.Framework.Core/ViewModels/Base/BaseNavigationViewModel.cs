@@ -9,8 +9,8 @@ namespace ISynergy.ViewModels.Base
     {
         public BaseNavigationViewModel(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
             Messenger.Default.Register<OnSubmittanceMessage>(this, async (e) => await OnSubmittanceAsync(e));
             Messenger.Default.Register<OnCancellationMessage>(this, async (e) => await OnCancellationAsync(e));

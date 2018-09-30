@@ -1,47 +1,47 @@
-﻿using ISynergy.Library;
-using Xunit;
+﻿using Xunit;
+using System;
 
-namespace ISynergy.Common.Handlers.Tests
+namespace ISynergy.Handlers.Tests
 {
     public class GenericStringTests
     {
         [Fact]
-        [Trait(nameof(General.IncreaseString2Long), Test.Unit)]
+        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringNumericSummand1()
         {
-            string result = General.IncreaseString2Long("10", 1);
+            string result = ("10").IncreaseString2Long(1);
             Assert.Equal("11", result);
         }
 
         [Fact]
-        [Trait(nameof(General.IncreaseString2Long), Test.Unit)]
+        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringNumericSummand3()
         {
-            string result = General.IncreaseString2Long("6281085010557", 3);
+            string result = ("6281085010557").IncreaseString2Long(3);
             Assert.Equal("6281085010560", result);
         }
 
         [Fact]
-        [Trait(nameof(General.IncreaseString2Long), Test.Unit)]
+        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringAlphaNumericSummand1()
         {
-            string result = General.IncreaseString2Long("A19", 1);
+            string result = ("A19").IncreaseString2Long(1);
             Assert.Equal("A20", result);
         }
 
         [Fact]
-        [Trait(nameof(General.IncreaseString2Long), Test.Unit)]
+        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringAlphaNumericSummand8()
         {
-            string result = General.IncreaseString2Long("AZURE02", 8);
+            string result = ("AZURE02").IncreaseString2Long(8);
             Assert.Equal("AZURE10", result);
         }
 
         [Fact]
-        [Trait(nameof(General.IncreaseString2Long), Test.Unit)]
+        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringAlphaNumericComplex()
         {
-            string result = General.IncreaseString2Long("2016AZURE10STAGE001", 99);
+            string result = ("2016AZURE10STAGE001").IncreaseString2Long(99);
             Assert.Equal("2016AZURE10STAGE100", result);
         }
     }

@@ -2,7 +2,6 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Models.Base;
-using ISynergy.Library;
 using ISynergy.Services;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ISynergy.Events;
+using ISynergy.Enumerations;
 
 namespace ISynergy.ViewModels.Base
 {
@@ -61,8 +61,8 @@ namespace ISynergy.ViewModels.Base
 
         public ViewModelBladeView(
             IContext context,
-            ISynergyService synergyService)
-            : base(context, synergyService)
+            IBaseService baseService)
+            : base(context, baseService)
         {
             Blades = new ObservableCollection<IView>();
 
@@ -102,7 +102,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await SynergyService.Dialog.ShowErrorAsync(SynergyService.Language.GetString("Warning_Validation_Failed"));
+                    await BaseService.Dialog.ShowErrorAsync(BaseService.Language.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }
@@ -124,12 +124,12 @@ namespace ISynergy.ViewModels.Base
             }
             else
             {
-                item = SynergyService.Language.GetString("Generic_This_Item");
+                item = BaseService.Language.GetString("Generic_This_Item");
             }
 
-            if (await SynergyService.Dialog.ShowAsync(
-                                string.Format(SynergyService.Language.GetString("Warning_Item_Remove"), item),
-                                SynergyService.Language.GetString("Generic_Operation_Delete"),
+            if (await BaseService.Dialog.ShowAsync(
+                                string.Format(BaseService.Language.GetString("Warning_Item_Remove"), item),
+                                BaseService.Language.GetString("Generic_Operation_Delete"),
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 try
@@ -138,9 +138,9 @@ namespace ISynergy.ViewModels.Base
                 }
                 catch (FlurlHttpException ex)
                 {
-                    if (ex.Call.Exception.Message.Contains(Exception_Constants.Error_547))
+                    if (ex.Call.Exception.Message.Contains(ExceptionConstants.Error_547))
                     {
-                        await SynergyService.Dialog.ShowErrorAsync(SynergyService.Language.GetString("Warning_No_Remove_547_Error"));
+                        await BaseService.Dialog.ShowErrorAsync(BaseService.Language.GetString("Warning_No_Remove_547_Error"));
                     }
                 }
             }
@@ -159,7 +159,7 @@ namespace ISynergy.ViewModels.Base
             {
                 viewmodel.Owner = this;
 
-                var view = SynergyService.Navigation.GetNavigationBlade(viewmodel.GetType().FullName, viewmodel);
+                var view = BaseService.Navigation.GetNavigationBlade(viewmodel.GetType().FullName, viewmodel);
 
                 if (!Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
                 {
@@ -211,14 +211,14 @@ namespace ISynergy.ViewModels.Base
 
             try
             {
-                await SynergyService.Busy.StartBusyAsync();
+                await BaseService.Busy.StartBusyAsync();
 
                 Items = new ObservableCollection<TEntity>(await RetrieveItemsAsync() ?? new List<TEntity>());
                 result = true;
             }
             finally
             {
-                await SynergyService.Busy.EndBusyAsync();
+                await BaseService.Busy.EndBusyAsync();
             }
 
             return result;
