@@ -254,6 +254,9 @@
     <EmbeddedResource Include="Properties\ISynergy.Framework.Windows.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommonServiceLocator">
+      <Version>2.0.4</Version>
+    </PackageReference>
     <PackageReference Include="Flurl">
       <Version>2.8.0</Version>
     </PackageReference>

@@ -1,4 +1,5 @@
-﻿using ISynergy.Extensions;
+﻿using CommonServiceLocator;
+using ISynergy.Extensions;
 using ISynergy.Services;
 using System;
 using System.Collections;
@@ -43,15 +44,8 @@ namespace ISynergy.Converters
         }
     }
 
-    public class EnumToArrayConverter : MarkupExtension, IValueConverter
+    public class EnumToArrayConverter : IValueConverter
     {
-        public ILanguageService LanguageService { get; }
-
-        public EnumToArrayConverter(ILanguageService languageService)
-        {
-            LanguageService = languageService;
-        }
-
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
             ArrayList list = new ArrayList();
@@ -82,7 +76,7 @@ namespace ISynergy.Converters
             DisplayAttribute[] attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
-                description = LanguageService.GetString(attributes[0].Description);
+                description = ServiceLocator.Current.GetInstance<ILanguageService>().GetString(attributes[0].Description);
 
             return description;
         }
