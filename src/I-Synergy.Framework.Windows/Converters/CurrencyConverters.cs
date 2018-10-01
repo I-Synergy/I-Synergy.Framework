@@ -1,4 +1,5 @@
-﻿using ISynergy.Services;
+﻿using CommonServiceLocator;
+using ISynergy.Services;
 using System;
 using System.Globalization;
 using System.Threading;
@@ -7,15 +8,8 @@ using Windows.UI.Xaml.Markup;
 
 namespace ISynergy.Converters
 {
-    public class CurrencyConverter : MarkupExtension, IValueConverter
+    public class CurrencyConverter : IValueConverter
     {
-        public IConverterService ConverterService { get; }
-
-        public CurrencyConverter(IConverterService converterService)
-        {
-            ConverterService = converterService;
-        }
-
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
             string currencySymbol = "$";
@@ -24,7 +18,7 @@ namespace ISynergy.Converters
             {
                 if (decimal.TryParse(value.ToString(), out decimal amount))
                 {
-                    return ConverterService.ConvertDecimalToCurrency(amount);
+                    return ServiceLocator.Current.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount);
                 }
             }
 
@@ -41,15 +35,8 @@ namespace ISynergy.Converters
         }
     }
 
-    public class NegativeCurrencyConverter : MarkupExtension, IValueConverter
+    public class NegativeCurrencyConverter : IValueConverter
     {
-        public IConverterService ConverterService { get; }
-
-        public NegativeCurrencyConverter(IConverterService converterService)
-        {
-            ConverterService = converterService;
-        }
-
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
             string currencySymbol = "$";
@@ -58,7 +45,7 @@ namespace ISynergy.Converters
             {
                 if (decimal.TryParse(value.ToString(), out decimal amount))
                 {
-                    return ConverterService.ConvertDecimalToCurrency(amount * -1);
+                    return ServiceLocator.Current.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount * -1);
                 }
             }
 
