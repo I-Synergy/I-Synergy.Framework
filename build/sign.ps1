@@ -12,7 +12,7 @@ Write-Host $certFile
 $exe = Get-ChildItem -Path "C:\program files (x86)\Windows Kits" -Recurse -Include signtool.exe | select -First 1
 Write-Host $exe
  
-$timestampUrl = "http://timestamp.verisign.com/scripts/timstamp.dll"
+$timestampUrl = "http://timestamp.comodoca.com/rfc3161"
  
 ForEach ($file in (Get-ChildItem $buildDir))
 {
