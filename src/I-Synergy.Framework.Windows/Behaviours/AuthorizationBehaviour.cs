@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Animations.Behaviors;
+﻿using CommonServiceLocator;
+using Microsoft.Toolkit.Uwp.UI.Animations.Behaviors;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,12 +32,12 @@ namespace ISynergy.Behaviours
         /// <summary>
         /// Initializes a new instance of the <see cref="Authentication"/> class.
         /// </summary>
-        public Authorization(IAuthenticationProvider authenticationProvider)
+        public Authorization()
         {
             if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 if (AuthenticationProvider is null)
-                    AuthenticationProvider = authenticationProvider;
+                    AuthenticationProvider = ServiceLocator.Current.GetInstance<IAuthenticationProvider>();
 
                 if (AuthenticationProvider is null)
                     throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");
