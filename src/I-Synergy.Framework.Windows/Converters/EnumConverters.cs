@@ -121,13 +121,6 @@ namespace ISynergy.Converters
 
     public class EnumToStringConverter : MarkupExtension, IValueConverter
     {
-        public ILanguageService LanguageService { get; }
-
-        public EnumToStringConverter(ILanguageService languageService)
-        {
-            LanguageService = languageService;
-        }
-
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
             return GetDescription(Enum.Parse(value.GetType(), value.ToString()) as Enum);
@@ -151,7 +144,7 @@ namespace ISynergy.Converters
 
             if (attributes != null && attributes.Length > 0)
             {
-                description = LanguageService.GetString(attributes[0].Description);
+                description = ServiceLocator.Current.GetInstance<ILanguageService>().GetString(attributes[0].Description);
             }
 
             return description;
