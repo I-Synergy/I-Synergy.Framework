@@ -20,7 +20,6 @@
       <dependency id="Microsoft.ApplicationInsights" version="2.7.2" />
       <dependency id="Microsoft.Toolkit.Uwp.UI.Controls" version="4.0.0" />
       <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.0" />
-      <dependency id="Microsoft.Extensions.DependencyInjection" version="2.1.1" />
       <dependency id="Microsoft.Extensions.Logging" version="2.1.1" />
       <dependency id="MvvmLightLibsStd10" version="5.4.1.1" />
       <dependency id="Newtonsoft.Json" version="11.0.2" />
