@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DryIoc;
+using System;
 
 namespace ISynergy.Services
 {
     public class UIVisualizerService : UIVisualizerServiceBase
     {
-        public UIVisualizerService(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public UIVisualizerService(IContainer container)
+            : base(container)
         {
         }
     }

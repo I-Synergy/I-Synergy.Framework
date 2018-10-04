@@ -4,7 +4,6 @@ namespace ISynergy.Services
 {
     public interface IBaseService
     {
-        IServiceProvider ServiceProvider { get; }
         IBusyService Busy { get; }
         ILanguageService Language { get; }
         IAuthenticationService Authentication { get; }

@@ -4,7 +4,6 @@ namespace ISynergy.Services
 {
     public abstract class BaseService : IBaseService
     {
-        public IServiceProvider ServiceProvider { get; }
         public IBusyService Busy { get; }
         public ILanguageService Language { get; }
         public ISettingsServiceBase ApplicationSettings { get; }
@@ -17,7 +16,6 @@ namespace ISynergy.Services
         public IConverterService Converter { get; }
 
         public BaseService(
-            IServiceProvider serviceProvider,
             IBusyService busy,
             ILanguageService language,
             IAuthenticationService authentication,
@@ -29,7 +27,6 @@ namespace ISynergy.Services
             IInfoService info,
             IConverterService converter)
         {
-            ServiceProvider = serviceProvider;
             Busy = busy;
             Language = language;
             ApplicationSettings = settings;

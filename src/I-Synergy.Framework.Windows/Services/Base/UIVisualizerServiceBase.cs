@@ -1,4 +1,5 @@
-﻿using ISynergy.ViewModels.Base;
+﻿using DryIoc;
+using ISynergy.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,15 @@ namespace ISynergy.Services
 {
     public abstract class UIVisualizerServiceBase : IUIVisualizerService
     {
-        public IServiceProvider ServiceProvider { get; }
+        public IContainer Container { get; }
 
         public List<ISynergy.Controls.Window> RegisteredWindows { get; internal set; }
 
         private static bool IsShown = false;
 
-        public UIVisualizerServiceBase(IServiceProvider serviceProvider)
+        public UIVisualizerServiceBase(IContainer container)
         {
-            ServiceProvider = serviceProvider;
+            Container = container;
             RegisteredWindows = new List<ISynergy.Controls.Window>();
         }
 
@@ -25,21 +26,21 @@ namespace ISynergy.Services
             where TViewModel : IViewModelDialog<TEntity>
             where TEntity : class, new()
         {
-            if (viewmodel is null) viewmodel = (IViewModelDialog<TEntity>)ServiceProvider.GetService(typeof(TViewModel));
+            if (viewmodel is null) viewmodel = (IViewModelDialog<TEntity>)Container.Resolve(typeof(TViewModel));
 
-            return ShowDialogAsync((ISynergy.Controls.Window)ServiceProvider.GetService(typeof(TWindow)), viewmodel);
+            return ShowDialogAsync((ISynergy.Controls.Window)Container.Resolve(typeof(TWindow)), viewmodel);
         }
 
         public Task<bool?> ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
             where TEntity : class, new()
         {
-            return ShowDialogAsync((ISynergy.Controls.Window)ServiceProvider.GetService(window.GetType()), viewmodel);
+            return ShowDialogAsync((ISynergy.Controls.Window)Container.Resolve(window.GetType()), viewmodel);
         }
 
         public Task<bool?> ShowDialogAsync<TEntity>(Type window, IViewModelDialog<TEntity> viewmodel)
             where TEntity : class, new()
         {
-            return ShowDialogAsync((ISynergy.Controls.Window)ServiceProvider.GetService(window), viewmodel);
+            return ShowDialogAsync((ISynergy.Controls.Window)Container.Resolve(window), viewmodel);
         }
 
         public virtual async Task<bool?> ShowDialogAsync<TEntity>(ISynergy.Controls.Window dialog, IViewModelDialog<TEntity> viewmodel)

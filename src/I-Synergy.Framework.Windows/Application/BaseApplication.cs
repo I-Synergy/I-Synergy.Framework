@@ -1,7 +1,10 @@
-﻿using Flurl.Http;
+﻿using CommonServiceLocator;
+using DryIoc;
+using Flurl.Http;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using ISynergy.Events;
+using ISynergy.Locators;
 using ISynergy.Providers;
 using ISynergy.Services;
 using ISynergy.ViewModels.Base;
@@ -32,24 +35,22 @@ namespace ISynergy
 {
     public abstract class BaseApplication : Application
     {
-        public IServiceProvider ServiceProvider { get; internal set; }
-        public IServiceCollection ServiceCollection { get; internal set; }
-        public IContext Context { get; internal set; }
-        public ILogger Logger { get; internal set; }
+        public IContext Context { get; private set; }
+        public ILogger Logger { get; } = new LoggerFactory().CreateLogger<BaseApplication>();
 
         public bool _preview { get; internal set; }
 
-        ///// <summary>
-        ///// Gets the default DryIoc <see cref="IContainer"/> for the application.
-        ///// </summary>
-        ///// <value>The default <see cref="IContainer"/> instance.</value>
-        //protected IContainer _container { get; set; }
+        /// <summary>
+        /// Gets the default DryIoc <see cref="IContainer"/> for the application.
+        /// </summary>
+        /// <value>The default <see cref="IContainer"/> instance.</value>
+        protected IContainer Container { get; set; }
 
-        ///// <summary>
-        ///// Creates the DryIoc <see cref="IContainer"/> that will be used as the default container.
-        ///// </summary>
-        ///// <returns>A new instance of <see cref="IContainer"/>.</returns>
-        //private IContainer CreateContainer() => new Container(Rules.Default.WithConcreteTypeDynamicRegistrations());
+        /// <summary>
+        /// Creates the DryIoc <see cref="IContainer"/> that will be used as the default container.
+        /// </summary>
+        /// <returns>A new instance of <see cref="IContainer"/>.</returns>
+        private IContainer CreateContainer() => new Container(Rules.Default.WithConcreteTypeDynamicRegistrations());
 
         public BaseApplication()
             : base()
@@ -255,25 +256,25 @@ namespace ISynergy
 #if PREVIEW
             _preview = true;
 #endif
-            ServiceCollection = new ServiceCollection();
-            ServiceCollection.AddLogging();
 
-            ServiceCollection.AddSingleton<IBaseService, BaseService>();
-            ServiceCollection.AddSingleton<IBusyService, BusyService>();
-            ServiceCollection.AddSingleton<ITelemetryService, TelemetryService>();
-            ServiceCollection.AddSingleton<IUIVisualizerService, UIVisualizerService>();
-            ServiceCollection.AddSingleton<INavigationService, NavigationService>();
-            ServiceCollection.AddSingleton<IDialogService, DialogService>();
-            ServiceCollection.AddSingleton<IInfoService, InfoService>();
+            Container = CreateContainer();
 
-            ServiceCollection.AddScoped<IUpdateService, UpdateService>();
-            ServiceCollection.AddScoped<IAuthenticationProvider, AuthenticationProvider>();
-            ServiceCollection.AddScoped<IConverterService, ConverterService>();
-            
+            IoCServiceLocator serviceLocator = new IoCServiceLocator(Container);
+            ServiceLocator.SetLocatorProvider(() => serviceLocator);
 
-            ServiceProvider = ServiceCollection.BuildServiceProvider();
+            // register the locator in DryIoc as well
+            Container.UseInstance<IServiceLocator>(serviceLocator);
+            Container.UseInstance(Logger);
 
-            Logger = ServiceProvider.GetService<ILoggerFactory>().CreateLogger<BaseApplication>();
+            Container.Register<IBusyService, BusyService>(Reuse.ScopedOrSingleton);
+            Container.Register<IDialogService, DialogService>();
+            Container.Register<ITelemetryService, TelemetryService>(Reuse.ScopedOrSingleton);
+            Container.Register<IAuthenticationProvider, AuthenticationProvider>();
+            Container.Register<IUIVisualizerService, UIVisualizerService>(Reuse.ScopedOrSingleton);
+            Container.Register<INavigationService, NavigationService>(Reuse.ScopedOrSingleton);
+            Container.Register<IInfoService, InfoService>();
+            Container.Register<IConverterService, ConverterService>();
+            Container.Register<IUpdateService, UpdateService>(Reuse.ScopedOrSingleton);
 
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
@@ -337,20 +338,18 @@ namespace ISynergy
 
             foreach (var item in viewmodelTypes.Distinct())
             {
-                ServiceCollection.AddSingleton(item);
+                Container.Register(item, Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
             }
 
             foreach (var item in viewTypes.Distinct())
             {
-                ServiceCollection.AddSingleton(item);
+                Container.Register(item, Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
             }
 
             foreach (var item in windowTypes.Distinct())
             {
-                ServiceCollection.AddSingleton(item);
+                Container.Register(item, Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
             }
-
-            ServiceProvider = ServiceCollection.BuildServiceProvider();
 
             foreach (Type view in viewTypes)
             {
@@ -358,7 +357,7 @@ namespace ISynergy
 
                 if (viewmodel != null)
                 {
-                    ServiceProvider.GetService<INavigationService>().Configure(viewmodel.FullName, view);
+                    Container.Resolve<INavigationService>().Configure(viewmodel.FullName, view);
                 }
             }
 
@@ -371,7 +370,7 @@ namespace ISynergy
             string previewTokenUrl = @"https://app-test.i-synergy.nl/oauth/token",
             string previewWebUrl = @"http://test.i-synergy.nl/")
         {
-            Context = ServiceProvider.GetService<IContext>();
+            Context = Container.Resolve<IContext>();
 
             if (_preview)
             {
@@ -385,7 +384,7 @@ namespace ISynergy
             try
             {
                 Logger.LogInformation("Update settings");
-                ServiceProvider.GetService<ISettingsServiceBase>().CheckForUpgrade();
+                Container.Resolve<ISettingsServiceBase>().CheckForUpgrade();
             }
             catch (Exception ex)
             {
@@ -393,7 +392,7 @@ namespace ISynergy
                 Logger.LogError(ex.Message, ex);
             }
 
-            string culture = ServiceProvider.GetService<ISettingsServiceBase>().Application_Culture;
+            string culture = Container.Resolve<ISettingsServiceBase>().Application_Culture;
 
             if (culture is null) culture = "en";
 
@@ -402,13 +401,13 @@ namespace ISynergy
 
             Context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
 
-            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).InstrumentationKey = ServiceProvider.GetService<ISettingsServiceBase>().ApplicationInsights_InstrumentationKey;
-            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).Context.User.UserAgent = ServiceProvider.GetService<IInfoService>().ProductName;
-            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).Context.Session.Id = Guid.NewGuid().ToString();
-            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).Context.Component.Version = ServiceProvider.GetService<IInfoService>().ProductVersion.ToString();
-            ((TelemetryClient)ServiceProvider.GetService<ITelemetryService>().Client).Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).InstrumentationKey = Container.Resolve<ISettingsServiceBase>().ApplicationInsights_InstrumentationKey;
+            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.User.UserAgent = Container.Resolve<IInfoService>().ProductName;
+            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.Session.Id = Guid.NewGuid().ToString();
+            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.Component.Version = Container.Resolve<IInfoService>().ProductVersion.ToString();
+            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.Device.OperatingSystem = Environment.OSVersion.ToString();
 
-            CustomXamlResourceLoader.Current = new CustomResourceLoader(ServiceProvider.GetService<ILanguageService>());
+            CustomXamlResourceLoader.Current = new CustomResourceLoader(Container.Resolve<ILanguageService>());
         }
 
         public virtual async Task HandleException(Exception ex)
@@ -417,52 +416,52 @@ namespace ISynergy
 
             if (!(connections != null && connections.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess))
             {
-                await ServiceProvider.GetService<IDialogService>().ShowInformationAsync(
-                    ServiceProvider.GetService<ILanguageService>().GetString("EX_DEFAULT_INTERNET"));
+                await Container.Resolve<IDialogService>().ShowInformationAsync(
+                    Container.Resolve<ILanguageService>().GetString("EX_DEFAULT_INTERNET"));
             }
             else
             {
                 if (ex is NotImplementedException)
                 {
-                    await ServiceProvider.GetService<IDialogService>().ShowInformationAsync(
-                        ServiceProvider.GetService<ILanguageService>().GetString("EX_FUTURE_MODULE"));
+                    await Container.Resolve<IDialogService>().ShowInformationAsync(
+                        Container.Resolve<ILanguageService>().GetString("EX_FUTURE_MODULE"));
                 }
                 else if (ex is UnauthorizedAccessException)
                 {
-                    await ServiceProvider.GetService<IDialogService>().ShowErrorAsync(ex.Message);
+                    await Container.Resolve<IDialogService>().ShowErrorAsync(ex.Message);
                 }
                 else if (ex is IOException)
                 {
                     if (ex.Message.Contains("The process cannot access the file") && ex.Message.Contains("because it is being used by another process"))
                     {
-                        await ServiceProvider.GetService<IDialogService>().ShowErrorAsync(
-                            ServiceProvider.GetService<ILanguageService>().GetString("EX_FILEINUSE"));
+                        await Container.Resolve<IDialogService>().ShowErrorAsync(
+                            Container.Resolve<ILanguageService>().GetString("EX_FILEINUSE"));
                     }
                     else
                     {
-                        await ServiceProvider.GetService<IDialogService>().ShowErrorAsync(
-                            ServiceProvider.GetService<ILanguageService>().GetString("EX_DEFAULT"));
+                        await Container.Resolve<IDialogService>().ShowErrorAsync(
+                            Container.Resolve<ILanguageService>().GetString("EX_DEFAULT"));
                     }
                 }
                 else if (ex is ArgumentException)
                 {
-                    await ServiceProvider.GetService<IDialogService>().ShowWarningAsync(
+                    await Container.Resolve<IDialogService>().ShowWarningAsync(
                         string.Format(
-                            ServiceProvider.GetService<ILanguageService>().GetString("EX_ARGUMENTNULL"),
+                            Container.Resolve<ILanguageService>().GetString("EX_ARGUMENTNULL"),
                             ((ArgumentException)ex).ParamName)
                         );
                 }
                 else
                 {
-                    await ServiceProvider.GetService<IDialogService>().ShowErrorAsync(
-                        ServiceProvider.GetService<ILanguageService>().GetString("EX_DEFAULT"));
+                    await Container.Resolve<IDialogService>().ShowErrorAsync(
+                        Container.Resolve<ILanguageService>().GetString("EX_DEFAULT"));
                 }
             }
 
             try
             {
-                ServiceProvider.GetService<ITelemetryService>().TrackException(ex);
-                ServiceProvider.GetService<ITelemetryService>().Flush();
+                Container.Resolve<ITelemetryService>().TrackException(ex);
+                Container.Resolve<ITelemetryService>().Flush();
             }
             catch { }
             finally
