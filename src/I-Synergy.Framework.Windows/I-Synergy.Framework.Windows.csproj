@@ -289,7 +289,7 @@
       <Version>11.0.2</Version>
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt">
-      <Version>5.2.4</Version>
+      <Version>5.3.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
