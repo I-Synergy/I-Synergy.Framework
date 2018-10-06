@@ -17,6 +17,7 @@
       <dependency id="Flurl" version="2.8.0" />
       <dependency id="Flurl.Http" version="2.4.0" />
       <dependency id="Mapster" version="3.2.0" />
+      <dependency id="CommonServiceLocator" version="2.0.4" />
       <dependency id="Microsoft.ApplicationInsights" version="2.7.2" />
       <dependency id="Microsoft.Toolkit.Uwp.UI.Controls" version="4.0.0" />
       <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.0" />

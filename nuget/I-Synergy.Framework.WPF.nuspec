@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>I-Synergy.Framework.Windows</id>
+    <version>2018.0.0</version>
+    <authors>Ismail Hassani</authors>
+    <owners>International Intelligence</owners>
+    <iconUrl>https://app.i-synergy.nl/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>I-Synergy Framework for WPF</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2008-2018</copyright>
+    <tags>I-Synergy Framework WPF</tags>
+    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy%20Framework</projectUrl>
+
+    <dependencies>
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="..\output\I-Synergy.Framework.WPF\Release\I-Synergy.Framework.**" target="lib\net461" />
+  </files>
+</package>
