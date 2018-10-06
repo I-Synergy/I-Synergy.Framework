@@ -12,6 +12,10 @@
     <copyright>Copyright 2008-2018</copyright>
     <tags>I-Synergy Framework WPF</tags>
     <projectUrl>https://dev.azure.com/i-synergy/I-Synergy%20Framework</projectUrl>
+
+    <dependencies>
+      <dependency id="I-Synergy.Framework.Core" version="2018.*" />
+    </dependencies>
   </metadata>
 
   <files>
