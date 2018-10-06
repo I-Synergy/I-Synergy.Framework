@@ -1,4 +1,5 @@
 ﻿using CommonServiceLocator;
+using ISynergy.Providers;
 using Microsoft.Toolkit.Uwp.UI.Animations.Behaviors;
 using System;
 using Windows.UI.Xaml;
