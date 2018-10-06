@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace ISynergy
+namespace ISynergy.Providers
 {
     public interface IAuthenticationProvider
     {

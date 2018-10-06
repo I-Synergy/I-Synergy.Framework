@@ -38,7 +38,7 @@ namespace ISynergy
         public IContext Context { get; private set; }
         public ILogger Logger { get; } = new LoggerFactory().CreateLogger<BaseApplication>();
 
-        public bool _preview { get; internal set; }
+        public bool _preview { get; private set; }
 
         /// <summary>
         /// Gets the default DryIoc <see cref="IContainer"/> for the application.
