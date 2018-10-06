@@ -14,7 +14,7 @@ Write-Host $exe
  
 $timestampUrl = "http://timestamp.comodoca.com/rfc3161"
  
-ForEach ($file in (Get-ChildItem $buildDir))
+ForEach ($file in (Get-ChildItem $buildDir).FullName.Contains("I-Synergy.Framework"))
 {
   if ($file.Extension -eq ".dll")
   {
