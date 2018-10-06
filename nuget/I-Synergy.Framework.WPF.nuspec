@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>I-Synergy.Framework.Windows</id>
+    <id>I-Synergy.Framework.WPF</id>
     <version>2018.0.0</version>
     <authors>Ismail Hassani</authors>
     <owners>International Intelligence</owners>
