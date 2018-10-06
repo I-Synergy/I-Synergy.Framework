@@ -188,7 +188,6 @@
     <Compile Include="Locators\DialogTypeLocator.cs" />
     <Compile Include="Locators\DialogTypeLocatorCache.cs" />
     <Compile Include="Locators\IDialogTypeLocator.cs" />
-    <Compile Include="Locators\IoCServiceLocator.cs" />
     <Compile Include="Models\NavigationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Base\AuthenticationServiceBase.cs" />

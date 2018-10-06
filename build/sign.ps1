@@ -14,14 +14,14 @@ Write-Host $exe
  
 $timestampUrl = "http://timestamp.comodoca.com/rfc3161"
  
-ForEach ($file in (Get-ChildItem $buildDir))
+ForEach ($file in (Get-ChildItem $buildDir -Filter I-Synergy*))
 {
-  if ($file.Extension -eq ".dll" -and $file.FullName -like 'I-Synergy.Framework*')
+  if ($file.Extension -eq ".dll")
   {
     Write-Host $file.FullName
     &$exe sign /f $certFile /p $pw -tr $timestampUrl $file.FullName
   }
-  elseif ($file.Extension -eq ".exe"-and $file.FullName -like 'I-Synergy.Framework*')
+  elseif ($file.Extension -eq ".exe")
   {
     Write-Host $file.FullName
     &$exe sign /f $certFile /p $pw -tr $timestampUrl $file.FullName
