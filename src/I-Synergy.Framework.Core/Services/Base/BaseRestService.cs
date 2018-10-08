@@ -10,7 +10,7 @@ using ISynergy.Events;
 
 namespace ISynergy.Services
 {
-    public abstract partial class RestServiceBase
+    public abstract partial class BaseRestService
     {
         protected IContext _context;
         protected ILanguageService LanguageService;
@@ -33,7 +33,7 @@ namespace ISynergy.Services
             }
         }
 
-        public RestServiceBase(
+        public BaseRestService(
             IContext context, 
             ILanguageService languageService, 
             IDialogService dialogService)

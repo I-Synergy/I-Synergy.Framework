@@ -13,7 +13,7 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return BaseService.Language.GetString("Generic_Note");
+                return BaseService.LanguageService.GetString("Generic_Note");
             }
         }
 

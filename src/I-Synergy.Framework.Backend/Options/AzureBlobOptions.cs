@@ -1,12 +1,12 @@
-﻿namespace ISynergy.Helpers
+﻿namespace ISynergy.Options
 {
-    public class AzureBlobSetting
+    public class AzureBlobOptions
     {
         public string AccountName { get; set; }
         public string AccountKey { get; set; }
     }
 
-    public class AzureDocumentSetting
+    public class AzureDocumentOptions
     {
         public string AccountName { get; set; }
         public string AccountKey { get; set; }

@@ -50,7 +50,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await BaseService.Dialog.ShowErrorAsync(BaseService.Language.GetString("Warning_Validation_Failed"));
+                    await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }

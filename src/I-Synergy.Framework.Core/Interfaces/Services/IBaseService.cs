@@ -4,15 +4,15 @@ namespace ISynergy.Services
 {
     public interface IBaseService
     {
-        IBusyService Busy { get; }
-        ILanguageService Language { get; }
-        IAuthenticationService Authentication { get; }
-        ISettingsServiceBase ApplicationSettings { get; }
-        ITelemetryService Telemetry { get; }
-        IDialogService Dialog { get; }
-        IUIVisualizerService UIVisualizer { get; }
-        INavigationService Navigation { get; }
-        IInfoService Info { get; }
-        IConverterService Converter { get; }
+        IBusyService BusyService { get; }
+        ILanguageService LanguageService { get; }
+        IAuthenticationService AuthenticationService { get; }
+        IBaseSettingsService BaseSettingsService { get; }
+        ITelemetryService TelemetryService { get; }
+        IDialogService DialogService { get; }
+        IUIVisualizerService UIVisualizerService { get; }
+        INavigationService NavigationService { get; }
+        IInfoService InfoService { get; }
+        IConverterService ConverterService { get; }
     }
 }

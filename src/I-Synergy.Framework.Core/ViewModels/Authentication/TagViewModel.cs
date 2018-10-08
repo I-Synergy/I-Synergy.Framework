@@ -14,7 +14,7 @@ namespace ISynergy.ViewModels.Authentication
         {
             get
             {
-                return BaseService.Language.GetString("Generic_ScanTag");
+                return BaseService.LanguageService.GetString("Generic_ScanTag");
             }
         }
 

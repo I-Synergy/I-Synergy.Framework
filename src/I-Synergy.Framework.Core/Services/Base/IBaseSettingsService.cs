@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
-    public interface ISettingsServiceBase
+    public interface IBaseSettingsService
     {
         #region "User Settings"
         string ApplicationInsights_InstrumentationKey { get; }

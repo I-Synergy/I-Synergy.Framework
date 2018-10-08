@@ -102,7 +102,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await BaseService.Dialog.ShowErrorAsync(BaseService.Language.GetString("Warning_Validation_Failed"));
+                    await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }
@@ -124,12 +124,12 @@ namespace ISynergy.ViewModels.Base
             }
             else
             {
-                item = BaseService.Language.GetString("Generic_This_Item");
+                item = BaseService.LanguageService.GetString("Generic_This_Item");
             }
 
-            if (await BaseService.Dialog.ShowAsync(
-                                string.Format(BaseService.Language.GetString("Warning_Item_Remove"), item),
-                                BaseService.Language.GetString("Generic_Operation_Delete"),
+            if (await BaseService.DialogService.ShowAsync(
+                                string.Format(BaseService.LanguageService.GetString("Warning_Item_Remove"), item),
+                                BaseService.LanguageService.GetString("Generic_Operation_Delete"),
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 try
@@ -140,7 +140,7 @@ namespace ISynergy.ViewModels.Base
                 {
                     if (ex.Call.Exception.Message.Contains(ExceptionConstants.Error_547))
                     {
-                        await BaseService.Dialog.ShowErrorAsync(BaseService.Language.GetString("Warning_No_Remove_547_Error"));
+                        await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_No_Remove_547_Error"));
                     }
                 }
             }
@@ -159,7 +159,7 @@ namespace ISynergy.ViewModels.Base
             {
                 viewmodel.Owner = this;
 
-                var view = BaseService.Navigation.GetNavigationBlade(viewmodel.GetType().FullName, viewmodel);
+                var view = BaseService.NavigationService.GetNavigationBlade(viewmodel.GetType().FullName, viewmodel);
 
                 if (!Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
                 {
@@ -211,14 +211,14 @@ namespace ISynergy.ViewModels.Base
 
             try
             {
-                await BaseService.Busy.StartBusyAsync();
+                await BaseService.BusyService.StartBusyAsync();
 
                 Items = new ObservableCollection<TEntity>(await RetrieveItemsAsync() ?? new List<TEntity>());
                 result = true;
             }
             finally
             {
-                await BaseService.Busy.EndBusyAsync();
+                await BaseService.BusyService.EndBusyAsync();
             }
 
             return result;

@@ -4,22 +4,22 @@ namespace ISynergy.Services
 {
     public abstract class BaseService : IBaseService
     {
-        public IBusyService Busy { get; }
-        public ILanguageService Language { get; }
-        public ISettingsServiceBase ApplicationSettings { get; }
-        public ITelemetryService Telemetry { get; }
-        public IDialogService Dialog { get; }
-        public IUIVisualizerService UIVisualizer { get; }
-        public INavigationService Navigation { get; }
-        public IAuthenticationService Authentication { get; }
-        public IInfoService Info { get; }
-        public IConverterService Converter { get; }
+        public IBusyService BusyService { get; }
+        public ILanguageService LanguageService { get; }
+        public IBaseSettingsService BaseSettingsService { get; }
+        public ITelemetryService TelemetryService { get; }
+        public IDialogService DialogService { get; }
+        public IUIVisualizerService UIVisualizerService { get; }
+        public INavigationService NavigationService { get; }
+        public IAuthenticationService AuthenticationService { get; }
+        public IInfoService InfoService { get; }
+        public IConverterService ConverterService { get; }
 
         public BaseService(
             IBusyService busy,
             ILanguageService language,
             IAuthenticationService authentication,
-            ISettingsServiceBase settings,
+            IBaseSettingsService settings,
             ITelemetryService telemetry,
             IDialogService dialog,
             IUIVisualizerService uiVisualizer,
@@ -27,16 +27,16 @@ namespace ISynergy.Services
             IInfoService info,
             IConverterService converter)
         {
-            Busy = busy;
-            Language = language;
-            ApplicationSettings = settings;
-            Telemetry = telemetry;
-            Dialog = dialog;
-            UIVisualizer = uiVisualizer;
-            Navigation = navigation;
-            Authentication = authentication;
-            Info = Info;
-            Converter = converter;
+            BusyService = busy;
+            LanguageService = language;
+            BaseSettingsService = settings;
+            TelemetryService = telemetry;
+            DialogService = dialog;
+            UIVisualizerService = uiVisualizer;
+            NavigationService = navigation;
+            AuthenticationService = authentication;
+            InfoService = InfoService;
+            ConverterService = converter;
         }
     }
 }

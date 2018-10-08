@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Views.Library
 {
-    public sealed partial class NoteWindow : INoteWindow
+    public sealed partial class NoteWindow : IWindow
     {
         private NoteViewModel ViewModel => DataContext as NoteViewModel;
 
