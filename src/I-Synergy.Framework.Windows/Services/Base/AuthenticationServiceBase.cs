@@ -12,14 +12,14 @@ namespace ISynergy.Services
         public IContext Context { get; }
         public IBusyService Busy { get; }
         public ILanguageService Language { get; }
-        public ISettingsServiceBase Settings { get; }
+        public IBaseSettingsService Settings { get; }
         public ITelemetryService Telemetry { get; }
 
         public AuthenticationServiceBase(
             IContext context,
             IBusyService busy,
             ILanguageService language,
-            ISettingsServiceBase settings,
+            IBaseSettingsService settings,
             ITelemetryService telemetry)
         {
             Context = context;

@@ -82,7 +82,7 @@ namespace ISynergy.ViewModels.Base
 
                 if (item.HasErrors)
                 {
-                    await DialogService.ShowErrorAsync(BaseService.Language.GetString("Warning_Validation_Failed"));
+                    await DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Validation_Failed"));
                     return false;
                 }
             }

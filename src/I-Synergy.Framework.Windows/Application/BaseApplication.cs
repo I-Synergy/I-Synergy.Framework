@@ -384,7 +384,7 @@ namespace ISynergy
             try
             {
                 Logger.LogInformation("Update settings");
-                Container.Resolve<ISettingsServiceBase>().CheckForUpgrade();
+                Container.Resolve<IBaseSettingsService>().CheckForUpgrade();
             }
             catch (Exception ex)
             {
@@ -392,7 +392,7 @@ namespace ISynergy
                 Logger.LogError(ex.Message, ex);
             }
 
-            string culture = Container.Resolve<ISettingsServiceBase>().Application_Culture;
+            string culture = Container.Resolve<IBaseSettingsService>().Application_Culture;
 
             if (culture is null) culture = "en";
 
@@ -401,7 +401,7 @@ namespace ISynergy
 
             Context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
 
-            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).InstrumentationKey = Container.Resolve<ISettingsServiceBase>().ApplicationInsights_InstrumentationKey;
+            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).InstrumentationKey = Container.Resolve<IBaseSettingsService>().ApplicationInsights_InstrumentationKey;
             ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.User.UserAgent = Container.Resolve<IInfoService>().ProductName;
             ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.Session.Id = Guid.NewGuid().ToString();
             ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.Component.Version = Container.Resolve<IInfoService>().ProductVersion.ToString();

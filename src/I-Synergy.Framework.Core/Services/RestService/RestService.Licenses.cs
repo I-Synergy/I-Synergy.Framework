@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
-    public abstract partial class RestServiceBase : IAccountsManagerContract
+    public abstract partial class BaseRestService : IAccountsManagerContract
     {
         public Task<List<AccountFull>> GetAccountsAsync(CancellationToken cancellationToken = default) =>
             GetAccountJsonAsync<List<AccountFull>>(new object[] { ControllerPaths.Accounts });

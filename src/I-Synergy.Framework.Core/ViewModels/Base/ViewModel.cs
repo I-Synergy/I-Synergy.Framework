@@ -73,18 +73,18 @@ namespace ISynergy.ViewModels.Base
         /// </summary>
         public bool Mode_IsAdvanced
         {
-            get { return BaseService.ApplicationSettings.Application_Advanced; }
+            get { return BaseService.BaseSettingsService.Application_Advanced; }
             set
             {
-                BaseService.ApplicationSettings.Application_Advanced = value;
+                BaseService.BaseSettingsService.Application_Advanced = value;
 
                 if (value)
                 {
-                    Mode_ToolTip = BaseService.Language.GetString("Generic_Advanced");
+                    Mode_ToolTip = BaseService.LanguageService.GetString("Generic_Advanced");
                 }
                 else
                 {
-                    Mode_ToolTip = BaseService.Language.GetString("Generic_Basic");
+                    Mode_ToolTip = BaseService.LanguageService.GetString("Generic_Basic");
                 }
             }
         }
@@ -102,11 +102,11 @@ namespace ISynergy.ViewModels.Base
                 {
                     if (Mode_IsAdvanced)
                     {
-                        result = BaseService.Language.GetString("Generic_Advanced");
+                        result = BaseService.LanguageService.GetString("Generic_Advanced");
                     }
                     else
                     {
-                        result = BaseService.Language.GetString("Generic_Basic");
+                        result = BaseService.LanguageService.GetString("Generic_Basic");
                     }
                 }
 
@@ -128,7 +128,7 @@ namespace ISynergy.ViewModels.Base
 
             TrackView();
 
-            Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.Busy.EndBusyAsync());
+            Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.BusyService.EndBusyAsync());
 
             Culture = Thread.CurrentThread.CurrentCulture;
             Culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
@@ -141,7 +141,7 @@ namespace ISynergy.ViewModels.Base
             Close_Command = new RelayCommand(() => Messenger.Default.Send(new OnCancellationMessage(this)));
         }
 
-        public virtual void TrackView() => BaseService.Telemetry.TrackPageView(this.GetType().Name.Replace("ViewModel", ""));
+        public virtual void TrackView() => BaseService.TelemetryService.TrackPageView(this.GetType().Name.Replace("ViewModel", ""));
 
         protected List<string> FlattenErrors()
         {
@@ -168,7 +168,7 @@ namespace ISynergy.ViewModels.Base
 
             if (attributes != null && attributes.Length > 0)
             {
-                description = BaseService.Language.GetString(attributes[0].Description);
+                description = BaseService.LanguageService.GetString(attributes[0].Description);
             }
 
             return description;

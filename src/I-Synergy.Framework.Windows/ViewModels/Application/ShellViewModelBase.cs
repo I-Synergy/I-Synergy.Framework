@@ -22,7 +22,7 @@ namespace ISynergy.ViewModels
     public abstract class ShellViewModelBase : ViewModel
     {
         public IAuthenticationService AuthenticationService { get; }
-        public IBusyService Busy => BaseService.Busy;
+        public IBusyService Busy => BaseService.BusyService;
 
         protected const string SetApplicationColor = "Set Application Color";
         protected const string SetApplicationWallpaper = "Set Application Wallpaper";
@@ -86,7 +86,7 @@ namespace ISynergy.ViewModels
                 {
                     if (result.Property.ToString() == nameof(Login_Command) && result.IsAuthenticated)
                     {
-                        await BaseService.Dialog.ShowGreetingAsync(Context.CurrentProfile.Username);
+                        await BaseService.DialogService.ShowGreetingAsync(Context.CurrentProfile.Username);
                         result.IsHandled = true;
                     }
                 }
@@ -110,7 +110,7 @@ namespace ISynergy.ViewModels
                         BaseService, 
                         request.EnableLogin);
 
-                    var tagResult = await BaseService.UIVisualizer.ShowDialogAsync(typeof(ITagWindow), tagVM);
+                    var tagResult = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(ITagWindow), tagVM);
 
                     if (tagResult.HasValue && tagResult.Value && tagVM.IsValid)
                     {
@@ -141,7 +141,7 @@ namespace ISynergy.ViewModels
                             Context,
                             BaseService);
 
-                        var pinResult = await BaseService.UIVisualizer.ShowDialogAsync(typeof(IPincodeWindow), pinVM);
+                        var pinResult = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(IPincodeWindow), pinVM);
 
                         if (pinResult == true && pinVM.Result)
                         {
@@ -153,7 +153,7 @@ namespace ISynergy.ViewModels
                         }
                         else if(pinResult == true)
                         {
-                            await BaseService.Dialog.ShowErrorAsync(BaseService.Language.GetString("Warning_Pincode_Invalid"));
+                            await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Pincode_Invalid"));
                         }
                     }
                 }
@@ -166,13 +166,13 @@ namespace ISynergy.ViewModels
 
         public async Task ProcessLoginRequestAsync()
         {
-            BaseService.ApplicationSettings.User_AutoLogin = false;
+            BaseService.BaseSettingsService.User_AutoLogin = false;
 
             await AuthenticationService.ProcessLoginRequestAsync();
 
             PopulateNavItems();
 
-            BaseService.Navigation.Navigate(typeof(ILoginViewModel).FullName);
+            BaseService.NavigationService.Navigate(typeof(ILoginViewModel).FullName);
         }
 
         protected abstract void PopulateNavItems();
@@ -197,7 +197,7 @@ namespace ISynergy.ViewModels
 
         protected Task ShowDialogRestartAfterUpdate()
         {
-            return BaseService.Dialog.ShowInformationAsync(BaseService.Language.GetString("Generic_UpdateRestart"));
+            return BaseService.DialogService.ShowInformationAsync(BaseService.LanguageService.GetString("Generic_UpdateRestart"));
         }
 
         /// <summary>
@@ -290,14 +290,14 @@ namespace ISynergy.ViewModels
 
         protected void SaveLastUsername(string username)
         {
-            BaseService.ApplicationSettings.Application_User = username;
+            BaseService.BaseSettingsService.Application_User = username;
         }
 
         private void CurrentWallpaperChanged(object sender, EventArgs e)
         {
             if (sender != null && sender is byte[])
             {
-                BaseService.ApplicationSettings.Application_Wallpaper = sender as byte[];
+                BaseService.BaseSettingsService.Application_Wallpaper = sender as byte[];
             }
         }
 
@@ -307,11 +307,11 @@ namespace ISynergy.ViewModels
                 Context,
                 BaseService);
 
-            var result = await BaseService.UIVisualizer.ShowDialogAsync(typeof(LanguageWindow), langVm);
+            var result = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(LanguageWindow), langVm);
 
             if (result.HasValue && result.Value)
             {
-                if (await BaseService.Dialog.ShowAsync(BaseService.Language.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (await BaseService.DialogService.ShowAsync(BaseService.LanguageService.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await RestartApplication();
                 }
@@ -324,15 +324,15 @@ namespace ISynergy.ViewModels
                 Context,
                 BaseService);
 
-            var result = await BaseService.UIVisualizer.ShowDialogAsync(typeof(ThemeWindow), langVm);
+            var result = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(ThemeWindow), langVm);
 
             if (result.HasValue && result.Value)
             {
-                if (await BaseService.Dialog.ShowAsync(
-                BaseService.Language.GetString("Warning_Color_Change") +
+                if (await BaseService.DialogService.ShowAsync(
+                BaseService.LanguageService.GetString("Warning_Color_Change") +
                 Environment.NewLine +
-                BaseService.Language.GetString("Generic_Do_you_want_to_do_it_now"),
-                BaseService.Language.GetString("TitleQuestion"),
+                BaseService.LanguageService.GetString("Generic_Do_you_want_to_do_it_now"),
+                BaseService.LanguageService.GetString("TitleQuestion"),
                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await RestartApplication();
@@ -348,7 +348,7 @@ namespace ISynergy.ViewModels
 
         public async Task RestartApplication()
         {
-            await BaseService.Dialog.ShowInformationAsync("Please restart the application.");
+            await BaseService.DialogService.ShowInformationAsync("Please restart the application.");
 
             Application.Current.Exit();
         }

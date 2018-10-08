@@ -32,9 +32,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy
 {
-    public abstract class BaseStartup<TDbContext, TUser> : IAsyncInitialization
-        where TDbContext : DbContext
-        where TUser : IdentityUser
+    public abstract class BaseStartup : IAsyncInitialization
     {
         protected abstract string ApiDisplayName { get; }
 
@@ -67,21 +65,11 @@ namespace ISynergy
             AddLocalization(services);
             AddOptions(services);
             AddCaching(services);
-            AddDbServices(services);
             AddDataProtectionService(services);
-            AddAuthentication(services);
-            AddAuthorization(services);
-            AddMultiTenancy(services);
-            AddMultiTenantActionFilter(services);
             AddMessageService(services);
             AddServices(services);
-            AddIdentity(services);
             AddLogging(services);
-            AddManagers(services);
-            AddMappers(services);
-            AddPaymentClient(services);
             AddCloudStorage(services);
-            AddSignalR(services);
             AddMvc(services);
             AddRouting(services);
             AddSwaggerGeneration(services);
@@ -105,15 +93,6 @@ namespace ISynergy
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseMvc();
-        }
-
-        protected virtual void AddSignalR(IServiceCollection services)
-        {
-            services.AddSignalR(options =>
-            {
-                options.EnableDetailedErrors = true;
-            })
-            .AddMessagePackProtocol();
         }
 
         /// <summary>
@@ -153,6 +132,195 @@ namespace ISynergy
         protected virtual void AddDataProtectionService(IServiceCollection services)
         {
             services.AddDataProtection();
+        }
+
+        
+
+        /// <summary>
+        /// AddMessageService
+        /// </summary>
+        /// <param name="services"></param>
+        /// <example>
+        /// <code>
+        /// services.AddScoped&lt;IEmailSender, MessageService>();
+        /// services.AddScoped&lt;ISmsSender, MessageService>();
+        /// </code>
+        /// </example>
+        protected virtual void AddMessageService(IServiceCollection services)
+        {
+        }
+
+        /// <summary>
+        /// AddServices
+        /// </summary>
+        /// <param name="services"></param>
+        /// <example>
+        /// <code>
+        /// services.AddScoped&lt;IFactoryService, FactoryService>();
+        /// </code>
+        /// </example>
+        protected virtual void AddServices(IServiceCollection services)
+        {
+        }
+
+        protected virtual void AddLogging(IServiceCollection services)
+        {
+            services.AddLogging();
+        }
+
+        protected virtual void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
+        {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.Configure<MvcOptions>(options =>
+            {
+                if (!Environment.IsDevelopment())
+                    options.Filters.Add(new RequireHttpsAttribute());
+            });
+
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization()
+                .AddJsonOptions(options =>
+                {
+                    var jsonSettings = options.SerializerSettings;
+
+                    jsonSettings.Formatting = Formatting.None;
+                    jsonSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+                    // Don't include null objects in Json, but only for production environments.
+                    jsonSettings.NullValueHandling =
+                        !Environment.IsDevelopment()
+                            ? NullValueHandling.Ignore
+                            : NullValueHandling.Include;
+
+                    // Treat datetime as unspecified in Json serializer.
+                    // This means that there will be no offset information (Z/+00:00) in the output Json.
+                    jsonSettings.DateFormatString = Constants.DateTimeOffsetFormat;
+                    jsonSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                    jsonSettings.DateParseHandling = DateParseHandling.DateTimeOffset;
+                    jsonSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+
+                    // Serialize enums as string, instead of by their integer value.
+                    var enumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
+                    jsonSettings.Converters.Add(enumConverter);
+                });
+
+        }
+
+        protected virtual void AddRouting(IServiceCollection services)
+        {
+            services.AddRouting(options =>
+            {
+                // Auto add trailing slash to url's. This is a workaround for, for example, providing emails in the url.
+                // A request won't get handled if it has a period (.) in the parameters, unless there's a trailing slash at the end.
+                // /api/controller/test@user.com <- DOES NOT WORK
+                // /api/controller/test@user.com/ <- DOES WORK
+                options.AppendTrailingSlash = true;
+            });
+        }
+
+        protected virtual void AddSwaggerGeneration(IServiceCollection services)
+        {
+            if (Environment.IsDevelopment())
+            {
+                services.AddSwaggerGen(options =>
+                {
+                    options.CustomSchemaIds(c => c.FullName);
+                    options.SwaggerDoc("v1", new Info
+                    {
+                        Title = ApiDisplayName,
+                        Version = "v1"
+                    });
+
+                    var xmlDocPath = Path.ChangeExtension(Assembly.GetEntryAssembly().Location, ".xml");
+                    options.IncludeXmlComments(xmlDocPath);
+                    options.OperationFilter<AuthorizeCheckOperationFilter>();
+                    options.AddSecurityDefinition(Constants.SecuritySchemeKey, new OAuth2Scheme
+                    {
+                        Type = "oauth2",
+                        Flow = "password",
+                        AuthorizationUrl = authorizationEndpointPath,
+                        TokenUrl = tokenEndpointPath,
+                        Scopes = new Dictionary<string, string>()
+                        {
+                            { "openid", "openid" },
+                            { "offline_access", "offline_access" }
+                        }
+                    });
+                });
+            }
+        }
+
+        /// <summary>
+        /// AddTelemetry
+        /// </summary>
+        /// <param name="services"></param>
+        /// <example>
+        /// <code>
+        /// // Configure SnapshotCollector from application settings
+        /// services.Configure&lt;SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
+        /// 
+        /// // Add SnapshotCollector telemetry processor.
+        /// services.AddSingleton&lt;ITelemetryInitializer, UserInfoTelemetryInitializer>();
+        /// services.AddSingleton&lt;ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory>();
+        /// </code>
+        /// </example>
+        protected virtual void AddTelemetry(IServiceCollection services)
+        {
+        }
+    }
+
+    public abstract class BaseStartup<TDbContext, TUser> : BaseStartup, IAsyncInitialization
+        where TDbContext : DbContext
+        where TUser : IdentityUser
+    {
+        public BaseStartup(IHostingEnvironment environment, IConfiguration configuration)
+            : base(environment, configuration)
+        {
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public new virtual void ConfigureServices(IServiceCollection services)
+        {
+            // Add framework services.
+            AddLocalization(services);
+            AddOptions(services);
+            AddCaching(services);
+            AddDbServices(services);
+            AddDataProtectionService(services);
+            AddAuthentication(services);
+            AddAuthorization(services);
+            AddMultiTenancy(services);
+            AddMultiTenantActionFilter(services);
+            AddMessageService(services);
+            AddServices(services);
+            AddIdentity(services);
+            AddLogging(services);
+            AddManagers(services);
+            AddMappers(services);
+            AddPaymentClient(services);
+            AddCloudStorage(services);
+            AddSignalR(services);
+            AddMvc(services);
+            AddRouting(services);
+            AddSwaggerGeneration(services);
+            AddTelemetry(services);
+        }
+
+        protected virtual void AddSignalR(IServiceCollection services)
+        {
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            })
+            .AddMessagePackProtocol();
         }
 
         protected virtual void AddAuthentication(IServiceCollection services)
@@ -267,33 +435,6 @@ namespace ISynergy
         {
         }
 
-        /// <summary>
-        /// AddMessageService
-        /// </summary>
-        /// <param name="services"></param>
-        /// <example>
-        /// <code>
-        /// services.AddScoped&lt;IEmailSender, MessageService>();
-        /// services.AddScoped&lt;ISmsSender, MessageService>();
-        /// </code>
-        /// </example>
-        protected virtual void AddMessageService(IServiceCollection services)
-        {
-        }
-
-        /// <summary>
-        /// AddServices
-        /// </summary>
-        /// <param name="services"></param>
-        /// <example>
-        /// <code>
-        /// services.AddScoped&lt;IFactoryService, FactoryService>();
-        /// </code>
-        /// </example>
-        protected virtual void AddServices(IServiceCollection services)
-        {
-        }
-
         protected virtual void AddDbServices(IServiceCollection services)
         {
             string DataConnection = Configuration.GetConnectionString("ConnectionString");
@@ -372,11 +513,6 @@ namespace ISynergy
             });
         }
 
-        protected virtual void AddLogging(IServiceCollection services)
-        {
-            services.AddLogging();
-        }
-
         protected abstract void AddManagers(IServiceCollection services);
         protected abstract void AddMappers(IServiceCollection services);
 
@@ -403,130 +539,6 @@ namespace ISynergy
         {
         }
 
-        protected virtual void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
-        {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.Configure<MvcOptions>(options =>
-            {
-                if (!Environment.IsDevelopment())
-                    options.Filters.Add(new RequireHttpsAttribute());
-            });
-
-            services.AddMvc(options =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                     .RequireAuthenticatedUser()
-                     .Build();
-
-                options.Filters.Add(new AuthorizeFilter(policy));
-            })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddRazorPagesOptions(options =>
-                {
-                    if(authorizedRazorPages != null)
-                    {
-                        foreach (var page in authorizedRazorPages)
-                        {
-                            options.Conventions.AuthorizePage(page);
-                        }
-                    }
-                })
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization()
-                .AddJsonOptions(options =>
-                {
-                    var jsonSettings = options.SerializerSettings;
-
-                    jsonSettings.Formatting = Formatting.None;
-                    jsonSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-                    // Don't include null objects in Json, but only for production environments.
-                    jsonSettings.NullValueHandling =
-                        !Environment.IsDevelopment()
-                            ? NullValueHandling.Ignore
-                            : NullValueHandling.Include;
-
-                    // Treat datetime as unspecified in Json serializer.
-                    // This means that there will be no offset information (Z/+00:00) in the output Json.
-                    jsonSettings.DateFormatString = Constants.DateTimeOffsetFormat;
-                    jsonSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                    jsonSettings.DateParseHandling = DateParseHandling.DateTimeOffset;
-                    jsonSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-
-                    // Serialize enums as string, instead of by their integer value.
-                    var enumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
-                    jsonSettings.Converters.Add(enumConverter);
-                });
-
-        }
-
-        protected virtual void AddRouting(IServiceCollection services)
-        {
-            services.AddRouting(options =>
-            {
-                // Auto add trailing slash to url's. This is a workaround for, for example, providing emails in the url.
-                // A request won't get handled if it has a period (.) in the parameters, unless there's a trailing slash at the end.
-                // /api/controller/test@user.com <- DOES NOT WORK
-                // /api/controller/test@user.com/ <- DOES WORK
-                options.AppendTrailingSlash = true;
-            });
-        }
-
-        protected virtual void AddSwaggerGeneration(IServiceCollection services)
-        {
-            if (Environment.IsDevelopment())
-            {
-                services.AddSwaggerGen(options =>
-                {
-                    options.CustomSchemaIds(c => c.FullName);
-                    options.SwaggerDoc("v1", new Info
-                    {
-                        Title = ApiDisplayName,
-                        Version = "v1"
-                    });
-
-                    var xmlDocPath = Path.ChangeExtension(Assembly.GetEntryAssembly().Location, ".xml");
-                    options.IncludeXmlComments(xmlDocPath);
-                    options.OperationFilter<AuthorizeCheckOperationFilter>();
-                    options.AddSecurityDefinition(Constants.SecuritySchemeKey, new OAuth2Scheme
-                    {
-                        Type = "oauth2",
-                        Flow = "password",
-                        AuthorizationUrl = authorizationEndpointPath,
-                        TokenUrl = tokenEndpointPath,
-                        Scopes = new Dictionary<string, string>()
-                        {
-                            { "openid", "openid" },
-                            { "offline_access", "offline_access" }
-                        }
-                    });
-                });
-            }
-        }
-
-        /// <summary>
-        /// AddTelemetry
-        /// </summary>
-        /// <param name="services"></param>
-        /// <example>
-        /// <code>
-        /// // Configure SnapshotCollector from application settings
-        /// services.Configure&lt;SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
-        /// 
-        /// // Add SnapshotCollector telemetry processor.
-        /// services.AddSingleton&lt;ITelemetryInitializer, UserInfoTelemetryInitializer>();
-        /// services.AddSingleton&lt;ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory>();
-        /// </code>
-        /// </example>
-        protected virtual void AddTelemetry(IServiceCollection services)
-        {
-        }
 
         protected async Task UpdateOpenIddictTablesAsync(TDbContext context)
         {
@@ -574,6 +586,69 @@ namespace ISynergy
             }
 
             await context.SaveChangesAsync();
+        }
+
+        protected new virtual void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
+        {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.Configure<MvcOptions>(options =>
+            {
+                if (!Environment.IsDevelopment())
+                    options.Filters.Add(new RequireHttpsAttribute());
+            });
+
+            services.AddMvc(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                     .RequireAuthenticatedUser()
+                     .Build();
+
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddRazorPagesOptions(options =>
+                {
+                    if (authorizedRazorPages != null)
+                    {
+                        foreach (var page in authorizedRazorPages)
+                        {
+                            options.Conventions.AuthorizePage(page);
+                        }
+                    }
+                })
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization()
+                .AddJsonOptions(options =>
+                {
+                    var jsonSettings = options.SerializerSettings;
+
+                    jsonSettings.Formatting = Formatting.None;
+                    jsonSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+                    // Don't include null objects in Json, but only for production environments.
+                    jsonSettings.NullValueHandling =
+                        !Environment.IsDevelopment()
+                            ? NullValueHandling.Ignore
+                            : NullValueHandling.Include;
+
+                    // Treat datetime as unspecified in Json serializer.
+                    // This means that there will be no offset information (Z/+00:00) in the output Json.
+                    jsonSettings.DateFormatString = Constants.DateTimeOffsetFormat;
+                    jsonSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                    jsonSettings.DateParseHandling = DateParseHandling.DateTimeOffset;
+                    jsonSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+
+                    // Serialize enums as string, instead of by their integer value.
+                    var enumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
+                    jsonSettings.Converters.Add(enumConverter);
+                });
+
         }
     }
 }

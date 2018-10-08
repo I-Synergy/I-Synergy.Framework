@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
-    public abstract partial class RestServiceBase : IAccountsContract
+    public abstract partial class BaseRestService : IAccountsContract
     {
         public Task<bool> CheckIfEmailIsAvailableAsync(string email) =>
             GetAccountJsonAsync<bool>(new object[] { ControllerPaths.Check, ControllerPaths.Email, email }, IsAnonymous: true);

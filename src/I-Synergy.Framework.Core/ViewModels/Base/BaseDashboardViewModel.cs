@@ -49,8 +49,8 @@ namespace ISynergy.ViewModels.Base
         {
             if (!e.Handled && !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
             {
-                if (BaseService.Navigation.CanGoBack)
-                    BaseService.Navigation.GoBack();
+                if (BaseService.NavigationService.CanGoBack)
+                    BaseService.NavigationService.GoBack();
 
                 e.Handled = true;
             }
@@ -64,8 +64,8 @@ namespace ISynergy.ViewModels.Base
             {
                 IsCancelled = true;
 
-                if (BaseService.Navigation.CanGoBack)
-                    BaseService.Navigation.GoBack();
+                if (BaseService.NavigationService.CanGoBack)
+                    BaseService.NavigationService.GoBack();
 
                 e.Handled = true;
             }

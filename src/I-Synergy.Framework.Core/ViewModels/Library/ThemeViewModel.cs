@@ -13,7 +13,7 @@ namespace ISynergy.ViewModels.Library
         {
             get
             {
-                return BaseService.Language.GetString("Generic_Colors");
+                return BaseService.LanguageService.GetString("Generic_Colors");
             }
         }
 
@@ -31,14 +31,14 @@ namespace ISynergy.ViewModels.Library
 
         private Task SetColorAsync(string color)
         {
-            BaseService.ApplicationSettings.Application_Color = color;
+            BaseService.BaseSettingsService.Application_Color = color;
             Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             return Task.CompletedTask;
         }
 
         private Task SetWallpaperAsync(byte[] wallpaper)
         {
-            BaseService.ApplicationSettings.Application_Wallpaper = wallpaper;
+            BaseService.BaseSettingsService.Application_Wallpaper = wallpaper;
             Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             return Task.CompletedTask;
         }

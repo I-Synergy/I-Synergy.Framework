@@ -9,7 +9,7 @@ namespace ISynergy.ViewModels.Authentication
 {
     public abstract class BaseForgotPasswordViewModel : ViewModelDialog<object>, IForgotPasswordViewModel
     {
-        public override string Title { get { return BaseService.Language.GetString("Generic_Password_Forgot"); } }
+        public override string Title { get { return BaseService.LanguageService.GetString("Generic_Password_Forgot"); } }
 
         public BaseForgotPasswordViewModel(
             IContext context,
@@ -56,7 +56,7 @@ namespace ISynergy.ViewModels.Authentication
 
             if (EmailAddress is null || !Network.IsValidEMail(EmailAddress))
             {
-                await DialogService.ShowErrorAsync(BaseService.Language.GetString("Warning_Invalid_Email"));
+                await DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Invalid_Email"));
                 result = false;
             }
 
@@ -81,11 +81,11 @@ namespace ISynergy.ViewModels.Authentication
         {
             if (await CheckFields())
             {
-                await BaseService.Busy.StartBusyAsync();
+                await BaseService.BusyService.StartBusyAsync();
 
                 var result = await ResetPasswordAsync();
 
-                await BaseService.Busy.EndBusyAsync();
+                await BaseService.BusyService.EndBusyAsync();
 
                 Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             }

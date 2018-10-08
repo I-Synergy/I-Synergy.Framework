@@ -185,6 +185,10 @@
     <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Helpers\UploadImageHelper.cs" />
     <Compile Include="Helpers\VisualHelpers.cs" />
+    <Compile Include="Interfaces\Authentication\IForgotPasswordWindow.cs" />
+    <Compile Include="Interfaces\Authentication\ILoginView.cs" />
+    <Compile Include="Interfaces\Authentication\IPincodeWindow.cs" />
+    <Compile Include="Interfaces\Authentication\ITagWindow.cs" />
     <Compile Include="Locators\DialogTypeLocator.cs" />
     <Compile Include="Locators\DialogTypeLocatorCache.cs" />
     <Compile Include="Locators\IDialogTypeLocator.cs" />
