@@ -77,16 +77,18 @@ namespace System
             }
         }
 
-        public static TResult GetPropertyValue<T, TResult>(T t, string propertyName, TResult defaultvalue)
+        public static TResult GetPropertyValue<T, TResult>(T t, string propertyName, TResult defaultValue)
             where T : class
             where TResult : IComparable<TResult>
         {
-            ParameterExpression parameter = Expression.Parameter(typeof(T));
-            UnaryExpression expression = Expression.Convert(Expression.Property(parameter, propertyName), typeof(object));
+            TResult result = (TResult)t.GetType().GetProperty(propertyName)?.GetValue(t, null);
 
-            dynamic resolver = Expression.Lambda<Func<T, TResult>>(expression, parameter).Compile();
+            if(result == null)
+            {
+                result = defaultValue;
+            }
 
-            return resolver(t);
+            return result;
         }
     }
 }

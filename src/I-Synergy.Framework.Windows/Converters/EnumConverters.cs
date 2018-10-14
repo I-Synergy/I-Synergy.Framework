@@ -53,7 +53,7 @@ namespace ISynergy.Converters
 
             foreach (Enum item in enumValues)
             {
-                list.Add(new KeyValuePair<int, string>(item.GetHashCode(), GetDescription(item)));
+                list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
             }
 
             return list;
@@ -119,7 +119,7 @@ namespace ISynergy.Converters
         }
     }
 
-    public class EnumToStringConverter : MarkupExtension, IValueConverter
+    public class EnumToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {

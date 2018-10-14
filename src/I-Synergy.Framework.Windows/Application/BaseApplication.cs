@@ -275,7 +275,7 @@ namespace ISynergy
             Container.Register<IInfoService, InfoService>();
             Container.Register<IConverterService, ConverterService>();
             Container.Register<IUpdateService, UpdateService>(Reuse.ScopedOrSingleton);
-
+            
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
