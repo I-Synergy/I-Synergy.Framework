@@ -20,31 +20,19 @@
     </v:View.Resources>
     
     <RelativePanel>
-        <TextBlock x:Name="TextBox_Title" 
-                   Text="{Binding Context.Title}" 
-                   Margin="55,8,8,8" 
-                   RelativePanel.AlignLeftWithPanel="True" 
-                   RelativePanel.AlignTopWithPanel="True" />
-
-        <Rectangle x:Name="Rectangle_Title" Fill="{StaticResource NavigationViewDefaultPaneBackground}" 
-                   Width="48" 
-                   Height="32" 
-                   RelativePanel.AlignLeftWithPanel="True" 
-                   RelativePanel.AlignTopWithPanel="True"/>
-        
         <NavigationView x:Name="RootNavigationView"
+                        RelativePanel.AlignTopWithPanel="True"
                         RelativePanel.AlignLeftWithPanel="True" 
                         RelativePanel.AlignRightWithPanel="True" 
                         RelativePanel.AlignBottomWithPanel="True" 
-                        RelativePanel.Below="Rectangle_Title"
-                        AlwaysShowHeader="False"
+                        Header="{Binding Context.Title}" 
                         IsSettingsVisible="False"
                         ExpandedModeThresholdWidth="1920"
                         MenuItemsSource="{Binding PrimaryItems}"
                         MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
                         SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         ItemInvoked="NavigationItemInvoked">
-           
+            
             <NavigationView.PaneFooter>
                 <NavigationViewList 
                     ItemsSource="{Binding SecondaryItems}"
@@ -56,7 +44,10 @@
             </NavigationView.PaneFooter>
 
             <NavigationView.Content>
-                <Frame x:Name="ContentRootFrame" Navigated="ContentRootFrame_Navigated" IsEnabled="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBooleanConverter}}">
+                <Frame x:Name="ContentRootFrame"
+                       Margin="10"
+                       Navigated="ContentRootFrame_Navigated" 
+                       IsEnabled="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBooleanConverter}}">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <NavigationThemeTransition/>

@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Views.Authentication
 {
-    public sealed partial class TagWindow : IWindow
+    public sealed partial class TagWindow : ITagWindow
     {
         private TagViewModel ViewModel => DataContext as TagViewModel;
 
