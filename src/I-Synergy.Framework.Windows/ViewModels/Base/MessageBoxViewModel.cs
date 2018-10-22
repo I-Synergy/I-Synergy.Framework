@@ -157,22 +157,22 @@ namespace ISynergy.ViewModels.Library
 
         private void SetImageSource(MessageBoxImage image)
         {
-            switch (image.GetHashCode())
+            switch (Convert.ToInt32(image))
             {
                 case 16:
-                    MessageImageSource = new BitmapImage(new Uri("/I-Synergy.Shared;component/Assets/Images/Error.png", UriKind.Relative));
+                    MessageImageSource = new BitmapImage(new Uri("/I-Synergy.Framework.Windows;component/Assets/Images/Error.png", UriKind.Relative));
                     break;
 
                 case 48:
-                    MessageImageSource = new BitmapImage(new Uri("/I-Synergy.Shared;component/Assets/Images/Warning.png", UriKind.Relative));
+                    MessageImageSource = new BitmapImage(new Uri("/I-Synergy.Framework.Windows;component/Assets/Images/Warning.png", UriKind.Relative));
                     break;
 
                 case 32:
-                    MessageImageSource = new BitmapImage(new Uri("/I-Synergy.Shared;component/Assets/Images/Question.png", UriKind.Relative));
+                    MessageImageSource = new BitmapImage(new Uri("/I-Synergy.Framework.Windows;component/Assets/Images/Question.png", UriKind.Relative));
                     break;
 
                 case 64:
-                    MessageImageSource = new BitmapImage(new Uri("/I-Synergy.Shared;component/Assets/Images/Information.png", UriKind.Relative));
+                    MessageImageSource = new BitmapImage(new Uri("/I-Synergy.Framework.Windows;component/Assets/Images/Information.png", UriKind.Relative));
                     break;
 
                 default:

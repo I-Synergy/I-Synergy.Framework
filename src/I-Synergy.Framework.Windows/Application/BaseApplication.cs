@@ -21,8 +21,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.Networking.Connectivity;
 using Windows.System.Profile;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -170,8 +172,6 @@ namespace ISynergy
             // Ensure the current window is active
             Window.Current.Activate();
 
-            //ThemeSelectorService.SetRequestedTheme();
-
             //if (!System.Diagnostics.Debugger.IsAttached)
             //    ISynergy.Controls.ScreenSaver.InitializeScreensaver(new Uri("ms-appx://I-Synergy.Pos/Assets/SplashScreen.scale-400.png"));
         }
@@ -275,7 +275,7 @@ namespace ISynergy
             Container.Register<IInfoService, InfoService>();
             Container.Register<IConverterService, ConverterService>();
             Container.Register<IUpdateService, UpdateService>(Reuse.ScopedOrSingleton);
-
+            
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
@@ -336,20 +336,9 @@ namespace ISynergy
                     .ToList());
             }
 
-            foreach (var item in viewmodelTypes.Distinct())
-            {
-                Container.Register(item, Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
-            }
-
-            foreach (var item in viewTypes.Distinct())
-            {
-                Container.Register(item, Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
-            }
-
-            foreach (var item in windowTypes.Distinct())
-            {
-                Container.Register(item, Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
-            }
+            Container.RegisterMany(viewmodelTypes.Distinct(), Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
+            Container.RegisterMany(viewTypes.Distinct(), Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
+            Container.RegisterMany(windowTypes.Distinct(), Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
 
             foreach (Type view in viewTypes)
             {

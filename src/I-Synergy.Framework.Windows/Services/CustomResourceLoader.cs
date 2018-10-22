@@ -5,11 +5,11 @@ namespace ISynergy.Services
 {
     public class CustomResourceLoader : CustomXamlResourceLoader
     {
-        private ILanguageService Resources;
+        private ILanguageService LanguageService;
 
         public CustomResourceLoader(ILanguageService languageservice)
         {
-            Resources = languageservice;
+            LanguageService = languageservice;
         }
 
         protected override object GetResource(string resourceId, string objectType, string propertyName, string propertyType)
@@ -20,9 +20,9 @@ namespace ISynergy.Services
             }
             else
             {
-                if (Resources != null)
+                if (LanguageService != null)
                 {
-                    return Resources.GetString(resourceId);
+                    return LanguageService.GetString(resourceId);
                 }
                 else
                 {

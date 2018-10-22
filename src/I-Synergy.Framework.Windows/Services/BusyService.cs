@@ -5,11 +5,11 @@ namespace ISynergy.Services
 {
     public class BusyService : ObservableClass, IBusyService
     {
-        protected readonly ILanguageService Language;
+        protected readonly ILanguageService LanguageService;
 
         public BusyService(ILanguageService language)
         {
-            Language = language;
+            LanguageService = language;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ISynergy.Services
             }
             else
             {
-                BusyMessage = Language.GetString("PleaseWait");
+                BusyMessage = LanguageService.GetString("PleaseWait");
             }
 
             IsBusy = true;

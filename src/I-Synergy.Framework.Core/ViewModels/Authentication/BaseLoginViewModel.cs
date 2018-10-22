@@ -442,7 +442,8 @@ namespace ISynergy.ViewModels.Authentication
 
         public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {
-            if (!e.Handled)
+            if (!e.Handled &&
+                e.Sender.GetType().BaseType.Equals(this))
             {
                 if (BaseService.NavigationService.CanGoBack)
                     BaseService.NavigationService.GoBack();
@@ -455,7 +456,8 @@ namespace ISynergy.ViewModels.Authentication
 
         public override Task OnCancellationAsync(OnCancellationMessage e)
         {
-            if (!e.Handled)
+            if (!e.Handled &&
+                e.Sender.GetType().BaseType.Equals(this))
             {
                 IsCancelled = true;
 

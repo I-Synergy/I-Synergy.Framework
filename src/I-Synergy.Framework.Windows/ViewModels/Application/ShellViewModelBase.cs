@@ -16,13 +16,13 @@ using ISynergy.ViewModels.Authentication;
 using ISynergy.Views.Authentication;
 using ISynergy.Events;
 using ISynergy.Enumerations;
+using DryIoc;
 
 namespace ISynergy.ViewModels
 {
     public abstract class ShellViewModelBase : ViewModel
     {
-        public IAuthenticationService AuthenticationService { get; }
-        public IBusyService Busy => BaseService.BusyService;
+        public IBusyService Busy => Container.Resolve<IBusyService>();
 
         protected const string SetApplicationColor = "Set Application Color";
         protected const string SetApplicationWallpaper = "Set Application Wallpaper";
@@ -50,13 +50,15 @@ namespace ISynergy.ViewModels
         public RelayCommand Feedback_Command { get; set; }
         public RelayCommand<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
 
+        private readonly IContainer Container;
+
         public ShellViewModelBase(
             IContext context,
             IBaseService synergyService,
-            IAuthenticationService authenticationService)
+            IContainer container)
             : base(context, synergyService)
         {
-            AuthenticationService = authenticationService;
+            Container = container; 
 
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
@@ -168,11 +170,12 @@ namespace ISynergy.ViewModels
         {
             BaseService.BaseSettingsService.User_AutoLogin = false;
 
-            await AuthenticationService.ProcessLoginRequestAsync();
+            await BaseService.AuthenticationService.ProcessLoginRequestAsync();
 
             PopulateNavItems();
 
-            BaseService.NavigationService.Navigate(typeof(ILoginViewModel).FullName);
+            BaseService.NavigationService.Navigate(
+                Container.Resolve<ILoginViewModel>().GetType().FullName);
         }
 
         protected abstract void PopulateNavItems();

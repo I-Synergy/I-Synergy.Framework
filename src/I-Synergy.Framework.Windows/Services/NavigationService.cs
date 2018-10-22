@@ -57,6 +57,7 @@ namespace ISynergy.Services
                 {
                     throw new ArgumentException($"Page not found: {pageKey}. Did you forget to call NavigationService.Configure?", "pageKey");
                 }
+                
                 var navigationResult = ((Frame)Frame).Navigate(_pages[pageKey], parameter, (NavigationTransitionInfo)infoOverride);
                 return navigationResult;
             }

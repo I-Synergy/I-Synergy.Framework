@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Views.Authentication
 {
-    public sealed partial class PincodeWindow : IWindow
+    public sealed partial class PincodeWindow : IPincodeWindow
     {
         private PincodeViewModel ViewModel => DataContext as PincodeViewModel;
 

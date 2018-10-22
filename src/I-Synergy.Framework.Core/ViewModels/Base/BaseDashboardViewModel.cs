@@ -47,7 +47,8 @@ namespace ISynergy.ViewModels.Base
 
         public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {
-            if (!e.Handled && !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
+            if (!e.Handled &&
+                !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
             {
                 if (BaseService.NavigationService.CanGoBack)
                     BaseService.NavigationService.GoBack();
@@ -60,7 +61,8 @@ namespace ISynergy.ViewModels.Base
 
         public override Task OnCancellationAsync(OnCancellationMessage e)
         {
-            if (!e.Handled && !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
+            if (!e.Handled && 
+                !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
             {
                 IsCancelled = true;
 
