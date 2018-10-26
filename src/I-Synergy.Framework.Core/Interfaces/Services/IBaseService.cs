@@ -6,7 +6,7 @@ namespace ISynergy.Services
     {
         IBusyService BusyService { get; }
         ILanguageService LanguageService { get; }
-        IAuthenticationService AuthenticationService { get; }
+        ILoginService LoginService { get; }
         IBaseSettingsService BaseSettingsService { get; }
         ITelemetryService TelemetryService { get; }
         IDialogService DialogService { get; }

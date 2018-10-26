@@ -138,7 +138,10 @@ namespace ISynergy.ViewModels.Base
             
             IsInitialized = false;
 
-            Close_Command = new RelayCommand(() => Messenger.Default.Send(new OnCancellationMessage(this)));
+            Close_Command = new RelayCommand(() =>
+            {
+                Messenger.Default.Send(new OnCancellationMessage(this));
+            });
         }
 
         public virtual void TrackView() => BaseService.TelemetryService.TrackPageView(this.GetType().Name.Replace("ViewModel", ""));

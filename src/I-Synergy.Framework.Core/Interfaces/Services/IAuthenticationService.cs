@@ -1,15 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using ISynergy.Contracts.Accounts;
+using System;
+using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
-    public interface IAuthenticationService
+    public interface IAuthenticationService :
+        IAccountsContract,
+        IAccountsManagerContract
     {
-        Task ProcessLoginRequestAsync();
-        Task LogoutAsync();
-        Task LoginAsync();
-        Task<bool> AuthenticationChangedAsync();
-        void CheckLicense();
-        Task LoadSettingsAsync();
-        Task RefreshSettingsAsync();
+        Task CheckForExpiredToken();
+        Task<bool> IsTransient(Exception e);
+        Task AuthenticateWithTokenAsync(string username, string password);
+        Task AuthenticateWithClientCredentialsAsync();
+        Task AuthenticateWithRefreshTokenAsync(string refreshtoken);
     }
 }

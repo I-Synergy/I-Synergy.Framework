@@ -11,14 +11,14 @@ namespace ISynergy.Services
         public IDialogService DialogService { get; }
         public IUIVisualizerService UIVisualizerService { get; }
         public INavigationService NavigationService { get; }
-        public IAuthenticationService AuthenticationService { get; }
+        public ILoginService LoginService { get; }
         public IInfoService InfoService { get; }
         public IConverterService ConverterService { get; }
 
         public BaseService(
             IBusyService busy,
             ILanguageService language,
-            IAuthenticationService authentication,
+            ILoginService loginService,
             IBaseSettingsService settings,
             ITelemetryService telemetry,
             IDialogService dialog,
@@ -34,7 +34,7 @@ namespace ISynergy.Services
             DialogService = dialog;
             UIVisualizerService = uiVisualizer;
             NavigationService = navigation;
-            AuthenticationService = authentication;
+            LoginService = loginService;
             InfoService = InfoService;
             ConverterService = converter;
         }

@@ -442,13 +442,15 @@ namespace ISynergy.ViewModels.Authentication
 
         public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {
-            if (!e.Handled &&
-                e.Sender.GetType().BaseType.Equals(this))
+            if (!e.Handled && e.Sender != null)
             {
-                if (BaseService.NavigationService.CanGoBack)
-                    BaseService.NavigationService.GoBack();
+                if (e.Sender.GetType().BaseType.Equals(this))
+                {
+                    if (BaseService.NavigationService.CanGoBack)
+                        BaseService.NavigationService.GoBack();
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
             }
 
             return Task.CompletedTask;
@@ -456,15 +458,17 @@ namespace ISynergy.ViewModels.Authentication
 
         public override Task OnCancellationAsync(OnCancellationMessage e)
         {
-            if (!e.Handled &&
-                e.Sender.GetType().BaseType.Equals(this))
+            if (!e.Handled && e.Sender != null)
             {
-                IsCancelled = true;
+                if (e.Sender.GetType().BaseType.Equals(this))
+                {
+                    IsCancelled = true;
 
-                if (BaseService.NavigationService.CanGoBack)
-                    BaseService.NavigationService.GoBack();
+                    if (BaseService.NavigationService.CanGoBack)
+                        BaseService.NavigationService.GoBack();
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
             }
 
             return Task.CompletedTask;

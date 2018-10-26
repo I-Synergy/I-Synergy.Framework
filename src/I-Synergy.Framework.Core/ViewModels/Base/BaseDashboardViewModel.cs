@@ -25,7 +25,7 @@ namespace ISynergy.ViewModels.Base
         private void ExecuteTileCommand(string e)
         {
             if(e.StartsWith("Tile_")) e = e.Replace("Tile_", "");
-            Messenger.Default.Send(new TileSelectedMessage { TileName = e });
+            Messenger.Default.Send(new TileSelectedMessage(this, e));
         }
 
         private bool CanExecuteTileCommand()
@@ -47,13 +47,16 @@ namespace ISynergy.ViewModels.Base
 
         public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {
-            if (!e.Handled &&
-                !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
+            if (!e.Handled && e.Sender != null)
             {
-                if (BaseService.NavigationService.CanGoBack)
-                    BaseService.NavigationService.GoBack();
+                if (!e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
+                    e.Sender.GetType().BaseType.Equals(this))
+                {
+                    if (BaseService.NavigationService.CanGoBack)
+                        BaseService.NavigationService.GoBack();
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
             }
 
             return Task.CompletedTask;
@@ -61,15 +64,18 @@ namespace ISynergy.ViewModels.Base
 
         public override Task OnCancellationAsync(OnCancellationMessage e)
         {
-            if (!e.Handled && 
-                !e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)))
+            if (!e.Handled && e.Sender != null)
             {
-                IsCancelled = true;
+                if (!e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
+                    e.Sender.GetType().BaseType.Equals(this))
+                {
+                    IsCancelled = true;
 
-                if (BaseService.NavigationService.CanGoBack)
-                    BaseService.NavigationService.GoBack();
+                    if (BaseService.NavigationService.CanGoBack)
+                        BaseService.NavigationService.GoBack();
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
             }
 
             return Task.CompletedTask;

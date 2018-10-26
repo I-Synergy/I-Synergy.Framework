@@ -20,7 +20,7 @@ namespace ISynergy
         string TokenUrl { get; set; }
         string CurrencySymbol { get; set; }
         string CurrencyCode { get; set; }
-        bool Authenticated { get; set; }
+        bool IsAuthenticated { get; set; }
         bool IsUserAdmin { get; set; }
     }
 }

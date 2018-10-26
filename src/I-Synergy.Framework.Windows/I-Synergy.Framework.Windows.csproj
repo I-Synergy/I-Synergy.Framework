@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="Controls\View.cs" />
     <Compile Include="Controls\Window.cs" />
+    <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
     <Compile Include="Converters\ByteConverters.cs" />
     <Compile Include="Converters\ClaimsConverters.cs" />
@@ -194,8 +195,9 @@
     <Compile Include="Locators\IDialogTypeLocator.cs" />
     <Compile Include="Models\NavigationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Base\AuthenticationServiceBase.cs" />
+    <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\Base\FileServiceBase.cs" />
+    <Compile Include="Services\Base\LoginServiceBase.cs" />
     <Compile Include="Services\Base\UIVisualizerServiceBase.cs" />
     <Compile Include="Services\BusyService.cs" />
     <Compile Include="Services\ConverterService.cs" />

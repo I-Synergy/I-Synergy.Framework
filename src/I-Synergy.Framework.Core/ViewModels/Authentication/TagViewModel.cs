@@ -47,7 +47,7 @@ namespace ISynergy.ViewModels.Authentication
 
             Login_Command = new RelayCommand(() =>
             {
-                Messenger.Default.Send(new LoginMessage());
+                Messenger.Default.Send(new AuthenticateUserMessageRequest(this, true));
                 Messenger.Default.Send(new OnCancellationMessage(this));
             });
         }

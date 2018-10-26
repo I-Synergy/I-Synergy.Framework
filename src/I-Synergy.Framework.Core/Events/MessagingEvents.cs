@@ -1,67 +1,91 @@
-﻿using ISynergy.ViewModels.Base;
+﻿using GalaSoft.MvvmLight.Messaging;
+using ISynergy.ViewModels.Base;
 
 namespace ISynergy.Events
 {
-    public class CloseTabMessage
+    public abstract class EventMessage : MessageBase
     {
-        public object ViewModel { get; set; }
-    }
+        public bool Handled { get; set; }
 
-    public class ActivateTabMessage
-    {
-        public object TabControl { get; set; }
-    }
-
-    public class CloseWindowsMessage
-    {
-        public IViewModel ViewModel { get; set; }
-    }
-
-    public class ChangeWallpaperMessage { public object Value { get; set; } }
-
-    public class LoginAuthenticationMessage { }
-
-    public class AuthenticateUserMessageRequest
-    {
-        public object Property { get; set; }
-        public object Sender { get; set; }
-        public bool EnableLogin { get; set; }
-    }
-
-    public class AuthenticateUserMessageResult
-    {
-        public object Property { get; set; }
-        public bool IsHandled { get; set; }
-        public bool IsAuthenticated { get; set; }
-    }
-
-    public class ItemSelectedMessage { public object Value { get; set; } }
-
-    public class AddBladeMessage
-    {
-        public object Owner { get; internal set; }
-        public IViewModelBlade Viewmodel { get; internal set; }
-
-        public AddBladeMessage(object owner, IViewModelBlade viewmodel)
+        public EventMessage(object sender)
+            : base(sender)
         {
-            Owner = owner;
+        }
+    }
+
+    public class CloseWindowsMessage : EventMessage
+    {
+        public CloseWindowsMessage(object sender)
+            : base(sender)
+        {
+        }
+    }
+
+    public class AuthenticationChangedMessage : EventMessage
+    {
+        public AuthenticationChangedMessage(object sender)
+            : base(sender)
+        {
+        }
+    }
+
+    public class AuthenticateUserMessageRequest : EventMessage
+    {
+        public object Property { get; }
+        public bool EnableLogin { get; }
+        public bool ShowLogin { get; }
+
+        public AuthenticateUserMessageRequest(object sender, bool showLogin, object property = null, bool enableLogin = true)
+            : base(sender)
+        {
+            Property = property;
+            EnableLogin = enableLogin;
+            ShowLogin = showLogin;
+        }
+    }
+
+    public class AuthenticateUserMessageResult : EventMessage
+    {
+        public object Property { get; private set; }
+        public bool IsAuthenticated { get; private set; }
+
+        public AuthenticateUserMessageResult(object sender, object property, bool authenticated)
+            : base(sender)
+        {
+            Property = property;
+            IsAuthenticated = authenticated;
+        }
+    }
+
+    public class ItemSelectedMessage : EventMessage
+    {
+        public object Value { get; private set; }
+
+        public ItemSelectedMessage(object sender, object value)
+            : base(sender)
+        {
+            Value = value;
+        }
+    }
+
+    public class AddBladeMessage : EventMessage
+    {
+        public IViewModelBlade Viewmodel { get; private set; }
+
+        public AddBladeMessage(object sender, IViewModelBlade viewmodel)
+            : base(sender)
+        {
             Viewmodel = viewmodel;
         }
     }
 
-    public abstract class EventMessage
-    {
-        public bool Handled { get; set; }
-        public object Sender { get; internal set; }
-    }
-
     public class OnSubmittanceMessage : EventMessage
     {
-        public object Value { get; internal set; }
+        public object Value { get; private set; }
 
         public OnSubmittanceMessage(object sender, object value)
+            : base(sender)
         {
-            Sender = sender;
             Value = value;
             Handled = false;
         }
@@ -70,19 +94,44 @@ namespace ISynergy.Events
     public class OnCancellationMessage : EventMessage
     {
         public OnCancellationMessage(object sender)
+            : base(sender)
         {
-            Sender = sender;
             Handled = false;
         }
     }
 
-    public class TileSelectedMessage { public string TileName { get; set; } }
+    public class TileSelectedMessage : EventMessage
+    {
+        public string TileName { get; private set; }
 
-    public class RefreshSettingsMessage { }
+        public TileSelectedMessage(object sender, string name)
+            : base(sender)
+        {
+            TileName = name;
+        }
+    }
 
-    public class RefreshDashboarMessage { }
+    public class RefreshSettingsMessage : EventMessage
+    {
+        public RefreshSettingsMessage(object sender)
+            : base(sender)
+        {
+        }
+    }
 
-    public class LoginMessage { }
+    public class RefreshDashboarMessage : EventMessage
+    {
+        public RefreshDashboarMessage(object sender)
+            : base(sender)
+        {
+        }
+    }
 
-    public class ExceptionHandledMessage { }
+    public class ExceptionHandledMessage : EventMessage
+    {
+        public ExceptionHandledMessage(object sender)
+            : base(sender)
+        {
+        }
+    }
 }
