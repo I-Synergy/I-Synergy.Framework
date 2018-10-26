@@ -8,8 +8,8 @@
     xmlns:Converters="using:ISynergy.Converters"
     mc:Ignorable="d"
     Title="{Binding Title}"
-    PrimaryButtonCommand="{Binding Close_Command}"
-    PrimaryButtonStyle="{StaticResource DefaultButtonStyle}">
+    SecondaryButtonCommand="{Binding Close_Command}"
+    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}">
 
     <w:Window.Resources>
         <Converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />

@@ -41,6 +41,12 @@ namespace ISynergy.ViewModels.Base
             IsNew = true;
 
             Submit_Command = new RelayCommand<TEntity>(async (e) => await OkAction(e));
+
+            Messenger.Default.Register<OnCancellationMessage>(this, (e) =>
+            {
+                IsCancelled = true;
+                CloseWindow();
+            });
         }
 
         protected async Task OkAction(TEntity e)
@@ -53,6 +59,7 @@ namespace ISynergy.ViewModels.Base
                     Messenger.Default.Send(new OnSubmittanceMessage(this, null));
             }
         }
+
 
         //protected override Task CancelAndCloseViewModelAsync()
         //{
@@ -68,7 +75,7 @@ namespace ISynergy.ViewModels.Base
 
         protected virtual void CloseWindow()
         {
-            Messenger.Default.Send(new CloseWindowsMessage { ViewModel = this });
+            Messenger.Default.Send(new CloseWindowsMessage(this));
         }
 
         protected virtual async Task<bool> ValidateInputAsync()

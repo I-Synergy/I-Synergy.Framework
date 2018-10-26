@@ -2,18 +2,17 @@
 using ISynergy.Events;
 using ISynergy.Models.Accounts;
 using ISynergy.Services;
+using ISynergy.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Authentication
 {
-    public interface ILoginViewModel
+    public interface ILoginViewModel : IViewModelNavigation<object>
     {
-        IBaseService BaseService { get; }
         bool AutoLogin { get; set; }
         RelayCommand ForgotPassword_Command { get; set; }
-        RelayCommand<object> Submit_Command { get; set; }
         bool LoginVisible { get; set; }
         string Password { get; set; }
         RelayCommand Register_Command { get; set; }
@@ -25,7 +24,6 @@ namespace ISynergy.ViewModels.Authentication
         string Registration_TimeZone { get; set; }
         RelayCommand ShowLogin_Command { get; set; }
         List<TimeZoneInfo> TimeZones { get; set; }
-        string Title { get; }
         string Username { get; set; }
         List<string> Usernames { get; set; }
 

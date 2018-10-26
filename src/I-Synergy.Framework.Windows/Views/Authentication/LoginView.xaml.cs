@@ -17,7 +17,11 @@ namespace ISynergy.Views.Authentication
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            await ViewModel.BaseService.NavigationService.CleanBackStackAsync();
+            if(ViewModel.Context.IsAuthenticated)
+            {
+                await ViewModel.BaseService.LoginService.LogoutAsync();
+            }
+
             await ViewModel.CheckAutoLogin();
         }
     }

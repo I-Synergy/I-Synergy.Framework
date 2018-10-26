@@ -35,6 +35,15 @@ namespace ISynergy.ViewModels.Base
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the IsDisabled property value.
+        /// </summary>
+        public bool IsDisabled
+        {
+            get { return GetValue<bool>(); }
+            set { SetValue(value); }
+        }
+
         public RelayCommand<TEntity> Submit_Command { get; private set; }
 
         public ViewModelBlade(

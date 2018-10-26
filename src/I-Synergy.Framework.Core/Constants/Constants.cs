@@ -1,9 +1,13 @@
-﻿namespace ISynergy
+﻿using System;
+
+namespace ISynergy
 {
     public class Constants
     {
         public const int DefaultPageSize = 250;
         public const int TopDimension = 5;
+        public const int RestRetryCount = 3;
+        public const int RestRetryDelayInSeconds = 5;
 
         public const string Authorization = "Authorization";
         public const string AuthenticationError = "authentication_error";

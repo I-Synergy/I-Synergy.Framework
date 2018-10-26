@@ -84,12 +84,12 @@ namespace ISynergy.ViewModels
             {
                 await Busy.StartBusyAsync();
 
-                if (result != null && !result.IsHandled)
+                if (result != null && !result.Handled)
                 {
                     if (result.Property.ToString() == nameof(Login_Command) && result.IsAuthenticated)
                     {
                         await BaseService.DialogService.ShowGreetingAsync(Context.CurrentProfile.Username);
-                        result.IsHandled = true;
+                        result.Handled = true;
                     }
                 }
             }
@@ -105,7 +105,11 @@ namespace ISynergy.ViewModels
             {
                 await Busy.StartBusyAsync();
 
-                if (Context.Profiles?.Count > 0)
+                if(request.ShowLogin)
+                {
+                    await ProcessAuthenticationRequestAsync();
+                }
+                else if (Context.Profiles?.Count > 0)
                 {
                     TagViewModel tagVM = new TagViewModel(
                         Context, 
@@ -126,15 +130,11 @@ namespace ISynergy.ViewModels
                             Context.CurrentProfile = null;
                             Context.CurrentProfile = Context.Profiles.Single(q => q.UserInfo.RfidUid == tag);
 
-                            Messenger.Default.Send(new AuthenticateUserMessageResult
-                            {
-                                Property = request.Property,
-                                IsAuthenticated = true
-                            });
+                            Messenger.Default.Send(new AuthenticateUserMessageResult(this, request.Property, true));
                         }
                         else
                         {
-                            await ProcessLoginRequestAsync();
+                            await ProcessAuthenticationRequestAsync();
                         }
                     }
                     else if(!request.EnableLogin)
@@ -147,11 +147,7 @@ namespace ISynergy.ViewModels
 
                         if (pinResult == true && pinVM.Result)
                         {
-                            Messenger.Default.Send(new AuthenticateUserMessageResult
-                            {
-                                Property = request.Property,
-                                IsAuthenticated = true
-                            });
+                            Messenger.Default.Send(new AuthenticateUserMessageResult(this, request.Property, true));
                         }
                         else if(pinResult == true)
                         {
@@ -166,11 +162,11 @@ namespace ISynergy.ViewModels
             }
         }
 
-        public async Task ProcessLoginRequestAsync()
+        public async Task ProcessAuthenticationRequestAsync()
         {
             BaseService.BaseSettingsService.User_AutoLogin = false;
 
-            await BaseService.AuthenticationService.ProcessLoginRequestAsync();
+            await BaseService.LoginService.ProcessLoginRequestAsync();
 
             PopulateNavItems();
 
@@ -278,7 +274,6 @@ namespace ISynergy.ViewModels
             set
             {
                 SetValue(value);
-                Messenger.Default.Send(new ChangeWallpaperMessage { Value = value });
             }
         }
 
@@ -312,7 +307,7 @@ namespace ISynergy.ViewModels
 
             var result = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(LanguageWindow), langVm);
 
-            if (result.HasValue && result.Value)
+            if (result.HasValue && result.Value && !langVm.IsCancelled)
             {
                 if (await BaseService.DialogService.ShowAsync(BaseService.LanguageService.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
@@ -329,7 +324,7 @@ namespace ISynergy.ViewModels
 
             var result = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(ThemeWindow), langVm);
 
-            if (result.HasValue && result.Value)
+            if (result.HasValue && result.Value && !langVm.IsCancelled)
             {
                 if (await BaseService.DialogService.ShowAsync(
                 BaseService.LanguageService.GetString("Warning_Color_Change") +

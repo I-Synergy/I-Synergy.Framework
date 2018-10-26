@@ -1,17 +1,21 @@
 ﻿using Flurl.Http;
-using ISynergy.Contracts.Accounts;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
-    public interface IBaseRestService :
-        IAccountsContract,
-        IAccountsManagerContract
+    public interface IBaseRestService
     {
-        IFlurlClient RestClient { get; }
+        IFlurlClient Client { get; }
 
-        Task AuthenticateWithTokenAsync(string username, string password);
-        Task AuthenticateWithClientCredentialsAsync();
-        Task AuthenticateWithRefreshTokenAsync(string refreshtoken);
+        Task<T> GetJsonAsync<T>(object[] segments, object queryparameters = null, CancellationToken cancellationToken = default);
+        Task<string> GetStringAsync(object[] segments, object queryparameters = null);
+        Task<int> PostJsonAsync(object[] segments, object data);
+        Task<T> PostAsync<T>(string baseUrl, object[] segments, object data, bool IsAnonymous = false);
+        Task<int> PutJsonAsync(object[] segments, object data);
+        Task<T> PutAsync<T>(string baseUrl, object[] segments, object data);
+        Task<int> DeleteJsonAsync(object[] segments, object queryparameters = null);
+        Task<int> DeleteAsync(string baseUrl, object[] segments, object queryparameters = null);
     }
 }

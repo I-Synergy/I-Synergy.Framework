@@ -54,7 +54,7 @@ namespace ISynergy
             set { SetValue(value); }
         }
 
-        public bool Authenticated
+        public bool IsAuthenticated
         {
             get { return GetValue<bool>(); }
             set { SetValue(value); }

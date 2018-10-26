@@ -51,6 +51,15 @@ namespace ISynergy.ViewModels.Base
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
+
+        /// <summary>
+        /// Gets or sets the IsPaneEnabled property value.
+        /// </summary>
+        public bool IsPaneEnabled
+        {
+            get { return GetValue<bool>(); }
+            set { SetValue(value); }
+        }
         
         public RelayCommand Add_Command { get; set; }
         public RelayCommand<TEntity> Edit_Command { get; set; }
@@ -81,7 +90,7 @@ namespace ISynergy.ViewModels.Base
             {
                 if(message.Viewmodel.Owner is null)
                 {
-                    message.Viewmodel.Owner = message.Owner;
+                    message.Viewmodel.Owner = message.Sender;
                 }
 
                 if (message.Viewmodel.Owner == this)
@@ -163,8 +172,15 @@ namespace ISynergy.ViewModels.Base
 
                 if (!Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
                 {
+                    foreach (var blade in Blades)
+                    {
+                        ((IViewModelBlade)blade.DataContext).IsDisabled = true;
+                    }
+
                     Blades.Add(view);
                 }
+
+                IsPaneEnabled = true;
             }
 
             return Task.CompletedTask;
@@ -172,19 +188,33 @@ namespace ISynergy.ViewModels.Base
 
         protected void RemoveBlade(IViewModelBlade viewmodel)
         {
-            Blades.Remove(Blades.Where(q => q.DataContext == viewmodel && ((IViewModelBlade)q.DataContext).Owner == this).FirstOrDefault());
+            if (Blades!= null)
+            {
+                Blades.Remove(Blades.Where(q => q.DataContext == viewmodel && ((IViewModelBlade)q.DataContext).Owner == this).FirstOrDefault());
+
+                if (Blades.Count < 1)
+                {
+                    IsPaneEnabled = false;
+                }
+                else
+                {
+                    ((IViewModelBlade)Blades.Last().DataContext).IsDisabled = false;
+                }
+            }
         }
 
         public override Task OnCancellationAsync(OnCancellationMessage e)
         {
-            if(!e.Handled && 
-                e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
-                ((IViewModelBlade)e.Sender).Owner == this)
+            if (!e.Handled && e.Sender != null)
             {
-                IsCancelled = true;
-                RemoveBlade(e.Sender as IViewModelBlade);
+                if (e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
+                    ((IViewModelBlade)e.Sender).Owner == this)
+                {
+                    IsCancelled = true;
+                    RemoveBlade(e.Sender as IViewModelBlade);
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
             }
 
             return Task.CompletedTask;
@@ -192,14 +222,16 @@ namespace ISynergy.ViewModels.Base
 
         public override async Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {
-            if (!e.Handled &&
-                e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
-                ((IViewModelBlade)e.Sender).Owner == this)
+            if (!e.Handled && e.Sender != null)
             {
-                RemoveBlade(e.Sender as IViewModelBlade);
-                await RefreshAsync();
+                if (e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
+                    ((IViewModelBlade)e.Sender).Owner == this)
+                {
+                    RemoveBlade(e.Sender as IViewModelBlade);
+                    await RefreshAsync();
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
             }
         }
 

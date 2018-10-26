@@ -266,16 +266,18 @@ namespace ISynergy
             Container.UseInstance<IServiceLocator>(serviceLocator);
             Container.UseInstance(Logger);
 
+            Container.RegisterDelegate<IFlurlClient>(x => new FlurlClient(), Reuse.ScopedOrSingleton);
             Container.Register<IBusyService, BusyService>(Reuse.ScopedOrSingleton);
             Container.Register<IDialogService, DialogService>();
             Container.Register<ITelemetryService, TelemetryService>(Reuse.ScopedOrSingleton);
+            Container.Register<IAuthenticationService, AuthenticationService>(Reuse.ScopedOrSingleton);
             Container.Register<IAuthenticationProvider, AuthenticationProvider>();
             Container.Register<IUIVisualizerService, UIVisualizerService>(Reuse.ScopedOrSingleton);
             Container.Register<INavigationService, NavigationService>(Reuse.ScopedOrSingleton);
             Container.Register<IInfoService, InfoService>();
             Container.Register<IConverterService, ConverterService>();
             Container.Register<IUpdateService, UpdateService>(Reuse.ScopedOrSingleton);
-            
+
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
@@ -455,7 +457,7 @@ namespace ISynergy
             catch { }
             finally
             {
-                Messenger.Default.Send(new ExceptionHandledMessage());
+                Messenger.Default.Send(new ExceptionHandledMessage(this));
             }
         }
     }
