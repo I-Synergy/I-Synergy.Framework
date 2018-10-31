@@ -40,7 +40,20 @@ namespace ISynergy.ViewModels.Base
             SelectedItem = new TEntity();
             IsNew = true;
 
-            Submit_Command = new RelayCommand<TEntity>(async (e) => await OkAction(e));
+            Submit_Command = new RelayCommand<TEntity>(async (e) =>
+            {
+                await SubmitAsync(e);
+
+                //if (e is IBaseModel && e != null)
+                //{
+                //    if (!(e as IBaseModel).HasErrors)
+                //    {
+                //        Messenger.Default.Send(new OnSubmittanceMessage(this, e));
+                //    }
+                //}
+
+                CloseWindow();
+            });
 
             Messenger.Default.Register<OnCancellationMessage>(this, (e) =>
             {
@@ -48,18 +61,6 @@ namespace ISynergy.ViewModels.Base
                 CloseWindow();
             });
         }
-
-        protected async Task OkAction(TEntity e)
-        {
-            await SubmitAsync(e);
-
-            if (e is IBaseModel && e != null)
-            {
-                if (!(e as IBaseModel).HasErrors)
-                    Messenger.Default.Send(new OnSubmittanceMessage(this, null));
-            }
-        }
-
 
         //protected override Task CancelAndCloseViewModelAsync()
         //{

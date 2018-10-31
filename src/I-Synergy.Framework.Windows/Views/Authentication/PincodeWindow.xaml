@@ -13,6 +13,6 @@
     SecondaryButtonStyle="{StaticResource DefaultButtonStyle}">
 
     <Grid Margin="10">
-        <PasswordBox x:Name="PasswordBox_Pincode" x:Uid="PasswordBox_Pincode" Header="{CustomResource Generic_Pin}" Password="{Binding Pincode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Number" />
+        <PasswordBox x:Name="PasswordBox_Pincode" x:Uid="PasswordBox_Pincode" Password="{Binding Pincode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Number" />
     </Grid>
 </w:Window>

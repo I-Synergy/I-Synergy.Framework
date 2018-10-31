@@ -23,7 +23,7 @@
             <PasswordBox x:Name="Text_Password" Header="{CustomResource Generic_Password}" ToolTipService.ToolTip="{CustomResource Generic_Password}" Password="{Binding Registration_Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <PasswordBox x:Name="Text_Password_Retype" Header="{CustomResource Generic_Password_Retype}" ToolTipService.ToolTip="{CustomResource Generic_Password_Retype}" Password="{Binding Registration_Password_Check, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <Button x:Name="Button_Register" Content="{CustomResource Generic_Register}" Margin ="5,25" Grid.Row="2" HorizontalAlignment="Left" Command="{Binding Register_Command}" IsEnabled="{Binding Busy.IsEnabled}" />
+            <Button x:Name="Button_Register" Content="{CustomResource Generic_Register}" Margin ="5,25" Grid.Row="2" HorizontalAlignment="Left" Command="{Binding Register_Command}" IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" />
         </StackPanel>
     </Grid>
 </UserControl>

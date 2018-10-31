@@ -192,7 +192,7 @@ namespace ISynergy.ViewModels.Library
 
             Result = parameter;
 
-            Messenger.Default.Send(new OnSubmittanceMessage(this, null));
+            Messenger.Default.Send(new OnSubmittanceMessage(this, e));
 
             return Task.CompletedTask;
         }

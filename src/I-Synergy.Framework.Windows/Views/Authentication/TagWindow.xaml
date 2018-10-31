@@ -12,7 +12,7 @@
         <Converters:StringToGeometryConverter x:Key="StringToGeometryConverter"/>
     </w:Window.Resources>
 
-    <StackPanel x:Name="LayoutRoot" Margin="10">
+    <StackPanel x:Name="LayoutRoot">
         <Grid Margin="0,0,0,10">
             <PasswordBox x:Name="PasswordBox_Tag" Password="{Binding RfidTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Password" KeyDown="PasswordBox_Tag_KeyDown" AllowFocusWhenDisabled="True" Opacity="0"/>
             <Canvas Background="{Binding Background, ElementName=TagWindowControl}" Height="100" Width="100" HorizontalAlignment="Center">

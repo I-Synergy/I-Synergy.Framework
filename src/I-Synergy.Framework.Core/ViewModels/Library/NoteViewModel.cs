@@ -29,7 +29,7 @@ namespace ISynergy.ViewModels.Library
         public override Task SubmitAsync(object e)
         {
             Argument.IsNotNull(nameof(e), e);
-            Messenger.Default.Send(new OnSubmittanceMessage(this, null));
+            Messenger.Default.Send(new OnSubmittanceMessage(this, e));
 
             return Task.CompletedTask;
         }

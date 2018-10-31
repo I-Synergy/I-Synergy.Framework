@@ -8,17 +8,15 @@
     xmlns:Converters="using:ISynergy.Converters"
     mc:Ignorable="d"
     Title="{Binding Title}"
-    SecondaryButtonCommand="{Binding Close_Command}"
-    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}">
+    PrimaryButtonCommand="{Binding Close_Command}"
+    PrimaryButtonStyle="{StaticResource DefaultButtonStyle}">
 
     <w:Window.Resources>
         <Converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
         <Converters:SolidColorBrushToHexStringConverter x:Key="SolidColorBrushToHexStringConverter"/>
     </w:Window.Resources>
     
-    <StackPanel Orientation="Vertical" Margin="10">
-        <TextBlock Text="{CustomResource Generic_Colors}" />
-
+    <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
             <RadioButton x:Name="Button_Color_1" Command="{Binding Color_Command}" CommandParameter="{Binding Background, ElementName=Color_1, Converter={StaticResource SolidColorBrushToHexStringConverter}}" GroupName="Color" MinWidth="0" IsChecked="True" />
             <Border x:Name="Color_1" Height="32" Width="32" CornerRadius="16" Background="#FF3399FF" Margin="2" />

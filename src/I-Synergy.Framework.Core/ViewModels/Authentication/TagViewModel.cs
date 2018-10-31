@@ -84,7 +84,7 @@ namespace ISynergy.ViewModels.Authentication
                 RfidTag = string.Empty;
             }
 
-            Messenger.Default.Send(new OnSubmittanceMessage(this, null));
+            Messenger.Default.Send(new OnSubmittanceMessage(this, IsValid));
 
             return Task.CompletedTask;
         }

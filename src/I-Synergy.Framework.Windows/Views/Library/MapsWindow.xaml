@@ -9,10 +9,10 @@
     Width="1024" 
     Height="{StaticResource ContentDialogMaxHeight}"
     Title="{Binding Title}"
-    IsEnabled="{Binding Busy.IsEnabled}"
+    IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}"
     Template="{StaticResource WindowTemplate}">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto"/>
@@ -48,8 +48,8 @@
         </Grid>
 
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding Busy.IsBusy}" Height="36" Width="36" />
-            <TextBlock FontSize="16" Text="{Binding Busy.BusyMessage}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding Busy.IsBusy}" />
+            <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding ISynergyService.BusyService.IsBusy}" Height="36" Width="36" />
+            <TextBlock FontSize="16" Text="{Binding ISynergyService.BusyService.BusyMessage}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding ISynergyService.BusyService.IsBusy}" />
         </StackPanel>
     </Grid>
 </w:Window>
