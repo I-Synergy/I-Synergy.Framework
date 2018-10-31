@@ -32,14 +32,14 @@ namespace ISynergy.ViewModels.Library
         private Task SetColorAsync(string color)
         {
             BaseService.BaseSettingsService.Application_Color = color;
-            Messenger.Default.Send(new OnSubmittanceMessage(this, null));
+            Messenger.Default.Send(new OnSubmittanceMessage(this, color));
             return Task.CompletedTask;
         }
 
         private Task SetWallpaperAsync(byte[] wallpaper)
         {
             BaseService.BaseSettingsService.Application_Wallpaper = wallpaper;
-            Messenger.Default.Send(new OnSubmittanceMessage(this, null));
+            Messenger.Default.Send(new OnSubmittanceMessage(this, wallpaper));
             return Task.CompletedTask;
         }
 

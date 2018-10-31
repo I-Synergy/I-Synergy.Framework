@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converters="using:ISynergy.Converters"
     DataContext="{Binding ShellViewModel, Source={StaticResource Locator}}"
-    IsEnabled="{Binding Busy.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+    IsEnabled="{Binding ISynergyService.BusyService.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
     mc:Ignorable="d">
 
     <v:View.Background>
@@ -47,7 +47,7 @@
                 <Frame x:Name="ContentRootFrame"
                        Margin="10"
                        Navigated="ContentRootFrame_Navigated" 
-                       IsEnabled="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBooleanConverter}}">
+                       IsEnabled="{Binding ISynergyService.BusyService.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBooleanConverter}}">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <NavigationThemeTransition/>
@@ -57,11 +57,11 @@
             </NavigationView.Content>
         </NavigationView>
 
-        <Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+        <Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding ISynergyService.BusyService.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.75" />
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Height="48" Width="48" />
-                <TextBlock FontSize="16" Text="{Binding Busy.BusyMessage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding Busy.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding ISynergyService.BusyService.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Height="48" Width="48" />
+                <TextBlock FontSize="16" Text="{Binding ISynergyService.BusyService.BusyMessage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding ISynergyService.BusyService.IsBusy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </Grid>
     </RelativePanel>

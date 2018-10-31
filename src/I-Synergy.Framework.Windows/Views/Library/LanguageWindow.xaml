@@ -17,8 +17,7 @@
         <Converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
     </w:Window.Resources>
     
-    <StackPanel Orientation="Vertical" Margin="10">
-        <TextBlock Text="{CustomResource Generic_Language_Select}" />
+    <StackPanel Orientation="Vertical">
         <RadioButton x:Name="Button_Language_nl" Content="{CustomResource Generic_Language_Dutch}" Command="{Binding SetLanguage_Command}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="nl" GroupName="Language" IsChecked="{Binding Language, ConverterParameter=nl, Converter={StaticResource StringToBooleanConverter}}" />
         <RadioButton x:Name="Button_Language_en" Content="{CustomResource Generic_Language_English}" Command="{Binding SetLanguage_Command}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="en" GroupName="Language" IsChecked="{Binding Language, ConverterParameter=en, Converter={StaticResource StringToBooleanConverter}}" />
         <RadioButton x:Name="Button_Language_de" Content="{CustomResource Generic_Language_German}" Command="{Binding SetLanguage_Command}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="de" GroupName="Language" IsChecked="{Binding Language, ConverterParameter=de, Converter={StaticResource StringToBooleanConverter}}" IsEnabled="False" />

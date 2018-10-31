@@ -13,7 +13,7 @@
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
     SecondaryButtonCommand="{Binding Close_Command}">
 
-    <Grid Margin="10">
-        <TextBox x:Name="TextBox_Memo" Header="{CustomResource Generic_Note}" Text="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultNoteTextBoxStyle}" Height="125" />
+    <Grid>
+        <TextBox x:Name="TextBox_Memo" Text="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultNoteTextBoxStyle}" Height="125" />
     </Grid>
 </w:Window>

@@ -22,7 +22,7 @@ namespace ISynergy.ViewModels
 {
     public abstract class ShellViewModelBase : ViewModel
     {
-        public IBusyService Busy => Container.Resolve<IBusyService>();
+        // public IBusyService Busy => Container.Resolve<IBusyService>();
 
         protected const string SetApplicationColor = "Set Application Color";
         protected const string SetApplicationWallpaper = "Set Application Wallpaper";
@@ -82,7 +82,7 @@ namespace ISynergy.ViewModels
         {
             try
             {
-                await Busy.StartBusyAsync();
+                await BaseService.BusyService.StartBusyAsync();
 
                 if (result != null && !result.Handled)
                 {
@@ -95,7 +95,7 @@ namespace ISynergy.ViewModels
             }
             finally
             {
-                await Busy.EndBusyAsync();
+                await BaseService.BusyService.EndBusyAsync();
             }
         }
 
@@ -103,7 +103,7 @@ namespace ISynergy.ViewModels
         {
             try
             {
-                await Busy.StartBusyAsync();
+                await BaseService.BusyService.StartBusyAsync();
 
                 if(request.ShowLogin)
                 {
@@ -158,7 +158,7 @@ namespace ISynergy.ViewModels
             }
             finally
             {
-                await Busy.EndBusyAsync();
+                await BaseService.BusyService.EndBusyAsync();
             }
         }
 

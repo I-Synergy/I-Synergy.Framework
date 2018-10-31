@@ -52,7 +52,7 @@ namespace ISynergy.ViewModels.Library
                 Result = false;
             }
 
-            Messenger.Default.Send(new OnSubmittanceMessage(this, null));
+            Messenger.Default.Send(new OnSubmittanceMessage(this, Result));
 
             return Task.CompletedTask;
         }
