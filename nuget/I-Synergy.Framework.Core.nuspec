@@ -14,7 +14,7 @@
     <projectUrl>https://dev.azure.com/i-synergy/I-Synergy%20Framework</projectUrl>
 
     <dependencies>
-      <dependency id="AspNet.Security.OpenIdConnect.Primitives" version="2.0.0-rc3-final" />
+      <dependency id="AspNet.Security.OpenIdConnect.Primitives" version="2.0.0" />
       <dependency id="CommonServiceLocator" version="2.0.4" />
       <dependency id="Flurl" version="2.8.0" />
       <dependency id="Flurl.Http" version="2.4.0" />
