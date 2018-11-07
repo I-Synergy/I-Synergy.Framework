@@ -372,6 +372,7 @@
     <Content Include="Assets\Images\Refresh.png" />
     <Content Include="Assets\Images\Warning.png" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0' ">
     <VisualStudioVersion>15.0</VisualStudioVersion>
   </PropertyGroup>
