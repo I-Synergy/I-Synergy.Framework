@@ -31,7 +31,7 @@
       <dependency id="OpenIddict" version="2.0.0-rc3-final" />
       <dependency id="OpenIddict.EntityFrameworkCore" version="2.0.0-rc3-final" />
       <dependency id="OpenIddict.Mvc" version="2.0.0-rc3-final" />
-      <dependency id="Swashbuckle.AspNetCore" version="3.0.0" />
+      <dependency id="Swashbuckle.AspNetCore" version="4.0.1" />
     </dependencies>
   </metadata>
 
