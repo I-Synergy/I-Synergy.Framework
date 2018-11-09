@@ -319,8 +319,9 @@ namespace ISynergy
             services.AddSignalR(options =>
             {
                 options.EnableDetailedErrors = true;
-            })
-            .AddMessagePackProtocol();
+            });
+            // Disabled due exception of UWP client while compiling natively https://github.com/aspnet/SignalR/issues/3288
+            // .AddMessagePackProtocol();
         }
 
         protected virtual void AddAuthentication(IServiceCollection services)
