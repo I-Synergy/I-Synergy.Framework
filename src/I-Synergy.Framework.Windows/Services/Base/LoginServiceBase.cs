@@ -49,6 +49,24 @@ namespace ISynergy.Services
 
         public async Task LoginAsync(string username, string password)
         {
+            // if username starts with "test:" or "local:"
+            // remove this prefix and set environment to test.
+            if(username.StartsWith(Constants.UsernamePrefixTest, StringComparison.InvariantCultureIgnoreCase))
+            {
+                username = username.Replace(Constants.UsernamePrefixTest, "", StringComparison.InvariantCultureIgnoreCase);
+                Context.Environment = Enumerations.SoftwareEnvironments.Test;
+            }
+            // remove this prefix and set environment to local.
+            if (username.StartsWith(Constants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
+            {
+                username = username.Replace(Constants.UsernamePrefixLocal, "", StringComparison.InvariantCultureIgnoreCase);
+                Context.Environment = Enumerations.SoftwareEnvironments.Local;
+            }
+            else
+            {
+                Context.Environment = Enumerations.SoftwareEnvironments.Production;
+            }
+            
             if (SettingsService.User_AutoLogin && !string.IsNullOrEmpty(SettingsService.User_RefreshToken))
             {
                 await AuthenticationService.AuthenticateWithRefreshTokenAsync(SettingsService.User_RefreshToken);

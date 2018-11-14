@@ -3,6 +3,7 @@ using DryIoc;
 using Flurl.Http;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
+using ISynergy.Enumerations;
 using ISynergy.Events;
 using ISynergy.Locators;
 using ISynergy.Providers;
@@ -39,8 +40,6 @@ namespace ISynergy
     {
         public IContext Context { get; private set; }
         public ILogger Logger { get; } = new LoggerFactory().CreateLogger<BaseApplication>();
-
-        public bool _preview { get; private set; }
 
         /// <summary>
         /// Gets the default DryIoc <see cref="IContainer"/> for the application.
@@ -107,7 +106,7 @@ namespace ISynergy
                 bool result = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
             }
 
-            Initialize(false);
+            Initialize();
             LaunchApplication();
         }
 
@@ -118,13 +117,17 @@ namespace ISynergy
                 ProtocolActivatedEventArgs eventArgs = args as ProtocolActivatedEventArgs;
 
                 // The received URI is eventArgs.Uri.AbsoluteUri
-                if (eventArgs.Uri.AbsoluteUri.Contains("test") || eventArgs.Uri.AbsoluteUri.Contains("preview"))
+                if (eventArgs.Uri.AbsoluteUri.Contains("test"))
                 {
-                    Initialize(true);
+                    Initialize(SoftwareEnvironments.Test);
+                }
+                if (eventArgs.Uri.AbsoluteUri.Contains("local"))
+                {
+                    Initialize(SoftwareEnvironments.Local);
                 }
                 else
                 {
-                    Initialize(false);
+                    Initialize();
                 }
 
                 LaunchApplication();
@@ -249,14 +252,8 @@ namespace ISynergy
             deferral.Complete();
         }
 
-        protected virtual void Initialize(bool preview = false)
+        protected virtual void Initialize(SoftwareEnvironments environment = SoftwareEnvironments.Production)
         {
-            _preview = preview;
-
-#if PREVIEW
-            _preview = true;
-#endif
-
             Container = CreateContainer();
 
             IoCServiceLocator serviceLocator = new IoCServiceLocator(Container);
@@ -355,22 +352,9 @@ namespace ISynergy
             SetContext();
         }
 
-        public virtual void SetContext(
-            string previewApiUrl = @"https://app-test.i-synergy.nl/api",
-            string previewAccountUrl = @"https://app-test.i-synergy.nl/account",
-            string previewTokenUrl = @"https://app-test.i-synergy.nl/oauth/token",
-            string previewWebUrl = @"http://test.i-synergy.nl/")
+        public virtual void SetContext()
         {
             Context = Container.Resolve<IContext>();
-
-            if (_preview)
-            {
-                Context.Environment = ".preview";
-                Context.ApiUrl = previewApiUrl;
-                Context.AccountUrl = previewAccountUrl;
-                Context.TokenUrl = previewTokenUrl;
-                Context.WebUrl = previewWebUrl;
-            }
 
             try
             {

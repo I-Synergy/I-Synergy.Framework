@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Enumerations;
+using System;
 using System.Collections.ObjectModel;
 
 namespace ISynergy
@@ -15,7 +16,7 @@ namespace ISynergy
         string MonitorUrl { get; set; }
         string Client_Id { get; set; }
         string Client_Secret { get; set; }
-        string Environment { get; set; }
+        SoftwareEnvironments Environment { get; set; }
         bool Application_NormalScreen { get; set; }
         string TokenUrl { get; set; }
         string CurrencySymbol { get; set; }

@@ -5,7 +5,9 @@
         //Environment to production backend
         Production = 0,
         //Environment to testing backend
-        Test = -1
+        Test = -1,
+        //Environment to local backend
+        Local = -2
     }
 
     public enum DataActions

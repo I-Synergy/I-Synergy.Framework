@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Enumerations;
+using System;
 using System.Collections.ObjectModel;
 
 namespace ISynergy
@@ -34,7 +35,11 @@ namespace ISynergy
             set { SetValue(value); }
         }
 
-        public string Environment { get; set; } = "";
+        public SoftwareEnvironments Environment
+        {
+            get { return GetValue<SoftwareEnvironments>(); }
+            set { SetValue(value); }
+        }
 
         public string CurrencySymbol
         {
