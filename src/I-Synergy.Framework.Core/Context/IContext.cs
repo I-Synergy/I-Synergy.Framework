@@ -10,15 +10,15 @@ namespace ISynergy
         Profile CurrentProfile { get; set; }
         TimeZoneInfo CurrentTimeZone { get; set; }
         string Title { get; set; }
-        string ApiUrl { get; set; }
-        string AccountUrl { get; set; }
-        string WebUrl { get; set; }
-        string MonitorUrl { get; set; }
+        string ApiUrl { get; }
+        string AccountUrl { get; }
+        string WebUrl { get; }
+        string MonitorUrl { get; }
         string Client_Id { get; set; }
         string Client_Secret { get; set; }
         SoftwareEnvironments Environment { get; set; }
         bool Application_NormalScreen { get; set; }
-        string TokenUrl { get; set; }
+        string TokenUrl { get; }
         string CurrencySymbol { get; set; }
         string CurrencyCode { get; set; }
         bool IsAuthenticated { get; set; }
