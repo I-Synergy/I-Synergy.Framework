@@ -14,8 +14,8 @@ namespace ISynergy
         string AccountUrl { get; }
         string WebUrl { get; }
         string MonitorUrl { get; }
-        string Client_Id { get; set; }
-        string Client_Secret { get; set; }
+        string Client_Id { get; }
+        string Client_Secret { get; }
         SoftwareEnvironments Environment { get; set; }
         bool Application_NormalScreen { get; set; }
         string TokenUrl { get; }
