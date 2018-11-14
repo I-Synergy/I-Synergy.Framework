@@ -42,6 +42,9 @@ namespace ISynergy
         public const string Temaplates = "templates";
         public const string Commodities = "commodities";
         public const string Relations = "relations";
+
+        public const string UsernamePrefixTest = "test:";
+        public const string UsernamePrefixLocal = "local:";
     }
 
     public class ExceptionConstants
