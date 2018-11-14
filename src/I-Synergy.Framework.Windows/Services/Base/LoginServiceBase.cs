@@ -57,7 +57,7 @@ namespace ISynergy.Services
                 Context.Environment = Enumerations.SoftwareEnvironments.Test;
             }
             // remove this prefix and set environment to local.
-            if (username.StartsWith(Constants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
+            else if (username.StartsWith(Constants.UsernamePrefixLocal, StringComparison.InvariantCultureIgnoreCase))
             {
                 username = username.Replace(Constants.UsernamePrefixLocal, "", StringComparison.InvariantCultureIgnoreCase);
                 Context.Environment = Enumerations.SoftwareEnvironments.Local;
