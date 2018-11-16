@@ -38,7 +38,7 @@ namespace ISynergy
     public abstract class BaseApplication : Application
     {
         public IContext Context { get; private set; }
-        public ILogger Logger { get; } = new LoggerFactory().CreateLogger<BaseApplication>();
+        public ILogger Logger { get; }
 
         public BaseApplication()
             : base()
@@ -241,7 +241,7 @@ namespace ISynergy
 
         protected virtual void Initialize(SoftwareEnvironments environment = SoftwareEnvironments.Production)
         {
-            SimpleIoc.Default.Register(() => Logger);
+            SimpleIoc.Default.Register<ILogger>(() => new LoggerFactory().CreateLogger<BaseApplication>());
             SimpleIoc.Default.Register<IFlurlClient>(() => new FlurlClient());
             SimpleIoc.Default.Register<IBusyService, BusyService>();
             SimpleIoc.Default.Register<IDialogService, DialogService>();
@@ -316,12 +316,12 @@ namespace ISynergy
 
             foreach (var viewmodel in viewmodelTypes.Distinct())
             {
-                SimpleIoc.Default.Register(() => viewmodel);
+                RegisterType(viewmodel);
             }
 
             foreach (Type view in viewTypes.Distinct())
             {
-                SimpleIoc.Default.Register(() => view);
+                RegisterType(view);
 
                 Type viewmodel = viewmodelTypes.Where(q => q.Name == view.Name.ReplaceLastOf(Constants.View, Constants.ViewModel)).FirstOrDefault();
 
@@ -333,10 +333,46 @@ namespace ISynergy
 
             foreach (var window in windowTypes.Distinct())
             {
-                SimpleIoc.Default.Register(() => window);
+                RegisterType(window);
             }
 
             SetContext();
+        }
+
+        private void RegisterType(Type implementationType)
+        {
+            // Get the Register<T1>() method
+            MethodInfo methodInfo =
+                SimpleIoc.Default.GetType().GetMethods()
+                         .Where(m => m.Name == nameof(SimpleIoc.Default.Register))
+                         .Where(m => m.IsGenericMethod)
+                         .Where(m => m.GetGenericArguments().Length == 1)
+                         .Where(m => m.GetParameters().Length == 0)
+                         .Single();
+
+            // Create a version of the method that takes your types
+            methodInfo = methodInfo.MakeGenericMethod(implementationType);
+
+            // Invoke the method on the default container (no parameters)
+            methodInfo.Invoke(SimpleIoc.Default, null);
+        }
+
+        private void RegisterType(Type interfaceType, Type implementationType)
+        {
+            // Get the Register<T1,T2>() method
+            MethodInfo methodInfo =
+                SimpleIoc.Default.GetType().GetMethods()
+                         .Where(m => m.Name == nameof(SimpleIoc.Default.Register))
+                         .Where(m => m.IsGenericMethod)
+                         .Where(m => m.GetGenericArguments().Length == 2)
+                         .Where(m => m.GetParameters().Length == 0)
+                         .Single();
+
+            // Create a version of the method that takes your types
+            methodInfo = methodInfo.MakeGenericMethod(interfaceType, implementationType);
+
+            // Invoke the method on the default container (no parameters)
+            methodInfo.Invoke(SimpleIoc.Default, null);
         }
 
         public virtual void SetContext()
