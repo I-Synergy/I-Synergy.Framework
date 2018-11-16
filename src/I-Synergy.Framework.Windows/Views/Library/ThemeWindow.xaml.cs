@@ -1,7 +1,6 @@
-﻿using CommonServiceLocator;
+﻿using GalaSoft.MvvmLight.Ioc;
 using ISynergy.Services;
 using ISynergy.ViewModels.Library;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Views.Library
 {
@@ -13,7 +12,7 @@ namespace ISynergy.Views.Library
         {
             this.InitializeComponent();
 
-            this.PrimaryButtonText = ServiceLocator.Current.GetInstance<ILanguageService>().GetString("Generic_Cancel");
+            this.PrimaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Cancel");
         }
     }
 }

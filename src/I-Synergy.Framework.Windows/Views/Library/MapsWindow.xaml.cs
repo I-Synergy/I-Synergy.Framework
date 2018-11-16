@@ -1,4 +1,4 @@
-﻿using CommonServiceLocator;
+﻿using GalaSoft.MvvmLight.Ioc;
 using ISynergy.Services;
 using ISynergy.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +35,7 @@ namespace ISynergy.Views.Library
 
                 try
                 {
-                    await ServiceLocator.Current.GetInstance<IBusyService>().StartBusyAsync();
+                    await SimpleIoc.Default.GetInstance<IBusyService>().StartBusyAsync();
 
                     Geopoint myLocation = new Geopoint(new BasicGeoposition { Latitude = 51.3774194, Longitude = 6.0791655 });
                     var MyLandmarks = new List<MapElement>();
@@ -121,7 +121,7 @@ namespace ISynergy.Views.Library
                 }
                 finally
                 {
-                    await ServiceLocator.Current.GetInstance<IBusyService>().EndBusyAsync();
+                    await SimpleIoc.Default.GetInstance<IBusyService>().EndBusyAsync();
                 }
             }
         }

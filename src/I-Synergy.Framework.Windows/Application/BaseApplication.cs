@@ -1,6 +1,5 @@
-﻿using CommonServiceLocator;
-using DryIoc;
-using Flurl.Http;
+﻿using Flurl.Http;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using ISynergy.Enumerations;
@@ -40,18 +39,6 @@ namespace ISynergy
     {
         public IContext Context { get; private set; }
         public ILogger Logger { get; } = new LoggerFactory().CreateLogger<BaseApplication>();
-
-        /// <summary>
-        /// Gets the default DryIoc <see cref="IContainer"/> for the application.
-        /// </summary>
-        /// <value>The default <see cref="IContainer"/> instance.</value>
-        protected IContainer Container { get; set; }
-
-        /// <summary>
-        /// Creates the DryIoc <see cref="IContainer"/> that will be used as the default container.
-        /// </summary>
-        /// <returns>A new instance of <see cref="IContainer"/>.</returns>
-        private IContainer CreateContainer() => new Container(Rules.Default.WithConcreteTypeDynamicRegistrations());
 
         public BaseApplication()
             : base()
@@ -254,26 +241,18 @@ namespace ISynergy
 
         protected virtual void Initialize(SoftwareEnvironments environment = SoftwareEnvironments.Production)
         {
-            Container = CreateContainer();
-
-            IoCServiceLocator serviceLocator = new IoCServiceLocator(Container);
-            ServiceLocator.SetLocatorProvider(() => serviceLocator);
-
-            // register the locator in DryIoc as well
-            Container.UseInstance<IServiceLocator>(serviceLocator);
-            Container.UseInstance(Logger);
-
-            Container.RegisterDelegate<IFlurlClient>(x => new FlurlClient(), Reuse.ScopedOrSingleton);
-            Container.Register<IBusyService, BusyService>(Reuse.ScopedOrSingleton);
-            Container.Register<IDialogService, DialogService>();
-            Container.Register<ITelemetryService, TelemetryService>(Reuse.ScopedOrSingleton);
-            Container.Register<IAuthenticationService, AuthenticationService>(Reuse.ScopedOrSingleton);
-            Container.Register<IAuthenticationProvider, AuthenticationProvider>();
-            Container.Register<IUIVisualizerService, UIVisualizerService>(Reuse.ScopedOrSingleton);
-            Container.Register<INavigationService, NavigationService>(Reuse.ScopedOrSingleton);
-            Container.Register<IInfoService, InfoService>();
-            Container.Register<IConverterService, ConverterService>();
-            Container.Register<IUpdateService, UpdateService>(Reuse.ScopedOrSingleton);
+            SimpleIoc.Default.Register(() => Logger);
+            SimpleIoc.Default.Register<IFlurlClient>(() => new FlurlClient());
+            SimpleIoc.Default.Register<IBusyService, BusyService>();
+            SimpleIoc.Default.Register<IDialogService, DialogService>();
+            SimpleIoc.Default.Register<ITelemetryService, TelemetryService>();
+            SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
+            SimpleIoc.Default.Register<IAuthenticationProvider, AuthenticationProvider>();
+            SimpleIoc.Default.Register<IUIVisualizerService, UIVisualizerService>();
+            SimpleIoc.Default.Register<INavigationService, NavigationService>();
+            SimpleIoc.Default.Register<IInfoService, InfoService>();
+            SimpleIoc.Default.Register<IConverterService, ConverterService>();
+            SimpleIoc.Default.Register<IUpdateService, UpdateService>();
 
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
@@ -335,18 +314,26 @@ namespace ISynergy
                     .ToList());
             }
 
-            Container.RegisterMany(viewmodelTypes.Distinct(), Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
-            Container.RegisterMany(viewTypes.Distinct(), Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
-            Container.RegisterMany(windowTypes.Distinct(), Reuse.ScopedOrSingleton, FactoryMethod.ConstructorWithResolvableArguments);
-
-            foreach (Type view in viewTypes)
+            foreach (var viewmodel in viewmodelTypes.Distinct())
             {
+                SimpleIoc.Default.Register(() => viewmodel);
+            }
+
+            foreach (Type view in viewTypes.Distinct())
+            {
+                SimpleIoc.Default.Register(() => view);
+
                 Type viewmodel = viewmodelTypes.Where(q => q.Name == view.Name.ReplaceLastOf(Constants.View, Constants.ViewModel)).FirstOrDefault();
 
                 if (viewmodel != null)
                 {
-                    Container.Resolve<INavigationService>().Configure(viewmodel.FullName, view);
+                    SimpleIoc.Default.GetInstance<INavigationService>().Configure(viewmodel.FullName, view);
                 }
+            }
+
+            foreach (var window in windowTypes.Distinct())
+            {
+                SimpleIoc.Default.Register(() => window);
             }
 
             SetContext();
@@ -354,12 +341,12 @@ namespace ISynergy
 
         public virtual void SetContext()
         {
-            Context = Container.Resolve<IContext>();
+            Context = SimpleIoc.Default.GetInstance<IContext>();
 
             try
             {
                 Logger.LogInformation("Update settings");
-                Container.Resolve<IBaseSettingsService>().CheckForUpgrade();
+                SimpleIoc.Default.GetInstance<IBaseSettingsService>().CheckForUpgrade();
             }
             catch (Exception ex)
             {
@@ -367,7 +354,7 @@ namespace ISynergy
                 Logger.LogError(ex.Message, ex);
             }
 
-            string culture = Container.Resolve<IBaseSettingsService>().Application_Culture;
+            string culture = SimpleIoc.Default.GetInstance<IBaseSettingsService>().Application_Culture;
 
             if (culture is null) culture = "en";
 
@@ -376,13 +363,13 @@ namespace ISynergy
 
             Context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
 
-            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).InstrumentationKey = Container.Resolve<IBaseSettingsService>().ApplicationInsights_InstrumentationKey;
-            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.User.UserAgent = Container.Resolve<IInfoService>().ProductName;
-            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.Session.Id = Guid.NewGuid().ToString();
-            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.Component.Version = Container.Resolve<IInfoService>().ProductVersion.ToString();
-            ((TelemetryClient)Container.Resolve<ITelemetryService>().Client).Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).InstrumentationKey = SimpleIoc.Default.GetInstance<IBaseSettingsService>().ApplicationInsights_InstrumentationKey;
+            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.User.UserAgent = SimpleIoc.Default.GetInstance<IInfoService>().ProductName;
+            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.Session.Id = Guid.NewGuid().ToString();
+            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.Component.Version = SimpleIoc.Default.GetInstance<IInfoService>().ProductVersion.ToString();
+            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.Device.OperatingSystem = Environment.OSVersion.ToString();
 
-            CustomXamlResourceLoader.Current = new CustomResourceLoader(Container.Resolve<ILanguageService>());
+            CustomXamlResourceLoader.Current = new CustomResourceLoader(SimpleIoc.Default.GetInstance<ILanguageService>());
         }
 
         public virtual async Task HandleException(Exception ex)
@@ -391,52 +378,52 @@ namespace ISynergy
 
             if (!(connections != null && connections.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess))
             {
-                await Container.Resolve<IDialogService>().ShowInformationAsync(
-                    Container.Resolve<ILanguageService>().GetString("EX_DEFAULT_INTERNET"));
+                await SimpleIoc.Default.GetInstance<IDialogService>().ShowInformationAsync(
+                    SimpleIoc.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT_INTERNET"));
             }
             else
             {
                 if (ex is NotImplementedException)
                 {
-                    await Container.Resolve<IDialogService>().ShowInformationAsync(
-                        Container.Resolve<ILanguageService>().GetString("EX_FUTURE_MODULE"));
+                    await SimpleIoc.Default.GetInstance<IDialogService>().ShowInformationAsync(
+                        SimpleIoc.Default.GetInstance<ILanguageService>().GetString("EX_FUTURE_MODULE"));
                 }
                 else if (ex is UnauthorizedAccessException)
                 {
-                    await Container.Resolve<IDialogService>().ShowErrorAsync(ex.Message);
+                    await SimpleIoc.Default.GetInstance<IDialogService>().ShowErrorAsync(ex.Message);
                 }
                 else if (ex is IOException)
                 {
                     if (ex.Message.Contains("The process cannot access the file") && ex.Message.Contains("because it is being used by another process"))
                     {
-                        await Container.Resolve<IDialogService>().ShowErrorAsync(
-                            Container.Resolve<ILanguageService>().GetString("EX_FILEINUSE"));
+                        await SimpleIoc.Default.GetInstance<IDialogService>().ShowErrorAsync(
+                            SimpleIoc.Default.GetInstance<ILanguageService>().GetString("EX_FILEINUSE"));
                     }
                     else
                     {
-                        await Container.Resolve<IDialogService>().ShowErrorAsync(
-                            Container.Resolve<ILanguageService>().GetString("EX_DEFAULT"));
+                        await SimpleIoc.Default.GetInstance<IDialogService>().ShowErrorAsync(
+                            SimpleIoc.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
                     }
                 }
                 else if (ex is ArgumentException)
                 {
-                    await Container.Resolve<IDialogService>().ShowWarningAsync(
+                    await SimpleIoc.Default.GetInstance<IDialogService>().ShowWarningAsync(
                         string.Format(
-                            Container.Resolve<ILanguageService>().GetString("EX_ARGUMENTNULL"),
+                            SimpleIoc.Default.GetInstance<ILanguageService>().GetString("EX_ARGUMENTNULL"),
                             ((ArgumentException)ex).ParamName)
                         );
                 }
                 else
                 {
-                    await Container.Resolve<IDialogService>().ShowErrorAsync(
-                        Container.Resolve<ILanguageService>().GetString("EX_DEFAULT"));
+                    await SimpleIoc.Default.GetInstance<IDialogService>().ShowErrorAsync(
+                        SimpleIoc.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
                 }
             }
 
             try
             {
-                Container.Resolve<ITelemetryService>().TrackException(ex);
-                Container.Resolve<ITelemetryService>().Flush();
+                SimpleIoc.Default.GetInstance<ITelemetryService>().TrackException(ex);
+                SimpleIoc.Default.GetInstance<ITelemetryService>().Flush();
             }
             catch { }
             finally

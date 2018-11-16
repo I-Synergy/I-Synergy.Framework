@@ -198,7 +198,6 @@
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\Base\FileServiceBase.cs" />
     <Compile Include="Services\Base\LoginServiceBase.cs" />
-    <Compile Include="Services\Base\UIVisualizerServiceBase.cs" />
     <Compile Include="Services\BusyService.cs" />
     <Compile Include="Services\ConverterService.cs" />
     <Compile Include="Services\CustomResourceLoader.cs" />
@@ -260,9 +259,6 @@
     <EmbeddedResource Include="Properties\ISynergy.Framework.Windows.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommonServiceLocator">
-      <Version>2.0.4</Version>
-    </PackageReference>
     <PackageReference Include="Flurl">
       <Version>2.8.0</Version>
     </PackageReference>

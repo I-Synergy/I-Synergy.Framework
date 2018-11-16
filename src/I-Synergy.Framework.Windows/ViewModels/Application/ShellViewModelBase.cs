@@ -16,7 +16,7 @@ using ISynergy.ViewModels.Authentication;
 using ISynergy.Views.Authentication;
 using ISynergy.Events;
 using ISynergy.Enumerations;
-using DryIoc;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace ISynergy.ViewModels
 {
@@ -50,16 +50,11 @@ namespace ISynergy.ViewModels
         public RelayCommand Feedback_Command { get; set; }
         public RelayCommand<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
 
-        private readonly IContainer Container;
-
         public ShellViewModelBase(
             IContext context,
-            IBaseService synergyService,
-            IContainer container)
+            IBaseService synergyService)
             : base(context, synergyService)
         {
-            Container = container; 
-
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
@@ -171,7 +166,7 @@ namespace ISynergy.ViewModels
             PopulateNavItems();
 
             BaseService.NavigationService.Navigate(
-                Container.Resolve<ILoginViewModel>().GetType().FullName);
+                SimpleIoc.Default.GetInstance<ILoginViewModel>().GetType().FullName);
         }
 
         protected abstract void PopulateNavItems();

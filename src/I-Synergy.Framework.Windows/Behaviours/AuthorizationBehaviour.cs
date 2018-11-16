@@ -1,4 +1,4 @@
-﻿using CommonServiceLocator;
+﻿using GalaSoft.MvvmLight.Ioc;
 using ISynergy.Providers;
 using Microsoft.Toolkit.Uwp.UI.Animations.Behaviors;
 using System;
@@ -38,7 +38,7 @@ namespace ISynergy.Behaviours
             if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 if (AuthenticationProvider is null)
-                    AuthenticationProvider = ServiceLocator.Current.GetInstance<IAuthenticationProvider>();
+                    AuthenticationProvider = SimpleIoc.Default.GetInstance<IAuthenticationProvider>();
 
                 if (AuthenticationProvider is null)
                     throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");
