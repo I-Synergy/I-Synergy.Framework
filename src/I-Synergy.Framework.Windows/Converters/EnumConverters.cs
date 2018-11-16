@@ -1,4 +1,4 @@
-﻿using CommonServiceLocator;
+﻿using GalaSoft.MvvmLight.Ioc;
 using ISynergy.Extensions;
 using ISynergy.Services;
 using System;
@@ -76,7 +76,7 @@ namespace ISynergy.Converters
             DisplayAttribute[] attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
-                description = ServiceLocator.Current.GetInstance<ILanguageService>().GetString(attributes[0].Description);
+                description = SimpleIoc.Default.GetInstance<ILanguageService>().GetString(attributes[0].Description);
 
             return description;
         }
@@ -144,7 +144,7 @@ namespace ISynergy.Converters
 
             if (attributes != null && attributes.Length > 0)
             {
-                description = ServiceLocator.Current.GetInstance<ILanguageService>().GetString(attributes[0].Description);
+                description = SimpleIoc.Default.GetInstance<ILanguageService>().GetString(attributes[0].Description);
             }
 
             return description;

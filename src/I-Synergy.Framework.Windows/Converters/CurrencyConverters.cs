@@ -1,4 +1,4 @@
-﻿using CommonServiceLocator;
+﻿using GalaSoft.MvvmLight.Ioc;
 using ISynergy.Services;
 using System;
 using System.Globalization;
@@ -18,7 +18,7 @@ namespace ISynergy.Converters
             {
                 if (decimal.TryParse(value.ToString(), out decimal amount))
                 {
-                    return ServiceLocator.Current.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount);
+                    return SimpleIoc.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount);
                 }
             }
 
@@ -45,7 +45,7 @@ namespace ISynergy.Converters
             {
                 if (decimal.TryParse(value.ToString(), out decimal amount))
                 {
-                    return ServiceLocator.Current.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount * -1);
+                    return SimpleIoc.Default.GetInstance<IConverterService>().ConvertDecimalToCurrency(amount * -1);
                 }
             }
 
