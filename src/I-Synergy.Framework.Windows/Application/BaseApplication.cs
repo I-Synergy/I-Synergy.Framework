@@ -38,7 +38,21 @@ namespace ISynergy
     public abstract class BaseApplication : Application
     {
         public IContext Context { get; private set; }
-        public ILogger Logger { get; }
+
+        private ILogger logger = null;
+
+        public ILogger Logger
+        {
+            get
+            {
+                if (logger is null)
+                {
+                    logger = SimpleIoc.Default.GetInstance<ILogger>();
+                }
+
+                return logger;
+            }
+        }
 
         public BaseApplication()
             : base()
