@@ -6,14 +6,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="{Binding Title}"
-    Width="500" 
-    Height="290"
+    Width="{ThemeResource ContentDialogMaxWidth}" 
+    Height="400"
     Template="{StaticResource WindowTemplate}"
     PrimaryButtonCommand="{Binding Submit_Command}"
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
     SecondaryButtonCommand="{Binding Close_Command}">
 
     <Grid>
-        <TextBox x:Name="TextBox_Memo" Text="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultNoteTextBoxStyle}" Height="125" />
+        <TextBox x:Name="TextBox_Memo" 
+                 Text="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                 Style="{StaticResource DefaultNoteTextBoxStyle}" />
     </Grid>
 </w:Window>

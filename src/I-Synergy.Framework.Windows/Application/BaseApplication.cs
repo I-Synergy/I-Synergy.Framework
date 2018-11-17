@@ -9,6 +9,7 @@ using ISynergy.Providers;
 using ISynergy.Services;
 using ISynergy.ViewModels.Base;
 using ISynergy.Views;
+using ISynergy.Views.Library;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -267,6 +268,9 @@ namespace ISynergy
             SimpleIoc.Default.Register<IInfoService, InfoService>();
             SimpleIoc.Default.Register<IConverterService, ConverterService>();
             SimpleIoc.Default.Register<IUpdateService, UpdateService>();
+
+            SimpleIoc.Default.Register<INoteWindow>(() => SimpleIoc.Default.GetInstance<NoteWindow>());
+            SimpleIoc.Default.Register<IMapsWindow>(() => SimpleIoc.Default.GetInstance<MapsWindow>());
 
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
