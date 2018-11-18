@@ -397,6 +397,15 @@ namespace ISynergy
         {
             Context = SimpleIoc.Default.GetInstance<IContext>();
 
+            string culture = SimpleIoc.Default.GetInstance<IBaseSettingsService>().Application_Culture;
+
+            if (culture is null) culture = "en";
+
+            CultureInfo.CurrentCulture = new CultureInfo(culture);
+            CultureInfo.CurrentUICulture = new CultureInfo(culture);
+
+            Context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+
             try
             {
                 Logger.LogInformation("Update settings");
@@ -407,15 +416,6 @@ namespace ISynergy
                 // if update is not available, application should still continue.
                 Logger.LogError(ex.Message, ex);
             }
-
-            string culture = SimpleIoc.Default.GetInstance<IBaseSettingsService>().Application_Culture;
-
-            if (culture is null) culture = "en";
-
-            CultureInfo.CurrentCulture = new CultureInfo(culture);
-            CultureInfo.CurrentUICulture = new CultureInfo(culture);
-
-            Context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
 
             ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).InstrumentationKey = SimpleIoc.Default.GetInstance<IBaseSettingsService>().ApplicationInsights_InstrumentationKey;
             ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.User.UserAgent = SimpleIoc.Default.GetInstance<IInfoService>().ProductName;

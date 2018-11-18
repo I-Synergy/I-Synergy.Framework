@@ -67,7 +67,26 @@ namespace ISynergy.ViewModels
             Messenger.Default.Register<OnSubmittanceMessage>(this, async (e) => await OnSubmittanceAsync(e));
         }
 
-        protected abstract Task OnSubmittanceAsync(OnSubmittanceMessage e);
+        protected virtual async Task OnSubmittanceAsync(OnSubmittanceMessage e)
+        {
+            if (!e.Handled && e.Sender != null)
+            {
+                if (e.Sender is LanguageViewModel)
+                {
+                    if(e.Value != null)
+                    {
+                        BaseService.BaseSettingsService.Application_Culture = e.Value.ToString();
+
+                        if (await BaseService.DialogService.ShowAsync(BaseService.LanguageService.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            await RestartApplication();
+                        }
+                    }
+
+                    e.Handled = true;
+                }
+            }
+        }
 
         protected abstract Task CreateFeedbackAsync();
 
@@ -294,22 +313,8 @@ namespace ISynergy.ViewModels
             }
         }
 
-        protected async Task OpenLanguageAsync()
-        {
-            LanguageViewModel langVm = new LanguageViewModel(
-                Context,
-                BaseService);
-
-            var result = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(LanguageWindow), langVm);
-
-            if (result.HasValue && result.Value && !langVm.IsCancelled)
-            {
-                if (await BaseService.DialogService.ShowAsync(BaseService.LanguageService.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    await RestartApplication();
-                }
-            }
-        }
+        protected Task OpenLanguageAsync() =>
+            BaseService.UIVisualizerService.ShowDialogAsync<LanguageWindow, LanguageViewModel, object>();
 
         protected async Task OpenColorsAsync()
         {
