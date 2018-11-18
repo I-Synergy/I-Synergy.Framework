@@ -265,8 +265,7 @@ namespace ISynergy
             SimpleIoc.Default.Register<INavigationService, NavigationService>();
             SimpleIoc.Default.Register<IInfoService, InfoService>();
             SimpleIoc.Default.Register<IConverterService, ConverterService>();
-            SimpleIoc.Default.Register<IUpdateService, UpdateService>();
-
+            
             SimpleIoc.Default.Register<IForgotPasswordWindow>(() => SimpleIoc.Default.GetInstance<ForgotPasswordWindow>());
             SimpleIoc.Default.Register<ITagWindow>(() => SimpleIoc.Default.GetInstance<TagWindow>());
             SimpleIoc.Default.Register<IPincodeWindow>(() => SimpleIoc.Default.GetInstance<PincodeWindow>());

@@ -207,7 +207,6 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\UIVisualizerService.cs" />
-    <Compile Include="Services\UpdateService.cs" />
     <Compile Include="Settings\FileDialogSettings.cs" />
     <Compile Include="Settings\FolderBrowserDialogSettings.cs" />
     <Compile Include="Settings\MessageBoxSettings.cs" />
