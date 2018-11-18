@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
     public interface ITelemetryService
     {
-        object Client { get; }
-
-        string Id { get; set; }
-        string Account_Id { get; set; }
-
-        void TrackException(Exception e);
-
-        void TrackEvent(string e);
-
-        void TrackEvent(string e, Dictionary<string, string> prop);
-
-        void TrackPageView(string e);
-
+        string UserId { get; set; }
+        string AccountId { get; set; }
+        Task TrackExceptionAsync(Exception e);
+        Task TrackEventAsync(string e);
+        Task TrackEventAsync(string e, Dictionary<string, string> prop);
+        Task TrackPageViewAsync(string e);
         void Flush();
     }
 }

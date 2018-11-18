@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ISynergy.Events;
 using System.Collections;
+using ISynergy.Helpers;
 
 namespace ISynergy.ViewModels.Base
 {
@@ -126,7 +127,10 @@ namespace ISynergy.ViewModels.Base
             Context = context;
             BaseService = baseService;
 
-            TrackView();
+            using (var task = AsyncHelper.Wait)
+            {
+                task.Run(BaseService.TelemetryService.TrackPageViewAsync(this.GetType().Name.Replace("ViewModel", "")));
+            }
 
             Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.BusyService.EndBusyAsync());
 
@@ -143,8 +147,6 @@ namespace ISynergy.ViewModels.Base
                 Messenger.Default.Send(new OnCancellationMessage(this));
             });
         }
-
-        public virtual void TrackView() => BaseService.TelemetryService.TrackPageView(this.GetType().Name.Replace("ViewModel", ""));
 
         protected List<string> FlattenErrors()
         {

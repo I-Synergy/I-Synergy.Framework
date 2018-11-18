@@ -9,9 +9,8 @@ using ISynergy.Providers;
 using ISynergy.Services;
 using ISynergy.ViewModels.Base;
 using ISynergy.Views;
+using ISynergy.Views.Authentication;
 using ISynergy.Views.Library;
-using Microsoft.ApplicationInsights;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -260,7 +259,6 @@ namespace ISynergy
             SimpleIoc.Default.Register<IFlurlClient>(() => new FlurlClient());
             SimpleIoc.Default.Register<IBusyService, BusyService>();
             SimpleIoc.Default.Register<IDialogService, DialogService>();
-            SimpleIoc.Default.Register<ITelemetryService, TelemetryService>();
             SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
             SimpleIoc.Default.Register<IAuthenticationProvider, AuthenticationProvider>();
             SimpleIoc.Default.Register<IUIVisualizerService, UIVisualizerService>();
@@ -269,13 +267,15 @@ namespace ISynergy
             SimpleIoc.Default.Register<IConverterService, ConverterService>();
             SimpleIoc.Default.Register<IUpdateService, UpdateService>();
 
+            SimpleIoc.Default.Register<IForgotPasswordWindow>(() => SimpleIoc.Default.GetInstance<ForgotPasswordWindow>());
+            SimpleIoc.Default.Register<ITagWindow>(() => SimpleIoc.Default.GetInstance<TagWindow>());
+            SimpleIoc.Default.Register<IPincodeWindow>(() => SimpleIoc.Default.GetInstance<PincodeWindow>());
+
             SimpleIoc.Default.Register<INoteWindow>(() => SimpleIoc.Default.GetInstance<NoteWindow>());
             SimpleIoc.Default.Register<IMapsWindow>(() => SimpleIoc.Default.GetInstance<MapsWindow>());
 
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
-            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            //ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(1024, 768);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
             Logger.LogInformation("Starting application");
 
@@ -417,12 +417,6 @@ namespace ISynergy
                 Logger.LogError(ex.Message, ex);
             }
 
-            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).InstrumentationKey = SimpleIoc.Default.GetInstance<IBaseSettingsService>().ApplicationInsights_InstrumentationKey;
-            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.User.UserAgent = SimpleIoc.Default.GetInstance<IInfoService>().ProductName;
-            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.Session.Id = Guid.NewGuid().ToString();
-            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.Component.Version = SimpleIoc.Default.GetInstance<IInfoService>().ProductVersion.ToString();
-            ((TelemetryClient)SimpleIoc.Default.GetInstance<ITelemetryService>().Client).Context.Device.OperatingSystem = Environment.OSVersion.ToString();
-
             CustomXamlResourceLoader.Current = new CustomResourceLoader(SimpleIoc.Default.GetInstance<ILanguageService>());
         }
 
@@ -476,7 +470,7 @@ namespace ISynergy
 
             try
             {
-                SimpleIoc.Default.GetInstance<ITelemetryService>().TrackException(ex);
+                await SimpleIoc.Default.GetInstance<ITelemetryService>().TrackExceptionAsync(ex);
                 SimpleIoc.Default.GetInstance<ITelemetryService>().Flush();
             }
             catch { }

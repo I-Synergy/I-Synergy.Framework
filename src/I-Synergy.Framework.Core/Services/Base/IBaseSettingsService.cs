@@ -7,6 +7,7 @@ namespace ISynergy.Services
     {
         #region "User Settings"
         string ApplicationInsights_InstrumentationKey { get; }
+        string AppCenter_InstrumentationKey { get; }
         string Application_User { get; set; }
         string Application_Users { get; set; }
         string User_RefreshToken { get; set; }

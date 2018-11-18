@@ -52,8 +52,6 @@ namespace ISynergy.ViewModels.Authentication
             });
         }
 
-        public override void TrackView() { }
-
         /// <summary>
         /// Gets or sets the Tag property value.
         /// </summary>

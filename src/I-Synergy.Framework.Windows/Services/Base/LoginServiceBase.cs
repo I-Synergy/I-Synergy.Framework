@@ -108,8 +108,8 @@ namespace ISynergy.Services
 
                     SettingsService.User_RefreshToken = Context.CurrentProfile.Token.refresh_token;
 
-                    TelemetryService.Id = Context.CurrentProfile.UserInfo.Username;
-                    TelemetryService.Account_Id = Context.CurrentProfile.UserInfo.User_Id.ToString();
+                    TelemetryService.UserId = Context.CurrentProfile.UserInfo.Username;
+                    TelemetryService.AccountId = Context.CurrentProfile.UserInfo.User_Id.ToString();
 
                     SetPrincipal(Context.CurrentProfile.UserInfo.Username, Context.CurrentProfile.UserInfo.Roles.ToArray());
 
