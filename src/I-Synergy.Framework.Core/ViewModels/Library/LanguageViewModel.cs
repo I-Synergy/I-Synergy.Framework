@@ -45,9 +45,7 @@ namespace ISynergy.ViewModels.Library
 
         public override Task SubmitAsync(object e)
         {
-            BaseService.BaseSettingsService.Application_Culture = Language;
             Messenger.Default.Send(new OnSubmittanceMessage(this, Language));
-
             return Task.CompletedTask;
         }
     }
