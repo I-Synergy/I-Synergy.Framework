@@ -71,9 +71,9 @@ namespace ISynergy.Controls
                 case ContentDialogResult.Secondary:
                     return false;
                 default:
-                    if(this.DataContext != null && this.DataContext is IViewModelDialog<TEntity>)
+                    if(DataContext != null && DataContext is IViewModelDialog<TEntity>)
                     {
-                        if (!(this.DataContext as IViewModelDialog<TEntity>).IsCancelled)
+                        if (!(DataContext as IViewModelDialog<TEntity>).IsCancelled)
                         {
                             return true;
                         }

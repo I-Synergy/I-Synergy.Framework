@@ -1,4 +1,5 @@
-﻿using ISynergy.ViewModels.Authentication;
+﻿using GalaSoft.MvvmLight.Ioc;
+using ISynergy.ViewModels.Authentication;
 using Windows.UI.Xaml.Navigation;
 
 namespace ISynergy.Views.Authentication
@@ -8,11 +9,12 @@ namespace ISynergy.Views.Authentication
     /// </summary>
     public sealed partial class LoginView : ILoginView
     {
-        private ILoginViewModel ViewModel => DataContext as ILoginViewModel;
+        private ILoginViewModel ViewModel => SimpleIoc.Default.GetInstance<ILoginViewModel>();
 
         public LoginView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            DataContext = ViewModel;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

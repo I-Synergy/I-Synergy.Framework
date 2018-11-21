@@ -17,7 +17,7 @@ namespace ISynergy.Views.Base.Controls
 
         public Base_Menu()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

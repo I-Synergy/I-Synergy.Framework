@@ -6,7 +6,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converters="using:ISynergy.Converters"
     xmlns:local="using:ISynergy.Views.Authentication.Controls"
-    DataContext="{Binding LoginViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
 
     <Page.Resources>

@@ -96,7 +96,7 @@ namespace ISynergy.Behaviours
         /// 
         public void Detach()
         {
-            if (AssociatedObject is TextBox tb) tb.TextChanged -= this.TbOnTextChanged;
+            if (AssociatedObject is TextBox tb) tb.TextChanged -= TbOnTextChanged;
         }
 
         /// 

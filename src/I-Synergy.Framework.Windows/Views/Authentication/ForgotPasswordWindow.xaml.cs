@@ -10,10 +10,10 @@ namespace ISynergy.Views.Authentication
 
         public ForgotPasswordWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.PrimaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Ok");
-            this.SecondaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Cancel");
+            PrimaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Ok");
+            SecondaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Cancel");
         }
     }
 }

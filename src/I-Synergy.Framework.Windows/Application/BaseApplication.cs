@@ -61,15 +61,15 @@ namespace ISynergy
 
             if (ThemeSelectorService.Theme == ElementTheme.Dark)
             {
-                this.RequestedTheme = ApplicationTheme.Dark;
+                RequestedTheme = ApplicationTheme.Dark;
             }
             else if (ThemeSelectorService.Theme == ElementTheme.Light)
             {
-                this.RequestedTheme = ApplicationTheme.Light;
+                RequestedTheme = ApplicationTheme.Light;
             }
 
-            this.Suspending += OnSuspending;
-            this.RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+            Suspending += OnSuspending;
+            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
             //Gets or sets a value that indicates whether to engage the text performance visualization feature of Microsoft Visual Studio when the app runs.
             //this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
@@ -290,18 +290,22 @@ namespace ISynergy
             });
         }
 
+        public List<Type> ViewModelTypes { get; private set; }
+        public List<Type> ViewTypes { get; private set; }
+        public List<Type> WindowTypes { get; private set; }
+
         protected void RegisterAssemblies(List<Assembly> assemblies)
         {
             assemblies.Add(Assembly.Load("I-Synergy.Framework.Core"));
             assemblies.Add(Assembly.Load("I-Synergy.Framework.Windows"));
 
-            List<Type> viewTypes = new List<Type>();
-            List<Type> windowTypes = new List<Type>();
-            List<Type> viewmodelTypes = new List<Type>();
+            ViewTypes = new List<Type>();
+            WindowTypes = new List<Type>();
+            ViewModelTypes = new List<Type>();
 
             foreach (Assembly assembly in assemblies)
             {
-                viewmodelTypes.AddRange(assembly.GetTypes()
+                ViewModelTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
                         q.GetInterface(nameof(IViewModel), false) != null &&
                         q.Name.EndsWith(Constants.ViewModel) &&
@@ -310,7 +314,7 @@ namespace ISynergy
                         !q.IsInterface)
                     .ToList());
 
-                viewTypes.AddRange(assembly.GetTypes()
+                ViewTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
                         q.GetInterface(nameof(IView), false) != null && (
                         q.Name.EndsWith(Constants.View) ||
@@ -321,7 +325,7 @@ namespace ISynergy
                         !q.IsInterface)
                     .ToList());
 
-                windowTypes.AddRange(assembly.GetTypes()
+                WindowTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
                         q.GetInterface(nameof(IWindow), false) != null &&
                         q.Name.EndsWith(Constants.Window) &&
@@ -331,16 +335,16 @@ namespace ISynergy
                     .ToList());
             }
 
-            foreach (var viewmodel in viewmodelTypes.Distinct())
+            foreach (var viewmodel in ViewModelTypes.Distinct())
             {
                 RegisterType(viewmodel);
             }
 
-            foreach (Type view in viewTypes.Distinct())
+            foreach (Type view in ViewTypes.Distinct())
             {
                 RegisterType(view);
 
-                Type viewmodel = viewmodelTypes.Where(q => q.Name == view.Name.ReplaceLastOf(Constants.View, Constants.ViewModel)).FirstOrDefault();
+                Type viewmodel = ViewModelTypes.Where(q => q.Name == view.Name.ReplaceLastOf(Constants.View, Constants.ViewModel)).FirstOrDefault();
 
                 if (viewmodel != null)
                 {
@@ -348,7 +352,7 @@ namespace ISynergy
                 }
             }
 
-            foreach (var window in windowTypes.Distinct())
+            foreach (var window in WindowTypes.Distinct())
             {
                 RegisterType(window);
             }
@@ -404,6 +408,7 @@ namespace ISynergy
             CultureInfo.CurrentUICulture = new CultureInfo(culture);
 
             Context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
+            Context.ViewModels = ViewModelTypes;
 
             try
             {

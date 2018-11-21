@@ -99,7 +99,7 @@ namespace ISynergy.Models.Base
                 if (_errorsContainer is null)
                 {
                     _errorsContainer =
-                        new ErrorsContainer<string>(pn => this.RaiseErrorsChanged(pn));
+                        new ErrorsContainer<string>(pn => RaiseErrorsChanged(pn));
                 }
 
                 return _errorsContainer;
@@ -120,7 +120,7 @@ namespace ISynergy.Models.Base
         {
             Argument.IsNotNullOrEmpty(propertyName, propertyName);
 
-            var propertyInfo = this.GetType().GetRuntimeProperty(propertyName);
+            var propertyInfo = GetType().GetRuntimeProperty(propertyName);
 
             if (propertyInfo is null)
                 throw new ArgumentException("Invalid property name", propertyName);
@@ -139,7 +139,7 @@ namespace ISynergy.Models.Base
             var propertiesWithChangedErrors = new List<string>();
 
             // Get all the properties decorated with the ValidationAttribute attribute.
-            var propertiesToValidate = this.GetType().GetRuntimeProperties().Where(c => c.GetCustomAttributes(typeof(ValidationAttribute)).Any());
+            var propertiesToValidate = GetType().GetRuntimeProperties().Where(c => c.GetCustomAttributes(typeof(ValidationAttribute)).Any());
 
             foreach (PropertyInfo propertyInfo in propertiesToValidate.EnsureNotNull())
             {

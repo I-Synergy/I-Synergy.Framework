@@ -10,9 +10,9 @@ namespace ISynergy.Views.Library
 
         public ThemeWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.PrimaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Cancel");
+            PrimaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Cancel");
         }
     }
 }

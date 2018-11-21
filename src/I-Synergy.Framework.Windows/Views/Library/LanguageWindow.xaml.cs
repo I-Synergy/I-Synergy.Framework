@@ -11,10 +11,10 @@ namespace ISynergy.Views.Library
 
         public LanguageWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.PrimaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Ok");
-            this.SecondaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Close");
+            PrimaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Ok");
+            SecondaryButtonText = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Close");
         }
     }
 }

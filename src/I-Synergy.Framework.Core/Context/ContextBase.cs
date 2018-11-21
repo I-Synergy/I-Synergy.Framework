@@ -1,5 +1,6 @@
 ﻿using ISynergy.Enumerations;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ISynergy
@@ -9,6 +10,13 @@ namespace ISynergy
         public ContextBase()
         {
             Profiles = new ObservableCollection<Profile>();
+            ViewModels = new List<Type>();
+        }
+
+        public List<Type> ViewModels
+        {
+            get { return GetValue<List<Type>>(); }
+            set { SetValue(value); }
         }
 
         public ObservableCollection<Profile> Profiles

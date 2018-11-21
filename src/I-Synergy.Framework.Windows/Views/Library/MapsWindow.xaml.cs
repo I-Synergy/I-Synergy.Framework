@@ -23,15 +23,15 @@ namespace ISynergy.Views.Library
 
         public MapsWindow()
         {
-            this.InitializeComponent();
-            this.Loaded += MapsWindow_Loaded;
+            InitializeComponent();
+            Loaded += MapsWindow_Loaded;
         }
 
         private async void MapsWindow_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (this.DataContext is MapsViewModel && this.DataContext != null)
+            if (DataContext is MapsViewModel && DataContext != null)
             {
-                MapsViewModel vm = this.DataContext as MapsViewModel;
+                MapsViewModel vm = DataContext as MapsViewModel;
 
                 try
                 {

@@ -8,7 +8,7 @@ namespace ISynergy.Views.Authentication.Controls
     {
         public SignUpControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

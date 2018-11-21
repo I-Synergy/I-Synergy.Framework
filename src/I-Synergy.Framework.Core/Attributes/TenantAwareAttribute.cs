@@ -12,7 +12,7 @@ namespace ISynergy.Attributes
 
         public TenantAwareAttribute(string field)
         {
-            this.FieldName = field;
+            FieldName = field;
         }
     }
 }
