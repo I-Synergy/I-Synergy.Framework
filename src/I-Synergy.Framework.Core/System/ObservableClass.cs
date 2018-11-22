@@ -40,7 +40,7 @@ namespace System
         {
             Argument.IsNotNullOrEmpty(propertyName, propertyName);
 
-            var propertyInfo = this.GetType().GetRuntimeProperty(propertyName);
+            var propertyInfo = GetType().GetRuntimeProperty(propertyName);
 
             if (propertyInfo is null)
                 throw new ArgumentException("Invalid property name", propertyName);

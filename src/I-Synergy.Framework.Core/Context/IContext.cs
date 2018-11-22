@@ -1,5 +1,6 @@
 ﻿using ISynergy.Enumerations;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ISynergy
@@ -7,6 +8,7 @@ namespace ISynergy
     public interface IContext
     {
         ObservableCollection<Profile> Profiles { get; set; }
+        List<Type> ViewModels { get; set; }
         Profile CurrentProfile { get; set; }
         TimeZoneInfo CurrentTimeZone { get; set; }
         string Title { get; set; }

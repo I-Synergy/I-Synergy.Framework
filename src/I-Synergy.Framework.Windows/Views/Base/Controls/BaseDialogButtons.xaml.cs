@@ -8,7 +8,7 @@ namespace ISynergy.Views.Base.Controls
     {
         public BaseDialogButtons()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

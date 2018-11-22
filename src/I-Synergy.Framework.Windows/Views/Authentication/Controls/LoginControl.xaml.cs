@@ -17,18 +17,18 @@ namespace ISynergy.Views.Authentication.Controls
 
         public LoginControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.Loaded += LoginScreen_Loaded;
-            this.PreviewKeyDown += LoginScreen_PreviewKeyDown;
-            this.TextBox_Password.GotFocus += TextBox_Password_GotFocus;
+            Loaded += LoginScreen_Loaded;
+            PreviewKeyDown += LoginScreen_PreviewKeyDown;
+            TextBox_Password.GotFocus += TextBox_Password_GotFocus;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            this.Loaded -= LoginScreen_Loaded;
-            this.PreviewKeyDown -= LoginScreen_PreviewKeyDown;
-            this.TextBox_Password.GotFocus -= TextBox_Password_GotFocus;
+            Loaded -= LoginScreen_Loaded;
+            PreviewKeyDown -= LoginScreen_PreviewKeyDown;
+            TextBox_Password.GotFocus -= TextBox_Password_GotFocus;
         }
 
         private void TextBox_Password_GotFocus(object sender, RoutedEventArgs e)

@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.System;
+using GalaSoft.MvvmLight.Ioc;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -15,11 +16,14 @@ namespace ISynergy.Views
     /// </summary>
     public sealed partial class ShellView : IView
     {
-        public IShellViewModel ViewModel => DataContext as IShellViewModel;
+        public IShellViewModel ViewModel => SimpleIoc.Default.GetInstance<IShellViewModel>();
 
         public ShellView()
         {
             InitializeComponent();
+
+            DataContext = ViewModel;
+
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             RootNavigationView.Loaded += RootNavigationView_Loaded;
@@ -72,8 +76,8 @@ namespace ISynergy.Views
 
             AltLeft.Invoked += BackInvoked;
 
-            this.KeyboardAccelerators.Add(GoBack);
-            this.KeyboardAccelerators.Add(AltLeft);
+            KeyboardAccelerators.Add(GoBack);
+            KeyboardAccelerators.Add(AltLeft);
 
             // ALT routes here
             AltLeft.Modifiers = VirtualKeyModifiers.Menu;

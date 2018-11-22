@@ -129,7 +129,7 @@ namespace ISynergy.ViewModels.Base
 
             using (var task = AsyncHelper.Wait)
             {
-                task.Run(BaseService.TelemetryService.TrackPageViewAsync(this.GetType().Name.Replace("ViewModel", "")));
+                task.Run(BaseService.TelemetryService.TrackPageViewAsync(GetType().Name.Replace("ViewModel", "")));
             }
 
             Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.BusyService.EndBusyAsync());
@@ -151,7 +151,7 @@ namespace ISynergy.ViewModels.Base
         protected List<string> FlattenErrors()
         {
             List<string> errors = new List<string>();
-            Dictionary<string, List<string>> allErrors = this.GetAllErrors();
+            Dictionary<string, List<string>> allErrors = GetAllErrors();
 
             foreach (string propertyName in allErrors.Keys)
             {

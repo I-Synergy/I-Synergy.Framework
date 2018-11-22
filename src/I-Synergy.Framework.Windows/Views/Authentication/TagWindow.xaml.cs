@@ -12,9 +12,9 @@ namespace ISynergy.Views.Authentication
 
         public TagWindow()
         {
-            this.InitializeComponent();
-            this.Loaded += TagWindow_Loaded;
-            this.DataContextChanged += TagWindow_DataContextChanged;
+            InitializeComponent();
+            Loaded += TagWindow_Loaded;
+            DataContextChanged += TagWindow_DataContextChanged;
         }
 
         private void TagWindow_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)

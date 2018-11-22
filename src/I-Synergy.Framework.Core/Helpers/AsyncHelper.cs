@@ -181,11 +181,11 @@ namespace ISynergy.Helpers
 
                 if (old is ExclusiveSynchronizationContext oldEx)
                 {
-                    this._items = oldEx._items;
+                    _items = oldEx._items;
                 }
                 else
                 {
-                    this._items = new EventQueue();
+                    _items = new EventQueue();
                 }
             }
 
