@@ -4,12 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:Converters="using:ISynergy.Converters"
     mc:Ignorable="d"
     d:DesignHeight="120"
-    d:DesignWidth="120"
-    toolkit:Mouse.Cursor="Hand">
+    d:DesignWidth="120">
 
     <Button.Resources>
         <Converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
