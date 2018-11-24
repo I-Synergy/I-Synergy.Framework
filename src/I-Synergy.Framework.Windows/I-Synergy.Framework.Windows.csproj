@@ -120,18 +120,27 @@
     <Compile Include="Adapters\FrameAdapter.cs" />
     <Compile Include="Adapters\IFrameAdapter.cs" />
     <Compile Include="Application\BaseApplication.cs" />
+    <Compile Include="Behaviours\AuthorizationBehaviour.cs" />
+    <Compile Include="Behaviours\Base\BehaviorBase.cs" />
     <Compile Include="Behaviours\NumericTextBoxBehavior.cs" />
     <Compile Include="Common\DeferredNavigation.cs" />
     <Compile Include="Common\DialogBox.cs" />
     <Compile Include="Common\Result.cs" />
+    <Compile Include="Controls\BladeView\BladeItem.cs" />
+    <Compile Include="Controls\BladeView\BladeView.cs" />
+    <Compile Include="Controls\Expander\Expander.cs" />
+    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
+    <Compile Include="Controls\LayoutTransformControl\LayoutTransformControl.cs" />
+    <Compile Include="Controls\LayoutTransformControl\PropertyChangeEventSource.cs" />
     <Compile Include="Controls\Menu\Base_Menu.xaml.cs">
       <DependentUpon>Base_Menu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CompositionShadow.xaml.cs">
       <DependentUpon>CompositionShadow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\IconRadioButton.cs" />
+    <Compile Include="Controls\RadioButton\IconRadioButton.cs" />
     <Compile Include="Controls\TextBox\DecimalTextBox.cs" />
+    <Compile Include="Controls\TextBlock\HeaderedTextBlock.cs" />
     <Compile Include="Controls\TextBox\IntegerTextBox.cs" />
     <Compile Include="Controls\TextBox\TextBoxAttached.cs" />
     <Compile Include="Controls\Tiles\Tile.xaml.cs">
@@ -139,6 +148,7 @@
     </Compile>
     <Compile Include="Controls\View.cs" />
     <Compile Include="Controls\Window.cs" />
+    <Compile Include="Controls\Wrappers\InlineCollectionWrapper.cs" />
     <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
     <Compile Include="Converters\ByteConverters.cs" />
@@ -174,6 +184,7 @@
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\ImagePicker.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
+    <Compile Include="Extensions\MatrixExtensions.cs" />
     <Compile Include="Helpers\NavigationAnimationHelpers.cs" />
     <Compile Include="Helpers\NavigationHelper.cs" />
     <Compile Include="Helpers\SingletonHelper.cs" />
