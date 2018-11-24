@@ -130,8 +130,9 @@
     <Compile Include="Controls\CompositionShadow.xaml.cs">
       <DependentUpon>CompositionShadow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\IconRadioButton.cs" />
+    <Compile Include="Controls\RadioButton\IconRadioButton.cs" />
     <Compile Include="Controls\TextBox\DecimalTextBox.cs" />
+    <Compile Include="Controls\TextBlock\HeaderedTextBlock.cs" />
     <Compile Include="Controls\TextBox\IntegerTextBox.cs" />
     <Compile Include="Controls\TextBox\TextBoxAttached.cs" />
     <Compile Include="Controls\Tiles\Tile.xaml.cs">
@@ -139,6 +140,7 @@
     </Compile>
     <Compile Include="Controls\View.cs" />
     <Compile Include="Controls\Window.cs" />
+    <Compile Include="Controls\Wrappers\InlineCollectionWrapper.cs" />
     <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
     <Compile Include="Converters\ByteConverters.cs" />
