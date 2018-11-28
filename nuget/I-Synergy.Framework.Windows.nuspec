@@ -50,6 +50,9 @@
     <file src="..\output\I-Synergy.Framework.Windows\ARM\Release\**\*.*" 
           exclude="..\output\I-Synergy.Framework.Windows\ARM\Release\I-Synergy.Framework.Core.*" 
           target="runtimes\win10-arm\lib\uap10.0" />
-    
+
+    <file src="..\output\I-Synergy.Framework.Windows\ARM64\Release\**\*.*"
+          exclude="..\output\I-Synergy.Framework.Windows\ARM64\Release\I-Synergy.Framework.Core.*"
+          target="runtimes\win10-arm64\lib\uap10.0" />
   </files>
 </package>
