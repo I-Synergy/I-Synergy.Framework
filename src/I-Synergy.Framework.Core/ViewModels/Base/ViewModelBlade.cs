@@ -1,4 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using ISynergy.Events;
 using ISynergy.Models.Base;
 using ISynergy.Services;
 using System.Threading.Tasks;
@@ -55,6 +57,9 @@ namespace ISynergy.ViewModels.Base
             IsNew = true;
 
             Submit_Command = new RelayCommand<TEntity>(async (e) => await SubmitAsync(e));
+
+            Messenger.Default.Register<OnSubmittanceMessage>(this, async (e) => await OnSubmittanceAsync(e));
+            Messenger.Default.Register<OnCancellationMessage>(this, async (e) => await OnCancellationAsync(e));
         }
 
         protected virtual async Task<bool> ValidateInputAsync()
@@ -77,8 +82,7 @@ namespace ISynergy.ViewModels.Base
         }
 
         public abstract Task SubmitAsync(TEntity e);
-
-        //public override Task OnSubmittanceAsync(OnSubmittanceMessage e) => Task.CompletedTask;
-        //public override Task OnCancellationAsync(OnCancellationMessage e) => Task.CompletedTask;
+        public abstract Task OnSubmittanceAsync(OnSubmittanceMessage e);
+        public abstract Task OnCancellationAsync(OnCancellationMessage e);
     }
 }

@@ -119,28 +119,6 @@ namespace ISynergy.ViewModels.Authentication
             set { SetValue(value); }
         }
 
-        //private async Task<bool> Check_Registration_Name(string e)
-        //{
-        //    bool? result = false;
-
-        //    if (e != null && e != "" && e.Length >= 3)
-        //    {
-        //        /* Call service asynchronously */
-        //        result = await RestService?.CheckIfLicenseIsAvailableAsync(e);
-
-        //        if (result.Value == false)
-        //        {
-        //            await DialogService.ShowErrorAsync(LanguageService.GetString("EX_LICENSE_NAME"));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        await DialogService.ShowErrorAsync(LanguageService.GetString("Warning_LicenseNameSize"));
-        //    }
-
-        //    return result.Value;
-        //}
-
         /// <summary>
         /// Gets or sets the Registration_Mail property value.
         /// </summary>
@@ -149,27 +127,6 @@ namespace ISynergy.ViewModels.Authentication
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
-
-        //private async Task<bool> Check_Registration_Mail(string e)
-        //{
-        //    bool? result = false;
-
-        //    if (e != null && e != "" && NetworkHandler.IsValidEMail(e))
-        //    {
-        //        result = await RestService?.CheckIfEmailIsAvailableAsync(e);
-
-        //        if (result.Value == false)
-        //        {
-        //            await DialogService.ShowErrorAsync(LanguageService.GetString("EX_LICENSE_EMAIL"));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        await DialogService.ShowErrorAsync(LanguageService.GetString("Warning_Invalid_Email"));
-        //    }
-
-        //    return result.Value;
-        //}
 
         /// <summary>
         /// Gets or sets the TimeZones property value.
@@ -422,23 +379,6 @@ namespace ISynergy.ViewModels.Authentication
         /// </example>
         /// <returns></returns>
         public abstract Task<bool> ForgotPasswordAsync();
-
-        //private async Task<bool> CheckRegistrationIsAvailable()
-        //{
-        //    if (await Check_Registration_Name(Registration_Name) &&
-        //        await Check_Registration_Mail(Registration_Mail) &&
-        //        Registration_Password_Check != null && Registration_Password != null &&
-        //        Registration_Password_Check.Equals(Registration_Password) &&
-        //        Regex.IsMatch(Registration_Password, Constants.PasswordRegEx))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
-        
 
         public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {
