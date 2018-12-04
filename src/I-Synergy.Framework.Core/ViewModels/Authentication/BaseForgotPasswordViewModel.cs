@@ -79,15 +79,24 @@ namespace ISynergy.ViewModels.Authentication
 
         public override async Task SubmitAsync(object e)
         {
-            if (await CheckFields())
+            try
             {
                 await BaseService.BusyService.StartBusyAsync();
 
-                var result = await ResetPasswordAsync();
+                if (await CheckFields())
+                {
+                    await BaseService.BusyService.StartBusyAsync();
 
+                    var result = await ResetPasswordAsync();
+
+                    await BaseService.BusyService.EndBusyAsync();
+
+                    Messenger.Default.Send(new OnSubmittanceMessage(this, e));
+                }
+            }
+            finally
+            {
                 await BaseService.BusyService.EndBusyAsync();
-
-                Messenger.Default.Send(new OnSubmittanceMessage(this, e));
             }
         }
     }
