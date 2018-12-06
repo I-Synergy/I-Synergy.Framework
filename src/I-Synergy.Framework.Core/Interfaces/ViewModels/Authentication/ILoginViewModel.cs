@@ -28,8 +28,8 @@ namespace ISynergy.ViewModels.Authentication
         List<string> Usernames { get; set; }
 
         Task<bool> AuthenticateAsync();
-        Task CheckAutoLogin();
-        Task<bool> ForgotPasswordAsync();
+        Task CheckAutoLoginAsync();
+        Task ForgotPasswordAsync();
         Task OnCancellationAsync(OnCancellationMessage e);
         Task OnSubmittanceAsync(OnSubmittanceMessage e);
         Task<bool> RegisterAsync();

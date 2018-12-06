@@ -15,7 +15,7 @@
 
     <Grid>
         <StackPanel Margin="2,10" VerticalAlignment="Center">
-            <TextBlock Text="{CustomResource Generic_Register}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource Accent_Brush}" TextWrapping="Wrap" />
+            <TextBlock Text="{CustomResource Generic_Register}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
 
             <TextBox x:Name="Text_CompanyName" Header="{CustomResource Relation_Companyname}" Text="{Binding Registration_Name, Mode=TwoWay}" />
             <TextBox x:Name="Text_Email" Header="{CustomResource Generic_Email}" CharacterCasing="Lower" Text="{Binding Registration_Mail, Mode=TwoWay}" ToolTipService.ToolTip="{CustomResource Generic_Email}" InputScope="EmailSmtpAddress" />

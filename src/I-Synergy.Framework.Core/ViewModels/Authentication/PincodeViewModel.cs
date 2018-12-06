@@ -34,11 +34,22 @@ namespace ISynergy.ViewModels.Library
             private set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the Property property value.
+        /// </summary>
+        public object Property
+        {
+            get { return GetValue<object>(); }
+            private set { SetValue(value); }
+        }
+
         public PincodeViewModel(
             IContext context,
-            IBaseService baseService)
+            IBaseService baseService,
+            object property)
             : base(context, baseService)
         {
+            Property = property;
         }
 
         public override Task SubmitAsync(object e)

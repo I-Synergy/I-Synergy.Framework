@@ -62,18 +62,6 @@ namespace ISynergy.ViewModels.Base
             });
         }
 
-        //protected override Task CancelAndCloseViewModelAsync()
-        //{
-        //    SelectedItem = null;
-        //    return base.CancelAndCloseViewModelAsync();
-        //}
-
-        //protected override Task CloseViewModelAsync()
-        //{
-        //    CloseWindow();
-        //    return Task.CompletedTask;
-        //}
-
         protected virtual void CloseWindow()
         {
             Messenger.Default.Send(new CloseWindowsMessage(this));

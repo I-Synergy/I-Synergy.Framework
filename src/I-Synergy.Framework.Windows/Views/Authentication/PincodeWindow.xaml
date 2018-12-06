@@ -9,8 +9,8 @@
     Title="{Binding Title}"
     PrimaryButtonCommand="{Binding Submit_Command}"
     SecondaryButtonCommand="{Binding Close_Command}"
-    PrimaryButtonStyle="{StaticResource DefaultButtonStyle}"
-    SecondaryButtonStyle="{StaticResource DefaultButtonStyle}">
+    PrimaryButtonStyle="{ThemeResource DefaultButtonStyle}"
+    SecondaryButtonStyle="{ThemeResource DefaultButtonStyle}">
 
     <Grid Margin="10">
         <PasswordBox x:Name="PasswordBox_Pincode" x:Uid="PasswordBox_Pincode" Password="{Binding Pincode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Number" />

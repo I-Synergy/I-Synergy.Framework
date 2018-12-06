@@ -33,24 +33,18 @@ namespace ISynergy.ViewModels.Authentication
         public bool IsLoginVisible
         {
             get { return GetValue<bool>(); }
-            set { SetValue(value); }
+            private set { SetValue(value); }
         }
 
-
-        public TagViewModel(
-            IContext context,
-            IBaseService baseService,
-            bool loginVisible = true)
-            : base(context, baseService)
+        /// <summary>
+        /// Gets or sets the Property property value.
+        /// </summary>
+        public object Property
         {
-            IsLoginVisible = loginVisible;
-
-            Login_Command = new RelayCommand(() =>
-            {
-                Messenger.Default.Send(new AuthenticateUserMessageRequest(this, true));
-                Messenger.Default.Send(new OnCancellationMessage(this));
-            });
+            get { return GetValue<object>(); }
+            private set { SetValue(value); }
         }
+
 
         /// <summary>
         /// Gets or sets the Tag property value.
@@ -58,7 +52,7 @@ namespace ISynergy.ViewModels.Authentication
         public string RfidTag
         {
             get { return GetValue<string>(); }
-            set { SetValue(value); }
+            private set { SetValue(value); }
         }
 
         /// <summary>
@@ -67,7 +61,23 @@ namespace ISynergy.ViewModels.Authentication
         public bool IsValid
         {
             get { return GetValue<bool>(); }
-            set { SetValue(value); }
+            private set { SetValue(value); }
+        }
+
+        public TagViewModel(
+            IContext context,
+            IBaseService baseService,
+            AuthenticateUserMessageRequest request)
+            : base(context, baseService)
+        {
+            IsLoginVisible = request.EnableLogin;
+            Property = request.Property;
+
+            Login_Command = new RelayCommand(() =>
+            {
+                Messenger.Default.Send(new AuthenticateUserMessageRequest(this, true));
+                Messenger.Default.Send(new OnCancellationMessage(this));
+            });
         }
 
         public override Task SubmitAsync(object e)
