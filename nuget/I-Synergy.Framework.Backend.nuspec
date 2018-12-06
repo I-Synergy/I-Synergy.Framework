@@ -34,9 +34,9 @@
   </metadata>
 
   <files>
-    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Backend.deps.json" target="lib\netstandard2.0" />
-    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Backend.dll" target="lib\netstandard2.0" />
-    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Backend.pdb" target="lib\netstandard2.0" />
-    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.1\I-Synergy.Framework.Backend.xml" target="lib\netstandard2.0" />
+    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.2\I-Synergy.Framework.Backend.deps.json" target="lib\netstandard2.0" />
+    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.2\I-Synergy.Framework.Backend.dll" target="lib\netstandard2.0" />
+    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.2\I-Synergy.Framework.Backend.pdb" target="lib\netstandard2.0" />
+    <file src="..\output\I-Synergy.Framework.Backend\release\netcoreapp2.2\I-Synergy.Framework.Backend.xml" target="lib\netstandard2.0" />
   </files>
 </package>
