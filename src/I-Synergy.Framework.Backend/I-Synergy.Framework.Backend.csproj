@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>ISynergy.Framework</RootNamespace>
     <LangVersion>7.3</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -31,12 +31,13 @@
     <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
     <PackageReference Include="Mapster" Version="3.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.6" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.4.1" />
     <PackageReference Include="OpenIddict" Version="2.0.0" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.0" />
     <PackageReference Include="OpenIddict.Mvc" Version="2.0.0" />

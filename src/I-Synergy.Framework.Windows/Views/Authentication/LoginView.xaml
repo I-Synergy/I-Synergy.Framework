@@ -28,16 +28,16 @@
 
         <Grid Grid.Column="1" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="{CustomResource  Generic_Register_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource Accent_Brush}" TextWrapping="Wrap" />
-                <TextBlock Text="{CustomResource  Generic_Register_Text}" Margin ="5" Foreground="{StaticResource Accent_Brush}" TextWrapping="Wrap" />
+                <TextBlock Text="{CustomResource  Generic_Register_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                <TextBlock Text="{CustomResource  Generic_Register_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
                 <Button IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Command="{Binding ShowLogin_Command}" Content="{CustomResource Generic_Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" />
             </StackPanel>
         </Grid>
 
         <Grid Grid.Column="3" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="{CustomResource  Generic_Login_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource Accent_Brush}" TextWrapping="Wrap" />
-                <TextBlock Text="{CustomResource  Generic_Login_Text}" Margin ="5" Foreground="{StaticResource Accent_Brush}" TextWrapping="Wrap" />
+                <TextBlock Text="{CustomResource  Generic_Login_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                <TextBlock Text="{CustomResource  Generic_Login_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
                 <Button IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Command="{Binding ShowLogin_Command}" Content="{CustomResource Generic_Login}" Margin ="5,20,5,5" HorizontalAlignment="Right" />
             </StackPanel>
         </Grid>

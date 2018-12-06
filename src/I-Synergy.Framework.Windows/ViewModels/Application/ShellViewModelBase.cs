@@ -22,8 +22,6 @@ namespace ISynergy.ViewModels
 {
     public abstract class ShellViewModelBase : ViewModel
     {
-        // public IBusyService Busy => Container.Resolve<IBusyService>();
-
         protected const string SetApplicationColor = "Set Application Color";
         protected const string SetApplicationWallpaper = "Set Application Wallpaper";
 
@@ -58,7 +56,7 @@ namespace ISynergy.ViewModels
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
-            RestartUpdate_Command = new RelayCommand(async () => await ShowDialogRestartAfterUpdate());
+            RestartUpdate_Command = new RelayCommand(async () => await ShowDialogRestartAfterUpdateAsync());
             StateChanged_Command = new RelayCommand<VisualStateChangedEventArgs>(args => GoToState(args.NewState.Name));
             Feedback_Command = new RelayCommand(async () => await CreateFeedbackAsync());
 
@@ -79,7 +77,77 @@ namespace ISynergy.ViewModels
 
                         if (await BaseService.DialogService.ShowAsync(BaseService.LanguageService.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
-                            await RestartApplication();
+                            await RestartApplicationAsync();
+                        }
+                    }
+
+                    e.Handled = true;
+                }
+                else if(e.Sender is ThemeViewModel)
+                {
+                    if (e.Value != null)
+                    {
+                        if (await BaseService.DialogService.ShowAsync(
+                            BaseService.LanguageService.GetString("Warning_Color_Change") +
+                            Environment.NewLine +
+                            BaseService.LanguageService.GetString("Generic_Do_you_want_to_do_it_now"),
+                            BaseService.LanguageService.GetString("TitleQuestion"),
+                            MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            await RestartApplicationAsync();
+                        }
+                    }
+
+                    e.Handled = true;
+                }
+                else if(e.Sender is TagViewModel)
+                {
+                    TagViewModel tagVM = e.Sender as TagViewModel;
+
+                    if (e.Value != null)
+                    {
+                        
+                        int tag = Convert.ToInt32(tagVM.RfidTag, 16);
+
+                        if (tag != 0 &&
+                            Context.CurrentProfile?.UserInfo?.RfidUid != 0 &&
+                            Context.Profiles.Any(q => q.UserInfo.RfidUid == tag) &&
+                            Context.Profiles.Single(q => q.UserInfo.RfidUid == tag).TokenExpiration.ToLocalTime() > DateTime.Now)
+                        {
+                            Context.CurrentProfile = null;
+                            Context.CurrentProfile = Context.Profiles.Single(q => q.UserInfo.RfidUid == tag);
+
+                            Messenger.Default.Send(new AuthenticateUserMessageResult(this, tagVM.Property, true));
+                        }
+                        else
+                        {
+                            await ProcessAuthenticationRequestAsync();
+                        }
+                    }
+                    else if (!tagVM.IsLoginVisible)
+                    {
+                        await BaseService.UIVisualizerService.ShowDialogAsync(
+                            typeof(IPincodeWindow), 
+                            new PincodeViewModel(Context, BaseService, tagVM.Property));
+                    }
+
+                    e.Handled = true;
+                }
+                else if(e.Sender is PincodeViewModel)
+                {
+                    PincodeViewModel pinVM = e.Sender as PincodeViewModel;
+
+                    if (e.Value != null)
+                    {
+                        bool pinResult = (bool)e.Value;
+
+                        if (pinResult)
+                        {
+                            Messenger.Default.Send(new AuthenticateUserMessageResult(this, pinVM.Property, true));
+                        }
+                        else if (pinResult == true)
+                        {
+                            await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Pincode_Invalid"));
                         }
                     }
 
@@ -125,49 +193,12 @@ namespace ISynergy.ViewModels
                 }
                 else if (Context.Profiles?.Count > 0)
                 {
-                    TagViewModel tagVM = new TagViewModel(
-                        Context, 
-                        BaseService, 
-                        request.EnableLogin);
-
-                    var tagResult = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(ITagWindow), tagVM);
-
-                    if (tagResult.HasValue && tagResult.Value && tagVM.IsValid)
-                    {
-                        int tag = Convert.ToInt32(tagVM.RfidTag, 16);
-
-                        if (tag != 0 &&
-                            Context.CurrentProfile?.UserInfo?.RfidUid != 0 &&
-                            Context.Profiles.Any(q => q.UserInfo.RfidUid == tag) &&
-                            Context.Profiles.Single(q => q.UserInfo.RfidUid == tag).TokenExpiration.ToLocalTime() > DateTime.Now)
-                        {
-                            Context.CurrentProfile = null;
-                            Context.CurrentProfile = Context.Profiles.Single(q => q.UserInfo.RfidUid == tag);
-
-                            Messenger.Default.Send(new AuthenticateUserMessageResult(this, request.Property, true));
-                        }
-                        else
-                        {
-                            await ProcessAuthenticationRequestAsync();
-                        }
-                    }
-                    else if(!request.EnableLogin)
-                    {
-                        PincodeViewModel pinVM = new PincodeViewModel(
+                    await BaseService.UIVisualizerService.ShowDialogAsync(
+                        typeof(ITagWindow), 
+                        new TagViewModel(
                             Context,
-                            BaseService);
-
-                        var pinResult = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(IPincodeWindow), pinVM);
-
-                        if (pinResult == true && pinVM.Result)
-                        {
-                            Messenger.Default.Send(new AuthenticateUserMessageResult(this, request.Property, true));
-                        }
-                        else if(pinResult == true)
-                        {
-                            await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Pincode_Invalid"));
-                        }
-                    }
+                            BaseService,
+                            request));
                 }
             }
             finally
@@ -208,10 +239,8 @@ namespace ISynergy.ViewModels
             }
         }
 
-        protected Task ShowDialogRestartAfterUpdate()
-        {
-            return BaseService.DialogService.ShowInformationAsync(BaseService.LanguageService.GetString("Generic_UpdateRestart"));
-        }
+        protected Task ShowDialogRestartAfterUpdateAsync() =>
+            BaseService.DialogService.ShowInformationAsync(BaseService.LanguageService.GetString("Generic_UpdateRestart"));
 
         /// <summary>
         /// Gets or sets the PrimaryItems property value.
@@ -316,27 +345,8 @@ namespace ISynergy.ViewModels
         protected Task OpenLanguageAsync() =>
             BaseService.UIVisualizerService.ShowDialogAsync<LanguageWindow, LanguageViewModel, object>();
 
-        protected async Task OpenColorsAsync()
-        {
-            ThemeViewModel langVm = new ThemeViewModel(
-                Context,
-                BaseService);
-
-            var result = await BaseService.UIVisualizerService.ShowDialogAsync(typeof(ThemeWindow), langVm);
-
-            if (result.HasValue && result.Value && !langVm.IsCancelled)
-            {
-                if (await BaseService.DialogService.ShowAsync(
-                BaseService.LanguageService.GetString("Warning_Color_Change") +
-                Environment.NewLine +
-                BaseService.LanguageService.GetString("Generic_Do_you_want_to_do_it_now"),
-                BaseService.LanguageService.GetString("TitleQuestion"),
-                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    await RestartApplication();
-                }
-            }
-        }
+        protected Task OpenColorsAsync() =>
+            BaseService.UIVisualizerService.ShowDialogAsync(typeof(ThemeWindow), new ThemeViewModel(Context, BaseService));
 
         private Task OpenFeedbackAsync()
         {
@@ -344,10 +354,9 @@ namespace ISynergy.ViewModels
             return Task.CompletedTask;
         }
 
-        public async Task RestartApplication()
+        public async Task RestartApplicationAsync()
         {
             await BaseService.DialogService.ShowInformationAsync("Please restart the application.");
-
             Application.Current.Exit();
         }
     }

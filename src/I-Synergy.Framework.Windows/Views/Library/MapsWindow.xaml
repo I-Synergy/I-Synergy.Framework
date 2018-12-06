@@ -44,7 +44,7 @@
                 </TextBlock>
             </StackPanel>
 
-            <Button x:Name="Button_Close" Grid.Column="1" Content="{CustomResource Generic_Close}" Command="{Binding Close_Command}" />
+            <Button x:Name="Button_Close" Grid.Column="1" Content="{CustomResource Generic_Close}" Command="{Binding Close_Command}" Style="{ThemeResource DefaultButtonStyle}" />
         </Grid>
 
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">

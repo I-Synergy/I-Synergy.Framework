@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>ISynergy.Framework.Core.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <LangVersion>7.3</LangVersion>

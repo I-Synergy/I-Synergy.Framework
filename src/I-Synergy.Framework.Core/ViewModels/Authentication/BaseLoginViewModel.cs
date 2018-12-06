@@ -44,7 +44,7 @@ namespace ISynergy.ViewModels.Authentication
             AutoLogin = BaseService.BaseSettingsService.User_AutoLogin;
         }
 
-        public Task CheckAutoLogin()
+        public Task CheckAutoLoginAsync()
         {
             if (BaseService.BaseSettingsService.User_AutoLogin && !string.IsNullOrEmpty(BaseService.BaseSettingsService.User_RefreshToken))
             {
@@ -182,7 +182,7 @@ namespace ISynergy.ViewModels.Authentication
             set { SetValue(value); }
         }
         
-        protected virtual async Task<bool> CheckFields()
+        protected virtual async Task<bool> CheckFieldsAsync()
         {
             bool result = true;
 
@@ -378,7 +378,7 @@ namespace ISynergy.ViewModels.Authentication
         /// </code>
         /// </example>
         /// <returns></returns>
-        public abstract Task<bool> ForgotPasswordAsync();
+        public abstract Task ForgotPasswordAsync();
 
         public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {

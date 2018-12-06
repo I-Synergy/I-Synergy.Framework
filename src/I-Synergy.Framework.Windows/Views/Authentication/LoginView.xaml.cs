@@ -24,7 +24,7 @@ namespace ISynergy.Views.Authentication
                 await ViewModel.BaseService.LoginService.LogoutAsync();
             }
 
-            await ViewModel.CheckAutoLogin();
+            await ViewModel.CheckAutoLoginAsync();
         }
     }
 }

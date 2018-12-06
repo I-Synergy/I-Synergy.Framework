@@ -9,7 +9,8 @@
     mc:Ignorable="d"
     Title="{Binding Title}"
     PrimaryButtonCommand="{Binding Close_Command}"
-    PrimaryButtonStyle="{StaticResource DefaultButtonStyle}">
+    PrimaryButtonStyle="{ThemeResource DefaultButtonStyle}"
+    SecondaryButtonStyle="{ThemeResource DefaultButtonStyle}">
 
     <w:Window.Resources>
         <Converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
