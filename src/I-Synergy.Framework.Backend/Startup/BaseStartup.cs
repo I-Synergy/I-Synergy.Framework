@@ -4,6 +4,7 @@ using ISynergy.Extensions;
 using ISynergy.Filters;
 using ISynergy.Options;
 using ISynergy.Providers;
+using ISynergy.Routing;
 using ISynergy.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -18,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenIddict.Abstractions;
@@ -91,6 +94,10 @@ namespace ISynergy
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseRequestLocalization(
+                app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value);
+
             app.UseCookiePolicy();
             app.UseMvc();
         }
@@ -122,6 +129,25 @@ namespace ISynergy
         protected virtual void AddLocalization(IServiceCollection services)
         {
             services.AddLocalization();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("nl")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture(culture: "nl", uiCulture: "nl");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+
+                options.RequestCultureProviders.Clear();
+                options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
+                options.RequestCultureProviders.Insert(1, new RouteDataRequestCultureProvider());
+                options.RequestCultureProviders.Insert(2, new AcceptLanguageHeaderRequestCultureProvider());
+                options.RequestCultureProviders.Insert(3, new QueryStringRequestCultureProvider());
+            });
         }
 
         protected virtual void AddCaching(IServiceCollection services)
@@ -184,7 +210,7 @@ namespace ISynergy
             });
 
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization()
                 .AddJsonOptions(options =>
@@ -612,7 +638,7 @@ namespace ISynergy
 
                 options.Filters.Add(new AuthorizeFilter(policy));
             })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddRazorPagesOptions(options =>
                 {
                     if (authorizedRazorPages != null)

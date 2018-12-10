@@ -100,10 +100,8 @@ namespace ISynergy.ViewModels
 
                     e.Handled = true;
                 }
-                else if(e.Sender is TagViewModel)
+                else if(e.Sender is TagViewModel tagVM)
                 {
-                    TagViewModel tagVM = e.Sender as TagViewModel;
-
                     if (e.Value != null)
                     {
                         
@@ -133,10 +131,8 @@ namespace ISynergy.ViewModels
 
                     e.Handled = true;
                 }
-                else if(e.Sender is PincodeViewModel)
+                else if(e.Sender is PincodeViewModel pinVM)
                 {
-                    PincodeViewModel pinVM = e.Sender as PincodeViewModel;
-
                     if (e.Value != null)
                     {
                         bool pinResult = (bool)e.Value;
