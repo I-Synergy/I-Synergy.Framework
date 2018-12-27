@@ -139,6 +139,7 @@
     </Compile>
     <Compile Include="Controls\View.cs" />
     <Compile Include="Controls\Window.cs" />
+    <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
     <Compile Include="Controls\Wrappers\InlineCollectionWrapper.cs" />
     <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
