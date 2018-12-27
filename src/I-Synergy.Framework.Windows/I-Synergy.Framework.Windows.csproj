@@ -170,6 +170,7 @@
     <Compile Include="Dialogs\IContentDialog.cs" />
     <Compile Include="Dialogs\IContentDialogFactory.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="Extensions\DispatcherExtensions.cs" />
     <Compile Include="Extensions\ResourceExtensions.cs" />
     <Compile Include="Extensions\SettingsStorageExtensions.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
