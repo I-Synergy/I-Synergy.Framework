@@ -144,6 +144,7 @@ namespace ISynergy.ViewModels.Base
                 try
                 {
                     await RemoveAsync(e);
+                    await RefreshAsync();
                 }
                 catch (FlurlHttpException ex)
                 {
@@ -186,24 +187,29 @@ namespace ISynergy.ViewModels.Base
             return Task.CompletedTask;
         }
 
-        protected void RemoveBlade(IViewModelBlade viewmodel)
+        protected Task<bool> RemoveBladeAsync(IViewModelBlade viewmodel)
         {
-            if (Blades!= null)
+            if (Blades != null)
             {
-                Blades.Remove(Blades.Where(q => q.DataContext == viewmodel && ((IViewModelBlade)q.DataContext).Owner == this).FirstOrDefault());
+                if (Blades.Remove(Blades.Where(q => q.DataContext == viewmodel && ((IViewModelBlade)q.DataContext).Owner == this).FirstOrDefault()))
+                {
+                    if (Blades.Count < 1)
+                    {
+                        IsPaneEnabled = false;
+                    }
+                    else
+                    {
+                        ((IViewModelBlade)Blades.Last().DataContext).IsDisabled = false;
+                    }
 
-                if (Blades.Count < 1)
-                {
-                    IsPaneEnabled = false;
-                }
-                else
-                {
-                    ((IViewModelBlade)Blades.Last().DataContext).IsDisabled = false;
+                    return Task.FromResult(true);
                 }
             }
+
+            return Task.FromResult(false);
         }
 
-        public override Task OnCancellationAsync(OnCancellationMessage e)
+        public override async Task OnCancellationAsync(OnCancellationMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {
@@ -211,13 +217,11 @@ namespace ISynergy.ViewModels.Base
                     ((IViewModelBlade)e.Sender).Owner == this)
                 {
                     IsCancelled = true;
-                    RemoveBlade(e.Sender as IViewModelBlade);
+                    await RemoveBladeAsync(e.Sender as IViewModelBlade);
 
                     e.Handled = true;
                 }
             }
-
-            return Task.CompletedTask;
         }
 
         public override async Task OnSubmittanceAsync(OnSubmittanceMessage e)
@@ -227,10 +231,11 @@ namespace ISynergy.ViewModels.Base
                 if (e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
                     ((IViewModelBlade)e.Sender).Owner == this)
                 {
-                    RemoveBlade(e.Sender as IViewModelBlade);
-                    await RefreshAsync();
-
-                    e.Handled = true;
+                    if (await RemoveBladeAsync(e.Sender as IViewModelBlade))
+                    {
+                        await RefreshAsync();
+                        e.Handled = true;
+                    }
                 }
             }
         }
