@@ -211,14 +211,13 @@ namespace ISynergy.ViewModels.Base
 
         public override async Task OnCancellationAsync(OnCancellationMessage e)
         {
-            if (!e.Handled && e.Sender != null)
+            IViewModelBlade viewmodel = e.Sender as IViewModelBlade;
+
+            if (!e.Handled && viewmodel != null && viewmodel.Owner == this)
             {
-                if (e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
-                    ((IViewModelBlade)e.Sender).Owner == this)
+                if (await RemoveBladeAsync(viewmodel))
                 {
                     IsCancelled = true;
-                    await RemoveBladeAsync(e.Sender as IViewModelBlade);
-
                     e.Handled = true;
                 }
             }
@@ -226,16 +225,14 @@ namespace ISynergy.ViewModels.Base
 
         public override async Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {
-            if (!e.Handled && e.Sender != null)
+            IViewModelBlade viewmodel = e.Sender as IViewModelBlade;
+
+            if (!e.Handled && viewmodel != null && viewmodel.Owner == this)
             {
-                if (e.Sender.GetType().GetInterfaces().Contains(typeof(IViewModelBlade)) &&
-                    ((IViewModelBlade)e.Sender).Owner == this)
+                if (await RemoveBladeAsync(viewmodel))
                 {
-                    if (await RemoveBladeAsync(e.Sender as IViewModelBlade))
-                    {
-                        await RefreshAsync();
-                        e.Handled = true;
-                    }
+                    await RefreshAsync();
+                    e.Handled = true;
                 }
             }
         }
