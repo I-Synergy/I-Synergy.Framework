@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy
+﻿namespace ISynergy
 {
     public class Constants
     {

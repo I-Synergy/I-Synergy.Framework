@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using ISynergy.Events;
 using ISynergy.Models.Accounts;
-using ISynergy.Services;
 using ISynergy.ViewModels.Base;
 using System;
 using System.Collections.Generic;
