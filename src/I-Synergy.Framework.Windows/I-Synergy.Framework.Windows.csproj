@@ -134,6 +134,7 @@
     <Compile Include="Controls\TextBlock\HeaderedTextBlock.cs" />
     <Compile Include="Controls\TextBox\IntegerTextBox.cs" />
     <Compile Include="Controls\TextBox\TextBoxAttached.cs" />
+    <Compile Include="Controls\Tiles\RotatorTile.cs" />
     <Compile Include="Controls\Tiles\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
@@ -184,6 +185,7 @@
     <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Helpers\UploadImageHelper.cs" />
     <Compile Include="Helpers\VisualHelpers.cs" />
+    <Compile Include="Helpers\WeakEventListener.cs" />
     <Compile Include="Interfaces\Authentication\IForgotPasswordWindow.cs" />
     <Compile Include="Interfaces\Authentication\ILoginView.cs" />
     <Compile Include="Interfaces\Authentication\IPincodeWindow.cs" />
