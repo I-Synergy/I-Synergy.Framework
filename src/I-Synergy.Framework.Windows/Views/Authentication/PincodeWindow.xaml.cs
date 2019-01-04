@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using ISynergy.Services;
 using ISynergy.ViewModels.Library;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Views.Authentication
 {

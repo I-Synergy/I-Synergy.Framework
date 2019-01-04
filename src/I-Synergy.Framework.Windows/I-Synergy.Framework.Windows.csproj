@@ -134,11 +134,13 @@
     <Compile Include="Controls\TextBlock\HeaderedTextBlock.cs" />
     <Compile Include="Controls\TextBox\IntegerTextBox.cs" />
     <Compile Include="Controls\TextBox\TextBoxAttached.cs" />
+    <Compile Include="Controls\Tiles\RotatorTile.cs" />
     <Compile Include="Controls\Tiles\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\View.cs" />
     <Compile Include="Controls\Window.cs" />
+    <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
     <Compile Include="Controls\Wrappers\InlineCollectionWrapper.cs" />
     <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
@@ -169,6 +171,7 @@
     <Compile Include="Dialogs\IContentDialog.cs" />
     <Compile Include="Dialogs\IContentDialogFactory.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="Extensions\DispatcherExtensions.cs" />
     <Compile Include="Extensions\ResourceExtensions.cs" />
     <Compile Include="Extensions\SettingsStorageExtensions.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
@@ -182,6 +185,7 @@
     <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Helpers\UploadImageHelper.cs" />
     <Compile Include="Helpers\VisualHelpers.cs" />
+    <Compile Include="Helpers\WeakEventListener.cs" />
     <Compile Include="Interfaces\Authentication\IForgotPasswordWindow.cs" />
     <Compile Include="Interfaces\Authentication\ILoginView.cs" />
     <Compile Include="Interfaces\Authentication\IPincodeWindow.cs" />

@@ -1,12 +1,8 @@
 ﻿using Flurl;
 using Flurl.Http;
-using GalaSoft.MvvmLight.Messaging;
-using ISynergy.Exceptions;
-using ISynergy.Models.General;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Events;
 
 namespace ISynergy.Services
 {

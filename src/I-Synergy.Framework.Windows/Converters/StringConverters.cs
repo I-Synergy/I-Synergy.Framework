@@ -1,10 +1,9 @@
 ﻿using System;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace ISynergy.Converters
 {
@@ -133,6 +132,22 @@ namespace ISynergy.Converters
         public object ConvertBack(object value, Type targetType, object parameter, string culture)
         {
             return value.ToString();
+        }
+    }
+
+    public class UriToImageSourceConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string culture)
+        {
+            if (value is null)
+                return null;
+
+            return new BitmapImage(new Uri(value as string));
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

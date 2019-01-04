@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Services
+﻿namespace ISynergy.Services
 {
     public abstract class BaseService : IBaseService
     {
