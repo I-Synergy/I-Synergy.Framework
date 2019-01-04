@@ -4,88 +4,53 @@ using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Converters
 {
-    public class DateOffsetToDateTimeConverter : IValueConverter
+    public class DateTimeOffsetToLocalDateTimeOffsetConverter: IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return Convert(value, targetType, parameter, new CultureInfo(language));
-        }
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var result = DateTime.Now;
-
-            if (value != null && value.GetType() == typeof(DateTimeOffset))
+            if(value is DateTimeOffset datetime)
             {
-                result = ((DateTimeOffset)value).ToLocalTime().DateTime;
+                return datetime.ToLocalTime();
             }
 
-            return result;
+            return DateTimeOffset.Now;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return ConvertBack(value, targetType, parameter, new CultureInfo(language));
+            throw new NotImplementedException();
+        }
+    }
+
+    public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
+    {
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:d\} 2009-06-15T13:45:30 -> 6/15/2009 (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:D\} 2009-06-15T13:45:30 -> Monday, June 15, 2009 (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:f\} 2009-06-15T13:45:30 -> Monday, June 15, 2009 1:45 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:F\} 2009-06-15T13:45:30 -> Monday, June 15, 2009 1:45:30 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:g\} 2009-06-15T13:45:30 -> 6/15/2009 1:45 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:G\} 2009-06-15T13:45:30 -> 6/15/2009 1:45:30 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=T} 2009-06-15T13:45:30 -> 1:45 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=T} 2009-06-15T13:45:30 -> 1:45:30 PM (en-US)
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is DateTimeOffset datetime)
+            {
+                if(parameter != null)
+                {
+                    return datetime.ToLocalTime().ToString(parameter.ToString());
+                }
+
+                return datetime.ToLocalTime().ToString("f");
+            }
+
+            return DateTimeOffset.Now.ToString("f");
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if (value != null)
-            {
-                if (value.GetType() == typeof(DateTime))
-                {
-                    return new DateTimeOffset(DateTime.SpecifyKind((DateTime)value, DateTimeKind.Local));
-                }
-
-                if (value.GetType() == typeof(string))
-                {
-                    return new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(value.ToString()), DateTimeKind.Local));
-                }
-            }
-
-            return new DateTimeOffset(DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local));
-        }
-
-        public class DateOffsetToDateConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, string language)
-            {
-                return Convert(value, targetType, parameter, new CultureInfo(language));
-            }
-
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                if (value != null && value.GetType() == typeof(DateTimeOffset))
-                {
-                    DateTimeOffset date = (DateTimeOffset)value;
-                    return date.ToLocalTime().Date;
-                }
-
-                return DateTime.Now.Date;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, string language)
-            {
-                return ConvertBack(value, targetType, parameter, new CultureInfo(language));
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                if (value != null)
-                {
-                    if (value.GetType() == typeof(DateTime))
-                    {
-                        return new DateTimeOffset((DateTime)value, DateTimeOffset.Now.Offset);
-                    }
-
-                    if (value.GetType() == typeof(string))
-                    {
-                        return new DateTimeOffset(DateTime.Parse(value.ToString(), CultureInfo.InvariantCulture));
-                    }
-                }
-
-                return DateTimeOffset.Now;
-            }
+            throw new NotImplementedException();
         }
     }
 }
