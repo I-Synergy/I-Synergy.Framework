@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Base
 {
-    public abstract class BaseDashboardViewModel : ViewModelNavigation<object>, IViewModelNavigation<object>
+    public abstract class BaseDashboardViewModel : ViewModelBladeView<object>, IViewModelBladeView<object>
     {
         public RelayCommand<string> Tile_Command { get; set; }
 
@@ -39,11 +39,6 @@ namespace ISynergy.ViewModels.Base
         }
 
         public abstract Task RefreshDashboardAsync();
-
-        public override Task SubmitAsync(object e)
-        {
-            return Task.CompletedTask;
-        }
 
         public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
         {

@@ -8,6 +8,7 @@ namespace ISynergy.Services
         public int FileType_Id { get; set; }
         public string Description { get; set; }
         public byte[] File { get; set; }
+        public Uri Url { get; set; }
     }
 
     public interface IFileService : IFileSupport

@@ -4,7 +4,6 @@ using System;
 using System.Globalization;
 using System.Threading;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Markup;
 
 namespace ISynergy.Converters
 {

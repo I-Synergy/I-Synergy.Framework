@@ -1,6 +1,8 @@
 ﻿using ISynergy.Enumerations;
 using System;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 
 namespace ISynergy.Services
@@ -40,7 +42,7 @@ namespace ISynergy.Services
 
         public Task ShowGreetingAsync(string name)
         {
-            if(DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
+            if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
             {
                 return ShowAsync(string.Format(LanguageService.GetString("Generic_Greeting_Night"), name),
                     LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
@@ -63,11 +65,13 @@ namespace ISynergy.Services
         }
 
         public virtual async Task<MessageBoxResult> ShowAsync(
-            string message, 
-            string title = "", 
-            MessageBoxButton buttons = MessageBoxButton.OK, 
+            string message,
+            string title = "",
+            MessageBoxButton buttons = MessageBoxButton.OK,
             MessageBoxImage image = MessageBoxImage.Information)
         {
+            MessageBoxResult result = MessageBoxResult.Cancel;
+
             var yesCommand = new UICommand(LanguageService.GetString("Generic_Yes"), cmd => { });
             var noCommand = new UICommand(LanguageService.GetString("Generic_No"), cmd => { });
             var okCommand = new UICommand(LanguageService.GetString("Generic_Ok"), cmd => { });
@@ -110,25 +114,30 @@ namespace ISynergy.Services
                     break;
             }
 
-            var command = await messageDialog.ShowAsync();
+            IUICommand command = default;
 
-            if(command is null && cancelCommand != null)
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(
+                CoreDispatcherPriority.Normal,
+                async () =>
+                {
+                    command = await messageDialog.ShowAsync();
+                });
+
+            if (command is null && cancelCommand != null)
             {
                 // back button was pressed
                 // invoke the UICommand
-
                 cancelCommand.Invoked(cancelCommand);
-                return MessageBoxResult.Cancel;
+                result = MessageBoxResult.Cancel;
             }
-
-            if (command == okCommand)
-                return MessageBoxResult.OK;
+            else if (command == okCommand)
+                result = MessageBoxResult.OK;
             else if (command == yesCommand)
-                return MessageBoxResult.Yes;
+                result = MessageBoxResult.Yes;
             else if (command == noCommand)
-                return MessageBoxResult.No;
+                result = MessageBoxResult.No;
 
-            return MessageBoxResult.Cancel;
+            return result;
         }
     }
 }

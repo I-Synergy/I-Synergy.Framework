@@ -134,4 +134,14 @@ namespace ISynergy.Events
         {
         }
     }
+
+    public class EnterKeyPressedMessage : EventMessage
+    {
+        public EnterKeyPressedMessage(object sender)
+            : base(sender)
+        {
+            Handled = false;
+        }
+    }
+
 }
