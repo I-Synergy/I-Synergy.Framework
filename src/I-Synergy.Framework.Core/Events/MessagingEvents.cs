@@ -13,6 +13,17 @@ namespace ISynergy.Events
         }
     }
 
+    public abstract class QueryMessage : EventMessage
+    {
+        public string Query { get; }
+
+        public QueryMessage(object sender, string query)
+            : base(sender)
+        {
+            Query = query;
+        }
+    }
+
     public class CloseWindowsMessage : EventMessage
     {
         public CloseWindowsMessage(object sender)
