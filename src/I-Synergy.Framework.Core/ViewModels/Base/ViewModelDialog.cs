@@ -44,14 +44,6 @@ namespace ISynergy.ViewModels.Base
             {
                 await SubmitAsync(e);
 
-                //if (e is IBaseModel && e != null)
-                //{
-                //    if (!(e as IBaseModel).HasErrors)
-                //    {
-                //        Messenger.Default.Send(new OnSubmittanceMessage(this, e));
-                //    }
-                //}
-
                 CloseWindow();
             });
 
