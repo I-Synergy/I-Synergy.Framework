@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System.Globalization;
+using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Controls
 {
@@ -6,6 +7,17 @@ namespace ISynergy.Controls
     {
         public IntegerTextBox() : base()
         {
+            if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+            {
+                TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
+            }
+            else
+            {
+                TextAlignment = Windows.UI.Xaml.TextAlignment.Right;
+            }
+
+            TextBoxAttached.SetAutoSelectable(this, true);
+
             Loaded += IntegerTextBox_Loaded;
             Unloaded += IntegerTextBox_Unloaded;
         }

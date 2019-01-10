@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Globalization;
+using System.Threading;
 using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Controls
@@ -7,6 +8,17 @@ namespace ISynergy.Controls
     {
         public DecimalTextBox() : base()
         {
+            if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+            {
+                TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
+            }
+            else
+            {
+                TextAlignment = Windows.UI.Xaml.TextAlignment.Right;
+            }
+
+            TextBoxAttached.SetAutoSelectable(this, true);
+
             Loaded += DecimalTextBox_Loaded;
             Unloaded += DecimalTextBox_Unloaded;
         }
