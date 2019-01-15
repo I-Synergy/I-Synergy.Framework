@@ -139,10 +139,14 @@ namespace ISynergy.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            if (value is null)
+            if (value is null || value.ToString() == string.Empty)
                 return null;
 
-            return new BitmapImage(new Uri(value as string));
+            return new BitmapImage
+            {
+                CreateOptions = BitmapCreateOptions.IgnoreImageCache,
+                UriSource = new Uri(value as string)
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string culture)
