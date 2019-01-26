@@ -1,11 +1,36 @@
-﻿using ISynergy.Extensions;
+﻿using ISynergy.Converters.Base;
+using ISynergy.Extensions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Converters
 {
+    public class BooleanMultiValueConverter : MultiValueConverterBase
+    {
+        public override object Convert(object[] values, Type targetType, object parameter, string language)
+        {
+            return values.All((item) =>
+            {
+                if(item is bool value)
+                {
+                    return value == true;
+                }
+
+                return false;
+            });
+        }
+
+        public override object[] ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class BoolToStateConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)

@@ -40,7 +40,7 @@ namespace ISynergy.Business.Base
             return Context.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
         }
 
-        protected async Task<int> AddItemAsync<TEntity, TSource>(TSource e, string user, CancellationToken cancellationToken = default)
+        protected async Task<int> AddItemAsync<TEntity, TSource>(TSource e, string user)
             where TEntity : BaseEntity, new()
             where TSource : BaseModel, new()
         {
@@ -52,11 +52,11 @@ namespace ISynergy.Business.Base
             Context.Add(target);
 
             return await Context
-                    .SaveChangesAsync(cancellationToken)
+                    .SaveChangesAsync()
                     .ConfigureAwait(false);
         }
 
-        protected async Task<int> UpdateItemAsync<TEntity, TSource>(TSource e, string user, CancellationToken cancellationToken = default)
+        protected async Task<int> UpdateItemAsync<TEntity, TSource>(TSource e, string user)
             where TEntity : BaseEntity, new()
             where TSource : BaseModel, new()
         {
@@ -74,7 +74,7 @@ namespace ISynergy.Business.Base
                 Expression query = Expression.Equal(Expression.Property(parameterExpression, targetPropertyName), Expression.Constant(sourcePropertyValue));
                 Expression<Func<TEntity, bool>> predicate = Expression.Lambda<Func<TEntity, bool>>(query, parameterExpression);
 
-                TEntity target = await Context.Set<TEntity>().SingleOrDefaultAsync(predicate, cancellationToken).ConfigureAwait(false);
+                TEntity target = await Context.Set<TEntity>().SingleOrDefaultAsync(predicate).ConfigureAwait(false);
                 target = e.Adapt(target);
 
                 Context.Set<TEntity>().Update(target);
@@ -82,7 +82,7 @@ namespace ISynergy.Business.Base
                 try
                 {
                     result = await Context
-                        .SaveChangesAsync(cancellationToken)
+                        .SaveChangesAsync()
                         .ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -93,7 +93,7 @@ namespace ISynergy.Business.Base
             return result;
         }
 
-        protected async Task<int> RemoveItemAsync<TEntity, TId>(TId id, string user, bool soft = false, CancellationToken cancellationToken = default)
+        protected async Task<int> RemoveItemAsync<TEntity, TId>(TId id, string user, bool soft = false)
             where TEntity : BaseEntity, new()
             where TId : struct
         {
@@ -102,7 +102,7 @@ namespace ISynergy.Business.Base
 
             int result = 0;
 
-            TEntity item = await GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false);
+            TEntity item = await GetItemByIdAsync<TEntity, TId>(id).ConfigureAwait(false);
 
             if (item != null)
             {
@@ -110,7 +110,7 @@ namespace ISynergy.Business.Base
                 {
                     Context.Set<TEntity>().Remove(item);
 
-                    result = await Context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                    result = await Context.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

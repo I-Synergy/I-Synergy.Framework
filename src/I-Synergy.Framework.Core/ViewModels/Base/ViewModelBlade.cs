@@ -82,7 +82,7 @@ namespace ISynergy.ViewModels.Base
         }
 
         public abstract Task SubmitAsync(TEntity e);
-        public abstract Task OnSubmittanceAsync(OnSubmittanceMessage e);
-        public abstract Task OnCancellationAsync(OnCancellationMessage e);
+        public virtual Task OnSubmittanceAsync(OnSubmittanceMessage e) => Task.CompletedTask;
+        public virtual Task OnCancellationAsync(OnCancellationMessage e) => Task.CompletedTask;
     }
 }

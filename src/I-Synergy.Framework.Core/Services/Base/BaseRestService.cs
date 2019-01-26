@@ -1,6 +1,7 @@
 ﻿using Flurl;
 using Flurl.Http;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace ISynergy.Services
             AuthenticationService = authenticationService;
         }
         
-        public async Task<T> GetJsonAsync<T>(object[] segments, object queryparameters = null, CancellationToken cancellationToken = default)
+        public async Task<T> GetJsonAsync<T>(object[] segments, object queryparameters, CancellationToken cancellationToken)
         {
             T result = default;
             int currentRetry = 0;
@@ -31,6 +32,9 @@ namespace ISynergy.Services
             {
                 try
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                        throw new TaskCanceledException();
+
                     await AuthenticationService.CheckForExpiredToken();
 
                     // Call external service.
@@ -43,6 +47,10 @@ namespace ISynergy.Services
 
                     // Return or break.
                     break;
+                }
+                catch (Exception f) 
+                    when (f.InnerException is TaskCanceledException | f.InnerException is OperationCanceledException)
+                {
                 }
                 catch (Exception e)
                 {
@@ -69,7 +77,7 @@ namespace ISynergy.Services
             return result;
         }
 
-        public async Task<string> GetStringAsync(object[] segments, object queryparameters = null)
+        public async Task<string> GetStringAsync(object[] segments, object queryparameters, CancellationToken cancellationToken)
         {
             string result = string.Empty;
             int currentRetry = 0;
@@ -78,6 +86,9 @@ namespace ISynergy.Services
             {
                 try
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                        throw new TaskCanceledException();
+
                     await AuthenticationService.CheckForExpiredToken();
 
                     // Call external service.
@@ -86,10 +97,14 @@ namespace ISynergy.Services
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
                         .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
-                        .GetStringAsync();
+                        .GetStringAsync(cancellationToken);
 
                     // Return or break.
                     break;
+                }
+                catch (Exception f) 
+                    when (f.InnerException is TaskCanceledException || f.InnerException is OperationCanceledException)
+                {
                 }
                 catch (Exception e)
                 {

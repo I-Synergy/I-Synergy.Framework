@@ -119,9 +119,9 @@ namespace ISynergy.ViewModels.Base
             return true;
         }
 
-        protected abstract Task AddAsync();
+        public abstract Task AddAsync();
 
-        protected abstract Task EditAsync(TEntity e);
+        public abstract Task EditAsync(TEntity e);
 
         protected virtual async Task DeleteAsync(TEntity e)
         {
@@ -156,7 +156,7 @@ namespace ISynergy.ViewModels.Base
             }
         }
 
-        protected abstract Task RemoveAsync(TEntity e);
+        public abstract Task RemoveAsync(TEntity e);
 
         private Task SearchAsync(object e)
         {
