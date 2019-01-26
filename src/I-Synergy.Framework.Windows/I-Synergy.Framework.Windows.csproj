@@ -113,7 +113,11 @@
     <Compile Include="Application\BaseApplication.cs" />
     <Compile Include="Behaviours\AuthorizationBehaviour.cs" />
     <Compile Include="Behaviours\Base\BehaviorBase.cs" />
+    <Compile Include="Behaviours\MultiBindingBehavior.cs" />
+    <Compile Include="Behaviours\MultiBindingBehaviour\MultiBindingItem.cs" />
+    <Compile Include="Behaviours\MultiBindingBehaviour\MultiBindingItemCollection.cs" />
     <Compile Include="Behaviours\NumericTextBoxBehavior.cs" />
+    <Compile Include="Collections\DependencyObjectCollection.cs" />
     <Compile Include="Common\DeferredNavigation.cs" />
     <Compile Include="Common\DialogBox.cs" />
     <Compile Include="Common\Result.cs" />
@@ -142,10 +146,12 @@
     <Compile Include="Controls\Window.cs" />
     <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
     <Compile Include="Controls\Wrappers\InlineCollectionWrapper.cs" />
+    <Compile Include="Converters\Base\MultiValueConverterBase.cs" />
     <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
     <Compile Include="Converters\ByteConverters.cs" />
     <Compile Include="Converters\ClaimsConverters.cs" />
+    <Compile Include="Converters\CollectionConverters.cs" />
     <Compile Include="Converters\ColorConverters.cs" />
     <Compile Include="Converters\CurrencyConverters.cs" />
     <Compile Include="Converters\DashboardConverters.cs" />

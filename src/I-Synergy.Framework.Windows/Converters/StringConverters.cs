@@ -73,6 +73,46 @@ namespace ISynergy.Converters
         }
     }
 
+    public class StringToEnabledConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string culture)
+        {
+            if (string.IsNullOrEmpty((string)value))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class StringToInvertEnabledConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string culture)
+        {
+            if (string.IsNullOrEmpty((string)value))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class StringToGeometryConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string culture)

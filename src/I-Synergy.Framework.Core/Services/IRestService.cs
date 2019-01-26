@@ -8,8 +8,8 @@ namespace ISynergy.Services
     {
         IFlurlClient Client { get; }
 
-        Task<T> GetJsonAsync<T>(object[] segments, object queryparameters = null, CancellationToken cancellationToken = default);
-        Task<string> GetStringAsync(object[] segments, object queryparameters = null);
+        Task<T> GetJsonAsync<T>(object[] segments, object queryparameters, CancellationToken cancellationToken);
+        Task<string> GetStringAsync(object[] segments, object queryparameters, CancellationToken cancellationToken);
         Task<int> PostJsonAsync(object[] segments, object data);
         Task<T> PostAsync<T>(string baseUrl, object[] segments, object data, bool IsAnonymous = false);
         Task<int> PutJsonAsync(object[] segments, object data);

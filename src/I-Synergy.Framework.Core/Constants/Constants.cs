@@ -7,6 +7,8 @@
         public const int RestRetryCount = 3;
         public const int RestRetryDelayInSeconds = 5;
 
+        public const int AutoSuggestBoxDelay = 500;
+
         public const string Authorization = "Authorization";
         public const string AuthenticationError = "authentication_error";
         public const string InvalidGrantError = "invalid_grant";
@@ -43,6 +45,8 @@
 
         public const string UsernamePrefixTest = "test:";
         public const string UsernamePrefixLocal = "local:";
+
+        public const string TemporaryUrl = @"temp:///";
     }
 
     public class ExceptionConstants
