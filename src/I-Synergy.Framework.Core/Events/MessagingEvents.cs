@@ -90,11 +90,11 @@ namespace ISynergy.Events
         }
     }
 
-    public class OnSubmittanceMessage : EventMessage
+    public class OnSubmitMessage : EventMessage
     {
         public object Value { get; private set; }
 
-        public OnSubmittanceMessage(object sender, object value)
+        public OnSubmitMessage(object sender, object value)
             : base(sender)
         {
             Value = value;
@@ -102,9 +102,9 @@ namespace ISynergy.Events
         }
     }
 
-    public class OnCancellationMessage : EventMessage
+    public class OnCancelMessage : EventMessage
     {
-        public OnCancellationMessage(object sender)
+        public OnCancelMessage(object sender)
             : base(sender)
         {
             Handled = false;

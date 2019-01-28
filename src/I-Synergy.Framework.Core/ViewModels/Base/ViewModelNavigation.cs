@@ -60,7 +60,7 @@ namespace ISynergy.ViewModels.Base
 
         public abstract Task SubmitAsync(TEntity e);
 
-        //public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
+        //public override Task OnSubmitAsync(OnSubmittanceMessage e)
         //{
         //    if (!e.Handled)
         //    {
@@ -73,7 +73,7 @@ namespace ISynergy.ViewModels.Base
         //    return Task.CompletedTask;
         //}
 
-        //public override Task OnCancellationAsync(OnCancellationMessage e)
+        //public override Task OnCancelAsync(OnCancellationMessage e)
         //{
         //    if (!e.Handled)
         //    {

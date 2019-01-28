@@ -62,10 +62,10 @@ namespace ISynergy.ViewModels
 
             Messenger.Default.Register<AuthenticateUserMessageRequest>(this, async (request) => await ValidateTaskWithUserAsync(request));
             Messenger.Default.Register<AuthenticateUserMessageResult>(this, async (result) => await OnAuthenticateUserMessageResult(result));
-            Messenger.Default.Register<OnSubmittanceMessage>(this, async (e) => await OnSubmittanceAsync(e));
+            Messenger.Default.Register<OnSubmitMessage>(this, async (e) => await OnSubmitAsync(e));
         }
 
-        protected virtual async Task OnSubmittanceAsync(OnSubmittanceMessage e)
+        protected virtual async Task OnSubmitAsync(OnSubmitMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {

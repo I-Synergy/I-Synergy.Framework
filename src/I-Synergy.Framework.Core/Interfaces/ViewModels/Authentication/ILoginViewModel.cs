@@ -29,8 +29,8 @@ namespace ISynergy.ViewModels.Authentication
         Task<bool> AuthenticateAsync();
         Task CheckAutoLoginAsync();
         Task ForgotPasswordAsync();
-        Task OnCancellationAsync(OnCancellationMessage e);
-        Task OnSubmittanceAsync(OnSubmittanceMessage e);
+        Task OnCancelAsync(OnCancelMessage e);
+        Task OnSubmitAsync(OnSubmitMessage e);
         Task<bool> RegisterAsync();
         Task SubmitAsync(object e);
     }

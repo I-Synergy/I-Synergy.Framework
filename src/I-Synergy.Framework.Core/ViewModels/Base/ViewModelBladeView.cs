@@ -209,7 +209,7 @@ namespace ISynergy.ViewModels.Base
             return Task.FromResult(false);
         }
 
-        public override async Task OnCancellationAsync(OnCancellationMessage e)
+        public override async Task OnCancelAsync(OnCancelMessage e)
         {
             IViewModelBlade viewmodel = e.Sender as IViewModelBlade;
 
@@ -223,7 +223,7 @@ namespace ISynergy.ViewModels.Base
             }
         }
 
-        public override async Task OnSubmittanceAsync(OnSubmittanceMessage e)
+        public override async Task OnSubmitAsync(OnSubmitMessage e)
         {
             IViewModelBlade viewmodel = e.Sender as IViewModelBlade;
 
