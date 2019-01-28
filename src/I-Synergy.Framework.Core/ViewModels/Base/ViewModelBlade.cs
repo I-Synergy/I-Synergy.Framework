@@ -58,8 +58,8 @@ namespace ISynergy.ViewModels.Base
 
             Submit_Command = new RelayCommand<TEntity>(async (e) => await SubmitAsync(e));
 
-            Messenger.Default.Register<OnSubmittanceMessage>(this, async (e) => await OnSubmittanceAsync(e));
-            Messenger.Default.Register<OnCancellationMessage>(this, async (e) => await OnCancellationAsync(e));
+            Messenger.Default.Register<OnSubmitMessage>(this, async (e) => await OnSubmitAsync(e));
+            Messenger.Default.Register<OnCancelMessage>(this, async (e) => await OnCancelAsync(e));
         }
 
         protected virtual async Task<bool> ValidateInputAsync()
@@ -82,7 +82,7 @@ namespace ISynergy.ViewModels.Base
         }
 
         public abstract Task SubmitAsync(TEntity e);
-        public virtual Task OnSubmittanceAsync(OnSubmittanceMessage e) => Task.CompletedTask;
-        public virtual Task OnCancellationAsync(OnCancellationMessage e) => Task.CompletedTask;
+        public virtual Task OnSubmitAsync(OnSubmitMessage e) => Task.CompletedTask;
+        public virtual Task OnCancelAsync(OnCancelMessage e) => Task.CompletedTask;
     }
 }

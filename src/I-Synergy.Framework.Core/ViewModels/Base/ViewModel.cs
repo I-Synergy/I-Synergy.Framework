@@ -144,7 +144,7 @@ namespace ISynergy.ViewModels.Base
 
             Close_Command = new RelayCommand(() =>
             {
-                Messenger.Default.Send(new OnCancellationMessage(this));
+                Messenger.Default.Send(new OnCancelMessage(this));
             });
         }
 

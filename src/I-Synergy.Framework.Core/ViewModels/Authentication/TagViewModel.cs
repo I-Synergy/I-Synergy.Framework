@@ -76,7 +76,7 @@ namespace ISynergy.ViewModels.Authentication
             Login_Command = new RelayCommand(() =>
             {
                 Messenger.Default.Send(new AuthenticateUserMessageRequest(this, true));
-                Messenger.Default.Send(new OnCancellationMessage(this));
+                Messenger.Default.Send(new OnCancelMessage(this));
             });
         }
 
@@ -92,7 +92,7 @@ namespace ISynergy.ViewModels.Authentication
                 RfidTag = string.Empty;
             }
 
-            Messenger.Default.Send(new OnSubmittanceMessage(this, IsValid));
+            Messenger.Default.Send(new OnSubmitMessage(this, IsValid));
 
             return Task.CompletedTask;
         }

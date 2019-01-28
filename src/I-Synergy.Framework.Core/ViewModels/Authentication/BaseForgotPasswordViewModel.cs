@@ -91,7 +91,7 @@ namespace ISynergy.ViewModels.Authentication
 
                     await BaseService.BusyService.EndBusyAsync();
 
-                    Messenger.Default.Send(new OnSubmittanceMessage(this, e));
+                    Messenger.Default.Send(new OnSubmitMessage(this, e));
                 }
             }
             finally

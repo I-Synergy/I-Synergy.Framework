@@ -40,7 +40,7 @@ namespace ISynergy.ViewModels.Base
 
         public abstract Task RefreshDashboardAsync();
 
-        public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
+        public override Task OnSubmitAsync(OnSubmitMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {
@@ -57,7 +57,7 @@ namespace ISynergy.ViewModels.Base
             return Task.CompletedTask;
         }
 
-        public override Task OnCancellationAsync(OnCancellationMessage e)
+        public override Task OnCancelAsync(OnCancelMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {

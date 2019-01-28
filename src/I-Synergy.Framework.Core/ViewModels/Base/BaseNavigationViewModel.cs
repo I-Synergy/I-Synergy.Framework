@@ -12,11 +12,11 @@ namespace ISynergy.ViewModels.Base
             IBaseService baseService)
             : base(context, baseService)
         {
-            Messenger.Default.Register<OnSubmittanceMessage>(this, async (e) => await OnSubmittanceAsync(e));
-            Messenger.Default.Register<OnCancellationMessage>(this, async (e) => await OnCancellationAsync(e));
+            Messenger.Default.Register<OnSubmitMessage>(this, async (e) => await OnSubmitAsync(e));
+            Messenger.Default.Register<OnCancelMessage>(this, async (e) => await OnCancelAsync(e));
         }
 
-        public abstract Task OnSubmittanceAsync(OnSubmittanceMessage e);
-        public abstract Task OnCancellationAsync(OnCancellationMessage e);
+        public abstract Task OnSubmitAsync(OnSubmitMessage e);
+        public abstract Task OnCancelAsync(OnCancelMessage e);
     }
 }

@@ -380,7 +380,7 @@ namespace ISynergy.ViewModels.Authentication
         /// <returns></returns>
         public abstract Task ForgotPasswordAsync();
 
-        public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
+        public override Task OnSubmitAsync(OnSubmitMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {
@@ -396,7 +396,7 @@ namespace ISynergy.ViewModels.Authentication
             return Task.CompletedTask;
         }
 
-        public override Task OnCancellationAsync(OnCancellationMessage e)
+        public override Task OnCancelAsync(OnCancelMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {
