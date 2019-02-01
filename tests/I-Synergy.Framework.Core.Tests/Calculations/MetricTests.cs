@@ -1,11 +1,11 @@
-﻿using Xunit;
+﻿using ISynergy.Framework.Tests.Base;
+using Xunit;
 
 namespace ISynergy.Calculations.Tests
 {
-    public class MetricTests
+    public class MetricTests : UnitTest
     {
         [Fact]
-        [Trait(nameof(Metric.Surface), Test.Unit)]
         public void Surface100Test()
         {
             decimal result = Metric.Surface(10, 10);
@@ -13,7 +13,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Metric.Surface), Test.Unit)]
         public void SurfaceDecimalTest()
         {
             decimal result = Metric.Surface(2.5m, 7.3m);
@@ -21,7 +20,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Metric.Volume), Test.Unit)]
         public void Volume1000Test()
         {
             decimal result = Metric.Volume(10, 10, 10);
@@ -29,7 +27,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Metric.Volume), Test.Unit)]
         public void VolumeDecimalTest()
         {
             decimal result = Metric.Volume(2.5m, 7.3m, 5.7m);
@@ -37,7 +34,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Metric.Density), Test.Unit)]
         public void DensityTest()
         {
             decimal result = Metric.Density(1000m, 100m);

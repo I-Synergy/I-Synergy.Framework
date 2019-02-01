@@ -1,14 +1,14 @@
-﻿namespace ISynergy.Services.Base
+﻿namespace ISynergy.Services
 {
     /// <summary>
     /// Base class for file services.
     /// </summary>
-    public abstract class FileServiceBase : IFileSupport
+    public abstract class BaseFileService : IFileSupport
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileServiceBase"/> class.
+        /// Initializes a new instance of the <see cref="BaseFileService"/> class.
         /// </summary>
-        protected FileServiceBase()
+        protected BaseFileService()
         {
             AddExtension = true;
             CheckFileExists = false;

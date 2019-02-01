@@ -13,7 +13,7 @@ using ISynergy.Enumerations;
 
 namespace ISynergy.ViewModels.Base
 {
-    public abstract class ViewModelBladeView<TEntity> : BaseNavigationViewModel<TEntity>, IViewModelBladeView<TEntity>
+    public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeView<TEntity>
         where TEntity : class, new()
     {
         /// <summary>
@@ -82,6 +82,8 @@ namespace ISynergy.ViewModels.Base
             Search_Command = new RelayCommand<object>(async (e) => await SearchAsync(e));
 
             Messenger.Default.Register<AddBladeMessage>(this, async (e) => await AddBladeAsync(e));
+            Messenger.Default.Register<OnSubmitMessage>(this, async (e) => await OnSubmitAsync(e));
+            Messenger.Default.Register<OnCancelMessage>(this, async (e) => await OnCancelAsync(e));
         }
 
         protected async Task AddBladeAsync(AddBladeMessage message)
@@ -209,7 +211,7 @@ namespace ISynergy.ViewModels.Base
             return Task.FromResult(false);
         }
 
-        public override async Task OnCancelAsync(OnCancelMessage e)
+        public virtual async Task OnCancelAsync(OnCancelMessage e)
         {
             IViewModelBlade viewmodel = e.Sender as IViewModelBlade;
 
@@ -223,7 +225,7 @@ namespace ISynergy.ViewModels.Base
             }
         }
 
-        public override async Task OnSubmitAsync(OnSubmitMessage e)
+        public virtual async Task OnSubmitAsync(OnSubmitMessage e)
         {
             IViewModelBlade viewmodel = e.Sender as IViewModelBlade;
 

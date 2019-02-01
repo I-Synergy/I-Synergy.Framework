@@ -1,11 +1,11 @@
-﻿using Xunit;
+﻿using ISynergy.Framework.Tests.Base;
+using Xunit;
 
 namespace ISynergy.Calculations.Tests
 {
-    public class BankingTests
+    public class BankingTests : UnitTest
     {
         [Fact]
-        [Trait(nameof(Bank), Test.Unit)]
         public void CheckAccountBankTest()
         {
             bool result = Bank.CheckAccount("150483341");
@@ -13,7 +13,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Bank), Test.Unit)]
         public void CheckAccountGiroTest()
         {
             bool result = Bank.CheckAccount("8318140");
@@ -21,7 +20,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Bank), Test.Unit)]
         public void CheckSofinummerTest()
         {
             bool result = Bank.CheckAccount("169649167");
@@ -29,7 +27,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Bank), Test.Unit)]
         public void CheckAccountStringTest()
         {
             bool result = Bank.CheckAccount("abcdefghijklmnopqrstuvwxyz");
@@ -37,7 +34,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Bank), Test.Unit)]
         public void CheckAccountNumbersTest()
         {
             bool result = Bank.CheckAccount("123456789");

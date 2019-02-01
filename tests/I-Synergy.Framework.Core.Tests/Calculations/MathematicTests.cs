@@ -1,11 +1,11 @@
-﻿using Xunit;
+﻿using ISynergy.Framework.Tests.Base;
+using Xunit;
 
 namespace ISynergy.Calculations.Tests
 {
-    public class MathematicTests
+    public class MathematicTests : UnitTest
     {
         [Fact]
-        [Trait(nameof(Mathematics.IsEven), Test.Unit)]
         public void IsEvenTest()
         {
             bool result = Mathematics.IsEven(28);
@@ -13,7 +13,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Mathematics.IsEven), Test.Unit)]
         public void IsOnEvenTest()
         {
             bool result = Mathematics.IsEven(15);

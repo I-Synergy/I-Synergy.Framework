@@ -40,6 +40,17 @@ namespace ISynergy.Events
         }
     }
 
+    public class OnLanguageChangedMessage : EventMessage
+    {
+        public string Language { get; private set; }
+
+        public OnLanguageChangedMessage(object sender, string language)
+            :base(sender)
+        {
+            Language = language;
+        }
+    }
+
     public class AuthenticateUserMessageRequest : EventMessage
     {
         public object Property { get; }

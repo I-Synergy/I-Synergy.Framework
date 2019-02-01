@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
-    public abstract class LoginServiceBase : ILoginService
+    public abstract class BaseLoginService : ILoginService
     {
         public IContext Context { get; }
         public IBaseSettingsService SettingsService { get; }
@@ -17,7 +17,7 @@ namespace ISynergy.Services
         public INavigationService NavigationService { get; }
         public IAuthenticationService AuthenticationService { get; }
 
-        public LoginServiceBase(
+        public BaseLoginService(
             IContext context,
             IBaseSettingsService settingsService,
             IBusyService busyService,
@@ -145,7 +145,7 @@ namespace ISynergy.Services
             }
         }
 
-        public Task LoadSettingsAsync() => SettingsService.LoadSettings();
+        public Task LoadSettingsAsync() => SettingsService.LoadSettingsAsync();
 
         public abstract Task LoadMasterItemsAsync();
         public abstract Task LoadUserItemsAsync();
