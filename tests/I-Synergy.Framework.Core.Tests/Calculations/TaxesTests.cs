@@ -1,11 +1,11 @@
-﻿using Xunit;
+﻿using ISynergy.Framework.Tests.Base;
+using Xunit;
 
 namespace ISynergy.Calculations.Tests
 {
-    public class TaxesTests
+    public class TaxesTests : UnitTest
     {
         [Fact]
-        [Trait(nameof(Tax), Test.Unit)]
         public void CalcPriceExclVATTest()
         {
             decimal result = Tax.CalcPriceExclVAT(21, 121);
@@ -13,7 +13,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Tax), Test.Unit)]
         public void CalcPriceInclVATTest()
         {
             decimal result = Tax.CalcPriceInclVAT(21, 100);
@@ -21,7 +20,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Tax), Test.Unit)]
         public void CalcVATExclVATTest()
         {
             decimal result = Tax.CalcVATExclVAT(21, 100);
@@ -29,7 +27,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Tax), Test.Unit)]
         public void CalcVATInclVATTest()
         {
             decimal result = Tax.CalcVATInclVAT(21, 121);

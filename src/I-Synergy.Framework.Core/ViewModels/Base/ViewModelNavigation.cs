@@ -1,11 +1,13 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using ISynergy.Events;
 using ISynergy.Models.Base;
 using ISynergy.Services;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Base
 {
-    public abstract class ViewModelNavigation<TEntity> : BaseNavigationViewModel<TEntity>, IViewModelNavigation<TEntity>
+    public abstract class ViewModelNavigation<TEntity> : ViewModel, IViewModelNavigation<TEntity>
         where TEntity : class, new()
     {
         /// <summary>
@@ -37,7 +39,13 @@ namespace ISynergy.ViewModels.Base
             IsNew = true;
 
             Submit_Command = new RelayCommand<TEntity>(async (e) => await SubmitAsync(e));
+
+            Messenger.Default.Register<OnSubmitMessage>(this, async (e) => await OnSubmitAsync(e));
+            Messenger.Default.Register<OnCancelMessage>(this, async (e) => await OnCancelAsync(e));
         }
+
+        public abstract Task OnSubmitAsync(OnSubmitMessage e);
+        public abstract Task OnCancelAsync(OnCancelMessage e);
 
         protected virtual async Task<bool> ValidateInputAsync()
         {

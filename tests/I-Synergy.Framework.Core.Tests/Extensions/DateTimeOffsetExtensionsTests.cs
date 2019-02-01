@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ISynergy.Framework.Tests.Base;
+using System;
 using Xunit;
 
 namespace ISynergy.Extensions.Tests
 {
-    public class DateTimeOffsetExtensionsTests
+    public class DateTimeOffsetExtensionsTests : UnitTest
     {
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void IsInRangeOfDateSameOffsetTest()
         {
             DateTimeOffset self = new DateTimeOffset(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
@@ -16,7 +16,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void IsInRangeOfDateDifferentOffsetTest()
         {
             DateTimeOffset self = new DateTimeOffset(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
@@ -26,7 +25,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void IsInRangeOfDatesSameOffsetTest()
         {
             DateTimeOffset self = new DateTimeOffset(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
@@ -37,7 +35,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void IsInRangeOfDatesDifferentOffsetTest()
         {
             DateTimeOffset self = new DateTimeOffset(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
@@ -48,7 +45,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void ToStartOfDayLocalTest()
         {
             DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay(TimeZoneInfo.Local);
@@ -56,7 +52,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void ToEndOfDayLocalTest()
         {
             DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay(TimeZoneInfo.Local);
@@ -64,7 +59,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void ToStartOfMonthLocalTest()
         {
             DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfMonth(TimeZoneInfo.Local);
@@ -72,7 +66,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void ToEndOfMonthLocalTest()
         {
             DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfMonth(TimeZoneInfo.Local);
@@ -80,7 +73,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void ToStartOfYearLocalTest()
         {
             DateTimeOffset result = DateTimeOffset.Now.ToStartOfYear(1975, TimeZoneInfo.Local);
@@ -88,7 +80,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeOffsetExtensions), Test.Unit)]
         public void ToEndOfYearLocalTest()
         {
             DateTimeOffset result = DateTimeOffset.Now.ToEndOfYear(1975, TimeZoneInfo.Local);

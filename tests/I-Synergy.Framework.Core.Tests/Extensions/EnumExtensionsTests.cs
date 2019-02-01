@@ -1,6 +1,8 @@
-﻿namespace ISynergy.Extensions.Tests
+﻿using ISynergy.Framework.Tests.Base;
+
+namespace ISynergy.Extensions.Tests
 {
-    public class EnumExtensionsTests
+    public class EnumExtensionsTests : UnitTest
     {
     }
 }

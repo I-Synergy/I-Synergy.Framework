@@ -1,14 +1,14 @@
-﻿using System;
+﻿using ISynergy.Framework.Tests.Base;
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace ISynergy.Extensions.Tests
 {
-    public class ArrayExtensionsTests
+    public class ArrayExtensionsTests : UnitTest
     {
         [Fact]
-        [Trait(nameof(ArrayExtensionsTests), Test.Unit)]
         public void NullArrayNonFailableTest()
         {
             object[] list = null;
@@ -24,7 +24,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(ArrayExtensionsTests), Test.Unit)]
         public void NullArrayFailableTest()
         {
             Assert.ThrowsAsync<NullReferenceException>(() =>

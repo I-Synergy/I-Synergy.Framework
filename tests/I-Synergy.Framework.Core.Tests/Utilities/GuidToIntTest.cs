@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ISynergy.Framework.Tests.Base;
+using System;
 using Xunit;
 
 namespace ISynergy.Utilities
 {
-    public class GuidToIntTest
+    public class GuidToIntTest : UnitTest
     {
         [Fact]
-        [Trait(nameof(CompareUtility.CompareObject), Test.Unit)]
         public void ConvertTest()
         {
             uint number = 1975;

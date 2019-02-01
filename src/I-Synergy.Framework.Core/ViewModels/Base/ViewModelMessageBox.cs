@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Library
 {
-    public abstract class BaseMessageBoxViewModel<TEntity> : ViewModelDialog<TEntity>
+    public abstract class ViewModelMessageBox<TEntity> : ViewModelDialog<TEntity>
         where TEntity : class, new()
     {
         /// <summary>
@@ -106,7 +106,7 @@ namespace ISynergy.ViewModels.Library
         public RelayCommand Yes_Command { get; set; }
         public RelayCommand No_Command { get; set; }
 
-        public BaseMessageBoxViewModel(
+        public ViewModelMessageBox(
             IContext context,
             IBaseService baseService, 
             string message, 

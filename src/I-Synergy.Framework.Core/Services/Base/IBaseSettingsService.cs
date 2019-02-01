@@ -25,7 +25,7 @@ namespace ISynergy.Services
         bool Application_IsFirstRun { get; }
         int DefaultCurrencyId { get; }
 
-        Task LoadSettings();
+        Task LoadSettingsAsync();
         T GetSetting<T>(string name, T defaultvalue) where T : IComparable<T>;
         #endregion
     }

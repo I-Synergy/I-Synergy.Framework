@@ -45,7 +45,7 @@ namespace ISynergy.ViewModels.Library
 
         public override Task SubmitAsync(object e)
         {
-            Messenger.Default.Send(new OnSubmitMessage(this, Language));
+            Messenger.Default.Send(new OnLanguageChangedMessage(this, Language));
             return Task.CompletedTask;
         }
     }

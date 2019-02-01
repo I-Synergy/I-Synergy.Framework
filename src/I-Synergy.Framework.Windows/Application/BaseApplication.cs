@@ -4,9 +4,11 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using ISynergy.Enumerations;
 using ISynergy.Events;
+using ISynergy.Functions;
 using ISynergy.Providers;
 using ISynergy.Services;
 using ISynergy.ViewModels.Base;
+using ISynergy.ViewModels.Library;
 using ISynergy.Views;
 using ISynergy.Views.Authentication;
 using ISynergy.Views.Library;
@@ -270,6 +272,8 @@ namespace ISynergy
             SimpleIoc.Default.Register<INoteWindow>(() => SimpleIoc.Default.GetInstance<NoteWindow>());
             SimpleIoc.Default.Register<IMapsWindow>(() => SimpleIoc.Default.GetInstance<MapsWindow>());
 
+            //Register functions
+            SimpleIoc.Default.Register<LocalizationFunctions>();
 
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 
@@ -397,14 +401,10 @@ namespace ISynergy
         {
             Context = SimpleIoc.Default.GetInstance<IContext>();
 
-            string culture = SimpleIoc.Default.GetInstance<IBaseSettingsService>().Application_Culture;
+            Messenger.Default.Register<OnLanguageChangedMessage>(this, (e) => OnLanguageChanged(e));
 
-            if (culture is null) culture = "en";
+            UpdateLanguage();
 
-            CultureInfo.CurrentCulture = new CultureInfo(culture);
-            CultureInfo.CurrentUICulture = new CultureInfo(culture);
-
-            Context.CurrencySymbol = CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol;
             Context.ViewModels = ViewModelTypes;
 
             try
@@ -419,6 +419,34 @@ namespace ISynergy
             }
 
             CustomXamlResourceLoader.Current = new CustomResourceLoader(SimpleIoc.Default.GetInstance<ILanguageService>());
+        }
+
+        private void OnLanguageChanged(OnLanguageChangedMessage e)
+        {
+            if (!e.Handled && e.Sender is LanguageViewModel && Window.Current.Content is Frame rootFrame)
+            {
+                Argument.IsNotNullOrEmpty(nameof(e.Language), e.Language);
+
+                SimpleIoc.Default.GetInstance<IBaseSettingsService>().Application_Culture = e.Language;
+
+                Type type = rootFrame.Content.GetType();
+                rootFrame.Content = null;
+                rootFrame = null;
+                UpdateLanguage();
+                rootFrame = new Frame();
+                rootFrame.Navigate(type, null);
+                Window.Current.Content = rootFrame;
+            }
+            else
+            {
+                UpdateLanguage();
+            }
+        }
+
+        private void UpdateLanguage()
+        {
+            var localizationFunctions = SimpleIoc.Default.GetInstance<LocalizationFunctions>();
+            localizationFunctions.SetLocalizationLanguage(SimpleIoc.Default.GetInstance<IBaseSettingsService>().Application_Culture);
         }
 
         public virtual async Task HandleException(Exception ex)

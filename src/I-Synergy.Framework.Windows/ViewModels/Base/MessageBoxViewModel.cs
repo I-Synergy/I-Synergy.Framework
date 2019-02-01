@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ISynergy.ViewModels.Library
 {
-    public class MessageBoxViewModel : BaseMessageBoxViewModel<object>
+    public class MessageBoxViewModel : ViewModelMessageBox<object>
     {
         /// <summary>
         /// Gets or sets the MessageImageSource property value.

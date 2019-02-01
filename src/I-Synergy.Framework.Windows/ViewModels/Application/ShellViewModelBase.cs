@@ -69,21 +69,7 @@ namespace ISynergy.ViewModels
         {
             if (!e.Handled && e.Sender != null)
             {
-                if (e.Sender is LanguageViewModel)
-                {
-                    if(e.Value != null)
-                    {
-                        BaseService.BaseSettingsService.Application_Culture = e.Value.ToString();
-
-                        if (await BaseService.DialogService.ShowAsync(BaseService.LanguageService.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                        {
-                            await RestartApplicationAsync();
-                        }
-                    }
-
-                    e.Handled = true;
-                }
-                else if(e.Sender is ThemeViewModel)
+                if(e.Sender is ThemeViewModel)
                 {
                     if (e.Value != null)
                     {

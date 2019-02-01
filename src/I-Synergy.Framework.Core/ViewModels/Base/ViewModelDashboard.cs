@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Base
 {
-    public abstract class BaseDashboardViewModel : ViewModelBladeView<object>, IViewModelBladeView<object>
+    public abstract class ViewModelDashboard : ViewModelBladeView<object>, IViewModelBladeView<object>
     {
         public RelayCommand<string> Tile_Command { get; set; }
 
-        public BaseDashboardViewModel(
+        public ViewModelDashboard(
             IContext context,
             IBaseService baseService)
             : base(context, baseService)
