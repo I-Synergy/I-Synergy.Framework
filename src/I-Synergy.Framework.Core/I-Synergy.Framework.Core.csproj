@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ISynergy.Framework</RootNamespace>
+    <RootNamespace>ISynergy</RootNamespace>
     <LangVersion>7.3</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <NeutralLanguage>en</NeutralLanguage>
@@ -23,6 +23,11 @@
     <OutputPath>..\..\output\I-Synergy.Framework.Core\release</OutputPath>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Models\MasterData\**" />
+    <EmbeddedResource Remove="Models\MasterData\**" />
+    <None Remove="Models\MasterData\**" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OpenIdConnect.Primitives" Version="2.0.0" />
@@ -33,10 +38,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Models\MasterData\" />
   </ItemGroup>
 
 </Project>

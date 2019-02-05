@@ -59,23 +59,14 @@ namespace ISynergy.ViewModels.Base
             Messenger.Default.Send(new CloseWindowsMessage(this));
         }
 
-        protected virtual async Task<bool> ValidateInputAsync()
+        public override Task<bool> ValidateInputAsync()
         {
-            if (SelectedItem is IBaseModel)
+            if (SelectedItem is IModelBase item)
             {
-                IBaseModel item = SelectedItem as IBaseModel;
-
-                item.ValidateProperties();
-                Errors = FlattenErrors();
-
-                if (item.HasErrors)
-                {
-                    await DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Validation_Failed"));
-                    return false;
-                }
+                ValidationService.ValidateProperties(item.GetType());
             }
 
-            return true;
+            return base.ValidateInputAsync();
         }
 
         public abstract Task SubmitAsync(TEntity e);

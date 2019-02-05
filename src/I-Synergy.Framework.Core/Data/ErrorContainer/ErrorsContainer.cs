@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace ISynergy.Models.Base
+namespace ISynergy.Data
 {
     /// <summary>
     /// Manages validation errors for an object, notifying when the error state changes.

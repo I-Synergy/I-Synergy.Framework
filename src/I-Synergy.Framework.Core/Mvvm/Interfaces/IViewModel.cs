@@ -2,6 +2,11 @@
 using ISynergy.Models.Base;
 using ISynergy.Services;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Base
 {
@@ -10,7 +15,7 @@ namespace ISynergy.ViewModels.Base
         public IViewModel Result { get; set; }
     }
 
-    public interface IViewModel : IBaseModel
+    public interface IViewModel : IModelBase
     {
         IContext Context { get; }
         IBaseService BaseService { get; }
@@ -21,5 +26,9 @@ namespace ISynergy.ViewModels.Base
         void OnDeactivate();
         void OnActivate(object parameter, bool isBack);
         RelayCommand Close_Command { get; }
+       
+
+        Task InitializeAsync();
+        Task<bool> ValidateInputAsync();
     }
 }

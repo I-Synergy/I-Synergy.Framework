@@ -46,26 +46,6 @@ namespace ISynergy.ViewModels.Base
 
         public abstract Task OnSubmitAsync(OnSubmitMessage e);
         public abstract Task OnCancelAsync(OnCancelMessage e);
-
-        protected virtual async Task<bool> ValidateInputAsync()
-        {
-            if (SelectedItem is IBaseModel)
-            {
-                IBaseModel item = SelectedItem as IBaseModel;
-
-                item.ValidateProperties();
-                Errors = FlattenErrors();
-
-                if (item.HasErrors)
-                {
-                    await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Validation_Failed"));
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         public abstract Task SubmitAsync(TEntity e);
 
         //public override Task OnSubmitAsync(OnSubmittanceMessage e)

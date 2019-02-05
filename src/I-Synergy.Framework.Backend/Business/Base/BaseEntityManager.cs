@@ -28,21 +28,21 @@ namespace ISynergy.Business.Base
         }
 
         protected virtual Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity, new()
+            where TEntity : EntityBase, new()
         {
             return Context.Set<TEntity>().AnyAsync(predicate, cancellationToken);
         }
 
         protected virtual Task<TEntity> GetItemByIdAsync<TEntity, TId>(TId id, CancellationToken cancellationToken = default)
-            where TEntity : BaseEntity, new()
+            where TEntity : EntityBase, new()
             where TId : struct
         {
             return Context.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
         }
 
         protected async Task<int> AddItemAsync<TEntity, TSource>(TSource e, string user)
-            where TEntity : BaseEntity, new()
-            where TSource : BaseModel, new()
+            where TEntity : EntityBase, new()
+            where TSource : ModelBase, new()
         {
             Argument.IsNotNull(nameof(TSource), e);
             Argument.IsNotNullOrWhitespace(nameof(user), user);
@@ -57,8 +57,8 @@ namespace ISynergy.Business.Base
         }
 
         protected async Task<int> UpdateItemAsync<TEntity, TSource>(TSource e, string user)
-            where TEntity : BaseEntity, new()
-            where TSource : BaseModel, new()
+            where TEntity : EntityBase, new()
+            where TSource : ModelBase, new()
         {
             Argument.IsNotNull(nameof(TSource), e);
             Argument.IsNotNullOrWhitespace(nameof(user), user);
@@ -94,7 +94,7 @@ namespace ISynergy.Business.Base
         }
 
         protected async Task<int> RemoveItemAsync<TEntity, TId>(TId id, string user, bool soft = false)
-            where TEntity : BaseEntity, new()
+            where TEntity : EntityBase, new()
             where TId : struct
         {
             Argument.IsNotNull(nameof(id), id);

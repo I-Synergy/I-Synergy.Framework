@@ -39,6 +39,7 @@ namespace ISynergy
         public IContext Context { get; private set; }
 
         private ILogger logger = null;
+        private IThemeSelectorService themeSelector = null;
 
         public ILogger Logger
         {
@@ -53,16 +54,32 @@ namespace ISynergy
             }
         }
 
+        public IThemeSelectorService ThemeSelector
+        {
+            get
+            {
+                if (themeSelector is null)
+                {
+                    themeSelector = SimpleIoc.Default.GetInstance<IThemeSelectorService>();
+                }
+
+                return themeSelector;
+            }
+        }
+
         public BaseApplication()
             : base()
         {
-            ThemeSelectorService.Initialize();
+            SimpleIoc.Default.Register<ILogger>(() => new LoggerFactory().CreateLogger<BaseApplication>());
+            SimpleIoc.Default.Register<IThemeSelectorService, ThemeSelectorService>();
 
-            if (ThemeSelectorService.Theme == ElementTheme.Dark)
+            ThemeSelector.Initialize();
+
+            if (ThemeSelector.Theme is ElementTheme.Dark)
             {
                 RequestedTheme = ApplicationTheme.Dark;
             }
-            else if (ThemeSelectorService.Theme == ElementTheme.Light)
+            else if (ThemeSelector.Theme is ElementTheme.Light)
             {
                 RequestedTheme = ApplicationTheme.Light;
             }
@@ -136,7 +153,7 @@ namespace ISynergy
 
         private void LaunchApplication()
         {
-            ThemeSelectorService.SetRequestedTheme();
+            ThemeSelector.SetRequestedTheme();
 
             DispatcherHelper.Initialize();
 
@@ -254,7 +271,7 @@ namespace ISynergy
 
         protected virtual void Initialize(SoftwareEnvironments environment = SoftwareEnvironments.Production)
         {
-            SimpleIoc.Default.Register<ILogger>(() => new LoggerFactory().CreateLogger<BaseApplication>());
+            
             SimpleIoc.Default.Register<IFlurlClient>(() => new FlurlClient());
             SimpleIoc.Default.Register<IBusyService, BusyService>();
             SimpleIoc.Default.Register<IDialogService, DialogService>();

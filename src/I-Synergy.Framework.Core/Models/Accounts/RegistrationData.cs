@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Models.Accounts
 {
-    public class RegistrationData : BaseModel
+    public class RegistrationData : ModelBase
     {
         /// <summary>
         /// Gets or sets the ApplicationId property value.

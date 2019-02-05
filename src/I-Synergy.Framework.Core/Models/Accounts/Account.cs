@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Models.Accounts
 {
-    public class Account : BaseModel
+    public class Account : ModelBase
     {
         public Account() { Account_Id = Guid.NewGuid(); }
 

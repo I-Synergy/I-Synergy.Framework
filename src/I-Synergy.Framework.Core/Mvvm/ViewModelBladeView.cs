@@ -102,24 +102,34 @@ namespace ISynergy.ViewModels.Base
             }
         }
 
-        protected virtual async Task<bool> ValidateInputAsync()
+        public override Task<bool> ValidateInputAsync()
         {
-            if (SelectedItem is IBaseModel)
+            if (SelectedItem is IModelBase item)
             {
-                IBaseModel item = SelectedItem as IBaseModel;
-
-                item.ValidateProperties();
-                Errors = FlattenErrors();
-
-                if (item.HasErrors)
-                {
-                    await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Validation_Failed"));
-                    return false;
-                }
+                ValidationService.ValidateProperties(item.GetType());
             }
 
-            return true;
+            return base.ValidateInputAsync();
         }
+
+        //protected virtual async Task<bool> ValidateInputAsync()
+        //{
+        //    if (SelectedItem is IBaseModel)
+        //    {
+        //        IBaseModel item = SelectedItem as IBaseModel;
+
+        //        item.ValidateProperties();
+        //        Errors = FlattenErrors();
+
+        //        if (item.HasErrors)
+        //        {
+        //            await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Validation_Failed"));
+        //            return false;
+        //        }
+        //    }
+
+        //    return true;
+        //}
 
         public abstract Task AddAsync();
 
