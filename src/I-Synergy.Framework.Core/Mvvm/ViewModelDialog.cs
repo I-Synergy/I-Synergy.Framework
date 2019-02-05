@@ -5,7 +5,7 @@ using ISynergy.Models.Base;
 using ISynergy.Services;
 using System.Threading.Tasks;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public abstract class ViewModelDialog<TEntity> : ViewModel, IViewModelDialog<TEntity>
         where TEntity : class, new()

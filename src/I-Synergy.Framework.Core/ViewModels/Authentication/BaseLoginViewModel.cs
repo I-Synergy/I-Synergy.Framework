@@ -1,7 +1,6 @@
 ﻿using ISynergy.Handlers;
 using ISynergy.Models.Accounts;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -10,6 +9,7 @@ using System.Linq;
 using GalaSoft.MvvmLight.Command;
 using System;
 using ISynergy.Events;
+using ISynergy.Mvvm;
 
 namespace ISynergy.ViewModels.Authentication
 {

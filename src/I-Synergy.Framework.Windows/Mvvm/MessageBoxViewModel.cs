@@ -1,4 +1,5 @@
 ﻿using ISynergy.Enumerations;
+using ISynergy.Mvvm;
 using ISynergy.Services;
 using System;
 using Windows.UI.Xaml;

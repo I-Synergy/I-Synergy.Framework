@@ -3,10 +3,9 @@ using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Enumerations;
 using ISynergy.Events;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using System.Threading.Tasks;
 
-namespace ISynergy.ViewModels.Library
+namespace ISynergy.Mvvm
 {
     public abstract class ViewModelMessageBox<TEntity> : ViewModelDialog<TEntity>
         where TEntity : class, new()

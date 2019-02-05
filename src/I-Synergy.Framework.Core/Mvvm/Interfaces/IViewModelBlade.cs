@@ -1,4 +1,4 @@
-﻿namespace ISynergy.ViewModels.Base
+﻿namespace ISynergy.Mvvm
 {
     public interface IViewModelBlade : IViewModel
     {

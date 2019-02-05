@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public interface IViewModelBladeView<TEntity> : IViewModelNavigation<TEntity>
     {

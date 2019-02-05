@@ -5,9 +5,9 @@ using GalaSoft.MvvmLight.Threading;
 using ISynergy.Enumerations;
 using ISynergy.Events;
 using ISynergy.Functions;
+using ISynergy.Mvvm;
 using ISynergy.Providers;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using ISynergy.ViewModels.Library;
 using ISynergy.Views;
 using ISynergy.Views.Authentication;
@@ -281,7 +281,9 @@ namespace ISynergy
             SimpleIoc.Default.Register<INavigationService, NavigationService>();
             SimpleIoc.Default.Register<IInfoService, InfoService>();
             SimpleIoc.Default.Register<IConverterService, ConverterService>();
-            
+            SimpleIoc.Default.Register<IValidationService, ValidationService>();
+            SimpleIoc.Default.Register<IThemeSelectorService, ThemeSelectorService>();
+
             SimpleIoc.Default.Register<IForgotPasswordWindow>(() => SimpleIoc.Default.GetInstance<ForgotPasswordWindow>());
             SimpleIoc.Default.Register<ITagWindow>(() => SimpleIoc.Default.GetInstance<TagWindow>());
             SimpleIoc.Default.Register<IPincodeWindow>(() => SimpleIoc.Default.GetInstance<PincodeWindow>());

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using ISynergy.Views.Library;
 using System;
 using System.Collections.ObjectModel;
@@ -17,6 +16,7 @@ using ISynergy.Views.Authentication;
 using ISynergy.Events;
 using ISynergy.Enumerations;
 using GalaSoft.MvvmLight.Ioc;
+using ISynergy.Mvvm;
 
 namespace ISynergy.ViewModels
 {
