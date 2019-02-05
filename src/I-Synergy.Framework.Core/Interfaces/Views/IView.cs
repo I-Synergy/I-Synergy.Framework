@@ -1,7 +1,9 @@
-﻿namespace ISynergy
+﻿using ISynergy.ViewModels.Base;
+
+namespace ISynergy
 {
     public interface IView
     {
-        object DataContext { get; set; }
+        IViewModel DataContext { get; set; }
     }
 }

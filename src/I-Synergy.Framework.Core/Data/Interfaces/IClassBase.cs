@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Models.Base
 {
-    public interface IBaseClass
+    public interface IClassBase
     {
         bool IsDeleted { get; set; }
     }

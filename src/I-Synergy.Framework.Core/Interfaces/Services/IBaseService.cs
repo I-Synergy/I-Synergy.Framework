@@ -12,5 +12,6 @@
         INavigationService NavigationService { get; }
         IInfoService InfoService { get; }
         IConverterService ConverterService { get; }
+        IValidationService ValidationService { get; }
     }
 }

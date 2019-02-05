@@ -12,15 +12,20 @@ using System.Threading.Tasks;
 using ISynergy.Events;
 using System.Collections;
 using ISynergy.Helpers;
+using System.Linq;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace ISynergy.ViewModels.Base
 {
-    public abstract class ViewModel : BaseModel, IViewModel
+    public abstract class ViewModel : ModelBase, IViewModel
     {
         public delegate Task Submit_Action(object e);
 
         public IContext Context { get; }
         public IBaseService BaseService { get; }
+        public IValidationService ValidationService { get; }
 
         public RelayCommand Close_Command { get; protected set; }
 
@@ -121,16 +126,14 @@ namespace ISynergy.ViewModels.Base
             IBaseService baseService)
             : base()
         {
-            base.PropertyChanged += OnPropertyChanged;
-            base.ErrorsChanged += (s, e) => Errors = FlattenErrors();
-
             Context = context;
             BaseService = baseService;
+            ValidationService = baseService.ValidationService;
 
-            using (var task = AsyncHelper.Wait)
-            {
-                task.Run(BaseService.TelemetryService.TrackPageViewAsync(GetType().Name.Replace("ViewModel", "")));
-            }
+            PropertyChanged += OnPropertyChanged;
+            ValidationService.ErrorsChanged += ValidationService_ErrorsChanged; //+= (s, e) => ;
+
+            
 
             Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.BusyService.EndBusyAsync());
 
@@ -148,20 +151,17 @@ namespace ISynergy.ViewModels.Base
             });
         }
 
-        protected List<string> FlattenErrors()
+        private void ValidationService_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
-            List<string> errors = new List<string>();
-            Dictionary<string, List<string>> allErrors = GetAllErrors();
-
-            foreach (string propertyName in allErrors.Keys)
-            {
-                foreach (string errorString in allErrors[propertyName].EnsureNotNull())
-                {
-                    errors.Add(propertyName + ": " + errorString);
-                }
-            }
-            return errors;
+            Errors = ValidationService.GetErrorList();
         }
+
+        public virtual async Task InitializeAsync()
+        {
+            await BaseService.TelemetryService.TrackPageViewAsync(GetType().Name.Replace("ViewModel", ""));
+        }
+
+        
 
         protected string GetEnumDescription(Enum value)
         {
@@ -196,11 +196,23 @@ namespace ISynergy.ViewModels.Base
         {
         }
 
-        protected object Parameter;
-
         public virtual void OnActivate(object parameter, bool isBack)
         {
-            Parameter = parameter;
+        }
+
+        public virtual async Task<bool> ValidateInputAsync()
+        {
+            ValidationService.ValidateProperties();
+            Errors = ValidationService.GetErrorList();
+
+            if (ValidationService.HasErrors)
+            {
+                await BaseService.DialogService.ShowErrorAsync(
+                    BaseService.LanguageService.GetString("Warning_Validation_Failed"));
+                return false;
+            }
+
+            return true;
         }
     }
 }

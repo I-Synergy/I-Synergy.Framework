@@ -11,7 +11,11 @@ namespace ISynergy.Controls
 {
     public class Window : ContentDialog, IWindow
     {
-        public object Owner { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public new IViewModel DataContext
+        {
+            get { return base.DataContext as IViewModel; }
+            set { base.DataContext = value; }
+        }
 
         public Window() : base()
         {
@@ -40,9 +44,8 @@ namespace ISynergy.Controls
 
             for (var i = 0; i < count; i++)
             {
-                var frameworkElement = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
 
-                if (frameworkElement != null)
+                if (VisualTreeHelper.GetChild(parent, i) is FrameworkElement frameworkElement)
                 {
                     if (frameworkElement.Name == name)
                     {

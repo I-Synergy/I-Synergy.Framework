@@ -1,12 +1,16 @@
-﻿using ISynergy.Models.Base;
+﻿using GalaSoft.MvvmLight.Ioc;
+using ISynergy.Models.Base;
+using ISynergy.Services;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Models
 {
-    public class NavigationItem : BaseModel
+    public class NavigationItem : ModelBase
     {
+        private IThemeSelectorService _themeSelectorService;
+
         /// <summary>
         /// Gets or sets the SelectedVisibility property value.
         /// </summary>
@@ -95,14 +99,21 @@ namespace ISynergy.Models
             Command = command;
             CommandParameter = commandParameter;
 
-            Services.ThemeSelectorService.OnThemeChanged += (s, e) => { if (!IsSelected) SelectedForeground = GetStandardTextColorBrush(); };
+            _themeSelectorService = SimpleIoc.Default.GetInstance<IThemeSelectorService>();
+            _themeSelectorService.OnThemeChanged += ThemeSelectorService_OnThemeChanged;
+        }
+
+        private void ThemeSelectorService_OnThemeChanged(object sender, object e)
+        {
+            if (!IsSelected)
+                SelectedForeground = GetStandardTextColorBrush();
         }
 
         private SolidColorBrush GetStandardTextColorBrush()
         {
             var brush = Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;
 
-            if (!Services.ThemeSelectorService.IsLightThemeEnabled)
+            if (!_themeSelectorService.IsLightThemeEnabled)
             {
                 brush = Application.Current.Resources["SystemControlForegroundAltHighBrush"] as SolidColorBrush;
             }

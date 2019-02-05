@@ -7,14 +7,14 @@ namespace ISynergy.Entities.Base
     /// BaseEntity model which fully supports serialization, property changed notifications,
     /// backwards compatibility and error checking.
     /// </summary>
-    public class BaseEntity : BaseClass, IBaseEntity
+    public class EntityBase : ClassBase, IEntityBase
     {
         public string Memo { get; set; }
         public string InputFirst { get; set; }
         public string InputLast { get; set; }
     }
 
-    public static class BaseEntity_Extension
+    public static class EntityBaseExtensions
     {
         public static bool HasProperty(this object obj, string propertyName)
         {

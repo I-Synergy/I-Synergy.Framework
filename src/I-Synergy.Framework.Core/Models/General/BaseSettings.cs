@@ -7,7 +7,7 @@ namespace ISynergy.Models.General
 
     }
 
-    public abstract class BaseSettings : BaseModel, ISettings
+    public abstract class BaseSettings : ModelBase, ISettings
     {
     }
 }

@@ -6,18 +6,24 @@ namespace ISynergy.Controls.Views
 {
     public abstract class View : Page, IView
     {
+        public new IViewModel DataContext
+        {
+            get { return base.DataContext as IViewModel; }
+            set { base.DataContext = value; }
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            (DataContext as IViewModel)?.OnActivate(e.Parameter, e.NavigationMode == NavigationMode.Back);
+            DataContext?.OnActivate(e.Parameter, e.NavigationMode == NavigationMode.Back);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
 
-            (DataContext as IViewModel)?.OnDeactivate();
+            DataContext?.OnDeactivate();
         }
     }
 }

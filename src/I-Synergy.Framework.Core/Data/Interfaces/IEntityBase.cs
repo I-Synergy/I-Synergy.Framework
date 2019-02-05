@@ -2,7 +2,7 @@
 
 namespace ISynergy.Entities.Base
 {
-    public interface IBaseEntity : IBaseClass
+    public interface IEntityBase : IClassBase
     {
         string Memo { get; set; }
         string InputFirst { get; set; }

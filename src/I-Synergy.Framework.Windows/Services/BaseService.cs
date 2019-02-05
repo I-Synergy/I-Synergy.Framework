@@ -12,6 +12,7 @@
         public ILoginService LoginService { get; }
         public IInfoService InfoService { get; }
         public IConverterService ConverterService { get; }
+        public IValidationService ValidationService { get; }
 
         public BaseService(
             IBusyService busy,
@@ -23,7 +24,8 @@
             IUIVisualizerService uiVisualizer,
             INavigationService navigation,
             IInfoService info,
-            IConverterService converter)
+            IConverterService converter,
+            IValidationService validation)
         {
             BusyService = busy;
             LanguageService = language;
@@ -35,6 +37,7 @@
             LoginService = loginService;
             InfoService = InfoService;
             ConverterService = converter;
+            ValidationService = validation;
         }
     }
 }
