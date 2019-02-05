@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using System;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public class ClosedWindowArgs : EventArgs
     {

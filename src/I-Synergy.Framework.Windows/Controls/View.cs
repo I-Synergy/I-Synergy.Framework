@@ -1,4 +1,4 @@
-﻿using ISynergy.ViewModels.Base;
+﻿using ISynergy.Mvvm;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 

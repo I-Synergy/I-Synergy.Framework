@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public class SubmittedItemArgs : EventArgs
     {

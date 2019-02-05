@@ -1,5 +1,5 @@
-﻿using ISynergy.Services;
-using ISynergy.ViewModels.Base;
+﻿using ISynergy.Mvvm;
+using ISynergy.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

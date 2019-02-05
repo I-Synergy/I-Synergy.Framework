@@ -1,4 +1,4 @@
-﻿using ISynergy.ViewModels.Base;
+﻿using ISynergy.Mvvm;
 
 namespace ISynergy.Controls.Interfaces
 {

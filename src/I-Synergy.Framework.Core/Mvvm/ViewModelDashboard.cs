@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public abstract class ViewModelDashboard : ViewModelBladeView<object>, IViewModelBladeView<object>
     {

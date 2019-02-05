@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using ISynergy.Events;
 using ISynergy.Enumerations;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeView<TEntity>
         where TEntity : class, new()

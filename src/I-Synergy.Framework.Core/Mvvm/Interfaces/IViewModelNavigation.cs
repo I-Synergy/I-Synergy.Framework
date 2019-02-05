@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public interface IViewModelNavigation<TEntity> : IViewModel
     {

@@ -1,5 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
-using ISynergy.ViewModels.Base;
+using ISynergy.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;

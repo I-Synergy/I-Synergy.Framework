@@ -2,7 +2,7 @@
 using ISynergy.Services;
 using System.ComponentModel;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>
         where TEntity : class, new()

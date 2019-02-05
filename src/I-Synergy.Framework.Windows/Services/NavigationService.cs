@@ -1,7 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using ISynergy.ViewModels.Base;
 using Windows.UI.Core;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using Windows.UI.Xaml.Media.Animation;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 using ISynergy.Controls.Views;
+using ISynergy.Mvvm;
 
 namespace ISynergy.Services
 {

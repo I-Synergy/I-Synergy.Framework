@@ -1,8 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
+using ISynergy.Mvvm;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 

@@ -17,7 +17,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-namespace ISynergy.ViewModels.Base
+namespace ISynergy.Mvvm
 {
     public abstract class ViewModel : ModelBase, IViewModel
     {
@@ -131,9 +131,7 @@ namespace ISynergy.ViewModels.Base
             ValidationService = baseService.ValidationService;
 
             PropertyChanged += OnPropertyChanged;
-            ValidationService.ErrorsChanged += ValidationService_ErrorsChanged; //+= (s, e) => ;
-
-            
+            ValidationService.ErrorsChanged += ValidationService_ErrorsChanged;
 
             Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.BusyService.EndBusyAsync());
 

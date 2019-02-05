@@ -1,5 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using ISynergy.ViewModels.Base;
+using ISynergy.Mvvm;
 
 namespace ISynergy.Events
 {

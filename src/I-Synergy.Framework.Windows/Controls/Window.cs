@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
-using ISynergy.ViewModels.Base;
+using ISynergy.Mvvm;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
