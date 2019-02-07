@@ -128,16 +128,5 @@ namespace ISynergy.Services
                         ((Frame)Frame).BackStack.Clear();
                     });
         }
-
-        //private void OnFrameNavigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
-        //{
-        //    SetBackButtonVisibility();
-        //}
-
-        //private void SetBackButtonVisibility()
-        //{
-        //    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = CanGoBack ?
-        //                    AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
-        //}
     }
 }

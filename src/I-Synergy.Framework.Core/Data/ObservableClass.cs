@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace ISynergy.Data
 {
-    public abstract class ObservableClass : ObservableObject
+    public abstract class ObservableClass : ObservableObject, IDisposable
     {
         private readonly Dictionary<string, object> _propertyBackingDictionary = new Dictionary<string, object>();
 
@@ -65,6 +65,11 @@ namespace ISynergy.Data
             }
 
             return isValid;
+        }
+
+        public void Dispose()
+        {
+            PropertyChanged -= PropertyChangedHandler;
         }
     }
 }
