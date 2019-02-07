@@ -20,14 +20,13 @@ namespace ISynergy.Mvvm
         IContext Context { get; }
         IBaseService BaseService { get; }
 
+        RelayCommand Close_Command { get; }
+
         bool CanClose { get; set; }
         bool IsCancelled { get; }
         string Title { get; }
-        void OnDeactivate();
-        void OnActivate(object parameter, bool isBack);
-        RelayCommand Close_Command { get; }
-       
-
+        Task OnDeactivateAsync();
+        Task OnActivateAsync(object parameter, bool isBack);
         Task InitializeAsync();
         Task<bool> ValidateInputAsync();
     }

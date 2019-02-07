@@ -157,8 +157,25 @@ namespace ISynergy.Controls
 
             Items.VectorChanged += ItemsVectorChanged;
 
-            Loaded += (sender, e) => AdjustBladeItemSize();
-            SizeChanged += (sender, e) => AdjustBladeItemSize();
+            Loaded += BladeView_Loaded;
+            Unloaded += BladeView_Unloaded;
+            SizeChanged += BladeView_SizeChanged;
+        }
+
+        private void BladeView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= BladeView_Loaded;
+            SizeChanged -= BladeView_SizeChanged;
+        }
+
+        private void BladeView_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            AdjustBladeItemSize();
+        }
+
+        private void BladeView_Loaded(object sender, RoutedEventArgs e)
+        {
+            AdjustBladeItemSize();
         }
 
         /// <inheritdoc/>

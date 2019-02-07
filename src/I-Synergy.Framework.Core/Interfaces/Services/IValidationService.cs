@@ -18,7 +18,7 @@ namespace ISynergy.Services
         Dictionary<string, List<string>> GetAllErrors();
         List<string> GetErrorList();
         bool ValidateProperties();
-        bool ValidateProperties(Type property);
-        bool ValidateProperty(string propertyName);
+        bool ValidateProperties(Type type);
+        bool ValidateProperty(Type type, string propertyName);
     }
 }

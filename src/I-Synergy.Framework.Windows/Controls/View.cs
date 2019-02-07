@@ -12,18 +12,16 @@ namespace ISynergy.Controls.Views
             set { base.DataContext = value; }
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            DataContext?.OnActivate(e.Parameter, e.NavigationMode == NavigationMode.Back);
+            await DataContext?.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        protected override async void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            DataContext?.OnDeactivate();
+            await DataContext?.OnDeactivateAsync();
         }
     }
 }

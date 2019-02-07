@@ -9,8 +9,6 @@ namespace ISynergy.Models
 {
     public class NavigationItem : ModelBase
     {
-        private IThemeSelectorService _themeSelectorService;
-
         /// <summary>
         /// Gets or sets the SelectedVisibility property value.
         /// </summary>
@@ -25,7 +23,16 @@ namespace ISynergy.Models
         /// </summary>
         public SolidColorBrush SelectedForeground
         {
-            get { return GetValue<SolidColorBrush>() ?? GetStandardTextColorBrush(); }
+            get { return GetValue<SolidColorBrush>(); }
+            set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the SelectedForeground property value.
+        /// </summary>
+        public SolidColorBrush Foreground
+        {
+            get { return GetValue<SolidColorBrush>(); }
             set { SetValue(value); }
         }
 
@@ -39,9 +46,9 @@ namespace ISynergy.Models
             {
                 SetValue(value);
                 SelectedVisibility = value ? Visibility.Visible : Visibility.Collapsed;
-                SelectedForeground = value
+                SelectedForeground = value 
                     ? Application.Current.Resources["PrimaryMediumBrush"] as SolidColorBrush
-                    : GetStandardTextColorBrush();
+                    : Foreground;
             }
         }
 
@@ -89,36 +96,15 @@ namespace ISynergy.Models
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
-
-
-        public NavigationItem(string name, string symbol, ICommand command, object commandParameter = null)
+        
+        public NavigationItem(string name, string symbol, SolidColorBrush foreground, ICommand command, object commandParameter = null)
         {
             Label = name;
             ToolTipMenu = name;
             Symbol = symbol;
+            Foreground = foreground;
             Command = command;
             CommandParameter = commandParameter;
-
-            _themeSelectorService = SimpleIoc.Default.GetInstance<IThemeSelectorService>();
-            _themeSelectorService.OnThemeChanged += ThemeSelectorService_OnThemeChanged;
-        }
-
-        private void ThemeSelectorService_OnThemeChanged(object sender, object e)
-        {
-            if (!IsSelected)
-                SelectedForeground = GetStandardTextColorBrush();
-        }
-
-        private SolidColorBrush GetStandardTextColorBrush()
-        {
-            var brush = Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;
-
-            if (!_themeSelectorService.IsLightThemeEnabled)
-            {
-                brush = Application.Current.Resources["SystemControlForegroundAltHighBrush"] as SolidColorBrush;
-            }
-
-            return brush;
         }
     }
 }

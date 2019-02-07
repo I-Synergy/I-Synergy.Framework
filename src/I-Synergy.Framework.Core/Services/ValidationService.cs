@@ -50,18 +50,18 @@ namespace ISynergy.Services
         private void RaiseErrorsChanged(string propertyName) =>
             ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
 
-        public bool ValidateProperty(string propertyName)
+        public bool ValidateProperty(Type type, string propertyName)
         {
             Argument.IsNotNullOrEmpty(propertyName, propertyName);
 
-            var propertyInfo = GetType().GetRuntimeProperty(propertyName);
+            var propertyInfo = type.GetRuntimeProperty(propertyName);
 
             if (propertyInfo is null)
                 throw new ArgumentException("Invalid property name", propertyName);
 
             var propertyErrors = new List<string>();
 
-            bool isValid = TryValidateProperty(propertyInfo, propertyErrors);
+            bool isValid = TryValidateProperty(type, propertyInfo, propertyErrors);
 
             _errorsContainer.SetErrors(propertyInfo.Name, propertyErrors);
 
@@ -70,17 +70,17 @@ namespace ISynergy.Services
 
         public bool ValidateProperties() => ValidateProperties(GetType());
 
-        public bool ValidateProperties(Type property)
+        public bool ValidateProperties(Type type)
         {
             var propertiesWithChangedErrors = new List<string>();
 
             // Get all the properties decorated with the ValidationAttribute attribute.
-            var propertiesToValidate = property.GetType().GetRuntimeProperties().Where(c => c.GetCustomAttributes(typeof(ValidationAttribute)).Any());
+            var propertiesToValidate = type.GetRuntimeProperties().Where(c => c.GetCustomAttributes(typeof(ValidationAttribute)).Any());
 
             foreach (PropertyInfo propertyInfo in propertiesToValidate.EnsureNotNull())
             {
                 var propertyErrors = new List<string>();
-                TryValidateProperty(propertyInfo, propertyErrors);
+                TryValidateProperty(type, propertyInfo, propertyErrors);
 
                 // If the errors have changed, save the property name to notify the update at the end of this method.
                 _errorsContainer.SetErrors(propertyInfo.Name, propertyErrors);
@@ -89,18 +89,15 @@ namespace ISynergy.Services
             return _errorsContainer.HasErrors;
         }
 
-        private bool TryValidateProperty(PropertyInfo propertyInfo, List<string> propertyErrors)
+        private bool TryValidateProperty(Type type, PropertyInfo propertyInfo, List<string> propertyErrors)
         {
-            var results = new List<ValidationResult>();
-            var context = new ValidationContext(this) { MemberName = propertyInfo.Name };
-            object propertyValue = propertyInfo.GetValue(this);
+            var validationResult = new List<ValidationResult>();
+            var validationContext = new ValidationContext(type);
+            bool isValid = Validator.TryValidateObject(type, validationContext, validationResult, true);
 
-            // Validate the property
-            bool isValid = Validator.TryValidateProperty(propertyValue, context, results);
-
-            if (results.Any())
+            if (validationResult.Any())
             {
-                propertyErrors.AddRange(results.Select(c => c.ErrorMessage));
+                propertyErrors.AddRange(validationResult.Select(c => c.ErrorMessage));
             }
 
             return isValid;

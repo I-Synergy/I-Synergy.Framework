@@ -41,10 +41,8 @@ namespace ISynergy.Controls
             InitializeComponent();
             DefaultStyleKey = typeof(CompositionShadow);
             SizeChanged += CompositionShadow_SizeChanged;
-            Loaded += (object sender, RoutedEventArgs e) =>
-            {
-                ConfigureShadowVisualForCastingElement();
-            };
+            Loaded += CompositionShadow_Loaded;
+            Unloaded += CompositionShadow_Unloaded;
 
             Compositor compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             _shadowVisual = compositor.CreateSpriteVisual();
@@ -55,6 +53,17 @@ namespace ISynergy.Controls
             // rendering on top of the content. To avoid this, CompositionShadow contains a Border
             // (to host the shadow) and a ContentPresenter (to hose the actual content, "CastingElement").
             ElementCompositionPreview.SetElementChildVisual(ShadowElement, _shadowVisual);
+        }
+
+        private void CompositionShadow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= CompositionShadow_Loaded;
+            SizeChanged -= CompositionShadow_SizeChanged;
+        }
+
+        private void CompositionShadow_Loaded(object sender, RoutedEventArgs e)
+        {
+            ConfigureShadowVisualForCastingElement();
         }
 
         /// <summary>

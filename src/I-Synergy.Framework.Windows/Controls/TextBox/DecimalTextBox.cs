@@ -32,7 +32,7 @@ namespace ISynergy.Controls
         private void DecimalTextBox_Unloaded(object sender, global::Windows.UI.Xaml.RoutedEventArgs e)
         {
             KeyDown -= DecimalTextBox_KeyDown;
-            TextChanged += DecimalTextBox_TextChanged;
+            TextChanged -= DecimalTextBox_TextChanged;
         }
 
         private void DecimalTextBox_KeyDown(object sender, global::Windows.UI.Xaml.Input.KeyRoutedEventArgs e)

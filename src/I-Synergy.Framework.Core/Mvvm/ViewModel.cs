@@ -16,10 +16,11 @@ using System.Linq;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using GalaSoft.MvvmLight;
 
 namespace ISynergy.Mvvm
 {
-    public abstract class ViewModel : ModelBase, IViewModel
+    public abstract class ViewModel : ViewModelBase, IViewModel
     {
         public delegate Task Submit_Action(object e);
 
@@ -159,8 +160,6 @@ namespace ISynergy.Mvvm
             await BaseService.TelemetryService.TrackPageViewAsync(GetType().Name.Replace("ViewModel", ""));
         }
 
-        
-
         protected string GetEnumDescription(Enum value)
         {
             Argument.IsNotNull(nameof(value), value);
@@ -190,12 +189,39 @@ namespace ISynergy.Mvvm
             return Task.CompletedTask;
         }
 
-        public virtual void OnDeactivate()
+        public virtual Task OnDeactivateAsync()
         {
+            Cleanup();
+            return Task.CompletedTask;
         }
 
-        public virtual void OnActivate(object parameter, bool isBack)
+        public virtual Task OnActivateAsync(object parameter, bool isBack) => InitializeAsync();
+
+        private readonly Dictionary<string, object> _propertyBackingDictionary = new Dictionary<string, object>();
+
+        protected T GetValue<T>([CallerMemberName] string propertyName = null)
         {
+            Argument.IsNotNull(propertyName, propertyName);
+
+            if (_propertyBackingDictionary.TryGetValue(propertyName, out object value)) return (T)value;
+
+            return default;
+        }
+
+        protected bool SetValue<T>(T newValue, [CallerMemberName] string propertyName = null)
+        {
+            Argument.IsNotNull(propertyName, propertyName);
+
+            if (EqualityComparer<T>.Default.Equals(newValue, GetValue<T>(propertyName))) return false;
+
+            _propertyBackingDictionary[propertyName] = newValue;
+
+            RaisePropertyChanged(propertyName);
+
+            if (!string.IsNullOrEmpty(propertyName))
+                ValidationService.ValidateProperty(this.GetType(), propertyName);
+
+            return true;
         }
 
         public virtual async Task<bool> ValidateInputAsync()
@@ -211,6 +237,14 @@ namespace ISynergy.Mvvm
             }
 
             return true;
+        }
+
+        public override void Cleanup()
+        {
+            PropertyChanged -= OnPropertyChanged;
+            ValidationService.ErrorsChanged -= ValidationService_ErrorsChanged;
+
+            base.Cleanup();
         }
     }
 }
