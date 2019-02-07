@@ -40,6 +40,15 @@ namespace ISynergy.ViewModels
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the SelectedForeground property value.
+        /// </summary>
+        public SolidColorBrush ForegroundColor
+        {
+            get { return GetValue<SolidColorBrush>() ?? GetStandardTextColorBrush(); }
+            set { SetValue(value); }
+        }
+
         public RelayCommand RestartUpdate_Command { get; set; }
         public RelayCommand Login_Command { get; set; }
         public RelayCommand Language_Command { get; set; }
@@ -48,11 +57,17 @@ namespace ISynergy.ViewModels
         public RelayCommand Feedback_Command { get; set; }
         public RelayCommand<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
 
+        private readonly IThemeSelectorService ThemeSelector;
+
         public ShellViewModelBase(
             IContext context,
-            IBaseService synergyService)
+            IBaseService synergyService,
+            IThemeSelectorService themeSelectorService)
             : base(context, synergyService)
         {
+            ThemeSelector = themeSelectorService;
+            ThemeSelector.OnThemeChanged += ThemeSelector_OnThemeChanged;
+
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
@@ -63,6 +78,23 @@ namespace ISynergy.ViewModels
             Messenger.Default.Register<AuthenticateUserMessageRequest>(this, async (request) => await ValidateTaskWithUserAsync(request));
             Messenger.Default.Register<AuthenticateUserMessageResult>(this, async (result) => await OnAuthenticateUserMessageResult(result));
             Messenger.Default.Register<OnSubmitMessage>(this, async (e) => await OnSubmitAsync(e));
+        }
+
+        private void ThemeSelector_OnThemeChanged(object sender, object e)
+        {
+            ForegroundColor = GetStandardTextColorBrush();
+        }
+
+        private SolidColorBrush GetStandardTextColorBrush()
+        {
+            var brush = Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;
+
+            if (!ThemeSelector.IsLightThemeEnabled)
+            {
+                brush = Application.Current.Resources["SystemControlForegroundAltHighBrush"] as SolidColorBrush;
+            }
+
+            return brush;
         }
 
         protected virtual async Task OnSubmitAsync(OnSubmitMessage e)

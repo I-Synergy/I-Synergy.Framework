@@ -106,7 +106,13 @@ namespace ISynergy.Controls
         public BladeItem()
         {
             DefaultStyleKey = typeof(BladeItem);
+            Unloaded += BladeItem_Unloaded;
             SizeChanged += OnSizeChanged;
+        }
+
+        private void BladeItem_Unloaded(object sender, RoutedEventArgs e)
+        {
+            SizeChanged -= OnSizeChanged;
         }
 
         /// <summary>
