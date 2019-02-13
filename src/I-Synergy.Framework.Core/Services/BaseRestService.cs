@@ -25,7 +25,6 @@ namespace ISynergy.Services
         
         public async Task<T> GetJsonAsync<T>(object[] segments, object queryparameters, CancellationToken cancellationToken)
         {
-            T result = default;
             int currentRetry = 0;
 
             for (; ; )
@@ -38,15 +37,12 @@ namespace ISynergy.Services
                     await AuthenticationService.CheckForExpiredToken();
 
                     // Call external service.
-                    result = await new Url(Context.ApiUrl)
+                    return await new Url(Context.ApiUrl)
                         .AppendPathSegments(segments)
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
                         .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
                         .GetJsonAsync<T>(cancellationToken);
-
-                    // Return or break.
-                    break;
                 }
                 catch (Exception f) 
                     when (f.InnerException is TaskCanceledException | f.InnerException is OperationCanceledException)
@@ -73,8 +69,6 @@ namespace ISynergy.Services
                 // using a strategy best suited for the operation and fault.
                 await Task.Delay(TimeSpan.FromSeconds(Constants.RestRetryDelayInSeconds));
             }
-
-            return result;
         }
 
         public async Task<string> GetStringAsync(object[] segments, object queryparameters, CancellationToken cancellationToken)

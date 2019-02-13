@@ -36,6 +36,7 @@
         public const string Page = "Page";
         public const string Window = "Window";
         public const string ViewModel = "ViewModel";
+        public const string ShellViewModel = "ShellViewModel";
 
         public const string Documents = "documents";
         public const string Images = "images";

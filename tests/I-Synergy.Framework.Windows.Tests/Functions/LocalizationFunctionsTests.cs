@@ -8,7 +8,7 @@ using ISynergy.Services;
 using ISynergy.Framework.Tests.Base;
 using ISynergy.Functions;
 
-namespace ISynergy.Framework.Tests.Functions
+namespace ISynergy.Functions.Tests
 {
     [Collection("Localization")]
     public class LocalizationFunctionsTests : IntegrationTest

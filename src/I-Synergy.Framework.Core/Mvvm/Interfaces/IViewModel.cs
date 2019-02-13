@@ -29,5 +29,7 @@ namespace ISynergy.Mvvm
         Task OnActivateAsync(object parameter, bool isBack);
         Task InitializeAsync();
         Task<bool> ValidateInputAsync();
+        void OnPropertyChanged(object sender, PropertyChangedEventArgs e);
+        void OnValidationErrorsChanged(object sender, DataErrorsChangedEventArgs e);
     }
 }

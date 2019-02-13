@@ -66,7 +66,7 @@ namespace ISynergy.Mvvm
             Page = 1;
         }
 
-        protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(sender, e);
 
