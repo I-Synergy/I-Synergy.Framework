@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
 
-namespace ISynergy.Models.Base
+namespace ISynergy
 {
     public interface IModelBase : INotifyPropertyChanged
     {

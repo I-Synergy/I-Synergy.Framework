@@ -1,5 +1,4 @@
-﻿using ISynergy.Models.Base;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 

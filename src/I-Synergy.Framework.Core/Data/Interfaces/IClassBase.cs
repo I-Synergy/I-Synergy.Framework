@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Models.Base
+﻿namespace ISynergy
 {
     public interface IClassBase
     {

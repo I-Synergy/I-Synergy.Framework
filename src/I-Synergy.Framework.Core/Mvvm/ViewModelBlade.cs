@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
-using ISynergy.Models.Base;
 using ISynergy.Services;
 using System.Threading.Tasks;
 
@@ -60,16 +59,6 @@ namespace ISynergy.Mvvm
 
             Messenger.Default.Register<OnSubmitMessage>(this, async (e) => await OnSubmitAsync(e));
             Messenger.Default.Register<OnCancelMessage>(this, async (e) => await OnCancelAsync(e));
-        }
-
-        public override Task<bool> ValidateInputAsync()
-        {
-            if (SelectedItem is IModelBase item)
-            {
-                ValidationService.ValidateProperties(item.GetType());
-            }
-
-            return base.ValidateInputAsync();
         }
 
         public abstract Task SubmitAsync(TEntity e);

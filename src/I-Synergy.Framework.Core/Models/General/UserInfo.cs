@@ -1,5 +1,4 @@
-﻿using ISynergy.Models.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ISynergy.Models.General

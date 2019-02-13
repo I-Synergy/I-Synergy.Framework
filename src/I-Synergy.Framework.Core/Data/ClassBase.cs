@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace ISynergy.Models.Base
+namespace ISynergy
 {
     /// <summary>
     /// Base_Class model which fully supports serialization, property changed notifications,

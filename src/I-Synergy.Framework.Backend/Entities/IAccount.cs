@@ -1,5 +1,4 @@
-﻿using ISynergy.Models.Base;
-using System;
+﻿using System;
 
 namespace ISynergy.Entities.Accounts
 {

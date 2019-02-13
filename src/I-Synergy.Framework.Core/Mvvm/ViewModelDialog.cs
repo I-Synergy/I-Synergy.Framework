@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
-using ISynergy.Models.Base;
 using ISynergy.Services;
 using System.Threading.Tasks;
 
@@ -57,16 +56,6 @@ namespace ISynergy.Mvvm
         protected virtual void CloseWindow()
         {
             Messenger.Default.Send(new CloseWindowsMessage(this));
-        }
-
-        public override Task<bool> ValidateInputAsync()
-        {
-            if (SelectedItem is IModelBase item)
-            {
-                ValidationService.ValidateProperties(item.GetType());
-            }
-
-            return base.ValidateInputAsync();
         }
 
         public abstract Task SubmitAsync(TEntity e);

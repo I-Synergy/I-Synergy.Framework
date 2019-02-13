@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
-using ISynergy.Models.Base;
 using ISynergy.Services;
 using System.Windows.Input;
 using Windows.UI.Xaml;
