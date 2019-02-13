@@ -30,14 +30,14 @@
     <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
     <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
     <PackageReference Include="Mapster" Version="3.3.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.5.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.5.1" />
     <PackageReference Include="OpenIddict" Version="2.0.0" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.0" />
     <PackageReference Include="OpenIddict.Mvc" Version="2.0.0" />

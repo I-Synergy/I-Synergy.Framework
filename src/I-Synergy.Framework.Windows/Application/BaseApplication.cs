@@ -37,42 +37,17 @@ namespace ISynergy
     public abstract class BaseApplication : Application
     {
         public IContext Context { get; private set; }
-
-        private ILogger logger = null;
-        private IThemeSelectorService themeSelector = null;
-
-        public ILogger Logger
-        {
-            get
-            {
-                if (logger is null)
-                {
-                    logger = SimpleIoc.Default.GetInstance<ILogger>();
-                }
-
-                return logger;
-            }
-        }
-
-        public IThemeSelectorService ThemeSelector
-        {
-            get
-            {
-                if (themeSelector is null)
-                {
-                    themeSelector = SimpleIoc.Default.GetInstance<IThemeSelectorService>();
-                }
-
-                return themeSelector;
-            }
-        }
+        public ILogger Logger { get; private set; }
+        public IThemeSelectorService ThemeSelector { get; private set; }
 
         public BaseApplication()
             : base()
         {
-            SimpleIoc.Default.Register<ILogger>(() => new LoggerFactory().CreateLogger<BaseApplication>());
-            SimpleIoc.Default.Register<IThemeSelectorService, ThemeSelectorService>();
+            RegisterBaseServices();
 
+            Logger = SimpleIoc.Default.GetInstance<ILogger>();
+
+            ThemeSelector = SimpleIoc.Default.GetInstance<IThemeSelectorService>();
             ThemeSelector.Initialize();
 
             if (ThemeSelector.Theme is ElementTheme.Dark)
@@ -116,13 +91,6 @@ namespace ISynergy
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            //XBOX support
-            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Xbox")
-            {
-                ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                bool result = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
-            }
-
             Initialize();
             LaunchApplication();
         }
@@ -269,20 +237,24 @@ namespace ISynergy
             deferral.Complete();
         }
 
+        protected virtual void RegisterBaseServices()
+        {
+            SimpleIoc.Default.Register<ILogger>(() => new LoggerFactory().CreateLogger<BaseApplication>());
+            SimpleIoc.Default.Register<IThemeSelectorService, ThemeSelectorService>();
+            SimpleIoc.Default.Register<IDialogService, DialogService>();
+            SimpleIoc.Default.Register<IInfoService, InfoService>();
+        }
+
         protected virtual void Initialize(SoftwareEnvironments environment = SoftwareEnvironments.Production)
         {
-            
             SimpleIoc.Default.Register<IFlurlClient>(() => new FlurlClient());
             SimpleIoc.Default.Register<IBusyService, BusyService>();
-            SimpleIoc.Default.Register<IDialogService, DialogService>();
             SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
             SimpleIoc.Default.Register<IAuthenticationProvider, AuthenticationProvider>();
             SimpleIoc.Default.Register<IUIVisualizerService, UIVisualizerService>();
             SimpleIoc.Default.Register<INavigationService, NavigationService>();
-            SimpleIoc.Default.Register<IInfoService, InfoService>();
             SimpleIoc.Default.Register<IConverterService, ConverterService>();
             SimpleIoc.Default.Register<IValidationService, ValidationService>();
-            SimpleIoc.Default.Register<IThemeSelectorService, ThemeSelectorService>();
 
             SimpleIoc.Default.Register<IForgotPasswordWindow>(() => SimpleIoc.Default.GetInstance<ForgotPasswordWindow>());
             SimpleIoc.Default.Register<ITagWindow>(() => SimpleIoc.Default.GetInstance<TagWindow>());
@@ -328,6 +300,7 @@ namespace ISynergy
                 ViewModelTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
                         q.GetInterface(nameof(IViewModel), false) != null &&
+                        !q.Name.Equals(Constants.ShellViewModel) &&
                         q.Name.EndsWith(Constants.ViewModel) &&
                         q.Name != Constants.ViewModel &&
                         !q.IsAbstract &&
@@ -419,12 +392,11 @@ namespace ISynergy
         public virtual void SetContext()
         {
             Context = SimpleIoc.Default.GetInstance<IContext>();
+            Context.ViewModels = ViewModelTypes;
 
             Messenger.Default.Register<OnLanguageChangedMessage>(this, (e) => OnLanguageChanged(e));
 
             UpdateLanguage();
-
-            Context.ViewModels = ViewModelTypes;
 
             try
             {
@@ -470,6 +442,17 @@ namespace ISynergy
 
         public virtual async Task HandleException(Exception ex)
         {
+            try
+            {
+                await SimpleIoc.Default.GetInstance<ITelemetryService>().TrackExceptionAsync(ex);
+                SimpleIoc.Default.GetInstance<ITelemetryService>().Flush();
+            }
+            catch { }
+            finally
+            {
+                Messenger.Default.Send(new ExceptionHandledMessage(this));
+            }
+
             ConnectionProfile connections = NetworkInformation.GetInternetConnectionProfile();
 
             if (!(connections != null && connections.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess))
@@ -514,17 +497,6 @@ namespace ISynergy
                     await SimpleIoc.Default.GetInstance<IDialogService>().ShowErrorAsync(
                         SimpleIoc.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
                 }
-            }
-
-            try
-            {
-                await SimpleIoc.Default.GetInstance<ITelemetryService>().TrackExceptionAsync(ex);
-                SimpleIoc.Default.GetInstance<ITelemetryService>().Flush();
-            }
-            catch { }
-            finally
-            {
-                Messenger.Default.Send(new ExceptionHandledMessage(this));
             }
         }
     }

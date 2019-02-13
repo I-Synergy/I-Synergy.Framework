@@ -121,7 +121,10 @@ namespace ISynergy.Mvvm
             }
             set { SetValue(value); }
         }
-        
+
+        private WeakEventListener<IViewModel, object, PropertyChangedEventArgs> WeakViewModelPropertyChangedEvent = null;
+        private WeakEventListener<IViewModel, object, DataErrorsChangedEventArgs> WeakValidationErrorsChangedEvent = null;
+
         public ViewModel(
             IContext context, 
             IBaseService baseService)
@@ -131,8 +134,21 @@ namespace ISynergy.Mvvm
             BaseService = baseService;
             ValidationService = baseService.ValidationService;
 
-            PropertyChanged += OnPropertyChanged;
-            ValidationService.ErrorsChanged += ValidationService_ErrorsChanged;
+            WeakViewModelPropertyChangedEvent = new WeakEventListener<IViewModel, object, PropertyChangedEventArgs>(this)
+            {
+                OnEventAction = (instance, source, eventargs) => instance.OnPropertyChanged(source, eventargs),
+                OnDetachAction = (listener) => this.PropertyChanged -= listener.OnEvent
+            };
+
+            this.PropertyChanged += WeakViewModelPropertyChangedEvent.OnEvent;
+
+            WeakValidationErrorsChangedEvent = new WeakEventListener<IViewModel, object, DataErrorsChangedEventArgs>(this)
+            {
+                OnEventAction = (instance, source, eventargs) => instance.OnValidationErrorsChanged(source, eventargs),
+                OnDetachAction = (listener) => ValidationService.ErrorsChanged -= listener.OnEvent
+            };
+
+            ValidationService.ErrorsChanged += WeakValidationErrorsChangedEvent.OnEvent;
 
             Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.BusyService.EndBusyAsync());
 
@@ -150,7 +166,7 @@ namespace ISynergy.Mvvm
             });
         }
 
-        private void ValidationService_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        public void OnValidationErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
             Errors = ValidationService.GetErrorList();
         }
@@ -176,7 +192,7 @@ namespace ISynergy.Mvvm
             return description;
         }
 
-        protected virtual void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public virtual void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
         }
 
@@ -237,14 +253,6 @@ namespace ISynergy.Mvvm
             }
 
             return true;
-        }
-
-        public override void Cleanup()
-        {
-            PropertyChanged -= OnPropertyChanged;
-            ValidationService.ErrorsChanged -= ValidationService_ErrorsChanged;
-
-            base.Cleanup();
         }
     }
 }
