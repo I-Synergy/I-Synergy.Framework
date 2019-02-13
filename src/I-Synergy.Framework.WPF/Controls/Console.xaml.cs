@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Processes;
+﻿using ISynergy.Processes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
