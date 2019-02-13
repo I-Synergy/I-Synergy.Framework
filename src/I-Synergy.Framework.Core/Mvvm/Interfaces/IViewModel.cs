@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Command;
-using ISynergy.Models.Base;
 using ISynergy.Services;
 using System;
 using System.Collections;
@@ -28,8 +27,7 @@ namespace ISynergy.Mvvm
         Task OnDeactivateAsync();
         Task OnActivateAsync(object parameter, bool isBack);
         Task InitializeAsync();
-        Task<bool> ValidateInputAsync();
         void OnPropertyChanged(object sender, PropertyChangedEventArgs e);
-        void OnValidationErrorsChanged(object sender, DataErrorsChangedEventArgs e);
+        void Cleanup();
     }
 }

@@ -1,6 +1,4 @@
-﻿using ISynergy.Entities.Base;
-using ISynergy.Models.Base;
-using Mapster;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;

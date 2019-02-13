@@ -1,6 +1,4 @@
-﻿using ISynergy.Models.Base;
-
-namespace ISynergy.Entities.Base
+﻿namespace ISynergy
 {
     public interface IEntityBase : IClassBase
     {

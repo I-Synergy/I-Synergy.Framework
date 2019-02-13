@@ -58,7 +58,7 @@ namespace ISynergy.ViewModels.Authentication
         /// <summary>
         /// Gets or sets the IsValid property value.
         /// </summary>
-        public bool IsValid
+        public bool IsRfidValid
         {
             get { return GetValue<bool>(); }
             private set { SetValue(value); }
@@ -84,11 +84,11 @@ namespace ISynergy.ViewModels.Authentication
         {
             if (Regex.IsMatch(RfidTag, Constants.RfidUidRegeEx))
             {
-                IsValid = true;
+                IsRfidValid = true;
             }
             else
             {
-                IsValid = false;
+                IsRfidValid = false;
                 RfidTag = string.Empty;
             }
 

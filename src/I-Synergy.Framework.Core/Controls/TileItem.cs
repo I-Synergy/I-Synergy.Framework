@@ -1,6 +1,4 @@
-﻿using ISynergy.Models.Base;
-
-namespace ISynergy.Controls
+﻿namespace ISynergy.Controls
 {
     /// <summary>
     /// TileItem model which fully supports serialization, property changed notifications,

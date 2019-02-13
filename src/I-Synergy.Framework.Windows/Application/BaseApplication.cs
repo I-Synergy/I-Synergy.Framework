@@ -248,13 +248,13 @@ namespace ISynergy
         protected virtual void Initialize(SoftwareEnvironments environment = SoftwareEnvironments.Production)
         {
             SimpleIoc.Default.Register<IFlurlClient>(() => new FlurlClient());
+            SimpleIoc.Default.Register<IMessenger>(() => new Messenger());
             SimpleIoc.Default.Register<IBusyService, BusyService>();
             SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
             SimpleIoc.Default.Register<IAuthenticationProvider, AuthenticationProvider>();
             SimpleIoc.Default.Register<IUIVisualizerService, UIVisualizerService>();
             SimpleIoc.Default.Register<INavigationService, NavigationService>();
             SimpleIoc.Default.Register<IConverterService, ConverterService>();
-            SimpleIoc.Default.Register<IValidationService, ValidationService>();
 
             SimpleIoc.Default.Register<IForgotPasswordWindow>(() => SimpleIoc.Default.GetInstance<ForgotPasswordWindow>());
             SimpleIoc.Default.Register<ITagWindow>(() => SimpleIoc.Default.GetInstance<TagWindow>());

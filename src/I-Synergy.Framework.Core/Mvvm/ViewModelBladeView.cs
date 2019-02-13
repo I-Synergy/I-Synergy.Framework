@@ -1,7 +1,6 @@
 ﻿using Flurl.Http;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using ISynergy.Models.Base;
 using ISynergy.Services;
 using System;
 using System.Collections.Generic;
@@ -101,35 +100,6 @@ namespace ISynergy.Mvvm
                 }
             }
         }
-
-        public override Task<bool> ValidateInputAsync()
-        {
-            if (SelectedItem is IModelBase item)
-            {
-                ValidationService.ValidateProperties(item.GetType());
-            }
-
-            return base.ValidateInputAsync();
-        }
-
-        //protected virtual async Task<bool> ValidateInputAsync()
-        //{
-        //    if (SelectedItem is IBaseModel)
-        //    {
-        //        IBaseModel item = SelectedItem as IBaseModel;
-
-        //        item.ValidateProperties();
-        //        Errors = FlattenErrors();
-
-        //        if (item.HasErrors)
-        //        {
-        //            await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Validation_Failed"));
-        //            return false;
-        //        }
-        //    }
-
-        //    return true;
-        //}
 
         public abstract Task AddAsync();
 

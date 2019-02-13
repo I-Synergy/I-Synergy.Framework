@@ -1,6 +1,4 @@
-﻿using ISynergy.Models.Base;
-
-namespace ISynergy.Models.General
+﻿namespace ISynergy.Models.General
 {
     public interface ISettings
     {

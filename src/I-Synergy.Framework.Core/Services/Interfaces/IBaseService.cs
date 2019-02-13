@@ -1,7 +1,10 @@
-﻿namespace ISynergy.Services
+﻿using GalaSoft.MvvmLight.Messaging;
+
+namespace ISynergy.Services
 {
     public interface IBaseService
     {
+        IMessenger Messenger { get; }
         IBusyService BusyService { get; }
         ILanguageService LanguageService { get; }
         ILoginService LoginService { get; }
@@ -12,6 +15,5 @@
         INavigationService NavigationService { get; }
         IInfoService InfoService { get; }
         IConverterService ConverterService { get; }
-        IValidationService ValidationService { get; }
     }
 }

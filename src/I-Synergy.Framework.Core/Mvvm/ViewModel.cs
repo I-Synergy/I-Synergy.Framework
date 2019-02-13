@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using ISynergy.Models.Base;
 using ISynergy.Services;
 using System;
 using System.Collections.Generic;
@@ -17,16 +16,17 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using GalaSoft.MvvmLight;
+using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 
 namespace ISynergy.Mvvm
 {
-    public abstract class ViewModel : ViewModelBase, IViewModel
+    public abstract class ViewModel : ObservableClass, IViewModel
     {
         public delegate Task Submit_Action(object e);
 
         public IContext Context { get; }
         public IBaseService BaseService { get; }
-        public IValidationService ValidationService { get; }
 
         public RelayCommand Close_Command { get; protected set; }
 
@@ -63,15 +63,6 @@ namespace ISynergy.Mvvm
         public bool IsInitialized
         {
             get { return GetValue<bool>(); }
-            set { SetValue(value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the Errors property value.
-        /// </summary>
-        public List<string> Errors
-        {
-            get { return GetValue<List<string>>(); }
             set { SetValue(value); }
         }
 
@@ -123,7 +114,6 @@ namespace ISynergy.Mvvm
         }
 
         private WeakEventListener<IViewModel, object, PropertyChangedEventArgs> WeakViewModelPropertyChangedEvent = null;
-        private WeakEventListener<IViewModel, object, DataErrorsChangedEventArgs> WeakValidationErrorsChangedEvent = null;
 
         public ViewModel(
             IContext context, 
@@ -132,7 +122,6 @@ namespace ISynergy.Mvvm
         {
             Context = context;
             BaseService = baseService;
-            ValidationService = baseService.ValidationService;
 
             WeakViewModelPropertyChangedEvent = new WeakEventListener<IViewModel, object, PropertyChangedEventArgs>(this)
             {
@@ -141,14 +130,6 @@ namespace ISynergy.Mvvm
             };
 
             this.PropertyChanged += WeakViewModelPropertyChangedEvent.OnEvent;
-
-            WeakValidationErrorsChangedEvent = new WeakEventListener<IViewModel, object, DataErrorsChangedEventArgs>(this)
-            {
-                OnEventAction = (instance, source, eventargs) => instance.OnValidationErrorsChanged(source, eventargs),
-                OnDetachAction = (listener) => ValidationService.ErrorsChanged -= listener.OnEvent
-            };
-
-            ValidationService.ErrorsChanged += WeakValidationErrorsChangedEvent.OnEvent;
 
             Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.BusyService.EndBusyAsync());
 
@@ -164,11 +145,6 @@ namespace ISynergy.Mvvm
             {
                 Messenger.Default.Send(new OnCancelMessage(this));
             });
-        }
-
-        public void OnValidationErrorsChanged(object sender, DataErrorsChangedEventArgs e)
-        {
-            Errors = ValidationService.GetErrorList();
         }
 
         public virtual async Task InitializeAsync()
@@ -213,46 +189,9 @@ namespace ISynergy.Mvvm
 
         public virtual Task OnActivateAsync(object parameter, bool isBack) => InitializeAsync();
 
-        private readonly Dictionary<string, object> _propertyBackingDictionary = new Dictionary<string, object>();
-
-        protected T GetValue<T>([CallerMemberName] string propertyName = null)
+        public virtual void Cleanup()
         {
-            Argument.IsNotNull(propertyName, propertyName);
-
-            if (_propertyBackingDictionary.TryGetValue(propertyName, out object value)) return (T)value;
-
-            return default;
-        }
-
-        protected bool SetValue<T>(T newValue, [CallerMemberName] string propertyName = null)
-        {
-            Argument.IsNotNull(propertyName, propertyName);
-
-            if (EqualityComparer<T>.Default.Equals(newValue, GetValue<T>(propertyName))) return false;
-
-            _propertyBackingDictionary[propertyName] = newValue;
-
-            RaisePropertyChanged(propertyName);
-
-            if (!string.IsNullOrEmpty(propertyName))
-                ValidationService.ValidateProperty(this.GetType(), propertyName);
-
-            return true;
-        }
-
-        public virtual async Task<bool> ValidateInputAsync()
-        {
-            ValidationService.ValidateProperties();
-            Errors = ValidationService.GetErrorList();
-
-            if (ValidationService.HasErrors)
-            {
-                await BaseService.DialogService.ShowErrorAsync(
-                    BaseService.LanguageService.GetString("Warning_Validation_Failed"));
-                return false;
-            }
-
-            return true;
+            Messenger.Default.Unregister(this);
         }
     }
 }

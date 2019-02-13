@@ -1,7 +1,6 @@
-﻿using ISynergy.Models.Base;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace ISynergy.Entities.Base
+namespace ISynergy
 {
     /// <summary>
     /// BaseEntity model which fully supports serialization, property changed notifications,
