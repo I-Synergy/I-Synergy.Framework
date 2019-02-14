@@ -18,10 +18,11 @@ using System.Runtime.CompilerServices;
 using GalaSoft.MvvmLight;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Mvvm
 {
-    public abstract class ViewModel : ObservableClass, IViewModel
+    public abstract class ViewModel : ObservableClass, IViewModel, ICleanup
     {
         public delegate Task Submit_Action(object e);
 
@@ -149,7 +150,10 @@ namespace ISynergy.Mvvm
 
         public virtual async Task InitializeAsync()
         {
-            await BaseService.TelemetryService.TrackPageViewAsync(GetType().Name.Replace("ViewModel", ""));
+            if (!IsInitialized)
+            {
+                await BaseService.TelemetryService.TrackPageViewAsync(GetType().Name.Replace("ViewModel", ""));
+            }
         }
 
         protected string GetEnumDescription(Enum value)
@@ -181,12 +185,7 @@ namespace ISynergy.Mvvm
             return Task.CompletedTask;
         }
 
-        public virtual Task OnDeactivateAsync()
-        {
-            Cleanup();
-            return Task.CompletedTask;
-        }
-
+        public virtual Task OnDeactivateAsync() => Task.CompletedTask;
         public virtual Task OnActivateAsync(object parameter, bool isBack) => InitializeAsync();
 
         public virtual void Cleanup()

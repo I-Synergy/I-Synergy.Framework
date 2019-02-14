@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using ISynergy.Services;
 using System;
 using System.Collections;
@@ -14,7 +15,7 @@ namespace ISynergy.Mvvm
         public IViewModel Result { get; set; }
     }
 
-    public interface IViewModel : IModelBase
+    public interface IViewModel : IObservableClass, ICleanup
     {
         IContext Context { get; }
         IBaseService BaseService { get; }
@@ -28,6 +29,5 @@ namespace ISynergy.Mvvm
         Task OnActivateAsync(object parameter, bool isBack);
         Task InitializeAsync();
         void OnPropertyChanged(object sender, PropertyChangedEventArgs e);
-        void Cleanup();
     }
 }

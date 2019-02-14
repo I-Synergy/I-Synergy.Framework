@@ -85,6 +85,16 @@ namespace ISynergy.Mvvm
             Messenger.Default.Register<OnCancelMessage>(this, async (e) => await OnCancelAsync(e));
         }
 
+        public override async Task InitializeAsync()
+        {
+            if (!IsInitialized)
+            {
+                await base.InitializeAsync();
+
+                IsInitialized = await RefreshAsync();
+            }
+        }
+
         protected async Task AddBladeAsync(AddBladeMessage message)
         {
             if(message.Viewmodel != null)

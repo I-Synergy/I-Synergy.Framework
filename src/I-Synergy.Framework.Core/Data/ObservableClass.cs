@@ -1,39 +1,43 @@
-﻿using GalaSoft.MvvmLight;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace ISynergy
 {
     public abstract class ObservableClass : IObservableClass, INotifyPropertyChanged
     {
+        [JsonIgnore]
+        public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
+            = new ObservableConcurrentDictionary<string, IProperty>();
+
+        [JsonIgnore]
+        public ObservableCollection<string> Errors { get; }
+            = new ObservableCollection<string>();
+
+        [JsonIgnore]
+        public Action<IObservableClass> Validator { set; get; }
+
+        [JsonIgnore]
+        public bool IsValid => !Errors.Any();
+
+        [JsonIgnore]
+        public bool IsDirty => Properties.Any(x => x.Value.IsDirty);
+
         public ObservableClass()
         {
-            Properties.CollectionChanged += (s, e) =>
-            {
-                //if (e.Action.Equals(NotifyCollectionChangedAction.Add))
-                //    Properties[e.Key].ValueChanged += (sender, args) =>
-                //    {
-                //        OnPropertyChanged(e.Key);
-                //        OnPropertyChanged(nameof(IsDirty));
-                //        OnPropertyChanged(nameof(IsValid));
-                //    };
-            };
         }
-
+        
         protected T GetValue<T>([CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
 
             if (!Properties.ContainsKey(propertyName))
                 Properties.Add(propertyName, new Property<T>());
+
             return (Properties[propertyName] as IProperty<T>).Value;
         }
 
@@ -43,11 +47,15 @@ namespace ISynergy
 
             if (!Properties.ContainsKey(propertyName))
                 Properties.Add(propertyName, new Property<T>());
+
             var property = (Properties[propertyName] as IProperty<T>);
             var previous = property.Value;
+
             if (!property.IsOriginalSet || !Equals(value, previous))
             {
                 property.Value = value;
+                OnPropertyChanged(propertyName);
+
                 Validate(validateAfter);
             }
         }
@@ -71,6 +79,7 @@ namespace ISynergy
 
                 OnPropertyChanged(nameof(IsValid));
             }
+
             return IsValid;
         }
 
@@ -94,30 +103,16 @@ namespace ISynergy
             Validate();
         }
 
-        [JsonIgnore]
-        public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
-            = new ObservableConcurrentDictionary<string, IProperty>();
-
-        [JsonIgnore]
-        public ObservableCollection<string> Errors { get; }
-            = new ObservableCollection<string>();
-
-        [JsonIgnore]
-        public Action<IObservableClass> Validator { set; get; }
-
-        [JsonIgnore]
-        public bool IsValid => !Errors.Any();
-
-        [JsonIgnore]
-        public bool IsDirty => Properties.Any(x => x.Value.IsDirty);
-
         #region INotifyPropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Dispose()
+        {
         }
         #endregion INotifyPropertyChanged
     }
