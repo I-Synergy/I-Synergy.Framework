@@ -25,7 +25,7 @@ namespace ISynergy.Data.Tests
             ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
             {
                 gotEvent = true;
-                Assert.True(e.PropertyName.Equals("IsValid"), "PropertyName was wrong.");
+                Assert.True(e.PropertyName.Equals("Value") | e.PropertyName.Equals("IsValid"), "PropertyName was wrong.");
             };
 
             string newValue = "new value";
