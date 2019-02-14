@@ -422,23 +422,23 @@ namespace ISynergy.Controls
 
         private void OnCollectionChanged(object oldValue, object newValue)
         {
-            if (oldValue is INotifyCollectionChanged inccOld)
+            if (oldValue is INotifyCollectionChanged incOld)
             {
-                inccOld.CollectionChanged -= Incc_CollectionChanged;
+                incOld.CollectionChanged -= Incc_CollectionChanged;
                 _inccWeakEventListener?.Detach();
                 _inccWeakEventListener = null;
             }
 
             if (newValue is IEnumerable)
             {
-                if (newValue is INotifyCollectionChanged inccNew)
+                if (newValue is INotifyCollectionChanged incNew)
                 {
                     _inccWeakEventListener = new WeakEventListener<RotatorTile, object, NotifyCollectionChangedEventArgs>(this)
                     {
                         OnEventAction = (instance, source, eventArgs) => instance.Incc_CollectionChanged(source, eventArgs),
-                        OnDetachAction = (listener) => inccNew.CollectionChanged -= listener.OnEvent
+                        OnDetachAction = (listener) => incNew.CollectionChanged -= listener.OnEvent
                     };
-                    inccNew.CollectionChanged += _inccWeakEventListener.OnEvent;
+                    incNew.CollectionChanged += _inccWeakEventListener.OnEvent;
                 }
 
                 Start();

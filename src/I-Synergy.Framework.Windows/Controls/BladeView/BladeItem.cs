@@ -1,6 +1,9 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Ioc;
+using ISynergy.Services;
+using System;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
@@ -11,90 +14,8 @@ namespace ISynergy.Controls
     /// </summary>
     [TemplatePart(Name = "CloseButton", Type = typeof(Button))]
     [TemplatePart(Name = "EnlargeButton", Type = typeof(Button))]
-    public class BladeItem : Expander
+    public partial class BladeItem : Expander
     {
-        /// <summary>
-        /// Fires when the blade is opened or closed
-        /// </summary>
-        public event EventHandler<Visibility> VisibilityChanged;
-
-        /// <summary>
-        /// Identifies the <see cref="TitleBarVisibility"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty TitleBarVisibilityProperty = DependencyProperty.Register(nameof(TitleBarVisibility), typeof(Visibility), typeof(BladeItem), new PropertyMetadata(default(Visibility)));
-
-        /// <summary>
-        /// Identifies the <see cref="TitleBarBackground"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty TitleBarBackgroundProperty = DependencyProperty.Register(nameof(TitleBarBackground), typeof(Brush), typeof(BladeItem), new PropertyMetadata(default(Brush)));
-
-        /// <summary>
-        /// Identifies the <see cref="CloseButtonBackground"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty CloseButtonBackgroundProperty = DependencyProperty.Register(nameof(CloseButtonBackground), typeof(Brush), typeof(BladeItem), new PropertyMetadata(default(Brush)));
-
-        /// <summary>
-        /// Identifies the <see cref="IsOpen"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(BladeItem), new PropertyMetadata(true, IsOpenChangedCallback));
-
-        /// <summary>
-        /// Identifies the <see cref="CloseButtonForeground"/> dependency property
-        /// </summary>
-        public static readonly DependencyProperty CloseButtonForegroundProperty = DependencyProperty.Register(nameof(CloseButtonForeground), typeof(Brush), typeof(BladeItem), new PropertyMetadata(new SolidColorBrush(Colors.Black)));
-
-        /// <summary>
-        /// Gets or sets the foreground color of the close button
-        /// </summary>
-        public Brush CloseButtonForeground
-        {
-            get { return (Brush)GetValue(CloseButtonForegroundProperty); }
-            set { SetValue(CloseButtonForegroundProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the visibility of the title bar for this blade
-        /// </summary>
-        public Visibility TitleBarVisibility
-        {
-            get { return (Visibility)GetValue(TitleBarVisibilityProperty); }
-            set { SetValue(TitleBarVisibilityProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the background color of the title bar
-        /// </summary>
-        public Brush TitleBarBackground
-        {
-            get { return (Brush)GetValue(TitleBarBackgroundProperty); }
-            set { SetValue(TitleBarBackgroundProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the background color of the default close button in the title bar
-        /// </summary>
-        public Brush CloseButtonBackground
-        {
-            get { return (Brush)GetValue(CloseButtonBackgroundProperty); }
-            set { SetValue(CloseButtonBackgroundProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this blade is opened
-        /// </summary>
-        public bool IsOpen
-        {
-            get { return (bool)GetValue(IsOpenProperty); }
-            set { SetValue(IsOpenProperty, value); }
-        }
-
-        private static void IsOpenChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
-        {
-            BladeItem bladeItem = (BladeItem)dependencyObject;
-            bladeItem.Visibility = bladeItem.IsOpen ? Visibility.Visible : Visibility.Collapsed;
-            bladeItem.VisibilityChanged?.Invoke(bladeItem, bladeItem.Visibility);
-        }
-
         private Button _closeButton;
         private Button _enlargeButton;
         private double _normalModeWidth;
@@ -106,13 +27,8 @@ namespace ISynergy.Controls
         public BladeItem()
         {
             DefaultStyleKey = typeof(BladeItem);
-            Unloaded += BladeItem_Unloaded;
-            SizeChanged += OnSizeChanged;
-        }
 
-        private void BladeItem_Unloaded(object sender, RoutedEventArgs e)
-        {
-            SizeChanged -= OnSizeChanged;
+            SizeChanged += OnSizeChanged;
         }
 
         /// <summary>
@@ -151,6 +67,11 @@ namespace ISynergy.Controls
             {
                 Width = _normalModeWidth;
                 VisualStateManager.GoToState(this, "Expanded", true);
+                var name = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Expanded");
+                if (_enlargeButton != null)
+                {
+                    AutomationProperties.SetName(_enlargeButton, name);
+                }
             }
         }
 
@@ -162,6 +83,11 @@ namespace ISynergy.Controls
             {
                 Width = double.NaN;
                 VisualStateManager.GoToState(this, "Collapsed", true);
+                var name = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Collapsed");
+                if (_enlargeButton != null)
+                {
+                    AutomationProperties.SetName(_enlargeButton, name);
+                }
             }
         }
 

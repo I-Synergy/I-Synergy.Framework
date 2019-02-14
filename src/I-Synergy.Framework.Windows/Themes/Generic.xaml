@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/HeaderedContentControl/HeaderedContentControl.xaml" />
+        <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/HeaderedTextBlock/HeaderedTextBlock.xaml" />
+        <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/RotatorTile/RotatorTile.xaml" />
+        <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/BladeView/BladeView.xaml" />
+        <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/Expander/Expander.xaml" />
+        <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/LayoutTransformControl/LayoutTransformControl.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

@@ -122,8 +122,17 @@
     <Compile Include="Common\DialogBox.cs" />
     <Compile Include="Common\Result.cs" />
     <Compile Include="Controls\BladeView\BladeItem.cs" />
+    <Compile Include="Controls\BladeView\BladeItem.Events.cs" />
+    <Compile Include="Controls\BladeView\BladeItem.Properties.cs" />
+    <Compile Include="Controls\BladeView\BladeMode.cs" />
     <Compile Include="Controls\BladeView\BladeView.cs" />
+    <Compile Include="Controls\BladeView\BladeView.Events.cs" />
+    <Compile Include="Controls\BladeView\BladeView.Properties.cs" />
+    <Compile Include="Controls\Expander\ExpandDirection.cs" />
+    <Compile Include="Controls\Expander\Expander.Constants.cs" />
     <Compile Include="Controls\Expander\Expander.cs" />
+    <Compile Include="Controls\Expander\Expander.Events.cs" />
+    <Compile Include="Controls\Expander\Expander.Properties.cs" />
     <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
     <Compile Include="Controls\LayoutTransformControl\LayoutTransformControl.cs" />
     <Compile Include="Controls\LayoutTransformControl\PropertyChangeEventSource.cs" />
@@ -134,11 +143,12 @@
       <DependentUpon>CompositionShadow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RadioButton\IconRadioButton.cs" />
+    <Compile Include="Controls\HeaderedTextBlock\HeaderedTextBlock.Properties.cs" />
     <Compile Include="Controls\TextBox\DecimalTextBox.cs" />
-    <Compile Include="Controls\TextBlock\HeaderedTextBlock.cs" />
+    <Compile Include="Controls\HeaderedTextBlock\HeaderedTextBlock.cs" />
     <Compile Include="Controls\TextBox\IntegerTextBox.cs" />
     <Compile Include="Controls\TextBox\TextBoxAttached.cs" />
-    <Compile Include="Controls\Tiles\RotatorTile.cs" />
+    <Compile Include="Controls\RotatorTile\RotatorTile.cs" />
     <Compile Include="Controls\Tiles\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
@@ -293,6 +303,22 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\BladeView\BladeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Expander\Expander.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LayoutTransformControl\LayoutTransformControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Menu\Base_Menu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -301,9 +327,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\HeaderedTextBlock\HeaderedTextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RotatorTile\RotatorTile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Tiles\Tile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Authentication\Controls\LoginControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -367,7 +405,6 @@
     <Content Include="Assets\Images\Refresh.png" />
     <Content Include="Assets\Images\Warning.png" />
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
