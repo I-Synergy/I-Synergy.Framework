@@ -111,12 +111,14 @@
     <Compile Include="Adapters\FrameAdapter.cs" />
     <Compile Include="Adapters\IFrameAdapter.cs" />
     <Compile Include="Application\BaseApplication.cs" />
-    <Compile Include="Behaviours\AuthorizationBehaviour.cs" />
-    <Compile Include="Behaviours\Base\BehaviorBase.cs" />
-    <Compile Include="Behaviours\MultiBindingBehavior.cs" />
-    <Compile Include="Behaviours\MultiBindingBehaviour\MultiBindingItem.cs" />
-    <Compile Include="Behaviours\MultiBindingBehaviour\MultiBindingItemCollection.cs" />
-    <Compile Include="Behaviours\NumericTextBoxBehavior.cs" />
+    <Compile Include="Behaviors\Attachers\ValidationBehaviorAttacher.cs" />
+    <Compile Include="Behaviors\AuthorizationBehavior.cs" />
+    <Compile Include="Behaviors\Base\BehaviorBase.cs" />
+    <Compile Include="Behaviors\MultiBindingBehavior.cs" />
+    <Compile Include="Behaviors\MultiBindingBehavior\MultiBindingItem.cs" />
+    <Compile Include="Behaviors\MultiBindingBehavior\MultiBindingItemCollection.cs" />
+    <Compile Include="Behaviors\NumericTextBoxBehavior.cs" />
+    <Compile Include="Behaviors\ValidationBehavior.cs" />
     <Compile Include="Collections\DependencyObjectCollection.cs" />
     <Compile Include="Common\DeferredNavigation.cs" />
     <Compile Include="Common\DialogBox.cs" />
@@ -128,6 +130,9 @@
     <Compile Include="Controls\BladeView\BladeView.cs" />
     <Compile Include="Controls\BladeView\BladeView.Events.cs" />
     <Compile Include="Controls\BladeView\BladeView.Properties.cs" />
+    <Compile Include="Controls\ErrorPresenter\ErrorPresenter.xaml.cs">
+      <DependentUpon>ErrorPresenter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Expander\ExpandDirection.cs" />
     <Compile Include="Controls\Expander\Expander.Constants.cs" />
     <Compile Include="Controls\Expander\Expander.cs" />
@@ -152,6 +157,7 @@
     <Compile Include="Controls\Tiles\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Validation\ControlWrapper.cs" />
     <Compile Include="Controls\View.cs" />
     <Compile Include="Controls\Window.cs" />
     <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
@@ -275,10 +281,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Flurl">
-      <Version>2.8.0</Version>
+      <Version>2.8.1</Version>
     </PackageReference>
     <PackageReference Include="Flurl.Http">
-      <Version>2.4.0</Version>
+      <Version>2.4.1</Version>
     </PackageReference>
     <PackageReference Include="Mapster">
       <Version>3.3.1</Version>
@@ -304,6 +310,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\BladeView\BladeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ErrorPresenter\ErrorPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -338,6 +348,10 @@
     <Page Include="Controls\Tiles\Tile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Validation\ControlWrapper.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <SubType>Designer</SubType>

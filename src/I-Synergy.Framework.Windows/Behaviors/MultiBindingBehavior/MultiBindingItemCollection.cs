@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 
-namespace ISynergy.Behaviours
+namespace ISynergy.Behaviors
 {
     /// <summary>
     /// Represents a collection of <see cref="MultiBindingBehavior" />.

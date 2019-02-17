@@ -70,11 +70,21 @@ namespace ISynergy
                 }
 
                 Validator?.Invoke(this);
-                Errors.Clear();
 
-                foreach (var error in Properties.Values.SelectMany(x => x.Errors))
+                foreach (var error in Errors.ToList())
                 {
-                    Errors.Add(error);
+                    if (!Properties.Values.SelectMany(x => x.Errors).Contains(error))
+                    {
+                        Errors.Remove(error);
+                    }
+                }
+
+                foreach (var error in Properties.Values.SelectMany(x => x.Errors).ToList())
+                {
+                    if (!Errors.Contains(error))
+                    {
+                        Errors.Add(error);
+                    }
                 }
 
                 OnPropertyChanged(nameof(IsValid));

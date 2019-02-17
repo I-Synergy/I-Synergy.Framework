@@ -1,4 +1,4 @@
-﻿using ISynergy.Behaviours.Base;
+﻿using ISynergy.Behaviors.Base;
 using Microsoft.Xaml.Interactivity;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 
-namespace ISynergy.Behaviours
+namespace ISynergy.Behaviors
 {
     [ContentProperty(Name = "Items")]
     [TypeConstraint(typeof(FrameworkElement))]
