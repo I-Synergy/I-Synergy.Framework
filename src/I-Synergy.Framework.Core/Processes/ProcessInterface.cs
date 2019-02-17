@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace ISynergy.Framework.Processes
+namespace ISynergy.Processes
 {
     /// <summary>
     /// A ProcessEventHandler is a delegate for process input/output events.

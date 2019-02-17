@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Tests.Base;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,10 +7,9 @@ using Xunit;
 
 namespace ISynergy.Extensions.Tests
 {
-    public class EnumerableExtensionsTest
+    public class EnumerableExtensionsTest : UnitTest
     {
         [Fact]
-        [Trait(nameof(EnumerableExtensionsTest), Test.Unit)]
         public void NullEnumerableNonFailableTest()
         {
             IEnumerable<object> list = null;
@@ -25,7 +25,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(EnumerableExtensionsTest), Test.Unit)]
         public void NullEnumerableFailableTest()
         {
             Assert.ThrowsAsync<NullReferenceException>(() =>

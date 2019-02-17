@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using ISynergy.Framework.Tests.Base;
+using System.Collections.Generic;
 using Xunit;
 
 namespace ISynergy.Utilities
 {
-    public class CompareUtilityTest
+    public class CompareUtilityTest : UnitTest
     {
         public class EmployeeRecord
         {
@@ -12,7 +13,6 @@ namespace ISynergy.Utilities
         }
 
         [Fact]
-        [Trait(nameof(CompareUtility.CompareObject), Test.Unit)]
         public void CompareObject()
         {
             var oOldRecord = new EmployeeRecord
@@ -36,7 +36,6 @@ namespace ISynergy.Utilities
         }
 
         [Theory]
-        [Trait(nameof(CompareUtility.Compare), Test.Unit)]
         [InlineData(true, "==", 50.99, 50.99)]
         [InlineData(true, "!=", 50.99, 50)]
         [InlineData(true, ">", 1, 0)]

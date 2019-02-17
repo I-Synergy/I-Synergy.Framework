@@ -1,7 +1,6 @@
 ﻿using ISynergy.Handlers;
 using ISynergy.Models.Accounts;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -10,6 +9,7 @@ using System.Linq;
 using GalaSoft.MvvmLight.Command;
 using System;
 using ISynergy.Events;
+using ISynergy.Mvvm;
 
 namespace ISynergy.ViewModels.Authentication
 {
@@ -24,6 +24,60 @@ namespace ISynergy.ViewModels.Authentication
             IBaseService baseService)
             : base(context, baseService)
         {
+            this.Validator = new Action<IObservableClass>(arg =>
+            {
+                if(LoginVisible)
+                {
+                    if (!string.IsNullOrEmpty(Username) && !(Username.Length > 3))
+                    {
+                        Properties[nameof(Username)].Errors.Add(BaseService.LanguageService.GetString("Warning_UsernameSize"));
+                    }
+
+                    if (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, Constants.PasswordRegEx))
+                    {
+                        Properties[nameof(Password)].Errors.Add(BaseService.LanguageService.GetString("Warning_PasswordSize"));
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(Registration_Name) && !(Registration_Name.Length > 3))
+                    {
+                        Properties[nameof(Registration_Name)].Errors.Add(BaseService.LanguageService.GetString("Warning_LicenseNameSize"));
+                    }
+
+                    if (!string.IsNullOrEmpty(Registration_Mail) && !Network.IsValidEMail(Registration_Mail))
+                    {
+                        Properties[nameof(Registration_Mail)].Errors.Add(BaseService.LanguageService.GetString("Warning_Invalid_Email"));
+                    }
+
+                    if (string.IsNullOrEmpty(Registration_TimeZone))
+                    {
+                        Properties[nameof(Registration_TimeZone)].Errors.Add(BaseService.LanguageService.GetString("Warning_NoTimeZone_Selected"));
+                    }
+
+                    if (!string.IsNullOrEmpty(Registration_Password) && !(Registration_Password.Length > 6))
+                    {
+                        Properties[nameof(Registration_Password)].Errors.Add(BaseService.LanguageService.GetString("Warning_PasswordSize"));
+                    }
+
+                    if (!string.IsNullOrEmpty(Registration_Password) && !Regex.IsMatch(Registration_Password, Constants.PasswordRegEx))
+                    {
+                        Properties[nameof(Registration_Password)].Errors.Add(BaseService.LanguageService.GetString("Warning_PasswordSize"));
+                    }
+
+                    if (!string.IsNullOrEmpty(Registration_Password_Check) && !(Registration_Password_Check.Length > 6))
+                    {
+                        Properties[nameof(Registration_Password_Check)].Errors.Add(BaseService.LanguageService.GetString("Warning_PasswordSize"));
+                    }
+
+                    if (!string.IsNullOrEmpty(Registration_Password) && !string.IsNullOrEmpty(Registration_Password_Check) && !Registration_Password.Equals(Registration_Password_Check))
+                    {
+                        Properties[nameof(Registration_Password)].Errors.Add(BaseService.LanguageService.GetString("Warning_PasswordMatch"));
+                        Properties[nameof(Registration_Password_Check)].Errors.Add(BaseService.LanguageService.GetString("Warning_PasswordMatch"));
+                    }
+                }
+            });
+
             Usernames = new List<string>();
             TimeZones = TimeZoneInfo.GetSystemTimeZones().ToList();
             Registration_TimeZone = "W. Europe Standard Time";
@@ -181,85 +235,6 @@ namespace ISynergy.ViewModels.Authentication
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
-        
-        protected virtual async Task<bool> CheckFieldsAsync()
-        {
-            bool result = true;
-
-            if (LoginVisible)
-            {
-                if (Username is null || Username.Length < 3)
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_UsernameSize"));
-                    result = false;
-                }
-
-                if (Password is null || Password.Length < 6)
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_PasswordSize"));
-                    result = false;
-                }
-
-                BaseService.BaseSettingsService.User_AutoLogin = AutoLogin;
-            }
-            else
-            {
-                if (Registration_Name is null || Registration_Name.Length < 3)
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_LicenseNameSize"));
-                    result = false;
-                }
-
-                if (Registration_Mail is null || !Network.IsValidEMail(Registration_Mail))
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Invalid_Email"));
-                    result = false;
-                }
-
-                if(string.IsNullOrEmpty(Registration_TimeZone))
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_NoTimeZone_Selected"));
-                    result = false;
-                }
-
-                if (Registration_Password is null || Registration_Password.Length < 6)
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_PasswordSize"));
-                    result = false;
-                }
-
-                Match passwordMatch = Regex.Match(Registration_Password, Constants.PasswordRegEx, RegexOptions.None);
-
-                if (!passwordMatch.Success)
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_PasswordSize"));
-                    result = false;
-                }
-
-                if (Registration_Password_Check is null || Registration_Password_Check.Length < 6)
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_PasswordSize"));
-                    result = false;
-                }
-
-                if (!Registration_Password.Equals(Registration_Password_Check))
-                {
-                    await BaseService.DialogService
-                        .ShowErrorAsync(BaseService.LanguageService.GetString("Warning_PasswordMatch"));
-                    result = false;
-                }
-            }
-
-            return result;
-        }
 
         /// <summary>
         /// Override to implement authentication
@@ -380,7 +355,7 @@ namespace ISynergy.ViewModels.Authentication
         /// <returns></returns>
         public abstract Task ForgotPasswordAsync();
 
-        public override Task OnSubmittanceAsync(OnSubmittanceMessage e)
+        public override Task OnSubmitAsync(OnSubmitMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {
@@ -396,7 +371,7 @@ namespace ISynergy.ViewModels.Authentication
             return Task.CompletedTask;
         }
 
-        public override Task OnCancellationAsync(OnCancellationMessage e)
+        public override Task OnCancelAsync(OnCancelMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converters="using:ISynergy.Converters"
+    xmlns:Controls="using:ISynergy.Controls"
     xmlns:local="using:ISynergy.Views.Authentication.Controls"
     mc:Ignorable="d">
 
@@ -15,36 +16,47 @@
         <Converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
     </Page.Resources>
 
-    <Grid
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="300" />
-            <ColumnDefinition Width="50" />
-            <ColumnDefinition Width="300" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <RelativePanel>
+        <Controls:ErrorPresenter x:Name="ErrorPresenter"
+                                  RelativePanel.AlignLeftWithPanel="True"
+                                  RelativePanel.AlignRightWithPanel="True"
+                                  RelativePanel.AlignTopWithPanel="True"/>
+        
+        <Grid x:Name="RootLayout"
+              RelativePanel.Below="ErrorPresenter"
+              RelativePanel.AlignLeftWithPanel="True"
+              RelativePanel.AlignRightWithPanel="True"
+              RelativePanel.AlignBottomWithPanel="True"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="1" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="{CustomResource  Generic_Register_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                <TextBlock Text="{CustomResource  Generic_Register_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                <Button IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Command="{Binding ShowLogin_Command}" Content="{CustomResource Generic_Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" />
-            </StackPanel>
-        </Grid>
+            <Grid Grid.Column="1" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{CustomResource  Generic_Register_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <TextBlock Text="{CustomResource  Generic_Register_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <Button IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Command="{Binding ShowLogin_Command}" Content="{CustomResource Generic_Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Grid>
 
-        <Grid Grid.Column="3" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="{CustomResource  Generic_Login_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                <TextBlock Text="{CustomResource  Generic_Login_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
-                <Button IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Command="{Binding ShowLogin_Command}" Content="{CustomResource Generic_Login}" Margin ="5,20,5,5" HorizontalAlignment="Right" />
-            </StackPanel>
-        </Grid>
+            <Grid Grid.Column="3" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{CustomResource  Generic_Login_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <TextBlock Text="{CustomResource  Generic_Login_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <Button IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Command="{Binding ShowLogin_Command}" Content="{CustomResource Generic_Login}" Margin ="5,20,5,5" HorizontalAlignment="Right" />
+                </StackPanel>
+            </Grid>
 
-        <Grid Grid.Column="1" Grid.ColumnSpan="3">
-            <local:SignUpControl HorizontalAlignment="Left" Width="300" Margin="0,1" IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}" VerticalAlignment="Stretch"  />
-            <local:LoginControl HorizontalAlignment="Right" Width="300" Margin="0,1" IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Stretch" />
+            <Grid Grid.Column="1" Grid.ColumnSpan="3">
+                <local:SignUpControl HorizontalAlignment="Left" Width="300" Margin="0,1" IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}" VerticalAlignment="Stretch"  />
+                <local:LoginControl HorizontalAlignment="Right" Width="300" Margin="0,1" IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Stretch" />
+            </Grid>
         </Grid>
-    </Grid>
+    </RelativePanel>
 </v:View>

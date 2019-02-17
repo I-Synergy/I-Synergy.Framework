@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
+using ISynergy.Mvvm;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Library
@@ -63,7 +63,7 @@ namespace ISynergy.ViewModels.Library
                 Result = false;
             }
 
-            Messenger.Default.Send(new OnSubmittanceMessage(this, Result));
+            Messenger.Default.Send(new OnSubmitMessage(this, Result));
 
             return Task.CompletedTask;
         }

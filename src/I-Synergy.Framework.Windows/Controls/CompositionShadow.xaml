@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<UserControl x:Name="Control"
     x:Class="ISynergy.Controls.CompositionShadow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,6 +10,6 @@
 
     <Grid>
         <Border x:Name="ShadowElement"/>
-        <ContentPresenter Content="{x:Bind CastingElement}" />
+        <ContentPresenter Content="{Binding CastingElement, ElementName=Control}" />
     </Grid>
 </UserControl>

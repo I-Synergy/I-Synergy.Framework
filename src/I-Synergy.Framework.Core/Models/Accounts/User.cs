@@ -1,5 +1,4 @@
-﻿using ISynergy.Models.Base;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +6,7 @@ using System.Linq;
 
 namespace ISynergy.Models.Accounts
 {
-    public class User : BaseModel
+    public class User : ModelBase
     {
         /// <summary>
         /// Gets or sets the Id property value.
@@ -55,7 +54,7 @@ namespace ISynergy.Models.Accounts
 
     }
 
-    public class Role : BaseModel
+    public class Role : ModelBase
     {
         /// <summary>
         /// Gets or sets the Id property value.

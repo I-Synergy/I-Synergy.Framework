@@ -1,8 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
+using ISynergy.Mvvm;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -58,7 +58,7 @@ namespace ISynergy.ViewModels.Authentication
         /// <summary>
         /// Gets or sets the IsValid property value.
         /// </summary>
-        public bool IsValid
+        public bool IsRfidValid
         {
             get { return GetValue<bool>(); }
             private set { SetValue(value); }
@@ -76,7 +76,7 @@ namespace ISynergy.ViewModels.Authentication
             Login_Command = new RelayCommand(() =>
             {
                 Messenger.Default.Send(new AuthenticateUserMessageRequest(this, true));
-                Messenger.Default.Send(new OnCancellationMessage(this));
+                Messenger.Default.Send(new OnCancelMessage(this));
             });
         }
 
@@ -84,15 +84,15 @@ namespace ISynergy.ViewModels.Authentication
         {
             if (Regex.IsMatch(RfidTag, Constants.RfidUidRegeEx))
             {
-                IsValid = true;
+                IsRfidValid = true;
             }
             else
             {
-                IsValid = false;
+                IsRfidValid = false;
                 RfidTag = string.Empty;
             }
 
-            Messenger.Default.Send(new OnSubmittanceMessage(this, IsValid));
+            Messenger.Default.Send(new OnSubmitMessage(this, IsValid));
 
             return Task.CompletedTask;
         }

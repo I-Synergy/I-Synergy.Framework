@@ -1,10 +1,9 @@
-﻿using ISynergy.Models.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ISynergy.Models.General
 {
-    public class AuthInfo : BaseModel
+    public class AuthInfo : ModelBase
     {
         /// <summary>
         /// Gets or sets the Modules property value.
@@ -35,7 +34,7 @@ namespace ISynergy.Models.General
     /// UserInfo model which fully supports serialization, property changed notifications,
     /// backwards compatibility and error checking.
     /// </summary>
-    public class UserInfo : BaseModel
+    public class UserInfo : ModelBase
     {
         /// <summary>
         /// Gets or sets the Account_Id property value.

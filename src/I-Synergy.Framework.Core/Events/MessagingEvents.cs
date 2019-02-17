@@ -1,5 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using ISynergy.ViewModels.Base;
+using ISynergy.Mvvm;
 
 namespace ISynergy.Events
 {
@@ -10,6 +10,17 @@ namespace ISynergy.Events
         public EventMessage(object sender)
             : base(sender)
         {
+        }
+    }
+
+    public abstract class QueryMessage : EventMessage
+    {
+        public string Query { get; }
+
+        public QueryMessage(object sender, string query)
+            : base(sender)
+        {
+            Query = query;
         }
     }
 
@@ -26,6 +37,17 @@ namespace ISynergy.Events
         public AuthenticationChangedMessage(object sender)
             : base(sender)
         {
+        }
+    }
+
+    public class OnLanguageChangedMessage : EventMessage
+    {
+        public string Language { get; private set; }
+
+        public OnLanguageChangedMessage(object sender, string language)
+            :base(sender)
+        {
+            Language = language;
         }
     }
 
@@ -79,11 +101,11 @@ namespace ISynergy.Events
         }
     }
 
-    public class OnSubmittanceMessage : EventMessage
+    public class OnSubmitMessage : EventMessage
     {
         public object Value { get; private set; }
 
-        public OnSubmittanceMessage(object sender, object value)
+        public OnSubmitMessage(object sender, object value)
             : base(sender)
         {
             Value = value;
@@ -91,9 +113,9 @@ namespace ISynergy.Events
         }
     }
 
-    public class OnCancellationMessage : EventMessage
+    public class OnCancelMessage : EventMessage
     {
-        public OnCancellationMessage(object sender)
+        public OnCancelMessage(object sender)
             : base(sender)
         {
             Handled = false;
@@ -134,14 +156,4 @@ namespace ISynergy.Events
         {
         }
     }
-
-    public class EnterKeyPressedMessage : EventMessage
-    {
-        public EnterKeyPressedMessage(object sender)
-            : base(sender)
-        {
-            Handled = false;
-        }
-    }
-
 }

@@ -1,9 +1,8 @@
-﻿using ISynergy.Models.Base;
-using System;
+﻿using System;
 
 namespace ISynergy.Entities.Accounts
 {
-    public interface IModule : IBaseClass
+    public interface IModule : IClassBase
     {
         Guid Module_Id { get; set; }
         string Name { get; set; }

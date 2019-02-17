@@ -1,11 +1,12 @@
-﻿using ISynergy.Models.Base;
+﻿using GalaSoft.MvvmLight.Ioc;
+using ISynergy.Services;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Models
 {
-    public class NavigationItem : BaseModel
+    public class NavigationItem : ModelBase
     {
         /// <summary>
         /// Gets or sets the SelectedVisibility property value.
@@ -21,7 +22,16 @@ namespace ISynergy.Models
         /// </summary>
         public SolidColorBrush SelectedForeground
         {
-            get { return GetValue<SolidColorBrush>() ?? GetStandardTextColorBrush(); }
+            get { return GetValue<SolidColorBrush>(); }
+            set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the SelectedForeground property value.
+        /// </summary>
+        public SolidColorBrush Foreground
+        {
+            get { return GetValue<SolidColorBrush>(); }
             set { SetValue(value); }
         }
 
@@ -35,9 +45,9 @@ namespace ISynergy.Models
             {
                 SetValue(value);
                 SelectedVisibility = value ? Visibility.Visible : Visibility.Collapsed;
-                SelectedForeground = value
+                SelectedForeground = value 
                     ? Application.Current.Resources["PrimaryMediumBrush"] as SolidColorBrush
-                    : GetStandardTextColorBrush();
+                    : Foreground;
             }
         }
 
@@ -85,29 +95,15 @@ namespace ISynergy.Models
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
-
-
-        public NavigationItem(string name, string symbol, ICommand command, object commandParameter = null)
+        
+        public NavigationItem(string name, string symbol, SolidColorBrush foreground, ICommand command, object commandParameter = null)
         {
             Label = name;
             ToolTipMenu = name;
             Symbol = symbol;
+            Foreground = foreground;
             Command = command;
             CommandParameter = commandParameter;
-
-            Services.ThemeSelectorService.OnThemeChanged += (s, e) => { if (!IsSelected) SelectedForeground = GetStandardTextColorBrush(); };
-        }
-
-        private SolidColorBrush GetStandardTextColorBrush()
-        {
-            var brush = Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;
-
-            if (!Services.ThemeSelectorService.IsLightThemeEnabled)
-            {
-                brush = Application.Current.Resources["SystemControlForegroundAltHighBrush"] as SolidColorBrush;
-            }
-
-            return brush;
         }
     }
 }

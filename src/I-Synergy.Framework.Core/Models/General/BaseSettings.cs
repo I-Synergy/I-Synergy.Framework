@@ -1,13 +1,11 @@
-﻿using ISynergy.Models.Base;
-
-namespace ISynergy.Models.General
+﻿namespace ISynergy.Models.General
 {
     public interface ISettings
     {
 
     }
 
-    public abstract class BaseSettings : BaseModel, ISettings
+    public abstract class BaseSettings : ModelBase, ISettings
     {
     }
 }

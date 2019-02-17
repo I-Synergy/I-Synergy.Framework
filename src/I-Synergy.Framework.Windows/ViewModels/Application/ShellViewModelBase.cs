@@ -1,5 +1,4 @@
 ﻿using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using ISynergy.Views.Library;
 using System;
 using System.Collections.ObjectModel;
@@ -17,6 +16,7 @@ using ISynergy.Views.Authentication;
 using ISynergy.Events;
 using ISynergy.Enumerations;
 using GalaSoft.MvvmLight.Ioc;
+using ISynergy.Mvvm;
 
 namespace ISynergy.ViewModels
 {
@@ -40,6 +40,15 @@ namespace ISynergy.ViewModels
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the SelectedForeground property value.
+        /// </summary>
+        public SolidColorBrush ForegroundColor
+        {
+            get { return GetValue<SolidColorBrush>() ?? GetStandardTextColorBrush(); }
+            set { SetValue(value); }
+        }
+
         public RelayCommand RestartUpdate_Command { get; set; }
         public RelayCommand Login_Command { get; set; }
         public RelayCommand Language_Command { get; set; }
@@ -48,11 +57,17 @@ namespace ISynergy.ViewModels
         public RelayCommand Feedback_Command { get; set; }
         public RelayCommand<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
 
+        private readonly IThemeSelectorService ThemeSelector;
+
         public ShellViewModelBase(
             IContext context,
-            IBaseService synergyService)
+            IBaseService synergyService,
+            IThemeSelectorService themeSelectorService)
             : base(context, synergyService)
         {
+            ThemeSelector = themeSelectorService;
+            ThemeSelector.OnThemeChanged += ThemeSelector_OnThemeChanged;
+
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
@@ -62,28 +77,31 @@ namespace ISynergy.ViewModels
 
             Messenger.Default.Register<AuthenticateUserMessageRequest>(this, async (request) => await ValidateTaskWithUserAsync(request));
             Messenger.Default.Register<AuthenticateUserMessageResult>(this, async (result) => await OnAuthenticateUserMessageResult(result));
-            Messenger.Default.Register<OnSubmittanceMessage>(this, async (e) => await OnSubmittanceAsync(e));
+            Messenger.Default.Register<OnSubmitMessage>(this, async (e) => await OnSubmitAsync(e));
         }
 
-        protected virtual async Task OnSubmittanceAsync(OnSubmittanceMessage e)
+        private void ThemeSelector_OnThemeChanged(object sender, object e)
+        {
+            ForegroundColor = GetStandardTextColorBrush();
+        }
+
+        private SolidColorBrush GetStandardTextColorBrush()
+        {
+            var brush = Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;
+
+            if (!ThemeSelector.IsLightThemeEnabled)
+            {
+                brush = Application.Current.Resources["SystemControlForegroundAltHighBrush"] as SolidColorBrush;
+            }
+
+            return brush;
+        }
+
+        protected virtual async Task OnSubmitAsync(OnSubmitMessage e)
         {
             if (!e.Handled && e.Sender != null)
             {
-                if (e.Sender is LanguageViewModel)
-                {
-                    if(e.Value != null)
-                    {
-                        BaseService.BaseSettingsService.Application_Culture = e.Value.ToString();
-
-                        if (await BaseService.DialogService.ShowAsync(BaseService.LanguageService.GetString("Warning_Restart"), "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                        {
-                            await RestartApplicationAsync();
-                        }
-                    }
-
-                    e.Handled = true;
-                }
-                else if(e.Sender is ThemeViewModel)
+                if(e.Sender is ThemeViewModel)
                 {
                     if (e.Value != null)
                     {

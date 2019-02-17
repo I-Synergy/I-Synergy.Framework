@@ -1,4 +1,4 @@
-﻿using ISynergy.ViewModels.Base;
+﻿using ISynergy.Mvvm;
 using System;
 
 namespace ISynergy.Locators

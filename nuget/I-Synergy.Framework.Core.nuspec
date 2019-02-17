@@ -2,21 +2,21 @@
 <package >
   <metadata>
     <id>I-Synergy.Framework.Core</id>
-    <version>2018.0.0</version>
+    <version>2019.0.0</version>
     <authors>Ismail Hassani</authors>
     <owners>International Intelligence</owners>
     <iconUrl>https://app.i-synergy.nl/favicon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>I-Synergy Core Framework for .Net Standard 2.0</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2008-2018</copyright>
+    <copyright>Copyright 2008-2019</copyright>
     <tags>I-Synergy Core Framework</tags>
     <projectUrl>https://dev.azure.com/i-synergy/I-Synergy%20Framework</projectUrl>
 
     <dependencies>
       <dependency id="AspNet.Security.OpenIdConnect.Primitives" version="2.0.0" />
-      <dependency id="Flurl" version="2.8.0" />
-      <dependency id="Flurl.Http" version="2.4.0" />
+      <dependency id="Flurl" version="2.8.1" />
+      <dependency id="Flurl.Http" version="2.4.1" />
       <dependency id="Microsoft.CSharp" version="4.5.0" />
       <dependency id="Microsoft.Extensions.Logging" version="2.2.0" />
       <dependency id="Newtonsoft.Json" version="12.0.1" />
