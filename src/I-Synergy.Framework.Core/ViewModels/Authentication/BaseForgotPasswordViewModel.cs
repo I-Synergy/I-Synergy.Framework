@@ -1,8 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
 using ISynergy.Handlers;
+using ISynergy.Mvvm;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Authentication
@@ -91,7 +91,7 @@ namespace ISynergy.ViewModels.Authentication
 
                     await BaseService.BusyService.EndBusyAsync();
 
-                    Messenger.Default.Send(new OnSubmittanceMessage(this, e));
+                    Messenger.Default.Send(new OnSubmitMessage(this, e));
                 }
             }
             finally

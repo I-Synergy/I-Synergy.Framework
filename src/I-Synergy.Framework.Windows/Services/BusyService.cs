@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Data;
+using System;
 using System.Threading.Tasks;
 
 namespace ISynergy.Services

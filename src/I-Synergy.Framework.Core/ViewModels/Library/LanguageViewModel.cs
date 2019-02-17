@@ -1,8 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Events;
+using ISynergy.Mvvm;
 using ISynergy.Services;
-using ISynergy.ViewModels.Base;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Library
@@ -45,7 +45,7 @@ namespace ISynergy.ViewModels.Library
 
         public override Task SubmitAsync(object e)
         {
-            Messenger.Default.Send(new OnSubmittanceMessage(this, Language));
+            Messenger.Default.Send(new OnLanguageChangedMessage(this, Language));
             return Task.CompletedTask;
         }
     }

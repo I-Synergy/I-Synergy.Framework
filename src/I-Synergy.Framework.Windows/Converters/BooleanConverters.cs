@@ -1,11 +1,68 @@
-﻿using ISynergy.Extensions;
+﻿using ISynergy.Converters.Base;
+using ISynergy.Extensions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Converters
 {
+    /// <summary>
+    /// Value converter that applies NOT operator to a <see cref="bool"/> value.
+    /// </summary>
+    public class BoolNegationConverter : IValueConverter
+    {
+        /// <summary>
+        /// Convert a boolean value to its negation.
+        /// </summary>
+        /// <param name="value">The <see cref="bool"/> value to negate.</param>
+        /// <param name="targetType">The type of the target property, as a type reference.</param>
+        /// <param name="parameter">Optional parameter. Not used.</param>
+        /// <param name="language">The language of the conversion. Not used</param>
+        /// <returns>The value to be passed to the target dependency property.</returns>
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return !(value is bool && (bool)value);
+        }
+
+        /// <summary>
+        /// Convert back a boolean value to its negation.
+        /// </summary>
+        /// <param name="value">The <see cref="bool"/> value to negate.</param>
+        /// <param name="targetType">The type of the target property, as a type reference.</param>
+        /// <param name="parameter">Optional parameter. Not used.</param>
+        /// <param name="language">The language of the conversion. Not used</param>
+        /// <returns>The value to be passed to the target dependency property.</returns>
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return !(value is bool && (bool)value);
+        }
+    }
+
+    public class BooleanMultiValueConverter : MultiValueConverterBase
+    {
+        public override object Convert(object[] values, Type targetType, object parameter, string language)
+        {
+            return values.All((item) =>
+            {
+                if(item is bool value)
+                {
+                    return value == true;
+                }
+
+                return false;
+            });
+        }
+
+        public override object[] ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class BoolToStateConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)

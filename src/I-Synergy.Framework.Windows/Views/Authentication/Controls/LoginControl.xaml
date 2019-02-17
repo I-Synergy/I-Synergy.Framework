@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Controls="using:ISynergy.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:Behaviors="using:ISynergy.Behaviors"
     mc:Ignorable="d" Unloaded="UserControl_Unloaded">
 
     <UserControl.Resources>
@@ -17,14 +18,27 @@
         <StackPanel Margin="2,10" VerticalAlignment="Center">
             <TextBlock Text="{CustomResource  Generic_Login}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" />
 
-            <AutoSuggestBox x:Name="TextBox_Username" Header="{CustomResource Generic_Username}" ToolTipService.ToolTip="{CustomResource  Generic_Email}" Text="{Binding Username, Mode=TwoWay}" TextChanged="TextBox_Username_TextChanged" QuerySubmitted="TextBox_Username_QuerySubmitted" SuggestionChosen="TextBox_Username_SuggestionChosen"/>
-            <PasswordBox x:Name="TextBox_Password" Header="{CustomResource Generic_Password}" ToolTipService.ToolTip="{CustomResource  Generic_Password}" Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Uid="TextBox_Password" InputScope="Password" PasswordRevealMode="Peek" KeyDown="TextBox_Password_KeyDown" />
+            <AutoSuggestBox x:Name="TextBox_Username" Behaviors:ValidationBehaviorAttacher.PropertyName="Username" Header="{CustomResource Generic_Username}" ToolTipService.ToolTip="{CustomResource  Generic_Email}" Text="{Binding Username, Mode=TwoWay}" TextChanged="TextBox_Username_TextChanged" QuerySubmitted="TextBox_Username_QuerySubmitted" SuggestionChosen="TextBox_Username_SuggestionChosen"/>
+            <PasswordBox x:Name="TextBox_Password" Behaviors:ValidationBehaviorAttacher.PropertyName="Password" Header="{CustomResource Generic_Password}" ToolTipService.ToolTip="{CustomResource  Generic_Password}" Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Uid="TextBox_Password" InputScope="Password" PasswordRevealMode="Peek" KeyDown="TextBox_Password_KeyDown"/>
 
             <CheckBox x:Name="CheckBox_AutoLogin" IsChecked="{Binding AutoLogin, Mode=TwoWay}" Content="{CustomResource Authentication_AutoLogin}" VerticalContentAlignment="Center" />
             <HyperlinkButton x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{CustomResource Generic_Password_Forgot}" Command="{Binding ForgotPassword_Command}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
             <TextBlock x:Name="TextBox_CapsLockOn" Grid.Row="2" Text="{CustomResource Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
 
-            <Button x:Name="Button_Submit" Content="{CustomResource Generic_Login}" Margin ="5,25" HorizontalAlignment="Right" Command="{Binding Submit_Command}" IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" />
+            <Button x:Name="Button_Submit" 
+                    Content="{CustomResource Generic_Login}" 
+                    Margin ="5,25" 
+                    HorizontalAlignment="Right" 
+                    Command="{Binding Submit_Command}">
+                <i:Interaction.Behaviors>
+                    <Behaviors:MultiBindingBehavior PropertyName="IsEnabled" Converter="{StaticResource BooleanMultiValueConverter}" >
+                        <Behaviors:MultiBindingItem Value="{Binding ISynergyService.BusyService.IsEnabled}" />
+                        <Behaviors:MultiBindingItem Value="{Binding IsValid}" />
+                        <Behaviors:MultiBindingItem Value="{Binding Username, Converter={StaticResource StringToEnabledConverter}}" />
+                        <Behaviors:MultiBindingItem Value="{Binding Password, Converter={StaticResource StringToEnabledConverter}}" />
+                    </Behaviors:MultiBindingBehavior>
+                </i:Interaction.Behaviors>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>

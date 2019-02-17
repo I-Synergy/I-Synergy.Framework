@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ISynergy.Framework.Tests.Base;
+using System;
 using Xunit;
 
 namespace ISynergy.Calculations.Tests
 {
-    public class FinancialTests
+    public class FinancialTests : UnitTest
     {
         [Theory]
-        [Trait(nameof(Financial), Test.Unit)]
         [InlineData(1, 50, 49)]
         [InlineData(100, 120, 0.2)]
         [InlineData(0, 0, 0)]
@@ -19,7 +19,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Financial), Test.Unit)]
         public void CalcPercAmountOfAmountDevideByZeroTest()
         {
             decimal result = Financial.CalcPercAmountOfAmount(0m, 0m);
@@ -27,7 +26,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Financial), Test.Unit)]
         public void CalcAmountOfPercentageTest()
         {
             decimal result = Financial.CalcAmountOfPercentage(121, 21);
@@ -35,7 +33,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Theory]
-        [Trait(nameof(Financial), Test.Unit)]
         [InlineData(1, 50, 49)]
         [InlineData(10, 100, 9)]
         [InlineData(10, 20, 1)]
@@ -47,7 +44,6 @@ namespace ISynergy.Calculations.Tests
         }
 
         [Fact]
-        [Trait(nameof(Financial), Test.Unit)]
         public void CalcMarginPercentageDevideByZeroTest()
         {
             decimal result = Financial.CalcMarginPercentage(100, 0);

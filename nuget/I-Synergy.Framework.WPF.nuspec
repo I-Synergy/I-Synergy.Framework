@@ -14,7 +14,7 @@
     <projectUrl>https://dev.azure.com/i-synergy/I-Synergy%20Framework</projectUrl>
 
     <dependencies>
-      <dependency id="I-Synergy.Framework.Core" version="2018.*" />
+      <dependency id="I-Synergy.Framework.Core" version="2019.*" />
     </dependencies>
   </metadata>
 

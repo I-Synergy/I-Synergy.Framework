@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ISynergy.Framework.Tests.Base;
+using System;
 using Xunit;
 
 namespace ISynergy.Extensions.Tests
 {
-    public class DateTimeExtensionsTests
+    public class DateTimeExtensionsTests : UnitTest
     {
         [Fact]
-        [Trait(nameof(DateTimeExtensions), Test.Unit)]
         public void ToStartOfDayTest()
         {
             DateTime result = new DateTime(1975, 10, 29, 14, 43, 35).ToStartOfDay();
@@ -14,7 +14,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeExtensions), Test.Unit)]
         public void ToEndOfDayTest()
         {
             DateTime result = new DateTime(1975, 10, 29, 14, 43, 35).ToEndOfDay();
@@ -22,7 +21,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeExtensions), Test.Unit)]
         public void ToStartOfYearTest()
         {
             DateTime result = new DateTime().ToStartOfYear(1975);
@@ -30,7 +28,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(DateTimeExtensions), Test.Unit)]
         public void ToEndOfYearTest()
         {
             DateTime result = new DateTime().ToEndOfYear(1975);

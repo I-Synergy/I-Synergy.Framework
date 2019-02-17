@@ -1,12 +1,12 @@
 ﻿using Xunit;
 using System;
+using ISynergy.Framework.Tests.Base;
 
 namespace ISynergy.Handlers.Tests
 {
-    public class GenericStringTests
+    public class GenericStringTests : UnitTest
     {
         [Fact]
-        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringNumericSummand1()
         {
             string result = ("10").IncreaseString2Long(1);
@@ -14,7 +14,6 @@ namespace ISynergy.Handlers.Tests
         }
 
         [Fact]
-        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringNumericSummand3()
         {
             string result = ("6281085010557").IncreaseString2Long(3);
@@ -22,7 +21,6 @@ namespace ISynergy.Handlers.Tests
         }
 
         [Fact]
-        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringAlphaNumericSummand1()
         {
             string result = ("A19").IncreaseString2Long(1);
@@ -30,7 +28,6 @@ namespace ISynergy.Handlers.Tests
         }
 
         [Fact]
-        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringAlphaNumericSummand8()
         {
             string result = ("AZURE02").IncreaseString2Long(8);
@@ -38,7 +35,6 @@ namespace ISynergy.Handlers.Tests
         }
 
         [Fact]
-        [Trait("IncreaseString2Long", Test.Unit)]
         public void IncreaseStringAlphaNumericComplex()
         {
             string result = ("2016AZURE10STAGE001").IncreaseString2Long(99);

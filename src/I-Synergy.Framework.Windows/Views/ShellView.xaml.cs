@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.System;
 using GalaSoft.MvvmLight.Ioc;
+using ISynergy.Helpers;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -18,26 +19,35 @@ namespace ISynergy.Views
     {
         public IShellViewModel ViewModel => SimpleIoc.Default.GetInstance<IShellViewModel>();
 
+        private readonly WeakEventListener<ShellView, object, RoutedEventArgs> WeakRootNavigationViewLoadedEvent = null;
+        private readonly WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs> WeakRootNavigationViewBackRequestedEvent = null;
+
         public ShellView()
         {
             InitializeComponent();
 
             DataContext = ViewModel;
 
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            WeakRootNavigationViewLoadedEvent = new WeakEventListener<ShellView, object, RoutedEventArgs>(this)
+            {
+                OnEventAction = (instance, source, eventargs) => instance.RootNavigationView_Loaded(source, eventargs),
+                OnDetachAction = (listener) => RootNavigationView.Loaded -= listener.OnEvent
+            };
 
-            RootNavigationView.Loaded += RootNavigationView_Loaded;
-            RootNavigationView.BackRequested += RootNavigationView_BackRequested;
-        }
+            RootNavigationView.Loaded += WeakRootNavigationViewLoadedEvent.OnEvent;
 
-        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
+            WeakRootNavigationViewBackRequestedEvent = new WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs>(this)
+            {
+                OnEventAction = (instance, source, eventargs) => instance.RootNavigationView_BackRequested(source, eventargs),
+                OnDetachAction = (listener) => RootNavigationView.BackRequested -= listener.OnEvent
+            };
+
+            RootNavigationView.BackRequested += WeakRootNavigationViewBackRequestedEvent.OnEvent;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
             await ViewModel.InitializeAsync(ContentRootFrame);
         }
 

@@ -4,16 +4,13 @@ namespace System
 {
     public static class DateTimeOffsetExtensions
     {
-        public static string ToUniversalTimeString(this DateTimeOffset self)
-        {
-            string result = self.ToUniversalTime().ToString(Constants.DateTimeOffsetFormat);
-            return result;
-        }
+        public static string ToUniversalTimeString(this DateTimeOffset self) =>
+            self.ToUniversalTime().ToString(Constants.DateTimeOffsetFormat);
 
         public static bool IsInRangeOfDate(this DateTimeOffset self, DateTimeOffset comparer)
         {
             DateTimeOffset start = comparer.ToOffset(self.Offset);
-            DateTimeOffset end = start.AddHours(24);
+            DateTimeOffset end = start.AddDays(1).AddMilliseconds(-1);
 
             if (self.CompareTo(start) >= 0 && self.CompareTo(end) <= 0)
             {

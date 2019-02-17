@@ -1,0 +1,35 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="using:ISynergy.Controls"
+    xmlns:Converters="using:ISynergy.Converters">
+
+    <Converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
+    
+    <Style TargetType="Controls:ControlWrapper">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Controls:ControlWrapper">
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Rectangle x:Name="Indicator" Width="8" Height="28" HorizontalAlignment="Left" VerticalAlignment="Bottom" DataContext="{TemplateBinding Property}" Fill="OrangeRed">
+                            <ToolTipService.ToolTip>
+                                <ToolTip Placement="Mouse">
+                                    <ItemsControl ItemsSource="{Binding Errors, Source={TemplateBinding Property}}" />
+                                </ToolTip>
+                            </ToolTipService.ToolTip>
+
+                            <Rectangle.RenderTransform>
+                                <TranslateTransform X="-12" />
+                            </Rectangle.RenderTransform>
+
+                            <Rectangle.Visibility>
+                                <Binding Converter="{StaticResource InverseBooleanToVisibilityConverter}" Path="IsValid" />
+                            </Rectangle.Visibility>
+                        </Rectangle>
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

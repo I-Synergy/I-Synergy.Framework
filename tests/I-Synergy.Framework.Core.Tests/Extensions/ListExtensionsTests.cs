@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Tests.Base;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,10 +7,9 @@ using Xunit;
 
 namespace ISynergy.Extensions.Tests
 {
-    public class ListExtensionsTests
+    public class ListExtensionsTests : UnitTest
     {
         [Fact]
-        [Trait(nameof(ListExtensionsTests), Test.Unit)]
         public void NullListNonFailableTest()
         {
             List<object> list = null;
@@ -25,7 +25,6 @@ namespace ISynergy.Extensions.Tests
         }
 
         [Fact]
-        [Trait(nameof(ListExtensionsTests), Test.Unit)]
         public void NullListFailableTest()
         {
             Assert.ThrowsAsync<NullReferenceException>(() =>

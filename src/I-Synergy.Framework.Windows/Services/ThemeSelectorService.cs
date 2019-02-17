@@ -8,23 +8,23 @@ using Windows.UI.Xaml;
 
 namespace ISynergy.Services
 {
-    public static class ThemeSelectorService
+    public class ThemeSelectorService : IThemeSelectorService
     {
         private const string SettingsKey = "RequestedTheme";
 
-        public static ElementTheme Theme { get; set; }
-        public static bool IsLightThemeEnabled => Theme == ElementTheme.Light;
+        public object Theme { get; set; }
+        public bool IsLightThemeEnabled => (ElementTheme)Theme == ElementTheme.Light;
 
-        public static event EventHandler<ElementTheme> OnThemeChanged = delegate { };
+        public event EventHandler<object> OnThemeChanged = delegate { };
 
-        public static void Initialize()
+        public void Initialize()
         {
             Theme = LoadThemeFromSetting();
         }
 
-        public static void SwitchTheme()
+        public void SwitchTheme()
         {
-            if (Theme == ElementTheme.Dark)
+            if ((ElementTheme)Theme  == ElementTheme.Dark)
             {
                 SetTheme(ElementTheme.Light);
             }
@@ -34,17 +34,17 @@ namespace ISynergy.Services
             }
         }
 
-        public static void SetTheme(ElementTheme theme)
+        public void SetTheme(object theme)
         {
-            Theme = theme;
+            Theme = (ElementTheme)theme;
 
             SetRequestedTheme();
-            SaveThemeInSetting(Theme);
+            SaveThemeInSetting((ElementTheme)Theme);
 
-            OnThemeChanged(null, Theme);
+            OnThemeChanged(null, (ElementTheme)Theme);
         }
 
-        public static void SetRequestedTheme()
+        public void SetRequestedTheme()
         {
             if (Window.Current.Content is FrameworkElement frameworkElement)
             {
@@ -53,13 +53,13 @@ namespace ISynergy.Services
                     frameworkElement.RequestedTheme = ElementTheme.Light;
                 }
 
-                frameworkElement.RequestedTheme = Theme;
+                frameworkElement.RequestedTheme = (ElementTheme)Theme;
             }
 
             SetupTitlebar();
         }
 
-        private static void SetupTitlebar()
+        private void SetupTitlebar()
         {
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
             {
@@ -72,7 +72,7 @@ namespace ISynergy.Services
                 {
                     titleBar.ButtonBackgroundColor = Colors.Transparent;
 
-                    if (Theme == ElementTheme.Dark)
+                    if ((ElementTheme)Theme == ElementTheme.Dark)
                     {
                         titleBar.ButtonForegroundColor = Colors.White;
                         titleBar.ForegroundColor = Colors.White;
@@ -91,7 +91,7 @@ namespace ISynergy.Services
             }
         }
 
-        private static ElementTheme LoadThemeFromSetting()
+        private object LoadThemeFromSetting()
         {
             ElementTheme cacheTheme = ElementTheme.Light;
 
@@ -109,7 +109,7 @@ namespace ISynergy.Services
             return cacheTheme;
         }
 
-        private static void SaveThemeInSetting(ElementTheme theme)
+        private void SaveThemeInSetting(ElementTheme theme)
         {
             ApplicationData.Current.LocalSettings.Values[SettingsKey] = theme.ToString();
         }

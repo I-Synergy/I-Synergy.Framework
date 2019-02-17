@@ -1,11 +1,10 @@
-﻿using ISynergy.Models.Base;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Models.Accounts
 {
-    public class Module : BaseModel
+    public class Module : ModelBase
     {
         public Module()
         {

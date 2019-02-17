@@ -7,7 +7,7 @@
     <ProjectGuid>{035D0B2D-A55D-42ED-A654-44661E48A2F7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ISynergy.Framework</RootNamespace>
+    <RootNamespace>ISynergy</RootNamespace>
     <AssemblyName>I-Synergy.Framework.Windows</AssemblyName>
     <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
@@ -111,15 +111,33 @@
     <Compile Include="Adapters\FrameAdapter.cs" />
     <Compile Include="Adapters\IFrameAdapter.cs" />
     <Compile Include="Application\BaseApplication.cs" />
-    <Compile Include="Behaviours\AuthorizationBehaviour.cs" />
-    <Compile Include="Behaviours\Base\BehaviorBase.cs" />
-    <Compile Include="Behaviours\NumericTextBoxBehavior.cs" />
+    <Compile Include="Behaviors\Attachers\ValidationBehaviorAttacher.cs" />
+    <Compile Include="Behaviors\AuthorizationBehavior.cs" />
+    <Compile Include="Behaviors\Base\BehaviorBase.cs" />
+    <Compile Include="Behaviors\MultiBindingBehavior.cs" />
+    <Compile Include="Behaviors\MultiBindingBehavior\MultiBindingItem.cs" />
+    <Compile Include="Behaviors\MultiBindingBehavior\MultiBindingItemCollection.cs" />
+    <Compile Include="Behaviors\NumericTextBoxBehavior.cs" />
+    <Compile Include="Behaviors\ValidationBehavior.cs" />
+    <Compile Include="Collections\DependencyObjectCollection.cs" />
     <Compile Include="Common\DeferredNavigation.cs" />
     <Compile Include="Common\DialogBox.cs" />
     <Compile Include="Common\Result.cs" />
     <Compile Include="Controls\BladeView\BladeItem.cs" />
+    <Compile Include="Controls\BladeView\BladeItem.Events.cs" />
+    <Compile Include="Controls\BladeView\BladeItem.Properties.cs" />
+    <Compile Include="Controls\BladeView\BladeMode.cs" />
     <Compile Include="Controls\BladeView\BladeView.cs" />
+    <Compile Include="Controls\BladeView\BladeView.Events.cs" />
+    <Compile Include="Controls\BladeView\BladeView.Properties.cs" />
+    <Compile Include="Controls\ErrorPresenter\ErrorPresenter.xaml.cs">
+      <DependentUpon>ErrorPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Expander\ExpandDirection.cs" />
+    <Compile Include="Controls\Expander\Expander.Constants.cs" />
     <Compile Include="Controls\Expander\Expander.cs" />
+    <Compile Include="Controls\Expander\Expander.Events.cs" />
+    <Compile Include="Controls\Expander\Expander.Properties.cs" />
     <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
     <Compile Include="Controls\LayoutTransformControl\LayoutTransformControl.cs" />
     <Compile Include="Controls\LayoutTransformControl\PropertyChangeEventSource.cs" />
@@ -130,22 +148,26 @@
       <DependentUpon>CompositionShadow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RadioButton\IconRadioButton.cs" />
+    <Compile Include="Controls\HeaderedTextBlock\HeaderedTextBlock.Properties.cs" />
     <Compile Include="Controls\TextBox\DecimalTextBox.cs" />
-    <Compile Include="Controls\TextBlock\HeaderedTextBlock.cs" />
+    <Compile Include="Controls\HeaderedTextBlock\HeaderedTextBlock.cs" />
     <Compile Include="Controls\TextBox\IntegerTextBox.cs" />
     <Compile Include="Controls\TextBox\TextBoxAttached.cs" />
-    <Compile Include="Controls\Tiles\RotatorTile.cs" />
+    <Compile Include="Controls\RotatorTile\RotatorTile.cs" />
     <Compile Include="Controls\Tiles\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Validation\ControlWrapper.cs" />
     <Compile Include="Controls\View.cs" />
     <Compile Include="Controls\Window.cs" />
     <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
     <Compile Include="Controls\Wrappers\InlineCollectionWrapper.cs" />
+    <Compile Include="Converters\Base\MultiValueConverterBase.cs" />
     <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
     <Compile Include="Converters\ByteConverters.cs" />
     <Compile Include="Converters\ClaimsConverters.cs" />
+    <Compile Include="Converters\CollectionConverters.cs" />
     <Compile Include="Converters\ColorConverters.cs" />
     <Compile Include="Converters\CurrencyConverters.cs" />
     <Compile Include="Converters\DashboardConverters.cs" />
@@ -174,6 +196,7 @@
     <Compile Include="Extensions\DispatcherExtensions.cs" />
     <Compile Include="Extensions\ResourceExtensions.cs" />
     <Compile Include="Extensions\SettingsStorageExtensions.cs" />
+    <Compile Include="Functions\LocalizationFunctions.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\ImagePicker.cs" />
@@ -185,7 +208,6 @@
     <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Helpers\UploadImageHelper.cs" />
     <Compile Include="Helpers\VisualHelpers.cs" />
-    <Compile Include="Helpers\WeakEventListener.cs" />
     <Compile Include="Interfaces\Authentication\IForgotPasswordWindow.cs" />
     <Compile Include="Interfaces\Authentication\ILoginView.cs" />
     <Compile Include="Interfaces\Authentication\IPincodeWindow.cs" />
@@ -196,8 +218,8 @@
     <Compile Include="Models\NavigationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
-    <Compile Include="Services\Base\FileServiceBase.cs" />
-    <Compile Include="Services\Base\LoginServiceBase.cs" />
+    <Compile Include="Services\Base\BaseFileService.cs" />
+    <Compile Include="Services\Base\BaseLoginService.cs" />
     <Compile Include="Services\BusyService.cs" />
     <Compile Include="Services\ConverterService.cs" />
     <Compile Include="Services\CustomResourceLoader.cs" />
@@ -205,6 +227,7 @@
     <Compile Include="Services\InfoService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Services\Base\BaseSettingsService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\UIVisualizerService.cs" />
     <Compile Include="Settings\FileDialogSettings.cs" />
@@ -217,7 +240,7 @@
     <Compile Include="Triggers\IntegerDataTrigger.cs" />
     <Compile Include="Triggers\ObjectDataTrigger.cs" />
     <Compile Include="ViewModels\Application\ShellViewModelBase.cs" />
-    <Compile Include="ViewModels\Base\MessageBoxViewModel.cs" />
+    <Compile Include="Mvvm\MessageBoxViewModel.cs" />
     <Compile Include="Views\Authentication\Controls\LoginControl.xaml.cs">
       <DependentUpon>LoginControl.xaml</DependentUpon>
     </Compile>
@@ -258,19 +281,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Flurl">
-      <Version>2.8.0</Version>
+      <Version>2.8.1</Version>
     </PackageReference>
     <PackageReference Include="Flurl.Http">
-      <Version>2.4.0</Version>
+      <Version>2.4.1</Version>
     </PackageReference>
     <PackageReference Include="Mapster">
-      <Version>3.2.0</Version>
+      <Version>3.3.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging">
       <Version>2.2.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.2</Version>
+      <Version>6.2.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.0</Version>
@@ -282,10 +305,30 @@
       <Version>12.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt">
-      <Version>5.3.0</Version>
+      <Version>5.4.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\BladeView\BladeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ErrorPresenter\ErrorPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Expander\Expander.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LayoutTransformControl\LayoutTransformControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Menu\Base_Menu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -294,9 +337,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\HeaderedTextBlock\HeaderedTextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RotatorTile\RotatorTile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Tiles\Tile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Validation\ControlWrapper.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Authentication\Controls\LoginControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -360,7 +419,6 @@
     <Content Include="Assets\Images\Refresh.png" />
     <Content Include="Assets\Images\Warning.png" />
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

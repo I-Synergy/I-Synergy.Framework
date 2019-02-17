@@ -1,7 +1,10 @@
-﻿namespace ISynergy.Services
+﻿using GalaSoft.MvvmLight.Messaging;
+
+namespace ISynergy.Services
 {
     public abstract class BaseService : IBaseService
     {
+        public IMessenger Messenger { get; }
         public IBusyService BusyService { get; }
         public ILanguageService LanguageService { get; }
         public IBaseSettingsService BaseSettingsService { get; }
@@ -14,6 +17,7 @@
         public IConverterService ConverterService { get; }
 
         public BaseService(
+            IMessenger messenger,
             IBusyService busy,
             ILanguageService language,
             ILoginService loginService,
@@ -25,6 +29,7 @@
             IInfoService info,
             IConverterService converter)
         {
+            Messenger = messenger;
             BusyService = busy;
             LanguageService = language;
             BaseSettingsService = settings;
