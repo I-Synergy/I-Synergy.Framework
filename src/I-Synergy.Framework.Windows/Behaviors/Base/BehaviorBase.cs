@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml;
 
-namespace ISynergy.Behaviours.Base
+namespace ISynergy.Behaviors.Base
 {
     /// <summary>
     /// Base class for behaviors that solves 2 problems:

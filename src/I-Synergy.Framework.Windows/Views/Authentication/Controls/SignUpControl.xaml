@@ -5,7 +5,8 @@
     xmlns:Converters="using:ISynergy.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Controls="using:ISynergy.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:Behaviors="using:ISynergy.Behaviors"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -17,13 +18,29 @@
         <StackPanel Margin="2,10" VerticalAlignment="Center">
             <TextBlock Text="{CustomResource Generic_Register}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
 
-            <TextBox x:Name="Text_CompanyName" Header="{CustomResource Relation_Companyname}" Text="{Binding Registration_Name, Mode=TwoWay}" />
-            <TextBox x:Name="Text_Email" Header="{CustomResource Generic_Email}" CharacterCasing="Lower" Text="{Binding Registration_Mail, Mode=TwoWay}" ToolTipService.ToolTip="{CustomResource Generic_Email}" InputScope="EmailSmtpAddress" />
-            <ComboBox x:Name="ComboBox_TimeZone" Header="{CustomResource Generic_TimeZone}" ItemsSource="{Binding TimeZones}" SelectedValuePath="Id" DisplayMemberPath="DisplayName" SelectedValue="{Binding Registration_TimeZone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <PasswordBox x:Name="Text_Password" Header="{CustomResource Generic_Password}" ToolTipService.ToolTip="{CustomResource Generic_Password}" Password="{Binding Registration_Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <PasswordBox x:Name="Text_Password_Retype" Header="{CustomResource Generic_Password_Retype}" ToolTipService.ToolTip="{CustomResource Generic_Password_Retype}" Password="{Binding Registration_Password_Check, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox x:Name="Text_CompanyName" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_Name" Header="{CustomResource Relation_Companyname}" Text="{Binding Registration_Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox x:Name="Text_Email" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_Mail" Header="{CustomResource Generic_Email}" CharacterCasing="Lower" Text="{Binding Registration_Mail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{CustomResource Generic_Email}" InputScope="EmailSmtpAddress" />
+            <ComboBox x:Name="ComboBox_TimeZone" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_TimeZone" Header="{CustomResource Generic_TimeZone}" ItemsSource="{Binding TimeZones}" SelectedValuePath="Id" DisplayMemberPath="DisplayName" SelectedValue="{Binding Registration_TimeZone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <PasswordBox x:Name="Text_Password" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_Password" Header="{CustomResource Generic_Password}" ToolTipService.ToolTip="{CustomResource Generic_Password}" Password="{Binding Registration_Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <PasswordBox x:Name="Text_Password_Retype" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_Password_Check" Header="{CustomResource Generic_Password_Retype}" ToolTipService.ToolTip="{CustomResource Generic_Password_Retype}" Password="{Binding Registration_Password_Check, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <Button x:Name="Button_Register" Content="{CustomResource Generic_Register}" Margin ="5,25" Grid.Row="2" HorizontalAlignment="Left" Command="{Binding Register_Command}" IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" />
+            <Button x:Name="Button_Register" 
+                    Content="{CustomResource Generic_Register}" 
+                    Margin ="5,25" 
+                    HorizontalAlignment="Left" 
+                    Command="{Binding Register_Command}">
+                <i:Interaction.Behaviors>
+                    <Behaviors:MultiBindingBehavior PropertyName="IsEnabled" Converter="{StaticResource BooleanMultiValueConverter}" >
+                        <Behaviors:MultiBindingItem Value="{Binding ISynergyService.BusyService.IsEnabled}" />
+                        <Behaviors:MultiBindingItem Value="{Binding IsValid}" />
+                        <Behaviors:MultiBindingItem Value="{Binding Registration_Name, Converter={StaticResource StringToEnabledConverter}}" />
+                        <Behaviors:MultiBindingItem Value="{Binding Registration_Mail, Converter={StaticResource StringToEnabledConverter}}" />
+                        <Behaviors:MultiBindingItem Value="{Binding Registration_TimeZone, Converter={StaticResource StringToEnabledConverter}}" />
+                        <Behaviors:MultiBindingItem Value="{Binding Registration_Password, Converter={StaticResource StringToEnabledConverter}}" />
+                        <Behaviors:MultiBindingItem Value="{Binding Registration_Password_Check, Converter={StaticResource StringToEnabledConverter}}" />
+                    </Behaviors:MultiBindingBehavior>
+                </i:Interaction.Behaviors>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>

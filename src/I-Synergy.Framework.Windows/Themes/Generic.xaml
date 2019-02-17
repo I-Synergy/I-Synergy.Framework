@@ -9,5 +9,6 @@
         <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/BladeView/BladeView.xaml" />
         <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/Expander/Expander.xaml" />
         <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/LayoutTransformControl/LayoutTransformControl.xaml" />
+        <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/Validation/ControlWrapper.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

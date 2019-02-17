@@ -37,9 +37,5 @@ namespace ISynergy.Fixtures
                 return Value.ToString();
             }
         }
-
-        public void Dispose()
-        {
-        }
     }
 }

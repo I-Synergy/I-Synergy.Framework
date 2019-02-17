@@ -1,11 +1,11 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
-using ISynergy.Behaviours.Base;
+using ISynergy.Behaviors.Base;
 using ISynergy.Providers;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace ISynergy.Behaviours
+namespace ISynergy.Behaviors
 {
     /// <summary>
     /// The available actions to perform when a user is not able to view a specific UI element.

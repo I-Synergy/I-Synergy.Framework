@@ -4,7 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace ISynergy.Behaviours
+namespace ISynergy.Behaviors
 {
     public class NumericTextBoxBehavior : DependencyObject, IBehavior
     {
