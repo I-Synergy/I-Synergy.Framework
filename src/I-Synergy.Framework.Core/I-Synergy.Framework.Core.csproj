@@ -23,11 +23,6 @@
     <OutputPath>..\..\output\I-Synergy.Framework.Core\release</OutputPath>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Models\MasterData\**" />
-    <EmbeddedResource Remove="Models\MasterData\**" />
-    <None Remove="Models\MasterData\**" />
-  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OpenIdConnect.Primitives" Version="2.0.0" />
