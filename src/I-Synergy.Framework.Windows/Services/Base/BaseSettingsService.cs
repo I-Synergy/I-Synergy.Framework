@@ -11,7 +11,7 @@ namespace ISynergy.Services
     {
         Windows.Storage.ApplicationDataContainer localSettings;
 
-        public BaseSettingsService()
+        protected BaseSettingsService()
         {
             localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         }

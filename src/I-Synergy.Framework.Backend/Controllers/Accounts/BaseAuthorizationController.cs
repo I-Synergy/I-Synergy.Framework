@@ -25,7 +25,7 @@ namespace ISynergy.Controllers.Base
         public OpenIddictApplicationManager<OpenIddictApplication> _appManager { get; internal set; }
         public IOptions<IdentityOptions> _identityOptions { get; internal set; }
 
-        public BaseAuthorizationController(
+        protected BaseAuthorizationController(
             IServiceProvider services,
             OpenIddictApplicationManager<OpenIddictApplication> appManager,
             IOptions<IdentityOptions> identityOptions)

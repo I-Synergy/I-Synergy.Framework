@@ -17,7 +17,7 @@ namespace ISynergy.Services
         public INavigationService NavigationService { get; }
         public IAuthenticationService AuthenticationService { get; }
 
-        public BaseLoginService(
+        protected BaseLoginService(
             IContext context,
             IBaseSettingsService settingsService,
             IBusyService busyService,

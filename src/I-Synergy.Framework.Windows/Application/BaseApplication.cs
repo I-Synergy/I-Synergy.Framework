@@ -40,7 +40,7 @@ namespace ISynergy
         public ILogger Logger { get; private set; }
         public IThemeSelectorService ThemeSelector { get; private set; }
 
-        public BaseApplication()
+        protected BaseApplication()
             : base()
         {
             RegisterBaseServices();

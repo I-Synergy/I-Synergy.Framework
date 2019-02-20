@@ -12,8 +12,8 @@ namespace ISynergy.Services
         public IContext Context { get; }
         public IFlurlClient Client { get; }
         public IAuthenticationService AuthenticationService { get; }
-        
-        public BaseRestService(
+
+        protected BaseRestService(
             IContext context,
             IFlurlClient client,
             IAuthenticationService authenticationService)

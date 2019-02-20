@@ -9,7 +9,7 @@ namespace ISynergy.Controllers.Base
     [ApiExplorerSettings(GroupName = "v1")]
     public abstract class BaseController : Controller
     {
-        public BaseController()
+        protected BaseController()
         {
         }
 

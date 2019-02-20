@@ -55,7 +55,7 @@ namespace ISynergy.Mvvm
         public RelayCommand Back_Command { get; private set; }
         public RelayCommand Next_Command { get; private set; }
 
-        public ViewModelDialogWizard(
+        protected ViewModelDialogWizard(
             IContext context,
             IBaseService baseService)
             : base(context, baseService)

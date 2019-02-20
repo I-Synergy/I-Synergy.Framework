@@ -16,7 +16,7 @@ namespace ISynergy.ViewModels.Base
         public bool IsInitialized { get; private set; }
 
         #region Constructors
-        public BaseViewModel(IHostingEnvironment environment, IMemoryCache cache, string currencySymbol, string title)
+        protected BaseViewModel(IHostingEnvironment environment, IMemoryCache cache, string currencySymbol, string title)
             : base()
         {
             Environment = environment;
