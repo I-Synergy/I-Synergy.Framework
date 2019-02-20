@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ISynergy.Exceptions
 {
@@ -17,6 +18,11 @@ namespace ISynergy.Exceptions
 
         public EntityNotFoundException(string message, Exception innerException)
             : base(message, innerException)
+        {
+        }
+
+        protected EntityNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            :base(serializationInfo, streamingContext)
         {
         }
     }

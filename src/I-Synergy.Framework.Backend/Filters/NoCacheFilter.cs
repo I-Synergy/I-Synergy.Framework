@@ -4,7 +4,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace ISynergy.Filters
 {
-    public class NoCacheFilter : ActionFilterAttribute
+    public sealed class NoCacheFilter : ActionFilterAttribute
     {
         public override void OnActionExecuted(ActionExecutedContext context)
         {

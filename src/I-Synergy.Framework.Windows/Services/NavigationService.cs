@@ -55,7 +55,7 @@ namespace ISynergy.Services
             {
                 if (!_pages.ContainsKey(pageKey))
                 {
-                    throw new ArgumentException($"Page not found: {pageKey}. Did you forget to call NavigationService.Configure?", "pageKey");
+                    throw new ArgumentException($"Page not found: {pageKey}. Did you forget to call NavigationService.Configure?", nameof(pageKey));
                 }
                 
                 var navigationResult = ((Frame)Frame).Navigate(_pages[pageKey], parameter, (NavigationTransitionInfo)infoOverride);
@@ -69,7 +69,7 @@ namespace ISynergy.Services
             {
                 if (!_pages.ContainsKey(pageKey))
                 {
-                    throw new ArgumentException($"Page not found: {pageKey}. Did you forget to call NavigationService.Configure?", "pageKey");
+                    throw new ArgumentException($"Page not found: {pageKey}. Did you forget to call NavigationService.Configure?", nameof(pageKey));
                 }
 
                 IView result = (IView)Activator.CreateInstance(_pages[pageKey]);

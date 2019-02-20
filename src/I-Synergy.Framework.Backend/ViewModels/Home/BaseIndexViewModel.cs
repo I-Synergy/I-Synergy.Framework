@@ -7,7 +7,7 @@ namespace ISynergy.ViewModels.Home
 {
     public abstract class BaseIndexViewModel : BaseViewModel
     {
-        public BaseIndexViewModel(
+        protected BaseIndexViewModel(
             IHostingEnvironment environment, 
             IMemoryCache cache, 
             string currencySymbol, 

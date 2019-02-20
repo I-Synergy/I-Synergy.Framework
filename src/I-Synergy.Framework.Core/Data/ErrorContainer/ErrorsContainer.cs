@@ -12,7 +12,7 @@ namespace ISynergy.Data
     /// <typeparam name="T">The type of the error object.</typeparam>
     public class ErrorsContainer<T>
     {
-        private static readonly T[] noErrors = new T[0];
+        private static readonly T[] noErrors = Array.Empty<T>();
         private readonly Action<string> raiseErrorsChanged;
         private readonly Dictionary<string, List<T>> validationResults;
 

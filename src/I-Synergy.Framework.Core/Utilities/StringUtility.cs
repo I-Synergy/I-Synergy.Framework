@@ -2,14 +2,14 @@
 
 namespace ISynergy.Utilities
 {
-    public class StringUtility
+    public static class StringUtility
     {
-        public bool AddDecimalSeperator(bool seperatoradded)
+        public static bool AddDecimalSeperator(bool seperatoradded)
         {
             return true;
         }
 
-        public decimal ConvertStringToDecimal(decimal value, string input, bool seperatoradded)
+        public static decimal ConvertStringToDecimal(decimal value, string input, bool seperatoradded)
         {
             string placeholder;
 

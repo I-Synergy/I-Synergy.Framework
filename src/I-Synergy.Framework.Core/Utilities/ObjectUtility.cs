@@ -19,7 +19,7 @@ namespace ISynergy.Utilities
         public static T Clone<T>(T source)
         {
             // Don't serialize a null object, simply return the default for that object
-            if (Object.ReferenceEquals(source, null))
+            if (source == null)
             {
                 return default;
             }

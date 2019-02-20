@@ -1,6 +1,6 @@
 ﻿namespace ISynergy
 {
-    public class MonitorEventNames
+    public static class MonitorEventNames
     {
         public const string Connected = nameof(Connected);
         public const string Disconnected = nameof(Disconnected);

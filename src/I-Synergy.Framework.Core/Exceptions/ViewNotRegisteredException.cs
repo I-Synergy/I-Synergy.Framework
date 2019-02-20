@@ -40,5 +40,13 @@ namespace ISynergy.Exceptions
             : base(info, context)
         {
         }
+
+        public ViewNotRegisteredException() : base()
+        {
+        }
+
+        public ViewNotRegisteredException(string message) : base(message)
+        {
+        }
     }
 }

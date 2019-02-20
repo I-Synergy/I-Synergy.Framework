@@ -8,7 +8,7 @@ namespace ISynergy.Filters
     /// Checks if HttpResponse content is null.
     /// If it's null, then return a HTTP 404 (Not Found) instead of HTTP 200 (OK).
     /// </summary>
-    public class NullResultFilter : ActionFilterAttribute
+    public sealed class NullResultFilter : ActionFilterAttribute
     {
         public override void OnActionExecuted(ActionExecutedContext context)
         {

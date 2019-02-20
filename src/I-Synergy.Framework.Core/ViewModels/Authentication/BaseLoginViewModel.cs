@@ -19,7 +19,7 @@ namespace ISynergy.ViewModels.Authentication
         public RelayCommand Register_Command { get; set; }
         public RelayCommand ForgotPassword_Command { get; set; }
 
-        public BaseLoginViewModel(
+        protected BaseLoginViewModel(
             IContext context,
             IBaseService baseService)
             : base(context, baseService)

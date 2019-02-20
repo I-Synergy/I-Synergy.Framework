@@ -49,11 +49,8 @@ namespace ISynergy.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            double limit = 0;
-            double test = 0;
-
-            double.TryParse(parameter.ToString(), out limit);
-            double.TryParse(value.ToString(), out test);
+            double.TryParse(parameter.ToString(), out double limit);
+            double.TryParse(value.ToString(), out double test);
 
             if (test < limit)
             {
@@ -73,11 +70,8 @@ namespace ISynergy.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            double limit = 0;
-            double test = 0;
-
-            double.TryParse(parameter.ToString(), out limit);
-            double.TryParse(value.ToString(), out test);
+            double.TryParse(parameter.ToString(), out double limit);
+            double.TryParse(value.ToString(), out double test);
 
             if (test <= limit)
             {
@@ -97,11 +91,8 @@ namespace ISynergy.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            double limit = 0;
-            double test = 0;
-
-            double.TryParse(parameter.ToString(), out limit);
-            double.TryParse(value.ToString(), out test);
+            double.TryParse(parameter.ToString(), out double limit);
+            double.TryParse(value.ToString(), out double test);
 
             if (test > limit)
             {
@@ -121,11 +112,8 @@ namespace ISynergy.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            double limit = 0;
-            double test = 0;
-
-            double.TryParse(parameter.ToString(), out limit);
-            double.TryParse(value.ToString(), out test);
+            double.TryParse(parameter.ToString(), out double limit);
+            double.TryParse(value.ToString(), out double test);
 
             if (test >= limit)
             {

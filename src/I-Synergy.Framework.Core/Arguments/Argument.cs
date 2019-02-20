@@ -120,7 +120,7 @@ namespace System
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotOutOfRange<T>(string paramName, T paramValue, T minimumValue, T maximumValue, Func<T, T, T, bool> validation)
         {
-            IsNotNull("validation", validation);
+            IsNotNull(nameof(validation), validation);
 
             if (!validation(paramValue, minimumValue, maximumValue))
             {
@@ -160,7 +160,7 @@ namespace System
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsMinimal<T>(string paramName, T paramValue, T minimumValue, Func<T, T, bool> validation)
         {
-            IsNotNull("validation", validation);
+            IsNotNull(nameof(validation), validation);
 
             if (!validation(paramValue, minimumValue))
             {

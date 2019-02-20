@@ -3,7 +3,7 @@
 namespace ISynergy.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class ParentIdentityAttribute : Attribute
+    public sealed class ParentIdentityAttribute : Attribute
     {
         public Type PropertyType { get; set; }
 

@@ -50,7 +50,7 @@ namespace ISynergy
         protected IMemoryCache Cache { get; }
         protected CultureInfo Culture { get; }
 
-        public BaseStartup(IHostingEnvironment environment, IConfiguration configuration)
+        protected BaseStartup(IHostingEnvironment environment, IConfiguration configuration)
         {
             Argument.IsNotNull(nameof(environment), environment);
             Argument.IsNotNull(nameof(configuration), configuration);
@@ -307,7 +307,7 @@ namespace ISynergy
         where TDbContext : DbContext
         where TUser : IdentityUser
     {
-        public BaseStartup(IHostingEnvironment environment, IConfiguration configuration)
+        protected BaseStartup(IHostingEnvironment environment, IConfiguration configuration)
             : base(environment, configuration)
         {
         }

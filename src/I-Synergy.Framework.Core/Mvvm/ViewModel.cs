@@ -114,9 +114,9 @@ namespace ISynergy.Mvvm
             set { SetValue(value); }
         }
 
-        private WeakEventListener<IViewModel, object, PropertyChangedEventArgs> WeakViewModelPropertyChangedEvent = null;
+        private readonly WeakEventListener<IViewModel, object, PropertyChangedEventArgs> WeakViewModelPropertyChangedEvent = null;
 
-        public ViewModel(
+        protected ViewModel(
             IContext context, 
             IBaseService baseService)
             : base()

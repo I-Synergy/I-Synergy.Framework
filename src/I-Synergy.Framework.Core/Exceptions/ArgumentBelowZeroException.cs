@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ISynergy.Exceptions
 {
@@ -19,8 +20,16 @@ namespace ISynergy.Exceptions
         {
         }
 
-        //protected ArgumentBelowZeroException(SerializationInfo info, StreamingContext context) : base(info, context)
-        //{
-        //}
+        protected ArgumentBelowZeroException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+
+        public ArgumentBelowZeroException() : base()
+        {
+        }
+
+        public ArgumentBelowZeroException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

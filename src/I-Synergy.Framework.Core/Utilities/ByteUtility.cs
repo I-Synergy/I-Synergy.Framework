@@ -2,7 +2,7 @@
 
 namespace ISynergy.Utilities
 {
-    public class ByteUtility
+    public static class ByteUtility
     {
         public static string WriteBytesToString(string Input, byte[] bytes, int start)
         {

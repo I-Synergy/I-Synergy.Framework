@@ -51,7 +51,9 @@ namespace ISynergy.Views
             await ViewModel.InitializeAsync(ContentRootFrame);
         }
 
+#pragma warning disable CA1822 // Mark members as static
         private void NavigationItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
         {
             if(args.InvokedItem != null && args.InvokedItem is NavigationItem)
             {
@@ -60,7 +62,9 @@ namespace ISynergy.Views
             }
         }
 
+#pragma warning disable CA1822 // Mark members as static
         private void NavigationViewList_ItemClick(object sender, ItemClickEventArgs e)
+#pragma warning restore CA1822 // Mark members as static
         {
             if (e.ClickedItem != null && e.ClickedItem is NavigationItem)
             {
