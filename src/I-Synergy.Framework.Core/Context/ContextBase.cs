@@ -8,7 +8,7 @@ namespace ISynergy
 {
     public abstract class ContextBase : ObservableClass
     {
-        public ContextBase()
+        protected ContextBase()
         {
             Profiles = new ObservableCollection<Profile>();
             ViewModels = new List<Type>();

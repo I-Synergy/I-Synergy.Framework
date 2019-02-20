@@ -2,7 +2,7 @@
 {
     public class ApiException
     {
-        public string error { get; set; }
-        public string error_description { get; set; }
+        public string Error { get; set; }
+        public string Error_Description { get; set; }
     }
 }

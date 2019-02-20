@@ -126,7 +126,7 @@ namespace ISynergy.ViewModels.Library
             }
         }
 
-        private void SetDirections(int options)
+        private static void SetDirections(int options)
         {
             //switch (options)
             //{

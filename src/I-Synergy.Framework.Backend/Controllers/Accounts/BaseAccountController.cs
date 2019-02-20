@@ -24,7 +24,7 @@ namespace ISynergy.Controllers.Base
         protected WebsiteOptions Websites { get; }
         protected ILogger Logger { get; }
 
-        public BaseAccountController(
+        protected BaseAccountController(
             IEmailSender emailSender,
             ISmsSender smsSender,
             IOptions<WebsiteOptions> websiteSettings,

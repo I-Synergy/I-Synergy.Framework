@@ -2,7 +2,7 @@
 
 namespace ISynergy.Calculations
 {
-    public class Bank
+    public static class Bank
     {
         public static bool CheckAccount(string accountnumber)
         {

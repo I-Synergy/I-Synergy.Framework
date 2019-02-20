@@ -11,7 +11,7 @@ namespace ISynergy.ViewModels.Authentication
     {
         public override string Title { get { return BaseService.LanguageService.GetString("Generic_Password_Forgot"); } }
 
-        public BaseForgotPasswordViewModel(
+        protected BaseForgotPasswordViewModel(
             IContext context,
             IBaseService baseService)
             : base(context, baseService)
@@ -30,7 +30,7 @@ namespace ISynergy.ViewModels.Authentication
             {
                 SetValue(value);
 
-                if (value != null && value != "" && Network.IsValidEMail(value))
+                if (!string.IsNullOrEmpty(value) && Network.IsValidEMail(value))
                 {
                     Mail_Valid = true;
                 }

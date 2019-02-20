@@ -179,7 +179,7 @@ namespace ISynergy.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            if (value is null || value.ToString() == string.Empty)
+            if (string.IsNullOrEmpty(value?.ToString()))
                 return null;
 
             return new BitmapImage

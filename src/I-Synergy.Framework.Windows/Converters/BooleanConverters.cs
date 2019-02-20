@@ -178,11 +178,11 @@ namespace ISynergy.Converters
 
     public abstract class BooleanConverter<T> : DependencyObject, IValueConverter
     {
-        public BooleanConverter()
+        protected BooleanConverter()
         {
         }
 
-        public BooleanConverter(T trueValue, T falseValue)
+        protected BooleanConverter(T trueValue, T falseValue)
         {
             True = trueValue;
             False = falseValue;

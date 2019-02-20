@@ -96,10 +96,13 @@
             set { SetValue(value); }
         }
 
+#pragma warning disable CA1819 
+        // Properties should not return arrays
         /// <summary>
         /// Gets or sets the Wallpaper property value.
         /// </summary>
         public byte[] Wallpaper
+#pragma warning restore CA1819 // Properties should not return arrays
         {
             get { return GetValue<byte[]>(); }
             set { SetValue(value); }

@@ -1,12 +1,12 @@
 ﻿namespace ISynergy
 {
-    public class AuthorizationPolicies
+    public static class AuthorizationPolicies
     {
         public const string Administrator = "Administrator";
         public const string User = "User";
     }
 
-    public class AutorizationRoles
+    public static class AutorizationRoles
     {
         public const string admin_view = "admin_view";
         public const string admin_create = "admin_create";

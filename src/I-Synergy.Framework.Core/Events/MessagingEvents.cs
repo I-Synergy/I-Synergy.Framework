@@ -7,7 +7,7 @@ namespace ISynergy.Events
     {
         public bool Handled { get; set; }
 
-        public EventMessage(object sender)
+        protected EventMessage(object sender)
             : base(sender)
         {
         }
@@ -17,7 +17,7 @@ namespace ISynergy.Events
     {
         public string Query { get; }
 
-        public QueryMessage(object sender, string query)
+        protected QueryMessage(object sender, string query)
             : base(sender)
         {
             Query = query;

@@ -91,7 +91,7 @@ namespace ISynergy.Services
             }
         }
 
-        private object LoadThemeFromSetting()
+        private static object LoadThemeFromSetting()
         {
             ElementTheme cacheTheme = ElementTheme.Light;
 
@@ -109,7 +109,7 @@ namespace ISynergy.Services
             return cacheTheme;
         }
 
-        private void SaveThemeInSetting(ElementTheme theme)
+        private static void SaveThemeInSetting(ElementTheme theme)
         {
             ApplicationData.Current.LocalSettings.Values[SettingsKey] = theme.ToString();
         }

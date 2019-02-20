@@ -31,7 +31,7 @@ namespace ISynergy.Mvvm
 
         public RelayCommand<TEntity> Submit_Command { get; set; }
 
-        public ViewModelDialog(
+        protected ViewModelDialog(
             IContext context,
             IBaseService baseService)
             : base(context, baseService)

@@ -124,12 +124,11 @@ namespace ISynergy.Views.Authentication.Controls
             }
         }
 
-        private void TextBox_Username_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        private static void TextBox_Username_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-
         }
 
-        private void TextBox_Username_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        private static void TextBox_Username_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             if(Network.IsValidEMail(args.SelectedItem.ToString()))
             {

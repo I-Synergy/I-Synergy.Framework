@@ -20,7 +20,7 @@ namespace ISynergy.Processes
     {
         ~ProcessInterface()
         {
-            Dispose(true);
+            Dispose(false);
         }
 
         /// <summary>
@@ -351,40 +351,44 @@ namespace ISynergy.Processes
             }
         }
 
-        protected void Dispose(bool native)
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        protected virtual void Dispose(bool disposing)
         {
-            if (OutputWorker != null)
+            if (disposing)
             {
-                OutputWorker.Dispose();
-                OutputWorker = null;
-            }
+                if (OutputWorker != null)
+                {
+                    OutputWorker.Dispose();
+                    OutputWorker = null;
+                }
 
-            if (ErrorWorker != null)
-            {
-                ErrorWorker.Dispose();
-                ErrorWorker = null;
-            }
+                if (ErrorWorker != null)
+                {
+                    ErrorWorker.Dispose();
+                    ErrorWorker = null;
+                }
 
-            if (Process != null)
-            {
-                Process.Kill();
-                Process.Dispose();
-                Process = null;
-            }
+                if (Process != null)
+                {
+                    Process.Kill();
+                    Process.Dispose();
+                    Process = null;
+                }
 
-            if (InputWriter != null)
-            {
-                InputWriter = null;
-            }
+                if (InputWriter != null)
+                {
+                    InputWriter = null;
+                }
 
-            if (OutputReader != null)
-            {
-                OutputReader = null;
-            }
+                if (OutputReader != null)
+                {
+                    OutputReader = null;
+                }
 
-            if (ErrorReader != null)
-            {
-                ErrorReader = null;
+                if (ErrorReader != null)
+                {
+                    ErrorReader = null;
+                }
             }
         }
 

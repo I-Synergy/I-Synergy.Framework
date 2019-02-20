@@ -7,7 +7,7 @@ namespace ISynergy.Attributes
     /// <summary>
     /// Filters and converts exceptions thrown by an EntityManager implementation to HTTPResponseExceptions.
     /// </summary>
-    public class EntityExceptionsFilterAttribute : ExceptionFilterAttribute
+    public sealed class EntityExceptionsFilterAttribute : ExceptionFilterAttribute
     {
         public override void OnException(ExceptionContext context)
         {

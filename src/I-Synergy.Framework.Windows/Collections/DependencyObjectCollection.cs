@@ -86,7 +86,7 @@ namespace ISynergy.Collections
             CollectionChanged?.Invoke(this, eventArgs);
         }
 
-        private void VerifyType(DependencyObject item)
+        private static void VerifyType(DependencyObject item)
         {
             if (!(item is T))
             {

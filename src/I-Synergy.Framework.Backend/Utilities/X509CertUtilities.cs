@@ -2,7 +2,7 @@
 
 namespace ISynergy.Utilities
 {
-    public class X509CertUtilities
+    public static class X509CertUtilities
     {
         public static X509Certificate2 FindCertFromStore(StoreName name, StoreLocation location, X509FindType findType, object findValue, bool validOnly)
         {

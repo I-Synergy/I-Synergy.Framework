@@ -11,5 +11,17 @@ namespace ISynergy.Exceptions
         {
             Response = response;
         }
+
+        public OpenIdConnectException() : base()
+        {
+        }
+
+        public OpenIdConnectException(string message) : base(message)
+        {
+        }
+
+        public OpenIdConnectException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Enumerations
+﻿using System;
+
+namespace ISynergy.Enumerations
 {
     public enum SoftwareEnvironments
     {
@@ -92,6 +94,7 @@
         YesNo = 4
     }
 
+    [Flags]
     public enum MessageBoxImage
     {
         None = 0,
