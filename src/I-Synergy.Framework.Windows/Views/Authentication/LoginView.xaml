@@ -17,13 +17,8 @@
     </Page.Resources>
 
     <RelativePanel>
-        <Controls:ErrorPresenter x:Name="ErrorPresenter"
-                                  RelativePanel.AlignLeftWithPanel="True"
-                                  RelativePanel.AlignRightWithPanel="True"
-                                  RelativePanel.AlignTopWithPanel="True"/>
-        
         <Grid x:Name="RootLayout"
-              RelativePanel.Below="ErrorPresenter"
+              RelativePanel.AlignTopWithPanel="True"
               RelativePanel.AlignLeftWithPanel="True"
               RelativePanel.AlignRightWithPanel="True"
               RelativePanel.AlignBottomWithPanel="True"
@@ -58,5 +53,10 @@
                 <local:LoginControl HorizontalAlignment="Right" Width="300" Margin="0,1" IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Stretch" />
             </Grid>
         </Grid>
+
+        <Controls:ErrorPresenter x:Name="ErrorPresenter"
+                                  RelativePanel.AlignLeftWithPanel="True"
+                                  RelativePanel.AlignRightWithPanel="True"
+                                  RelativePanel.AlignTopWithPanel="True"/>
     </RelativePanel>
 </v:View>

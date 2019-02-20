@@ -41,7 +41,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
                         .GetJsonAsync<T>(cancellationToken);
                 }
                 catch (Exception f) 
@@ -90,7 +90,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
                         .GetStringAsync(cancellationToken);
 
                     // Return or break.
@@ -144,7 +144,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .WithClient(Client);
 
-                    if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token);
+                    if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token);
 
                     result = await url
                         .PostJsonAsync(data)
@@ -196,7 +196,7 @@ namespace ISynergy.Services
                     result = await new Url(baseUrl)
                         .AppendPathSegments(segments)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
                         .PutJsonAsync(data)
                         .ReceiveJson<T>();
 
@@ -247,7 +247,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
                         .DeleteAsync()
                         .ReceiveJson<int>();
 
