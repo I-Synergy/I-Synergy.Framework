@@ -59,7 +59,7 @@ namespace ISynergy.ViewModels
 
         private readonly IThemeSelectorService ThemeSelector;
 
-        public ShellViewModelBase(
+        protected ShellViewModelBase(
             IContext context,
             IBaseService synergyService,
             IThemeSelectorService themeSelectorService)

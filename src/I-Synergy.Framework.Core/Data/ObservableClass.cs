@@ -27,7 +27,7 @@ namespace ISynergy
         [JsonIgnore]
         public bool IsDirty => Properties.Any(x => x.Value.IsDirty);
 
-        public ObservableClass()
+        protected ObservableClass()
         {
         }
         

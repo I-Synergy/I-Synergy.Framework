@@ -12,7 +12,7 @@ namespace ISynergy.Mvvm
     {
         public RelayCommand<string> Tile_Command { get; set; }
 
-        public ViewModelDashboard(
+        protected ViewModelDashboard(
             IContext context,
             IBaseService baseService)
             : base(context, baseService)

@@ -7,7 +7,7 @@ namespace ISynergy.Services.Base
 {
     public abstract class BaseMessageService : IEmailSender, ISmsSender
     {
-        public BaseMessageService(IOptions<AuthMessageSenderOptions> optionsAccessor, IOptions<MessageServiceOptions> sender)
+        protected BaseMessageService(IOptions<AuthMessageSenderOptions> optionsAccessor, IOptions<MessageServiceOptions> sender)
         {
             Options = optionsAccessor.Value;
             Sender = sender.Value;

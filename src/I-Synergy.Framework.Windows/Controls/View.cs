@@ -18,7 +18,7 @@ namespace ISynergy.Controls.Views
         private readonly WeakEventListener<IView, object, RoutedEventArgs> WeakViewLoadedEvent = null;
         private readonly WeakEventListener<IView, object, RoutedEventArgs> WeakViewUnloadedEvent = null;
 
-        public View()
+        protected View()
         {
             WeakViewLoadedEvent = new WeakEventListener<IView, object, RoutedEventArgs>(this)
             {
