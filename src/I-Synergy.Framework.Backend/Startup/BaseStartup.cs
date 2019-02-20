@@ -303,7 +303,7 @@ namespace ISynergy
         }
     }
 
-    protected abstract class BaseStartup<TDbContext, TUser> : BaseStartup, IAsyncInitialization
+    public abstract class BaseStartup<TDbContext, TUser> : BaseStartup, IAsyncInitialization
         where TDbContext : DbContext
         where TUser : IdentityUser
     {
