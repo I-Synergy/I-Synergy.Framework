@@ -1,7 +1,9 @@
-﻿namespace ISynergy.ViewModels.Manage
+﻿using System.Collections.Generic;
+
+namespace ISynergy.ViewModels.Manage
 {
     public class GenerateRecoveryCodesViewModel
     {
-        public string[] RecoveryCodes { get; set; }
+        public List<string> RecoveryCodes { get; set; }
     }
 }
