@@ -12,8 +12,8 @@ namespace ISynergy.Services
         public IContext Context { get; }
         public IFlurlClient Client { get; }
         public IAuthenticationService AuthenticationService { get; }
-        
-        public BaseRestService(
+
+        protected BaseRestService(
             IContext context,
             IFlurlClient client,
             IAuthenticationService authenticationService)
@@ -41,7 +41,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
                         .GetJsonAsync<T>(cancellationToken);
                 }
                 catch (Exception f) 
@@ -90,7 +90,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
                         .GetStringAsync(cancellationToken);
 
                     // Return or break.
@@ -144,7 +144,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .WithClient(Client);
 
-                    if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token);
+                    if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token);
 
                     result = await url
                         .PostJsonAsync(data)
@@ -196,7 +196,7 @@ namespace ISynergy.Services
                     result = await new Url(baseUrl)
                         .AppendPathSegments(segments)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
                         .PutJsonAsync(data)
                         .ReceiveJson<T>();
 
@@ -247,7 +247,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
                         .DeleteAsync()
                         .ReceiveJson<int>();
 

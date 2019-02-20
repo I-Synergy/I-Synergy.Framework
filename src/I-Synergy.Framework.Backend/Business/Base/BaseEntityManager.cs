@@ -17,7 +17,7 @@ namespace ISynergy.Business.Base
         protected ILogger Logger { get; }
         protected TDbContext Context { get; }
 
-        public BaseEntityManager(TDbContext context, ILoggerFactory loggerFactory)
+        protected BaseEntityManager(TDbContext context, ILoggerFactory loggerFactory)
         {
             Argument.IsNotNull(nameof(context), context);
 

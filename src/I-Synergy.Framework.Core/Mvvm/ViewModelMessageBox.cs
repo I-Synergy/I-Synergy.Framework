@@ -105,7 +105,7 @@ namespace ISynergy.Mvvm
         public RelayCommand Yes_Command { get; set; }
         public RelayCommand No_Command { get; set; }
 
-        public ViewModelMessageBox(
+        protected ViewModelMessageBox(
             IContext context,
             IBaseService baseService, 
             string message, 

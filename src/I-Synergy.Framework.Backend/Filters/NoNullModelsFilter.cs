@@ -10,7 +10,7 @@ namespace ISynergy.Filters
     /// and tries to add a model error to the model state.
     /// Only optional parameters with a default value of null are allowed.
     /// </summary>
-    public class NoNullModelsFilter : ActionFilterAttribute
+    public sealed class NoNullModelsFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

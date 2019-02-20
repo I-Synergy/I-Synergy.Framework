@@ -43,7 +43,7 @@ namespace ISynergy.Business.Base
         public SignInManager<TUser> SignInManager { get; }
         public RoleManager<IdentityRole> RoleManager { get; }
 
-        public BaseAccountsManager(
+        protected BaseAccountsManager(
             UserManager<TUser> userManager,
             SignInManager<TUser> signInManager,
             RoleManager<IdentityRole> roleManager,

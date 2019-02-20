@@ -2,7 +2,7 @@
 
 namespace ISynergy
 {
-    public class ClaimTypes
+    public static class ClaimTypes
     {
         //Used by identity token
         public const string AccountIdType = "account_id";

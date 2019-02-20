@@ -52,8 +52,8 @@ namespace ISynergy
                     if (propertyHandler != null)
                     {
                         propertyHandler(this, new PropertyChangedEventArgs("Count"));
-                        propertyHandler(this, new PropertyChangedEventArgs("Keys"));
-                        propertyHandler(this, new PropertyChangedEventArgs("Values"));
+                        propertyHandler(this, new PropertyChangedEventArgs(nameof(Keys)));
+                        propertyHandler(this, new PropertyChangedEventArgs(nameof(Values)));
                     }
                 }, null);
             }

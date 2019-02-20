@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ISynergy.Helpers
 {
-    public class ImageHelper
+    public static class ImageHelper
     {
         public static async Task<BitmapSource> ImageFromClipboardAsync()
         {

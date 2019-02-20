@@ -51,7 +51,7 @@ namespace ISynergy.Views
             await ViewModel.InitializeAsync(ContentRootFrame);
         }
 
-        private void NavigationItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        private static void NavigationItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             if(args.InvokedItem != null && args.InvokedItem is NavigationItem)
             {
@@ -60,7 +60,7 @@ namespace ISynergy.Views
             }
         }
 
-        private void NavigationViewList_ItemClick(object sender, ItemClickEventArgs e)
+        private static void NavigationViewList_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (e.ClickedItem != null && e.ClickedItem is NavigationItem)
             {

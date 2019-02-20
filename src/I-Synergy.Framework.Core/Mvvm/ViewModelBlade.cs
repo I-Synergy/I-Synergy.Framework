@@ -47,7 +47,7 @@ namespace ISynergy.Mvvm
 
         public RelayCommand<TEntity> Submit_Command { get; private set; }
 
-        public ViewModelBlade(
+        protected ViewModelBlade(
             IContext context,
             IBaseService baseService)
             : base(context, baseService)

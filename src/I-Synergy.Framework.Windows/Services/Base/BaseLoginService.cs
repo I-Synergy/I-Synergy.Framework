@@ -17,7 +17,7 @@ namespace ISynergy.Services
         public INavigationService NavigationService { get; }
         public IAuthenticationService AuthenticationService { get; }
 
-        public BaseLoginService(
+        protected BaseLoginService(
             IContext context,
             IBaseSettingsService settingsService,
             IBusyService busyService,
@@ -91,7 +91,7 @@ namespace ISynergy.Services
                 {
                     BusyService.BusyMessage = LanguageService.GetString("Authentication_Authenticating");
 
-                    var securityToken = new JwtSecurityToken(Context.CurrentProfile.Token.id_token);
+                    var securityToken = new JwtSecurityToken(Context.CurrentProfile.Token.Id_Token);
 
                     Context.CurrentProfile.UserInfo = ClaimConverters.ConvertClaimsToUserInfo(securityToken.Claims);
                     Context.CurrentProfile.TokenExpiration = securityToken.ValidTo.ToLocalTime();
@@ -104,7 +104,7 @@ namespace ISynergy.Services
                     Context.CurrentTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
 
 
-                    SettingsService.User_RefreshToken = Context.CurrentProfile.Token.refresh_token;
+                    SettingsService.User_RefreshToken = Context.CurrentProfile.Token.Refresh_Token;
 
                     TelemetryService.UserId = Context.CurrentProfile.UserInfo.Username;
                     TelemetryService.AccountId = Context.CurrentProfile.UserInfo.User_Id.ToString();

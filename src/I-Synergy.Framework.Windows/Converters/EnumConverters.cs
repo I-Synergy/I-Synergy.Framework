@@ -63,11 +63,11 @@ namespace ISynergy.Converters
             throw new NotImplementedException();
         }
 
-        public string GetDescription(Enum value)
+        public static string GetDescription(Enum value)
         {
             if (value is null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             string description = value.ToString();
@@ -130,11 +130,11 @@ namespace ISynergy.Converters
             throw new NotImplementedException();
         }
 
-        public string GetDescription(Enum value)
+        public static string GetDescription(Enum value)
         {
             if (value is null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             string description = value.ToString();

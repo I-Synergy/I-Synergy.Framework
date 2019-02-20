@@ -11,7 +11,7 @@ namespace ISynergy.Services
     {
         Windows.Storage.ApplicationDataContainer localSettings;
 
-        public BaseSettingsService()
+        protected BaseSettingsService()
         {
             localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         }
@@ -161,7 +161,9 @@ namespace ISynergy.Services
             }
         }
 
+#pragma warning disable CA1819 // Properties should not return arrays
         public byte[] Application_Wallpaper
+#pragma warning restore CA1819 // Properties should not return arrays
         {
             get
             {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace ISynergy.ViewModels.Base
         public bool IsInitialized { get; private set; }
 
         #region Constructors
-        public BaseViewModel(IHostingEnvironment environment, IMemoryCache cache, string currencySymbol, string title)
+        protected BaseViewModel(IHostingEnvironment environment, IMemoryCache cache, string currencySymbol, string title)
             : base()
         {
             Environment = environment;
@@ -46,9 +47,31 @@ namespace ISynergy.ViewModels.Base
         #endregion
 
         #region IDisposable Support
-        // This code added to correctly implement the disposable pattern.
-        public virtual void Dispose()
+        // Dispose() calls Dispose(true)
+        public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // NOTE: Leave out the finalizer altogether if this class doesn't
+        // own unmanaged resources, but leave the other methods
+        // exactly as they are.
+        //~ObservableClass()
+        //{
+        //    // Finalizer calls Dispose(false)
+        //    Dispose(false);
+        //}
+
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+            }
+
+            // free native resources if there are any.
         }
         #endregion
     }

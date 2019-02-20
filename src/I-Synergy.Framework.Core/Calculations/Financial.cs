@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Calculations
 {
-    public class Financial
+    public static class Financial
     {
         public static decimal CalcPercAmountOfAmount(decimal previousAmount, decimal actualAmount)
         {

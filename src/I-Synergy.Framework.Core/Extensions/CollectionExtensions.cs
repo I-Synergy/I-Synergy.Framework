@@ -38,7 +38,7 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
         public static bool CanMoveItemUp(this IList list, object item)
         {
-            Argument.IsNotNull("list", list);
+            Argument.IsNotNull(nameof(list), list);
 
             if (item is null)
             {
@@ -68,8 +68,8 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="item"/> is <c>null</c>.</exception>
         public static bool MoveItemUp(this IList list, object item)
         {
-            Argument.IsNotNull("list", list);
-            Argument.IsNotNull("item", item);
+            Argument.IsNotNull(nameof(list), list);
+            Argument.IsNotNull(nameof(item), item);
 
             int currentIndex = list.IndexOf(item);
 
@@ -90,7 +90,7 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
         public static bool CanMoveItemDown(this IList list, object item)
         {
-            Argument.IsNotNull("list", list);
+            Argument.IsNotNull(nameof(list), list);
 
             if (item is null)
             {
@@ -127,8 +127,8 @@ namespace System.Collections
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="index"/> is smaller than 0 or larger than the list count.</exception>
         public static bool MoveItemUpByIndex(this IList list, int index)
         {
-            Argument.IsNotNull("list", list);
-            Argument.IsNotOutOfRange("index", index, 0, list.Count - 1);
+            Argument.IsNotNull(nameof(list), list);
+            Argument.IsNotOutOfRange(nameof(index), index, 0, list.Count - 1);
 
             if (list.Count < index - 1)
             {
@@ -157,8 +157,8 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="item"/> is <c>null</c>.</exception>
         public static bool MoveItemDown(this IList list, object item)
         {
-            Argument.IsNotNull("list", list);
-            Argument.IsNotNull("item", item);
+            Argument.IsNotNull(nameof(list), list);
+            Argument.IsNotNull(nameof(item), item);
 
             int currentIndex = list.IndexOf(item);
 
@@ -180,8 +180,8 @@ namespace System.Collections
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="index"/> is smaller than 0 or larger than the list count.</exception>
         public static bool MoveItemDownByIndex(this IList list, int index)
         {
-            Argument.IsNotNull("list", list);
-            Argument.IsNotOutOfRange("index", index, 0, list.Count - 1);
+            Argument.IsNotNull(nameof(list), list);
+            Argument.IsNotOutOfRange(nameof(index), index, 0, list.Count - 1);
 
             if (list.Count < index - 1)
             {
@@ -210,8 +210,8 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="range"/> is <c>null</c>.</exception>
         public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> range)
         {
-            Argument.IsNotNull("collection", collection);
-            Argument.IsNotNull("range", range);
+            Argument.IsNotNull(nameof(collection), collection);
+            Argument.IsNotNull(nameof(range), range);
 
             foreach (T curItem in range.EnsureNotNull())
             {
@@ -230,8 +230,8 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="range"/> is <c>null</c>.</exception>
         public static void ReplaceRange<T>(this ICollection<T> collection, IEnumerable<T> range)
         {
-            Argument.IsNotNull("collection", collection);
-            Argument.IsNotNull("range", range);
+            Argument.IsNotNull(nameof(collection), collection);
+            Argument.IsNotNull(nameof(range), range);
 
             collection.Clear();
 
@@ -247,7 +247,7 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
         public static void RemoveFirst(this IList list)
         {
-            Argument.IsNotNull("list", list);
+            Argument.IsNotNull(nameof(list), list);
 
             if (list.Count == 0)
             {
@@ -266,7 +266,7 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
         public static void RemoveLast(this IList list)
         {
-            Argument.IsNotNull("list", list);
+            Argument.IsNotNull(nameof(list), list);
 
             if (list.Count == 0)
             {
@@ -297,7 +297,7 @@ namespace System.Collections
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is <c>null</c>.</exception>
         public static ReadOnlyCollection<T> AsReadOnly<T>(this IList<T> collection)
         {
-            Argument.IsNotNull("collection", collection);
+            Argument.IsNotNull(nameof(collection), collection);
 
             return new ReadOnlyCollection<T>(collection);
         }
@@ -310,9 +310,9 @@ namespace System.Collections
         /// <returns>Array.</returns>
         public static Array ToArray(this IEnumerable collection, Type elementType)
         {
-            Argument.IsNotNull("elementType", elementType);
+            Argument.IsNotNull(nameof(elementType), elementType);
 
-            var internalList = new List<object>(collection != null ? collection.Cast<object>() : new object[] { });
+            var internalList = new List<object>(collection != null ? collection.Cast<object>() : Array.Empty<object>());
             var array = Array.CreateInstance(elementType, internalList.Count);
 
             int index = 0;
@@ -372,7 +372,7 @@ namespace System.Collections
         /// <param name="comparer">The comparer.</param>
         public static void Sort<T>(this IList<T> existingSet, Func<T, T, int> comparer = null)
         {
-            Argument.IsNotNull("existingSet", existingSet);
+            Argument.IsNotNull(nameof(existingSet), existingSet);
 
             for (int i = existingSet.Count - 1; i >= 0; i--)
             {

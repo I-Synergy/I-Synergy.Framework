@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Calculations
 {
-    public class Tax
+    public static class Tax
     {
         public static decimal CalcPriceExclVAT(decimal percentage, decimal amountVatIncluded)
         {
