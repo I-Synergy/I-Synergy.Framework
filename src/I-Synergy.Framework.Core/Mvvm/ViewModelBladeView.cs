@@ -150,7 +150,7 @@ namespace ISynergy.Mvvm
 
         public abstract Task RemoveAsync(TEntity e);
 
-        private Task SearchAsync(object e)
+        private static Task SearchAsync(object e)
         {
             throw new NotImplementedException();
         }

@@ -87,7 +87,7 @@ namespace ISynergy.Accessors
             return GetClaimAs(claimType, claimValue, transformFunc);
         }
 
-        private T GetClaimAs<T>(string claimType, string claimValue, TryFunc<string, T> transformFunc)
+        private static T GetClaimAs<T>(string claimType, string claimValue, TryFunc<string, T> transformFunc)
             where T : struct
         {
             if (!transformFunc(claimValue, out var result)) throw new InvalidClaimValueException(claimType);

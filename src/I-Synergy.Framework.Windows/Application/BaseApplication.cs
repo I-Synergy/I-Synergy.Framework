@@ -169,12 +169,12 @@ namespace ISynergy
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
-        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        private void OnNavigated(object sender, NavigationEventArgs e)
+        private static void OnNavigated(object sender, NavigationEventArgs e)
         {
             // Each time a navigation event occurs, update the Back button's visibility
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
@@ -183,7 +183,7 @@ namespace ISynergy
                 AppViewBackButtonVisibility.Collapsed;
         }
 
-        private void OnBackRequested(object sender, BackRequestedEventArgs e)
+        private static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -230,7 +230,7 @@ namespace ISynergy
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private static void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
@@ -353,7 +353,7 @@ namespace ISynergy
             SetContext();
         }
 
-        private void RegisterType(Type implementationType)
+        private static void RegisterType(Type implementationType)
         {
             // Get the Register<T1>() method
             MethodInfo methodInfo =
@@ -371,7 +371,7 @@ namespace ISynergy
             methodInfo.Invoke(SimpleIoc.Default, null);
         }
 
-        private void RegisterType(Type interfaceType, Type implementationType)
+        private static void RegisterType(Type interfaceType, Type implementationType)
         {
             // Get the Register<T1,T2>() method
             MethodInfo methodInfo =
@@ -412,7 +412,7 @@ namespace ISynergy
             CustomXamlResourceLoader.Current = new CustomResourceLoader(SimpleIoc.Default.GetInstance<ILanguageService>());
         }
 
-        private void OnLanguageChanged(OnLanguageChangedMessage e)
+        private static void OnLanguageChanged(OnLanguageChangedMessage e)
         {
             if (!e.Handled && e.Sender is LanguageViewModel && Window.Current.Content is Frame rootFrame)
             {
@@ -434,7 +434,7 @@ namespace ISynergy
             }
         }
 
-        private void UpdateLanguage()
+        private static void UpdateLanguage()
         {
             var localizationFunctions = SimpleIoc.Default.GetInstance<LocalizationFunctions>();
             localizationFunctions.SetLocalizationLanguage(SimpleIoc.Default.GetInstance<IBaseSettingsService>().Application_Culture);
