@@ -7,7 +7,7 @@ namespace ISynergy.Filters
     /// Checks if ModelState is valid.
     /// If the requirements are not met, bad request is set as result.
     /// </summary>
-    public class ValidateModelFilter : ActionFilterAttribute
+    public sealed class ValidateModelFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

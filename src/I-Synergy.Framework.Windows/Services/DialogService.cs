@@ -22,22 +22,22 @@ namespace ISynergy.Services
 
         public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "")
         {
-            return ShowAsync(error.Message, title != "" ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
+            return ShowAsync(error.Message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "")
         {
-            return ShowAsync(message, title != "" ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
+            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "")
         {
-            return ShowAsync(message, title != "" ? title : LanguageService.GetString("TitleInfo"), MessageBoxButton.OK, MessageBoxImage.Information);
+            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleInfo"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "")
         {
-            return ShowAsync(message, title != "" ? title : LanguageService.GetString("TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         public Task ShowGreetingAsync(string name)

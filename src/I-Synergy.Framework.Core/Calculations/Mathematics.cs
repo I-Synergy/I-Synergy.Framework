@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Calculations
 {
-    public class Mathematics
+    public static class Mathematics
     {
         /// <summary>
         /// Checkt of het getal even is

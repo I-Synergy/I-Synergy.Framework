@@ -1,6 +1,6 @@
 ﻿namespace ISynergy
 {
-    public class RoleNames
+    public static class RoleNames
     {
         public const string Guest = "Guest";
         public const string User = "User";

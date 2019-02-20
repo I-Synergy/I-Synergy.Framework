@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Dialogs
+﻿using System.Collections.Generic;
+
+namespace ISynergy.Dialogs
 {
     /// <summary>
     /// Settings for <see cref="FileDialog"/>.
@@ -36,7 +38,7 @@
         /// <summary>
         /// Gets the file names of all selected files in the dialog box.
         /// </summary>
-        public string[] FileNames { get; set; } = { string.Empty };
+        public List<string> FileNames { get; set; } = new List<string> { string.Empty };
 
         /// <summary>
         /// Gets or sets the current file name filter string, which determines the choices that

@@ -1,6 +1,6 @@
 ﻿namespace ISynergy
 {
-    public class Constants
+    public static class Constants
     {
         public const int DefaultPageSize = 250;
         public const int TopDimension = 5;
@@ -50,7 +50,7 @@
         public const string TemporaryUrl = @"temp:///";
     }
 
-    public class ExceptionConstants
+    public static class ExceptionConstants
     {
         public const string Error_547 = "The DELETE statement conflicted with the REFERENCE constraint";
     }

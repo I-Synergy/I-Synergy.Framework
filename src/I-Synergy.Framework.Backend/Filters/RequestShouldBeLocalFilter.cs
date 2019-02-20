@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ISynergy.Filters
 {
-    public class RequestShouldBeLocalFilter : ActionFilterAttribute
+    public sealed class RequestShouldBeLocalFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

@@ -16,7 +16,7 @@ namespace ISynergy.Services
         public IInfoService InfoService { get; }
         public IConverterService ConverterService { get; }
 
-        public BaseService(
+        protected BaseService(
             IMessenger messenger,
             IBusyService busy,
             ILanguageService language,

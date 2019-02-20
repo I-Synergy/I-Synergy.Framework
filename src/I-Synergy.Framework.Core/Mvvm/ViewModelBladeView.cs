@@ -67,7 +67,7 @@ namespace ISynergy.Mvvm
         public RelayCommand<object> Search_Command { get; set; }
         public RelayCommand<TEntity> Submit_Command { get; set; }
 
-        public ViewModelBladeView(
+        protected ViewModelBladeView(
             IContext context,
             IBaseService baseService)
             : base(context, baseService)
@@ -150,7 +150,7 @@ namespace ISynergy.Mvvm
 
         public abstract Task RemoveAsync(TEntity e);
 
-        private Task SearchAsync(object e)
+        private static Task SearchAsync(object e)
         {
             throw new NotImplementedException();
         }

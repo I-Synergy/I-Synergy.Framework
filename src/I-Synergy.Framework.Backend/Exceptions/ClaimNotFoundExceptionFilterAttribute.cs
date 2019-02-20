@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ISynergy.Exceptions
 {
-    public class ClaimNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
+    public sealed class ClaimNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
     {
         public override void OnException(ExceptionContext context)
         {

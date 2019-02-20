@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ISynergy.Exceptions
 {
@@ -21,6 +22,10 @@ namespace ISynergy.Exceptions
 
         public UnexpectedEnumValueException(Type enumClass, object value)
             : base($"The value({enumClass}) of Enum type '{value}' was unexpected.")
+        {
+        }
+
+        protected UnexpectedEnumValueException(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         {
         }
     }

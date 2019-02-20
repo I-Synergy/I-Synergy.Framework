@@ -6,7 +6,7 @@ namespace ISynergy.Helpers
 {
     public class TitleBarHelper : INotifyPropertyChanged
     {
-        private static TitleBarHelper _instance = new TitleBarHelper();
+        private static readonly TitleBarHelper _instance = new TitleBarHelper();
         private static CoreApplicationViewTitleBar _coreTitleBar;
         private Thickness _titlePosition;
         private Visibility _titleVisibility;
@@ -84,7 +84,7 @@ namespace ISynergy.Helpers
             TitlePosition = CalculateTilebarOffset(_coreTitleBar.SystemOverlayLeftInset, _coreTitleBar.Height);
         }
 
-        private Thickness CalculateTilebarOffset(double leftPosition, double height)
+        private static Thickness CalculateTilebarOffset(double leftPosition, double height)
         {
             // top position should be 6 pixels for a 32 pixel high titlebar hence scale by actual height
             var correctHeight = height / 32 * 6;

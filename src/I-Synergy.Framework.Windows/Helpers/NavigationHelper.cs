@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Helpers
 {
-    public class NavigationHelper
+    public static class NavigationHelper
     {
         /// <summary>
         /// Looks for a child control within a parent by name

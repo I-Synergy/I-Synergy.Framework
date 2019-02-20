@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Handlers
 {
-    public class Network
+    public static class Network
     {
         public static Task<bool> IsInternetConnectionAvailable()
         {

@@ -45,7 +45,7 @@ namespace ISynergy.Services
         {
             if (DateTime.Now.CompareTo(Context.CurrentProfile?.TokenExpiration) >= 0 && Context.CurrentProfile?.Token != null)
             {
-                await AuthenticateWithRefreshTokenAsync(Context.CurrentProfile?.Token.refresh_token);
+                await AuthenticateWithRefreshTokenAsync(Context.CurrentProfile?.Token.Refresh_Token);
             }
         }
 
@@ -61,7 +61,7 @@ namespace ISynergy.Services
                 //Check if access-token is expired
                 if (ex.Call.HttpStatus == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    await AuthenticateWithRefreshTokenAsync(Context.CurrentProfile?.Token.refresh_token);
+                    await AuthenticateWithRefreshTokenAsync(Context.CurrentProfile?.Token.Refresh_Token);
 
                     if (Context.CurrentProfile?.Token is null)
                     {
@@ -95,7 +95,7 @@ namespace ISynergy.Services
                         .SetQueryParams(queryparameters)
                         .WithClient(Client);
 
-                    if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token);
+                    if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token);
 
                     result = await url.GetJsonAsync<T>(cancellationToken);
 
@@ -138,12 +138,12 @@ namespace ISynergy.Services
                         .WithClient(Client)
                         .PostUrlEncodedAsync(new Grant
                         {
-                            grant_type = Grant_Types.password,
-                            username = username,
-                            password = password,
-                            client_id = Context.Client_Id,
-                            client_secret = Context.Client_Secret,
-                            scope = Grant_Scopes.password
+                            Grant_Type = Grant_Types.password,
+                            Username = username,
+                            Password = password,
+                            Client_Id = Context.Client_Id,
+                            Client_Secret = Context.Client_Secret,
+                            Scope = Grant_Scopes.password
                         })
                         .ReceiveJson<Token>();
 
@@ -172,10 +172,10 @@ namespace ISynergy.Services
                         .WithClient(Client)
                         .PostUrlEncodedAsync(new Grant
                         {
-                            grant_type = Grant_Types.client_credentials,
-                            client_id = Context.Client_Id,
-                            client_secret = Context.Client_Secret,
-                            scope = Grant_Scopes.client_credentials
+                            Grant_Type = Grant_Types.client_credentials,
+                            Client_Id = Context.Client_Id,
+                            Client_Secret = Context.Client_Secret,
+                            Scope = Grant_Scopes.client_credentials
                         })
                         .ReceiveJson<Token>()
                 };
@@ -206,10 +206,10 @@ namespace ISynergy.Services
                         .WithClient(Client)
                         .PostUrlEncodedAsync(new Grant
                         {
-                            grant_type = Grant_Types.refresh_token,
-                            refresh_token = refreshtoken,
-                            client_id = Context.Client_Id,
-                            client_secret = Context.Client_Secret
+                            Grant_Type = Grant_Types.refresh_token,
+                            Refresh_Token = refreshtoken,
+                            Client_Id = Context.Client_Id,
+                            Client_Secret = Context.Client_Secret
                         })
                         .ReceiveJson<Token>()
                 };
@@ -239,15 +239,15 @@ namespace ISynergy.Services
 
                 if (api_ex != null)
                 {
-                    if (api_ex.error == Constants.InvalidGrantError)
+                    if (api_ex.Error == Constants.InvalidGrantError)
                     {
                         await DialogService.ShowErrorAsync(
                             LanguageService.GetString("EX_ACCOUNT_LOGIN_FAILED"));
                     }
-                    else if (api_ex.error == Constants.AuthenticationError || api_ex.error == Constants.UnauthorizedClientError)
+                    else if (api_ex.Error == Constants.AuthenticationError || api_ex.Error == Constants.UnauthorizedClientError)
                     {
                         await DialogService.ShowErrorAsync(
-                            LanguageService.GetString(api_ex.error_description));
+                            LanguageService.GetString(api_ex.Error_Description));
                     }
                     else
                     {
@@ -278,7 +278,7 @@ namespace ISynergy.Services
                     result = await new Url(Context.AccountUrl)
                         .AppendPathSegments(segments)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
                         .PutJsonAsync(data)
                         .ReceiveJson<T>();
 
@@ -326,7 +326,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .WithClient(Client);
 
-                    if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token);
+                    if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token);
 
                     result = await url
                         .PostJsonAsync(data)
@@ -376,7 +376,7 @@ namespace ISynergy.Services
                         .AppendPathSegments(segments)
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
-                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
+                        .WithOAuthBearerToken(Context.CurrentProfile?.Token.Access_Token)
                         .DeleteAsync()
                         .ReceiveJson<int>();
 

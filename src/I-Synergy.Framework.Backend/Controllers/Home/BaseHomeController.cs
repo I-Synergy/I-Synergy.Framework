@@ -11,7 +11,7 @@ namespace ISynergy.Controllers.Base
     {
         protected IHostingEnvironment _environment;
 
-        public BaseHomeController(IHostingEnvironment environment)
+        protected BaseHomeController(IHostingEnvironment environment)
             : base()
         {
             _environment = environment;

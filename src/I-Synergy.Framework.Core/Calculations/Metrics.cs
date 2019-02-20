@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Calculations
 {
-    public class Metric
+    public static class Metric
     {
         /// <summary>
         /// Berekend het oppervlakte

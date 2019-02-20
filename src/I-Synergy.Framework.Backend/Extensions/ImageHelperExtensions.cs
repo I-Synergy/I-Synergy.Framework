@@ -13,7 +13,7 @@ namespace ISynergy.Extensions
 
             string img = "";
 
-            var props = (attributes != null) ? attributes.GetType().GetProperties().ToDictionary(x => x.Name, x => x.GetValue(attributes)) : null;
+            var props = attributes?.GetType().GetProperties().ToDictionary(x => x.Name, x => x.GetValue(attributes));
 
             var attrs = (props is null)
                 ? string.Empty

@@ -14,9 +14,12 @@ namespace ISynergy.Helpers
 
         public async Task<byte[]> GetImageAsync()
         {
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            var picker = new FileOpenPicker
+            {
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary
+            };
+
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".bmp");
             picker.FileTypeFilter.Add(".gif");

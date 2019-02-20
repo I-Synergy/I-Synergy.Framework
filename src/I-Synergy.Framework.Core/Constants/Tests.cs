@@ -1,6 +1,6 @@
 ﻿namespace ISynergy
 {
-    public class Test
+    public static class Test
     {
         public const string Unit = "Unit";
         public const string Integration = "Integration";
