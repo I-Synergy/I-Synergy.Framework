@@ -362,10 +362,9 @@ namespace ISynergy.ViewModels
         protected Task OpenColorsAsync() =>
             BaseService.UIVisualizerService.ShowDialogAsync(typeof(ThemeWindow), new ThemeViewModel(Context, BaseService));
 
-        private Task OpenFeedbackAsync()
+        protected async static Task OpenFeedbackAsync()
         {
-            //Windows.System.Launcher.LaunchUriAsync(new Uri("feedback-hub:"));
-            return Task.CompletedTask;
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("feedback-hub:"));
         }
 
         public async Task RestartApplicationAsync()

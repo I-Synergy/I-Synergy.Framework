@@ -113,7 +113,7 @@ namespace ISynergy.Controllers.Base
             }
         }
 
-        protected string FormatKey(string unformattedKey)
+        protected static string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
             int currentPosition = 0;
