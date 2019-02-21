@@ -1,9 +1,5 @@
 ﻿namespace ISynergy.Models.General
 {
-#pragma warning disable IDE1006 // Naming Styles
-    // Reason: Class is used as payload of a HTTP form post.
-    // Flurl uses the capitalization of the property names as post parameter keys.
-    // There's currently no way to customize this with, for example, an attribute.
     public class Grant
     {
         public string grant_type { get; set; }
@@ -14,7 +10,6 @@
         public string client_secret { get; set; }
         public string scope { get; set; }
     }
-#pragma warning restore IDE1006 // Naming Styles
 
     public static class GrantTypes
     {
