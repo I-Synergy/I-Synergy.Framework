@@ -4,6 +4,7 @@ using ISynergy.Models.Accounts;
 using ISynergy.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Authentication
@@ -16,15 +17,15 @@ namespace ISynergy.ViewModels.Authentication
         string Password { get; set; }
         RelayCommand Register_Command { get; set; }
         string Registration_Mail { get; set; }
-        List<Module> Registration_Modules { get; set; }
+        ObservableCollection<Module> Registration_Modules { get; set; }
         string Registration_Name { get; set; }
         string Registration_Password { get; set; }
         string Registration_Password_Check { get; set; }
         string Registration_TimeZone { get; set; }
         RelayCommand ShowLogin_Command { get; set; }
-        List<TimeZoneInfo> TimeZones { get; set; }
+        ObservableCollection<TimeZoneInfo> TimeZones { get; set; }
         string Username { get; set; }
-        List<string> Usernames { get; set; }
+        ObservableCollection<string> Usernames { get; set; }
 
         Task<bool> AuthenticateAsync();
         Task CheckAutoLoginAsync();

@@ -16,14 +16,12 @@ namespace ISynergy.Behaviors
     {
         private bool _updating;
 
-#pragma warning disable CA1819 
         // Properties should not return arrays
         /// <summary>
         /// Gets or sets the multiple binding value.
         /// </summary>
         /// <value>The multiple binding value.</value>
         public object[] Value
-#pragma warning restore CA1819 // Properties should not return arrays
         {
             get { return (object[])GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }

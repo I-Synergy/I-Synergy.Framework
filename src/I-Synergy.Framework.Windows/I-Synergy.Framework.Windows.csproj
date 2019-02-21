@@ -197,6 +197,7 @@
     <Compile Include="Extensions\ResourceExtensions.cs" />
     <Compile Include="Extensions\SettingsStorageExtensions.cs" />
     <Compile Include="Functions\LocalizationFunctions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\ImagePicker.cs" />
