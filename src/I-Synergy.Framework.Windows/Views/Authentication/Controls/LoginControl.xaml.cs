@@ -124,15 +124,11 @@ namespace ISynergy.Views.Authentication.Controls
             }
         }
 
-#pragma warning disable CA1822 // Mark members as static
         private void TextBox_Username_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-#pragma warning restore CA1822 // Mark members as static
         {
         }
 
-#pragma warning disable CA1822 // Mark members as static
         private void TextBox_Username_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-#pragma warning restore CA1822 // Mark members as static
         {
             if(Network.IsValidEMail(args.SelectedItem.ToString()))
             {

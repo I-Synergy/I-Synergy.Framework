@@ -20,6 +20,9 @@ namespace ISynergy.Controls.Views
 
         protected View()
         {
+            // By default, all pages are cached to increase performance
+            this.NavigationCacheMode = NavigationCacheMode.Required;
+
             WeakViewLoadedEvent = new WeakEventListener<IView, object, RoutedEventArgs>(this)
             {
                 OnEventAction = (instance, source, eventargs) => instance.View_Loaded(source, eventargs),
@@ -60,6 +63,12 @@ namespace ISynergy.Controls.Views
         protected override async void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+
+            if(e.NavigationMode == NavigationMode.Back)
+            {
+                this.NavigationCacheMode = NavigationCacheMode.Disabled;
+            }
+
             await DataContext?.OnDeactivateAsync();
         }
     }
