@@ -10,6 +10,7 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using ISynergy.Events;
 using ISynergy.Mvvm;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.ViewModels.Authentication
 {
@@ -78,8 +79,8 @@ namespace ISynergy.ViewModels.Authentication
                 }
             });
 
-            Usernames = new List<string>();
-            TimeZones = TimeZoneInfo.GetSystemTimeZones().ToList();
+            Usernames = new ObservableCollection<string>();
+            TimeZones = new ObservableCollection<TimeZoneInfo>(TimeZoneInfo.GetSystemTimeZones());
             Registration_TimeZone = "W. Europe Standard Time";
 
             LoginVisible = true;
@@ -91,7 +92,7 @@ namespace ISynergy.ViewModels.Authentication
 
             if(BaseService.BaseSettingsService.Application_Users != null)
             {
-                Usernames = JsonConvert.DeserializeObject<List<string>>(BaseService.BaseSettingsService.Application_Users);
+                Usernames = JsonConvert.DeserializeObject<ObservableCollection<string>>(BaseService.BaseSettingsService.Application_Users);
             }
             
             Username = BaseService.BaseSettingsService.Application_User;
@@ -125,9 +126,9 @@ namespace ISynergy.ViewModels.Authentication
         /// <summary>
         /// Gets or sets the Usernames property value.
         /// </summary>
-        public List<string> Usernames   
+        public ObservableCollection<string> Usernames   
         {
-            get { return GetValue<List<string>>(); }
+            get { return GetValue<ObservableCollection<string>>(); }
             set { SetValue(value); }
         }
         
@@ -185,9 +186,9 @@ namespace ISynergy.ViewModels.Authentication
         /// <summary>
         /// Gets or sets the TimeZones property value.
         /// </summary>
-        public List<TimeZoneInfo> TimeZones
+        public ObservableCollection<TimeZoneInfo> TimeZones
         {
-            get { return GetValue<List<TimeZoneInfo>>(); }
+            get { return GetValue<ObservableCollection<TimeZoneInfo>>(); }
             set { SetValue(value); }
         }
         
@@ -221,9 +222,9 @@ namespace ISynergy.ViewModels.Authentication
         /// <summary>
         /// Gets or sets the Registration_Modules property value.
         /// </summary>
-        public List<Module> Registration_Modules
+        public ObservableCollection<Module> Registration_Modules
         {
-            get { return GetValue<List<Module>>(); }
+            get { return GetValue<ObservableCollection<Module>>(); }
             set { SetValue(value); }
         }
 

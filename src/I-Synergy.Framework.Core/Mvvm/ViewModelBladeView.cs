@@ -239,7 +239,7 @@ namespace ISynergy.Mvvm
             {
                 await BaseService.BusyService.StartBusyAsync();
 
-                Items = new ObservableCollection<TEntity>(await RetrieveItemsAsync() ?? new List<TEntity>());
+                Items = await RetrieveItemsAsync() ?? new ObservableCollection<TEntity>();
                 result = true;
             }
             finally
@@ -250,6 +250,6 @@ namespace ISynergy.Mvvm
             return result;
         }
 
-        protected abstract Task<List<TEntity>> RetrieveItemsAsync();
+        protected abstract Task<ObservableCollection<TEntity>> RetrieveItemsAsync();
     }
 }
