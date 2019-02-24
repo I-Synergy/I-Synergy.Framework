@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace ISynergy
 {
@@ -8,9 +9,15 @@ namespace ISynergy
     /// </summary>
     public class EntityBase : ClassBase, IEntityBase
     {
+        public int Version { get; set; }
         public string Memo { get; set; }
-        public string InputFirst { get; set; }
-        public string InputLast { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset? ChangedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public string ChangedBy { get; set; }
+
+        [Obsolete] public string InputFirst { get; set; }
+        [Obsolete] public string InputLast { get; set; }
     }
 
     public static class EntityBaseExtensions
