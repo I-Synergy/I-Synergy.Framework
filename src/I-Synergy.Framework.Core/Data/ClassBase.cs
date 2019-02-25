@@ -10,6 +10,9 @@ namespace ISynergy
     public abstract class ClassBase : IClassBase
     {
         [Required]
+        public int Version { get; set; }
+
+        [Required]
         public bool IsDeleted { get; set; }
     }
 }
