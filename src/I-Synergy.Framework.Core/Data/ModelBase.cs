@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ISynergy.Data;
+using System;
 
 namespace ISynergy
 {
@@ -14,20 +15,47 @@ namespace ISynergy
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
+
+        /// <summary>
+        /// Gets or sets the Version property value.
+        /// </summary>
+        public int Version
+        {
+            get { return GetValue<int>(); }
+            set { SetValue(value); }
+        }
         
         /// <summary>
-        /// Gets or sets the InputFirst property value.
+        /// Gets or sets the CreatedDate property value.
         /// </summary>
-        public string InputFirst
+        public DateTimeOffset CreatedDate
+        {
+            get { return GetValue<DateTimeOffset>(); }
+            set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the CreatedBy property value.
+        /// </summary>
+        public string CreatedBy
         {
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
 
         /// <summary>
-        /// Gets or sets the InputLast property value.
+        /// Gets or sets the ChangedDate property value.
         /// </summary>
-        public string InputLast
+        public DateTimeOffset? ChangedDate
+        {
+            get { return GetValue<DateTimeOffset?>(); }
+            set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the ChangedBy property value.
+        /// </summary>
+        public string ChangedBy
         {
             get { return GetValue<string>(); }
             set { SetValue(value); }

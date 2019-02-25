@@ -166,6 +166,7 @@
     <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
     <Compile Include="Converters\ByteConverters.cs" />
+    <Compile Include="Converters\ChangeTrackingConverters.cs" />
     <Compile Include="Converters\ClaimsConverters.cs" />
     <Compile Include="Converters\CollectionConverters.cs" />
     <Compile Include="Converters\ColorConverters.cs" />
