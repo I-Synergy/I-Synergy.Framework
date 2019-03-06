@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("I-Synergy.Framework.Windows")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright (c) 2008-2019 International Intelligence")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
