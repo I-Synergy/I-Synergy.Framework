@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.Networking.Connectivity;
 using Windows.System.Profile;
 using Windows.UI.Core;
@@ -233,7 +234,13 @@ namespace ISynergy
         private static void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+
             //TODO: Save application state and stop any background activity
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+            {
+                task.Value?.Unregister(true);
+            }
+
             deferral.Complete();
         }
 
