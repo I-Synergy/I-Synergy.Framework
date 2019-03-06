@@ -120,7 +120,9 @@ namespace ISynergy
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
 
+        #region IDisposable
         // Dispose() calls Dispose(true)
         public void Dispose()
         {
@@ -147,6 +149,6 @@ namespace ISynergy
 
             // free native resources if there are any.
         }
-        #endregion INotifyPropertyChanged
+        #endregion
     }
 }
