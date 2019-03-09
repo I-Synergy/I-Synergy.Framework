@@ -1,4 +1,5 @@
-﻿using ISynergy.Data;
+﻿using GalaSoft.MvvmLight.Messaging;
+using ISynergy.Events;
 using ISynergy.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,16 @@ namespace ISynergy
         {
             get { return GetValue<bool>(); }
             set { SetValue(value); }
+        }
+
+        public bool IsOffline
+        {
+            get { return GetValue<bool>(); }
+            set
+            {
+                SetValue(value);
+                Messenger.Default.Send(new OfflineModeChangedMessage(this));
+            }
         }
     }
 }
