@@ -33,13 +33,24 @@
                         ItemInvoked="NavigationItemInvoked">
             
             <NavigationView.PaneFooter>
-                <NavigationViewList 
-                    ItemsSource="{Binding SecondaryItems}"
-                    ItemTemplate="{StaticResource NavigationViewItemTemplate}"
-                    IsItemClickEnabled="True"
-                    SelectionMode="Single"
-                    ItemClick="NavigationViewList_ItemClick"
-                    VerticalContentAlignment="Bottom"/>
+                <RelativePanel>
+                    <NavigationViewList x:Name="BottomNavList"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        ItemsSource="{Binding SecondaryItems}"
+                        ItemTemplate="{StaticResource NavigationViewItemTemplate}"
+                        IsItemClickEnabled="True"
+                        SelectionMode="Single"
+                        ItemClick="NavigationViewList_ItemClick"
+                        VerticalContentAlignment="Bottom"/>
+                    <ToggleSwitch x:Name="ToggleSwitch_IsOffline"
+                                  RelativePanel.AlignLeftWithPanel="True"
+                                  RelativePanel.Below="BottomNavList"
+                                  Style="{StaticResource OfflineToggleSwitch}"
+                                  OnContent="{CustomResource Generic_Offline}"
+                                  OffContent="{CustomResource Generic_Online}"
+                                  IsOn="{Binding Context.IsOffline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </RelativePanel>
             </NavigationView.PaneFooter>
 
             <NavigationView.Content>

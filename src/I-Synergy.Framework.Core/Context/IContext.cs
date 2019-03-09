@@ -25,5 +25,6 @@ namespace ISynergy
         string CurrencyCode { get; set; }
         bool IsAuthenticated { get; set; }
         bool IsUserAdmin { get; set; }
+        bool IsOffline { get; set; }
     }
 }

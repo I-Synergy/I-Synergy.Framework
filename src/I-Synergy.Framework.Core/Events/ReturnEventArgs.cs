@@ -4,10 +4,11 @@ namespace ISynergy.Events
 {
     public class ReturnEventArgs<T> : EventArgs
     {
-        public T Result { get; set; }
+        public T Value { get; }
 
-        public ReturnEventArgs()
+        public ReturnEventArgs(T value)
         {
+            Value = value;
         }
     }
 }

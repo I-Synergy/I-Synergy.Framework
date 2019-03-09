@@ -156,4 +156,12 @@ namespace ISynergy.Events
         {
         }
     }
+
+    public class OfflineModeChangedMessage : EventMessage
+    {
+        public OfflineModeChangedMessage(object sender)
+            : base(sender)
+        {
+        }
+    }
 }
