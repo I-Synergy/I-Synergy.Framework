@@ -114,4 +114,20 @@ namespace ISynergy.Enumerations
         RefreshTokenAndAuthorizationCodeGrantType,
         ClientCredentialsGrantType,
     }
+
+    public enum TimeOfDayRunnable
+    {
+        TooEarly,
+        CanRun,
+        TooLate,
+    }
+
+    public enum Week
+    {
+        First,
+        Second,
+        Third,
+        Fourth,
+        Last,
+    }
 }
