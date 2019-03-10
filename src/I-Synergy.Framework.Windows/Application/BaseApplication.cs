@@ -244,9 +244,28 @@ namespace ISynergy
             deferral.Complete();
         }
 
+        private ILoggerFactory _factory = null;
+
+        private ILoggerFactory LoggerFactory
+        {
+            get
+            {
+                if (_factory == null)
+                {
+                    _factory = new LoggerFactory();
+                    ConfigureLogger(_factory);
+                }
+
+                return _factory;
+            }
+            set { _factory = value; }
+        }
+
+        protected abstract void ConfigureLogger(ILoggerFactory factory);
+
         protected virtual void RegisterBaseServices()
         {
-            SimpleIoc.Default.Register<ILogger>(() => new LoggerFactory().CreateLogger<BaseApplication>());
+            SimpleIoc.Default.Register<ILogger>(() => LoggerFactory.CreateLogger<BaseApplication>());
             SimpleIoc.Default.Register<IThemeSelectorService, ThemeSelectorService>();
             SimpleIoc.Default.Register<IDialogService, DialogService>();
             SimpleIoc.Default.Register<IInfoService, InfoService>();

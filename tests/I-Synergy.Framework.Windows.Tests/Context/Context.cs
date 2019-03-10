@@ -15,5 +15,6 @@ namespace ISynergy
         public string Client_Id { get; set; }
         public string Client_Secret { get; set; }
         public string TokenUrl { get; set; }
+        public new bool IsOffline { get; set; }
     }
 }
