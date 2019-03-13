@@ -342,7 +342,7 @@ namespace ISynergy.Processes
             {
                 try
                 {
-                    return (Process != null && Process.HasExited == false);
+                    return Process != null && Process.HasExited == false;
                 }
                 catch
                 {

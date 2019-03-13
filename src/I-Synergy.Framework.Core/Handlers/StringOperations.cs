@@ -9,10 +9,9 @@ using System.Xml.Linq;
 
 namespace ISynergy.Handlers
 {
-
     public class StringWriterUTF8 : StringWriter
     {
-        public StringWriterUTF8() : base()
+        public StringWriterUTF8()
         {
         }
 
@@ -27,11 +26,11 @@ namespace ISynergy.Handlers
     {
         private static List<string> GetList(string source)
         {
-            List<string> result = new List<string>();
-            string stringItem = "";
-            bool flag = char.IsDigit(source[0]);
+            var result = new List<string>();
+            var stringItem = "";
+            var flag = char.IsDigit(source[0]);
 
-            foreach (char c in source.EnsureNotNull())
+            foreach (var c in source.EnsureNotNull())
             {
                 if (flag != char.IsDigit(c) || c == '\'')
                 {
@@ -57,14 +56,14 @@ namespace ISynergy.Handlers
 
         public int Compare(object x, object y)
         {
-            string s1 = x as string;
+            var s1 = x as string;
 
             if (s1 is null)
             {
                 return 0;
             }
 
-            string s2 = y as string;
+            var s2 = y as string;
 
             if (s2 is null)
             {
@@ -76,12 +75,12 @@ namespace ISynergy.Handlers
                 return 0;
             }
 
-            int len1 = s1.Length;
-            int len2 = s2.Length;
+            var len1 = s1.Length;
+            var len2 = s2.Length;
 
             // Walk through two the strings with two markers.
-            List<string> str1 = GetList(s1);
-            List<string> str2 = GetList(s2);
+            var str1 = GetList(s1);
+            var str2 = GetList(s2);
 
             while (str1.Count != str2.Count)
             {
@@ -95,13 +94,13 @@ namespace ISynergy.Handlers
                 }
             }
 
-            int x1 = 0; int res = 0; int x2 = 0; string y2 = "";
-            bool status = false;
-            string y1 = ""; bool s1Status = false; bool s2Status = false;
+            var x1 = 0; var res = 0; var x2 = 0; var y2 = "";
+            var status = false;
+            var y1 = ""; var s1Status = false; var s2Status = false;
 
-            int result = 0;
+            var result = 0;
 
-            for (int i = 0; i < str1.Count && i < str2.Count; i++)
+            for (var i = 0; i < str1.Count && i < str2.Count; i++)
             {
                 status = int.TryParse(str1[i].ToString(), out res);
                 if (res == 0)
@@ -147,8 +146,8 @@ namespace ISynergy.Handlers
                     }
                     else
                     {
-                        int st1ZeroCount = str1[i].ToString().Trim().Length - str1[i].ToString().TrimStart(new char[] { '0' }).Length;
-                        int st2ZeroCount = str2[i].ToString().Trim().Length - str2[i].ToString().TrimStart(new char[] { '0' }).Length;
+                        var st1ZeroCount = str1[i].ToString().Trim().Length - str1[i].ToString().TrimStart(new char[] { '0' }).Length;
+                        var st2ZeroCount = str2[i].ToString().Trim().Length - str2[i].ToString().TrimStart(new char[] { '0' }).Length;
                         if (st1ZeroCount > st2ZeroCount)
                             result = -1;
                         else if (st1ZeroCount < st2ZeroCount)
@@ -171,12 +170,12 @@ namespace ISynergy.Handlers
             return result;
         }
     }
-    
+
     public static class StringOperations
     {
         public static string TruncateAt(string text, int maxWidth)
         {
-            string result = text;
+            var result = text;
 
             if (text.Length > maxWidth)
             {

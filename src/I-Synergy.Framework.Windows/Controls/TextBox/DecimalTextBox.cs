@@ -1,12 +1,11 @@
 ﻿using System.Globalization;
-using System.Threading;
 using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Controls
 {
     public class DecimalTextBox : TextBox
     {
-        public DecimalTextBox() : base()
+        public DecimalTextBox()
         {
             if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
             {
@@ -39,7 +38,7 @@ namespace ISynergy.Controls
         {
             if (e.Key == global::Windows.System.VirtualKey.Decimal)
             {
-                string separator = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+                var separator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
                 e.Handled = true;
 
@@ -55,7 +54,7 @@ namespace ISynergy.Controls
 
         private void DecimalTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(!decimal.TryParse(Text, out decimal result))
+            if(!decimal.TryParse(Text, out var result))
             {
                 if(!string.IsNullOrEmpty(Text) && Text.Length != 0)
                 {

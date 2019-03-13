@@ -6,7 +6,7 @@ namespace ISynergy.Services
     /// <summary>
     /// Service that allows the retrieval of the UI dispatcher.
     /// </summary>
-    public partial interface IDispatcherService
+    public interface IDispatcherService
     {
         /// <summary>
         /// Executes the specified delegate asynchronously with the specified arguments on the thread that the Dispatcher was created on.

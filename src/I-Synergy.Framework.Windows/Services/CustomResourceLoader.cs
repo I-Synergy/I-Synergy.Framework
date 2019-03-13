@@ -5,7 +5,7 @@ namespace ISynergy.Services
 {
     public class CustomResourceLoader : CustomXamlResourceLoader
     {
-        private ILanguageService LanguageService;
+        private readonly ILanguageService LanguageService;
 
         public CustomResourceLoader(ILanguageService languageservice)
         {

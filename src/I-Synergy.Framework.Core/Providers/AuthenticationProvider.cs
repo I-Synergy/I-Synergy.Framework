@@ -6,7 +6,7 @@ namespace ISynergy.Providers
 {
     public class AuthenticationProvider : IAuthenticationProvider
     {
-        public IContext Context { get; private set; }
+        public IContext Context { get; }
 
         public AuthenticationProvider(IContext context)
         {
@@ -20,11 +20,11 @@ namespace ISynergy.Providers
 
         public bool HasAccessToUIElement(object element, object tag, string authorizationTag)
         {
-            string authorizationTagString = authorizationTag as string;
+            var authorizationTagString = authorizationTag;
 
             if (authorizationTag != null && Context.CurrentProfile?.UserInfo != null)
             {
-                string[] roles = authorizationTag.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                var roles = authorizationTag.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (Context.CurrentProfile.UserInfo.Roles.Intersect(roles).Any()) return true;
             }

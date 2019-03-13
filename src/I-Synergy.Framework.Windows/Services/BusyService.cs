@@ -1,6 +1,4 @@
-﻿using ISynergy.Data;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
@@ -43,7 +41,6 @@ namespace ISynergy.Services
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
-
 
         public Task StartBusyAsync(string message = null)
         {

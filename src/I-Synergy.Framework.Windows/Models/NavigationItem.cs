@@ -1,6 +1,4 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using ISynergy.Services;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
@@ -45,7 +43,7 @@ namespace ISynergy.Models
             {
                 SetValue(value);
                 SelectedVisibility = value ? Visibility.Visible : Visibility.Collapsed;
-                SelectedForeground = value 
+                SelectedForeground = value
                     ? Application.Current.Resources["PrimaryMediumBrush"] as SolidColorBrush
                     : Foreground;
             }
@@ -95,7 +93,7 @@ namespace ISynergy.Models
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
-        
+
         public NavigationItem(string name, string symbol, SolidColorBrush foreground, ICommand command, object commandParameter = null)
         {
             Label = name;

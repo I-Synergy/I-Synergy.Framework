@@ -52,13 +52,13 @@ namespace ISynergy.Mvvm
             set { SetValue(value); }
         }
 
-        public RelayCommand Back_Command { get; private set; }
-        public RelayCommand Next_Command { get; private set; }
+        public RelayCommand Back_Command { get; }
+        public RelayCommand Next_Command { get; }
 
         protected ViewModelBladeWizard(
             IContext context,
             IBaseService baseService)
-            : base(context, baseService) 
+            : base(context, baseService)
         {
             Back_Command = new RelayCommand(() => PerformBackAction());
             Next_Command = new RelayCommand(() => PerformNextAction());

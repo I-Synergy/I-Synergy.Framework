@@ -16,7 +16,7 @@ namespace System
         /// <param name="self">a hex string: "FFFFFF", "#000000"</param>
         public static Color HexStringToColor(this string self)
         {
-            string hc = self.ExtractHexDigits();
+            var hc = self.ExtractHexDigits();
 
             if (hc.Length != 6)
             {
@@ -25,19 +25,19 @@ namespace System
                 return Color.Empty;
             }
 
-            string r = hc.Substring(0, 2);
-            string g = hc.Substring(2, 2);
-            string b = hc.Substring(4, 2);
+            var r = hc.Substring(0, 2);
+            var g = hc.Substring(2, 2);
+            var b = hc.Substring(4, 2);
 
-            Color color = Color.Empty;
+            var color = Color.Empty;
 
             try
             {
-                int ri
+                var ri
                    = Int32.Parse(r, System.Globalization.NumberStyles.HexNumber);
-                int gi
+                var gi
                    = Int32.Parse(g, System.Globalization.NumberStyles.HexNumber);
-                int bi
+                var bi
                    = Int32.Parse(b, System.Globalization.NumberStyles.HexNumber);
 
                 color = Color.FromArgb(ri, gi, bi);
@@ -54,12 +54,12 @@ namespace System
 
         public static int CovertString2Numeric(this string self)
         {
-            List<string> iChars = new List<string>();
-            string strResult = string.Empty;
+            var iChars = new List<string>();
+            var strResult = string.Empty;
 
-            foreach (string iChar in iChars.EnsureNotNull())
+            foreach (var iChar in iChars.EnsureNotNull())
             {
-                if (IsInteger(iChar) == true)
+                if (IsInteger(iChar))
                 {
                     strResult = strResult + iChar;
                 }
@@ -72,7 +72,7 @@ namespace System
         {
             try
             {
-                return float.TryParse(self, out float output);
+                return float.TryParse(self, out var output);
             }
             catch (Exception)
             {
@@ -84,7 +84,7 @@ namespace System
         {
             try
             {
-                return decimal.TryParse(self, out decimal output);
+                return decimal.TryParse(self, out var output);
             }
             catch (Exception)
             {
@@ -96,7 +96,7 @@ namespace System
         {
             try
             {
-                return int.TryParse(self, out int output);
+                return int.TryParse(self, out var output);
             }
             catch (Exception)
             {
@@ -106,11 +106,11 @@ namespace System
 
         public static string IncreaseString2Long(this string self, long summand)
         {
-            string numberString = string.Empty;
-            int codePos = self.Length;
+            var numberString = string.Empty;
+            var codePos = self.Length;
 
             // Go back from end of id to the begin while a char is a number
-            for (int i = self.Length - 1; i >= 0; i--)
+            for (var i = self.Length - 1; i >= 0; i--)
             {
                 if (Char.IsDigit(self.Substring(i, 1).ToCharArray()[0]))
                 {
@@ -137,7 +137,7 @@ namespace System
             }
             else
             {
-                long num = long.Parse(numberString) + summand;
+                var num = long.Parse(numberString) + summand;
                 return self.Substring(0, codePos) + num.ToString();
             }
         }
@@ -148,11 +148,11 @@ namespace System
                 return self;
             // dont need to do anything
 
-            string sResult = self;
+            var sResult = self;
             string sChar = null;
             // temp holder for current string char
-            int iEn = 0;
-            int iLineNO = width;
+            var iEn = 0;
+            var iLineNO = width;
 
             while (sResult.Length >= iLineNO)
             {
@@ -183,10 +183,10 @@ namespace System
         public static string ExtractHexDigits(this string self)
         {
             // remove any characters that are not digits (like #)
-            Regex isHexDigit = new Regex("[abcdefABCDEF\\d]+", RegexOptions.Compiled);
-            string newnum = "";
+            var isHexDigit = new Regex("[abcdefABCDEF\\d]+", RegexOptions.Compiled);
+            var newnum = "";
 
-            foreach (char c in self.EnsureNotNull())
+            foreach (var c in self.EnsureNotNull())
                 if (isHexDigit.IsMatch(c.ToString())) newnum += c.ToString();
 
             return newnum;
@@ -209,8 +209,8 @@ namespace System
 
         public static int CountLines(this string self)
         {
-            int pos = 0;
-            int count = 1;
+            var pos = 0;
+            var count = 1;
             do
             {
                 pos = self.IndexOf(Environment.NewLine, pos);
@@ -224,7 +224,7 @@ namespace System
 
         public static string FirstLine(this string self)
         {
-            int pos = self.IndexOf(Environment.NewLine);
+            var pos = self.IndexOf(Environment.NewLine);
             if (pos == -1)
                 return self;
 
@@ -233,7 +233,7 @@ namespace System
 
         public static bool IsAlphaNumeric(this string s)
         {
-            return !(new Regex("[^a-zA-Z0-9]")).IsMatch(s);
+            return !new Regex("[^a-zA-Z0-9]").IsMatch(s);
         }
 
         public static char LastCharAt(this string self, int pos)
@@ -288,7 +288,7 @@ namespace System
                     ret.Add(self.Substring(pos1, len));
 
                     pos1 = poses[0];
-                    for (int j = 1; j <= poses.Count; ++j)
+                    for (var j = 1; j <= poses.Count; ++j)
                     {
                         if (j == poses.Count)
                             len = self.Length - poses[j - 1];
@@ -311,33 +311,29 @@ namespace System
 
         public static string ReplaceLastOf(this string str, string fromStr, string toStr)
         {
-            int lastIndexOf = str.LastIndexOf(fromStr);
+            var lastIndexOf = str.LastIndexOf(fromStr);
             if (lastIndexOf < 0)
                 return str;
 
-            string leading = str.Substring(0, lastIndexOf);
-            int charsToEnd = str.Length - (lastIndexOf + fromStr.Length);
-            string trailing = str.Substring(lastIndexOf + fromStr.Length, charsToEnd);
+            var leading = str.Substring(0, lastIndexOf);
+            var charsToEnd = str.Length - (lastIndexOf + fromStr.Length);
+            var trailing = str.Substring(lastIndexOf + fromStr.Length, charsToEnd);
 
             return leading + toStr + trailing;
         }
 
-        /// <summary>
-		/// Convert camel-cased string to camel-cased string with separator.
-		/// </summary>
-		/// <param name="source">Source string</param>
-		/// <param name="separator">Separator char</param>
-		/// <returns>String with separator</returns>
-		public static string ToCamelWithSeparator(this string source, char separator)
+        public static string ToCamelWithSeparator(this string source, char separator)
         {
             if (string.IsNullOrEmpty(source))
+            {
                 return source;
+            }
 
             var sourceArray = source.ToCharArray();
 
             var sb = new StringBuilder(sourceArray[0].ToString());
 
-            for (int i = 1; i <= sourceArray.Length - 1; i++) // Index 0 is skipped.
+            for (var i = 1; i <= sourceArray.Length - 1; i++) // Index 0 is skipped.
             {
                 if (char.IsUpper(sourceArray[i]) && !char.IsUpper(sourceArray[i - 1]))
                     sb.Append(separator);
@@ -366,7 +362,7 @@ namespace System
         public static string Wrap(this string a, int width)
         {
             int pos, next;
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             // Lucidity check
             if (width < 1)
@@ -376,7 +372,7 @@ namespace System
             for (pos = 0; pos < a.Length; pos = next)
             {
                 // Find end of line
-                int eol = a.IndexOf(Environment.NewLine, pos);
+                var eol = a.IndexOf(Environment.NewLine, pos);
 
                 if (eol == -1)
                     next = eol = a.Length;
@@ -388,7 +384,7 @@ namespace System
                 {
                     do
                     {
-                        int len = eol - pos;
+                        var len = eol - pos;
 
                         if (len > width)
                             len = BreakLine(a, pos, width);
@@ -410,7 +406,6 @@ namespace System
             return sb.ToString();
         }
 
-
         /// <summary>
         /// Locates position to break the given line so as to avoid
         /// breaking words.
@@ -419,10 +414,10 @@ namespace System
         /// <param name="pos">Index where line of text starts</param>
         /// <param name="max">Maximum line length</param>
         /// <returns>The modified line length</returns>
-        public static int BreakLine(string text, int pos, int max)
+        public static int BreakLine(this string text, int pos, int max)
         {
             // Find last whitespace in line
-            int i = max - 1;
+            var i = max - 1;
 
             while (i >= 0 && !Char.IsWhiteSpace(text[pos + i]))
                 i--;
@@ -442,11 +437,11 @@ namespace System
 
         public static byte[] GetBytes(this string value, int start, int NumBytes)
         {
-            StringBuilder g = new StringBuilder(value);
-            byte[] Bytes = new byte[NumBytes];
+            var g = new StringBuilder(value);
+            var Bytes = new byte[NumBytes];
             string temp;
-            int CharPos = start;
-            for (int i = 0; i < NumBytes; i++)
+            var CharPos = start;
+            for (var i = 0; i < NumBytes; i++)
             {
                 temp = g[CharPos++].ToString();
                 temp += g[CharPos++].ToString();

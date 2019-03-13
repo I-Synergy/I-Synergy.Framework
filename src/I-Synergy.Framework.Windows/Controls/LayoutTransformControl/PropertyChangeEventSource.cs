@@ -50,8 +50,8 @@ namespace ISynergy.Controls
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var target = (PropertyChangeEventSource<TPropertyType>)d;
-            TPropertyType oldValue = (TPropertyType)e.OldValue;
-            TPropertyType newValue = target.Value;
+            var oldValue = (TPropertyType)e.OldValue;
+            var newValue = target.Value;
             target.OnValueChanged(oldValue, newValue);
         }
 

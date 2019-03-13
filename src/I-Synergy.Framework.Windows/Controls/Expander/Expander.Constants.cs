@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ISynergy.Controls
+﻿namespace ISynergy.Controls
 {
     /// <summary>
     /// The <see cref="Expander"/> control allows user to show/hide content based on a boolean state

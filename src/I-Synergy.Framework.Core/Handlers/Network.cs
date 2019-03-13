@@ -8,8 +8,8 @@ namespace ISynergy.Handlers
     {
         public static Task<bool> IsInternetConnectionAvailable()
         {
-            Ping ping = new Ping();
-            PingReply reply = ping.Send("8.8.8.8", 1000, new byte[32], new PingOptions());
+            var ping = new Ping();
+            var reply = ping.Send("8.8.8.8", 1000, new byte[32], new PingOptions());
 
             if(reply.Status == IPStatus.Success)
             {

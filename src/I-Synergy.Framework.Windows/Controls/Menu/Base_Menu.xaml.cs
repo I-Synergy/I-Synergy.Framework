@@ -4,9 +4,9 @@
 
 namespace ISynergy.Views.Base.Controls
 {
-    public sealed partial class Base_Menu 
+    public sealed partial class Base_Menu
     {
-        private static readonly DependencyProperty Refresh_EnabledProperty = 
+        private static readonly DependencyProperty Refresh_EnabledProperty =
             DependencyProperty.Register(nameof(Refresh_Enabled), typeof(Visibility), typeof(Base_Menu), new PropertyMetadata(Visibility.Visible));
 
         public Visibility Refresh_Enabled

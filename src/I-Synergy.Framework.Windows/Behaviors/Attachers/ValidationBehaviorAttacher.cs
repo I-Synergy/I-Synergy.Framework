@@ -16,7 +16,7 @@ namespace ISynergy.Behaviors
         {
             var control = (Control)dependencyObject;
 
-            BehaviorCollection collection = new BehaviorCollection();
+            var collection = new BehaviorCollection();
 
             var validationBehavior = new ValidationBehavior() { PropertyName = arg.NewValue.ToString() };
 

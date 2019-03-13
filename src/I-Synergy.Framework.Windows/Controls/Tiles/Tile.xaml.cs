@@ -101,9 +101,6 @@ namespace ISynergy.Controls
 
                 case Modes.Small:
                     break;
-
-                default:
-                    break;
             }
         }
     }

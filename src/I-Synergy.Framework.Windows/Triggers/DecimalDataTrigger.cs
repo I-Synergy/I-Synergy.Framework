@@ -13,7 +13,7 @@ namespace ISynergy.Triggers
             set { SetValue(DataValueProperty, value); }
         }
 
-        public static readonly DependencyProperty DataValueProperty = 
+        public static readonly DependencyProperty DataValueProperty =
             DependencyProperty.Register(nameof(DataValue), typeof(decimal), typeof(DecimalDataTrigger), new PropertyMetadata(0m, DataValueChanged));
 
         private static void DataValueChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
@@ -21,8 +21,8 @@ namespace ISynergy.Triggers
             TriggerStateCheck(
                 target,
                 (string)target.GetValue(OperatorProperty),
-                decimal.TryParse(e.NewValue.ToString(), out decimal resultA) ? resultA : 0m,
-                decimal.TryParse(target.GetValue(TriggerValueProperty).ToString(), out decimal resultB) ? resultB : 0m);
+                decimal.TryParse(e.NewValue.ToString(), out var resultA) ? resultA : 0m,
+                decimal.TryParse(target.GetValue(TriggerValueProperty).ToString(), out var resultB) ? resultB : 0m);
         }
         #endregion
 
@@ -41,8 +41,8 @@ namespace ISynergy.Triggers
             TriggerStateCheck(
                 target,
                 (string)target.GetValue(OperatorProperty),
-                decimal.TryParse(target.GetValue(DataValueProperty).ToString(), out decimal resultA) ? resultA : 0m,
-                decimal.TryParse(e.NewValue.ToString(), out decimal resultB) ? resultB : 0m);
+                decimal.TryParse(target.GetValue(DataValueProperty).ToString(), out var resultA) ? resultA : 0m,
+                decimal.TryParse(e.NewValue.ToString(), out var resultB) ? resultB : 0m);
         }
         #endregion
 

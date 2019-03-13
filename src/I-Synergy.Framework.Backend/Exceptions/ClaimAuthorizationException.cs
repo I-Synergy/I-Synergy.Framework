@@ -4,7 +4,7 @@ namespace ISynergy.Exceptions
 {
     public abstract class ClaimAuthorizationException : Exception
     {
-        protected ClaimAuthorizationException() : base()
+        protected ClaimAuthorizationException()
         {
         }
 

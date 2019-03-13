@@ -44,7 +44,7 @@ namespace ISynergy.Controls
             Loaded += CompositionShadow_Loaded;
             Unloaded += CompositionShadow_Unloaded;
 
-            Compositor compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+            var compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             _shadowVisual = compositor.CreateSpriteVisual();
             _dropShadow = compositor.CreateDropShadow();
             _shadowVisual.Shadow = _dropShadow;
@@ -267,7 +267,7 @@ namespace ISynergy.Controls
 
         private void UpdateShadowSize()
         {
-            Vector2 newSize = new Vector2((float)ActualWidth, (float)ActualHeight);
+            var newSize = new Vector2((float)ActualWidth, (float)ActualHeight);
             if (_castingElement != null)
             {
                 newSize = new Vector2((float)_castingElement.ActualWidth, (float)_castingElement.ActualHeight);

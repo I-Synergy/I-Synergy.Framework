@@ -1,11 +1,7 @@
 ﻿using ISynergy.Behaviors.Base;
 using Microsoft.Xaml.Interactivity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;

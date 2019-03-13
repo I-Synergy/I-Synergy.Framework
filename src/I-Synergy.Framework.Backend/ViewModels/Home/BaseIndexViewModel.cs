@@ -8,9 +8,9 @@ namespace ISynergy.ViewModels.Home
     public abstract class BaseIndexViewModel : BaseViewModel
     {
         protected BaseIndexViewModel(
-            IHostingEnvironment environment, 
-            IMemoryCache cache, 
-            string currencySymbol, 
+            IHostingEnvironment environment,
+            IMemoryCache cache,
+            string currencySymbol,
             string title)
             :base(environment, cache, currencySymbol, title)
         {

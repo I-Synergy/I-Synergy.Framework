@@ -45,6 +45,5 @@ namespace ISynergy.Models.Accounts
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
-
     }
 }

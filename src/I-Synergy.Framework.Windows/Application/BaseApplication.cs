@@ -15,7 +15,6 @@ using ISynergy.Views.Library;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,7 +23,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.Networking.Connectivity;
-using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -38,11 +36,10 @@ namespace ISynergy
     public abstract class BaseApplication : Application
     {
         public IContext Context { get; private set; }
-        public ILogger Logger { get; private set; }
-        public IThemeSelectorService ThemeSelector { get; private set; }
+        public ILogger Logger { get; }
+        public IThemeSelectorService ThemeSelector { get; }
 
         protected BaseApplication()
-            : base()
         {
             RegisterBaseServices();
 
@@ -90,7 +87,7 @@ namespace ISynergy
             await HandleException(e.ExceptionObject as Exception);
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             Initialize();
             LaunchApplication();
@@ -100,7 +97,7 @@ namespace ISynergy
         {
             if (args.Kind == ActivationKind.Protocol)
             {
-                ProtocolActivatedEventArgs eventArgs = args as ProtocolActivatedEventArgs;
+                var eventArgs = args as ProtocolActivatedEventArgs;
 
                 // The received URI is eventArgs.Uri.AbsoluteUri
                 if (eventArgs.Uri.AbsoluteUri.Contains("test"))
@@ -147,7 +144,6 @@ namespace ISynergy
                     rootFrame.CanGoBack ?
                     AppViewBackButtonVisibility.Visible :
                     AppViewBackButtonVisibility.Collapsed;
-
             }
 
             if (rootFrame.Content is null)
@@ -186,7 +182,7 @@ namespace ISynergy
 
         private static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            var rootFrame = Window.Current.Content as Frame;
 
             if (GetDescendantFromName(Window.Current.Content, "ContentRootFrame") is Frame _frame)
             {
@@ -321,7 +317,7 @@ namespace ISynergy
             WindowTypes = new List<Type>();
             ViewModelTypes = new List<Type>();
 
-            foreach (Assembly assembly in assemblies)
+            foreach (var assembly in assemblies)
             {
                 ViewModelTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
@@ -359,11 +355,11 @@ namespace ISynergy
                 RegisterType(viewmodel);
             }
 
-            foreach (Type view in ViewTypes.Distinct())
+            foreach (var view in ViewTypes.Distinct())
             {
                 RegisterType(view);
 
-                Type viewmodel = ViewModelTypes.Where(q => q.Name == view.Name.ReplaceLastOf(Constants.View, Constants.ViewModel)).FirstOrDefault();
+                var viewmodel = ViewModelTypes.Where(q => q.Name == view.Name.ReplaceLastOf(Constants.View, Constants.ViewModel)).FirstOrDefault();
 
                 if (viewmodel != null)
                 {
@@ -382,7 +378,7 @@ namespace ISynergy
         private static void RegisterType(Type implementationType)
         {
             // Get the Register<T1>() method
-            MethodInfo methodInfo =
+            var methodInfo =
                 SimpleIoc.Default.GetType().GetMethods()
                          .Where(m => m.Name == nameof(SimpleIoc.Default.Register))
                          .Where(m => m.IsGenericMethod)
@@ -400,7 +396,7 @@ namespace ISynergy
         private static void RegisterType(Type interfaceType, Type implementationType)
         {
             // Get the Register<T1,T2>() method
-            MethodInfo methodInfo =
+            var methodInfo =
                 SimpleIoc.Default.GetType().GetMethods()
                          .Where(m => m.Name == nameof(SimpleIoc.Default.Register))
                          .Where(m => m.IsGenericMethod)
@@ -446,7 +442,7 @@ namespace ISynergy
 
                 SimpleIoc.Default.GetInstance<IBaseSettingsService>().Application_Culture = e.Language;
 
-                Type type = rootFrame.Content.GetType();
+                var type = rootFrame.Content.GetType();
                 rootFrame.Content = null;
                 rootFrame = null;
                 UpdateLanguage();
@@ -479,7 +475,7 @@ namespace ISynergy
                 Messenger.Default.Send(new ExceptionHandledMessage(this));
             }
 
-            ConnectionProfile connections = NetworkInformation.GetInternetConnectionProfile();
+            var connections = NetworkInformation.GetInternetConnectionProfile();
 
             if (!(connections != null && connections.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess))
             {

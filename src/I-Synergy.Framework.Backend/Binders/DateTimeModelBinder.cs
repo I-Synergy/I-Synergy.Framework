@@ -34,8 +34,7 @@ namespace ISynergy.Binders
             if (valueResult.FirstValue is null)
                 return Task.CompletedTask;
 
-
-            if (!DateTime.TryParse(valueResult.FirstValue, out DateTime value))
+            if (!DateTime.TryParse(valueResult.FirstValue, out var value))
                 return Task.CompletedTask;
 
             EnumUtility.ThrowIfUndefined(typeof(DateTimeKind), value.Kind);

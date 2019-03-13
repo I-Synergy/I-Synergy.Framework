@@ -21,8 +21,8 @@ namespace ISynergy.Triggers
             TriggerStateCheck(
                 target,
                 (string)target.GetValue(OperatorProperty),
-                int.TryParse(e.NewValue.ToString(), out int resultA) ? resultA : 0,
-                int.TryParse(target.GetValue(TriggerValueProperty).ToString(), out int resultB) ? resultB : 0);
+                int.TryParse(e.NewValue.ToString(), out var resultA) ? resultA : 0,
+                int.TryParse(target.GetValue(TriggerValueProperty).ToString(), out var resultB) ? resultB : 0);
         }
         #endregion
 
@@ -41,8 +41,8 @@ namespace ISynergy.Triggers
             TriggerStateCheck(
                 target,
                 (string)target.GetValue(OperatorProperty),
-                int.TryParse(target.GetValue(DataValueProperty).ToString(), out int resultA) ? resultA : 0,
-                int.TryParse(e.NewValue.ToString(), out int resultB) ? resultB : 0);
+                int.TryParse(target.GetValue(DataValueProperty).ToString(), out var resultA) ? resultA : 0,
+                int.TryParse(e.NewValue.ToString(), out var resultB) ? resultB : 0);
         }
         #endregion
 

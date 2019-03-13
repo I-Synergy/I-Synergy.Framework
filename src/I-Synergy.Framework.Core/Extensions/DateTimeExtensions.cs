@@ -7,7 +7,7 @@ namespace System
     {
         public static int Age(this DateTime self)
         {
-            int result = DateTime.Now.Year - self.Year;
+            var result = DateTime.Now.Year - self.Year;
 
             if (DateTime.Now.Month < self.Month || (DateTime.Now.Month == self.Month && DateTime.Now.Day < self.Day))
                 result--;
@@ -17,13 +17,13 @@ namespace System
 
         public static int AgeInDays(this DateTime self)
         {
-            double result = (DateTime.Now - self).TotalDays;
+            var result = (DateTime.Now - self).TotalDays;
             return Convert.ToInt32(Math.Floor(result));
         }
 
         public static string ToJsonString(this DateTime self)
         {
-            string result = self.ToUniversalTime().ToString(Constants.DateTimeOffsetFormat);
+            var result = self.ToUniversalTime().ToString(Constants.DateTimeOffsetFormat);
             return result;
         }
 

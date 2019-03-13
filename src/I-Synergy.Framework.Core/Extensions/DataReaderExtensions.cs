@@ -10,7 +10,7 @@ namespace System.Data
     {
         public static List<T> MapToList<T>(this IDataReader datareader)
         {
-            List<T> list = new List<T>();
+            var list = new List<T>();
             T obj = default;
 
             while (datareader.Read())
@@ -18,7 +18,7 @@ namespace System.Data
                 var fieldNames = Enumerable.Range(0, datareader.FieldCount).Select(i => datareader.GetName(i)).ToArray();
                 obj = Activator.CreateInstance<T>();
 
-                foreach (PropertyInfo prop in obj.GetType().GetProperties().EnsureNotNull())
+                foreach (var prop in obj.GetType().GetProperties().EnsureNotNull())
                 {
                     if (fieldNames.Contains(prop.Name) && !datareader.IsDBNull(prop.Name))
                     {

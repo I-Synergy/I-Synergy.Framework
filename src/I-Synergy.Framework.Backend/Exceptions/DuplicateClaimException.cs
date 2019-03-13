@@ -9,7 +9,7 @@ namespace ISynergy.Exceptions
         {
         }
 
-        public DuplicateClaimException() : base()
+        public DuplicateClaimException()
         {
         }
 

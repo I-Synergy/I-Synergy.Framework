@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -30,7 +29,7 @@ namespace ISynergy
         protected ObservableClass()
         {
         }
-        
+
         protected T GetValue<T>([CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
@@ -48,7 +47,7 @@ namespace ISynergy
             if (!Properties.ContainsKey(propertyName))
                 Properties.Add(propertyName, new Property<T>());
 
-            var property = (Properties[propertyName] as IProperty<T>);
+            var property = Properties[propertyName] as IProperty<T>;
             var previous = property.Value;
 
             if (!property.IsOriginalSet || !Equals(value, previous))

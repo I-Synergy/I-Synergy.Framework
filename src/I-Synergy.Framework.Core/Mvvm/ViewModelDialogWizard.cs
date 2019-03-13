@@ -52,8 +52,8 @@ namespace ISynergy.Mvvm
             set { SetValue(value); }
         }
 
-        public RelayCommand Back_Command { get; private set; }
-        public RelayCommand Next_Command { get; private set; }
+        public RelayCommand Back_Command { get; }
+        public RelayCommand Next_Command { get; }
 
         protected ViewModelDialogWizard(
             IContext context,

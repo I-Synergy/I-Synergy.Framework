@@ -2,10 +2,8 @@
 using ISynergy.Extensions;
 using ISynergy.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -45,10 +43,10 @@ namespace ISynergy.Converters
 
     public class EnumToArrayConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            ArrayList list = new ArrayList();
-            Array enumValues = Enum.GetValues(value.GetType());
+            var list = new List<KeyValuePair<int, string>>();
+            var enumValues = Enum.GetValues(value.GetType());
 
             foreach (Enum item in enumValues)
             {
@@ -58,7 +56,7 @@ namespace ISynergy.Converters
             return list;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -70,9 +68,9 @@ namespace ISynergy.Converters
                 throw new ArgumentNullException(nameof(value));
             }
 
-            string description = value.ToString();
-            FieldInfo fieldInfo = value.GetType().GetField(description);
-            DisplayAttribute[] attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
+            var description = value.ToString();
+            var fieldInfo = value.GetType().GetField(description);
+            var attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
                 description = SimpleIoc.Default.GetInstance<ILanguageService>().GetString(attributes[0].Description);
@@ -83,7 +81,7 @@ namespace ISynergy.Converters
 
     public class EnumToResourceImageConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value != null)
             {
@@ -112,7 +110,7 @@ namespace ISynergy.Converters
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -120,12 +118,12 @@ namespace ISynergy.Converters
 
     public class EnumToStringConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             return GetDescription(Enum.Parse(value.GetType(), value.ToString()) as Enum);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -137,9 +135,9 @@ namespace ISynergy.Converters
                 throw new ArgumentNullException(nameof(value));
             }
 
-            string description = value.ToString();
-            FieldInfo fieldInfo = value.GetType().GetField(description);
-            DisplayAttribute[] attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
+            var description = value.ToString();
+            var fieldInfo = value.GetType().GetField(description);
+            var attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
             {

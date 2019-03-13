@@ -45,7 +45,7 @@ namespace ISynergy.Locators
             if (viewModelType is null)
                 throw new ArgumentNullException(nameof(viewModelType));
 
-            cache.TryGetValue(viewModelType, out Type dialogType);
+            cache.TryGetValue(viewModelType, out var dialogType);
             return dialogType;
         }
 

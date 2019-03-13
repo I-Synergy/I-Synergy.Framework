@@ -11,7 +11,7 @@
         /// <remarks></remarks>
         public static decimal Surface(decimal length, decimal width)
         {
-            return (length * width);
+            return length * width;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@
         /// <remarks></remarks>
         public static decimal Volume(decimal length, decimal width, decimal height)
         {
-            return (length * width * height);
+            return length * width * height;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@
         /// <remarks></remarks>
         public static decimal Density(decimal volume, decimal weight)
         {
-            return (weight / volume);
+            return weight / volume;
         }
     }
 }

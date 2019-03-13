@@ -21,7 +21,7 @@ namespace ISynergy.Routing
 
             // Test if length of result complies with ISO2 country code,
             // else return ZeroResultTask.
-            string pathTest = httpContext.Request.Path.Value.Split('/')[1]?.ToString();
+            var pathTest = httpContext.Request.Path.Value.Split('/')[1]?.ToString();
 
             if(pathTest is null || pathTest.Length != 2)
             {
@@ -32,7 +32,7 @@ namespace ISynergy.Routing
 
             try
             {
-                ProviderCultureResult providerResultCulture = new ProviderCultureResult(culture, uiCulture);
+                var providerResultCulture = new ProviderCultureResult(culture, uiCulture);
                 return Task.FromResult(providerResultCulture);
             }
             catch (Exception)

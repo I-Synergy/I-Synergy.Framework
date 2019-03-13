@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 
 namespace ISynergy
@@ -46,7 +44,7 @@ namespace ISynergy
             var propertyHandler = PropertyChanged;
             if (collectionHandler != null || propertyHandler != null)
             {
-                _context.Post(s =>
+                _context.Post(_ =>
                 {
                     collectionHandler?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                     if (propertyHandler != null)
@@ -73,7 +71,7 @@ namespace ISynergy
         /// <returns>Whether the add was successful.</returns>
         private bool TryAddWithNotification(TKey key, TValue value)
         {
-            bool result = _dictionary.TryAdd(key, value);
+            var result = _dictionary.TryAdd(key, value);
             if (result) NotifyObserversOfChange();
             return result;
         }
@@ -84,7 +82,7 @@ namespace ISynergy
         /// <returns>Whether the removal was successful.</returns>
         private bool TryRemoveWithNotification(TKey key, out TValue value)
         {
-            bool result = _dictionary.TryRemove(key, out value);
+            var result = _dictionary.TryRemove(key, out value);
             if (result) NotifyObserversOfChange();
             return result;
         }
@@ -133,7 +131,7 @@ namespace ISynergy
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
-            return TryRemoveWithNotification(item.Key, out TValue temp);
+            return TryRemoveWithNotification(item.Key, out var temp);
         }
         #endregion
 
@@ -167,7 +165,7 @@ namespace ISynergy
 
         public bool Remove(TKey key)
         {
-            return TryRemoveWithNotification(key, out TValue temp);
+            return TryRemoveWithNotification(key, out var temp);
         }
 
         public bool TryGetValue(TKey key, out TValue value)

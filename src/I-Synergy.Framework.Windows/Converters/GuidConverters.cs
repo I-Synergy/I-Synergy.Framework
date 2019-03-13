@@ -6,7 +6,7 @@ namespace ISynergy.Converters
 {
     public class GuidToInversedVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is Guid && (Guid)value != Guid.Empty)
             {
@@ -18,7 +18,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -26,7 +26,7 @@ namespace ISynergy.Converters
 
     public class GuidToVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is Guid && (Guid)value != Guid.Empty)
             {
@@ -38,7 +38,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }

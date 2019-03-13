@@ -77,7 +77,7 @@ namespace ISynergy.Models.Accounts
             get { return GetValue<DateTimeOffset>(); }
             set { SetValue(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the IsActive property value.
         /// </summary>

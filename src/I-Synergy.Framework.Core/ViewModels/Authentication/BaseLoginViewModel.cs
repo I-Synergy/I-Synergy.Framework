@@ -2,10 +2,8 @@
 using ISynergy.Models.Accounts;
 using ISynergy.Services;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Linq;
 using GalaSoft.MvvmLight.Command;
 using System;
 using ISynergy.Events;
@@ -25,7 +23,7 @@ namespace ISynergy.ViewModels.Authentication
             IBaseService baseService)
             : base(context, baseService)
         {
-            this.Validator = new Action<IObservableClass>(arg =>
+            this.Validator = new Action<IObservableClass>(_ =>
             {
                 if(LoginVisible)
                 {
@@ -94,7 +92,7 @@ namespace ISynergy.ViewModels.Authentication
             {
                 Usernames = JsonConvert.DeserializeObject<ObservableCollection<string>>(BaseService.BaseSettingsService.Application_Users);
             }
-            
+
             Username = BaseService.BaseSettingsService.Application_User;
             AutoLogin = BaseService.BaseSettingsService.User_AutoLogin;
         }
@@ -122,16 +120,16 @@ namespace ISynergy.ViewModels.Authentication
         }
 
         public override string Title { get { return BaseService.LanguageService.GetString("Generic_Login"); } }
-        
+
         /// <summary>
         /// Gets or sets the Usernames property value.
         /// </summary>
-        public ObservableCollection<string> Usernames   
+        public ObservableCollection<string> Usernames
         {
             get { return GetValue<ObservableCollection<string>>(); }
             set { SetValue(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the Username property value.
         /// </summary>
@@ -191,7 +189,7 @@ namespace ISynergy.ViewModels.Authentication
             get { return GetValue<ObservableCollection<TimeZoneInfo>>(); }
             set { SetValue(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the Registration_TimeZone property value.
         /// </summary>
@@ -326,7 +324,6 @@ namespace ISynergy.ViewModels.Authentication
         /// </example>
         /// <returns></returns>
         public abstract Task<bool> RegisterAsync();
-
 
         /// <summary>
         /// 

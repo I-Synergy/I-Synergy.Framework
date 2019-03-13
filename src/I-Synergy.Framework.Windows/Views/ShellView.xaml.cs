@@ -55,7 +55,7 @@ namespace ISynergy.Views
         {
             if(args.InvokedItem != null && args.InvokedItem is NavigationItem)
             {
-                NavigationItem item = args.InvokedItem as NavigationItem;
+                var item = args.InvokedItem as NavigationItem;
                 if (item.Command.CanExecute(item.CommandParameter)) item.Command.Execute(item.CommandParameter);
             }
         }
@@ -64,7 +64,7 @@ namespace ISynergy.Views
         {
             if (e.ClickedItem != null && e.ClickedItem is NavigationItem)
             {
-                NavigationItem item = e.ClickedItem as NavigationItem;
+                var item = e.ClickedItem as NavigationItem;
                 if (item.Command.CanExecute(item.CommandParameter)) item.Command.Execute(item.CommandParameter);
             }
         }
@@ -72,14 +72,14 @@ namespace ISynergy.Views
         private void RootNavigationView_Loaded(object sender, RoutedEventArgs e)
         {
             // add keyboard accelerators for backwards navigation
-            KeyboardAccelerator GoBack = new KeyboardAccelerator
+            var GoBack = new KeyboardAccelerator
             {
                 Key = VirtualKey.GoBack
             };
 
             GoBack.Invoked += BackInvoked;
 
-            KeyboardAccelerator AltLeft = new KeyboardAccelerator
+            var AltLeft = new KeyboardAccelerator
             {
                 Key = VirtualKey.Left
             };
@@ -91,7 +91,6 @@ namespace ISynergy.Views
 
             // ALT routes here
             AltLeft.Modifiers = VirtualKeyModifiers.Menu;
-
         }
 
         private void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -112,7 +111,7 @@ namespace ISynergy.Views
 
         private bool OnBackRequested()
         {
-            bool navigated = false;
+            var navigated = false;
 
             // don't go back if the nav pane is overlayed
             if (RootNavigationView.IsPaneOpen && (RootNavigationView.DisplayMode == NavigationViewDisplayMode.Compact || RootNavigationView.DisplayMode == NavigationViewDisplayMode.Minimal))
@@ -128,7 +127,6 @@ namespace ISynergy.Views
                 }
             }
             return navigated;
-
         }
     }
 }
