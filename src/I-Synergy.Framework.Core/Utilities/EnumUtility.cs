@@ -47,7 +47,7 @@ namespace ISynergy.Utilities
 
             foreach (var value in Enum.GetValues(flags.GetType()).Cast<Enum>().EnsureNotNull())
             {
-                ulong bits = Convert.ToUInt64(value);
+                var bits = Convert.ToUInt64(value);
 
                 while (flag < bits)
                 {

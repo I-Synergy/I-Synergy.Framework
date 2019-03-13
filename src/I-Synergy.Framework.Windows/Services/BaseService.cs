@@ -38,7 +38,7 @@ namespace ISynergy.Services
             UIVisualizerService = uiVisualizer;
             NavigationService = navigation;
             LoginService = loginService;
-            InfoService = InfoService;
+            InfoService = info;
             ConverterService = converter;
         }
     }

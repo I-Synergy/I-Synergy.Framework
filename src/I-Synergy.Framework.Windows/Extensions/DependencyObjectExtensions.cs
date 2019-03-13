@@ -9,13 +9,13 @@ namespace ISynergy.Extensions
     {
         public static void FindChildren<T>(this DependencyObject startNode, List<T> results) where T : DependencyObject
         {
-            int count = VisualTreeHelper.GetChildrenCount(startNode);
-            for (int i = 0; i < count; i++)
+            var count = VisualTreeHelper.GetChildrenCount(startNode);
+            for (var i = 0; i < count; i++)
             {
-                DependencyObject current = VisualTreeHelper.GetChild(startNode, i);
-                if ((current.GetType()).Equals(typeof(T)) || (current.GetType().GetTypeInfo().IsSubclassOf(typeof(T))))
+                var current = VisualTreeHelper.GetChild(startNode, i);
+                if (current.GetType().Equals(typeof(T)) || current.GetType().GetTypeInfo().IsSubclassOf(typeof(T)))
                 {
-                    T asType = (T)current;
+                    var asType = (T)current;
                     results.Add(asType);
                 }
                 current.FindChildren<T>(results);
@@ -24,7 +24,7 @@ namespace ISynergy.Extensions
 
         public static T FindParent<T>(this DependencyObject startNode) where T : DependencyObject
         {
-            DependencyObject parentObject = VisualTreeHelper.GetParent(startNode);
+            var parentObject = VisualTreeHelper.GetParent(startNode);
             if (parentObject is null) return null;
 
             if (parentObject is T parent)

@@ -178,11 +178,11 @@ namespace ISynergy.Controls
         private void RotateToNextItem()
         {
             // Check if there's more than one item. if not, don't start animation
-            bool hasTwoOrMoreItems = false;
-            if (ItemsSource is IEnumerable)
+            var hasTwoOrMoreItems = false;
+            if (ItemsSource is IEnumerable itemsSource)
             {
-                var enumerator = (ItemsSource as IEnumerable).GetEnumerator();
-                int count = 0;
+                var enumerator = itemsSource.GetEnumerator();
+                var count = 0;
                 while (enumerator.MoveNext())
                 {
                     count++;
@@ -241,7 +241,7 @@ namespace ISynergy.Controls
                 sb.Children.Add(anim);
             }
 
-            sb.Completed += async (a, b) =>
+            sb.Completed += async (_, __) =>
             {
                 if (_currentElement != null)
                 {
@@ -254,6 +254,7 @@ namespace ISynergy.Controls
 
                 // Reset back and swap images, getting the next image ready
                 sb.Stop();
+
                 if (_translate != null)
                 {
                     UpdateTranslateXY();
@@ -320,7 +321,7 @@ namespace ISynergy.Controls
                 {
                     var items = ItemsSource as IEnumerable;
                     var ienum = ((IEnumerable)ItemsSource).GetEnumerator();
-                    int count = 0;
+                    var count = 0;
                     while (ienum.MoveNext())
                     {
                         count++;
@@ -330,7 +331,7 @@ namespace ISynergy.Controls
                     {
                         index = index % count;
                         ienum.Reset();
-                        for (int i = 0; i < index; i++)
+                        for (var i = 0; i < index; i++)
                         {
                             ienum.MoveNext();
                         }
@@ -345,10 +346,10 @@ namespace ISynergy.Controls
 
         private int GetIndexOf(object item)
         {
-            if (ItemsSource is IEnumerable)
+            if (ItemsSource is IEnumerable itemsSource)
             {
-                int i = 0;
-                var ienum = ((IEnumerable)ItemsSource).GetEnumerator();
+                var i = 0;
+                var ienum = itemsSource.GetEnumerator();
                 while (ienum.MoveNext())
                 {
                     if (ienum.Current == item)
@@ -455,7 +456,7 @@ namespace ISynergy.Controls
             {
                 if (e.OldItems?.Count > 0)
                 {
-                    int endIndex = e.OldStartingIndex + e.OldItems.Count;
+                    var endIndex = e.OldStartingIndex + e.OldItems.Count;
                     if (_currentIndex >= e.NewStartingIndex && _currentIndex < endIndex)
                     {
                         // Current item was removed. Replace with the next one
@@ -464,7 +465,7 @@ namespace ISynergy.Controls
                     else if (_currentIndex > endIndex)
                     {
                         // Items were removed before the current item. Just update the changed index
-                        _currentIndex -= (endIndex - e.NewStartingIndex) - 1;
+                        _currentIndex -= endIndex - e.NewStartingIndex - 1;
                     }
                     else if (e.NewStartingIndex == _currentIndex + 1)
                     {
@@ -475,7 +476,7 @@ namespace ISynergy.Controls
             }
             else if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                int endIndex = e.NewStartingIndex + e.NewItems.Count;
+                var endIndex = e.NewStartingIndex + e.NewItems.Count;
                 if (e.NewItems?.Count > 0)
                 {
                     if (_currentIndex < 0)
@@ -497,7 +498,7 @@ namespace ISynergy.Controls
             }
             else if (e.Action == NotifyCollectionChangedAction.Replace)
             {
-                int endIndex = e.OldStartingIndex + e.OldItems.Count;
+                var endIndex = e.OldStartingIndex + e.OldItems.Count;
                 if (_currentIndex >= e.OldStartingIndex && _currentIndex < endIndex + 1)
                 {
                     // Current item was removed. Replace with the next one
@@ -506,7 +507,7 @@ namespace ISynergy.Controls
             }
             else if (e.Action == NotifyCollectionChangedAction.Move)
             {
-                int endIndex = e.OldStartingIndex + e.OldItems.Count;
+                var endIndex = e.OldStartingIndex + e.OldItems.Count;
                 if (_currentIndex >= e.OldStartingIndex && _currentIndex < endIndex)
                 {
                     // The current item was moved. Get its new location
@@ -547,7 +548,7 @@ namespace ISynergy.Controls
                 return;
             }
 
-            int index = ctrl.GetIndexOf(e.NewValue);
+            var index = ctrl.GetIndexOf(e.NewValue);
             if (index > -1)
             {
                 ctrl._currentIndex = index;

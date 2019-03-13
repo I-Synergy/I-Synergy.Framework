@@ -37,17 +37,17 @@ namespace ISynergy.Helpers
 
         public static Color ConvertInteger2Color(int color)
         {
-            byte[] bytes = BitConverter.GetBytes(color);
+            var bytes = BitConverter.GetBytes(color);
             return Color.FromArgb(bytes[3], bytes[2], bytes[1], bytes[0]);
         }
 
         public static int ConvertColor2Integer(Color color)
         {
-            byte[] bytes = new byte[] { 255, color.R, color.G, color.B };
+            var bytes = new byte[] { 255, color.R, color.G, color.B };
 
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
-            
+
             return BitConverter.ToInt32(bytes, 0);
         }
 
@@ -57,7 +57,7 @@ namespace ISynergy.Helpers
 
             if (image != null && image.Length > 0)
             {
-                MemoryStream stream = new MemoryStream();
+                var stream = new MemoryStream();
                 stream.Write(image, 0, image.Length);
                 stream.Position = 0;
 

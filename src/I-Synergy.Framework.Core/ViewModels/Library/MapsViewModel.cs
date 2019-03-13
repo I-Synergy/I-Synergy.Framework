@@ -45,7 +45,7 @@ namespace ISynergy.ViewModels
         /// Gets or sets the Token property value.
         /// </summary>
         public string Token => "hF8EPqW3h22fX9BAQyU1~0IckNGlmrR9tLsNHtBrP6g~AnhUPQAJSywzA2Wj53uJ2pfv8_JzJTPP2V4gAkttD4AOFbJWL51QQ9Lj5F8i0to3";
-      
+
         /// <summary>
         /// Gets or sets the Content property value.
         /// </summary>
@@ -72,7 +72,7 @@ namespace ISynergy.ViewModels
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
-        
+
         public MapsViewModel(
             IContext context,
             IBaseService baseService,

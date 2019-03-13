@@ -24,22 +24,22 @@ namespace ISynergy.Controls
 
         private static void AutoFocusableChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue != e.OldValue)
+            if (e.NewValue != e.OldValue && d is TextBox textBox)
             {
-                if ((bool)e.NewValue == true)
+                if ((bool)e.NewValue)
                 {
-                    (d as TextBox).GotFocus += OnGotFocusHandler;
+                    textBox.GotFocus += OnGotFocusHandler;
                 }
                 else
                 {
-                    (d as TextBox).GotFocus -= OnGotFocusHandler;
+                    textBox.GotFocus -= OnGotFocusHandler;
                 }
             }
         }
 
         private static void OnGotFocusHandler(object sender, RoutedEventArgs e)
         {
-            (sender as TextBox).SelectAll();
+            (sender as TextBox)?.SelectAll();
         }
     }
 }

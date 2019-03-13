@@ -8,13 +8,13 @@ namespace ISynergy.Converters
 {
     public class ResourceNameToGeometryConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (parameter != null && parameter is string)
             {
                 return (Geometry)XamlReader.Load(
                         "<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>"
-                        + Application.Current.Resources[parameter] as string as string + "</Geometry>");
+                        + Application.Current.Resources[parameter] + "</Geometry>");
             }
             else
             {
@@ -22,7 +22,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -30,7 +30,7 @@ namespace ISynergy.Converters
 
     public class ResourceNameToStringConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (parameter != null && parameter is string)
             {
@@ -42,7 +42,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }

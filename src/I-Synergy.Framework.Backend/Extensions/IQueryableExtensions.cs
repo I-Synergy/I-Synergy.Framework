@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ISynergy.Extensions
@@ -16,13 +15,12 @@ namespace ISynergy.Extensions
         /// </summary>
         /// <param name="query"></param>
         /// <param name="pagesize">Has to be greater than 0.</param>
-        /// <param name="cancellationToken"/>
-        public static async Task<int> CountPagesAsync<TEntity>(this IQueryable<TEntity> query, int pagesize, CancellationToken cancellationToken = default)
+        public static async Task<int> CountPagesAsync<TEntity>(this IQueryable<TEntity> query, int pagesize)
         {
             if (pagesize < 1)
                 throw new ArgumentOutOfRangeException("Value must be greater than 0.", "pagesize");
 
-            return (int)Math.Ceiling((double)await query.CountAsync(cancellationToken).ConfigureAwait(false) / pagesize);
+            return (int)Math.Ceiling((double)await query.CountAsync() / pagesize);
         }
 
         /// <summary>
@@ -39,7 +37,9 @@ namespace ISynergy.Extensions
             if (pagesize < 1)
                 throw new ArgumentOutOfRangeException("Value must be greater than 0.", "pagesize");
 
-            return query.Skip((page - 1) * pagesize).Take(pagesize);
+            return query
+                .Skip(page * pagesize)
+                .Take(pagesize);
         }
     }
 }

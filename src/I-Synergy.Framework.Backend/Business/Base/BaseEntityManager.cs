@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ISynergy.Business.Base
@@ -25,33 +24,32 @@ namespace ISynergy.Business.Base
             Logger = loggerFactory.CreateLogger<BaseEntityManager<TDbContext>>();
         }
 
-        protected virtual Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        protected virtual Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> predicate)
             where TEntity : EntityBase, new()
         {
-            return Context.Set<TEntity>().AnyAsync(predicate, cancellationToken);
+            return Context.Set<TEntity>().AnyAsync(predicate);
         }
 
-        protected virtual Task<TEntity> GetItemByIdAsync<TEntity, TId>(TId id, CancellationToken cancellationToken = default)
+        protected virtual Task<TEntity> GetItemByIdAsync<TEntity, TId>(TId id)
             where TEntity : EntityBase, new()
             where TId : struct
         {
-            return Context.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
+            return Context.Set<TEntity>().FindAsync(new object[] { id });
         }
 
-        protected async Task<int> AddItemAsync<TEntity, TSource>(TSource e, string user)
+        protected Task<int> AddItemAsync<TEntity, TSource>(TSource e, string user)
             where TEntity : EntityBase, new()
             where TSource : ModelBase, new()
         {
             Argument.IsNotNull(nameof(TSource), e);
             Argument.IsNotNullOrWhitespace(nameof(user), user);
 
-            TEntity target = e.Adapt<TSource, TEntity>();
+            var target = e.Adapt<TSource, TEntity>();
 
             Context.Add(target);
 
-            return await Context
-                    .SaveChangesAsync()
-                    .ConfigureAwait(false);
+            return Context
+                    .SaveChangesAsync();
         }
 
         protected async Task<int> UpdateItemAsync<TEntity, TSource>(TSource e, string user)
@@ -61,18 +59,18 @@ namespace ISynergy.Business.Base
             Argument.IsNotNull(nameof(TSource), e);
             Argument.IsNotNullOrWhitespace(nameof(user), user);
 
-            int result = 0;
+            var result = 0;
 
-            string targetPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
-            object sourcePropertyValue = ReflectionExtensions.GetIdentityValue(e);
+            var targetPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
+            var sourcePropertyValue = ReflectionExtensions.GetIdentityValue(e);
 
             if (targetPropertyName != null && sourcePropertyValue != null)
             {
-                ParameterExpression parameterExpression = Expression.Parameter(typeof(TEntity));
+                var parameterExpression = Expression.Parameter(typeof(TEntity));
                 Expression query = Expression.Equal(Expression.Property(parameterExpression, targetPropertyName), Expression.Constant(sourcePropertyValue));
-                Expression<Func<TEntity, bool>> predicate = Expression.Lambda<Func<TEntity, bool>>(query, parameterExpression);
+                var predicate = Expression.Lambda<Func<TEntity, bool>>(query, parameterExpression);
 
-                TEntity target = await Context.Set<TEntity>().SingleOrDefaultAsync(predicate).ConfigureAwait(false);
+                var target = await Context.Set<TEntity>().SingleOrDefaultAsync(predicate);
                 target = e.Adapt(target);
 
                 Context.Set<TEntity>().Update(target);
@@ -81,7 +79,7 @@ namespace ISynergy.Business.Base
                 {
                     result = await Context
                         .SaveChangesAsync()
-                        .ConfigureAwait(false);
+                        ;
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -98,17 +96,25 @@ namespace ISynergy.Business.Base
             Argument.IsNotNull(nameof(id), id);
             Argument.IsNotNullOrWhitespace(nameof(user), user);
 
-            int result = 0;
+            var result = 0;
 
-            TEntity item = await GetItemByIdAsync<TEntity, TId>(id).ConfigureAwait(false);
+            var item = await GetItemByIdAsync<TEntity, TId>(id);
 
             if (item != null)
             {
                 try
                 {
-                    Context.Set<TEntity>().Remove(item);
+                    if(soft)
+                    {
+                        item.IsDeleted = true;
+                        Context.Set<TEntity>().Update(item);
+                    }
+                    else
+                    {
+                        Context.Set<TEntity>().Remove(item);
+                    }
 
-                    result = await Context.SaveChangesAsync().ConfigureAwait(false);
+                    result = await Context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

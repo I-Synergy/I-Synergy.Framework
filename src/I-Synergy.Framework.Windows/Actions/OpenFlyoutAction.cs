@@ -176,7 +176,7 @@ namespace ISynergy.Actions
             {
                 FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
             }
-            
+
             return true;
         }
     }

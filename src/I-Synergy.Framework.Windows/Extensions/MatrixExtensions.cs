@@ -41,14 +41,14 @@ namespace ISynergy.Extensions
         /// <returns>Matrix representing transform.</returns>
         public static Matrix GetMatrix(this SkewTransform transform)
         {
-            Matrix matrix = Matrix.Identity;
+            var matrix = Matrix.Identity;
 
             var angleX = transform.AngleX;
             var angleY = transform.AngleY;
             var centerX = transform.CenterX;
             var centerY = transform.CenterY;
 
-            bool hasCenter = centerX != 0 || centerY != 0;
+            var hasCenter = centerX != 0 || centerY != 0;
 
             if (hasCenter)
             {
@@ -86,9 +86,8 @@ namespace ISynergy.Extensions
         /// <returns>Rotated Matrix.</returns>
         public static Matrix Rotate(this Matrix matrix, double angle)
         {
-            return matrix.Multiply(CreateRotationRadians((angle % 360) * (Math.PI / 180.0)));
+            return matrix.Multiply(CreateRotationRadians(angle % 360 * (Math.PI / 180.0)));
         }
-
 
         /// <summary>
         /// Rotates this matrix about the specified point and returns the new result.
@@ -100,7 +99,7 @@ namespace ISynergy.Extensions
         /// <returns>Rotated Matrix.</returns>
         public static Matrix RotateAt(this Matrix matrix, double angle, double centerX, double centerY)
         {
-            return matrix.Multiply(CreateRotationRadians((angle % 360) * (Math.PI / 180.0), centerX, centerY));
+            return matrix.Multiply(CreateRotationRadians(angle % 360 * (Math.PI / 180.0), centerX, centerY));
         }
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace ISynergy.Extensions
         /// <returns>Skewed Matrix.</returns>
         public static Matrix Skew(this Matrix matrix, double skewX, double skewY)
         {
-            return matrix.Multiply(CreateSkewRadians((skewX % 360) * (Math.PI / 180.0), (skewY % 360) * (Math.PI / 180.0)));
+            return matrix.Multiply(CreateSkewRadians(skewX % 360 * (Math.PI / 180.0), skewY % 360 * (Math.PI / 180.0)));
         }
 
         /// <summary>
@@ -153,12 +152,12 @@ namespace ISynergy.Extensions
             return new Matrix(matrix.M11, matrix.M12, matrix.M21, matrix.M22, matrix.OffsetX + offsetX, matrix.OffsetY + offsetY);
         }
 
-        internal static Matrix CreateRotationRadians(double angle)
+        internal static Matrix CreateRotationRadians(this double angle)
         {
             return CreateRotationRadians(angle, 0, 0);
         }
 
-        internal static Matrix CreateRotationRadians(double angle, double centerX, double centerY)
+        internal static Matrix CreateRotationRadians(this double angle, double centerX, double centerY)
         {
             var sin = Math.Sin(angle);
             var cos = Math.Cos(angle);
@@ -168,17 +167,17 @@ namespace ISynergy.Extensions
             return new Matrix(cos, sin, -sin, cos, dx, dy);
         }
 
-        internal static Matrix CreateScaling(double scaleX, double scaleY)
+        internal static Matrix CreateScaling(this double scaleX, double scaleY)
         {
             return new Matrix(scaleX, 0, 0, scaleY, 0, 0);
         }
 
-        internal static Matrix CreateScaling(double scaleX, double scaleY, double centerX, double centerY)
+        internal static Matrix CreateScaling(this double scaleX, double scaleY, double centerX, double centerY)
         {
             return new Matrix(scaleX, 0, 0, scaleY, centerX - (scaleX * centerX), centerY - (scaleY * centerY));
         }
 
-        internal static Matrix CreateSkewRadians(double skewX, double skewY)
+        internal static Matrix CreateSkewRadians(this double skewX, double skewY)
         {
             return new Matrix(1.0, Math.Tan(skewY), Math.Tan(skewX), 1.0, 0.0, 0.0);
         }
@@ -198,8 +197,8 @@ namespace ISynergy.Extensions
                 (matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22),
                 (matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21),
                 (matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22),
-                ((matrix1.OffsetX * matrix2.M11) + (matrix1.OffsetY * matrix2.M21)) + matrix2.OffsetX,
-                ((matrix1.OffsetX * matrix2.M12) + (matrix1.OffsetY * matrix2.M22)) + matrix2.OffsetY);
+                (matrix1.OffsetX * matrix2.M11) + (matrix1.OffsetY * matrix2.M21) + matrix2.OffsetX,
+                (matrix1.OffsetX * matrix2.M12) + (matrix1.OffsetY * matrix2.M22) + matrix2.OffsetY);
         }
 
         /// <summary>
@@ -230,15 +229,15 @@ namespace ISynergy.Extensions
         {
             // WPF equivalent of following code:
             // var rectTransformed = Rect.Transform(rect, matrix);
-            Point leftTop = matrix.Transform(new Point(rectangle.Left, rectangle.Top));
-            Point rightTop = matrix.Transform(new Point(rectangle.Right, rectangle.Top));
-            Point leftBottom = matrix.Transform(new Point(rectangle.Left, rectangle.Bottom));
-            Point rightBottom = matrix.Transform(new Point(rectangle.Right, rectangle.Bottom));
-            double left = Math.Min(Math.Min(leftTop.X, rightTop.X), Math.Min(leftBottom.X, rightBottom.X));
-            double top = Math.Min(Math.Min(leftTop.Y, rightTop.Y), Math.Min(leftBottom.Y, rightBottom.Y));
-            double right = Math.Max(Math.Max(leftTop.X, rightTop.X), Math.Max(leftBottom.X, rightBottom.X));
-            double bottom = Math.Max(Math.Max(leftTop.Y, rightTop.Y), Math.Max(leftBottom.Y, rightBottom.Y));
-            Rect rectTransformed = new Rect(left, top, right - left, bottom - top);
+            var leftTop = matrix.Transform(new Point(rectangle.Left, rectangle.Top));
+            var rightTop = matrix.Transform(new Point(rectangle.Right, rectangle.Top));
+            var leftBottom = matrix.Transform(new Point(rectangle.Left, rectangle.Bottom));
+            var rightBottom = matrix.Transform(new Point(rectangle.Right, rectangle.Bottom));
+            var left = Math.Min(Math.Min(leftTop.X, rightTop.X), Math.Min(leftBottom.X, rightBottom.X));
+            var top = Math.Min(Math.Min(leftTop.Y, rightTop.Y), Math.Min(leftBottom.Y, rightBottom.Y));
+            var right = Math.Max(Math.Max(leftTop.X, rightTop.X), Math.Max(leftBottom.X, rightBottom.X));
+            var bottom = Math.Max(Math.Max(leftTop.Y, rightTop.Y), Math.Max(leftBottom.Y, rightBottom.Y));
+            var rectTransformed = new Rect(left, top, right - left, bottom - top);
             return rectTransformed;
         }
     }

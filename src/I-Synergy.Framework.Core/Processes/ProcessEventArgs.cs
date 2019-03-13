@@ -49,7 +49,7 @@ namespace ISynergy.Processes
         /// <summary>
         /// Gets the content.
         /// </summary>
-        public string Content { get; private set; }
+        public string Content { get; }
 
         /// <summary>
         /// Gets or sets the code.
@@ -57,6 +57,6 @@ namespace ISynergy.Processes
         /// <value>
         /// The code.
         /// </value>
-        public int? Code { get; private set; }
+        public int? Code { get; }
     }
 }

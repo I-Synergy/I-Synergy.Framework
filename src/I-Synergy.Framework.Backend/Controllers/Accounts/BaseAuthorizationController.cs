@@ -41,14 +41,14 @@ namespace ISynergy.Controllers.Base
         // you must provide your own authorization endpoint action:
 
         [HttpGet("~/oauth/authorize")]
-        public async Task<IActionResult> Authorize(OpenIdConnectRequest request, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Authorize(OpenIdConnectRequest request)
         {
             Debug.Assert(request.IsAuthorizationRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
             // Retrieve the application details from the database.
-            var application = await _appManager.FindByClientIdAsync(request.ClientId, cancellationToken);
+            var application = await _appManager.FindByClientIdAsync(request.ClientId);
             if (application is null)
             {
                 return View("Error", new ErrorViewModel
@@ -70,11 +70,11 @@ namespace ISynergy.Controllers.Base
 
         [FormValueRequired("submit.Accept")]
         [HttpPost("~/oauth/authorize"), ValidateAntiForgeryToken]
-        public abstract Task<IActionResult> Accept(OpenIdConnectRequest request, CancellationToken cancellationToken = default);
+        public abstract Task<IActionResult> Accept(OpenIdConnectRequest request);
 
         [FormValueRequired("submit.Deny")]
         [HttpPost("~/oauth/authorize"), ValidateAntiForgeryToken]
-        public IActionResult Deny(CancellationToken cancellationToken = default)
+        public IActionResult Deny()
         {
             // Notify OpenIddict that the authorization grant has been denied by the resource owner
             // to redirect the user agent to the client application using the appropriate response_mode.
@@ -85,7 +85,7 @@ namespace ISynergy.Controllers.Base
         // flows like the authorization code flow or the implicit flow.
         [AllowAnonymous]
         [HttpGet("~/oauth/logout")]
-        public IActionResult Logout(OpenIdConnectRequest request, CancellationToken cancellationToken = default)
+        public IActionResult Logout(OpenIdConnectRequest request)
         {
             Debug.Assert(request.IsLogoutRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
@@ -110,12 +110,12 @@ namespace ISynergy.Controllers.Base
         // you must provide your own token endpoint action:
         [AllowAnonymous]
         [HttpPost("~/oauth/token"), Produces("application/json")]
-        public abstract Task<IActionResult> Exchange(OpenIdConnectRequest request, CancellationToken cancellationToken = default);
+        public abstract Task<IActionResult> Exchange(OpenIdConnectRequest request);
         #endregion Password, authorization code and refresh token flows
 
         [AllowAnonymous]
         [HttpGet("~/maintenance/pruneinvalidrecords")]
-        public async Task PruneInvalidRecords(CancellationToken cancellationToken = default)
+        public async Task PruneInvalidRecords()
         {
             using (var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -127,19 +127,11 @@ namespace ISynergy.Controllers.Base
                 // Note: the authorization/token managers MUST be resolved from the scoped provider
                 // as they depend on scoped stores that should be disposed as soon as possible.
 
-                try
-                {
-                    var tokenManager = scope.ServiceProvider.GetRequiredService<OpenIddictTokenManager<OpenIddictToken>>();
-                    if (tokenManager != null) await tokenManager.PruneAsync(cancellationToken);
-                }
-                catch (Exception) { }
+                var tokenManager = scope.ServiceProvider.GetRequiredService<OpenIddictTokenManager<OpenIddictToken>>();
+                if (tokenManager != null) await tokenManager.PruneAsync();
 
-                try
-                {
-                    var authorizationManager = scope.ServiceProvider.GetRequiredService<OpenIddictAuthorizationManager<OpenIddictAuthorization>>();
-                    if (authorizationManager != null) await authorizationManager.PruneAsync(cancellationToken);
-                }
-                catch (Exception) { }
+                var authorizationManager = scope.ServiceProvider.GetRequiredService<OpenIddictAuthorizationManager<OpenIddictAuthorization>>();
+                if (authorizationManager != null) await authorizationManager.PruneAsync();
             }
         }
     }

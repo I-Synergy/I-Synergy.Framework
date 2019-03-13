@@ -122,8 +122,7 @@ namespace ISynergy.ViewModels
                 {
                     if (e.Value != null)
                     {
-                        
-                        int tag = Convert.ToInt32(tagVM.RfidTag, 16);
+                        var tag = Convert.ToInt32(tagVM.RfidTag, 16);
 
                         if (tag != 0 &&
                             Context.CurrentProfile?.UserInfo?.RfidUid != 0 &&
@@ -143,7 +142,7 @@ namespace ISynergy.ViewModels
                     else if (!tagVM.IsLoginVisible)
                     {
                         await BaseService.UIVisualizerService.ShowDialogAsync(
-                            typeof(IPincodeWindow), 
+                            typeof(IPincodeWindow),
                             new PincodeViewModel(Context, BaseService, tagVM.Property));
                     }
 
@@ -153,13 +152,13 @@ namespace ISynergy.ViewModels
                 {
                     if (e.Value != null)
                     {
-                        bool pinResult = (bool)e.Value;
+                        var pinResult = (bool)e.Value;
 
                         if (pinResult)
                         {
                             Messenger.Default.Send(new AuthenticateUserMessageResult(this, pinVM.Property, true));
                         }
-                        else if (pinResult == true)
+                        else if (pinResult)
                         {
                             await BaseService.DialogService.ShowErrorAsync(BaseService.LanguageService.GetString("Warning_Pincode_Invalid"));
                         }
@@ -208,7 +207,7 @@ namespace ISynergy.ViewModels
                 else if (Context.Profiles?.Count > 0)
                 {
                     await BaseService.UIVisualizerService.ShowDialogAsync(
-                        typeof(ITagWindow), 
+                        typeof(ITagWindow),
                         new TagViewModel(
                             Context,
                             BaseService,
@@ -247,8 +246,6 @@ namespace ISynergy.ViewModels
                     break;
                 case NarrowStateName:
                     DisplayMode = SplitViewDisplayMode.Overlay;
-                    break;
-                default:
                     break;
             }
         }
@@ -321,7 +318,7 @@ namespace ISynergy.ViewModels
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the Wallpaper property value.
         /// </summary>

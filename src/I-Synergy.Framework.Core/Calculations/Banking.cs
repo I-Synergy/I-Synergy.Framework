@@ -16,7 +16,7 @@ namespace ISynergy.Calculations
                 return false;
             }
 
-            int NumTotal = 0;
+            var NumTotal = 0;
 
             NumTotal = NumTotal + Convert.ToInt32(accountnumber.Substring(0, 1)) * 9;
             NumTotal = NumTotal + Convert.ToInt32(accountnumber.Substring(1, 1)) * 8;

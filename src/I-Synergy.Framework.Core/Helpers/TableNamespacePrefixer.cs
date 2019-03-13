@@ -27,7 +27,7 @@ namespace ISynergy.Helpers
             if (typeNamespace?.StartsWith(_modelBaseNamespace) != true)
                 throw new InvalidOperationException($"Entity should have {_modelBaseNamespace} as namespace!");
 
-            string result = typeNamespace
+            var result = typeNamespace
                 .Remove(0, _modelBaseNamespace.Length)
                 .Replace('.', '_');
 

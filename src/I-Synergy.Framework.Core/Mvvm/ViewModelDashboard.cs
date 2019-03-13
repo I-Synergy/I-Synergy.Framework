@@ -19,7 +19,7 @@ namespace ISynergy.Mvvm
         {
             Tile_Command = new RelayCommand<string>((e) => ExecuteTileCommand(e), CanExecuteTileCommand());
 
-            Messenger.Default.Register<RefreshDashboarMessage>(this, async (e) => await RefreshDashboardAsync());
+            Messenger.Default.Register<RefreshDashboarMessage>(this, async (_) => await RefreshDashboardAsync());
         }
 
         private void ExecuteTileCommand(string e)

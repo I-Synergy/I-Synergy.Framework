@@ -6,7 +6,7 @@ namespace ISynergy.Converters
 {
     public class IntegerToVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if ((int)value == 0 || value is null)
             {
@@ -18,7 +18,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -26,7 +26,7 @@ namespace ISynergy.Converters
 
     public class ZeroIntegerToVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if ((int)value != 0 || value != null)
             {
@@ -38,7 +38,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -46,9 +46,9 @@ namespace ISynergy.Converters
 
     public class IntegerToStringConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if ((value != null))
+            if (value != null)
             {
                 return value.ToString();
             }
@@ -58,11 +58,11 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            int result = 0;
+            var result = 0;
 
-            if ((value != null))
+            if (value != null)
             {
                 int.TryParse(value.ToString(), out result);
             }

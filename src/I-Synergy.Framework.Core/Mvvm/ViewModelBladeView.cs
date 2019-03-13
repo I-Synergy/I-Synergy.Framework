@@ -3,7 +3,6 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,7 +58,7 @@ namespace ISynergy.Mvvm
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
-        
+
         public RelayCommand Add_Command { get; set; }
         public RelayCommand<TEntity> Edit_Command { get; set; }
         public RelayCommand<TEntity> Delete_Command { get; set; }
@@ -203,7 +202,7 @@ namespace ISynergy.Mvvm
 
         public virtual async Task OnCancelAsync(OnCancelMessage e)
         {
-            IViewModelBlade viewmodel = e.Sender as IViewModelBlade;
+            var viewmodel = e.Sender as IViewModelBlade;
 
             if (!e.Handled && viewmodel != null && viewmodel.Owner == this)
             {
@@ -217,7 +216,7 @@ namespace ISynergy.Mvvm
 
         public virtual async Task OnSubmitAsync(OnSubmitMessage e)
         {
-            IViewModelBlade viewmodel = e.Sender as IViewModelBlade;
+            var viewmodel = e.Sender as IViewModelBlade;
 
             if (!e.Handled && viewmodel != null && viewmodel.Owner == this)
             {
@@ -233,7 +232,7 @@ namespace ISynergy.Mvvm
 
         protected async Task<bool> GetItemsAsync()
         {
-            bool result = false;
+            var result = false;
 
             try
             {

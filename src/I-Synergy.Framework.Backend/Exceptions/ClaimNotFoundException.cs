@@ -4,7 +4,7 @@ namespace ISynergy.Exceptions
 {
     public class ClaimNotFoundException : ClaimAuthorizationException
     {
-        public ClaimNotFoundException() : base()
+        public ClaimNotFoundException()
         {
         }
 

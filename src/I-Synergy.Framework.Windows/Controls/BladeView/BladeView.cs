@@ -19,7 +19,7 @@ namespace ISynergy.Controls
     {
         private ScrollViewer _scrollViewer;
 
-        private Dictionary<BladeItem, Size> _cachedBladeItemSizes = new Dictionary<BladeItem, Size>();
+        private readonly Dictionary<BladeItem, Size> _cachedBladeItemSizes = new Dictionary<BladeItem, Size>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BladeView"/> class.
@@ -30,8 +30,8 @@ namespace ISynergy.Controls
 
             Items.VectorChanged += ItemsVectorChanged;
 
-            Loaded += (sender, e) => AdjustBladeItemSize();
-            SizeChanged += (sender, e) => AdjustBladeItemSize();
+            Loaded += (s, e) => AdjustBladeItemSize();
+            SizeChanged += (s, e) => AdjustBladeItemSize();
         }
 
         /// <inheritdoc/>
@@ -82,7 +82,7 @@ namespace ISynergy.Controls
             ActiveBlades = new ObservableCollection<BladeItem>();
             foreach (var item in Items)
             {
-                BladeItem blade = GetBladeItem(item);
+                var blade = GetBladeItem(item);
                 if (blade != null)
                 {
                     if (blade.IsOpen)
@@ -98,7 +98,7 @@ namespace ISynergy.Controls
                 var openBlades = ActiveBlades.Where(item => item.TitleBarVisibility == Visibility.Visible).ToList();
                 if (openBlades.Count > AutoCollapseCountThreshold)
                 {
-                    for (int i = 0; i < openBlades.Count - 1; i++)
+                    for (var i = 0; i < openBlades.Count - 1; i++)
                     {
                         openBlades[i].IsExpanded = false;
                     }

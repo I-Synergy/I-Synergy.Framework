@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
@@ -14,9 +13,9 @@ namespace ISynergy.Services
 
     public interface ICloudStorageService
     {
-        Task<string> UploadFileAsync(byte[] file, int fileTypeId, string filename, StorageTypes type, CancellationToken cancellationToken = default);
-        Task<byte[]> DownloadFileAsync(string filename, StorageTypes type, CancellationToken cancellationToken = default);
-        Task<string> UpdateFileAsync(byte[] file, int fileTypeId, string filename, StorageTypes type, CancellationToken cancellationToken = default);
-        Task<bool> RemoveFileAsync(string filename, StorageTypes type, CancellationToken cancellationToken = default);
+        Task<string> UploadFileAsync(byte[] file, int fileTypeId, string filename, StorageTypes type);
+        Task<byte[]> DownloadFileAsync(string filename, StorageTypes type);
+        Task<string> UpdateFileAsync(byte[] file, int fileTypeId, string filename, StorageTypes type);
+        Task<bool> RemoveFileAsync(string filename, StorageTypes type);
     }
 }

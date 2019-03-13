@@ -2,23 +2,13 @@
 using GalaSoft.MvvmLight.Messaging;
 using ISynergy.Services;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using ISynergy.Events;
-using System.Collections;
 using ISynergy.Helpers;
-using System.Linq;
 using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using GalaSoft.MvvmLight;
-using System.Collections.ObjectModel;
-using Newtonsoft.Json;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Mvvm
 {
@@ -57,7 +47,7 @@ namespace ISynergy.Mvvm
             get { return GetValue<CultureInfo>(); }
             set { SetValue(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the IsInitialized property value.
         /// </summary>
@@ -95,7 +85,7 @@ namespace ISynergy.Mvvm
         {
             get
             {
-                string result = GetValue<string>();
+                var result = GetValue<string>();
 
                 if (string.IsNullOrWhiteSpace(result))
                 {
@@ -117,9 +107,8 @@ namespace ISynergy.Mvvm
         private readonly WeakEventListener<IViewModel, object, PropertyChangedEventArgs> WeakViewModelPropertyChangedEvent = null;
 
         protected ViewModel(
-            IContext context, 
+            IContext context,
             IBaseService baseService)
-            : base()
         {
             Context = context;
             BaseService = baseService;
@@ -132,14 +121,14 @@ namespace ISynergy.Mvvm
 
             this.PropertyChanged += WeakViewModelPropertyChangedEvent.OnEvent;
 
-            Messenger.Default.Register<ExceptionHandledMessage>(this, i => BaseService.BusyService.EndBusyAsync());
+            Messenger.Default.Register<ExceptionHandledMessage>(this, _ => BaseService.BusyService.EndBusyAsync());
 
-            Culture = Thread.CurrentThread.CurrentCulture;
+            Culture = CultureInfo.CurrentCulture;
             Culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
             Culture.NumberFormat.CurrencyNegativePattern = 1;
 
             NumberFormat = Culture.NumberFormat;
-            
+
             IsInitialized = false;
 
             Close_Command = new RelayCommand(() =>
@@ -160,9 +149,9 @@ namespace ISynergy.Mvvm
         {
             Argument.IsNotNull(nameof(value), value);
 
-            string description = value.ToString();
-            FieldInfo fieldInfo = value.GetType().GetField(description);
-            DisplayAttribute[] attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
+            var description = value.ToString();
+            var fieldInfo = value.GetType().GetField(description);
+            var attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
             {

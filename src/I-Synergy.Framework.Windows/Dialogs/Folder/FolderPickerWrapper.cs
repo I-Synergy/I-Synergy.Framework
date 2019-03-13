@@ -28,7 +28,7 @@ namespace ISynergy.Dialogs
                 ViewMode = settings.ViewMode
             };
 
-            foreach (string fileTypeFilter in settings.FileTypeFilter)
+            foreach (var fileTypeFilter in settings.FileTypeFilter)
             {
                 picker.FileTypeFilter.Add(fileTypeFilter);
             }

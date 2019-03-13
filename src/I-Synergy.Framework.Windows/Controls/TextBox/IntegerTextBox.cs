@@ -5,7 +5,7 @@ namespace ISynergy.Controls
 {
     public class IntegerTextBox : TextBox
     {
-        public IntegerTextBox() : base()
+        public IntegerTextBox()
         {
             if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
             {
@@ -27,7 +27,7 @@ namespace ISynergy.Controls
             KeyDown += IntegerTextBox_KeyDown;
             TextChanged += IntegerTextBox_TextChanged;
         }
-        
+
         private void IntegerTextBox_Unloaded(object sender, global::Windows.UI.Xaml.RoutedEventArgs e)
         {
             KeyDown -= IntegerTextBox_KeyDown;
@@ -45,7 +45,7 @@ namespace ISynergy.Controls
 
         private void IntegerTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!int.TryParse(Text, out int result))
+            if (!int.TryParse(Text, out var result))
             {
                 if (!string.IsNullOrEmpty(Text) && Text.Length != 0)
                 {

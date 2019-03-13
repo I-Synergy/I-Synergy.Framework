@@ -41,7 +41,7 @@ namespace ISynergy.Events
         {
             lock (_handlers)
             {
-                int index = _handlers.FindIndex(h => h.IsMatch(handler));
+                var index = _handlers.FindIndex(h => h.IsMatch(handler));
                 if (index >= 0)
                     _handlers.RemoveAt(index);
             }

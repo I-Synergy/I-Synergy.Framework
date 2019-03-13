@@ -45,7 +45,6 @@ namespace ISynergy.ViewModels.Authentication
             private set { SetValue(value); }
         }
 
-
         /// <summary>
         /// Gets or sets the Tag property value.
         /// </summary>

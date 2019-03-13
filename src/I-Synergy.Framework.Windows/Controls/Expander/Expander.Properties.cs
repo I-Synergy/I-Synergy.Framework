@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 
 namespace ISynergy.Controls
 {
@@ -76,7 +71,7 @@ namespace ISynergy.Controls
         {
             var expander = d as Expander;
 
-            bool isExpanded = (bool)e.NewValue;
+            var isExpanded = (bool)e.NewValue;
             if (isExpanded)
             {
                 expander.ExpandControl();

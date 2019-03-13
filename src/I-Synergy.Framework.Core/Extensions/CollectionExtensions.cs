@@ -71,7 +71,7 @@ namespace System.Collections
             Argument.IsNotNull(nameof(list), list);
             Argument.IsNotNull(nameof(item), item);
 
-            int currentIndex = list.IndexOf(item);
+            var currentIndex = list.IndexOf(item);
 
             if (currentIndex == -1)
             {
@@ -102,7 +102,7 @@ namespace System.Collections
                 return false;
             }
 
-            int index = list.IndexOf(item);
+            var index = list.IndexOf(item);
 
             if (index == -1)
             {
@@ -140,7 +140,7 @@ namespace System.Collections
                 return true;
             }
 
-            object item = list[index];
+            var item = list[index];
             list.RemoveAt(index);
             list.Insert(index - 1, item);
 
@@ -160,7 +160,7 @@ namespace System.Collections
             Argument.IsNotNull(nameof(list), list);
             Argument.IsNotNull(nameof(item), item);
 
-            int currentIndex = list.IndexOf(item);
+            var currentIndex = list.IndexOf(item);
 
             if (currentIndex == -1)
             {
@@ -193,7 +193,7 @@ namespace System.Collections
                 return true;
             }
 
-            object item = list[index];
+            var item = list[index];
             list.RemoveAt(index);
             list.Insert(index + 1, item);
 
@@ -213,7 +213,7 @@ namespace System.Collections
             Argument.IsNotNull(nameof(collection), collection);
             Argument.IsNotNull(nameof(range), range);
 
-            foreach (T curItem in range.EnsureNotNull())
+            foreach (var curItem in range.EnsureNotNull())
             {
                 collection.Add(curItem);
             }
@@ -315,9 +315,9 @@ namespace System.Collections
             var internalList = new List<object>(collection != null ? collection.Cast<object>() : Array.Empty<object>());
             var array = Array.CreateInstance(elementType, internalList.Count);
 
-            int index = 0;
+            var index = 0;
 
-            foreach (object item in internalList.EnsureNotNull())
+            foreach (var item in internalList.EnsureNotNull())
             {
                 array.SetValue(item, index++);
             }
@@ -374,9 +374,9 @@ namespace System.Collections
         {
             Argument.IsNotNull(nameof(existingSet), existingSet);
 
-            for (int i = existingSet.Count - 1; i >= 0; i--)
+            for (var i = existingSet.Count - 1; i >= 0; i--)
             {
-                for (int j = 1; j <= i; j++)
+                for (var j = 1; j <= i; j++)
                 {
                     var o1 = existingSet[j - 1];
                     var o2 = existingSet[j];

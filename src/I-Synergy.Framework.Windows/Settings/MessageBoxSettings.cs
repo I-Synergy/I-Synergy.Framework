@@ -22,18 +22,18 @@ namespace ISynergy.Dialogs
         /// Gets or sets the <see cref="MessageBoxButton"/> value that specifies which button or
         /// buttons to display. Default value is <see cref="MessageBoxButton.OK"/>.
         /// </summary>
-        public MessageBoxButton Button { get; set; } = MessageBoxButton.OK;
+        public MessageBoxButton Button { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="MessageBoxImage"/> value that specifies the icon to
         /// display. Default value is <see cref="MessageBoxImage.None"/>.
         /// </summary>
-        public MessageBoxImage Icon { get; set; } = MessageBoxImage.None;
+        public MessageBoxImage Icon { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="MessageBoxResult"/> value that specifies the default result
         /// of the message box. Default value is <see cref="MessageBoxResult.None"/>.
         /// </summary>
-        public MessageBoxResult DefaultResult { get; set; } = MessageBoxResult.None;
+        public MessageBoxResult DefaultResult { get; set; }
     }
 }

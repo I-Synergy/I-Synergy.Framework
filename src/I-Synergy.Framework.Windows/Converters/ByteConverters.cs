@@ -7,7 +7,7 @@ namespace ISynergy.Converters
 {
     public class BytesToImageSourceConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value != null)
             {
@@ -19,7 +19,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return new NotImplementedException();
         }
@@ -33,13 +33,13 @@ namespace ISynergy.Converters
 
             if (value is byte[] && value != null)
             {
-                byte[] bytes = value as byte[];
+                var bytes = value as byte[];
 
                 result = new MemoryStream();
                 result.Write(bytes, 0, bytes.Length);
                 result.Position = 0;
             }
-            
+
             return result;
         }
 

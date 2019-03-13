@@ -13,7 +13,7 @@ namespace ISynergy.Helpers
         /// <param name="hexColor">a hex string: "FFFFFF", "#000000"</param>
         public static Color HexStringToColor(string hexColor)
         {
-            string hc = hexColor.ExtractHexDigits();
+            var hc = hexColor.ExtractHexDigits();
 
             if (hc.Length != 6)
             {
@@ -22,19 +22,19 @@ namespace ISynergy.Helpers
                 return Colors.Transparent;
             }
 
-            string r = hc.Substring(0, 2);
-            string g = hc.Substring(2, 2);
-            string b = hc.Substring(4, 2);
+            var r = hc.Substring(0, 2);
+            var g = hc.Substring(2, 2);
+            var b = hc.Substring(4, 2);
 
-            Color color = Colors.Transparent;
+            var color = Colors.Transparent;
 
             try
             {
-                byte ri
+                var ri
                    = byte.Parse(r, System.Globalization.NumberStyles.HexNumber);
-                byte gi
+                var gi
                    = byte.Parse(g, System.Globalization.NumberStyles.HexNumber);
-                byte bi
+                var bi
                    = byte.Parse(b, System.Globalization.NumberStyles.HexNumber);
 
                 color = Color.FromArgb(255, ri, gi, bi);
@@ -54,19 +54,19 @@ namespace ISynergy.Helpers
 
             if(hex.Length == 6)
             {
-                byte a = byte.Parse("1");
-                byte r = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
-                byte g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
-                byte b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
+                var a = byte.Parse("1");
+                var r = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
+                var g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
+                var b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
 
                 return new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
             }
             else if(hex.Length == 8)
             {
-                byte a = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
-                byte r = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
-                byte g = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
-                byte b = byte.Parse(hex.Substring(6, 2), NumberStyles.HexNumber);
+                var a = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
+                var r = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
+                var g = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
+                var b = byte.Parse(hex.Substring(6, 2), NumberStyles.HexNumber);
 
                 return new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
             }
@@ -82,19 +82,19 @@ namespace ISynergy.Helpers
 
             if (hex.Length == 6)
             {
-                byte a = byte.Parse("1");
-                byte r = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
-                byte g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
-                byte b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
+                var a = byte.Parse("1");
+                var r = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
+                var g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
+                var b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
 
                 return Windows.UI.Color.FromArgb(a, r, g, b);
             }
             else if (hex.Length == 8)
             {
-                byte a = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
-                byte r = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
-                byte g = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
-                byte b = byte.Parse(hex.Substring(6, 2), NumberStyles.HexNumber);
+                var a = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
+                var r = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
+                var g = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
+                var b = byte.Parse(hex.Substring(6, 2), NumberStyles.HexNumber);
 
                 return Windows.UI.Color.FromArgb(a, r, g, b);
             }

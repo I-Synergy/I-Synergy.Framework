@@ -29,16 +29,16 @@ namespace ISynergy.Locators
             if (viewModel is null)
                 throw new ArgumentNullException(nameof(viewModel));
 
-            Type viewModelType = viewModel.GetType();
+            var viewModelType = viewModel.GetType();
 
-            Type dialogType = Cache.Get(viewModelType);
+            var dialogType = Cache.Get(viewModelType);
 
             if (dialogType != null)
             {
                 return dialogType;
             }
 
-            string dialogName = GetDialogName(viewModelType);
+            var dialogName = GetDialogName(viewModelType);
 
             dialogType = GetAssemblyFromType(viewModelType).GetType(dialogName);
 
@@ -52,7 +52,7 @@ namespace ISynergy.Locators
 
         private static string GetDialogName(Type viewModelType)
         {
-            string dialogName = viewModelType.FullName.Replace(".ViewModels.", ".Views.");
+            var dialogName = viewModelType.FullName.Replace(".ViewModels.", ".Views.");
 
             if (!dialogName.EndsWith("ViewModel", StringComparison.Ordinal))
                 throw new TypeLoadException(AppendInfoAboutDialogTypeLocators($"View model of type '{viewModelType}' doesn't follow naming convention since it isn't suffixed with 'ViewModel'."));

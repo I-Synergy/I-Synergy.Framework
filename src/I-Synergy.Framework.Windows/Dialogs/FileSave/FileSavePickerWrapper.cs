@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -32,7 +31,7 @@ namespace ISynergy.Dialogs
                 SuggestedStartLocation = settings.SuggestedStartLocation
             };
 
-            foreach (KeyValuePair<string, IList<string>> fileTypeChoice in settings.FileTypeChoices)
+            foreach (var fileTypeChoice in settings.FileTypeChoices)
             {
                 picker.FileTypeChoices.Add(fileTypeChoice);
             }

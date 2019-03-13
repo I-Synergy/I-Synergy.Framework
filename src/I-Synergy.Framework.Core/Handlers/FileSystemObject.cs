@@ -33,19 +33,15 @@ namespace ISynergy.Handlers
         {
             //1MB = 128Kb = 1024Kbits = 131072Bytes = 1048576Bits
             //0,5Mb = 524288Bytes
-            long iBytes = 0;
-
-            FileInfo filedetails = new FileInfo(path);
-            iBytes = filedetails.Length;
-
-            return iBytes;
+            var filedetails = new FileInfo(path);
+            return filedetails.Length;
         }
 
         public static string GetExtention(string path)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
-            string[] fileparts = path.Split('.');
+            var fileparts = path.Split('.');
 
             if (fileparts.Count() > 0)
             {
@@ -57,13 +53,13 @@ namespace ISynergy.Handlers
 
         public static string GetFileDescription(string path)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
-            string[] fileparts = path.Split('.');
+            var fileparts = path.Split('.');
 
             if (fileparts.Count() > 0)
             {
-                string[] folderparts = fileparts[0].Split('\\');
+                var folderparts = fileparts[0].Split('\\');
 
                 if (folderparts.Count() > 0)
                 {

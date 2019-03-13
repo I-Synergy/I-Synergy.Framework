@@ -49,7 +49,7 @@ namespace ISynergy.Extensions
 
         public static async Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
         {
-            if (settings.Values.TryGetValue(key, out object obj))
+            if (settings.Values.TryGetValue(key, out var obj))
             {
                 return await Json.ToObjectAsync<T>((string)obj);
             }
@@ -76,12 +76,12 @@ namespace ISynergy.Extensions
 
         public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
         {
-            var item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
+            var item = await folder.TryGetItemAsync(fileName).AsTask();
 
             if ((item != null) && item.IsOfType(StorageItemTypes.File))
             {
                 var storageFile = await folder.GetFileAsync(fileName);
-                byte[] content = await storageFile.ReadBytesAsync();
+                var content = await storageFile.ReadBytesAsync();
                 return content;
             }
 

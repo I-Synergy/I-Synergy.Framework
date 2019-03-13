@@ -19,13 +19,13 @@ namespace ISynergy.Utilities
         }
 
         //the method that will be provided to the KeyVaultClient
-        public async Task<string> GetToken(string authority, string resource, string scope)
+        public async Task<string> GetToken(string authority, string resource)
         {
             var authContext = new AuthenticationContext(authority);
-            ClientCredential clientCred = new ClientCredential(
+            var clientCred = new ClientCredential(
                 _vaultSettings.Value.ClientId,
                 _vaultSettings.Value.ClientSecret);
-            AuthenticationResult result = await authContext.AcquireTokenAsync(resource, clientCred);
+            var result = await authContext.AcquireTokenAsync(resource, clientCred);
 
             if (result is null)
                 throw new InvalidOperationException("Failed to obtain the JWT token");

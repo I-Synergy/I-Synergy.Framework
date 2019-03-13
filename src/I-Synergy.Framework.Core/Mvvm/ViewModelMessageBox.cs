@@ -107,8 +107,8 @@ namespace ISynergy.Mvvm
 
         protected ViewModelMessageBox(
             IContext context,
-            IBaseService baseService, 
-            string message, 
+            IBaseService baseService,
+            string message,
             string title,
             MessageBoxButton button = MessageBoxButton.OK,
             MessageBoxImage image = MessageBoxImage.Information,
@@ -138,9 +138,6 @@ namespace ISynergy.Mvvm
 
                 case MessageBoxResult.Cancel:
                     IsCancelDefault = true;
-                    break;
-
-                default:
                     break;
             }
         }
@@ -187,7 +184,7 @@ namespace ISynergy.Mvvm
 
         public override Task SubmitAsync(TEntity e)
         {
-            int.TryParse(e.ToString(), out int parameter);
+            int.TryParse(e.ToString(), out var parameter);
 
             Result = parameter;
 

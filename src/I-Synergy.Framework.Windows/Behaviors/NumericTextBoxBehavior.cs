@@ -40,7 +40,7 @@ namespace ISynergy.Behaviors
         ///TextBox to assocate this behavior with.
         public void Attach(DependencyObject associatedObject)
         {
-            TextBox tb = associatedObject as TextBox;
+            var tb = associatedObject as TextBox;
 
             if (tb is null)
             {
@@ -71,7 +71,7 @@ namespace ISynergy.Behaviors
             {
                 if (AllowDecimal)
                 {
-                    if (string.IsNullOrEmpty(tb.Text) || Double.TryParse(tb.Text, out double value))
+                    if (string.IsNullOrEmpty(tb.Text) || Double.TryParse(tb.Text, out var value))
                     {
                         _lastText = tb.Text;
                         return;
@@ -79,7 +79,7 @@ namespace ISynergy.Behaviors
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(tb.Text) || long.TryParse(tb.Text, out long value))
+                    if (string.IsNullOrEmpty(tb.Text) || long.TryParse(tb.Text, out var value))
                     {
                         _lastText = tb.Text;
                         return;

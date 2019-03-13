@@ -34,10 +34,10 @@ namespace ISynergy.Services
             return ShowDialogAsync((ISynergy.Controls.Window)SimpleIoc.Default.GetInstance(window.GetType()), viewmodel);
         }
 
-        public Task<bool?> ShowDialogAsync<TEntity>(Type window, IViewModelDialog<TEntity> viewmodel)
+        public Task<bool?> ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
             where TEntity : class, new()
         {
-            return ShowDialogAsync((ISynergy.Controls.Window)SimpleIoc.Default.GetInstance(window), viewmodel);
+            return ShowDialogAsync((ISynergy.Controls.Window)SimpleIoc.Default.GetInstance(type), viewmodel);
         }
 
         public virtual async Task<bool?> ShowDialogAsync<TEntity>(ISynergy.Controls.Window dialog, IViewModelDialog<TEntity> viewmodel)
@@ -59,7 +59,7 @@ namespace ISynergy.Services
 
                 IsShown = true;
 
-                for (int i = 0; i < RegisteredWindows.Count(q => q.Equals(dialog)); i++)
+                for (var i = 0; i < RegisteredWindows.Count(q => q.Equals(dialog)); i++)
                 {
                     result = await RegisteredWindows[i].ShowAsync<TEntity>();
                     RegisteredWindows.Remove(RegisteredWindows[i]);

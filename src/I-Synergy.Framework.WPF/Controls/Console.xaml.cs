@@ -1,18 +1,10 @@
 ﻿using ISynergy.Processes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ISynergy.Framework.Controls
 {
@@ -103,7 +95,7 @@ namespace ISynergy.Framework.Controls
         /// <param name="e">The <see cref="System.Windows.Input.KeyEventArgs" /> instance containing the event data.</param>
         void RichTextBox_Console_KeyDown(object sender, KeyEventArgs e)
         {
-            bool inReadOnlyZone = RichTextBox_Console.Selection.Start.CompareTo(inputStartPos) < 0;
+            var inReadOnlyZone = RichTextBox_Console.Selection.Start.CompareTo(inputStartPos) < 0;
 
             //  If we're at the input point and it's backspace, bail.
             if (inReadOnlyZone && e.Key == Key.Back)
@@ -216,7 +208,6 @@ namespace ISynergy.Framework.Controls
             }
         }
 
-
         /// <summary>
         /// Runs a process.
         /// </summary>
@@ -245,7 +236,6 @@ namespace ISynergy.Framework.Controls
 
                 //  We're now running.
                 IsProcessRunning = true;
-
             });
         }
 
@@ -281,7 +271,7 @@ namespace ISynergy.Framework.Controls
         /// <summary>
         /// The internal process interface used to interface with the process.
         /// </summary>
-        public ProcessInterface ProcessInterface { get; private set; } = new ProcessInterface();
+        public ProcessInterface ProcessInterface { get; } = new ProcessInterface();
 
         /// <summary>
         /// Current position that input starts at.
@@ -322,7 +312,6 @@ namespace ISynergy.Framework.Controls
         private static void OnShowDiagnosticsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
         {
         }
-
 
         private static readonly DependencyProperty IsInputEnabledProperty =
           DependencyProperty.Register(nameof(IsInputEnabled), typeof(bool), typeof(Console),

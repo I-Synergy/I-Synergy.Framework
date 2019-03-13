@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Controls
@@ -38,7 +33,7 @@ namespace ISynergy.Controls
             nameof(Header),
             typeof(string),
             typeof(HeaderedTextBlock),
-            new PropertyMetadata(null, (d, e) => { ((HeaderedTextBlock)d).UpdateVisibility(); }));
+            new PropertyMetadata(null, (d, _) => { ((HeaderedTextBlock)d).UpdateVisibility(); }));
 
         /// <summary>
         /// Defines the <see cref="Text"/> dependency property.
@@ -47,7 +42,7 @@ namespace ISynergy.Controls
             nameof(Text),
             typeof(string),
             typeof(HeaderedTextBlock),
-            new PropertyMetadata(null, (d, e) => { ((HeaderedTextBlock)d).UpdateVisibility(); }));
+            new PropertyMetadata(null, (d, _) => { ((HeaderedTextBlock)d).UpdateVisibility(); }));
 
         /// <summary>
         /// Defines the <see cref="Orientation"/> dependency property.
@@ -65,7 +60,7 @@ namespace ISynergy.Controls
             nameof(HideTextIfEmpty),
             typeof(bool),
             typeof(HeaderedTextBlock),
-            new PropertyMetadata(false, (d, e) => { ((HeaderedTextBlock)d).UpdateVisibility(); }));
+            new PropertyMetadata(false, (d, _) => { ((HeaderedTextBlock)d).UpdateVisibility(); }));
 
         /// <summary>
         /// Gets or sets the header style.
