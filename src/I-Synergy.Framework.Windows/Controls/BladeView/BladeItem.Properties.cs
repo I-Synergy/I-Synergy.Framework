@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
+﻿using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
@@ -86,7 +81,7 @@ namespace ISynergy.Controls
 
         private static void IsOpenChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            BladeItem bladeItem = (BladeItem)dependencyObject;
+            var bladeItem = (BladeItem)dependencyObject;
             bladeItem.Visibility = bladeItem.IsOpen ? Visibility.Visible : Visibility.Collapsed;
             bladeItem.VisibilityChanged?.Invoke(bladeItem, bladeItem.Visibility);
         }

@@ -42,7 +42,7 @@ namespace Windows.UI.Core
                 }
             });
 
-            await taskCompletionSource.Task.ConfigureAwait(false);
+            await taskCompletionSource.Task;
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Windows.UI.Core
                 }
             });
 
-            return await taskCompletionSource.Task.ConfigureAwait(false);
+            return await taskCompletionSource.Task;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Windows.UI.Core
             {
                 try
                 {
-                    await asyncAction().ConfigureAwait(false);
+                    await asyncAction();
 
                     taskCompletionSource.TrySetResult(true);
                 }
@@ -122,7 +122,7 @@ namespace Windows.UI.Core
                 }
             });
 
-            await taskCompletionSource.Task.ConfigureAwait(false);
+            await taskCompletionSource.Task;
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Windows.UI.Core
             {
                 try
                 {
-                    var result = await asyncFunction().ConfigureAwait(false);
+                    var result = await asyncFunction();
 
                     taskCompletionSource.TrySetResult(result);
                 }
@@ -163,7 +163,7 @@ namespace Windows.UI.Core
                 }
             });
 
-            return await taskCompletionSource.Task.ConfigureAwait(false);
+            return await taskCompletionSource.Task;
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Windows.UI.Core
                 }
             });
 
-            await taskCompletionSource.Task.ConfigureAwait(false);
+            await taskCompletionSource.Task;
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Windows.UI.Core
                 }
             });
 
-            return await taskCompletionSource.Task.ConfigureAwait(false);
+            return await taskCompletionSource.Task;
         }
     }
 }

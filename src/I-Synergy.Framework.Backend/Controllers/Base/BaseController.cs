@@ -13,6 +13,6 @@ namespace ISynergy.Controllers.Base
         {
         }
 
-        public string GetCurrentUser { get => User.Claims.Where(q => q.Type == ClaimTypes.UserNameType).FirstOrDefault().Value; }
+        public string GetCurrentUser { get => User.Claims.Where(q => q.Type == ClaimTypes.UserNameType).FirstOrDefault()?.Value; }
     }
 }

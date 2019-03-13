@@ -64,7 +64,7 @@ namespace ISynergy.Services
             {
                 Context.Environment = Enumerations.SoftwareEnvironments.Production;
             }
-            
+
             if (SettingsService.User_AutoLogin && !string.IsNullOrEmpty(SettingsService.User_RefreshToken))
             {
                 await AuthenticationService.AuthenticateWithRefreshTokenAsync(SettingsService.User_RefreshToken);
@@ -96,13 +96,12 @@ namespace ISynergy.Services
                     Context.CurrentProfile.UserInfo = ClaimConverters.ConvertClaimsToUserInfo(securityToken.Claims);
                     Context.CurrentProfile.TokenExpiration = securityToken.ValidTo.ToLocalTime();
 
-                    string timezoneId = Context.CurrentProfile.UserInfo.TimeZoneId;
+                    var timezoneId = Context.CurrentProfile.UserInfo.TimeZoneId;
 
                     if (string.IsNullOrEmpty(timezoneId))
                         timezoneId = TimeZoneInfo.Local.Id;
 
                     Context.CurrentTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
-
 
                     SettingsService.User_RefreshToken = Context.CurrentProfile.Token.refresh_token;
 

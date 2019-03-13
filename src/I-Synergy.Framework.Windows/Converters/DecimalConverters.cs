@@ -6,7 +6,7 @@ namespace ISynergy.Converters
 {
     public class DecimalToVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if ((decimal)value == 0 || value is null)
             {
@@ -18,7 +18,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -26,10 +26,10 @@ namespace ISynergy.Converters
 
     public class DecimalEqualsConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            decimal.TryParse(parameter.ToString(), out decimal limit);
-            decimal.TryParse(value.ToString(), out decimal test);
+            decimal.TryParse(parameter.ToString(), out var limit);
+            decimal.TryParse(value.ToString(), out var test);
 
             if (test == limit)
             {
@@ -39,7 +39,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -47,10 +47,10 @@ namespace ISynergy.Converters
 
     public class DecimalLesserThenConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            decimal.TryParse(parameter.ToString(), out decimal limit);
-            decimal.TryParse(value.ToString(), out decimal test);
+            decimal.TryParse(parameter.ToString(), out var limit);
+            decimal.TryParse(value.ToString(), out var test);
 
             if (test < limit)
             {
@@ -60,7 +60,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -68,10 +68,10 @@ namespace ISynergy.Converters
 
     public class DecimalGreaterThenConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            decimal.TryParse(parameter.ToString(), out decimal limit);
-            decimal.TryParse(value.ToString(), out decimal test);
+            decimal.TryParse(parameter.ToString(), out var limit);
+            decimal.TryParse(value.ToString(), out var test);
 
             if (test > limit)
             {
@@ -81,7 +81,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -89,10 +89,10 @@ namespace ISynergy.Converters
 
     public class DecimalEqualsOrLesserThenConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            decimal.TryParse(parameter.ToString(), out decimal limit);
-            decimal.TryParse(value.ToString(), out decimal test);
+            decimal.TryParse(parameter.ToString(), out var limit);
+            decimal.TryParse(value.ToString(), out var test);
 
             if (test <= limit)
             {
@@ -102,7 +102,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -110,10 +110,10 @@ namespace ISynergy.Converters
 
     public class DecimalEqualsOrGreaterThenConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            decimal.TryParse(parameter.ToString(), out decimal limit);
-            decimal.TryParse(value.ToString(), out decimal test);
+            decimal.TryParse(parameter.ToString(), out var limit);
+            decimal.TryParse(value.ToString(), out var test);
 
             if (test >= limit)
             {
@@ -123,7 +123,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -131,7 +131,7 @@ namespace ISynergy.Converters
 
     public class DecimalToStringConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is decimal)
             {
@@ -151,9 +151,9 @@ namespace ISynergy.Converters
             return "0";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if (decimal.TryParse(value.ToString(), out decimal result))
+            if (decimal.TryParse(value.ToString(), out var result))
             {
                 return result;
             }

@@ -17,7 +17,7 @@ namespace ISynergy.Validators
 
         public override async Task<IdentityResult> ValidateAsync(UserManager<TUser> manager, TUser user, string password)
         {
-            var result = await base.ValidateAsync(manager, user, password).ConfigureAwait(false);
+            var result = await base.ValidateAsync(manager, user, password);
 
             if (!result.Succeeded)
                 return result;

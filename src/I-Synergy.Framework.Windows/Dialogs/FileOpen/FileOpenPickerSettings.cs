@@ -44,11 +44,11 @@ namespace ISynergy.Dialogs
         /// file picker. To give the user a sense of consistency, the file picker remembers the
         /// last location that the user navigated to and will generally start at that location.
         /// </remarks>
-        public PickerLocationId SuggestedStartLocation { get; set; } = PickerLocationId.DocumentsLibrary;
+        public PickerLocationId SuggestedStartLocation { get; set; }
 
         /// <summary>
         /// Gets or sets the view mode that the file open picker uses to display items.
         /// </summary>
-        public PickerViewMode ViewMode { get; set; } = PickerViewMode.List;
+        public PickerViewMode ViewMode { get; set; }
     }
 }

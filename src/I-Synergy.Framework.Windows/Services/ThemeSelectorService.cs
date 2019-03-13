@@ -63,7 +63,7 @@ namespace ISynergy.Services
         {
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
             {
-                CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
                 coreTitleBar.ExtendViewIntoTitleBar = true;
 
                 var titleBar = ApplicationView.GetForCurrentView().TitleBar;
@@ -93,7 +93,7 @@ namespace ISynergy.Services
 
         private static object LoadThemeFromSetting()
         {
-            ElementTheme cacheTheme = ElementTheme.Light;
+            var cacheTheme = ElementTheme.Light;
 
             var themeName = ApplicationData.Current.LocalSettings.Values[SettingsKey];
 

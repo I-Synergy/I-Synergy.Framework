@@ -166,7 +166,6 @@ namespace ISynergy.Controls
                 return;
             }
 
-
             if (transform is ScaleTransform scaleTransform)
             {
                 var scaleXPropertyChangeEventSource =
@@ -186,7 +185,6 @@ namespace ISynergy.Controls
                 return;
             }
 
-
             if (transform is SkewTransform skewTransform)
             {
                 var angleXPropertyChangeEventSource =
@@ -205,7 +203,6 @@ namespace ISynergy.Controls
                 propertyChangeEventSources.Add(angleYPropertyChangeEventSource);
                 return;
             }
-
 
             if (transform is MatrixTransform matrixTransform)
             {
@@ -285,7 +282,7 @@ namespace ISynergy.Controls
         protected override void OnApplyTemplate()
         {
             // Save existing content and remove it from the visual tree
-            FrameworkElement savedContent = Child;
+            var savedContent = Child;
             Child = null;
 
             // Apply new template
@@ -422,7 +419,7 @@ namespace ISynergy.Controls
         /// layout, based on its calculations of child element sizes.</returns>
         protected override Size MeasureOverride(Size availableSize)
         {
-            FrameworkElement child = Child;
+            var child = Child;
             if (_layoutRoot == null || child == null)
             {
                 // No content, no size
@@ -445,8 +442,8 @@ namespace ISynergy.Controls
             _layoutRoot.Measure(measureSize);
 
             // Transform DesiredSize to find its width/height
-            Rect transformedDesiredRect = _transformation.RectTransform(new Rect(0, 0, _layoutRoot.DesiredSize.Width, _layoutRoot.DesiredSize.Height));
-            Size transformedDesiredSize = new Size(transformedDesiredRect.Width, transformedDesiredRect.Height);
+            var transformedDesiredRect = _transformation.RectTransform(new Rect(0, 0, _layoutRoot.DesiredSize.Width, _layoutRoot.DesiredSize.Height));
+            var transformedDesiredSize = new Size(transformedDesiredRect.Width, transformedDesiredRect.Height);
 
             // Return result to allocate enough space for the transformation
             return transformedDesiredSize;
@@ -460,7 +457,7 @@ namespace ISynergy.Controls
         /// <returns>The actual size used.</returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            FrameworkElement child = Child;
+            var child = Child;
             if (_layoutRoot == null || child == null)
             {
                 // No child, use whatever was given
@@ -468,7 +465,7 @@ namespace ISynergy.Controls
             }
 
             // Determine the largest available size after the transformation
-            Size finalSizeTransformed = ComputeLargestTransformedSize(finalSize);
+            var finalSizeTransformed = ComputeLargestTransformedSize(finalSize);
             if (IsSizeSmaller(finalSizeTransformed, _layoutRoot.DesiredSize))
             {
                 // Some elements do not like being given less space than they asked for (ex: TextBlock)
@@ -477,10 +474,10 @@ namespace ISynergy.Controls
             }
 
             // Transform the working size to find its width/height
-            Rect transformedRect = _transformation.RectTransform(new Rect(0, 0, finalSizeTransformed.Width, finalSizeTransformed.Height));
+            var transformedRect = _transformation.RectTransform(new Rect(0, 0, finalSizeTransformed.Width, finalSizeTransformed.Height));
 
             // Create the Arrange rect to center the transformed content
-            Rect finalRect = new Rect(
+            var finalRect = new Rect(
                 -transformedRect.Left + ((finalSize.Width - transformedRect.Width) / 2),
                 -transformedRect.Top + ((finalSize.Height - transformedRect.Height) / 2),
                 finalSizeTransformed.Width,
@@ -518,17 +515,17 @@ namespace ISynergy.Controls
         private Size ComputeLargestTransformedSize(Size arrangeBounds)
         {
             // Computed largest transformed size
-            Size computedSize = Size.Empty;
+            var computedSize = Size.Empty;
 
             // Detect infinite bounds and constrain the scenario
-            bool infiniteWidth = double.IsInfinity(arrangeBounds.Width);
+            var infiniteWidth = double.IsInfinity(arrangeBounds.Width);
 
             if (infiniteWidth)
             {
                 arrangeBounds.Width = arrangeBounds.Height;
             }
 
-            bool infiniteHeight = double.IsInfinity(arrangeBounds.Height);
+            var infiniteHeight = double.IsInfinity(arrangeBounds.Height);
 
             if (infiniteHeight)
             {
@@ -536,28 +533,28 @@ namespace ISynergy.Controls
             }
 
             // Capture the matrix parameters
-            double a = _transformation.M11;
-            double b = _transformation.M12;
-            double c = _transformation.M21;
-            double d = _transformation.M22;
+            var a = _transformation.M11;
+            var b = _transformation.M12;
+            var c = _transformation.M21;
+            var d = _transformation.M22;
 
             // Compute maximum possible transformed width/height based on starting width/height
             // These constraints define two lines in the positive x/y quadrant
-            double maxWidthFromWidth = Math.Abs(arrangeBounds.Width / a);
-            double maxHeightFromWidth = Math.Abs(arrangeBounds.Width / c);
-            double maxWidthFromHeight = Math.Abs(arrangeBounds.Height / b);
-            double maxHeightFromHeight = Math.Abs(arrangeBounds.Height / d);
+            var maxWidthFromWidth = Math.Abs(arrangeBounds.Width / a);
+            var maxHeightFromWidth = Math.Abs(arrangeBounds.Width / c);
+            var maxWidthFromHeight = Math.Abs(arrangeBounds.Height / b);
+            var maxHeightFromHeight = Math.Abs(arrangeBounds.Height / d);
 
             // The transformed width/height that maximize the area under each segment is its midpoint
             // At most one of the two midpoints will satisfy both constraints
-            double idealWidthFromWidth = maxWidthFromWidth / 2;
-            double idealHeightFromWidth = maxHeightFromWidth / 2;
-            double idealWidthFromHeight = maxWidthFromHeight / 2;
-            double idealHeightFromHeight = maxHeightFromHeight / 2;
+            var idealWidthFromWidth = maxWidthFromWidth / 2;
+            var idealHeightFromWidth = maxHeightFromWidth / 2;
+            var idealWidthFromHeight = maxWidthFromHeight / 2;
+            var idealHeightFromHeight = maxHeightFromHeight / 2;
 
             // Compute slope of both constraint lines
-            double slopeFromWidth = -(maxHeightFromWidth / maxWidthFromWidth);
-            double slopeFromHeight = -(maxHeightFromHeight / maxWidthFromHeight);
+            var slopeFromWidth = -(maxHeightFromWidth / maxWidthFromWidth);
+            var slopeFromHeight = -(maxHeightFromHeight / maxWidthFromHeight);
 
             if (arrangeBounds.Width == 0 || arrangeBounds.Height == 0)
             {
@@ -577,8 +574,8 @@ namespace ISynergy.Controls
             else if (b == 0 || c == 0)
             {
                 // Check for 0/180 degree special cases
-                double maxHeight = infiniteHeight ? double.PositiveInfinity : maxHeightFromHeight;
-                double maxWidth = infiniteWidth ? double.PositiveInfinity : maxWidthFromWidth;
+                var maxHeight = infiniteHeight ? double.PositiveInfinity : maxHeightFromHeight;
+                var maxWidth = infiniteWidth ? double.PositiveInfinity : maxWidthFromWidth;
 
                 if (b == 0 && c == 0)
                 {
@@ -588,25 +585,25 @@ namespace ISynergy.Controls
                 else if (b == 0)
                 {
                     // Constrained by width
-                    double computedHeight = Math.Min(idealHeightFromWidth, maxHeight);
+                    var computedHeight = Math.Min(idealHeightFromWidth, maxHeight);
                     computedSize = new Size(
-                        maxWidth - Math.Abs((c * computedHeight) / a),
+                        maxWidth - Math.Abs(c * computedHeight / a),
                         computedHeight);
                 }
                 else if (c == 0)
                 {
                     // Constrained by height
-                    double computedWidth = Math.Min(idealWidthFromHeight, maxWidth);
+                    var computedWidth = Math.Min(idealWidthFromHeight, maxWidth);
                     computedSize = new Size(
                         computedWidth,
-                        maxHeight - Math.Abs((b * computedWidth) / d));
+                        maxHeight - Math.Abs(b * computedWidth / d));
                 }
             }
             else if (a == 0 || d == 0)
             {
                 // Check for 90/270 degree special cases
-                double maxWidth = infiniteHeight ? double.PositiveInfinity : maxWidthFromHeight;
-                double maxHeight = infiniteWidth ? double.PositiveInfinity : maxHeightFromWidth;
+                var maxWidth = infiniteHeight ? double.PositiveInfinity : maxWidthFromHeight;
+                var maxHeight = infiniteWidth ? double.PositiveInfinity : maxHeightFromWidth;
 
                 if (a == 0 && d == 0)
                 {
@@ -616,18 +613,18 @@ namespace ISynergy.Controls
                 else if (a == 0)
                 {
                     // Constrained by width
-                    double computedHeight = Math.Min(idealHeightFromHeight, maxHeight);
+                    var computedHeight = Math.Min(idealHeightFromHeight, maxHeight);
                     computedSize = new Size(
-                        maxWidth - Math.Abs((d * computedHeight) / b),
+                        maxWidth - Math.Abs(d * computedHeight / b),
                         computedHeight);
                 }
                 else if (d == 0)
                 {
                     // Constrained by height.
-                    double computedWidth = Math.Min(idealWidthFromWidth, maxWidth);
+                    var computedWidth = Math.Min(idealWidthFromWidth, maxWidth);
                     computedSize = new Size(
                         computedWidth,
-                        maxHeight - Math.Abs((a * computedWidth) / c));
+                        maxHeight - Math.Abs(a * computedWidth / c));
                 }
             }
             else if (idealHeightFromWidth <= ((slopeFromHeight * idealWidthFromWidth) + maxHeightFromHeight))
@@ -645,7 +642,7 @@ namespace ISynergy.Controls
                 // Neither midpoint is viable; use the intersection of the two constraint lines instead.
 
                 // Compute width by setting heights equal (m1*x+c1=m2*x+c2).
-                double computedWidth = (maxHeightFromHeight - maxHeightFromWidth) / (slopeFromWidth - slopeFromHeight);
+                var computedWidth = (maxHeightFromHeight - maxHeightFromWidth) / (slopeFromWidth - slopeFromHeight);
 
                 // Compute height from width constraint line (y=m*x+c; using height would give same result).
                 computedSize = new Size(

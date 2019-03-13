@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
     public abstract class BaseSettingsService : IBaseSettingsService
     {
-        Windows.Storage.ApplicationDataContainer localSettings;
+        readonly Windows.Storage.ApplicationDataContainer localSettings;
 
         protected BaseSettingsService()
         {

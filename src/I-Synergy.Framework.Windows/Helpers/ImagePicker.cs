@@ -50,7 +50,7 @@ namespace ISynergy.Helpers
             {
                 using (var stream = randomStream.AsStream())
                 {
-                    byte[] buffer = new byte[randomStream.Size];
+                    var buffer = new byte[randomStream.Size];
                     await stream.ReadAsync(buffer, 0, buffer.Length);
                     return buffer;
                 }

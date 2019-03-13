@@ -26,7 +26,7 @@ namespace ISynergy.Mvvm
             get { return GetValue<object>(); }
             set { SetValue(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the IsNew property value.
         /// </summary>
@@ -45,7 +45,7 @@ namespace ISynergy.Mvvm
             set { SetValue(value); }
         }
 
-        public RelayCommand<TEntity> Submit_Command { get; private set; }
+        public RelayCommand<TEntity> Submit_Command { get; }
 
         protected ViewModelBlade(
             IContext context,

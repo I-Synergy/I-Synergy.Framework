@@ -51,7 +51,7 @@ namespace ISynergy.Services
 
         public async Task<bool> IsTransient(Exception e)
         {
-            bool result = false;
+            var result = false;
 
             // Determine if the exception is transient.
             // In some cases this is as simple as checking the exception type, in other
@@ -78,10 +78,10 @@ namespace ISynergy.Services
             return result;
         }
 
-        protected async Task<T> GetAccountJsonAsync<T>(object[] segments, object queryparameters = null, bool IsAnonymous = false, CancellationToken cancellationToken = default)
+        protected async Task<T> GetAccountJsonAsync<T>(object[] segments, object queryparameters = null, bool IsAnonymous = false)
         {
             T result = default;
-            int currentRetry = 0;
+            var currentRetry = 0;
 
             for (; ; )
             {
@@ -97,7 +97,7 @@ namespace ISynergy.Services
 
                     if (!IsAnonymous) url.WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token);
 
-                    result = await url.GetJsonAsync<T>(cancellationToken);
+                    result = await url.GetJsonAsync<T>();
 
                     // Return or break.
                     break;
@@ -218,7 +218,7 @@ namespace ISynergy.Services
             {
                 if (e.Call.HttpStatus == System.Net.HttpStatusCode.BadRequest)
                 {
-                    ApiException ex = await e.GetResponseJsonAsync<ApiException>();
+                    var ex = await e.GetResponseJsonAsync<ApiException>();
 
                     if (ex != null)
                     {
@@ -235,7 +235,7 @@ namespace ISynergy.Services
         {
             if (e.Call.HttpStatus == System.Net.HttpStatusCode.BadRequest)
             {
-                ApiException api_ex = await e.GetResponseJsonAsync<ApiException>();
+                var api_ex = await e.GetResponseJsonAsync<ApiException>();
 
                 if (api_ex != null)
                 {
@@ -266,7 +266,7 @@ namespace ISynergy.Services
         public async Task<T> PutAccountJsonAsync<T>(object[] segments, object data)
         {
             T result = default;
-            int currentRetry = 0;
+            var currentRetry = 0;
 
             for (; ; )
             {
@@ -313,7 +313,7 @@ namespace ISynergy.Services
         public async Task<T> PostAccountJsonAsync<T>(object[] segments, object data, bool IsAnonymous = false)
         {
             T result = default;
-            int currentRetry = 0;
+            var currentRetry = 0;
 
             for (; ; )
             {
@@ -362,8 +362,8 @@ namespace ISynergy.Services
 
         public async Task<int> DeleteAccountJsonAsync(object[] segments, object queryparameters = null)
         {
-            int result = 0;
-            int currentRetry = 0;
+            var result = 0;
+            var currentRetry = 0;
 
             for (; ; )
             {
@@ -426,12 +426,12 @@ namespace ISynergy.Services
         public Task<List<AccountFull>> GetAccountsAsync(CancellationToken cancellationToken = default) =>
             GetAccountJsonAsync<List<AccountFull>>(new object[] { ControllerPaths.Accounts });
 
-        public Task<int> UpdateAccountAsync(AccountFull e, CancellationToken cancellationToken = default) =>
+        public Task<int> UpdateAccountAsync(AccountFull e) =>
             PutAccountJsonAsync<int>(new object[] { ControllerPaths.Accounts }, e);
 
         public async Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken = default)
         {
-            List<Role> result = new List<Role>();
+            var result = new List<Role>();
 
             var roles = await GetAccountJsonAsync<List<Role>>(new object[] { ControllerPaths.Roles });
 
@@ -444,19 +444,19 @@ namespace ISynergy.Services
             return result;
         }
 
-        public Task<int> RemoveUserAsync(string id, CancellationToken cancellationToken = default) =>
+        public Task<int> RemoveUserAsync(string id) =>
             DeleteAccountJsonAsync(new object[] { ControllerPaths.Users, id });
 
-        public Task<int> RemoveAccountAsync(Guid id, CancellationToken cancellationToken = default) =>
+        public Task<int> RemoveAccountAsync(Guid id) =>
             DeleteAccountJsonAsync(new object[] { ControllerPaths.Accounts, id });
 
-        public Task<int> ToggleAccountActivationAsync(Guid id, CancellationToken cancellationToken = default) =>
+        public Task<int> ToggleAccountActivationAsync(Guid id) =>
             PutAccountJsonAsync<int>(new object[] { ControllerPaths.Accounts, id }, null);
 
-        public Task<bool> ToggleUserLockAsync(string id, CancellationToken cancellationToken = default) =>
+        public Task<bool> ToggleUserLockAsync(string id) =>
             PutAccountJsonAsync<bool>(new object[] { ControllerPaths.Users, id }, null);
 
-        public Task<int> UpdateUserAsync(UserEdit e, CancellationToken cancellationToken = default) =>
+        public Task<int> UpdateUserAsync(UserEdit e) =>
             PutAccountJsonAsync<int>(new object[] { ControllerPaths.Users }, e);
     }
 }

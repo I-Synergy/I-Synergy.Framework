@@ -42,7 +42,7 @@ namespace ISynergy.Events
 
     public class OnLanguageChangedMessage : EventMessage
     {
-        public string Language { get; private set; }
+        public string Language { get; }
 
         public OnLanguageChangedMessage(object sender, string language)
             :base(sender)
@@ -68,8 +68,8 @@ namespace ISynergy.Events
 
     public class AuthenticateUserMessageResult : EventMessage
     {
-        public object Property { get; private set; }
-        public bool IsAuthenticated { get; private set; }
+        public object Property { get; }
+        public bool IsAuthenticated { get; }
 
         public AuthenticateUserMessageResult(object sender, object property, bool authenticated)
             : base(sender)
@@ -81,7 +81,7 @@ namespace ISynergy.Events
 
     public class ItemSelectedMessage : EventMessage
     {
-        public object Value { get; private set; }
+        public object Value { get; }
 
         public ItemSelectedMessage(object sender, object value)
             : base(sender)
@@ -92,7 +92,7 @@ namespace ISynergy.Events
 
     public class AddBladeMessage : EventMessage
     {
-        public IViewModelBlade Viewmodel { get; private set; }
+        public IViewModelBlade Viewmodel { get; }
 
         public AddBladeMessage(object sender, IViewModelBlade viewmodel)
             : base(sender)
@@ -103,7 +103,7 @@ namespace ISynergy.Events
 
     public class OnSubmitMessage : EventMessage
     {
-        public object Value { get; private set; }
+        public object Value { get; }
 
         public OnSubmitMessage(object sender, object value)
             : base(sender)
@@ -124,7 +124,7 @@ namespace ISynergy.Events
 
     public class TileSelectedMessage : EventMessage
     {
-        public string TileName { get; private set; }
+        public string TileName { get; }
 
         public TileSelectedMessage(object sender, string name)
             : base(sender)

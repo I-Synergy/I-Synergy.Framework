@@ -18,7 +18,7 @@ namespace ISynergy.Helpers
         {
             var myBatch = target.Compositor.GetCommitBatch(CompositionBatchTypes.Animation);
             target.Opacity = 0.0f;
-            ImplicitAnimationCollection implicitAnimationCollection = target.Compositor.CreateImplicitAnimationCollection();
+            var implicitAnimationCollection = target.Compositor.CreateImplicitAnimationCollection();
 
             implicitAnimationCollection[nameof(Visual.Opacity)] = CreateOpacityAnimation(target.Compositor, duration);
             target.ImplicitAnimations = implicitAnimationCollection;
@@ -27,7 +27,7 @@ namespace ISynergy.Helpers
 
         public static KeyFrameAnimation CreateOpacityAnimation(Compositor compositor, TimeSpan duration)
         {
-            ScalarKeyFrameAnimation kf = compositor.CreateScalarKeyFrameAnimation();
+            var kf = compositor.CreateScalarKeyFrameAnimation();
             kf.InsertExpressionKeyFrame(1.0f, "this.FinalValue");
             kf.Duration = duration;
             kf.Target = "Opacity";
@@ -98,7 +98,7 @@ namespace ISynergy.Helpers
 
         private static KeyFrameAnimation CreateOffsetAnimation(Compositor compositor, TimeSpan duration)
         {
-            Vector3KeyFrameAnimation kf = compositor.CreateVector3KeyFrameAnimation();
+            var kf = compositor.CreateVector3KeyFrameAnimation();
             kf.InsertExpressionKeyFrame(1.0f, "this.FinalValue");
             kf.Duration = duration;
             kf.Target = "Offset";
@@ -179,9 +179,9 @@ namespace ISynergy.Helpers
             var chil = VisualTreeHelper.GetChild(root, 0);
             FrameworkElement child = null;
 
-            int count = VisualTreeHelper.GetChildrenCount(root);
+            var count = VisualTreeHelper.GetChildrenCount(root);
 
-            for (int i = 0; i < count && child is null; i++)
+            for (var i = 0; i < count && child is null; i++)
             {
                 var current = (FrameworkElement)VisualTreeHelper.GetChild(root, i);
                 if (current != null && current.Name != null && current.Name == name)
@@ -217,7 +217,7 @@ namespace ISynergy.Helpers
             }
 
             var childCount = VisualTreeHelper.GetChildrenCount(element);
-            for (int i = 0; i < childCount; i++)
+            for (var i = 0; i < childCount; i++)
             {
                 var result = VisualTreeHelper.GetChild(element, i).FindDescendantByName(name);
                 if (result != null)
@@ -311,7 +311,7 @@ namespace ISynergy.Helpers
                     yield return type;
                 }
 
-                foreach (T childofChild in child.FindDescendants<T>())
+                foreach (var childofChild in child.FindDescendants<T>())
                 {
                     yield return childofChild;
                 }

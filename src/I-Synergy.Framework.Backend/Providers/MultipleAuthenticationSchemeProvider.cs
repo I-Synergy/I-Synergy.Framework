@@ -30,7 +30,7 @@ namespace ISynergy.Providers
             // For API requests, use authentication tokens.
             if (request.Path.StartsWithSegments("/api") ||
                 request.Path.StartsWithSegments("/monitor") ||
-                request.Path.StartsWithSegments("/oauth") || 
+                request.Path.StartsWithSegments("/oauth") ||
                 request.Path.StartsWithSegments("/account"))
             {
                 return GetSchemeAsync(OAuthValidationDefaults.AuthenticationScheme);

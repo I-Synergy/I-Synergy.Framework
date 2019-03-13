@@ -6,7 +6,6 @@ namespace ISynergy.Helpers
 {
     public class TitleBarHelper : INotifyPropertyChanged
     {
-        private static readonly TitleBarHelper _instance = new TitleBarHelper();
         private static CoreApplicationViewTitleBar _coreTitleBar;
         private Thickness _titlePosition;
         private Visibility _titleVisibility;
@@ -24,13 +23,7 @@ namespace ISynergy.Helpers
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static TitleBarHelper Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
+        public static TitleBarHelper Instance { get; } = new TitleBarHelper();
 
         public CoreApplicationViewTitleBar TitleBar
         {

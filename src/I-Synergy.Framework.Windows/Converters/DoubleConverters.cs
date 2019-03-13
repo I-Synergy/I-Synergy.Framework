@@ -6,7 +6,7 @@ namespace ISynergy.Converters
 {
     public class ZeroDoubleToVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if ((double)value != 0 || value != null)
             {
@@ -18,7 +18,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -26,20 +26,20 @@ namespace ISynergy.Converters
 
     public class DoubleOfDoubleConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             double result = 0;
 
-            if (double.TryParse(value.ToString(), out double size) && double.TryParse(parameter.ToString(), out double margin))
+            if (double.TryParse(value.ToString(), out var size) && double.TryParse(parameter.ToString(), out var margin))
             {
-                double calc = size - margin;
+                var calc = size - margin;
                 if (calc >= 0) result = calc;
             }
 
             return result;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -47,10 +47,10 @@ namespace ISynergy.Converters
 
     public class DoubleIsLesserThenConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            double.TryParse(parameter.ToString(), out double limit);
-            double.TryParse(value.ToString(), out double test);
+            double.TryParse(parameter.ToString(), out var limit);
+            double.TryParse(value.ToString(), out var test);
 
             if (test < limit)
             {
@@ -60,7 +60,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -68,10 +68,10 @@ namespace ISynergy.Converters
 
     public class DoubleIsLesserOrEqualThenConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            double.TryParse(parameter.ToString(), out double limit);
-            double.TryParse(value.ToString(), out double test);
+            double.TryParse(parameter.ToString(), out var limit);
+            double.TryParse(value.ToString(), out var test);
 
             if (test <= limit)
             {
@@ -81,7 +81,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -89,10 +89,10 @@ namespace ISynergy.Converters
 
     public class DoubleIsGreaterThenConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            double.TryParse(parameter.ToString(), out double limit);
-            double.TryParse(value.ToString(), out double test);
+            double.TryParse(parameter.ToString(), out var limit);
+            double.TryParse(value.ToString(), out var test);
 
             if (test > limit)
             {
@@ -102,7 +102,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -110,10 +110,10 @@ namespace ISynergy.Converters
 
     public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            double.TryParse(parameter.ToString(), out double limit);
-            double.TryParse(value.ToString(), out double test);
+            double.TryParse(parameter.ToString(), out var limit);
+            double.TryParse(value.ToString(), out var test);
 
             if (test >= limit)
             {
@@ -123,7 +123,7 @@ namespace ISynergy.Converters
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }

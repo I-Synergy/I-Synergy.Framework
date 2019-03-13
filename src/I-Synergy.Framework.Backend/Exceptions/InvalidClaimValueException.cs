@@ -9,7 +9,7 @@ namespace ISynergy.Exceptions
         {
         }
 
-        public InvalidClaimValueException() : base()
+        public InvalidClaimValueException()
         {
         }
 

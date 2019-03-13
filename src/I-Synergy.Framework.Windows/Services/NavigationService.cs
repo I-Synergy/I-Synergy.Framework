@@ -57,7 +57,7 @@ namespace ISynergy.Services
                 {
                     throw new ArgumentException($"Page not found: {pageKey}. Did you forget to call NavigationService.Configure?", nameof(pageKey));
                 }
-                
+
                 var navigationResult = ((Frame)Frame).Navigate(_pages[pageKey], parameter, (NavigationTransitionInfo)infoOverride);
                 return navigationResult;
             }
@@ -72,11 +72,11 @@ namespace ISynergy.Services
                     throw new ArgumentException($"Page not found: {pageKey}. Did you forget to call NavigationService.Configure?", nameof(pageKey));
                 }
 
-                IView result = (IView)Activator.CreateInstance(_pages[pageKey]);
+                var result = (IView)Activator.CreateInstance(_pages[pageKey]);
 
                 if(parameter != null && parameter is IViewModel)
                 {
-                    Binding datacontextBinding = new Binding
+                    var datacontextBinding = new Binding
                     {
                         Source = parameter as IViewModel,
                         Mode = BindingMode.TwoWay,

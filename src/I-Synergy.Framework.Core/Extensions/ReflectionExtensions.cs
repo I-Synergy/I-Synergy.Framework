@@ -1,5 +1,4 @@
 ﻿using ISynergy.Attributes;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -9,7 +8,7 @@ namespace System
     {
         public static string GetIdentityPropertyName<T>() where T : class
         {
-            IEnumerable<PropertyInfo> result = typeof(T).GetProperties().Where(
+            var result = typeof(T).GetProperties().Where(
                     e => e.IsDefined(typeof(IdentityAttribute))
                 );
 
@@ -23,9 +22,9 @@ namespace System
             }
         }
 
-        public static object GetIdentityValue<T>(T t) where T : class
+        public static object GetIdentityValue<T>(this T t) where T : class
         {
-            IEnumerable<PropertyInfo> result = t.GetType().GetProperties().Where(
+            var result = t.GetType().GetProperties().Where(
                     e => e.IsDefined(typeof(IdentityAttribute))
                 );
 
@@ -46,7 +45,7 @@ namespace System
 
         public static string GetParentIdentityPropertyName<T>() where T : class
         {
-            IEnumerable<PropertyInfo> result = typeof(T).GetProperties().Where(
+            var result = typeof(T).GetProperties().Where(
                     e => e.IsDefined(typeof(ParentIdentityAttribute))
                 );
 
@@ -62,7 +61,7 @@ namespace System
 
         public static Type GetParentIdentityPropertyType<T>() where T : class
         {
-            IEnumerable<PropertyInfo> result = typeof(T).GetProperties().Where(
+            var result = typeof(T).GetProperties().Where(
                     e => e.IsDefined(typeof(ParentIdentityAttribute))
                 );
 
@@ -76,11 +75,11 @@ namespace System
             }
         }
 
-        public static TResult GetPropertyValue<T, TResult>(T t, string propertyName, TResult defaultValue)
+        public static TResult GetPropertyValue<T, TResult>(this T t, string propertyName, TResult defaultValue)
             where T : class
             where TResult : IComparable<TResult>
         {
-            TResult result = (TResult)t.GetType().GetProperty(propertyName)?.GetValue(t, null);
+            var result = (TResult)t.GetType().GetProperty(propertyName)?.GetValue(t, null);
 
             if(result == null)
             {

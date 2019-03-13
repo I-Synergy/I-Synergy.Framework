@@ -49,7 +49,7 @@ namespace ISynergy.ViewModels.Library
         public MessageBoxViewModel(
             IContext context,
             IBaseService synergyService,
-            string message, 
+            string message,
             string title,
             MessageBoxButton button = MessageBoxButton.OK,
             MessageBoxImage image = MessageBoxImage.Information,
@@ -79,9 +79,6 @@ namespace ISynergy.ViewModels.Library
 
                 case MessageBoxResult.Cancel:
                     IsCancelDefault = true;
-                    break;
-
-                default:
                     break;
             }
         }
@@ -124,36 +121,6 @@ namespace ISynergy.ViewModels.Library
 
                     break;
             }
-        }
-
-        private static void SetDirections(int options)
-        {
-            //switch (options)
-            //{
-            //    case (int)MessageBoxOptions.None:
-            //        ContentTextAlignment = TextAlignment.Left;
-            //        ContentFlowDirection = FlowDirection.LeftToRight;
-            //        TitleFlowDirection = FlowDirection.LeftToRight;
-            //        break;
-
-            //    case (int)MessageBoxOptions.RightAlign:
-            //        ContentTextAlignment = TextAlignment.Right;
-            //        ContentFlowDirection = FlowDirection.LeftToRight;
-            //        TitleFlowDirection = FlowDirection.LeftToRight;
-            //        break;
-
-            //    case (int)MessageBoxOptions.RtlReading:
-            //        ContentTextAlignment = TextAlignment.Right;
-            //        ContentFlowDirection = FlowDirection.RightToLeft;
-            //        TitleFlowDirection = FlowDirection.RightToLeft;
-            //        break;
-
-            //    case (int)MessageBoxOptions.RightAlign | (int)MessageBoxOptions.RtlReading:
-            //        ContentTextAlignment = TextAlignment.Left;
-            //        ContentFlowDirection = FlowDirection.RightToLeft;
-            //        TitleFlowDirection = FlowDirection.RightToLeft;
-            //        break;
-            //}
         }
 
         private void SetImageSource(MessageBoxImage image)

@@ -51,7 +51,6 @@ namespace ISynergy.Models.Accounts
             get { return GetValue<int>(); }
             set { SetValue(value); }
         }
-
     }
 
     public class Role : ModelBase
@@ -188,7 +187,5 @@ namespace ISynergy.Models.Accounts
             get { return GetValue<int>(); }
             set { SetValue(value); }
         }
-
-
     }
 }

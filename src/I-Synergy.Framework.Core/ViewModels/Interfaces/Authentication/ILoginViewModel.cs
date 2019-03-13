@@ -3,7 +3,6 @@ using ISynergy.Events;
 using ISynergy.Models.Accounts;
 using ISynergy.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 

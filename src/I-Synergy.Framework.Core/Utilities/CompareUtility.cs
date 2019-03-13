@@ -8,7 +8,7 @@ namespace ISynergy.Utilities
     {
         public static List<string> CompareObject(object source, object destination)
         {
-            List<string> result = new List<string>();
+            var result = new List<string>();
 
             var oType = source.GetType();
 
@@ -16,7 +16,7 @@ namespace ISynergy.Utilities
             {
                 var oOldValue = oProperty.GetValue(source, null);
                 var oNewValue = oProperty.GetValue(destination, null);
-                
+
                 // this will handle the scenario where either value is null
                 if (!object.Equals(oOldValue, oNewValue))
                 {

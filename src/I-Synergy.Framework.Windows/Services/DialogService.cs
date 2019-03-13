@@ -70,7 +70,7 @@ namespace ISynergy.Services
             MessageBoxButton buttons = MessageBoxButton.OK,
             MessageBoxImage image = MessageBoxImage.Information)
         {
-            MessageBoxResult result = MessageBoxResult.Cancel;
+            var result = MessageBoxResult.Cancel;
 
             var yesCommand = new UICommand(LanguageService.GetString("Generic_Yes"), cmd => { });
             var noCommand = new UICommand(LanguageService.GetString("Generic_No"), cmd => { });

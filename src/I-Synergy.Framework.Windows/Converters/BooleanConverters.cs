@@ -1,8 +1,6 @@
 ﻿using ISynergy.Converters.Base;
 using ISynergy.Extensions;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -50,7 +48,7 @@ namespace ISynergy.Converters
             {
                 if(item is bool value)
                 {
-                    return value == true;
+                    return value;
                 }
 
                 return false;
@@ -123,7 +121,7 @@ namespace ISynergy.Converters
 
     public class NullToBooleanConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value != null)
             {
@@ -135,7 +133,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -143,18 +141,18 @@ namespace ISynergy.Converters
 
     public class InverseBooleanConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is bool)
-                return !(bool)value;
+            if (value is bool x)
+                return !x;
 
             throw new InvalidOperationException("The target must be a boolean");
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if (value is bool)
-                return !(bool)value;
+            if (value is bool x)
+                return !x;
 
             throw new InvalidOperationException("The target must be a boolean");
         }
@@ -206,7 +204,7 @@ namespace ISynergy.Converters
         // Using a DependencyProperty as the backing store for True.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TrueProperty = DependencyProperty.Register(nameof(True), typeof(T), typeof(BooleanConverter<T>), new PropertyMetadata(default(T)));
 
-        public virtual object Convert(object value, Type targetType, object parameter, string culture)
+        public virtual object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is null)
             {
@@ -218,7 +216,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public virtual object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public virtual object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return value != null ? value.Equals(True) : false;
         }

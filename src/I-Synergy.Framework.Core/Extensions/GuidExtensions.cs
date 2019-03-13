@@ -6,10 +6,10 @@ namespace System
     {
         public static uint ToUInt(this Guid guid)
         {
-            string strGuid = guid.ToString().Remove("-{}");
-            byte[] EncryptedBytes = strGuid.GetBytes(9, 8);
+            var strGuid = guid.ToString().Remove("-{}");
+            var EncryptedBytes = strGuid.GetBytes(9, 8);
             var decrypted = Cypher.DecryptDES(EncryptedBytes, Cypher.Key);
-            uint DecryptedUint = BitConverter.ToUInt32(decrypted, 0);
+            var DecryptedUint = BitConverter.ToUInt32(decrypted, 0);
             return DecryptedUint;
         }
     }

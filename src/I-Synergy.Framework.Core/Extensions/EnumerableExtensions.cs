@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 
 namespace ISynergy.Extensions
 {
@@ -19,7 +18,7 @@ namespace ISynergy.Extensions
         /// <exception cref="TypeArgumentException"><typeparamref name="T"/> is not a flags enum.</exception>
         public static bool HasAny(this Enum value, Enum desiredFlags)
         {
-            foreach (Enum flag in desiredFlags.GetIndividualFlags().EnsureNotNull())
+            foreach (var flag in desiredFlags.GetIndividualFlags().EnsureNotNull())
             {
                 if (value.HasFlag(flag))
                 {
@@ -72,11 +71,11 @@ namespace ISynergy.Extensions
 
         private static IEnumerable<Enum> GetFlags(Enum value, Enum[] values)
         {
-            ulong bits = Convert.ToUInt64(value);
-            List<Enum> results = new List<Enum>();
-            for (int i = values.Length - 1; i >= 0; i--)
+            var bits = Convert.ToUInt64(value);
+            var results = new List<Enum>();
+            for (var i = values.Length - 1; i >= 0; i--)
             {
-                ulong mask = Convert.ToUInt64(values[i]);
+                var mask = Convert.ToUInt64(values[i]);
                 if (i == 0 && mask == 0L)
                     break;
                 if ((bits & mask) == mask)
@@ -99,7 +98,7 @@ namespace ISynergy.Extensions
             ulong flag = 0x1;
             foreach (var value in Enum.GetValues(enumType).Cast<Enum>().EnsureNotNull())
             {
-                ulong bits = Convert.ToUInt64(value);
+                var bits = Convert.ToUInt64(value);
                 if (bits == 0L)
                     //yield return value;
                     continue; // skip the zero value
@@ -113,32 +112,32 @@ namespace ISynergy.Extensions
 
         public static DataTable ToDataTable<T>(this IEnumerable<T> collection, string tableName)
         {
-            DataTable tbl = ToDataTable(collection);
+            var tbl = ToDataTable(collection);
             tbl.TableName = tableName;
             return tbl;
         }
 
         public static DataTable ToDataTable<T>(this IEnumerable<T> collection)
         {
-            DataTable dt = new DataTable();
-            Type t = typeof(T);
-            PropertyInfo[] pia = t.GetProperties();
+            var dt = new DataTable();
+            var t = typeof(T);
+            var pia = t.GetProperties();
             object temp;
             DataRow dr;
 
-            for (int i = 0; i < pia.Length; i++)
+            for (var i = 0; i < pia.Length; i++)
             {
                 dt.Columns.Add(pia[i].Name, Nullable.GetUnderlyingType(pia[i].PropertyType) ?? pia[i].PropertyType);
                 dt.Columns[i].AllowDBNull = true;
             }
 
             //Populate the table
-            foreach (T item in collection.EnsureNotNull())
+            foreach (var item in collection.EnsureNotNull())
             {
                 dr = dt.NewRow();
                 dr.BeginEdit();
 
-                for (int i = 0; i < pia.Length; i++)
+                for (var i = 0; i < pia.Length; i++)
                 {
                     temp = pia[i].GetValue(item) ?? DBNull.Value;
 

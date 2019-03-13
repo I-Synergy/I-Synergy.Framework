@@ -18,12 +18,12 @@ namespace ISynergy.Contracts.Accounts
     public interface IAccountsManagerContract : IAccountsContract
     {
         Task<List<AccountFull>> GetAccountsAsync(CancellationToken cancellationToken = default);
-        Task<int> UpdateAccountAsync(AccountFull e, CancellationToken cancellationToken = default);
-        Task<int> UpdateUserAsync(UserEdit e, CancellationToken cancellationToken = default);
+        Task<int> UpdateAccountAsync(AccountFull e);
+        Task<int> UpdateUserAsync(UserEdit e);
         Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken = default);
-        Task<int> RemoveUserAsync(string id, CancellationToken cancellationToken = default);
-        Task<int> RemoveAccountAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<int> ToggleAccountActivationAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<bool> ToggleUserLockAsync(string id, CancellationToken cancellationToken = default);
+        Task<int> RemoveUserAsync(string id);
+        Task<int> RemoveAccountAsync(Guid id);
+        Task<int> ToggleAccountActivationAsync(Guid id);
+        Task<bool> ToggleUserLockAsync(string id);
     }
 }

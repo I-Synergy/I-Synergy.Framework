@@ -7,7 +7,7 @@ namespace ISynergy.Extensions
         public static void BindWithReload(this IConfiguration configuration, object instance)
         {
             configuration.Bind(instance);
-            configuration.GetReloadToken().RegisterChangeCallback((obj) => configuration.Bind(instance), null);
+            configuration.GetReloadToken().RegisterChangeCallback((_) => configuration.Bind(instance), null);
         }
     }
 }
