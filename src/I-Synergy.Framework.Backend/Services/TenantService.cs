@@ -17,6 +17,14 @@ namespace ISynergy.Services
         public Guid TenantId => RetrieveTenantId();
         public string UserName => RetrieveUserName();
 
+        public void SetTenant(Guid tenantId)
+        {
+            ClaimsIdentity claimIdentity = new ClaimsIdentity();
+            claimIdentity.AddClaim(new Claim(ClaimTypes.AccountIdType, tenantId.ToString()));
+            GenericPrincipal principal = new GenericPrincipal(claimIdentity, Array.Empty<string>());
+            httpContextAccessor.HttpContext.User = principal;
+        }
+
         public void SetTenant(Guid tenantId, string username)
         {
             GenericIdentity identity = new GenericIdentity(username);
