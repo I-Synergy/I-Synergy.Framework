@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using ISynergy.Data;
 using System;
 
 namespace ISynergy
@@ -24,7 +23,7 @@ namespace ISynergy
             get { return GetValue<int>(); }
             set { SetValue(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the CreatedDate property value.
         /// </summary>

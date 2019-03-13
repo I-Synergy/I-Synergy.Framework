@@ -1,6 +1,5 @@
 ﻿using ISynergy.Helpers;
 using ISynergy.Mvvm;
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -36,7 +35,7 @@ namespace ISynergy.Controls.Views
                 OnEventAction = (instance, source, eventargs) => instance.View_Unloaded(source, eventargs),
                 OnDetachAction = (listener) => this.Unloaded -= listener.OnEvent
             };
-            
+
             this.Unloaded += WeakViewUnloadedEvent.OnEvent;
         }
 

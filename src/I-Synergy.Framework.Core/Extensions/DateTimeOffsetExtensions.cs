@@ -9,8 +9,8 @@ namespace System
 
         public static bool IsInRangeOfDate(this DateTimeOffset self, DateTimeOffset comparer)
         {
-            DateTimeOffset start = comparer.ToOffset(self.Offset);
-            DateTimeOffset end = start.AddDays(1).AddMilliseconds(-1);
+            var start = comparer.ToOffset(self.Offset);
+            var end = start.AddDays(1).AddMilliseconds(-1);
 
             if (self.CompareTo(start) >= 0 && self.CompareTo(end) <= 0)
             {
@@ -22,8 +22,8 @@ namespace System
 
         public static bool IsInRangeOfDate(this DateTimeOffset self, DateTimeOffset comparer_start, DateTimeOffset comparer_end)
         {
-            DateTimeOffset start = comparer_start.ToOffset(self.Offset);
-            DateTimeOffset end = comparer_end.ToOffset(self.Offset);
+            var start = comparer_start.ToOffset(self.Offset);
+            var end = comparer_end.ToOffset(self.Offset);
 
             if (self.CompareTo(start) >= 0 && self.CompareTo(end) <= 0)
             {
@@ -35,10 +35,10 @@ namespace System
 
         public static int ComparedToDateTime(this DateTimeOffset self, DateTimeOffset comparer)
         {
-            DateTimeOffset source = self.ToOffset(comparer.Offset);
-            DateTimeOffset target = comparer;
+            var source = self.ToOffset(comparer.Offset);
+            var target = comparer;
 
-            int result = DateTimeOffset.Compare(source, target);
+            var result = DateTimeOffset.Compare(source, target);
 
             return result;
         }

@@ -1,7 +1,6 @@
 ﻿using Flurl;
 using Flurl.Http;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,10 +21,10 @@ namespace ISynergy.Services
             Context = context;
             AuthenticationService = authenticationService;
         }
-        
-        public async Task<T> GetJsonAsync<T>(object[] segments, object queryparameters, CancellationToken cancellationToken)
+
+        public async Task<T> GetJsonAsync<T>(object[] segments, object queryparameters, CancellationToken cancellationToken = default)
         {
-            int currentRetry = 0;
+            var currentRetry = 0;
 
             for (; ; )
             {
@@ -42,9 +41,9 @@ namespace ISynergy.Services
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
                         .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
-                        .GetJsonAsync<T>(cancellationToken);
+                        .GetJsonAsync<T>();
                 }
-                catch (Exception f) 
+                catch (Exception f)
                     when (f.InnerException is TaskCanceledException | f.InnerException is OperationCanceledException)
                 {
                 }
@@ -71,10 +70,10 @@ namespace ISynergy.Services
             }
         }
 
-        public async Task<string> GetStringAsync(object[] segments, object queryparameters, CancellationToken cancellationToken)
+        public async Task<string> GetStringAsync(object[] segments, object queryparameters, CancellationToken cancellationToken = default)
         {
-            string result = string.Empty;
-            int currentRetry = 0;
+            var result = string.Empty;
+            var currentRetry = 0;
 
             for (; ; )
             {
@@ -91,12 +90,12 @@ namespace ISynergy.Services
                         .SetQueryParams(queryparameters)
                         .WithClient(Client)
                         .WithOAuthBearerToken(Context.CurrentProfile?.Token.access_token)
-                        .GetStringAsync(cancellationToken);
+                        .GetStringAsync();
 
                     // Return or break.
                     break;
                 }
-                catch (Exception f) 
+                catch (Exception f)
                     when (f.InnerException is TaskCanceledException || f.InnerException is OperationCanceledException)
                 {
                 }
@@ -131,7 +130,7 @@ namespace ISynergy.Services
         public async Task<T> PostAsync<T>(string baseUrl, object[] segments, object data, bool IsAnonymous = false)
         {
             T result = default;
-            int currentRetry = 0;
+            var currentRetry = 0;
 
             for (; ; )
             {
@@ -184,7 +183,7 @@ namespace ISynergy.Services
         public async Task<T> PutAsync<T>(string baseUrl, object[] segments, object data)
         {
             T result = default;
-            int currentRetry = 0;
+            var currentRetry = 0;
 
             for (; ; )
             {
@@ -233,8 +232,8 @@ namespace ISynergy.Services
 
         public async Task<int> DeleteAsync(string baseUrl, object[] segments, object queryparameters = null)
         {
-            int result = 0;
-            int currentRetry = 0;
+            var result = 0;
+            var currentRetry = 0;
 
             for (; ; )
             {

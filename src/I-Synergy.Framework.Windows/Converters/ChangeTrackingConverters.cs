@@ -1,10 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using ISynergy.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Converters
@@ -15,10 +12,10 @@ namespace ISynergy.Converters
         {
             if(value is IModelBase model)
             {
-                StringBuilder result = new StringBuilder();
+                var result = new StringBuilder();
 
-                string userCreated = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Unknown");
-                string userChanged = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Unknown");
+                var userCreated = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Unknown");
+                var userChanged = SimpleIoc.Default.GetInstance<ILanguageService>().GetString("Generic_Unknown");
 
                 if (!string.IsNullOrEmpty(model.CreatedBy)) userCreated = model.CreatedBy;
 

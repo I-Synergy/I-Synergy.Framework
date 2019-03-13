@@ -7,7 +7,7 @@ namespace ISynergy.Adapters
 {
     public class FrameAdapter : IFrameAdapter
     {
-        private Frame _internalFrame;
+        private readonly Frame _internalFrame;
 
         public event NavigatedEventHandler Navigated { add => _internalFrame.Navigated += value; remove => _internalFrame.Navigated -= value; }
 
@@ -22,7 +22,7 @@ namespace ISynergy.Adapters
             _internalFrame = internalFrame;
         }
 
-        public bool IsNavigating { get; private set; }
+        public bool IsNavigating { get; }
 
         public bool CanGoBack => _internalFrame.CanGoBack;
 

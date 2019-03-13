@@ -4,10 +4,9 @@ using System.Runtime.Serialization;
 namespace ISynergy.Exceptions
 {
     [Serializable]
-    public partial class EntityNotFoundException : Exception
+    public class EntityNotFoundException : Exception
     {
         public EntityNotFoundException()
-            : base()
         {
         }
 

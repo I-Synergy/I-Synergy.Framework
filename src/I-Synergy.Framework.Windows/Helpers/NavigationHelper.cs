@@ -13,13 +13,13 @@ namespace ISynergy.Helpers
             // confirm parent and name are valid.
             if (parent is null || string.IsNullOrEmpty(name)) return null;
 
-            if (parent is FrameworkElement && (parent as FrameworkElement).Name == name) return parent;
+            if (parent is FrameworkElement frameworkElement && frameworkElement.Name == name) return parent;
 
             DependencyObject result = null;
 
-            int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+            var childrenCount = VisualTreeHelper.GetChildrenCount(parent);
 
-            for (int i = 0; i < childrenCount; i++)
+            for (var i = 0; i < childrenCount; i++)
             {
                 var child = VisualTreeHelper.GetChild(parent, i);
                 result = FindChild(child, name);
@@ -40,9 +40,9 @@ namespace ISynergy.Helpers
 
             DependencyObject foundChild = null;
 
-            int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+            var childrenCount = VisualTreeHelper.GetChildrenCount(parent);
 
-            for (int i = 0; i < childrenCount; i++)
+            for (var i = 0; i < childrenCount; i++)
             {
                 var child = VisualTreeHelper.GetChild(parent, i);
                 foundChild = FindChild<T>(child);

@@ -12,12 +12,10 @@ namespace ISynergy.Collections
     /// <typeparam name="T"></typeparam> 
     public class ObservableRangeCollection<T> : ObservableCollection<T>
     {
-
         /// <summary> 
         /// Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class. 
         /// </summary> 
         public ObservableRangeCollection()
-            : base()
         {
         }
 
@@ -55,7 +53,7 @@ namespace ISynergy.Collections
                 return;
             }
 
-            int startIndex = Count;
+            var startIndex = Count;
             var changedItems = collection is List<T> ? (List<T>)collection : new List<T>(collection);
             foreach (var i in changedItems)
                 Items.Add(i);
@@ -79,7 +77,6 @@ namespace ISynergy.Collections
 
             if (notificationMode == NotifyCollectionChangedAction.Reset)
             {
-
                 foreach (var i in collection)
                     Items.Remove(i);
 
@@ -89,7 +86,7 @@ namespace ISynergy.Collections
             }
 
             var changedItems = collection is List<T> ? (List<T>)collection : new List<T>(collection);
-            for (int i = 0; i < changedItems.Count; i++)
+            for (var i = 0; i < changedItems.Count; i++)
             {
                 if (!Items.Remove(changedItems[i]))
                 {
@@ -119,7 +116,5 @@ namespace ISynergy.Collections
             Items.Clear();
             AddRange(collection, NotifyCollectionChangedAction.Reset);
         }
-
     }
-
 }

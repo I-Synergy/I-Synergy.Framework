@@ -114,7 +114,7 @@ namespace ISynergy.Controllers.Base
                     Modules = model.Modules,
                     UsersAllowed = model.Users
                 })
-                .ConfigureAwait(false))
+                )
                 {
                     // Comment out following line to prevent a new user automatically logged on.
                     // await Manager.SignInManager.SignInAsync(user, isPersistent: false);
@@ -246,30 +246,29 @@ namespace ISynergy.Controllers.Base
 
         [HttpPut("account/accounts")]
         [Authorize(Roles = "License_Manager, License_Administrator")]
-        public abstract Task<int> UpdateAccountAsync([FromBody]AccountFull e, CancellationToken cancellationToken = default);
+        public abstract Task<int> UpdateAccountAsync([FromBody]AccountFull e);
 
         [HttpPut("account/accounts/{id}")]
         [Authorize(Roles = "License_Manager, License_Administrator")]
-        public abstract Task<int> ToggleAccountActivationAsync(Guid id, CancellationToken cancellationToken = default);
-
+        public abstract Task<int> ToggleAccountActivationAsync(Guid id);
 
         [HttpDelete("account/accounts/{id}")]
-        public abstract Task<int> RemoveAccountAsync(Guid id, CancellationToken cancellationToken = default);
+        public abstract Task<int> RemoveAccountAsync(Guid id);
 
         [HttpGet("account/roles")]
         public abstract Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken = default);
 
         [HttpPut("account/users/{id}")]
-        public abstract Task<bool> ToggleUserLockAsync(string id, CancellationToken cancellationToken = default);
+        public abstract Task<bool> ToggleUserLockAsync(string id);
 
         [HttpPut("account/users")]
-        public abstract Task<int> UpdateUserAsync([FromBody]UserEdit e, CancellationToken cancellationToken = default);
+        public abstract Task<int> UpdateUserAsync([FromBody]UserEdit e);
 
         [HttpDelete("account/users/{id}")]
-        public abstract Task<int> RemoveUserAsync(string id, CancellationToken cancellationToken = default);
+        public abstract Task<int> RemoveUserAsync(string id);
 
         [HttpGet("account/users/{id}")]
-        public abstract Task<List<User>> GetUsersFromAccountAsync(Guid id, CancellationToken cancellationToken = default);
+        public abstract Task<List<User>> GetUsersFromAccountAsync(Guid id);
 
         [HttpPost("account/users")]
         public abstract Task<bool> AddUserAsync([FromBody]UserAdd user);

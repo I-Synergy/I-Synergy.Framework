@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Abstractions;
@@ -60,7 +59,7 @@ namespace ISynergy.Business.Base
             RoleManager = roleManager;
         }
 
-        public async Task<List<AccountFull>> GetAccountsAsync(bool isAdministrator, CancellationToken cancellationToken = default)
+        public async Task<List<AccountFull>> GetAccountsAsync(bool isAdministrator)
         {
             var accounts = Context.Set<TAccount>().AsQueryable();
 
@@ -69,22 +68,22 @@ namespace ISynergy.Business.Base
             var result = await accounts
                 .OrderBy(o => o.Description)
                 .ProjectToType<AccountFull>()
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .ToListAsync()
+                ;
 
-            foreach (AccountFull account in result.EnsureNotNull())
+            foreach (var account in result.EnsureNotNull())
             {
-                foreach (UserFull user in account.Users.EnsureNotNull())
+                foreach (var user in account.Users.EnsureNotNull())
                 {
                     user.Roles = new List<Role>();
 
-                    var idUser = await UserManager.FindByIdAsync(user.Id).ConfigureAwait(false);
+                    var idUser = await UserManager.FindByIdAsync(user.Id);
 
-                    IList<string> roles = await UserManager.GetRolesAsync(idUser).ConfigureAwait(false);
+                    var roles = await UserManager.GetRolesAsync(idUser);
 
-                    foreach (string role in roles.EnsureNotNull())
+                    foreach (var role in roles.EnsureNotNull())
                     {
-                        var item = await RoleManager.FindByNameAsync(role).ConfigureAwait(false);
+                        var item = await RoleManager.FindByNameAsync(role);
                         user.Roles.Add(item.Adapt<Role>());
                     }
                 }
@@ -93,71 +92,59 @@ namespace ISynergy.Business.Base
             return result;
         }
 
-        public async Task<int> UpdateAccountAsync(AccountFull e, CancellationToken cancellationToken = default)
+        public async Task<int> UpdateAccountAsync(AccountFull e)
         {
-            int result = 0;
-
             var account = await Context.Set<TAccount>()
                 .Where(q => q.Account_Id == e.Account_Id)
                 .OrderBy(o => o.Description)
-                .SingleAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .SingleAsync();
 
             Context.Set<TAccount>().Update(e.Adapt(account));
 
-            result = await Context
-                .SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            return result;
+            return await Context
+                .SaveChangesAsync();
         }
 
-        public async Task<int> ToggleAccountActivationAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<int> ToggleAccountActivationAsync(Guid id)
         {
-            int result = 0;
-
             var account = await Context.Set<TAccount>()
                 .Where(q => q.Account_Id == id)
                 .OrderBy(o => o.Description)
-                .SingleAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .SingleAsync();
 
             account.IsActive = !account.IsActive;
 
             Context.Set<TAccount>().Update(account);
 
-            result = await Context
-                .SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            return result;
+            return await Context
+                .SaveChangesAsync();
         }
 
-        public async Task<bool> ToggleUserLockAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<bool> ToggleUserLockAsync(string id)
         {
-            var user = await UserManager.FindByIdAsync(id).ConfigureAwait(false);
+            var user = await UserManager.FindByIdAsync(id);
 
             if (user != null)
             {
-                if (await UserManager.IsLockedOutAsync(user).ConfigureAwait(false))
+                if (await UserManager.IsLockedOutAsync(user))
                 {
-                    await UserManager.SetLockoutEndDateAsync(user, null).ConfigureAwait(false);
-                    await UserManager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
+                    await UserManager.SetLockoutEndDateAsync(user, null);
+                    await UserManager.ResetAccessFailedCountAsync(user);
                 }
                 else
                 {
-                    await UserManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue).ConfigureAwait(false);
+                    await UserManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
                 }
             }
 
-            return await UserManager.IsLockedOutAsync(user).ConfigureAwait(false);
+            return await UserManager.IsLockedOutAsync(user);
         }
 
-        public async Task<int> UpdateUserAsync(UserEdit e, CancellationToken cancellationToken = default)
+        public async Task<int> UpdateUserAsync(UserEdit e)
         {
-            int result = 0;
+            var result = 0;
 
-            var user = await UserManager.FindByIdAsync(e.Id).ConfigureAwait(false);
+            var user = await UserManager.FindByIdAsync(e.Id);
 
             if (user.UserName != e.UserName)
             {
@@ -170,12 +157,12 @@ namespace ISynergy.Business.Base
 
             user.EmailConfirmed = e.IsConfirmed;
 
-            var status = await UserManager.UpdateAsync(user).ConfigureAwait(false);
+            var status = await UserManager.UpdateAsync(user);
 
             if (status.Succeeded)
             {
-                await UserManager.RemoveFromRolesAsync(user, await UserManager.GetRolesAsync(user).ConfigureAwait(false)).ConfigureAwait(false);
-                await UserManager.AddToRolesAsync(user, e.Roles.Select(s => s.Name)).ConfigureAwait(false);
+                await UserManager.RemoveFromRolesAsync(user, await UserManager.GetRolesAsync(user));
+                await UserManager.AddToRolesAsync(user, e.Roles.Select(s => s.Name));
 
                 result = 1;
             }
@@ -183,7 +170,7 @@ namespace ISynergy.Business.Base
             return result;
         }
 
-        public async Task<List<Role>> GetRolesAsync(bool isManager, bool isAdministrator, CancellationToken cancellationToken = default)
+        public async Task<List<Role>> GetRolesAsync(bool isManager, bool isAdministrator)
         {
             var roles = Context.Set<IdentityRole>().AsQueryable();
 
@@ -200,8 +187,8 @@ namespace ISynergy.Business.Base
             var result = await roles
                 .OrderBy(o => o.Name)
                 .ProjectToType<Role>()
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .ToListAsync()
+                ;
 
             return result;
         }
@@ -210,78 +197,78 @@ namespace ISynergy.Business.Base
         {
             Argument.IsNotNull(nameof(name), name);
 
-            return !await Context.Set<TAccount>().Where(q => q.Description.ToLower() == name.ToLower()).AnyAsync().ConfigureAwait(false);
+            return !await Context.Set<TAccount>().Where(q => q.Description.ToLower() == name.ToLower()).AnyAsync();
         }
 
         public async Task<bool> CheckIfEmailIsAvailableAsync(string email)
         {
             Argument.IsNotNull(nameof(email), email);
 
-            return await UserManager.FindByEmailAsync(email).ConfigureAwait(false) is null;
+            return await UserManager.FindByEmailAsync(email) is null;
         }
 
         public async Task<IdentityResult> ExternalLoginUserAsync(ExternalLoginInfo info, TUser user)
         {
-            var result = await UserManager.CreateAsync(user).ConfigureAwait(false);
+            var result = await UserManager.CreateAsync(user);
 
             if (result.Succeeded)
             {
-                result = await UserManager.AddLoginAsync(user, info).ConfigureAwait(false);
+                result = await UserManager.AddLoginAsync(user, info);
 
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false).ConfigureAwait(false);
+                    await SignInManager.SignInAsync(user, isPersistent: false);
                 }
             }
 
             return result;
         }
 
-        public async Task<RegistrationResult> RegisterExternalAsync(TAccount account, TUser user, List<TAccountModule> modules, string password, string createdby)
+        public async Task<RegistrationResult> RegisterExternalAsync(TAccount account, TUser user, List<TAccountModule> modules, string password)
         {
             RegistrationResult result = null;
 
             Context.Set<TAccount>().Add(account);
             Context.Set<TAccountModule>().AddRange(modules);
 
-            await Context.SaveChangesAsync().ConfigureAwait(false);
+            await Context.SaveChangesAsync();
 
-            var identityResult = await UserManager.CreateAsync(user, password).ConfigureAwait(false);
+            var identityResult = await UserManager.CreateAsync(user, password);
 
-            var adminRole = await RoleManager.FindByNameAsync(Administrator.ToString()).ConfigureAwait(false);
+            var adminRole = await RoleManager.FindByNameAsync(Administrator.ToString());
 
             if (adminRole is null)
             {
                 adminRole = new IdentityRole(Administrator.ToString());
-                await RoleManager.CreateAsync(adminRole).ConfigureAwait(false);
-                await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.admin_view)).ConfigureAwait(false);
-                await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.admin_create)).ConfigureAwait(false);
-                await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.admin_update)).ConfigureAwait(false);
-                await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.admin_delete)).ConfigureAwait(false);
+                await RoleManager.CreateAsync(adminRole);
+                await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.admin_view));
+                await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.admin_create));
+                await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.admin_update));
+                await RoleManager.AddClaimAsync(adminRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.admin_delete));
             }
 
-            if (!await UserManager.IsInRoleAsync(user, adminRole.Name).ConfigureAwait(false))
+            if (!await UserManager.IsInRoleAsync(user, adminRole.Name))
             {
-                identityResult = await UserManager.AddToRoleAsync(user, adminRole.Name).ConfigureAwait(false);
+                identityResult = await UserManager.AddToRoleAsync(user, adminRole.Name);
             }
 
-            var userRole = await RoleManager.FindByNameAsync(User.ToString()).ConfigureAwait(false);
+            var userRole = await RoleManager.FindByNameAsync(User.ToString());
 
             if (userRole is null)
             {
                 userRole = new IdentityRole(User.ToString());
-                identityResult = await RoleManager.CreateAsync(userRole).ConfigureAwait(false);
-                identityResult = await RoleManager.AddClaimAsync(userRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.user_view)).ConfigureAwait(false);
+                identityResult = await RoleManager.CreateAsync(userRole);
+                identityResult = await RoleManager.AddClaimAsync(userRole, new Claim(ClaimTypes.PermissionType, AutorizationRoles.user_view));
             }
 
-            if (!await UserManager.IsInRoleAsync(user, userRole.Name).ConfigureAwait(false))
+            if (!await UserManager.IsInRoleAsync(user, userRole.Name))
             {
-                identityResult = await UserManager.AddToRoleAsync(user, userRole.Name).ConfigureAwait(false);
+                identityResult = await UserManager.AddToRoleAsync(user, userRole.Name);
             }
 
             if (identityResult.Succeeded)
             {
-                string token = await UserManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
+                var token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
 
                 result = new RegistrationResult
                 {
@@ -299,13 +286,13 @@ namespace ISynergy.Business.Base
         {
             RegistrationResult result = null;
 
-            var identityResult = await UserManager.CreateAsync(user, password).ConfigureAwait(false);
+            var identityResult = await UserManager.CreateAsync(user, password);
 
             if (identityResult.Succeeded)
             {
                 foreach (var role in roles.EnsureNotNull())
                 {
-                    if (!await UserManager.IsInRoleAsync(user, role.Name).ConfigureAwait(false)) identityResult = await UserManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
+                    if (!await UserManager.IsInRoleAsync(user, role.Name)) identityResult = await UserManager.AddToRoleAsync(user, role.Name);
                 }
             }
 
@@ -313,7 +300,7 @@ namespace ISynergy.Business.Base
             {
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
-                string token = await UserManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
+                var token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
 
                 result = new RegistrationResult
                 {
@@ -328,7 +315,7 @@ namespace ISynergy.Business.Base
 
         public async Task<string> CreateApiKeyAsync(ClaimsPrincipal principal)
         {
-            if(Guid.TryParse(principal.GetClaim(ClaimTypes.AccountIdType), out Guid tenantId))
+            if(Guid.TryParse(principal.GetClaim(ClaimTypes.AccountIdType), out var tenantId))
             {
                 var key = new TApiKey
                 {
@@ -345,7 +332,7 @@ namespace ISynergy.Business.Base
 
                 var result = await Context
                     .SaveChangesAsync()
-                    .ConfigureAwait(false);
+                    ;
 
                 if (result != 0)
                 {
@@ -360,67 +347,66 @@ namespace ISynergy.Business.Base
             throw new ClaimNotFoundException();
         }
 
-        public async Task<List<Account>> GetItemsAsync(bool isdeleted = false, int page = 1, int pagesize = int.MaxValue, CancellationToken cancellationToken = default)
+        public async Task<List<Account>> GetItemsAsync(bool isdeleted = false, int page = 0, int pagesize = int.MaxValue)
         {
-            Guid id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+            var id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
 
             var result = await Context.Set<TAccount>()
                 .Where(q => q.Account_Id != id && q.IsDeleted == isdeleted)
                 .OrderBy(q => q.Description)
                 .ToPage(page, pagesize)
                 .ProjectToType<Account>()
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .ToListAsync()
+                ;
 
             return result;
         }
 
-        public async Task<Account> GetItemAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Account> GetItemAsync(Guid id)
         {
             var result = await Context.Set<TAccount>()
                 .Where(q => q.Account_Id == id)
                 .ProjectToType<Account>()
-                .SingleOrDefaultAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .SingleOrDefaultAsync()
+                ;
 
             return result;
         }
 
-        public async Task<string> GetItemDescriptionAsync(Guid id, CancellationToken cancellationToken = default)
+        public Task<string> GetItemDescriptionAsync(Guid id)
         {
-            return await Context.Set<TAccount>()
+            return Context.Set<TAccount>()
                 .Where(q => q.Account_Id == id)
                 .Select(r => r.Description)
-                .SingleOrDefaultAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .SingleOrDefaultAsync();
         }
 
-        public Task<int> GetLicensedUsersAsync(Guid id, CancellationToken cancellationToken = default)
+        public Task<int> GetLicensedUsersAsync(Guid id)
         {
-            return Context.Set<TAccount>().Where(q => q.Account_Id == id).Select(r => r.UsersAllowed).SingleOrDefaultAsync(cancellationToken);
+            return Context.Set<TAccount>().Where(q => q.Account_Id == id).Select(r => r.UsersAllowed).SingleOrDefaultAsync();
         }
 
-        public Task<DateTimeOffset> GetLicenseExpirationAsync(Guid id, CancellationToken cancellationToken = default)
+        public Task<DateTimeOffset> GetLicenseExpirationAsync(Guid id)
         {
-            return Context.Set<TAccount>().Where(q => q.Account_Id == id).Select(r => r.Expiration_Date).SingleOrDefaultAsync(cancellationToken);
+            return Context.Set<TAccount>().Where(q => q.Account_Id == id).Select(r => r.Expiration_Date).SingleOrDefaultAsync();
         }
 
-        public async Task<List<User>> GetUsersAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<List<User>> GetUsersAsync(Guid id)
         {
             var users = await Context.Set<TUser>()
                 .Where(q => q.Account_Id == id)
                 .ProjectToType<User>()
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .ToListAsync()
+                ;
 
             return users;
         }
 
-        public async Task<List<User>> GetAdminUsersAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<List<User>> GetAdminUsersAsync(Guid id)
         {
-            List<User> users = new List<User>();
+            var users = new List<User>();
 
-            var administrators = await UserManager.GetUsersInRoleAsync(Administrator).ConfigureAwait(false);
+            var administrators = await UserManager.GetUsersInRoleAsync(Administrator);
 
             if (administrators != null && administrators.Count > 0)
             {
@@ -444,13 +430,13 @@ namespace ISynergy.Business.Base
             return users;
         }
 
-        public async Task<int> RemoveUserAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<int> RemoveUserAsync(string id)
         {
-            var item = await UserManager.FindByIdAsync(id).ConfigureAwait(false);
+            var item = await UserManager.FindByIdAsync(id);
 
             if (item != null)
             {
-                var result = await UserManager.DeleteAsync(item).ConfigureAwait(false);
+                var result = await UserManager.DeleteAsync(item);
 
                 if (result == IdentityResult.Success)
                 {
@@ -461,26 +447,25 @@ namespace ISynergy.Business.Base
             return 0;
         }
 
-        public async Task<int> RemoveAccountAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<int> RemoveAccountAsync(Guid id)
         {
-            int result = 0;
+            var result = 0;
 
-            var account = await Context.Set<TAccount>().Where(q => q.Account_Id == id).SingleAsync(cancellationToken).ConfigureAwait(false);
+            var account = await Context.Set<TAccount>().Where(q => q.Account_Id == id).SingleAsync();
 
             if (account != null)
             {
                 Context.Set<TAccount>().Remove(account);
 
                 result = await Context
-                    .SaveChangesAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                    .SaveChangesAsync()
+                    ;
             }
 
             return result;
         }
 
-
-        private Task<TUser> GetUserAsync(ClaimsPrincipal principal, CancellationToken cancellationToken = default)
+        private Task<TUser> GetUserAsync(ClaimsPrincipal principal)
         {
             return UserManager.GetUserAsync(principal);
         }
@@ -488,12 +473,12 @@ namespace ISynergy.Business.Base
         public async Task<AuthenticationTicket> AcceptAsync(OpenIdConnectRequest request, ClaimsPrincipal user)
         {
             // Retrieve the profile of the logged in user.
-            var userProfile = await GetUserAsync(user).ConfigureAwait(false);
+            var userProfile = await GetUserAsync(user);
 
             if (userProfile is null) return null;
 
             // Create a new authentication ticket.
-            return await CreateTicketAsync(request, userProfile).ConfigureAwait(false);
+            return await CreateTicketAsync(request, userProfile);
         }
 
         public async Task<AuthenticationTicket> ExchangeAsync(OpenIdConnectRequest request, GrantTypes grantTypes, AuthenticateResult info = null, OpenIddictApplication application = null)
@@ -509,19 +494,19 @@ namespace ISynergy.Business.Base
                 switch (grantTypes)
                 {
                     case GrantTypes.PasswordGrantType:
-                        user = await ExchangePasswordGrantTypeAsync(request).ConfigureAwait(false);
+                        user = await ExchangePasswordGrantTypeAsync(request);
                         break;
 
                     case GrantTypes.RefreshTokenAndAuthorizationCodeGrantType:
-                        user = await ExchangeRefreshTokenGrantTypeAsync(request, info).ConfigureAwait(false);
+                        user = await ExchangeRefreshTokenGrantTypeAsync(request, info);
                         break;
 
                     case GrantTypes.ClientCredentialsGrantType:
-                        user = await ExchangeClientCredentialsGrantTypeAsync(request, application.ClientId).ConfigureAwait(false);
+                        user = await ExchangeClientCredentialsGrantTypeAsync(request, application.ClientId);
                         break;
                 }
 
-                account = await GetAccountAsync(user.Account_Id).ConfigureAwait(false);
+                account = await GetAccountAsync(user.Account_Id);
 
                 if (account is null)
                 {
@@ -532,7 +517,7 @@ namespace ISynergy.Business.Base
                     });
                 }
 
-                roles = await UserManager.GetRolesAsync(user).ConfigureAwait(false);
+                roles = await UserManager.GetRolesAsync(user);
                 if (roles is null)
                 {
                     throw new OpenIdConnectException(new OpenIdConnectResponse
@@ -562,7 +547,7 @@ namespace ISynergy.Business.Base
 
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
-                result = await CreateTicketAsync(request, user, account, roles, info?.Properties).ConfigureAwait(false);
+                result = await CreateTicketAsync(request, user, account, roles, info?.Properties);
 
                 // Create a new push message to notify subscriber of new loggedin user 
                 // await PubNubService.PublishAsync(
@@ -576,7 +561,7 @@ namespace ISynergy.Business.Base
 
         private async Task<TUser> ExchangePasswordGrantTypeAsync(OpenIdConnectRequest request)
         {
-            TUser user = await UserManager.FindByNameAsync(request.Username).ConfigureAwait(false);
+            var user = await UserManager.FindByNameAsync(request.Username);
 
             if (user is null)
             {
@@ -588,24 +573,24 @@ namespace ISynergy.Business.Base
             }
 
             // Validate the username/password parameters and ensure the account is not locked out.
-            var result = await SignInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true).ConfigureAwait(false);
+            var result = await SignInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
 
             if (result.Succeeded)
             {
                 if (UserManager.SupportsUserLockout)
                 {
-                    await UserManager.SetLockoutEndDateAsync(user, null).ConfigureAwait(false);
+                    await UserManager.SetLockoutEndDateAsync(user, null);
                 }
 
-                await UserManager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
+                await UserManager.ResetAccessFailedCountAsync(user);
 
                 return user;
             }
             else if (result.IsLockedOut)
             {
-                if (UserManager.SupportsUserLockout && await UserManager.GetLockoutEnabledAsync(user).ConfigureAwait(false))
+                if (UserManager.SupportsUserLockout && await UserManager.GetLockoutEnabledAsync(user))
                 {
-                    await UserManager.AccessFailedAsync(user).ConfigureAwait(false);
+                    await UserManager.AccessFailedAsync(user);
                 }
 
                 throw new OpenIdConnectException(new OpenIdConnectResponse
@@ -616,9 +601,9 @@ namespace ISynergy.Business.Base
             }
             else if (result.IsNotAllowed)
             {
-                if (UserManager.SupportsUserLockout && await UserManager.GetLockoutEnabledAsync(user).ConfigureAwait(false))
+                if (UserManager.SupportsUserLockout && await UserManager.GetLockoutEnabledAsync(user))
                 {
-                    await UserManager.AccessFailedAsync(user).ConfigureAwait(false);
+                    await UserManager.AccessFailedAsync(user);
                 }
 
                 throw new OpenIdConnectException(new OpenIdConnectResponse
@@ -629,9 +614,9 @@ namespace ISynergy.Business.Base
             }
             else if (result.RequiresTwoFactor)
             {
-                if (UserManager.SupportsUserLockout && await UserManager.GetLockoutEnabledAsync(user).ConfigureAwait(false))
+                if (UserManager.SupportsUserLockout && await UserManager.GetLockoutEnabledAsync(user))
                 {
-                    await UserManager.AccessFailedAsync(user).ConfigureAwait(false);
+                    await UserManager.AccessFailedAsync(user);
                 }
 
                 throw new OpenIdConnectException(new OpenIdConnectResponse
@@ -642,9 +627,9 @@ namespace ISynergy.Business.Base
             }
             else
             {
-                if (UserManager.SupportsUserLockout && await UserManager.GetLockoutEnabledAsync(user).ConfigureAwait(false))
+                if (UserManager.SupportsUserLockout && await UserManager.GetLockoutEnabledAsync(user))
                 {
-                    await UserManager.AccessFailedAsync(user).ConfigureAwait(false);
+                    await UserManager.AccessFailedAsync(user);
                 }
 
                 throw new OpenIdConnectException(new OpenIdConnectResponse
@@ -661,7 +646,7 @@ namespace ISynergy.Business.Base
             // Note: if you want to automatically invalidate the authorization code/refresh token
             // when the user password/roles change, use the following line instead:
             // var user = Manager.SignInManager.ValidateSecurityStampAsync(info.Principal);
-            TUser user = await UserManager.GetUserAsync(info.Principal).ConfigureAwait(false);
+            var user = await UserManager.GetUserAsync(info.Principal);
 
             if (user is null)
             {
@@ -673,7 +658,7 @@ namespace ISynergy.Business.Base
             }
 
             // Ensure the user is still allowed to sign in.
-            if (!await SignInManager.CanSignInAsync(user).ConfigureAwait(false))
+            if (!await SignInManager.CanSignInAsync(user))
             {
                 throw new OpenIdConnectException(new OpenIdConnectResponse
                 {
@@ -691,7 +676,7 @@ namespace ISynergy.Business.Base
             // Note: if you want to automatically invalidate the authorization code/refresh token
             // when the user password/roles change, use the following line instead:
             // var user = Manager.SignInManager.ValidateSecurityStampAsync(info.Principal);
-            TUser user = await UserManager.FindByNameAsync(clientid).ConfigureAwait(false);
+            var user = await UserManager.FindByNameAsync(clientid);
 
             if (user is null)
             {
@@ -724,7 +709,7 @@ namespace ISynergy.Business.Base
             }
             else
             {
-                principal = await SignInManager.CreateUserPrincipalAsync(user).ConfigureAwait(false);
+                principal = await SignInManager.CreateUserPrincipalAsync(user);
             }
 
             // Create a new authentication ticket holding the user identity.
@@ -759,7 +744,7 @@ namespace ISynergy.Business.Base
             Argument.IsNotNull(nameof(user), user);
             Argument.IsNotNull(nameof(account), account);
 
-            ClaimsIdentity result = new ClaimsIdentity(
+            var result = new ClaimsIdentity(
                 authenticationType,
                 OpenIdConnectConstants.Claims.Name,
                 OpenIdConnectConstants.Claims.Role);

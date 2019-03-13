@@ -44,7 +44,7 @@ namespace ISynergy.Models.General
             get { return GetValue<Guid>(); }
             set { SetValue(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the Account_Description property value.
         /// </summary>

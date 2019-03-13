@@ -10,15 +10,15 @@ namespace ISynergy.Extensions
     {
         private static string GetFileContentType(string path)
         {
-            if (path.EndsWith(".JPG", StringComparison.OrdinalIgnoreCase) == true)
+            if (path.EndsWith(".JPG", StringComparison.OrdinalIgnoreCase))
             {
                 return "image/jpeg";
             }
-            else if (path.EndsWith(".GIF", StringComparison.OrdinalIgnoreCase) == true)
+            else if (path.EndsWith(".GIF", StringComparison.OrdinalIgnoreCase))
             {
                 return "image/gif";
             }
-            else if (path.EndsWith(".PNG", StringComparison.OrdinalIgnoreCase) == true)
+            else if (path.EndsWith(".PNG", StringComparison.OrdinalIgnoreCase))
             {
                 return "image/png";
             }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Threading;
 
 namespace ISynergy.Services
 {
@@ -20,11 +19,11 @@ namespace ISynergy.Services
 
         public string ConvertDecimalToCurrency(decimal value)
         {
-            string currencySymbol = "$";
+            var currencySymbol = "$";
 
             currencySymbol = Context.CurrencySymbol;
 
-            NumberFormatInfo info = Thread.CurrentThread.CurrentCulture.NumberFormat;
+            var info = CultureInfo.CurrentCulture.NumberFormat;
             info.CurrencySymbol = $"{currencySymbol} ";
             info.CurrencyNegativePattern = 1;
 

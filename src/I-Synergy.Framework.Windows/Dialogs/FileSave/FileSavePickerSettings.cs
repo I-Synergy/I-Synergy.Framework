@@ -73,7 +73,7 @@ namespace ISynergy.Dialogs
         /// Gets or sets the <see cref="StorageFile"/> that the file picker suggests to the user
         /// for saving a file.
         /// </summary>
-        public StorageFile SuggestedSaveFile { get; set; } = null;
+        public StorageFile SuggestedSaveFile { get; set; }
 
         /// <summary>
         /// Gets or sets the location that the file save picker suggests to the user as the
@@ -84,6 +84,6 @@ namespace ISynergy.Dialogs
         /// the file picker. To give the user a sense of consistency, the file picker remembers the
         /// last location that the user navigated to and will generally start at that location.
         /// </remarks>
-        public PickerLocationId SuggestedStartLocation { get; set; } = PickerLocationId.DocumentsLibrary;
+        public PickerLocationId SuggestedStartLocation { get; set; }
     }
 }

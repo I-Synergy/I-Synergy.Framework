@@ -24,7 +24,7 @@ namespace ISynergy.Exceptions
         {
         }
 
-        public ArgumentBelowZeroException() : base()
+        public ArgumentBelowZeroException()
         {
         }
 

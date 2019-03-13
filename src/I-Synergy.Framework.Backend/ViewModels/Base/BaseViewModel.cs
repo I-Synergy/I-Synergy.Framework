@@ -7,18 +7,17 @@ using System.Threading.Tasks;
 
 namespace ISynergy.ViewModels.Base
 {
-    public abstract partial class BaseViewModel : PageModel, IBaseViewModel
+    public abstract class BaseViewModel : PageModel, IBaseViewModel
     {
         public CultureInfo Culture { get; }
         public IMemoryCache Cache { get; }
         public IHostingEnvironment Environment { get; }
-        
+
         public string Title { get; }
         public bool IsInitialized { get; private set; }
 
         #region Constructors
         protected BaseViewModel(IHostingEnvironment environment, IMemoryCache cache, string currencySymbol, string title)
-            : base()
         {
             Environment = environment;
             Cache = cache;
@@ -27,8 +26,8 @@ namespace ISynergy.ViewModels.Base
             Culture.NumberFormat.CurrencySymbol = $"{currencySymbol} ";
             Culture.NumberFormat.CurrencyNegativePattern = 1;
 
-            System.Threading.Thread.CurrentThread.CurrentCulture = Culture;
-            System.Threading.Thread.CurrentThread.CurrentUICulture = Culture;
+            CultureInfo.CurrentCulture = Culture;
+            CultureInfo.CurrentUICulture = Culture;
 
             Title = title;
 

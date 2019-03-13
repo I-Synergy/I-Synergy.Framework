@@ -12,7 +12,7 @@ namespace ISynergy.Exceptions
             Response = response;
         }
 
-        public OpenIdConnectException() : base()
+        public OpenIdConnectException()
         {
         }
 

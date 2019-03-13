@@ -11,7 +11,7 @@ namespace ISynergy.Extensions
         {
             var env = html.ViewContext.HttpContext.RequestServices.GetService(typeof(IHostingEnvironment)) as IHostingEnvironment;
 
-            string img = "";
+            var img = "";
 
             var props = attributes?.GetType().GetProperties().ToDictionary(x => x.Name, x => x.GetValue(attributes));
 

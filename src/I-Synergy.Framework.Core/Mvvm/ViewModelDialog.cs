@@ -46,7 +46,7 @@ namespace ISynergy.Mvvm
                 CloseWindow();
             });
 
-            Messenger.Default.Register<OnCancelMessage>(this, (e) =>
+            Messenger.Default.Register<OnCancelMessage>(this, (_) =>
             {
                 IsCancelled = true;
                 CloseWindow();

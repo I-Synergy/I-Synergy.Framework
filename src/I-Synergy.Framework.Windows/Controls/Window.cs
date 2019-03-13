@@ -17,7 +17,7 @@ namespace ISynergy.Controls
             set { base.DataContext = value; }
         }
 
-        public Window() : base()
+        public Window()
         {
             Messenger.Default.Register<CloseWindowsMessage>(this, (e) =>
             {
@@ -44,7 +44,6 @@ namespace ISynergy.Controls
 
             for (var i = 0; i < count; i++)
             {
-
                 if (VisualTreeHelper.GetChild(parent, i) is FrameworkElement frameworkElement)
                 {
                     if (frameworkElement.Name == name)
@@ -74,12 +73,9 @@ namespace ISynergy.Controls
                 case ContentDialogResult.Secondary:
                     return false;
                 default:
-                    if(DataContext != null && DataContext is IViewModelDialog<TEntity>)
+                    if(DataContext is IViewModelDialog<TEntity> dataContext && !dataContext.IsCancelled)
                     {
-                        if (!(DataContext as IViewModelDialog<TEntity>).IsCancelled)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
 
                     return false;

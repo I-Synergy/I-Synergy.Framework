@@ -19,7 +19,6 @@ namespace ISynergy.ViewModels.Authentication
             EmailAddress = "";
         }
 
-
         /// <summary>
         /// Gets or sets the EmailAddress property value.
         /// </summary>
@@ -52,7 +51,7 @@ namespace ISynergy.ViewModels.Authentication
 
         private async Task<bool> CheckFields()
         {
-            bool result = true;
+            var result = true;
 
             if (EmailAddress is null || !Network.IsValidEMail(EmailAddress))
             {

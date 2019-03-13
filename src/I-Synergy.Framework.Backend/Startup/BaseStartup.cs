@@ -59,7 +59,7 @@ namespace ISynergy
             Configuration = configuration;
         }
 
-        public Task Initialization { get; private set; }
+        public Task Initialization { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public virtual void ConfigureServices(IServiceCollection services)
@@ -161,8 +161,6 @@ namespace ISynergy
             services.AddDataProtection();
         }
 
-        
-
         /// <summary>
         /// AddMessageService
         /// </summary>
@@ -200,7 +198,7 @@ namespace ISynergy
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = _ => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -238,7 +236,6 @@ namespace ISynergy
                     var enumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
                     jsonSettings.Converters.Add(enumConverter);
                 });
-
         }
 
         protected virtual void AddRouting(IServiceCollection services)
@@ -465,18 +462,18 @@ namespace ISynergy
 
         protected virtual void AddDbServices(IServiceCollection services)
         {
-            string DataConnection = Configuration.GetConnectionString("ConnectionString");
+            var DataConnection = Configuration.GetConnectionString("ConnectionString");
 
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<TDbContext>(options =>
                 {
-                    options.UseSqlServer(DataConnection,
-                        sqlServerOptionsAction: sqlOptions =>
-                        {
-                            // Configuring Connection Resilience
-                            // Doesn't work because of transactions!!!
-                            // sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                        });
+                options.UseSqlServer(DataConnection);
+                        //sqlServerOptionsAction: sqlOptions =>
+                        //{
+                        //    // Configuring Connection Resilience
+                        //    // Doesn't work because of transactions!!!
+                        //    // sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                        //});
 
                     // Register the entity sets needed by OpenIddict.
                     // Note: use the generic overload if you need
@@ -544,7 +541,6 @@ namespace ISynergy
         protected abstract void AddManagers(IServiceCollection services);
         protected abstract void AddMappers(IServiceCollection services);
 
-
         /// <summary>
         /// AddPaymentClient
         /// </summary>
@@ -566,7 +562,6 @@ namespace ISynergy
         protected virtual void AddPaymentClient(IServiceCollection services)
         {
         }
-
 
         protected async Task UpdateOpenIddictTablesAsync(TDbContext context)
         {
@@ -621,7 +616,7 @@ namespace ISynergy
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = _ => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -676,7 +671,6 @@ namespace ISynergy
                     var enumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
                     jsonSettings.Converters.Add(enumConverter);
                 });
-
         }
     }
 }

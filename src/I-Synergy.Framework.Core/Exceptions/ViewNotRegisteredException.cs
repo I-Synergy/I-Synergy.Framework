@@ -41,7 +41,7 @@ namespace ISynergy.Exceptions
         {
         }
 
-        public ViewNotRegisteredException() : base()
+        public ViewNotRegisteredException()
         {
         }
 

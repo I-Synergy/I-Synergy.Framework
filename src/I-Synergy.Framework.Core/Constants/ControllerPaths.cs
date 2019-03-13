@@ -94,7 +94,6 @@
         public const string Refunds = "refunds";
         public const string Subscriptions = "subscriptions";
 
-
         public const string CheckNumber = "check/number/{number}";
         public const string CheckCode = "check/code/{code}";
 

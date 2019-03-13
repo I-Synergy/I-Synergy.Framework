@@ -47,8 +47,6 @@ namespace ISynergy.Common
                             Frame.Navigating -= OnFrameNavigating;
                             Frame.GoBack();
                             break;
-                        default:
-                            break;
                     }
                 }
             }

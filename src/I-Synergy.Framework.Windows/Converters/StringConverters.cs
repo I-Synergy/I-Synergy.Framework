@@ -9,7 +9,7 @@ namespace ISynergy.Converters
 {
     public class StringFormatConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is null)
                 return null;
@@ -20,7 +20,7 @@ namespace ISynergy.Converters
             return string.Format((string)parameter, value);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -28,7 +28,7 @@ namespace ISynergy.Converters
 
     public class StringToBooleanConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (parameter.ToString().Equals(value.ToString()))
             {
@@ -40,9 +40,9 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if ((bool)value == true)
+            if ((bool)value)
             {
                 return parameter.ToString();
             }
@@ -55,7 +55,7 @@ namespace ISynergy.Converters
 
     public class StringToVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (string.IsNullOrEmpty((string)value))
             {
@@ -67,7 +67,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -75,7 +75,7 @@ namespace ISynergy.Converters
 
     public class StringToEnabledConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (string.IsNullOrEmpty((string)value))
             {
@@ -87,7 +87,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -95,7 +95,7 @@ namespace ISynergy.Converters
 
     public class StringToInvertEnabledConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (string.IsNullOrEmpty((string)value))
             {
@@ -107,7 +107,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
@@ -115,13 +115,13 @@ namespace ISynergy.Converters
 
     public class StringToGeometryConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value != null && !string.IsNullOrWhiteSpace(value.ToString()) && value is string)
             {
                 return (Geometry)XamlReader.Load(
                         "<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>"
-                        + value as string + "</Geometry>");
+                        + value + "</Geometry>");
             }
             else
             {
@@ -129,17 +129,17 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
     }
-    
+
     public class StringToDecimalConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (decimal.TryParse(value.ToString(), out decimal result))
+            if (decimal.TryParse(value.ToString(), out var result))
             {
                 return result;
             }
@@ -149,7 +149,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return value.ToString();
         }
@@ -157,9 +157,9 @@ namespace ISynergy.Converters
 
     public class StringToIntegerConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (int.TryParse(value.ToString(), out int result))
+            if (int.TryParse(value.ToString(), out var result))
             {
                 return result;
             }
@@ -169,7 +169,7 @@ namespace ISynergy.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return value.ToString();
         }
@@ -177,7 +177,7 @@ namespace ISynergy.Converters
 
     public class UriToImageSourceConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string culture)
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (string.IsNullOrEmpty(value?.ToString()))
                 return null;
@@ -189,7 +189,7 @@ namespace ISynergy.Converters
             };
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }

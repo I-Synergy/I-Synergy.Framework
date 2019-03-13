@@ -58,7 +58,7 @@ namespace ISynergy.Data
         {
             var localPropertyName = propertyName ?? string.Empty;
 
-            if (validationResults.TryGetValue(localPropertyName, out List<T> currentValidationResults))
+            if (validationResults.TryGetValue(localPropertyName, out var currentValidationResults))
             {
                 return currentValidationResults;
             }

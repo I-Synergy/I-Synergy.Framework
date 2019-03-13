@@ -4,7 +4,7 @@ namespace ISynergy.Utilities
 {
     public static class StringUtility
     {
-        public static bool AddDecimalSeperator(bool seperatoradded)
+        public static bool AddDecimalSeperator()
         {
             return true;
         }
@@ -28,8 +28,7 @@ namespace ISynergy.Utilities
                 placeholder = placeholder.Remove(0, 1);
             }
 
-
-            if (decimal.TryParse(placeholder, out decimal result))
+            if (decimal.TryParse(placeholder, out var result))
             {
                 return result;
             }

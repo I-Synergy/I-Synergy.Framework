@@ -30,13 +30,13 @@ namespace ISynergy.Views.Library
         {
             if (DataContext is MapsViewModel && DataContext != null)
             {
-                MapsViewModel vm = DataContext as MapsViewModel;
+                var vm = DataContext as MapsViewModel;
 
                 try
                 {
                     await SimpleIoc.Default.GetInstance<IBusyService>().StartBusyAsync();
 
-                    Geopoint myLocation = new Geopoint(new BasicGeoposition { Latitude = 51.3774194, Longitude = 6.0791655 });
+                    var myLocation = new Geopoint(new BasicGeoposition { Latitude = 51.3774194, Longitude = 6.0791655 });
                     var MyLandmarks = new List<MapElement>();
 
                     var accessStatus = await Geolocator.RequestAccessAsync();
@@ -44,8 +44,8 @@ namespace ISynergy.Views.Library
                     if (accessStatus == GeolocationAccessStatus.Allowed)
                     {
                         // Get the current location.
-                        Geolocator geolocator = new Geolocator();
-                        Geoposition pos = await geolocator.GetGeopositionAsync();
+                        var geolocator = new Geolocator();
+                        var pos = await geolocator.GetGeopositionAsync();
                         myLocation = pos.Coordinate.Point;
 
                         var myLocationNeedle = new MapIcon
@@ -74,7 +74,7 @@ namespace ISynergy.Views.Library
                         {
                             var locationNeedle = new MapIcon
                             {
-                                Location = location.Locations.FirstOrDefault().Point,
+                                Location = location.Locations.FirstOrDefault()?.Point,
                                 NormalizedAnchorPoint = new Point(0.5, 1.0),
                                 ZIndex = 0,
                                 Title = address
@@ -84,7 +84,7 @@ namespace ISynergy.Views.Library
 
                             var routeResult = await MapRouteFinder.GetDrivingRouteAsync(
                                 myLocation,
-                                location.Locations.FirstOrDefault().Point,
+                                location.Locations.FirstOrDefault()?.Point,
                                 MapRouteOptimization.TimeWithTraffic,
                                 MapRouteRestrictions.None);
 
@@ -94,7 +94,7 @@ namespace ISynergy.Views.Library
                                 vm.DistcanceToArrival = routeResult.Route.LengthInMeters / 1000;
 
                                 // Use the route to initialize a MapRouteView.
-                                MapRouteView viewOfRoute = new MapRouteView(routeResult.Route);
+                                var viewOfRoute = new MapRouteView(routeResult.Route);
 
                                 // Add the new MapRouteView to the Routes collection
                                 // of the MapControl.
