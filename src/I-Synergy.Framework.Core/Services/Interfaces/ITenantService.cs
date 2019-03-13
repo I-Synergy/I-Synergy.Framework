@@ -7,6 +7,7 @@ namespace ISynergy.Services
         Guid TenantId { get; }
         string UserName { get; }
 
+        void SetTenant(Guid tenantId);
         void SetTenant(Guid tenantId, string username);
     }
 }
