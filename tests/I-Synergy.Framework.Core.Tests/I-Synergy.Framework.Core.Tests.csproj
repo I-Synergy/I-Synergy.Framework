@@ -19,8 +19,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TaskScheduler\" />
-  </ItemGroup>
   <Import Project="..\I-Synergy.Framework.Shared.Tests\I-Synergy.Framework.Shared.Tests.projitems" Label="Shared" />
 </Project>

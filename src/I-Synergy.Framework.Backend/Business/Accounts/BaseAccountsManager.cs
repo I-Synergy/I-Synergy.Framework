@@ -21,13 +21,15 @@ using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Abstractions;
 using ISynergy.Entities.Accounts;
 using ISynergy.Enumerations;
+using ISynergy.Utilities;
 
 namespace ISynergy.Business.Base
 {
-    public abstract class BaseAccountsManager<TAccount, TUser, TModule, TAccountModule, TDbContext> : BaseEntityManager<TDbContext>
+    public abstract class BaseAccountsManager<TAccount, TUser, TModule, TApiKey, TAccountModule, TDbContext> : BaseEntityManager<TDbContext>
         where TAccount : class, IAccount, new()
         where TUser : class, IUser, new()
         where TModule : class, IModule, new()
+        where TApiKey : class, IApiKey, new()
         where TAccountModule : class, IAccountModule, new()
         where TDbContext : DbContext
     {
@@ -324,11 +326,43 @@ namespace ISynergy.Business.Base
             return result;
         }
 
-        //public async Task<User> GetCurrentUserAsync()
-        //{
-        //    ISynergy.TUser result = await UserManager.GetUserAsync(User);
-        //    return ;
-        //}
+        public async Task<string> CreateApiKeyAsync(ClaimsPrincipal principal, string description, DateTimeOffset expiration)
+        {
+            var user = await GetUserAsync(principal);
+
+            if(user != null)
+            {
+                var key = new TApiKey
+                {
+                    ApiKey_Id = Guid.NewGuid(),
+                    User_Id = user.Id,
+                    Key = SecretUtility.GenerateSecret(),
+                    Description = description,
+                    ExpirationDate = expiration,
+                    CreatedDate = DateTimeOffset.Now,
+                    CreatedBy = user.UserName
+                };
+
+                Context
+                    .Set<TApiKey>()
+                    .Add(key);
+
+                var result = await Context
+                    .SaveChangesAsync()
+                    .ConfigureAwait(false);
+
+                if(result != 0)
+                {
+                    return key.Key;
+                }
+                else
+                {
+                    throw new InvalidProgramException();
+                }
+            }
+
+            throw new ClaimNotFoundException();
+        }
 
         public async Task<List<Account>> GetItemsAsync(bool isdeleted = false, int page = 1, int pagesize = int.MaxValue, CancellationToken cancellationToken = default)
         {
@@ -450,7 +484,7 @@ namespace ISynergy.Business.Base
         }
 
 
-        private Task<TUser> GetUsersAsync(ClaimsPrincipal principal, CancellationToken cancellationToken = default)
+        private Task<TUser> GetUserAsync(ClaimsPrincipal principal, CancellationToken cancellationToken = default)
         {
             return UserManager.GetUserAsync(principal);
         }
@@ -458,7 +492,7 @@ namespace ISynergy.Business.Base
         public async Task<AuthenticationTicket> AcceptAsync(OpenIdConnectRequest request, ClaimsPrincipal user)
         {
             // Retrieve the profile of the logged in user.
-            var userProfile = await GetUsersAsync(user).ConfigureAwait(false);
+            var userProfile = await GetUserAsync(user).ConfigureAwait(false);
 
             if (userProfile is null) return null;
 
@@ -542,6 +576,32 @@ namespace ISynergy.Business.Base
             }
 
             return result;
+        }
+
+        private async Task<TUser> ExchangeApiKeyAsync(string apikey)
+        {
+            string id = Context.Set<TApiKey>()
+                .Where(q => q.Key == apikey)
+                .Select(s => s.User_Id)
+                .FirstOrDefault();
+
+            TUser user = await UserManager.FindByIdAsync(id).ConfigureAwait(false);
+
+            if (user is null)
+            {
+                throw new OpenIdConnectException(new OpenIdConnectResponse
+                {
+                    Error = Constants.AuthenticationError,
+                    ErrorDescription = "EX_ACCOUNT_LOGIN_FAILED"
+                });
+            }
+
+            if(await SignInManager.CanSignInAsync(user))
+            {
+                return user;
+            }
+
+            return null;
         }
 
         private async Task<TUser> ExchangePasswordGrantTypeAsync(OpenIdConnectRequest request)
