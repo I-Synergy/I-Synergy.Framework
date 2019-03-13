@@ -326,21 +326,17 @@ namespace ISynergy.Business.Base
             return result;
         }
 
-        public async Task<string> CreateApiKeyAsync(ClaimsPrincipal principal, string description, DateTimeOffset expiration)
+        public async Task<string> CreateApiKeyAsync(ClaimsPrincipal principal)
         {
-            var user = await GetUserAsync(principal);
-
-            if(user != null)
+            if(Guid.TryParse(principal.GetClaim(ClaimTypes.AccountIdType), out Guid tenantId))
             {
                 var key = new TApiKey
                 {
                     ApiKey_Id = Guid.NewGuid(),
-                    User_Id = user.Id,
+                    Tenant_Id = tenantId,
                     Key = SecretUtility.GenerateSecret(),
-                    Description = description,
-                    ExpirationDate = expiration,
                     CreatedDate = DateTimeOffset.Now,
-                    CreatedBy = user.UserName
+                    CreatedBy = principal.Identity.Name
                 };
 
                 Context
@@ -351,7 +347,7 @@ namespace ISynergy.Business.Base
                     .SaveChangesAsync()
                     .ConfigureAwait(false);
 
-                if(result != 0)
+                if (result != 0)
                 {
                     return key.Key;
                 }
@@ -576,32 +572,6 @@ namespace ISynergy.Business.Base
             }
 
             return result;
-        }
-
-        private async Task<TUser> ExchangeApiKeyAsync(string apikey)
-        {
-            string id = Context.Set<TApiKey>()
-                .Where(q => q.Key == apikey)
-                .Select(s => s.User_Id)
-                .FirstOrDefault();
-
-            TUser user = await UserManager.FindByIdAsync(id).ConfigureAwait(false);
-
-            if (user is null)
-            {
-                throw new OpenIdConnectException(new OpenIdConnectResponse
-                {
-                    Error = Constants.AuthenticationError,
-                    ErrorDescription = "EX_ACCOUNT_LOGIN_FAILED"
-                });
-            }
-
-            if(await SignInManager.CanSignInAsync(user))
-            {
-                return user;
-            }
-
-            return null;
         }
 
         private async Task<TUser> ExchangePasswordGrantTypeAsync(OpenIdConnectRequest request)
