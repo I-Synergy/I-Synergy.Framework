@@ -23,5 +23,8 @@ namespace ISynergy.Helpers
             var member = (MemberExpression)propertyExpression.Body;
             return member.Member.Name;
         }
+
+        public static bool IsNullableType<T>(this T self) where T : Type =>
+            Nullable.GetUnderlyingType(self) != null;
     }
 }

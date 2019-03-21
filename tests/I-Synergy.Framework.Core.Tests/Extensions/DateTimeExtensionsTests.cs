@@ -9,28 +9,28 @@ namespace ISynergy.Extensions.Tests
         [Fact]
         public void ToStartOfDayTest()
         {
-            DateTime result = new DateTime(1975, 10, 29, 14, 43, 35).ToStartOfDay();
+            var result = new DateTime(1975, 10, 29, 14, 43, 35).ToStartOfDay();
             Assert.Equal(new DateTime(1975, 10, 29, 0, 0, 0), result);
         }
 
         [Fact]
         public void ToEndOfDayTest()
         {
-            DateTime result = new DateTime(1975, 10, 29, 14, 43, 35).ToEndOfDay();
+            var result = new DateTime(1975, 10, 29, 14, 43, 35).ToEndOfDay();
             Assert.Equal(new DateTime(1975, 10, 29, 23, 59, 59, 999), result);
         }
 
         [Fact]
         public void ToStartOfYearTest()
         {
-            DateTime result = new DateTime().ToStartOfYear(1975);
+            var result = new DateTime().ToStartOfYear(1975);
             Assert.Equal(new DateTime(1975, 1, 1, 0, 0, 0), result);
         }
 
         [Fact]
         public void ToEndOfYearTest()
         {
-            DateTime result = new DateTime().ToEndOfYear(1975);
+            var result = new DateTime().ToEndOfYear(1975);
             Assert.Equal(new DateTime(1975, 12, 31, 23, 59, 59, 999), result);
         }
     }

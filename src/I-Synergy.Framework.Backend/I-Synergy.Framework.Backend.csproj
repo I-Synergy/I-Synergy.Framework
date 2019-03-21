@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\Analyzers.props" />
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>ISynergy.Framework</RootNamespace>
@@ -48,4 +47,5 @@
   <ItemGroup>
     <ProjectReference Include="..\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj" />
   </ItemGroup>
+  <Import Project="..\..\Analyzers.props" />
 </Project>

@@ -26,12 +26,12 @@ namespace ISynergy.Helpers.Tests
         [Fact]
         public void WeakEventListenerEventTest()
         {
-            bool isOnEventTriggered = false;
-            bool isOnDetachTriggered = false;
+            var isOnEventTriggered = false;
+            var isOnDetachTriggered = false;
 
-            SampleClass sample = new SampleClass();
+            var sample = new SampleClass();
 
-            WeakEventListener<SampleClass, object, EventArgs> weak = new WeakEventListener<SampleClass, object, EventArgs>(sample)
+            var weak = new WeakEventListener<SampleClass, object, EventArgs>(sample)
             {
                 OnEventAction = (instance, source, eventArgs) => { isOnEventTriggered = true; },
                 OnDetachAction = (listener) => { isOnDetachTriggered = true; }
