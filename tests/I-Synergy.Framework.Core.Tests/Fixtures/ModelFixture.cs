@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ISynergy.Fixtures
 {
     public class ModelFixture<T> : ModelBase, IDisposable
     {
         public ModelFixture()
-            : base()
         {
         }
 

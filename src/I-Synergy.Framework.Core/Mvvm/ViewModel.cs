@@ -9,6 +9,7 @@ using ISynergy.Events;
 using ISynergy.Helpers;
 using System.ComponentModel;
 using GalaSoft.MvvmLight;
+using ISynergy.Enumerations;
 
 namespace ISynergy.Mvvm
 {
@@ -108,10 +109,12 @@ namespace ISynergy.Mvvm
 
         protected ViewModel(
             IContext context,
-            IBaseService baseService)
+            IBaseService baseService,
+            ValidationTriggers validation = ValidationTriggers.Manual)
         {
             Context = context;
             BaseService = baseService;
+            SetValidationTrigger(validation);
 
             WeakViewModelPropertyChangedEvent = new WeakEventListener<IViewModel, object, PropertyChangedEventArgs>(this)
             {

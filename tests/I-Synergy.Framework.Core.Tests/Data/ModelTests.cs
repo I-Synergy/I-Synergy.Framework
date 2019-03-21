@@ -8,19 +8,19 @@ using Xunit;
 
 namespace ISynergy.Data.Tests
 {
-    [Collection("NotifyPropertyChanged")]
+    [Collection(nameof(ModelBase))]
     public class ModelTests : UnitTest
     {
         [Fact]
         public void ViewModelFieldNotifyPropertyChangedNotifiesOnNewValueTest()
         {
-            string originalValue = "original value";
+            var originalValue = "original value";
 
             var instance = new ModelFixture<string>(originalValue);
 
             Assert.IsAssignableFrom<INotifyPropertyChanged>(instance);
 
-            bool gotEvent = false;
+            var gotEvent = false;
 
             ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
             {
@@ -28,7 +28,7 @@ namespace ISynergy.Data.Tests
                 Assert.True(e.PropertyName.Equals("Value") | e.PropertyName.Equals("IsValid"), "PropertyName was wrong.");
             };
 
-            string newValue = "new value";
+            var newValue = "new value";
             instance.Value = newValue;
 
             Assert.True(newValue.Equals(instance.Value), "Value didn't change.");
@@ -38,13 +38,13 @@ namespace ISynergy.Data.Tests
         [Fact]
         public void ViewModelFieldNotifyPropertyChangedDoesNotNotifyOnSameValueTest()
         {
-            string originalValue = "original value";
+            var originalValue = "original value";
 
             var instance = new ModelFixture<string>(originalValue);
 
             Assert.IsAssignableFrom<INotifyPropertyChanged>(instance);
 
-            bool gotEvent = false;
+            var gotEvent = false;
 
             ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
             {
@@ -68,7 +68,7 @@ namespace ISynergy.Data.Tests
         [Fact]
         public void ViewModelFieldConstructorWithValueTest()
         {
-            string expectedValue = "expected value";
+            var expectedValue = "expected value";
 
             var instance = new ModelFixture<string>(expectedValue);
 
@@ -87,7 +87,7 @@ namespace ISynergy.Data.Tests
         [Fact]
         public void ViewModelFieldToStringTest()
         {
-            string expectedValue = "expected value";
+            var expectedValue = "expected value";
 
             var instance = new ModelFixture<string>(expectedValue);
 

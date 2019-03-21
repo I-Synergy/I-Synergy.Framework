@@ -12,7 +12,7 @@ namespace ISynergy.Extensions.Tests
         public void NullArrayNonFailableTest()
         {
             object[] list = null;
-            bool result = false;
+            var result = false;
 
             foreach (var item in list.EnsureNotNull())
             {

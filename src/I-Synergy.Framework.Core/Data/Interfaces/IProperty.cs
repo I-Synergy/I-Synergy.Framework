@@ -8,7 +8,7 @@ namespace ISynergy
     {
         event EventHandler ValueChanged;
 
-        void Revert();
+        void ResetChanges();
 
         void MarkAsClean();
 

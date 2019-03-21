@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-<Import Project="..\..\Analyzers.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ISynergy</RootNamespace>
@@ -24,7 +23,6 @@
     <OutputPath>..\..\output\I-Synergy.Framework.Core\release</OutputPath>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OpenIdConnect.Primitives" Version="2.0.0" />
     <PackageReference Include="Flurl" Version="2.8.1" />
@@ -36,8 +34,5 @@
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
   </ItemGroup>
   
-  <ItemGroup>
-    <PackageReference Update="Roslynator.Analyzers" Version="2.0.0" />
-  </ItemGroup>
-
+  <Import Project="..\..\Analyzers.props" />
 </Project>
