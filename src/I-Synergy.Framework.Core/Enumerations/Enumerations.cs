@@ -12,6 +12,12 @@ namespace ISynergy.Enumerations
         Local = -2
     }
 
+    public enum ValidationTriggers
+    {
+        ChangedProperty,
+        Manual
+    }
+
     public enum DataActions
     {
         Save = 0,
@@ -112,14 +118,14 @@ namespace ISynergy.Enumerations
     {
         PasswordGrantType,
         RefreshTokenAndAuthorizationCodeGrantType,
-        ClientCredentialsGrantType,
+        ClientCredentialsGrantType
     }
 
     public enum TimeOfDayRunnable
     {
         TooEarly,
         CanRun,
-        TooLate,
+        TooLate
     }
 
     public enum Week
@@ -128,6 +134,6 @@ namespace ISynergy.Enumerations
         Second,
         Third,
         Fourth,
-        Last,
+        Last
     }
 }

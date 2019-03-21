@@ -13,7 +13,7 @@ namespace ISynergy.Extensions.Tests
         public void NullObservableCollectionNonFailableTest()
         {
             ObservableCollection<object> list = null;
-            bool result = false;
+            var result = false;
 
             foreach (var item in list.EnsureNotNull()) { }
 
