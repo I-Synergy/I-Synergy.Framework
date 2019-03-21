@@ -11,9 +11,9 @@ namespace ISynergy.Utilities
         {
             uint number = 1975;
 
-            Guid NewG = Guid.NewGuid();
-            Guid EnryptedGuid = number.ToGuid();
-            uint result = EnryptedGuid.ToUInt();
+            var NewG = Guid.NewGuid();
+            var EnryptedGuid = number.ToGuid();
+            var result = EnryptedGuid.ToUInt();
 
             Assert.Equal(number, result);
         }

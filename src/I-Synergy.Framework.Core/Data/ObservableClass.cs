@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using ISynergy.Enumerations;
+using ISynergy.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +11,9 @@ namespace ISynergy
 {
     public abstract class ObservableClass : IObservableClass, INotifyPropertyChanged
     {
+        [JsonIgnore]
+        private ValidationTriggers ValidationTrigger { get; set; }
+
         [JsonIgnore]
         public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
             = new ObservableConcurrentDictionary<string, IProperty>();
@@ -24,7 +29,15 @@ namespace ISynergy
         public bool IsValid => !Errors.Any();
 
         [JsonIgnore]
-        public bool IsDirty => Properties.Any(x => x.Value.IsDirty);
+        public bool IsDirty
+        {
+            get { return Properties.Any(x => x.Value.IsDirty); }
+        }
+
+        public void SetValidationTrigger(ValidationTriggers validation)
+        {
+            ValidationTrigger = validation;
+        }
 
         protected ObservableClass()
         {
@@ -40,7 +53,7 @@ namespace ISynergy
             return (Properties[propertyName] as IProperty<T>).Value;
         }
 
-        protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null, bool validateAfter = true)
+        protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
 
@@ -50,44 +63,44 @@ namespace ISynergy
             var property = Properties[propertyName] as IProperty<T>;
             var previous = property.Value;
 
-            if (!property.IsOriginalSet || !Equals(value, previous))
+            if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType())
             {
                 property.Value = value;
                 OnPropertyChanged(propertyName);
 
-                Validate(validateAfter);
+                if (ValidationTrigger == ValidationTriggers.ChangedProperty)
+                {
+                    Validate();
+                }
             }
         }
 
-        public bool Validate(bool validateAfter = true)
+        public bool Validate()
         {
-            if (validateAfter)
+            foreach (var property in Properties)
             {
-                foreach (var property in Properties)
-                {
-                    property.Value.Errors.Clear();
-                }
-
-                Validator?.Invoke(this);
-
-                foreach (var error in Errors.ToList())
-                {
-                    if (!Properties.Values.SelectMany(x => x.Errors).Contains(error))
-                    {
-                        Errors.Remove(error);
-                    }
-                }
-
-                foreach (var error in Properties.Values.SelectMany(x => x.Errors).ToList())
-                {
-                    if (!Errors.Contains(error))
-                    {
-                        Errors.Add(error);
-                    }
-                }
-
-                OnPropertyChanged(nameof(IsValid));
+                property.Value.Errors.Clear();
             }
+
+            Validator?.Invoke(this);
+
+            foreach (var error in Errors.ToList())
+            {
+                if (!Properties.Values.SelectMany(x => x.Errors).Contains(error))
+                {
+                    Errors.Remove(error);
+                }
+            }
+
+            foreach (var error in Properties.Values.SelectMany(x => x.Errors).ToList())
+            {
+                if (!Errors.Contains(error))
+                {
+                    Errors.Add(error);
+                }
+            }
+
+            OnPropertyChanged(nameof(IsValid));
 
             return IsValid;
         }
@@ -96,10 +109,13 @@ namespace ISynergy
         {
             foreach (var property in Properties)
             {
-                property.Value.Revert();
+                property.Value.ResetChanges();
             }
 
-            Validate();
+            if (ValidationTrigger == ValidationTriggers.ChangedProperty)
+            {
+                Validate();
+            }
         }
 
         public void MarkAsClean()
@@ -109,7 +125,10 @@ namespace ISynergy
                 property.Value.MarkAsClean();
             }
 
-            Validate();
+            if (ValidationTrigger == ValidationTriggers.ChangedProperty)
+            {
+                Validate();
+            }
         }
 
         #region INotifyPropertyChanged

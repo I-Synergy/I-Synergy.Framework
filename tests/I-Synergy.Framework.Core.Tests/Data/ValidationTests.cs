@@ -12,8 +12,6 @@ namespace ISynergy.Data.Tests
     [Category("Validation")]
     public class ValidationTests : UnitTest
     {
-
-
         [Fact]
         public void ValidateIsNullTest()
         {
@@ -24,7 +22,7 @@ namespace ISynergy.Data.Tests
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<string> i = arg as ModelFixture<string>;
+                var i = arg as ModelFixture<string>;
 
                 if (string.IsNullOrEmpty(i.Value))
                 {
@@ -45,7 +43,7 @@ namespace ISynergy.Data.Tests
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<string> i = arg as ModelFixture<string>;
+                var i = arg as ModelFixture<string>;
 
                 if (string.IsNullOrEmpty(i.Value))
                 {
@@ -66,7 +64,7 @@ namespace ISynergy.Data.Tests
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<int> i = arg as ModelFixture<int>;
+                var i = arg as ModelFixture<int>;
 
                 if (!Enumerable.Range(1, 100).Contains(i.Value))
                 {
@@ -87,7 +85,7 @@ namespace ISynergy.Data.Tests
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<int> i = arg as ModelFixture<int>;
+                var i = arg as ModelFixture<int>;
 
                 if (!Enumerable.Range(1, 500).Contains(i.Value))
                 {
@@ -108,7 +106,7 @@ namespace ISynergy.Data.Tests
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<string> i = arg as ModelFixture<string>;
+                var i = arg as ModelFixture<string>;
 
                 if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                 {
@@ -129,7 +127,7 @@ namespace ISynergy.Data.Tests
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                ModelFixture<string> i = arg as ModelFixture<string>;
+                var i = arg as ModelFixture<string>;
 
                 if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                 {

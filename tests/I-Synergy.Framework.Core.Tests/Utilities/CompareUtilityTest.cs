@@ -26,7 +26,7 @@ namespace ISynergy.Utilities
                 CompanyNumber = 3
             };
 
-            List<string> result = CompareUtility.CompareObject(oOldRecord, oNewRecord);
+            var result = CompareUtility.CompareObject(oOldRecord, oNewRecord);
 
             Assert.Equal(new List<string>
             {
@@ -44,7 +44,7 @@ namespace ISynergy.Utilities
         [InlineData(true, "<=", 49, 49.99)]
         public void CompareDecimalValues(bool result, string operation, decimal value1, decimal value2)
         {
-            bool assert = CompareUtility.Compare(operation, value1, value2);
+            var assert = CompareUtility.Compare(operation, value1, value2);
             Assert.Equal(result, assert);
         }
     }

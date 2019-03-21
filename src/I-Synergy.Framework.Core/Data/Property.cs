@@ -9,23 +9,28 @@ namespace ISynergy
 {
     public class Property<T> : IProperty<T>, INotifyPropertyChanged
     {
+        public event EventHandler ValueChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool _IsOriginalSet = false;
+        private bool _IsDirty = true;
+        private T _Value = default;
+        private T _OriginalValue = default;
+
         public Property()
         {
+            Errors = new ObservableCollection<string>();
             Errors.CollectionChanged += (s, e) => OnPropertyChanged(nameof(IsValid));
         }
 
-        public event EventHandler ValueChanged;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Revert() => Value = OriginalValue;
-
-        public void MarkAsClean() => OriginalValue = Value;
-
-        public override string ToString() => Value?.ToString();
+        public Property(T value)
+            : this()
+        {
+            Value = value;
+        }
 
         [JsonIgnore]
-        public ObservableCollection<string> Errors { get; } = new ObservableCollection<string>();
+        public ObservableCollection<string> Errors { get; }
 
         [JsonIgnore]
         public bool IsValid => !Errors.Any();
@@ -33,15 +38,9 @@ namespace ISynergy
         [JsonIgnore]
         public bool IsDirty
         {
-            get
-            {
-                if (Value == null)
-                    return OriginalValue != null;
-                return !Value.Equals(OriginalValue);
-            }
+            get { return _IsDirty; }
+            private set { Set(ref _IsDirty, value); }
         }
-
-        T _Value = default;
 
         public T Value
         {
@@ -49,21 +48,21 @@ namespace ISynergy
             set
             {
                 if (!IsOriginalSet)
+                {
                     OriginalValue = value;
+                }
+
                 Set(ref _Value, value);
+                IsDirty = true;
                 ValueChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        bool _IsOriginalSet = false;
 
         public bool IsOriginalSet
         {
             get { return _IsOriginalSet; }
             private set { Set(ref _IsOriginalSet, value); }
         }
-
-        T _OriginalValue = default;
 
         public T OriginalValue
         {
@@ -81,9 +80,22 @@ namespace ISynergy
                 return false;
             storage = value;
             OnPropertyChanged(callerMemberName);
-            OnPropertyChanged(nameof(IsDirty));
             return true;
         }
+
+        public void ResetChanges()
+        {
+            Value = OriginalValue;
+            IsDirty = false;
+        }
+
+        public void MarkAsClean()
+        {
+            OriginalValue = Value;
+            IsDirty = false;
+        }
+
+        public override string ToString() => Value?.ToString();
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

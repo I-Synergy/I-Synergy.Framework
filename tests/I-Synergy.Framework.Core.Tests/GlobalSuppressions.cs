@@ -235,4 +235,5 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~M:ISynergy.Background.Tasks.ScheduleTests.YearsTests.Should_Default_To_00_00_If_At_Is_Not_Defined")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~M:ISynergy.Utilities.CompareUtilityTest.CompareDecimalValues(System.Boolean,System.String,System.Decimal,System.Decimal)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~M:ISynergy.Utilities.GuidToIntTest.ConvertTest")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Redundancy", "RCS1163:Unused parameter.", Justification = "<Pending>", Scope = "member", Target = "~M:ISynergy.Helpers.Tests.WeakEventListenerTests.WeakEventListenerEventTest")]
 
