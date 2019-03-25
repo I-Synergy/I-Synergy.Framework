@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,7 @@ using OpenIddict.EntityFrameworkCore.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -462,12 +464,19 @@ namespace ISynergy
 
         protected virtual void AddDbServices(IServiceCollection services)
         {
-            var DataConnection = Configuration.GetConnectionString("ConnectionString");
+            var dbConnection = new SqlConnection
+            {
+                ConnectionString = Configuration.GetConnectionString("ConnectionString")
+            };
+
+            // DataSource != LocalDB means app is running in Azure with the SQLDB connection string you configured
+            if (dbConnection.DataSource != "(localdb)\\MSSQLLocalDB")
+                dbConnection.AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
 
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<TDbContext>(options =>
                 {
-                options.UseSqlServer(DataConnection);
+                options.UseSqlServer(dbConnection);
                         //sqlServerOptionsAction: sqlOptions =>
                         //{
                         //    // Configuring Connection Resilience
