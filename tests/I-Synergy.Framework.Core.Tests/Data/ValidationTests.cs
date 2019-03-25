@@ -1,10 +1,8 @@
 ﻿using ISynergy.Fixtures;
 using ISynergy.Framework.Tests.Base;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace ISynergy.Data.Tests
