@@ -1,6 +1,6 @@
-﻿using ISynergy.Enumerations;
+﻿using ISynergy.Attributes;
+using ISynergy.Enumerations;
 using ISynergy.Helpers;
-using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,24 +11,24 @@ namespace ISynergy
 {
     public abstract class ObservableClass : IObservableClass, INotifyPropertyChanged
     {
-        [JsonIgnore]
+        [IgnoreProperty]
         private ValidationTriggers ValidationTrigger { get; set; }
 
-        [JsonIgnore]
+        [IgnoreProperty]
         public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
             = new ObservableConcurrentDictionary<string, IProperty>();
 
-        [JsonIgnore]
+        [IgnoreProperty]
         public ObservableCollection<string> Errors { get; }
             = new ObservableCollection<string>();
 
-        [JsonIgnore]
+        [IgnoreProperty]
         public Action<IObservableClass> Validator { set; get; }
 
-        [JsonIgnore]
+        [IgnoreProperty]
         public bool IsValid => !Errors.Any();
 
-        [JsonIgnore]
+        [IgnoreProperty]
         public bool IsDirty
         {
             get { return Properties.Any(x => x.Value.IsDirty); }
@@ -41,6 +41,24 @@ namespace ISynergy
 
         protected ObservableClass()
         {
+            var propertyInfos = this.GetType()
+                .GetProperties()
+                .Where(p => !Attribute.IsDefined(p, typeof(IgnorePropertyAttribute)))
+                .ToList();
+
+            foreach (var propertyInfo in propertyInfos)
+            {
+                //add to property dictionary
+                var propValue = propertyInfo.GetValue(this);
+                var propType = propertyInfo.PropertyType;
+
+                var property = (IProperty)typeof(Property<>)
+                    .MakeGenericType(propType)
+                    .GetConstructor(new[] { propType })
+                    .Invoke(new[] { propValue });
+
+                Properties.Add(propertyInfo.Name, property);
+            }
         }
 
         protected T GetValue<T>([CallerMemberName] string propertyName = null)
