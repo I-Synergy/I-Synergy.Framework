@@ -29,6 +29,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Windows
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "I-Synergy.Framework.Shared.Tests", "tests\I-Synergy.Framework.Shared.Tests\I-Synergy.Framework.Shared.Tests.shproj", "{42862C14-75D1-4E0F-95A9-D30F656187E8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{84C45AE8-9B0E-45A0-B385-69F3D6E4EDBA}"
+	ProjectSection(SolutionItems) = preProject
+		Analyzers.props = Analyzers.props
+		Analyzers.ruleset = Analyzers.ruleset
+		BuildCommon.targets = BuildCommon.targets
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		tests\I-Synergy.Framework.Shared.Tests\I-Synergy.Framework.Shared.Tests.projitems*{42862c14-75d1-4e0f-95a9-d30f656187e8}*SharedItemsImports = 13
