@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 using ISynergy.Services;
 using ISynergy.Framework.Tests.Base;
-using ISynergy.Functions;
 
 namespace ISynergy.Functions.Tests
 {
