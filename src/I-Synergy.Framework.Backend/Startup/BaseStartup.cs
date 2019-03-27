@@ -470,7 +470,7 @@ namespace ISynergy
             };
 
             // DataSource != LocalDB means app is running in Azure with the SQLDB connection string you configured
-            if (dbConnection.DataSource != "(localdb)\\MSSQLLocalDB")
+            if (!dbConnection.DataSource.Equals("(localdb)\\MSSQLLocalDB", StringComparison.OrdinalIgnoreCase))
                 dbConnection.AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
 
             services.AddEntityFrameworkSqlServer()
