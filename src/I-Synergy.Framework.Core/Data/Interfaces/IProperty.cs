@@ -1,4 +1,4 @@
-﻿using ISynergy.Attributes;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 
@@ -14,7 +14,7 @@ namespace ISynergy
 
         ObservableCollection<string> Errors { get; }
 
-        [IgnoreProperty]
+        [JsonIgnore]
         bool IsValid { get; }
 
         bool IsDirty { get; }
