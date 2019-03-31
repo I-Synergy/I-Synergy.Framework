@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>I-Synergy.Framework.Core</id>
-    <version>2019.0.0</version>
+    <version>$version$</version>
     <authors>Ismail Hassani</authors>
     <owners>International Intelligence</owners>
     <iconUrl>https://app.i-synergy.nl/favicon.ico</iconUrl>
@@ -11,7 +11,7 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2008-2019</copyright>
     <tags>I-Synergy Core Framework</tags>
-    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy%20Framework</projectUrl>
+    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework</projectUrl>
 
     <dependencies>
       <dependency id="AspNet.Security.OpenIdConnect.Primitives" version="2.0.0" />
