@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Utilities;
+using System;
 using Windows.UI.Xaml;
 
 namespace ISynergy.Triggers
@@ -19,6 +20,7 @@ namespace ISynergy.Triggers
         {
             TriggerStateCheck(
                 target,
+                (string)target.GetValue(OperatorProperty),
                 e.NewValue,
                 target.GetValue(TriggerValueProperty));
         }
@@ -38,17 +40,30 @@ namespace ISynergy.Triggers
         {
             TriggerStateCheck(
                 target,
+                (string)target.GetValue(OperatorProperty),
                 target.GetValue(DataValueProperty),
                 e.NewValue);
         }
         #endregion
 
-        private static void TriggerStateCheck(DependencyObject target, object dataValue, object triggerValue)
+        #region Operator
+        public string Operator
+        {
+            get { return (string)GetValue(OperatorProperty); }
+            set { SetValue(OperatorProperty, value); }
+        }
+
+        public static readonly DependencyProperty OperatorProperty =
+            DependencyProperty.Register(nameof(Operator), typeof(string), typeof(ObjectDataTrigger), new PropertyMetadata("=="));
+        #endregion
+
+        private static void TriggerStateCheck(DependencyObject target, string operation, object dataValue, object triggerValue)
         {
             Argument.IsNotNull(nameof(target), target);
+            Argument.IsNotNullOrEmpty(nameof(operation), operation);
 
             if (!(target is ObjectDataTrigger trigger) || dataValue is null) return;
-            trigger.SetActive(dataValue.Equals(triggerValue));
+            trigger.SetActive(CompareUtility.Compare(operation, dataValue, triggerValue));
         }
     }
 }
