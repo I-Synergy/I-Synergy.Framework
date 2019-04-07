@@ -48,6 +48,16 @@
         public const string UsernamePrefixLocal = "local:";
 
         public const string TemporaryUrl = @"temp:///";
+
+        public const string ApiName = "api";
+        public const string ApiClient = "ISynergy";
+
+        public const string SignalPath = "/api/signal";
+
+        public const string IsOffline = "IsOffline";
+        public const string HasInternetConnection = "HasInternetConnection";
+
+        public const int NumberOfPaymentsToList = 50;
     }
 
     public static class ExceptionConstants
