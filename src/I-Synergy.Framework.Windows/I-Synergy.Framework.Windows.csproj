@@ -421,6 +421,24 @@
     <Content Include="Assets\Images\Refresh.png" />
     <Content Include="Assets\Images\Warning.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Fonts\segoesb.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Fonts\segoeui.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Fonts\segoeuib.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Fonts\segoeuil.ttf" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
