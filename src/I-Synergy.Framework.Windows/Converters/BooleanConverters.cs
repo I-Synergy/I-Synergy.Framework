@@ -1,7 +1,5 @@
-﻿using ISynergy.Converters.Base;
-using ISynergy.Extensions;
+﻿using ISynergy.Extensions;
 using System;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -23,7 +21,7 @@ namespace ISynergy.Converters
         /// <returns>The value to be passed to the target dependency property.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return !(value is bool && (bool)value);
+            return !(value is bool x && x);
         }
 
         /// <summary>
@@ -36,28 +34,7 @@ namespace ISynergy.Converters
         /// <returns>The value to be passed to the target dependency property.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return !(value is bool && (bool)value);
-        }
-    }
-
-    public class BooleanMultiValueConverter : MultiValueConverterBase
-    {
-        public override object Convert(object[] values, Type targetType, object parameter, string language)
-        {
-            return values.All((item) =>
-            {
-                if(item is bool value)
-                {
-                    return value;
-                }
-
-                return false;
-            });
-        }
-
-        public override object[] ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
+            return !(value is bool x && x);
         }
     }
 
