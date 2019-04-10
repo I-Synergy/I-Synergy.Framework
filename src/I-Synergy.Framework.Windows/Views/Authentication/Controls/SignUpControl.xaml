@@ -5,7 +5,6 @@
     xmlns:Converters="using:ISynergy.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:Behaviors="using:ISynergy.Behaviors"
     mc:Ignorable="d">
 
@@ -28,19 +27,8 @@
                     Content="{CustomResource Generic_Register}" 
                     Margin ="5,25" 
                     HorizontalAlignment="Left" 
-                    Command="{Binding Register_Command}">
-                <i:Interaction.Behaviors>
-                    <Behaviors:MultiBindingBehavior PropertyName="IsEnabled" Converter="{StaticResource BooleanMultiValueConverter}" >
-                        <Behaviors:MultiBindingItem Value="{Binding ISynergyService.BusyService.IsEnabled}" />
-                        <Behaviors:MultiBindingItem Value="{Binding IsValid}" />
-                        <Behaviors:MultiBindingItem Value="{Binding Registration_Name, Converter={StaticResource StringToEnabledConverter}}" />
-                        <Behaviors:MultiBindingItem Value="{Binding Registration_Mail, Converter={StaticResource StringToEnabledConverter}}" />
-                        <Behaviors:MultiBindingItem Value="{Binding Registration_TimeZone, Converter={StaticResource StringToEnabledConverter}}" />
-                        <Behaviors:MultiBindingItem Value="{Binding Registration_Password, Converter={StaticResource StringToEnabledConverter}}" />
-                        <Behaviors:MultiBindingItem Value="{Binding Registration_Password_Check, Converter={StaticResource StringToEnabledConverter}}" />
-                    </Behaviors:MultiBindingBehavior>
-                </i:Interaction.Behaviors>
-            </Button>
+                    Command="{Binding Register_Command}"
+                    IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}"/>
         </StackPanel>
     </Grid>
 </UserControl>

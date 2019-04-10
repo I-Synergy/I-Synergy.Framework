@@ -114,9 +114,6 @@
     <Compile Include="Behaviors\Attachers\ValidationBehaviorAttacher.cs" />
     <Compile Include="Behaviors\AuthorizationBehavior.cs" />
     <Compile Include="Behaviors\Base\BehaviorBase.cs" />
-    <Compile Include="Behaviors\MultiBindingBehavior.cs" />
-    <Compile Include="Behaviors\MultiBindingBehavior\MultiBindingItem.cs" />
-    <Compile Include="Behaviors\MultiBindingBehavior\MultiBindingItemCollection.cs" />
     <Compile Include="Behaviors\NumericTextBoxBehavior.cs" />
     <Compile Include="Behaviors\ValidationBehavior.cs" />
     <Compile Include="Collections\DependencyObjectCollection.cs" />
@@ -162,7 +159,6 @@
     <Compile Include="Controls\Window.cs" />
     <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
     <Compile Include="Controls\Wrappers\InlineCollectionWrapper.cs" />
-    <Compile Include="Converters\Base\MultiValueConverterBase.cs" />
     <Compile Include="Converters\BladeConverters.cs" />
     <Compile Include="Converters\BooleanConverters.cs" />
     <Compile Include="Converters\ByteConverters.cs" />
