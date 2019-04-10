@@ -29,16 +29,8 @@
                     Content="{CustomResource Generic_Login}" 
                     Margin ="5,25" 
                     HorizontalAlignment="Right" 
-                    Command="{Binding Submit_Command}">
-                <i:Interaction.Behaviors>
-                    <Behaviors:MultiBindingBehavior PropertyName="IsEnabled" Converter="{StaticResource BooleanMultiValueConverter}" >
-                        <Behaviors:MultiBindingItem Value="{Binding ISynergyService.BusyService.IsEnabled}" />
-                        <Behaviors:MultiBindingItem Value="{Binding IsValid}" />
-                        <Behaviors:MultiBindingItem Value="{Binding Username, Converter={StaticResource StringToEnabledConverter}}" />
-                        <Behaviors:MultiBindingItem Value="{Binding Password, Converter={StaticResource StringToEnabledConverter}}" />
-                    </Behaviors:MultiBindingBehavior>
-                </i:Interaction.Behaviors>
-            </Button>
+                    Command="{Binding Submit_Command}"
+                    IsEnabled="{Binding ISynergyService.BusyService.IsEnabled}"/>
         </StackPanel>
     </Grid>
 </UserControl>
