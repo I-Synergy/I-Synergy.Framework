@@ -1,28 +1,5 @@
 ﻿namespace ISynergy
 {
-    public static class ControllerNames
-    {
-        public const string Templates = "templates";
-        public const string MasterData = "masterdata";
-        public const string Settings = "settings";
-        public const string Reports = "reports";
-
-        public const string Relations = "relations";
-        public const string RelationMainGroups = "relationmaingroups";
-        public const string RelationGroups = "relationgroups";
-
-        public const string Commodities = "commodities";
-        public const string Products = "products";
-        public const string CommodityMainGroups = "commoditymaingroups";
-        public const string CommodityGroups = "commoditygroups";
-
-        public const string Invoices = "invoices";
-        public const string Orders = "orders";
-        public const string Quotes = "quotes";
-        public const string Sales = "sales";
-        public const string Payment = "payment";
-    }
-
     public static class ControllerPaths
     {
         public const string Accounts = "accounts";
