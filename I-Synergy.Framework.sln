@@ -1,0 +1,98 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{82E3182E-EF0A-4CFE-AA9A-86994AC5765E}"
+	ProjectSection(SolutionItems) = preProject
+		docs\readme.md = docs\readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC7EDEE6-465F-4AC7-B976-8C42D7426365}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.AspNetCore", "..\I-Synergy.Framework.AspNetCore\src\I-Synergy.Framework.AspNetCore\I-Synergy.Framework.AspNetCore.csproj", "{534BF57F-B7CF-49A1-A0AA-A42A93587305}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.AspNetCore.Authentication", "..\I-Synergy.Framework.AspNetCore.Authentication\src\I-Synergy.Framework.AspNetCore.Authentication\I-Synergy.Framework.AspNetCore.Authentication.csproj", "{BD0D5A7F-25A3-44C1-991A-A358CF6EC544}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Core", "..\I-Synergy.Framework.Core\src\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj", "{90F74F51-A863-4229-AE7B-D6A8D22AD1BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.EntityFramework", "..\I-Synergy.Framework.EntityFramework\src\I-Synergy.Framework.EntityFramework\I-Synergy.Framework.EntityFramework.csproj", "{2880C580-D046-46E8-A539-AD383F4840C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Geography", "..\I-Synergy.Framework.Geography\src\I-Synergy.Framework.Geography\I-Synergy.Framework.Geography.csproj", "{51FDB728-F86A-4A69-9A11-60D7A2A27C5F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Mathematics", "..\I-Synergy.Framework.Mathematics\src\I-Synergy.Framework.Mathematics\I-Synergy.Framework.Mathematics.csproj", "{36D6797C-AD02-46DD-ABBF-E21D94B1C27C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Mvvm", "..\I-Synergy.Framework.Mvvm\src\I-Synergy.Framework.Mvvm\I-Synergy.Framework.Mvvm.csproj", "{21628459-8F0E-465A-B67C-192B9BDD5E6E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.MessageBus", "..\I-Synergy.Framework.MessageBus\src\I-Synergy.Framework.MessageBus\I-Synergy.Framework.MessageBus.csproj", "{9FC6D506-399B-49BE-8875-E06352F80C77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.MessageBus.Azure", "..\I-Synergy.Framework.MessageBus\src\I-Synergy.Framework.MessageBus.Azure\I-Synergy.Framework.MessageBus.Azure.csproj", "{9164CBE1-3C0C-4F53-B826-A229D459145E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{534BF57F-B7CF-49A1-A0AA-A42A93587305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{534BF57F-B7CF-49A1-A0AA-A42A93587305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{534BF57F-B7CF-49A1-A0AA-A42A93587305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{534BF57F-B7CF-49A1-A0AA-A42A93587305}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD0D5A7F-25A3-44C1-991A-A358CF6EC544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD0D5A7F-25A3-44C1-991A-A358CF6EC544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD0D5A7F-25A3-44C1-991A-A358CF6EC544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD0D5A7F-25A3-44C1-991A-A358CF6EC544}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90F74F51-A863-4229-AE7B-D6A8D22AD1BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90F74F51-A863-4229-AE7B-D6A8D22AD1BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90F74F51-A863-4229-AE7B-D6A8D22AD1BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90F74F51-A863-4229-AE7B-D6A8D22AD1BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2880C580-D046-46E8-A539-AD383F4840C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2880C580-D046-46E8-A539-AD383F4840C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2880C580-D046-46E8-A539-AD383F4840C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2880C580-D046-46E8-A539-AD383F4840C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51FDB728-F86A-4A69-9A11-60D7A2A27C5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51FDB728-F86A-4A69-9A11-60D7A2A27C5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51FDB728-F86A-4A69-9A11-60D7A2A27C5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51FDB728-F86A-4A69-9A11-60D7A2A27C5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36D6797C-AD02-46DD-ABBF-E21D94B1C27C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36D6797C-AD02-46DD-ABBF-E21D94B1C27C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36D6797C-AD02-46DD-ABBF-E21D94B1C27C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36D6797C-AD02-46DD-ABBF-E21D94B1C27C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21628459-8F0E-465A-B67C-192B9BDD5E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21628459-8F0E-465A-B67C-192B9BDD5E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21628459-8F0E-465A-B67C-192B9BDD5E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21628459-8F0E-465A-B67C-192B9BDD5E6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FC6D506-399B-49BE-8875-E06352F80C77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FC6D506-399B-49BE-8875-E06352F80C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FC6D506-399B-49BE-8875-E06352F80C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FC6D506-399B-49BE-8875-E06352F80C77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9164CBE1-3C0C-4F53-B826-A229D459145E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9164CBE1-3C0C-4F53-B826-A229D459145E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9164CBE1-3C0C-4F53-B826-A229D459145E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9164CBE1-3C0C-4F53-B826-A229D459145E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{534BF57F-B7CF-49A1-A0AA-A42A93587305} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{BD0D5A7F-25A3-44C1-991A-A358CF6EC544} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{90F74F51-A863-4229-AE7B-D6A8D22AD1BE} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{2880C580-D046-46E8-A539-AD383F4840C8} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{51FDB728-F86A-4A69-9A11-60D7A2A27C5F} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{36D6797C-AD02-46DD-ABBF-E21D94B1C27C} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{21628459-8F0E-465A-B67C-192B9BDD5E6E} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{9FC6D506-399B-49BE-8875-E06352F80C77} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{9164CBE1-3C0C-4F53-B826-A229D459145E} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
+	EndGlobalSection
+EndGlobal
