@@ -1,0 +1,47 @@
+# File: pipelines/artifacts.jobs.yml
+
+jobs:
+- job: ArtifactsJob
+  displayName: 'Process artifacts'
+  steps:
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'Output'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    - task: PowerShell@2
+      displayName: 'PowerShell Script - Update buildnumber'
+      inputs:
+        targetType: filePath
+        filePath: ./build/updatebuildnumber.ps1
+        arguments: '-previousBuildNumber "$env:BUILD_BUILDNUMBER"'
+
+    - task: DownloadSecureFile@1
+      displayName: 'Download secure file'
+      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'release'))
+      inputs:
+        secureFile: 'i-synergy.pfx'
+
+    - task: PowerShell@2
+      displayName: 'Sign Artifacts: $(ProjectDescription)'
+      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'release'))
+      inputs:
+        targetType: filePath
+        filePath: ./build/sign.ps1
+        arguments: '-certFile "$(Agent.WorkFolder)\_temp\i-synergy.pfx" -pw "$(CertPassword)" -buildDir "$(System.ArtifactsDirectory)\Output\$(ProjectName)\$(BuildConfiguration)\netstandard2.0" -timestampUrl "$(TimestampUrl)"'
+
+    - task: NuGetCommand@2
+      displayName: 'NuGet pack: $(ProjectDescription)'
+      inputs:
+        command: pack
+        packagesToPack: 'nuget/$(ProjectName).nuspec'
+        buildProperties: 'ProjectName=$(ProjectName);Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/$(ProjectName).$(build.buildNumber).nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'Nuget.org'
