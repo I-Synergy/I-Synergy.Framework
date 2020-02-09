@@ -15,6 +15,7 @@ ___
 | [I-Synergy.Framework.MessageBus](https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework.MessageBus) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework.MessageBus%20CD?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=92&branchName=master)|
 | [I-Synergy.Framework.Storage](https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework.Storage) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework.Storage%20CD?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=92&branchName=master)|
 | [I-Synergy.Framework.Payment](https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework.Payment) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework.Payment%20CD?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=103&branchName=master)|
+| [I-Synergy.Framework.Windows](https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework.Windows) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework.Windows%20CD?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=120&branchName=master)|
 
 ## Nuget Deployment Status
 | Release | Status |
@@ -33,3 +34,4 @@ ___
 | [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage.Azure) |
 | [I-Synergy.Framework.Payment](https://www.nuget.org/packages/I-Synergy.Framework.Payment/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Payment) |
 | [I-Synergy.Framework.Payment.Mollie](https://www.nuget.org/packages/I-Synergy.Framework.Payment.Mollie/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Payment.Mollie) |
+| [I-Synergy.Framework.Windows](https://www.nuget.org/packages/I-Synergy.Framework.Windows/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Windows) |
