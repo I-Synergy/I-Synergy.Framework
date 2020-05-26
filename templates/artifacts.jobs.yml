@@ -158,7 +158,7 @@ jobs:
       inputs:
         command: pack
         packagesToPack: 'nuget/I-Synergy.Framework.Windows.nuspec'
-        buildProperties: 'ProjectName=$(ProjectName);Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+        buildProperties: 'ProjectName=I-Synergy.Framework.Windows;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
 
     - task: NuGetCommand@2
       displayName: 'NuGet push: I-Synergy.Framework'
