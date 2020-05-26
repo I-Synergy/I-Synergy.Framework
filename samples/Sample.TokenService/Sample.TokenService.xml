@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sample.TokenService</name>
+    </assembly>
+    <members>
+        <member name="T:Sample.TokenService.Business.TokenManager">
+            <summary>
+            Token manager to be used in the business layer
+            </summary>
+        </member>
+        <member name="M:Sample.TokenService.Business.TokenManager.#ctor(ISynergy.Framework.Core.Services.IJwtTokenService)">
+            <summary>
+            Constructor with dependency injection for the JwtTokenService
+            </summary>
+            <param name="tokenService"></param>
+        </member>
+        <member name="M:Sample.TokenService.Business.TokenManager.GenerateJwtTokenAsync(ISynergy.Models.General.TokenRequest)">
+            <summary>
+            Generates a HmacSha256 encoded <see cref="T:ISynergy.Models.General.Token"/> from a <see cref="T:System.Security.Principal.GenericPrincipal"/> and an expiration <see cref="T:System.TimeSpan"/>
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sample.TokenService.Business.TokenManager.GenerateWopiTokenAsync(Sample.TokenService.Models.WopiTokenInput)">
+            <summary>
+            Generates a <see cref="T:Sample.TokenService.Models.WopiToken"/> from <see cref="T:Sample.TokenService.Models.WopiTokenInput"/> 
+            </summary>
+            <param name="input"></param>
+            <returns><see cref="T:Sample.TokenService.Models.WopiToken"/></returns>
+        </member>
+        <member name="M:Sample.TokenService.Business.TokenManager.GetProfileAsync(ISynergy.Models.General.Token)">
+            <summary>
+            Validates token and gets profile from token.
+            </summary>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sample.TokenService.Business.TokenManager.GetClaimsAsync(ISynergy.Models.General.Token)">
+            <summary>
+            Validates token and get all claims from token.
+            </summary>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sample.TokenService.Business.TokenManager.GetClaimsAsync(ISynergy.Models.General.Token,System.String)">
+            <summary>
+            Validates token and get all claims with specified ClaimType.
+            </summary>
+            <param name="token"></param>
+            <param name="claimType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sample.TokenService.Business.TokenManager.GetSingleClaimAsync(ISynergy.Models.General.Token,System.String)">
+            <summary>
+            Validates token and get single claim with specified ClaimType.
+            this method throws an exception if there is more than one element in the sequence.
+            </summary>
+            <param name="token"></param>
+            <param name="claimType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Sample.TokenService.CustomClaimTypes">
+            <summary>
+            Specific Claim types to be used in auth token service
+            </summary>
+        </member>
+        <member name="T:Sample.TokenService.OfficeOnlineDocumentModes">
+            <summary>
+            Document roles for Office Online viewer
+            </summary>
+        </member>
+        <member name="T:Sample.TokenService.Contracts.ITokenServiceContract">
+            <summary>
+            Service contract to enforce implementation in business-, service- and client implementation
+            </summary>
+        </member>
+        <member name="T:Sample.TokenService.Controllers.TokenController">
+            <summary>
+            Authentication controller that generates a <see cref="T:ISynergy.Models.General.Token"/>
+            </summary>
+        </member>
+        <member name="M:Sample.TokenService.Controllers.TokenController.#ctor(Sample.TokenService.Business.ITokenManager)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="manager"></param>
+        </member>
+        <member name="M:Sample.TokenService.Controllers.TokenController.GenerateJwtTokenAsync(ISynergy.Models.General.TokenRequest)">
+            <summary>
+            Generates a HmacSha256 encoded <see cref="T:ISynergy.Models.General.Token"/> from a <see cref="T:ISynergy.Models.General.TokenRequest"/>
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sample.TokenService.Controllers.TokenController.GetProfileAsync(ISynergy.Models.General.Token)">
+            <summary>
+            Validates given <see cref="T:ISynergy.Models.General.Token"/> and returns the <see cref="T:ISynergy.Models.General.Profile"/> of user
+            </summary>
+            <param name="token"></param>
+            <returns><see cref="T:ISynergy.Models.General.Profile"/></returns>
+        </member>
+        <member name="M:Sample.TokenService.Controllers.TokenController.GenerateWopiTokenAsync(Sample.TokenService.Models.WopiTokenInput)">
+            <summary>
+            Creates a <see cref="T:Sample.TokenService.Models.WopiToken"/> from <see cref="T:Sample.TokenService.Models.WopiTokenInput"/> 
+            </summary>
+            <param name="input"></param>
+            <returns><see cref="T:Sample.TokenService.Models.WopiToken"/></returns>
+        </member>
+        <member name="M:Sample.TokenService.Controllers.TokenController.GetClaimsAsync(ISynergy.Models.General.Token)">
+            <summary>
+            Retrieves a list of <see cref="T:System.Security.Claims.Claim"/> from a <see cref="T:ISynergy.Models.General.Token"/>
+            </summary>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sample.TokenService.Controllers.TokenController.GetClaimsAsync(ISynergy.Models.General.Token,System.String)">
+            <summary>
+            Retrieves a list of string from a <see cref="T:ISynergy.Models.General.Token"/> and <see cref="T:Sample.TokenService.CustomClaimTypes"/>
+            </summary>
+            <param name="token"></param>
+            <param name="claimType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sample.TokenService.Controllers.TokenController.GetSingleClaimAsync(ISynergy.Models.General.Token,System.String)">
+            <summary>
+            Retrieves a single of string from a <see cref="T:ISynergy.Models.General.Token"/> and <see cref="T:Sample.TokenService.CustomClaimTypes"/>
+            </summary>
+            <param name="token"></param>
+            <param name="claimType"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

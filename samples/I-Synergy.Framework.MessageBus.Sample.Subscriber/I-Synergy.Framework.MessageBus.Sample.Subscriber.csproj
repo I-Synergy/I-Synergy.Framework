@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>ISynergy.Framework.MessageBus.Sample.Subscriber</RootNamespace>
+    <UserSecretsId>856ca46a-6c76-4d30-beff-69f3e12a0dc0</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\I-Synergy.Framework.MessageBus.Azure\I-Synergy.Framework.MessageBus.Azure.csproj" />
+    <ProjectReference Include="..\..\src\I-Synergy.Framework.MessageBus\I-Synergy.Framework.MessageBus.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\I-Synergy.Framework.Messagebus.Sample.Shared\I-Synergy.Framework.Messagebus.Sample.Shared.projitems" Label="Shared" />
+
+</Project>

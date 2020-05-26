@@ -1,0 +1,102 @@
+﻿using System;
+using System.Globalization;
+using System.Text;
+using ISynergy.Framework.Core.Extensions;
+
+namespace ISynergy.Framework.Geography
+{
+    /// <summary>
+    /// This is the outcome of a three dimensional geodetic calculation.  It represents
+    /// the path a between two GlobalPositions for a specified reference ellipsoid.
+    /// </summary>
+    public struct GeodeticMeasurement : IEquatable<GeodeticMeasurement>
+    {
+        /// <summary>
+        /// The calculator used to compute this measurement
+        /// </summary>
+        /// <value>The calculator.</value>
+        public GeodeticCalculator Calculator => AverageCurve.Calculator;
+
+        /// <summary>
+        /// Get the average geodetic curve.  This is the geodetic curve as measured
+        /// at the average elevation between two points.
+        /// </summary>
+        /// <value>The average curve.</value>
+        public GeodeticCurve AverageCurve { get; }
+
+        /// <summary>
+        /// Get the ellipsoidal distance (in meters).  This is the length of the average geodetic
+        /// curve.  For actual point-to-point distance, use PointToPointDistance property.
+        /// </summary>
+        /// <value>The ellipsoidal distance.</value>
+        public double EllipsoidalDistance => AverageCurve.EllipsoidalDistance;
+
+        /// <summary>
+        /// Get the azimuth.  This is angle from north from start to end.
+        /// </summary>
+        /// <value>The azimuth.</value>
+        public Angle Azimuth => AverageCurve.Azimuth;
+
+        /// <summary>
+        /// Get the reverse azimuth.  This is angle from north from end to start.
+        /// </summary>
+        /// <value>The reverse azimuth.</value>
+        public Angle ReverseAzimuth => AverageCurve.ReverseAzimuth;
+
+        /// <summary>
+        /// Get the elevation change, in meters, going from the starting to the ending point.
+        /// </summary>
+        /// <value>The elevation change.</value>
+        public double ElevationChange { get; }
+
+        /// <summary>
+        /// Get the distance travelled, in meters, going from one point to the next.
+        /// </summary>
+        /// <value>The point to point distance.</value>
+        public double PointToPointDistance { get; }
+
+        /// <summary>
+        /// Creates a new instance of GeodeticMeasurement.
+        /// </summary>
+        /// <param name="averageCurve">the geodetic curve as measured at the average elevation between two points</param>
+        /// <param name="elevationChange">the change in elevation, in meters, going from the starting point to the ending point</param>
+        internal GeodeticMeasurement(
+            GeodeticCurve averageCurve,
+            double elevationChange)
+        {
+            var ellDist = averageCurve.EllipsoidalDistance;
+
+            AverageCurve = averageCurve;
+            ElevationChange = elevationChange;
+            PointToPointDistance = Math.Sqrt(ellDist * ellDist + ElevationChange * ElevationChange);
+        }
+
+        /// <summary>
+        /// Get the GeodeticMeasurement as a culture invariant string
+        /// </summary>
+        /// <returns>The measurement as culture invariant string</returns>
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+
+            builder.Append(AverageCurve);
+            builder.Append(";elev12=");
+            builder.Append(ElevationChange.ToString(NumberFormatInfo.InvariantInfo));
+            builder.Append(";p2p=");
+            builder.Append(PointToPointDistance.ToString(NumberFormatInfo.InvariantInfo));
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Test wether another measurement is the same
+        /// </summary>
+        /// <param name="other">Another measurement</param>
+        /// <returns>True if both are the same</returns>
+        public bool Equals(GeodeticMeasurement other)
+        {
+            return ElevationChange.IsApproximatelyEqual(other.ElevationChange) &&
+                   AverageCurve.Equals(other.AverageCurve);
+        }
+    }
+}

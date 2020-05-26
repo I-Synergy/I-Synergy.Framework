@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Project.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>ISynergy.Framework.WebDav.Storage.SQLite</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\output\I-Synergy.Framework.AspNetCore.WebDav.Storage.SQLite\debug</OutputPath>
+    <DocumentationFile>..\..\output\I-Synergy.Framework.AspNetCore.WebDav.Storage.SQLite\debug\I-Synergy.Framework.AspNetCore.WebDav.Storage.SQLite.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\output\I-Synergy.Framework.AspNetCore.WebDav.Storage.SQLite\release</OutputPath>
+    <DocumentationFile>..\..\output\I-Synergy.Framework.AspNetCore.WebDav.Storage.SQLite\release\I-Synergy.Framework.AspNetCore.WebDav.Storage.SQLite.xml</DocumentationFile>
+    <NoWarn>1701;1702</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
+  </ItemGroup>
+</Project>

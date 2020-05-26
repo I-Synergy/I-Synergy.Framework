@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$ProjectName$</id>
+    <version>$Version$</version>
+    <authors>Ismail Hassani</authors>
+    <owners>International Intelligence</owners>
+    <iconUrl>https://app.i-synergy.nl/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>I-Synergy Framework Authentication for Asp.Net Core 3.0</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2008-2020</copyright>
+    <tags>I-Synergy Framework AspNetCore Authentication OAuth</tags>
+    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework.AspNetCore</projectUrl>
+
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="I-Synergy.Framework.AspNetCore" version="[$PackageVersion$]" />
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="6.6.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  
+  <files>
+    <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netcoreapp3.1\$projectname$.deps.json" target="lib\netcoreapp3.1" />
+    <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netcoreapp3.1\$projectname$.dll" target="lib\netcoreapp3.1" />
+    <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netcoreapp3.1\$projectname$.pdb" target="lib\netcoreapp3.1" />
+  </files>
+</package>

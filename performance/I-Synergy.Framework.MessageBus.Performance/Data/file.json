@@ -1,0 +1,198 @@
+{
+  "Name": "U001test.docx",
+  "Template": "oxml\\key2bz\\amsterdam\\uitreksels\\U001.GBA.DOCX",
+  "Type": 0,
+  "ReplaceInHeadersAndFooters": true,
+  "TemplateVariables": [
+    {
+      "Name": ">>10",
+      "Value": "",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V010211",
+      "Value": "Lucia Johanna Maria",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V019901",
+      "Value": "Oorthuizen",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V010302",
+      "Value": "13 juni 1957 te Amsterdam",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V081160",
+      "Value": "1098 BE",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V089901",
+      "Value": "Linnaeuskade 19 1",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "C399005",
+      "Value": "OXML\\KEY2BZ\\AMSTERDAM\\CONDITIONEEL\\C399005A.AMS.DOCX",
+      "Type": 2,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V999912",
+      "Value": "19 oktober 2009",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "C007001",
+      "Value": "OXML\\KEY2BZ\\AMSTERDAM\\CONDITIONEEL\\C007001A.GBA.DOCX",
+      "Type": 2,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V081011",
+      "Value": "Woonadres",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V059931",
+      "Value": "Gehuwd",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V081161",
+      "Value": "Amsterdam",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V080922",
+      "Value": "13 juni 1957",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V999930",
+      "Value": "Amsterdam",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "C010001",
+      "Value": "OXML\\KEY2BZ\\AMSTERDAM\\CONDITIONEEL\\C010001A.GBA.DOCX",
+      "Type": 2,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V088399",
+      "Value": "Categorie verblijfplaats in onderzoek",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V081032",
+      "Value": "16 februari 1989",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V080922",
+      "Value": "13 juni 1957",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V081422",
+      "Value": "",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "C199005",
+      "Value": "OXML\\KEY2BZ\\AMSTERDAM\\CONDITIONEEL\\C199005X.AMS.DOCX",
+      "Type": 2,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "C101001",
+      "Value": "OXML\\KEY2BZ\\AMSTERDAM\\CONDITIONEEL\\C101001B.GBA.DOCX",
+      "Type": 2,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "C001002",
+      "Value": "OXML\\KEY2BZ\\AMSTERDAM\\CONDITIONEEL\\C001002C.GBA.DOCX",
+      "Type": 2,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V059901",
+      "Value": "d'Arnault",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V019901",
+      "Value": "Oorthuizen",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "C099005",
+      "Value": "OXML\\KEY2BZ\\AMSTERDAM\\CONDITIONEEL\\C099005X.AMS.DOCX",
+      "Type": 2,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "V040500",
+      "Value": "Nederlandse",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    },
+    {
+      "Name": "S040510",
+      "Value": "N",
+      "Type": 4,
+      "TableHasHeader": false,
+      "RemoveTable": false
+    }
+  ],
+  "ExternalContent": {}
+}

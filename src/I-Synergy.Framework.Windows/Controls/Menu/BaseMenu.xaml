@@ -1,0 +1,22 @@
+﻿<CommandBar x:Name="BaseMenuInstance"
+    x:Class="ISynergy.Framework.Windows.Controls.BaseMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:m="using:ISynergy.Framework.Windows.Markup"
+    mc:Ignorable="d" 
+    Background="Transparent" 
+    DefaultLabelPosition="Right" 
+    IsDynamicOverflowEnabled="False">
+
+    <CommandBar.Content>
+        <TextBlock x:Name="TextBlockTitle" Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}" />
+    </CommandBar.Content>
+    <CommandBar.PrimaryCommands>
+        <AppBarButton x:Name="Button_Add" Content="{StaticResource tb_plus}" Command="{Binding Add_Command}" Label="{m:LanguageResource Key=Operation_Add}" ToolTipService.ToolTip="{m:LanguageResource Key=Operation_Add}" Style="{StaticResource IconAppBarButtonStyle}"/>
+        <AppBarButton x:Name="Button_Edit" Content="{StaticResource tb_edit}" Command="{Binding Edit_Command}" CommandParameter="{Binding SelectedItem, Mode=OneWay}" Label="{m:LanguageResource Key=Operation_Edit}" ToolTipService.ToolTip="{m:LanguageResource Key=Operation_Edit}" Style="{StaticResource IconAppBarButtonStyle}"/>
+        <AppBarButton x:Name="Button_Delete" Content="{StaticResource tb_delete}" Command="{Binding Delete_Command}" CommandParameter="{Binding SelectedItem, Mode=OneWay}" Label="{m:LanguageResource Key=Operation_Delete}" ToolTipService.ToolTip="{m:LanguageResource Key=Operation_Delete}" Style="{StaticResource IconAppBarButtonStyle}"/>
+        <AppBarButton x:Name="Button_Refresh" Content="{StaticResource tb_refresh}" Command="{Binding Refresh_Command}" Label="{m:LanguageResource Key=Operation_Refresh}" ToolTipService.ToolTip="{m:LanguageResource Key=Operation_Refresh}" Visibility="{Binding Refresh_Enabled, ElementName=BaseMenuInstance}" Style="{StaticResource IconAppBarButtonStyle}"/>
+    </CommandBar.PrimaryCommands>
+</CommandBar>

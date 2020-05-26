@@ -1,0 +1,50 @@
+﻿@model OverviewModel<PaymentResponse>
+
+@{
+    ViewData["Title"] = "List payments";
+}
+
+<div class="container">
+    <h2>List of payments</h2>
+    
+    <div class="clearfix">
+        <a asp-action="Create" class="btn btn-primary float-right">Create new payment</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date created</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Method</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (PaymentResponse payment in Model.Items) {
+                <tr>
+                    <td>@payment.Id</td>
+                    <td>@payment.CreatedAt</td>
+                    <td>@payment.Amount.ToString()</td>
+                    <td>@payment.Status</td>
+                    <td>@payment.Method</td>
+                    <td>
+                        @if (payment.Status == ISynergy.Framework.Payment.Mollie.Enumerations.PaymentStatus.Open) {
+                            <a href="@payment.Links.Checkout.Href" class="btn btn-outline-secondary" target="_blank">Pay</a>
+                        }
+                        
+                        @if (payment.Status == ISynergy.Framework.Payment.Mollie.Enumerations.PaymentStatus.Paid) {
+                            <form method="post" asp-controller="Refund" asp-action="Refund" asp-route-paymentId="@payment.Id">
+                                <input type="submit" name="Refund" value="Refund" class="btn btn-outline-secondary"/>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <partial name="_OverviewNavigation" model="Model.Navigation" />
+</div>
