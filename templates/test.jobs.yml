@@ -87,10 +87,3 @@ jobs:
         command: test
         projects: 'tests\I-Synergy.Framework.Storage.Tests\I-Synergy.Framework.Storage.Tests.csproj'
         arguments: '-c $(BuildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Run Test: I-Synergy.Framework.Windows'
-      inputs:
-        command: test
-        projects: 'tests\I-Synergy.Framework.Windows.Tests\I-Synergy.Framework.Windows.Tests.csproj'
-        arguments: '-c $(BuildConfiguration)'

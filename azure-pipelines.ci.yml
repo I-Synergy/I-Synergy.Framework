@@ -1,4 +1,4 @@
-name: $(Date:yyyy).1$(DayOfYear)$(Rev:.r)-preview.0
+name: $(Date:yyyy).1$(DayOfYear)$(Rev:.r).0
 
 trigger: none
 
