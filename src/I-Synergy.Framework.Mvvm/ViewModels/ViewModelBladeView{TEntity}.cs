@@ -17,14 +17,30 @@ using ISynergy.Framework.Core.Utilities;
 
 namespace ISynergy.Framework.Mvvm
 {
+    /// <summary>
+    /// Class ViewModelBladeView.
+    /// Implements the <see cref="ViewModel" />
+    /// Implements the <see cref="IViewModelBladeView" />
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+    /// <seealso cref="ViewModel" />
+    /// <seealso cref="IViewModelBladeView" />
     public abstract class ViewModelBladeView<TEntity> : ViewModel, IViewModelBladeView
     {
+        /// <summary>
+        /// Occurs when [submitted].
+        /// </summary>
         public event EventHandler<SubmitEventArgs<TEntity>> Submitted;
+        /// <summary>
+        /// Called when [submitted].
+        /// </summary>
+        /// <param name="e">The e.</param>
         protected virtual void OnSubmitted(SubmitEventArgs<TEntity> e) => Submitted?.Invoke(this, e);
 
         /// <summary>
         /// Gets or sets the Blades property value.
         /// </summary>
+        /// <value>The blades.</value>
         public ObservableCollection<IView> Blades
         {
             get { return GetValue<ObservableCollection<IView>>(); }
@@ -34,6 +50,7 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the Items property value.
         /// </summary>
+        /// <value>The items.</value>
         public ObservableCollection<TEntity> Items
         {
             get { return GetValue<ObservableCollection<TEntity>>(); }
@@ -43,6 +60,7 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the IsPaneEnabled property value.
         /// </summary>
+        /// <value><c>true</c> if this instance is pane enabled; otherwise, <c>false</c>.</value>
         public bool IsPaneEnabled
         {
             get { return GetValue<bool>(); }
@@ -52,6 +70,7 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the SelectedItem property value.
         /// </summary>
+        /// <value>The selected item.</value>
         public TEntity SelectedItem
         {
             get { return GetValue<TEntity>(); }
@@ -61,22 +80,58 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the IsNew property value.
         /// </summary>
+        /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
         public bool IsNew
         {
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the submit command.
+        /// </summary>
+        /// <value>The submit command.</value>
         public RelayCommand<TEntity> Submit_Command { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether [refresh on initialization].
+        /// </summary>
+        /// <value><c>true</c> if [refresh on initialization]; otherwise, <c>false</c>.</value>
         public bool RefreshOnInitialization { get; }
 
+        /// <summary>
+        /// Gets or sets the add command.
+        /// </summary>
+        /// <value>The add command.</value>
         public RelayCommand Add_Command { get; set; }
+        /// <summary>
+        /// Gets or sets the edit command.
+        /// </summary>
+        /// <value>The edit command.</value>
         public RelayCommand<TEntity> Edit_Command { get; set; }
+        /// <summary>
+        /// Gets or sets the delete command.
+        /// </summary>
+        /// <value>The delete command.</value>
         public RelayCommand<TEntity> Delete_Command { get; set; }
+        /// <summary>
+        /// Gets or sets the refresh command.
+        /// </summary>
+        /// <value>The refresh command.</value>
         public RelayCommand Refresh_Command { get; set; }
+        /// <summary>
+        /// Gets or sets the search command.
+        /// </summary>
+        /// <value>The search command.</value>
         public RelayCommand<object> Search_Command { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="commonServices">The common services.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
         protected ViewModelBladeView(
             IContext context,
             IBaseCommonServices commonServices,
@@ -112,6 +167,10 @@ namespace ISynergy.Framework.Mvvm
             Submit_Command = new RelayCommand<TEntity>(async (e) => await SubmitAsync(e));
         }
 
+        /// <summary>
+        /// initialize as an asynchronous operation.
+        /// </summary>
+        /// <returns>Task.</returns>
         public override async Task InitializeAsync()
         {
             if (!IsInitialized)
@@ -123,15 +182,32 @@ namespace ISynergy.Framework.Mvvm
             }
         }
 
+        /// <summary>
+        /// Sets the selected item.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
         public virtual void SetSelectedItem(TEntity entity)
         {
             SelectedItem = entity;
             IsNew = false;
         }
 
+        /// <summary>
+        /// Adds the asynchronous.
+        /// </summary>
+        /// <returns>Task.</returns>
         public abstract Task AddAsync();
+        /// <summary>
+        /// Edits the asynchronous.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>Task.</returns>
         public abstract Task EditAsync(TEntity e);
 
+        /// <summary>
+        /// delete as an asynchronous operation.
+        /// </summary>
+        /// <param name="e">The e.</param>
         public async Task DeleteAsync(TEntity e)
         {
             string item;
@@ -154,13 +230,34 @@ namespace ISynergy.Framework.Mvvm
             }
         }
 
+        /// <summary>
+        /// Removes the asynchronous.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>Task.</returns>
         public abstract Task RemoveAsync(TEntity e);
+        /// <summary>
+        /// Searches the asynchronous.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>Task.</returns>
         public abstract Task SearchAsync(object e);
 
+        /// <summary>
+        /// Refreshes the asynchronous.
+        /// </summary>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public virtual Task<bool> RefreshAsync() => GetItemsAsync();
 
+        /// <summary>
+        /// The get items cancellation token
+        /// </summary>
         private CancellationTokenSource GetItemsCancellationToken = new CancellationTokenSource();
 
+        /// <summary>
+        /// get items as an asynchronous operation.
+        /// </summary>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public async Task<bool> GetItemsAsync()
         {
             var result = false;
@@ -187,8 +284,18 @@ namespace ISynergy.Framework.Mvvm
             return result;
         }
 
+        /// <summary>
+        /// Retrieves the items asynchronous.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
         public abstract Task<List<TEntity>> RetrieveItemsAsync(CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Submits the asynchronous.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>Task.</returns>
         public virtual Task SubmitAsync(TEntity e)
         {
             OnSubmitted(new SubmitEventArgs<TEntity>(e));

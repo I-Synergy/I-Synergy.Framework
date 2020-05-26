@@ -11,11 +11,17 @@ namespace ISynergy.Framework.Windows.Controls
     [ContentProperty(Name = nameof(Inlines))]
     public partial class HeaderedTextBlock : Control
     {
+        /// <summary>
+        /// The header content presenter
+        /// </summary>
         private ContentPresenter _headerContentPresenter;
+        /// <summary>
+        /// The text content
+        /// </summary>
         private TextBlock _textContent;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HeaderedTextBlock"/> class.
+        /// Initializes a new instance of the <see cref="HeaderedTextBlock" /> class.
         /// </summary>
         public HeaderedTextBlock()
         {
@@ -37,6 +43,9 @@ namespace ISynergy.Framework.Windows.Controls
             UpdateForOrientation(Orientation);
         }
 
+        /// <summary>
+        /// Updates the visibility.
+        /// </summary>
         private void UpdateVisibility()
         {
             if (_headerContentPresenter != null)
@@ -54,6 +63,10 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Updates for orientation.
+        /// </summary>
+        /// <param name="orientationValue">The orientation value.</param>
         private void UpdateForOrientation(Orientation orientationValue)
         {
             switch (orientationValue)

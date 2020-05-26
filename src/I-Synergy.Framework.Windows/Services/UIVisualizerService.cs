@@ -10,17 +10,40 @@ using ISynergy.Framework.Core.Locators;
 
 namespace ISynergy.Framework.Windows.Services
 {
+    /// <summary>
+    /// Class UIVisualizerService.
+    /// Implements the <see cref="IUIVisualizerService" />
+    /// </summary>
+    /// <seealso cref="IUIVisualizerService" />
     public class UIVisualizerService : IUIVisualizerService
     {
+        /// <summary>
+        /// Gets the registered windows.
+        /// </summary>
+        /// <value>The registered windows.</value>
         public List<Window> RegisteredWindows { get; internal set; }
 
+        /// <summary>
+        /// The is shown
+        /// </summary>
         private static bool IsShown = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UIVisualizerService"/> class.
+        /// </summary>
         public UIVisualizerService()
         {
             RegisteredWindows = new List<Window>();
         }
 
+        /// <summary>
+        /// Shows the dialog asynchronous.
+        /// </summary>
+        /// <typeparam name="TWindow">The type of the t window.</typeparam>
+        /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task<bool> ShowDialogAsync<TWindow, TViewModel, TEntity>(IViewModelDialog<TEntity> viewmodel = null)
             where TWindow : IWindow
             where TViewModel : IViewModelDialog<TEntity>
@@ -30,16 +53,37 @@ namespace ISynergy.Framework.Windows.Services
             return CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel);
         }
 
+        /// <summary>
+        /// Shows the dialog asynchronous.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="window">The window.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task<bool> ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
         {
             return CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(window.GetType()), viewmodel);
         }
 
+        /// <summary>
+        /// Shows the dialog asynchronous.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="type">The type.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task<bool> ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
         {
             return CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(type), viewmodel);
         }
 
+        /// <summary>
+        /// create dialog as an asynchronous operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="dialog">The dialog.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         private async Task<bool> CreateDialogAsync<TEntity>(Window dialog, IViewModelDialog<TEntity> viewmodel)
         {
             bool result = false;

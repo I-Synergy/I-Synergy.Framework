@@ -6,7 +6,6 @@ namespace ISynergy.Framework.Core.Linq
 {
     /// <summary>
     /// Provides a base class for dynamic objects.
-    /// 
     /// In addition to the methods defined here, the following items are added using reflection:
     /// - default constructor
     /// - constructor with all the properties as parameters (if not linq-to-entities)
@@ -17,8 +16,15 @@ namespace ISynergy.Framework.Core.Linq
     /// </summary>
     public abstract class DynamicClass : DynamicObject
     {
+        /// <summary>
+        /// The properties dictionary
+        /// </summary>
         private Dictionary<string, object> _propertiesDictionary;
 
+        /// <summary>
+        /// Gets the properties.
+        /// </summary>
+        /// <value>The properties.</value>
         private Dictionary<string, object> Properties
         {
             get
@@ -93,9 +99,8 @@ namespace ISynergy.Framework.Core.Linq
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="object"/> with the specified name.
+        /// Gets or sets the <see cref="object" /> with the specified name.
         /// </summary>
-        /// <value>The <see cref="object"/>.</value>
         /// <param name="name">The name.</param>
         /// <returns>Value from the property.</returns>
         public object this[string name]
@@ -126,9 +131,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <summary>
         /// Returns the enumeration of all dynamic member names.
         /// </summary>
-        /// <returns>
-        /// A sequence that contains dynamic member names.
-        /// </returns>
+        /// <returns>A sequence that contains dynamic member names.</returns>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             return Properties.Keys;
@@ -139,9 +142,7 @@ namespace ISynergy.Framework.Core.Linq
         /// </summary>
         /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member on which the dynamic operation is performed. For example, for the Console.WriteLine(sampleObject.SampleProperty) statement, where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject" /> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param>
         /// <param name="result">The result of the get operation. For example, if the method is called for a property, you can assign the property value to <paramref name="result" />.</param>
-        /// <returns>
-        /// true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a run-time exception is thrown.)
-        /// </returns>
+        /// <returns>true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a run-time exception is thrown.)</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             var name = binder.Name;
@@ -155,9 +156,7 @@ namespace ISynergy.Framework.Core.Linq
         /// </summary>
         /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member to which the value is being assigned. For example, for the statement sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject" /> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param>
         /// <param name="value">The value to set to the member. For example, for sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject" /> class, the <paramref name="value" /> is "Test".</param>
-        /// <returns>
-        /// true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)
-        /// </returns>
+        /// <returns>true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)</returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             var name = binder.Name;

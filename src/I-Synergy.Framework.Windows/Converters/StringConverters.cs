@@ -7,8 +7,21 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ISynergy.Framework.Windows.Converters
 {
+    /// <summary>
+    /// Class StringFormatConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class StringFormatConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is null)
@@ -20,14 +33,36 @@ namespace ISynergy.Framework.Windows.Converters
             return string.Format((string)parameter, value);
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
     }
 
+    /// <summary>
+    /// Class StringToBooleanConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class StringToBooleanConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (parameter.ToString().Equals(value.ToString()))
@@ -40,6 +75,14 @@ namespace ISynergy.Framework.Windows.Converters
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             if ((bool)value)
@@ -53,8 +96,21 @@ namespace ISynergy.Framework.Windows.Converters
         }
     }
 
+    /// <summary>
+    /// Class StringToVisibilityConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class StringToVisibilityConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is string stringValue && !string.IsNullOrEmpty(stringValue))
@@ -67,14 +123,36 @@ namespace ISynergy.Framework.Windows.Converters
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
     }
 
+    /// <summary>
+    /// Class StringToEnabledConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class StringToEnabledConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (string.IsNullOrEmpty((string)value))
@@ -87,14 +165,36 @@ namespace ISynergy.Framework.Windows.Converters
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
     }
 
+    /// <summary>
+    /// Class StringToInvertEnabledConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class StringToInvertEnabledConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (string.IsNullOrEmpty((string)value))
@@ -107,14 +207,36 @@ namespace ISynergy.Framework.Windows.Converters
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
     }
 
+    /// <summary>
+    /// Class StringToGeometryConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class StringToGeometryConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value != null && !string.IsNullOrWhiteSpace(value.ToString()) && value is string)
@@ -129,14 +251,36 @@ namespace ISynergy.Framework.Windows.Converters
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
     }
 
+    /// <summary>
+    /// Class StringToDecimalConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class StringToDecimalConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (decimal.TryParse(value.ToString(), out var result))
@@ -149,14 +293,35 @@ namespace ISynergy.Framework.Windows.Converters
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return value.ToString();
         }
     }
 
+    /// <summary>
+    /// Class StringToIntegerConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class StringToIntegerConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (int.TryParse(value.ToString(), out var result))
@@ -169,14 +334,35 @@ namespace ISynergy.Framework.Windows.Converters
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return value.ToString();
         }
     }
 
+    /// <summary>
+    /// Class UriToImageSourceConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class UriToImageSourceConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (string.IsNullOrEmpty(value?.ToString()))
@@ -189,6 +375,15 @@ namespace ISynergy.Framework.Windows.Converters
             };
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();

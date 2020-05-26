@@ -20,6 +20,7 @@ namespace ISynergy.Framework.EntityFramework.Events
         /// <summary>
         /// Entity
         /// </summary>
+        /// <value>The entity.</value>
         public T Entity { get; }
     }
 }

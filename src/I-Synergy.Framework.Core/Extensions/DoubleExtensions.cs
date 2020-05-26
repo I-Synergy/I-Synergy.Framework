@@ -2,6 +2,9 @@
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// Class DoubleExtensions.
+    /// </summary>
     public static class DoubleExtensions
     {
         /// <summary>

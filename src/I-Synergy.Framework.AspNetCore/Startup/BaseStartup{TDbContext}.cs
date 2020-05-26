@@ -16,9 +16,22 @@ using Newtonsoft.Json;
 
 namespace ISynergy.Framework.AspNetCore.Startup
 {
+    /// <summary>
+    /// Class BaseStartup.
+    /// Implements the <see cref="BaseStartup" />
+    /// Implements the <see cref="IAsyncInitialization" />
+    /// </summary>
+    /// <typeparam name="TDbContext">The type of the t database context.</typeparam>
+    /// <seealso cref="BaseStartup" />
+    /// <seealso cref="IAsyncInitialization" />
     public abstract class BaseStartup<TDbContext> : BaseStartup, IAsyncInitialization
         where TDbContext : DbContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseStartup{TDbContext}"/> class.
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <param name="configuration">The configuration.</param>
         protected BaseStartup(IWebHostEnvironment environment, IConfiguration configuration)
             : base(environment, configuration)
         {
@@ -27,7 +40,7 @@ namespace ISynergy.Framework.AspNetCore.Startup
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">The services.</param>
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
@@ -36,24 +49,17 @@ namespace ISynergy.Framework.AspNetCore.Startup
         }
 
         /// <summary>
-        /// Adds data context.
+        /// Adds the database services.
         /// </summary>
-        /// <param name="services"></param>
-        /// <example>
-        /// services.AddDbContext<TDbContext>(options =>
-        /// {
-        ///    options.UseSqlServer(Configuration.GetConnectionString("ConnectionString"));
-        ///    //sqlServerOptionsAction: sqlOptions =>
-        ///    //{
-        ///    //    // Configuring Connection Resilience
-        ///    //    // Doesn't work because of transactions!!!
-        ///    //    // sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-        ///    //});
-        /// };
-        /// </example>
+        /// <param name="services">The services.</param>
         protected abstract void AddDbServices(IServiceCollection services);
 
-        protected new virtual void AddMvc(IServiceCollection services, IEnumerable<string>? authorizedRazorPages = null)
+        /// <summary>
+        /// Adds the MVC.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="authorizedRazorPages">The authorized razor pages.</param>
+        protected new virtual void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {

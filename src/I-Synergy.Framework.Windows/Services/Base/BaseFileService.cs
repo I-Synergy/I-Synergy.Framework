@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Windows.Services
     public abstract class BaseFileService : IFileSupport
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseFileService"/> class.
+        /// Initializes a new instance of the <see cref="BaseFileService" /> class.
         /// </summary>
         protected BaseFileService()
         {

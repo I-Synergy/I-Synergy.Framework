@@ -7,13 +7,27 @@ using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.Windows.Helpers
 {
+    /// <summary>
+    /// Class VisualHelpers.
+    /// </summary>
     public static class VisualHelpers
     {
+        /// <summary>
+        /// Gets the visual.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns>Visual.</returns>
         public static Visual GetVisual(this UIElement element)
         {
             return ElementCompositionPreview.GetElementVisual(element);
         }
 
+        /// <summary>
+        /// Applies the implicit animation.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="duration">The duration.</param>
+        /// <returns>CompositionCommitBatch.</returns>
         public static CompositionCommitBatch ApplyImplicitAnimation(this Visual target, TimeSpan duration)
         {
             var myBatch = target.Compositor.GetCommitBatch(CompositionBatchTypes.Animation);
@@ -25,6 +39,12 @@ namespace ISynergy.Framework.Windows.Helpers
             return myBatch;
         }
 
+        /// <summary>
+        /// Creates the opacity animation.
+        /// </summary>
+        /// <param name="compositor">The compositor.</param>
+        /// <param name="duration">The duration.</param>
+        /// <returns>KeyFrameAnimation.</returns>
         public static KeyFrameAnimation CreateOpacityAnimation(Compositor compositor, TimeSpan duration)
         {
             var kf = compositor.CreateScalarKeyFrameAnimation();
@@ -34,11 +54,21 @@ namespace ISynergy.Framework.Windows.Helpers
             return kf;
         }
 
+        /// <summary>
+        /// Sets the size.
+        /// </summary>
+        /// <param name="v">The v.</param>
+        /// <param name="element">The element.</param>
         public static void SetSize(this Visual v, FrameworkElement element)
         {
             v.Size = new System.Numerics.Vector2((float)element.ActualWidth, (float)element.ActualHeight);
         }
 
+        /// <summary>
+        /// Fades the visual.
+        /// </summary>
+        /// <param name="v">The v.</param>
+        /// <param name="seconds">The seconds.</param>
         public static void FadeVisual(this Visual v, double seconds)
         {
             var fadeAnimation = CreateImplicitFadeAnimation(seconds);
@@ -47,6 +77,11 @@ namespace ISynergy.Framework.Windows.Helpers
         }
 
         // TODO: kill this function
+        /// <summary>
+        /// Creates the opacity animation.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <returns>ScalarKeyFrameAnimation.</returns>
         public static ScalarKeyFrameAnimation CreateOpacityAnimation(double seconds)
         {
             var animation = Window.Current.Compositor.CreateScalarKeyFrameAnimation();
@@ -58,6 +93,12 @@ namespace ISynergy.Framework.Windows.Helpers
             return animation;
         }
 
+        /// <summary>
+        /// Creates the opacity animation.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <param name="finalvalue">The finalvalue.</param>
+        /// <returns>ICompositionAnimationBase.</returns>
         public static ICompositionAnimationBase CreateOpacityAnimation(double seconds, float finalvalue)
         {
             var animation = Window.Current.Compositor.CreateScalarKeyFrameAnimation();
@@ -67,6 +108,12 @@ namespace ISynergy.Framework.Windows.Helpers
             return animation;
         }
 
+        /// <summary>
+        /// Creates the animation group.
+        /// </summary>
+        /// <param name="listContentShowAnimations">The list content show animations.</param>
+        /// <param name="listContentOpacityAnimations">The list content opacity animations.</param>
+        /// <returns>ICompositionAnimationBase.</returns>
         public static ICompositionAnimationBase CreateAnimationGroup(CompositionAnimation listContentShowAnimations, ScalarKeyFrameAnimation listContentOpacityAnimations)
         {
             var group = Window.Current.Compositor.CreateAnimationGroup();
@@ -75,6 +122,11 @@ namespace ISynergy.Framework.Windows.Helpers
             return group;
         }
 
+        /// <summary>
+        /// Enables the layout implicit animations.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="t">The t.</param>
         public static void EnableLayoutImplicitAnimations(this UIElement element, TimeSpan t)
         {
             Compositor compositor;
@@ -87,6 +139,11 @@ namespace ISynergy.Framework.Windows.Helpers
             result.ImplicitAnimations = elementImplicitAnimation;
         }
 
+        /// <summary>
+        /// Creates the implicit fade animation.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <returns>CompositionAnimation.</returns>
         private static CompositionAnimation CreateImplicitFadeAnimation(double seconds)
         {
             var animation = Window.Current.Compositor.CreateScalarKeyFrameAnimation();
@@ -96,6 +153,12 @@ namespace ISynergy.Framework.Windows.Helpers
             return animation;
         }
 
+        /// <summary>
+        /// Creates the offset animation.
+        /// </summary>
+        /// <param name="compositor">The compositor.</param>
+        /// <param name="duration">The duration.</param>
+        /// <returns>KeyFrameAnimation.</returns>
         private static KeyFrameAnimation CreateOffsetAnimation(Compositor compositor, TimeSpan duration)
         {
             var kf = compositor.CreateVector3KeyFrameAnimation();
@@ -105,6 +168,14 @@ namespace ISynergy.Framework.Windows.Helpers
             return kf;
         }
 
+        /// <summary>
+        /// Creates the horizontal offset animation.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="delaySeconds">The delay seconds.</param>
+        /// <param name="from">if set to <c>true</c> [from].</param>
+        /// <returns>CompositionAnimation.</returns>
         public static CompositionAnimation CreateHorizontalOffsetAnimation(double seconds, float offset, double delaySeconds, bool from)
         {
             var animation = Window.Current.Compositor.CreateScalarKeyFrameAnimation();
@@ -129,11 +200,26 @@ namespace ISynergy.Framework.Windows.Helpers
             return animation;
         }
 
+        /// <summary>
+        /// Creates the horizontal offset animation.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="delaySeconds">The delay seconds.</param>
+        /// <returns>CompositionAnimation.</returns>
         public static CompositionAnimation CreateHorizontalOffsetAnimation(double seconds, float offset, double delaySeconds)
         {
             return CreateHorizontalOffsetAnimation(seconds, offset, delaySeconds, true);
         }
 
+        /// <summary>
+        /// Creates the vertical offset animation.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="delaySeconds">The delay seconds.</param>
+        /// <param name="from">if set to <c>true</c> [from].</param>
+        /// <returns>CompositionAnimation.</returns>
         public static CompositionAnimation CreateVerticalOffsetAnimation(double seconds, float offset, double delaySeconds, bool from)
         {
             var animation = Window.Current.Compositor.CreateScalarKeyFrameAnimation();
@@ -158,21 +244,47 @@ namespace ISynergy.Framework.Windows.Helpers
             return animation;
         }
 
+        /// <summary>
+        /// Creates the vertical offset animation.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="delaySeconds">The delay seconds.</param>
+        /// <returns>CompositionAnimation.</returns>
         public static CompositionAnimation CreateVerticalOffsetAnimation(double seconds, float offset, double delaySeconds)
         {
             return CreateVerticalOffsetAnimation(seconds, offset, delaySeconds, true);
         }
 
+        /// <summary>
+        /// Creates the vertical offset animation from.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns>CompositionAnimation.</returns>
         public static CompositionAnimation CreateVerticalOffsetAnimationFrom(double seconds, float offset)
         {
             return CreateVerticalOffsetAnimation(seconds, offset, 0.0f);
         }
 
+        /// <summary>
+        /// Creates the vertical offset animation to.
+        /// </summary>
+        /// <param name="seconds">The seconds.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns>CompositionAnimation.</returns>
         public static CompositionAnimation CreateVerticalOffsetAnimationTo(double seconds, float offset)
         {
             return CreateVerticalOffsetAnimation(seconds, offset, 0.0f, false);
         }
 
+        /// <summary>
+        /// Gets the name of the visual child by.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="root">The root.</param>
+        /// <param name="name">The name.</param>
+        /// <returns>T.</returns>
         public static T GetVisualChildByName<T>(this FrameworkElement root, string name)
             where T : FrameworkElement
         {
@@ -199,7 +311,7 @@ namespace ISynergy.Framework.Windows.Helpers
         }
 
         /// <summary>
-        /// Find descendant <see cref="FrameworkElement"/> control using its name.
+        /// Find descendant <see cref="FrameworkElement" /> control using its name.
         /// </summary>
         /// <param name="element">Parent element.</param>
         /// <param name="name">Name of the control to find</param>
@@ -319,7 +431,7 @@ namespace ISynergy.Framework.Windows.Helpers
         }
 
         /// <summary>
-        /// Find visual ascendant <see cref="FrameworkElement"/> control using its name.
+        /// Find visual ascendant <see cref="FrameworkElement" /> control using its name.
         /// </summary>
         /// <param name="element">Parent element.</param>
         /// <param name="name">Name of the control to find</param>

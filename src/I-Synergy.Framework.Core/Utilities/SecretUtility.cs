@@ -4,8 +4,15 @@ using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Utilities
 {
+    /// <summary>
+    /// Class SecretUtility.
+    /// </summary>
     public static class SecretUtility
     {
+        /// <summary>
+        /// Generates the secret.
+        /// </summary>
+        /// <returns>System.String.</returns>
         public static string GenerateSecret()
         {
             const int byteLength = 66; // 64-bits, round up to get a string without padding in base64.

@@ -1,7 +1,7 @@
 ﻿namespace ISynergy.Framework.Core.Events
 {
     /// <summary>
-    /// This interface is meant for the <see cref="WeakAction{T}" /> class and can be 
+    /// This interface is meant for the <see cref="WeakAction{T}" /> class and can be
     /// useful if you store multiple WeakAction{T} instances but don't know in advance
     /// what type T represents.
     /// </summary>
@@ -10,6 +10,7 @@
         /// <summary>
         /// The target of the WeakAction.
         /// </summary>
+        /// <value>The target.</value>
         object Target
         {
             get;

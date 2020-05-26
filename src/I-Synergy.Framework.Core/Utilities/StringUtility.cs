@@ -10,13 +10,27 @@ using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.Core.Utilities
 {
+    /// <summary>
+    /// Class StringUtility.
+    /// </summary>
     public static class StringUtility
     {
+        /// <summary>
+        /// Adds the decimal seperator.
+        /// </summary>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public static bool AddDecimalSeperator()
         {
             return true;
         }
 
+        /// <summary>
+        /// Converts the string to decimal.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="input">The input.</param>
+        /// <param name="seperatoradded">if set to <c>true</c> [seperatoradded].</param>
+        /// <returns>System.Decimal.</returns>
         public static decimal ConvertStringToDecimal(decimal value, string input, bool seperatoradded)
         {
             string placeholder;
@@ -47,28 +61,54 @@ namespace ISynergy.Framework.Core.Utilities
         /// <summary>
         /// Extension where encoded string is converted to a byte array.
         /// </summary>
-        /// <typeparam name="TEncoding"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <typeparam name="TEncoding">The type of the t encoding.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns>System.Byte[].</returns>
         public static byte[] GetBytes<TEncoding>(string value) where TEncoding : Encoding, new() =>
             new TEncoding().GetBytes(value);
     }
 
+    /// <summary>
+    /// Class StringWriterUTF8.
+    /// Implements the <see cref="StringWriter" />
+    /// </summary>
+    /// <seealso cref="StringWriter" />
     public class StringWriterUTF8 : StringWriter
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringWriterUTF8"/> class.
+        /// </summary>
         public StringWriterUTF8()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringWriterUTF8"/> class.
+        /// </summary>
+        /// <param name="formatProvider">An <see cref="T:System.IFormatProvider"></see> object that controls formatting.</param>
         public StringWriterUTF8(IFormatProvider formatProvider) : base(formatProvider)
         {
         }
 
+        /// <summary>
+        /// Gets the <see cref="T:System.Text.Encoding"></see> in which the output is written.
+        /// </summary>
+        /// <value>The encoding.</value>
         public override Encoding Encoding { get { return Encoding.UTF8; } }
     }
 
+    /// <summary>
+    /// Class AlphanumericStringComparer.
+    /// Implements the <see cref="IComparer" />
+    /// </summary>
+    /// <seealso cref="IComparer" />
     public class AlphanumericStringComparer : IComparer
     {
+        /// <summary>
+        /// Gets the list.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <returns>List&lt;System.String&gt;.</returns>
         private static List<string> GetList(string source)
         {
             var result = new List<string>();
@@ -99,6 +139,12 @@ namespace ISynergy.Framework.Core.Utilities
             return result;
         }
 
+        /// <summary>
+        /// Compares the specified x.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns>System.Int32.</returns>
         public int Compare(object x, object y)
         {
             if (!(x is string s1))
@@ -217,8 +263,17 @@ namespace ISynergy.Framework.Core.Utilities
         }
     }
 
+    /// <summary>
+    /// Class StringOperations.
+    /// </summary>
     public static class StringOperations
     {
+        /// <summary>
+        /// Truncates at.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="maxWidth">The maximum width.</param>
+        /// <returns>System.String.</returns>
         public static string TruncateAt(string text, int maxWidth)
         {
             var result = text;
@@ -231,6 +286,11 @@ namespace ISynergy.Framework.Core.Utilities
             return result;
         }
 
+        /// <summary>
+        /// Converts to csv.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <returns>System.String.</returns>
         public static string ToCsv(params string[] items)
         {
             var sb = new StringBuilder(255);
@@ -246,6 +306,11 @@ namespace ISynergy.Framework.Core.Utilities
             return sb.ToString().Chop();
         }
 
+        /// <summary>
+        /// xes the element to string.
+        /// </summary>
+        /// <param name="xml">The XML.</param>
+        /// <returns>System.String.</returns>
         public static string XElementToString(XElement xml)
         {
             var sw = new StringWriterUTF8(CultureInfo.CurrentCulture);

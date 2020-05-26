@@ -12,14 +12,36 @@ namespace ISynergy.Framework.AspNetCore.Binders
     /// </summary>
     public class DateTimeModelBinder : IModelBinder
     {
+        /// <summary>
+        /// The specified kind
+        /// </summary>
         private readonly DateTimeKind specifiedKind;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DateTimeModelBinder"/> class.
+        /// </summary>
+        /// <param name="specifiedKind">The specified kind.</param>
         public DateTimeModelBinder(DateTimeKind specifiedKind)
         {
             EnumUtility.ThrowIfUndefined(typeof(DateTimeKind), specifiedKind);
             this.specifiedKind = specifiedKind;
         }
 
+        /// <summary>
+        /// Attempts to bind a model.
+        /// </summary>
+        /// <param name="bindingContext">The <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext" />.</param>
+        /// <returns><para>
+        /// A <see cref="T:System.Threading.Tasks.Task" /> which will complete when the model binding process completes.
+        /// </para>
+        /// <para>
+        /// If model binding was successful, the <see cref="P:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext.Result" /> should have
+        /// <see cref="P:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingResult.IsModelSet" /> set to <c>true</c>.
+        /// </para>
+        /// <para>
+        /// A model binder that completes successfully should set <see cref="P:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext.Result" /> to
+        /// a value returned from <see cref="M:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingResult.Success(System.Object)" />.
+        /// </para></returns>
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             Argument.IsNotNull(nameof(bindingContext), bindingContext);

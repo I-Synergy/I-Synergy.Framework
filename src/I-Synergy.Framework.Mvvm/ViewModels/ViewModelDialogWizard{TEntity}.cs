@@ -7,12 +7,21 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.Mvvm
 {
+    /// <summary>
+    /// Class ViewModelDialogWizard.
+    /// Implements the <see cref="ViewModelDialog{TEntity}" />
+    /// Implements the <see cref="IViewModelDialogWizard{TEntity}" />
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+    /// <seealso cref="ViewModelDialog{TEntity}" />
+    /// <seealso cref="IViewModelDialogWizard{TEntity}" />
     public abstract class ViewModelDialogWizard<TEntity> : ViewModelDialog<TEntity>, IViewModelDialogWizard<TEntity>
         where TEntity : class, new()
     {
         /// <summary>
         /// Gets or sets the Page property value.
         /// </summary>
+        /// <value>The page.</value>
         public int Page
         {
             get { return GetValue<int>(); }
@@ -22,6 +31,7 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the Pages property value.
         /// </summary>
+        /// <value>The pages.</value>
         public int Pages
         {
             get { return GetValue<int>(); }
@@ -31,6 +41,7 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the Next_IsEnabled property value.
         /// </summary>
+        /// <value><c>true</c> if [next is enabled]; otherwise, <c>false</c>.</value>
         public bool Next_IsEnabled
         {
             get { return GetValue<bool>(); }
@@ -40,6 +51,7 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the Back_IsEnabled property value.
         /// </summary>
+        /// <value><c>true</c> if [back is enabled]; otherwise, <c>false</c>.</value>
         public bool Back_IsEnabled
         {
             get { return GetValue<bool>(); }
@@ -49,15 +61,30 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the Submit_IsEnabled property value.
         /// </summary>
+        /// <value><c>true</c> if [submit is enabled]; otherwise, <c>false</c>.</value>
         public bool Submit_IsEnabled
         {
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets the back command.
+        /// </summary>
+        /// <value>The back command.</value>
         public RelayCommand Back_Command { get; }
+        /// <summary>
+        /// Gets the next command.
+        /// </summary>
+        /// <value>The next command.</value>
         public RelayCommand Next_Command { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewModelDialogWizard{TEntity}"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="commonServices">The common services.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         protected ViewModelDialogWizard(
             IContext context,
             IBaseCommonServices commonServices,
@@ -70,6 +97,11 @@ namespace ISynergy.Framework.Mvvm
             Page = 1;
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:PropertyChanged" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="PropertyChangedEventArgs" /> instance containing the event data.</param>
         public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(sender, e);
@@ -103,6 +135,9 @@ namespace ISynergy.Framework.Mvvm
             }
         }
 
+        /// <summary>
+        /// Performs the back action.
+        /// </summary>
         private void PerformBackAction()
         {
             Validate();
@@ -113,6 +148,9 @@ namespace ISynergy.Framework.Mvvm
             }
         }
 
+        /// <summary>
+        /// Performs the next action.
+        /// </summary>
         private void PerformNextAction()
         {
             Validate();

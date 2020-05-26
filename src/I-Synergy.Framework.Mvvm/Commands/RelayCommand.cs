@@ -12,19 +12,25 @@ namespace ISynergy.Framework.Mvvm.Commands
     /// </summary>
     public class RelayCommand : ICommand
     {
+        /// <summary>
+        /// The execute
+        /// </summary>
         private readonly WeakAction _execute;
 
+        /// <summary>
+        /// The can execute
+        /// </summary>
         private readonly WeakFunc<bool> _canExecute;
 
         /// <summary>
-        /// Initializes a new instance of the RelayCommand class that 
+        /// Initializes a new instance of the RelayCommand class that
         /// can always execute.
         /// </summary>
         /// <param name="execute">The execution logic. IMPORTANT: If the action causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects. </param>
+        /// you must set keepTargetAlive to true to avoid side effects.</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is causing a closure. </param>
+        /// parameter to true if the action is causing a closure.</param>
         /// <exception cref="ArgumentNullException">If the execute argument is null.</exception>
         public RelayCommand(Action execute, bool keepTargetAlive = false)
             : this(execute, null, keepTargetAlive)
@@ -35,13 +41,13 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// Initializes a new instance of the RelayCommand class.
         /// </summary>
         /// <param name="execute">The execution logic. IMPORTANT: If the action causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects. </param>
+        /// you must set keepTargetAlive to true to avoid side effects.</param>
         /// <param name="canExecute">The execution status logic.  IMPORTANT: If the func causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects. </param>
+        /// you must set keepTargetAlive to true to avoid side effects.</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is causing a closures. </param>
-        /// <exception cref="ArgumentNullException">If the execute argument is null.</exception>
+        /// parameter to true if the action is causing a closures.</param>
+        /// <exception cref="ArgumentNullException">execute</exception>
         public RelayCommand(Action execute, Func<bool> canExecute, bool keepTargetAlive = false)
         {
             if (execute == null)
@@ -60,6 +66,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <summary>
         /// Occurs when changes occur that affect whether the command should execute.
         /// </summary>
+        /// <returns></returns>
         public event EventHandler CanExecuteChanged;
 
         /// <summary>
@@ -87,7 +94,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         }
 
         /// <summary>
-        /// Defines the method to be called when the command is invoked. 
+        /// Defines the method to be called when the command is invoked.
         /// </summary>
         /// <param name="parameter">This parameter will always be ignored.</param>
         public virtual void Execute(object parameter)

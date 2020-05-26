@@ -4,8 +4,8 @@ namespace ISynergy.Framework.MessageBus.Sample.Publisher.Options
 {
     /// <summary>
     /// Class TestQueueOptions.
-    /// Implements the <see cref="ISynergy.Framework.MessageBus.Options.BaseQueueOption" />
+    /// Implements the <see cref="BaseQueueOption" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.MessageBus.Options.BaseQueueOption" />
+    /// <seealso cref="BaseQueueOption" />
     public class TestQueueOptions : BaseQueueOption { }
 }

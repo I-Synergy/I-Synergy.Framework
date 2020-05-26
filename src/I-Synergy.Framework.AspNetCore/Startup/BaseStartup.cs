@@ -21,13 +21,35 @@ using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.AspNetCore
 {
+    /// <summary>
+    /// Class BaseStartup.
+    /// Implements the <see cref="IAsyncInitialization" />
+    /// </summary>
+    /// <seealso cref="IAsyncInitialization" />
     public abstract class BaseStartup : IAsyncInitialization
     {
+        /// <summary>
+        /// Gets the display name of the API.
+        /// </summary>
+        /// <value>The display name of the API.</value>
         protected virtual string ApiDisplayName => $"{GetType().Assembly.GetName().Name} v{GetType().Assembly.GetName().Version}";
 
+        /// <summary>
+        /// Gets the environment.
+        /// </summary>
+        /// <value>The environment.</value>
         protected IWebHostEnvironment Environment { get; }
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <value>The configuration.</value>
         protected IConfiguration Configuration { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseStartup"/> class.
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <param name="configuration">The configuration.</param>
         protected BaseStartup(IWebHostEnvironment environment, IConfiguration configuration)
         {
             Argument.IsNotNull(nameof(environment), environment);
@@ -37,9 +59,17 @@ namespace ISynergy.Framework.AspNetCore
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// The result of the asynchronous initialization of this instance.
+        /// </summary>
+        /// <value>The initialization.</value>
         public Task Initialization { get; } = new Task(() => { });
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// Configures the services.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public virtual void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
@@ -57,6 +87,11 @@ namespace ISynergy.Framework.AspNetCore
             AddTelemetry(services);
         }
 
+        /// <summary>
+        /// Configures the specified application.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="env">The env.</param>
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -88,9 +123,9 @@ namespace ISynergy.Framework.AspNetCore
         /// <summary>
         /// AddCloudStorage
         /// </summary>
-        /// <param name="services"></param>
-        /// /// <example>
-        /// <code>
+        /// <param name="services">The services.</param>
+        /// <example>
+        ///   <code>
         /// services.Configure{AzureDocumentSetting}(_configurationRoot.GetSection(nameof(AzureDocumentSetting)).BindWithReload);
         /// services.AddScoped{ICloudStorageService, CloudStorageService}();
         /// </code>
@@ -99,12 +134,20 @@ namespace ISynergy.Framework.AspNetCore
         {
         }
 
+        /// <summary>
+        /// Adds the options.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddOptions(IServiceCollection services)
         {
             services.AddOptions();
             services.Configure<WebsiteOptions>(Configuration.GetSection(nameof(WebsiteOptions)).BindWithReload);
         }
 
+        /// <summary>
+        /// Adds the localization.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddLocalization(IServiceCollection services)
         {
             services.AddLocalization();
@@ -130,6 +173,10 @@ namespace ISynergy.Framework.AspNetCore
         }
 
 
+        /// <summary>
+        /// Adds the signal r.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddSignalR(IServiceCollection services)
         {
             services.AddSignalR(options =>
@@ -140,11 +187,19 @@ namespace ISynergy.Framework.AspNetCore
             // .AddMessagePackProtocol();
         }
 
+        /// <summary>
+        /// Adds the caching.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddCaching(IServiceCollection services)
         {
             services.AddMemoryCache();
         }
 
+        /// <summary>
+        /// Adds the data protection service.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddDataProtectionService(IServiceCollection services)
         {
             services.AddDataProtection();
@@ -153,11 +208,11 @@ namespace ISynergy.Framework.AspNetCore
         /// <summary>
         /// AddMessageService
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">The services.</param>
         /// <example>
-        /// <code>
-        /// services.AddScoped&lt;IEmailSender, MessageService>();
-        /// services.AddScoped&lt;ISmsSender, MessageService>();
+        ///   <code>
+        /// services.AddScoped&lt;IEmailSender, MessageService&gt;();
+        /// services.AddScoped&lt;ISmsSender, MessageService&gt;();
         /// </code>
         /// </example>
         protected virtual void AddMessageService(IServiceCollection services)
@@ -167,22 +222,31 @@ namespace ISynergy.Framework.AspNetCore
         /// <summary>
         /// AddServices
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">The services.</param>
         /// <example>
-        /// <code>
-        /// services.AddScoped&lt;IFactoryService, FactoryService>();
+        ///   <code>
+        /// services.AddScoped&lt;IFactoryService, FactoryService&gt;();
         /// </code>
         /// </example>
         protected virtual void AddServices(IServiceCollection services)
         {
         }
 
+        /// <summary>
+        /// Adds the logging.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddLogging(IServiceCollection services)
         {
             services.AddLogging();
         }
 
-        protected virtual void AddMvc(IServiceCollection services, IEnumerable<string>? authorizedRazorPages = null)
+        /// <summary>
+        /// Adds the MVC.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="authorizedRazorPages">The authorized razor pages.</param>
+        protected virtual void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -228,6 +292,10 @@ namespace ISynergy.Framework.AspNetCore
                 });
         }
 
+        /// <summary>
+        /// Adds the routing.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddRouting(IServiceCollection services)
         {
             services.AddRouting(options =>
@@ -243,15 +311,14 @@ namespace ISynergy.Framework.AspNetCore
         /// <summary>
         /// AddTelemetry
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">The services.</param>
         /// <example>
-        /// <code>
+        ///   <code>
         /// // Configure SnapshotCollector from application settings
-        /// services.Configure&lt;SnapshotCollectorConfiguration>(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
-        /// 
+        /// services.Configure&lt;SnapshotCollectorConfiguration&gt;(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
         /// // Add SnapshotCollector telemetry processor.
-        /// services.AddSingleton&lt;ITelemetryInitializer, UserInfoTelemetryInitializer>();
-        /// services.AddSingleton&lt;ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory>();
+        /// services.AddSingleton&lt;ITelemetryInitializer, UserInfoTelemetryInitializer&gt;();
+        /// services.AddSingleton&lt;ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory&gt;();
         /// </code>
         /// </example>
         protected virtual void AddTelemetry(IServiceCollection services)

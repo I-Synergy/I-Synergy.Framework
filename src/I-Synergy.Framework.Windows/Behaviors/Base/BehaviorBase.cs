@@ -5,26 +5,28 @@ namespace ISynergy.Framework.Windows.Behaviors.Base
 {
     /// <summary>
     /// Base class for behaviors that solves 2 problems:
-    ///   1. Prevent duplicate initialization that can happen (prevent multiple OnAttached calls);
-    ///   2. Whenever <see cref="Initialize"/> initially fails, this method will subscribe to <see cref="FrameworkElement.SizeChanged"/> to allow lazy initialization.
+    /// 1. Prevent duplicate initialization that can happen (prevent multiple OnAttached calls);
+    /// 2. Whenever <see cref="Initialize" /> initially fails, this method will subscribe to <see cref="FrameworkElement.SizeChanged" /> to allow lazy initialization.
     /// </summary>
     /// <typeparam name="T">The type of the associated object.</typeparam>
     /// <seealso cref="Behavior{T}" />
-    /// <remarks>
-    /// For more info, see https://github.com/windows-toolkit/WindowsCommunityToolkit/issues/1008.
-    /// </remarks>
+    /// <remarks>For more info, see https://github.com/windows-toolkit/WindowsCommunityToolkit/issues/1008.</remarks>
     public abstract class BehaviorBase<T> : Behavior<T>
         where T : UIElement
     {
+        /// <summary>
+        /// The is attaching
+        /// </summary>
         private bool _isAttaching;
+        /// <summary>
+        /// The is attached
+        /// </summary>
         private bool _isAttached;
 
         /// <summary>
         /// Gets a value indicating whether this behavior is attached.
         /// </summary>
-        /// <value>
-        /// <c>true</c> if this behavior is attached; otherwise, <c>false</c>.
-        /// </value>
+        /// <value><c>true</c> if this behavior is attached; otherwise, <c>false</c>.</value>
         protected bool IsAttached
         {
             get { return _isAttached; }
@@ -33,9 +35,7 @@ namespace ISynergy.Framework.Windows.Behaviors.Base
         /// <summary>
         /// Called after the behavior is attached to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" />.
         /// </summary>
-        /// <remarks>
-        /// Override this to hook up functionality to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" />
-        /// </remarks>
+        /// <remarks>Override this to hook up functionality to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" /></remarks>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -53,9 +53,7 @@ namespace ISynergy.Framework.Windows.Behaviors.Base
         /// <summary>
         /// Called when the behavior is being detached from its <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" />.
         /// </summary>
-        /// <remarks>
-        /// Override this to unhook functionality from the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" />
-        /// </remarks>
+        /// <remarks>Override this to unhook functionality from the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" /></remarks>
         protected override void OnDetaching()
         {
             base.OnDetaching();
@@ -102,6 +100,11 @@ namespace ISynergy.Framework.Windows.Behaviors.Base
             return true;
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:AssociatedObjectLoaded" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OnAssociatedObjectLoaded(object sender, RoutedEventArgs e)
         {
             if (!_isAttached)
@@ -112,6 +115,11 @@ namespace ISynergy.Framework.Windows.Behaviors.Base
             OnAssociatedObjectLoaded();
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:AssociatedObjectUnloaded" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OnAssociatedObjectUnloaded(object sender, RoutedEventArgs e)
         {
             OnAssociatedObjectUnloaded();
@@ -119,6 +127,11 @@ namespace ISynergy.Framework.Windows.Behaviors.Base
             // Note: don't detach here, we'll let the behavior implementation take care of that
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:AssociatedObjectSizeChanged" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="SizeChangedEventArgs"/> instance containing the event data.</param>
         private void OnAssociatedObjectSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (!_isAttached)
@@ -127,6 +140,9 @@ namespace ISynergy.Framework.Windows.Behaviors.Base
             }
         }
 
+        /// <summary>
+        /// Handles the attach.
+        /// </summary>
         private void HandleAttach()
         {
             if (_isAttaching || _isAttached)
@@ -145,6 +161,9 @@ namespace ISynergy.Framework.Windows.Behaviors.Base
             _isAttaching = false;
         }
 
+        /// <summary>
+        /// Handles the detach.
+        /// </summary>
         private void HandleDetach()
         {
             if (!_isAttached)

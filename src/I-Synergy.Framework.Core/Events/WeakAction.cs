@@ -10,12 +10,16 @@ namespace ISynergy.Framework.Core.Events
     /// </summary>
     public class WeakAction
     {
+        /// <summary>
+        /// The static action
+        /// </summary>
         private Action _staticAction;
 
         /// <summary>
         /// Gets or sets the <see cref="MethodInfo" /> corresponding to this WeakAction's
         /// method passed in the constructor.
         /// </summary>
+        /// <value>The method.</value>
         protected MethodInfo Method
         {
             get;
@@ -25,6 +29,7 @@ namespace ISynergy.Framework.Core.Events
         /// <summary>
         /// Gets the name of the method that this WeakAction represents.
         /// </summary>
+        /// <value>The name of the method.</value>
         public virtual string MethodName
         {
             get
@@ -44,6 +49,7 @@ namespace ISynergy.Framework.Core.Events
         /// <see cref="Reference" />, for example if the
         /// method is anonymous.
         /// </summary>
+        /// <value>The action reference.</value>
         protected WeakReference ActionReference
         {
             get;
@@ -51,10 +57,11 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Saves the <see cref="ActionReference"/> as a hard reference. This is
+        /// Saves the <see cref="ActionReference" /> as a hard reference. This is
         /// used in relation with this instance's constructor and only if
         /// the constructor's keepTargetAlive parameter is true.
         /// </summary>
+        /// <value>The live reference.</value>
         protected object LiveReference
         {
             get;
@@ -67,6 +74,7 @@ namespace ISynergy.Framework.Core.Events
         /// <see cref="ActionReference" />, for example if the
         /// method is anonymous.
         /// </summary>
+        /// <value>The reference.</value>
         protected WeakReference Reference
         {
             get;
@@ -76,6 +84,7 @@ namespace ISynergy.Framework.Core.Events
         /// <summary>
         /// Gets a value indicating whether the WeakAction is static or not.
         /// </summary>
+        /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
         public bool IsStatic
         {
             get
@@ -158,6 +167,7 @@ namespace ISynergy.Framework.Core.Events
         /// Gets a value indicating whether the Action's owner is still alive, or if it was collected
         /// by the Garbage Collector already.
         /// </summary>
+        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
         public virtual bool IsAlive
         {
             get
@@ -196,9 +206,10 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Gets the Action's owner. This object is stored as a 
+        /// Gets the Action's owner. This object is stored as a
         /// <see cref="WeakReference" />.
         /// </summary>
+        /// <value>The target.</value>
         public object Target
         {
             get
@@ -215,6 +226,7 @@ namespace ISynergy.Framework.Core.Events
         /// <summary>
         /// The target of the weak reference.
         /// </summary>
+        /// <value>The action target.</value>
         protected object ActionTarget
         {
             get

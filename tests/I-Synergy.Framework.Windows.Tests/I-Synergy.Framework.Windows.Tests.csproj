@@ -10,9 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ISynergy.Framework.Windows.Tests</RootNamespace>
     <AssemblyName>I-Synergy.Framework.Windows.Tests</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
+    <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -164,6 +164,14 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj">
+      <Project>{90f74f51-a863-4229-ae7b-d6a8d22ad1be}</Project>
+      <Name>I-Synergy.Framework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\I-Synergy.Framework.Mvvm\I-Synergy.Framework.Mvvm.csproj">
+      <Project>{21628459-8f0e-465a-b67c-192b9bdd5e6e}</Project>
+      <Name>I-Synergy.Framework.Mvvm</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj">
       <Project>{035d0b2d-a55d-42ed-a654-44661e48a2f7}</Project>
       <Name>I-Synergy.Framework.Windows</Name>

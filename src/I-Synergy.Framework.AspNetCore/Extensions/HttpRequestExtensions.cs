@@ -5,8 +5,16 @@ using System.Net.Http;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {
+    /// <summary>
+    /// Class HttpRequestExtensions.
+    /// </summary>
     public static class HttpRequestExtensions
     {
+        /// <summary>
+        /// Determines whether the specified HTTP request is local.
+        /// </summary>
+        /// <param name="httpRequest">The HTTP request.</param>
+        /// <returns><c>true</c> if the specified HTTP request is local; otherwise, <c>false</c>.</returns>
         public static bool IsLocal(this HttpRequest httpRequest)
         {
             var connection = httpRequest.HttpContext.Connection;
@@ -25,6 +33,12 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             return false;
         }
 
+        /// <summary>
+        /// Creates the proxy HTTP request.
+        /// </summary>
+        /// <param name="_self">The self.</param>
+        /// <param name="uri">The URI.</param>
+        /// <returns>HttpRequestMessage.</returns>
         public static HttpRequestMessage CreateProxyHttpRequest(this HttpContext _self, Uri uri)
         {
             var result = new HttpRequestMessage();

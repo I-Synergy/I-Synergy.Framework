@@ -11,7 +11,9 @@ using Newtonsoft.Json;
 
 namespace ISynergy.Framework.MessageBus.Azure.Queue
 {
-    /// <summary>Message bus implementation on Azure Service Bus.</summary>
+    /// <summary>
+    /// Message bus implementation on Azure Service Bus.
+    /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <typeparam name="TOption">The type of the t option.</typeparam>
     public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
@@ -60,6 +62,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
         /// Subscriber to message queue.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Task.</returns>
         public virtual async Task SubscribeToMessagesAsync(CancellationToken cancellationToken = default)
         {
             // First, we create a generic MessageReceiver for the queue. This class can 
@@ -119,6 +122,11 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
             await doneReceiving.Task;
         }
 
+        /// <summary>
+        /// Exceptions the received handler.
+        /// </summary>
+        /// <param name="exceptionReceivedEventArgs">The <see cref="ExceptionReceivedEventArgs"/> instance containing the event data.</param>
+        /// <returns>Task.</returns>
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
         {
             _logger.LogError(exceptionReceivedEventArgs.Exception, "Message handler encountered an exception");

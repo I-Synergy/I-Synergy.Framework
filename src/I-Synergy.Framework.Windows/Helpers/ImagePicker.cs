@@ -7,11 +7,26 @@ using Windows.Storage.Pickers;
 
 namespace ISynergy.Framework.Windows.Helpers
 {
+    /// <summary>
+    /// Class ImagePicker.
+    /// </summary>
     public class ImagePicker
     {
+        /// <summary>
+        /// Gets the file path.
+        /// </summary>
+        /// <value>The file path.</value>
         public string FilePath { get; private set; }
+        /// <summary>
+        /// Gets the type of the content.
+        /// </summary>
+        /// <value>The type of the content.</value>
         public string ContentType { get; private set; }
 
+        /// <summary>
+        /// get image as an asynchronous operation.
+        /// </summary>
+        /// <returns>System.Byte[].</returns>
         public async Task<byte[]> GetImageAsync()
         {
             var picker = new FileOpenPicker
@@ -30,6 +45,11 @@ namespace ISynergy.Framework.Windows.Helpers
             return await LoadImageAsync(file);
         }
 
+        /// <summary>
+        /// load image as an asynchronous operation.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <returns>System.Byte[].</returns>
         private async Task<byte[]> LoadImageAsync(StorageFile file)
         {
             if (file is null)
@@ -46,15 +66,11 @@ namespace ISynergy.Framework.Windows.Helpers
             await file.CopyAndReplaceAsync(targetFile);
             FilePath = targetFile.Path;
 
-            using (var randomStream = await file.OpenReadAsync())
-            {
-                using (var stream = randomStream.AsStream())
-                {
-                    var buffer = new byte[randomStream.Size];
-                    await stream.ReadAsync(buffer, 0, buffer.Length);
-                    return buffer;
-                }
-            }
+            using var randomStream = await file.OpenReadAsync();
+            using var stream = randomStream.AsStream();
+            var buffer = new byte[randomStream.Size];
+            await stream.ReadAsync(buffer, 0, buffer.Length);
+            return buffer;
         }
     }
 }

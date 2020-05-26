@@ -75,13 +75,6 @@ jobs:
         arguments: '-c $(BuildConfiguration)'
 
     - task: DotNetCoreCLI@2
-      displayName: 'Run Test: I-Synergy.Framework.Payment.Mollie'
-      inputs:
-        command: test
-        projects: 'tests\I-Synergy.Framework.Payment.Mollie.Tests\I-Synergy.Framework.Payment.Mollie.Tests.csproj'
-        arguments: '-c $(BuildConfiguration)'
-
-    - task: DotNetCoreCLI@2
       displayName: 'Run Test: I-Synergy.Framework.Payment'
       inputs:
         command: test

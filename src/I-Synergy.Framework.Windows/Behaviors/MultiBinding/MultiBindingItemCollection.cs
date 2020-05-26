@@ -10,6 +10,9 @@ namespace ISynergy.Framework.Windows.Behaviors
     /// </summary>
     public class MultiBindingItemCollection : DependencyObjectCollection<MultiBindingItem>
     {
+        /// <summary>
+        /// The updating
+        /// </summary>
         private bool _updating;
 
         /// <summary>
@@ -28,6 +31,11 @@ namespace ISynergy.Framework.Windows.Behaviors
         internal static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(nameof(Value), typeof(object[]), typeof(MultiBindingItemCollection), new PropertyMetadata(null, OnValueChanged));
 
+        /// <summary>
+        /// Handles the <see cref="E:ValueChanged" /> event.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var multiBindingItemCollection = (MultiBindingItemCollection)d;
@@ -36,13 +44,18 @@ namespace ISynergy.Framework.Windows.Behaviors
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MultiBindingItemCollection"/> class.
+        /// Initializes a new instance of the <see cref="MultiBindingItemCollection" /> class.
         /// </summary>
         public MultiBindingItemCollection()
         {
             CollectionChanged += OnCollectionChanged;
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:CollectionChanged" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null)
@@ -64,6 +77,9 @@ namespace ISynergy.Framework.Windows.Behaviors
             Update();
         }
 
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
         internal void Update()
         {
             if (_updating)
@@ -86,6 +102,9 @@ namespace ISynergy.Framework.Windows.Behaviors
             }
         }
 
+        /// <summary>
+        /// Updates the source.
+        /// </summary>
         private void UpdateSource()
         {
             if (_updating)

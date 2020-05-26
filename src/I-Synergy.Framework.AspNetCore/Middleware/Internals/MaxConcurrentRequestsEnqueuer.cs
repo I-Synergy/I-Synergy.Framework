@@ -7,24 +7,60 @@ using ISynergy.Framework.AspNetCore.Options;
 
 namespace ISynergy.Framework.AspNetCore.Middleware.Internals
 {
+    /// <summary>
+    /// Class MaxConcurrentRequestsEnqueuer.
+    /// </summary>
     internal class MaxConcurrentRequestsEnqueuer
     {
+        /// <summary>
+        /// Enum DropMode
+        /// </summary>
         public enum DropMode
         {
+            /// <summary>
+            /// The tail
+            /// </summary>
             Tail = MaxConcurrentRequestsLimitExceededPolicy.FifoQueueDropTail,
+            /// <summary>
+            /// The head
+            /// </summary>
             Head = MaxConcurrentRequestsLimitExceededPolicy.FifoQueueDropHead
         }
 
+        /// <summary>
+        /// The queue semaphore
+        /// </summary>
         private readonly SemaphoreSlim _queueSemaphore = new SemaphoreSlim(1, 1);
 
+        /// <summary>
+        /// The maximum queue length
+        /// </summary>
         private readonly int _maxQueueLength;
+        /// <summary>
+        /// The drop mode
+        /// </summary>
         private readonly DropMode _dropMode;
+        /// <summary>
+        /// The maximum time in queue
+        /// </summary>
         private readonly int _maxTimeInQueue;
 
+        /// <summary>
+        /// The queue
+        /// </summary>
         private readonly LinkedList<TaskCompletionSource<bool>> _queue = new LinkedList<TaskCompletionSource<bool>>();
 
+        /// <summary>
+        /// The enqueue failed task
+        /// </summary>
         private static readonly Task<bool> _enqueueFailedTask = Task.FromResult(false);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MaxConcurrentRequestsEnqueuer"/> class.
+        /// </summary>
+        /// <param name="maxQueueLength">Maximum length of the queue.</param>
+        /// <param name="dropMode">The drop mode.</param>
+        /// <param name="maxTimeInQueue">The maximum time in queue.</param>
         public MaxConcurrentRequestsEnqueuer(int maxQueueLength, DropMode dropMode, int maxTimeInQueue)
         {
             _maxQueueLength = maxQueueLength;
@@ -32,6 +68,11 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Internals
             _maxTimeInQueue = maxTimeInQueue;
         }
 
+        /// <summary>
+        /// enqueue as an asynchronous operation.
+        /// </summary>
+        /// <param name="requestAbortedCancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public async Task<bool> EnqueueAsync(CancellationToken requestAbortedCancellationToken)
         {
             var enqueueTask = _enqueueFailedTask;
@@ -68,6 +109,10 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Internals
             return await enqueueTask.ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// dequeue as an asynchronous operation.
+        /// </summary>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public async Task<bool> DequeueAsync()
         {
             var dequeued = false;
@@ -89,6 +134,11 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Internals
             return dequeued;
         }
 
+        /// <summary>
+        /// Internals the enqueue asynchronous.
+        /// </summary>
+        /// <param name="enqueueCancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
         private Task<bool> InternalEnqueueAsync(CancellationToken enqueueCancellationToken)
         {
             var enqueueTask = _enqueueFailedTask;
@@ -105,6 +155,11 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Internals
             return enqueueTask;
         }
 
+        /// <summary>
+        /// Gets the enqueue cancellation token.
+        /// </summary>
+        /// <param name="requestAbortedCancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>CancellationToken.</returns>
         private CancellationToken GetEnqueueCancellationToken(CancellationToken requestAbortedCancellationToken)
         {
             var enqueueCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(
@@ -115,6 +170,10 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Internals
             return enqueueCancellationToken;
         }
 
+        /// <summary>
+        /// Gets the timeout token.
+        /// </summary>
+        /// <returns>CancellationToken.</returns>
         private CancellationToken GetTimeoutToken()
         {
             var timeoutToken = CancellationToken.None;
@@ -131,6 +190,10 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Internals
             return timeoutToken;
         }
 
+        /// <summary>
+        /// Cancels the enqueue.
+        /// </summary>
+        /// <param name="state">The state.</param>
         private void CancelEnqueue(object state)
         {
             var removed = false;
@@ -154,6 +217,10 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Internals
             }
         }
 
+        /// <summary>
+        /// Internals the dequeue.
+        /// </summary>
+        /// <param name="result">if set to <c>true</c> [result].</param>
         private void InternalDequeue(bool result)
         {
             var enqueueTaskCompletionSource = _queue.First.Value;

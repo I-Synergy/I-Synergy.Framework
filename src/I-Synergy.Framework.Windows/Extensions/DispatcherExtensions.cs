@@ -4,6 +4,9 @@ using Windows.Foundation;
 
 namespace Windows.UI.Core
 {
+    /// <summary>
+    /// Class DispatcherExtensions.
+    /// </summary>
     public static class DispatcherExtensions
     {
         /// <summary>
@@ -11,7 +14,7 @@ namespace Windows.UI.Core
         /// </summary>
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="action">The action to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Action action)
         {
             return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, action);
@@ -23,7 +26,7 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="priority">Specifies the priority for event dispatch.</param>
         /// <param name="action">The action to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static async Task RunAndAwaitAsync(this CoreDispatcher dispatcher, CoreDispatcherPriority priority, Action action)
         {
             var taskCompletionSource = new TaskCompletionSource<bool>();
@@ -51,7 +54,7 @@ namespace Windows.UI.Core
         /// <typeparam name="T">The return type.</typeparam>
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="function">The function to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<T> function)
         {
             return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, function);
@@ -64,7 +67,7 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="priority">Specifies the priority for event dispatch.</param>
         /// <param name="function">The function to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static async Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, CoreDispatcherPriority priority, Func<T> function)
         {
             var taskCompletionSource = new TaskCompletionSource<T>();
@@ -91,7 +94,7 @@ namespace Windows.UI.Core
         /// </summary>
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="asyncAction">The async action to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Func<Task> asyncAction)
         {
             return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncAction);
@@ -103,7 +106,7 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="priority">Specifies the priority for event dispatch.</param>
         /// <param name="asyncAction">The async action to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static async Task RunAndAwaitAsync(this CoreDispatcher dispatcher, CoreDispatcherPriority priority, Func<Task> asyncAction)
         {
             var taskCompletionSource = new TaskCompletionSource<bool>();
@@ -131,7 +134,7 @@ namespace Windows.UI.Core
         /// <typeparam name="T">The return type.</typeparam>
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="asyncFunction">The async function to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<Task<T>> asyncFunction)
         {
             return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncFunction);
@@ -144,7 +147,7 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="priority">Specifies the priority for event dispatch.</param>
         /// <param name="asyncFunction">The async function to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static async Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, CoreDispatcherPriority priority, Func<Task<T>> asyncFunction)
         {
             var taskCompletionSource = new TaskCompletionSource<T>();
@@ -171,7 +174,7 @@ namespace Windows.UI.Core
         /// </summary>
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="asyncAction">The async action to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Func<IAsyncAction> asyncAction)
         {
             return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncAction);
@@ -183,7 +186,7 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="priority">Specifies the priority for event dispatch.</param>
         /// <param name="asyncAction">The async action to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static async Task RunAndAwaitAsync(this CoreDispatcher dispatcher, CoreDispatcherPriority priority, Func<IAsyncAction> asyncAction)
         {
             var taskCompletionSource = new TaskCompletionSource<bool>();
@@ -211,7 +214,7 @@ namespace Windows.UI.Core
         /// <typeparam name="T">The return type.</typeparam>
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="asyncFunction">The async function to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<IAsyncOperation<T>> asyncFunction)
         {
             return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncFunction);
@@ -224,7 +227,7 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="priority">Specifies the priority for event dispatch.</param>
         /// <param name="asyncFunction">The async function to call.</param>
-        /// <returns>The <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
         public static async Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, CoreDispatcherPriority priority, Func<IAsyncOperation<T>> asyncFunction)
         {
             var taskCompletionSource = new TaskCompletionSource<T>();

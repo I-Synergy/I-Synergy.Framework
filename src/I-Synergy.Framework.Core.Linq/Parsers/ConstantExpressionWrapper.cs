@@ -9,6 +9,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
     /// </summary>
     internal class ConstantExpressionWrapper : IConstantExpressionWrapper
     {
+        /// <summary>
+        /// Wraps the specified expression.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
         public void Wrap(ref Expression expression)
         {
             if (expression is ConstantExpression constantExpression)
@@ -110,6 +114,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Wrappeds the constant.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the t value.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns>MemberExpression.</returns>
         private static MemberExpression WrappedConstant<TValue>(TValue value)
         {
             var wrapper = new WrappedValue<TValue>(value);

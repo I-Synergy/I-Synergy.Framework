@@ -11,11 +11,15 @@ namespace ISynergy.Framework.Core.Events
     /// <typeparam name="TResult">The type of the Func's return value.</typeparam>
     public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResult
     {
+        /// <summary>
+        /// The static function
+        /// </summary>
         private Func<T, TResult> _staticFunc;
 
         /// <summary>
         /// Gets or sets the name of the method that this WeakFunc represents.
         /// </summary>
+        /// <value>The name of the method.</value>
         public override string MethodName
         {
             get
@@ -33,6 +37,7 @@ namespace ISynergy.Framework.Core.Events
         /// Gets a value indicating whether the Func's owner is still alive, or if it was collected
         /// by the Garbage Collector already.
         /// </summary>
+        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
         public override bool IsAlive
         {
             get
@@ -76,7 +81,7 @@ namespace ISynergy.Framework.Core.Events
         /// <param name="func">The Func that will be associated to this instance.</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures. </param>
+        /// parameter to true if the action is using closures.</param>
         [SuppressMessage(
             "Microsoft.Design", 
             "CA1062:Validate arguments of public methods",

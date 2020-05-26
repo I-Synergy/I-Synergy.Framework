@@ -4,12 +4,12 @@ using Windows.UI.Xaml.Controls;
 namespace ISynergy.Framework.Windows.Controls
 {
     /// <summary>
-    /// Defines the properties for the <see cref="HeaderedTextBlock"/> control.
+    /// Defines the properties for the <see cref="HeaderedTextBlock" /> control.
     /// </summary>
     public partial class HeaderedTextBlock
     {
         /// <summary>
-        /// Defines the <see cref="HeaderTemplate"/> dependency property.
+        /// Defines the <see cref="HeaderTemplate" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty HeaderTemplateProperty = DependencyProperty.Register(
             nameof(HeaderTemplate),
@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Windows.Controls
             new PropertyMetadata(null));
 
         /// <summary>
-        /// Defines the <see cref="TextStyle"/> dependency property.
+        /// Defines the <see cref="TextStyle" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty TextStyleProperty = DependencyProperty.Register(
             nameof(TextStyle),
@@ -27,7 +27,7 @@ namespace ISynergy.Framework.Windows.Controls
             new PropertyMetadata(null));
 
         /// <summary>
-        /// Defines the <see cref="Header"/> dependency property.
+        /// Defines the <see cref="Header" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
             nameof(Header),
@@ -36,7 +36,7 @@ namespace ISynergy.Framework.Windows.Controls
             new PropertyMetadata(null, (d, _) => { ((HeaderedTextBlock)d).UpdateVisibility(); }));
 
         /// <summary>
-        /// Defines the <see cref="Text"/> dependency property.
+        /// Defines the <see cref="Text" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             nameof(Text),
@@ -45,7 +45,7 @@ namespace ISynergy.Framework.Windows.Controls
             new PropertyMetadata(null, (d, _) => { ((HeaderedTextBlock)d).UpdateVisibility(); }));
 
         /// <summary>
-        /// Defines the <see cref="Orientation"/> dependency property.
+        /// Defines the <see cref="Orientation" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
             nameof(Orientation),
@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Windows.Controls
             new PropertyMetadata(Orientation.Vertical, (d, e) => { ((HeaderedTextBlock)d).UpdateForOrientation((Orientation)e.NewValue); }));
 
         /// <summary>
-        /// Defines the <see cref="HideTextIfEmpty"/> dependency property.
+        /// Defines the <see cref="HideTextIfEmpty" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty HideTextIfEmptyProperty = DependencyProperty.Register(
             nameof(HideTextIfEmpty),
@@ -65,6 +65,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the header style.
         /// </summary>
+        /// <value>The header template.</value>
         public DataTemplate HeaderTemplate
         {
             get
@@ -81,6 +82,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the text style.
         /// </summary>
+        /// <value>The text style.</value>
         public Style TextStyle
         {
             get
@@ -97,6 +99,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the header.
         /// </summary>
+        /// <value>The header.</value>
         public string Header
         {
             get
@@ -113,6 +116,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
+        /// <value>The text.</value>
         public string Text
         {
             get
@@ -129,13 +133,13 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets the collection of inline text elements within a Windows.UI.Xaml.Controls.TextBlock.
         /// </summary>
-        /// <returns>
-        /// A collection that holds all inline text elements from the Windows.UI.Xaml.Controls.TextBlock. The default is an empty collection.</returns>
+        /// <value>The inlines.</value>
         public InlineCollectionWrapper Inlines { get; } = new InlineCollectionWrapper();
 
         /// <summary>
         /// Gets or sets the orientation.
         /// </summary>
+        /// <value>The orientation.</value>
         public Orientation Orientation
         {
             get
@@ -152,6 +156,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets a value indicating whether the Text TextBlock is hidden if its value is empty
         /// </summary>
+        /// <value><c>true</c> if [hide text if empty]; otherwise, <c>false</c>.</value>
         public bool HideTextIfEmpty
         {
             get

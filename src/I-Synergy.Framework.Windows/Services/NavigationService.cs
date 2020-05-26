@@ -22,37 +22,77 @@ using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Windows.Services
 {
+    /// <summary>
+    /// Class NavigationService.
+    /// Implements the <see cref="INavigationService" />
+    /// </summary>
+    /// <seealso cref="INavigationService" />
     public class NavigationService : INavigationService
     {
+        /// <summary>
+        /// The pages
+        /// </summary>
         private readonly Dictionary<string, Type> _pages = new Dictionary<string, Type>();
+        /// <summary>
+        /// The semaphore
+        /// </summary>
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
+        /// <summary>
+        /// The frame
+        /// </summary>
         private Frame _frame;
 
+        /// <summary>
+        /// Gets or sets the frame.
+        /// </summary>
+        /// <value>The frame.</value>
         public object Frame
         {
-            get => _frame ?? (_frame = (Frame)global::Windows.UI.Xaml.Window.Current.Content);
+            get => _frame ??= (Frame)global::Windows.UI.Xaml.Window.Current.Content;
             set
             {
                 _frame = (Frame)value;
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance can go back.
+        /// </summary>
+        /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
         public bool CanGoBack => _frame.CanGoBack;
+        /// <summary>
+        /// Gets a value indicating whether this instance can go forward.
+        /// </summary>
+        /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
         public bool CanGoForward => _frame.CanGoForward;
 
+        /// <summary>
+        /// Goes the back.
+        /// </summary>
         public void GoBack()
         {
             if (_frame.CanGoBack)
                 _frame.GoBack();
         }
-        
+
+        /// <summary>
+        /// Goes the forward.
+        /// </summary>
         public void GoForward()
         {
             if (_frame.CanGoForward)
                 _frame.GoForward();
         }
 
+        /// <summary>
+        /// navigate as an asynchronous operation.
+        /// </summary>
+        /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="infoOverride">The information override.</param>
+        /// <returns>Task&lt;IView&gt;.</returns>
+        /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
         public async Task<IView> NavigateAsync<TViewModel>(object parameter = null, object infoOverride = null)
             where TViewModel : class, IViewModel
         {
@@ -139,6 +179,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// initialize view model as an asynchronous operation.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
         private async Task InitializeViewModelAsync(IViewModel viewModel)
         {
             if(!viewModel.IsInitialized)
@@ -147,6 +191,12 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// open blade as an asynchronous operation.
+        /// </summary>
+        /// <param name="owner">The owner.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task.</returns>
         public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModelBlade viewmodel)
         {
             Argument.IsNotNull(nameof(owner), owner);
@@ -169,12 +219,23 @@ namespace ISynergy.Framework.Windows.Services
             owner.IsPaneEnabled = true;
         }
 
+        /// <summary>
+        /// Handles the Closed event of the Viewmodel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private async void Viewmodel_Closed(object sender, EventArgs e)
         {
             if (sender is IViewModelBlade viewModel)
                 await RemoveBladeAsync(viewModel.Owner, viewModel);
         }
 
+        /// <summary>
+        /// Removes the blade asynchronous.
+        /// </summary>
+        /// <param name="owner">The owner.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task.</returns>
         public Task RemoveBladeAsync(IViewModelBladeView owner, IViewModelBlade viewmodel)
         {
             Argument.IsNotNull(nameof(owner), owner);
@@ -203,6 +264,13 @@ namespace ISynergy.Framework.Windows.Services
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// get navigation blade as an asynchronous operation.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <returns>IView.</returns>
+        /// <exception cref="ArgumentException">Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure? - viewModel</exception>
+        /// <exception cref="ArgumentException">Instance could not be created from {viewModelKey}</exception>
         private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
         {
             await _semaphore.WaitAsync();
@@ -242,6 +310,13 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Configures the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="pageType">Type of the page.</param>
+        /// <exception cref="ArgumentException">The key {key} is already configured in NavigationService</exception>
+        /// <exception cref="ArgumentException">This type is already configured with key {_pages.First(p => p.Value == pageType).Key}</exception>
         public void Configure(string key, Type pageType)
         {
             _semaphore.Wait();
@@ -266,6 +341,12 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets the name of registered page.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        /// <returns>System.String.</returns>
+        /// <exception cref="ArgumentException">The page '{page.Name}' is unknown by the NavigationService</exception>
         public string GetNameOfRegisteredPage(Type page)
         {
             _semaphore.Wait();
@@ -287,6 +368,9 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// clean back stack as an asynchronous operation.
+        /// </summary>
         public async Task CleanBackStackAsync()
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,

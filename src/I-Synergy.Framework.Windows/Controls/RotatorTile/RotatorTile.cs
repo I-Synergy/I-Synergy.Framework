@@ -21,61 +21,106 @@ namespace ISynergy.Framework.Windows.Controls
     [TemplatePart(Name = StackPartName, Type = typeof(StackPanel))]
     public class RotatorTile : Control
     {
+        /// <summary>
+        /// The scroller part name
+        /// </summary>
         private const string ScrollerPartName = "Scroller";
+        /// <summary>
+        /// The current part name
+        /// </summary>
         private const string CurrentPartName = "Current";
+        /// <summary>
+        /// The next part name
+        /// </summary>
         private const string NextPartName = "Next";
+        /// <summary>
+        /// The translate part name
+        /// </summary>
         private const string TranslatePartName = "Translate";
+        /// <summary>
+        /// The stack part name
+        /// </summary>
         private const string StackPartName = "Stack";
 
+        /// <summary>
+        /// The randomizer
+        /// </summary>
         private static readonly Random Randomizer = new Random();
+        /// <summary>
+        /// The current index
+        /// </summary>
         private int _currentIndex = -1; // current index in the items displayed
+        /// <summary>
+        /// The timer
+        /// </summary>
         private DispatcherTimer _timer;  // timer for triggering when to flip the content
+        /// <summary>
+        /// The current element
+        /// </summary>
         private FrameworkElement _currentElement; // FrameworkElement holding a reference to the current element being display
+        /// <summary>
+        /// The next element
+        /// </summary>
         private FrameworkElement _nextElement; // FrameworkElement holding a reference to the next element being display
+        /// <summary>
+        /// The scroller
+        /// </summary>
         private FrameworkElement _scroller;  // Container Element that's being translated to animate from one item to the next
+        /// <summary>
+        /// The translate
+        /// </summary>
         private TranslateTransform _translate; // Translate Transform used when animating the transition
+        /// <summary>
+        /// The stack panel
+        /// </summary>
         private StackPanel _stackPanel; // StackPanel that contains the live tile elements
+        /// <summary>
+        /// The suppress flip on set
+        /// </summary>
         private bool _suppressFlipOnSet; // Prevents the SelectedItem change handler to cause a flip
+        /// <summary>
+        /// The incc weak event listener
+        /// </summary>
         private WeakEventListener<RotatorTile, object, NotifyCollectionChangedEventArgs> _inccWeakEventListener;
 
         /// <summary>
-        /// Identifies the <see cref="ExtraRandomDuration"/> property.
+        /// Identifies the <see cref="ExtraRandomDuration" /> property.
         /// </summary>
         public static readonly DependencyProperty ExtraRandomDurationProperty =
             DependencyProperty.Register(nameof(ExtraRandomDuration), typeof(TimeSpan), typeof(RotatorTile), new PropertyMetadata(default(TimeSpan)));
 
         /// <summary>
-        /// Identifies the <see cref="RotationDelay"/> property.
+        /// Identifies the <see cref="RotationDelay" /> property.
         /// </summary>
         public static readonly DependencyProperty RotationDelayProperty =
             DependencyProperty.Register(nameof(RotationDelay), typeof(TimeSpan), typeof(RotatorTile), new PropertyMetadata(default(TimeSpan), OnRotationDelayInSecondsPropertyChanged));
 
         /// <summary>
-        /// Identifies the <see cref="ItemsSource"/> property.
+        /// Identifies the <see cref="ItemsSource" /> property.
         /// </summary>
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(nameof(ItemsSource), typeof(object), typeof(RotatorTile), new PropertyMetadata(null, OnItemsSourcePropertyChanged));
 
         /// <summary>
-        /// Identifies the <see cref="ItemTemplate"/> property.
+        /// Identifies the <see cref="ItemTemplate" /> property.
         /// </summary>
         public static readonly DependencyProperty ItemTemplateProperty =
             DependencyProperty.Register(nameof(ItemTemplate), typeof(DataTemplate), typeof(RotatorTile), null);
 
         /// <summary>
-        /// Identifies the <see cref="RotateDirection"/> property.
+        /// Identifies the <see cref="RotateDirection" /> property.
         /// </summary>
         public static readonly DependencyProperty RotateDirectionProperty =
             DependencyProperty.Register(nameof(RotateDirection), typeof(RotateDirection), typeof(RotatorTile), new PropertyMetadata(RotateDirection.Up));
 
         /// <summary>
-        /// Identifies the <see cref="CurrentItem"/> property.
+        /// Identifies the <see cref="CurrentItem" /> property.
         /// </summary>
         public static readonly DependencyProperty CurrentItemProperty =
             DependencyProperty.Register(nameof(CurrentItem), typeof(object), typeof(RotatorTile), new PropertyMetadata(null, OnCurrentItemPropertyChanged));
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RotatorTile"/> class.
+        /// Initializes a new instance of the <see cref="RotatorTile" /> class.
         /// </summary>
         public RotatorTile()
         {
@@ -117,6 +162,11 @@ namespace ISynergy.Framework.Windows.Controls
             base.OnApplyTemplate();
         }
 
+        /// <summary>
+        /// Handles the SizeChanged event of the RotatorTile control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="SizeChangedEventArgs"/> instance containing the event data.</param>
         private void RotatorTile_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (_currentElement != null && _nextElement != null)
@@ -142,12 +192,22 @@ namespace ISynergy.Framework.Windows.Controls
             Clip = new RectangleGeometry() { Rect = new Rect(default, e.NewSize) };
         }
 
+        /// <summary>
+        /// Handles the Loaded event of the RotatorTile control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void RotatorTile_Loaded(object sender, RoutedEventArgs e)
         {
             // Start timer after control has loaded
             _timer?.Start();
         }
 
+        /// <summary>
+        /// Handles the Unloaded event of the RotatorTile control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void RotatorTile_Unloaded(object sender, RoutedEventArgs e)
         {
             // Stop timer and reset animation when control unloads
@@ -162,6 +222,8 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Triggered when it's time to flip to the next live tile.
         /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void Timer_Tick(object sender, object e)
         {
             var item = GetItemAt(_currentIndex + 1);
@@ -169,12 +231,18 @@ namespace ISynergy.Framework.Windows.Controls
             UpdateNextItem();
         }
 
+        /// <summary>
+        /// Updates the next item.
+        /// </summary>
         private void UpdateNextItem()
         {
             _currentIndex++;
             CurrentItem = GetItemAt(_currentIndex);
         }
 
+        /// <summary>
+        /// Rotates to next item.
+        /// </summary>
         private void RotateToNextItem()
         {
             // Check if there's more than one item. if not, don't start animation
@@ -268,6 +336,9 @@ namespace ISynergy.Framework.Windows.Controls
             sb.Begin();
         }
 
+        /// <summary>
+        /// Updates the translate xy.
+        /// </summary>
         private void UpdateTranslateXY()
         {
             if (_translate == null)
@@ -289,11 +360,19 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Gets the current.
+        /// </summary>
+        /// <returns>System.Object.</returns>
         private object GetCurrent()
         {
             return GetItemAt(_currentIndex);
         }
 
+        /// <summary>
+        /// Gets the next.
+        /// </summary>
+        /// <returns>System.Object.</returns>
         private object GetNext()
         {
             if (_currentIndex < 0)
@@ -304,6 +383,11 @@ namespace ISynergy.Framework.Windows.Controls
             return GetItemAt(_currentIndex + 1);
         }
 
+        /// <summary>
+        /// Gets the item at.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns>System.Object.</returns>
         private object GetItemAt(int index)
         {
             if (ItemsSource != null && index > -1)
@@ -317,10 +401,9 @@ namespace ISynergy.Framework.Windows.Controls
                         return list[index];
                     }
                 }
-                else if (ItemsSource is IEnumerable)
+                else if (ItemsSource is IEnumerable enumerable)
                 {
-                    var items = ItemsSource as IEnumerable;
-                    var ienum = ((IEnumerable)ItemsSource).GetEnumerator();
+                    var ienum = enumerable.GetEnumerator();
                     var count = 0;
                     while (ienum.MoveNext())
                     {
@@ -344,6 +427,11 @@ namespace ISynergy.Framework.Windows.Controls
             return null;
         }
 
+        /// <summary>
+        /// Gets the index of.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>System.Int32.</returns>
         private int GetIndexOf(object item)
         {
             if (ItemsSource is IEnumerable itemsSource)
@@ -364,6 +452,9 @@ namespace ISynergy.Framework.Windows.Controls
             return -1;
         }
 
+        /// <summary>
+        /// Starts this instance.
+        /// </summary>
         private void Start()
         {
             _currentIndex = 0;
@@ -409,18 +500,29 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the ItemsSource
         /// </summary>
+        /// <value>The items source.</value>
         public object ItemsSource
         {
             get { return GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:ItemsSourcePropertyChanged" /> event.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void OnItemsSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var ctrl = (RotatorTile)d;
             ctrl.OnCollectionChanged(e.OldValue, e.NewValue);
         }
 
+        /// <summary>
+        /// Called when [collection changed].
+        /// </summary>
+        /// <param name="oldValue">The old value.</param>
+        /// <param name="newValue">The new value.</param>
         private void OnCollectionChanged(object oldValue, object newValue)
         {
             if (oldValue is INotifyCollectionChanged incOld)
@@ -450,6 +552,11 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Handles the CollectionChanged event of the Incc control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
         private void Incc_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
@@ -524,12 +631,18 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the currently selected visible item
         /// </summary>
+        /// <value>The current item.</value>
         public object CurrentItem
         {
             get { return GetValue(CurrentItemProperty); }
             set { SetValue(CurrentItemProperty, value); }
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:RotationDelayInSecondsPropertyChanged" /> event.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void OnRotationDelayInSecondsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             // Update new timer value.
@@ -540,6 +653,11 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:CurrentItemPropertyChanged" /> event.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void OnCurrentItemPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var ctrl = (RotatorTile)d;
@@ -562,6 +680,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the item template
         /// </summary>
+        /// <value>The item template.</value>
         public DataTemplate ItemTemplate
         {
             get { return (DataTemplate)GetValue(ItemTemplateProperty); }
@@ -571,6 +690,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the direction the tile slides in.
         /// </summary>
+        /// <value>The direction.</value>
         public RotateDirection Direction
         {
             get { return (RotateDirection)GetValue(RotateDirectionProperty); }
@@ -580,6 +700,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the duration for tile rotation.
         /// </summary>
+        /// <value>The rotation delay.</value>
         public TimeSpan RotationDelay
         {
             get { return (TimeSpan)GetValue(RotationDelayProperty); }
@@ -591,23 +712,32 @@ namespace ISynergy.Framework.Windows.Controls
         /// </summary>
         public enum RotateDirection
         {
-            /// <summary>Up</summary>
+            /// <summary>
+            /// Up
+            /// </summary>
             Up,
 
-            /// <summary>Left</summary>
+            /// <summary>
+            /// Left
+            /// </summary>
             Left,
 
-            /// <summary>Down</summary>
+            /// <summary>
+            /// Down
+            /// </summary>
             Down,
 
-            /// <summary>Right</summary>
+            /// <summary>
+            /// Right
+            /// </summary>
             Right,
         }
 
         /// <summary>
-        /// Gets or sets the extra randomized duration to be added to the <see cref="RotationDelay"/> property.
-        /// A value between zero and this value *in seconds* will be added to the <see cref="RotationDelay"/>.
+        /// Gets or sets the extra randomized duration to be added to the <see cref="RotationDelay" /> property.
+        /// A value between zero and this value *in seconds* will be added to the <see cref="RotationDelay" />.
         /// </summary>
+        /// <value>The random duration of the extra.</value>
         public TimeSpan ExtraRandomDuration
         {
             get { return (TimeSpan)GetValue(ExtraRandomDurationProperty); }

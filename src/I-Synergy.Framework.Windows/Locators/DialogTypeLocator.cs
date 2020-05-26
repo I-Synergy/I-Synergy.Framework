@@ -8,22 +8,25 @@ namespace ISynergy.Framework.Windows.Locators
     /// Dialog type locator responsible for locating dialog types for specified view models based
     /// on a naming convention used in a multitude of articles and code samples regarding the MVVM
     /// pattern.
-    /// <para/>
+    /// <para />
     /// The convention states that if the name of the view model is
     /// 'MyNamespace.ViewModels.MyDialogViewModel' then the name of the dialog is
     /// 'MyNamespace.Views.MyDialog'.
     /// </summary>
     public class DialogTypeLocator : IDialogTypeLocator
     {
+        /// <summary>
+        /// The cache
+        /// </summary>
         internal static readonly DialogTypeLocatorCache Cache = new DialogTypeLocatorCache();
 
         /// <summary>
         /// Locates the dialog type representing the specified view model in a user interface.
         /// </summary>
         /// <param name="viewModel">The view model to find the dialog type for.</param>
-        /// <returns>
-        /// The dialog type representing the specified view model in a user interface.
-        /// </returns>
+        /// <returns>The dialog type representing the specified view model in a user interface.</returns>
+        /// <exception cref="ArgumentNullException">viewModel</exception>
+        /// <exception cref="TypeLoadException"></exception>
         public Type Locate(IViewModel viewModel)
         {
             if (viewModel is null)
@@ -50,6 +53,12 @@ namespace ISynergy.Framework.Windows.Locators
             return dialogType;
         }
 
+        /// <summary>
+        /// Gets the name of the dialog.
+        /// </summary>
+        /// <param name="viewModelType">Type of the view model.</param>
+        /// <returns>System.String.</returns>
+        /// <exception cref="TypeLoadException"></exception>
         private static string GetDialogName(Type viewModelType)
         {
             var dialogName = viewModelType.FullName.Replace(".ViewModels.", ".Views.");
@@ -62,8 +71,18 @@ namespace ISynergy.Framework.Windows.Locators
                 dialogName.Length - "ViewModel".Length);
         }
 
+        /// <summary>
+        /// Gets the type of the assembly from.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>Assembly.</returns>
         private static Assembly GetAssemblyFromType(Type type) => type.Assembly;
 
+        /// <summary>
+        /// Appends the information about dialog type locators.
+        /// </summary>
+        /// <param name="errorMessage">The error message.</param>
+        /// <returns>System.String.</returns>
         private static string AppendInfoAboutDialogTypeLocators(string errorMessage)
         {
             return

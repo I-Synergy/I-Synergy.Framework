@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Windows.Extensions
     // TODO: Check if we can make these static extension methods of the MatrixHelper in C#8 or move to an operator extension.
 
     /// <summary>
-    /// Static helper methods for <see cref="o:Windows.UI.Xaml.Media.Matrix"/>.
+    /// Static helper methods for <see cref="o:Windows.UI.Xaml.Media.Matrix" />.
     /// </summary>
     public static class MatrixExtensions
     {
@@ -152,11 +152,23 @@ namespace ISynergy.Framework.Windows.Extensions
             return new Matrix(matrix.M11, matrix.M12, matrix.M21, matrix.M22, matrix.OffsetX + offsetX, matrix.OffsetY + offsetY);
         }
 
+        /// <summary>
+        /// Creates the rotation radians.
+        /// </summary>
+        /// <param name="angle">The angle.</param>
+        /// <returns>Matrix.</returns>
         internal static Matrix CreateRotationRadians(this double angle)
         {
             return CreateRotationRadians(angle, 0, 0);
         }
 
+        /// <summary>
+        /// Creates the rotation radians.
+        /// </summary>
+        /// <param name="angle">The angle.</param>
+        /// <param name="centerX">The center x.</param>
+        /// <param name="centerY">The center y.</param>
+        /// <returns>Matrix.</returns>
         internal static Matrix CreateRotationRadians(this double angle, double centerX, double centerY)
         {
             var sin = Math.Sin(angle);
@@ -167,16 +179,36 @@ namespace ISynergy.Framework.Windows.Extensions
             return new Matrix(cos, sin, -sin, cos, dx, dy);
         }
 
+        /// <summary>
+        /// Creates the scaling.
+        /// </summary>
+        /// <param name="scaleX">The scale x.</param>
+        /// <param name="scaleY">The scale y.</param>
+        /// <returns>Matrix.</returns>
         internal static Matrix CreateScaling(this double scaleX, double scaleY)
         {
             return new Matrix(scaleX, 0, 0, scaleY, 0, 0);
         }
 
+        /// <summary>
+        /// Creates the scaling.
+        /// </summary>
+        /// <param name="scaleX">The scale x.</param>
+        /// <param name="scaleY">The scale y.</param>
+        /// <param name="centerX">The center x.</param>
+        /// <param name="centerY">The center y.</param>
+        /// <returns>Matrix.</returns>
         internal static Matrix CreateScaling(this double scaleX, double scaleY, double centerX, double centerY)
         {
             return new Matrix(scaleX, 0, 0, scaleY, centerX - (scaleX * centerX), centerY - (scaleY * centerY));
         }
 
+        /// <summary>
+        /// Creates the skew radians.
+        /// </summary>
+        /// <param name="skewX">The skew x.</param>
+        /// <param name="skewY">The skew y.</param>
+        /// <returns>Matrix.</returns>
         internal static Matrix CreateSkewRadians(this double skewX, double skewY)
         {
             return new Matrix(1.0, Math.Tan(skewY), Math.Tan(skewX), 1.0, 0.0, 0.0);
@@ -221,9 +253,8 @@ namespace ISynergy.Framework.Windows.Extensions
         /// <summary>
         /// Implement WPF's Rect.Transform.
         /// </summary>
+        /// <param name="matrix">The matrix to use to transform the rectangle.</param>
         /// <param name="rectangle">The rectangle to transform.</param>
-        /// <param name="matrix">The matrix to use to transform the rectangle.
-        /// </param>
         /// <returns>The transformed rectangle.</returns>
         public static Rect RectTransform(this Matrix matrix, Rect rectangle)
         {

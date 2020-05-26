@@ -11,11 +11,17 @@ namespace ISynergy.Framework.Geography
     /// </summary>
     public class GlobalMesh
     {
+        /// <summary>
+        /// The minimum mesh size
+        /// </summary>
         private const int MinimumMeshSize = 1;
 
         // The maximum number of cells required for any UTM Grid 
 
         // The maximum vertical number of cells in any UTM Grid
+        /// <summary>
+        /// The maximum vertical meshes
+        /// </summary>
         private readonly long _maxVerticalMeshes;
 
         /// <summary>
@@ -26,7 +32,8 @@ namespace ISynergy.Framework.Geography
         /// better computational efficiency.
         /// </summary>
         /// <param name="meshSizeinMeters">The size of the squares in meter. The defauklt value is 1000m.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid mesh size is specified</exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public GlobalMesh(int meshSizeinMeters = 1000)
         {
             if (meshSizeinMeters < MinimumMeshSize)
@@ -62,28 +69,32 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The size of the mesh squares in meters. We only support full meters.
         /// </summary>
+        /// <value>The size of the mesh.</value>
         public int MeshSize { get; }
 
         /// <summary>
         /// The UTM Projection for the Globe we cover with the mesh.
         /// </summary>
+        /// <value>The projection.</value>
         public UtmProjection Projection { get; } = new UtmProjection();
 
         /// <summary>
         /// The (maximum) total number of meshes used to cover an UTM Grid.
         /// Individual Grids may actually be covered by fewer mesh-cells.
         /// </summary>
+        /// <value>The count.</value>
         public long Count { get; }
 
         /// <summary>
         /// The maximum number of a mesh
         /// </summary>
+        /// <value>The global count.</value>
         public long GlobalCount => Count * UtmGrid.NumberOfGrids;
 
         /// <summary>
         /// Return the UtmGrid this mesh belongs to
         /// </summary>
-        /// <param name="meshNumber"></param>
+        /// <param name="meshNumber">The mesh number.</param>
         /// <returns>The UtmGrid in which this mesh cell is located</returns>
         /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid mesh number is specified</exception>
         public UtmGrid Grid(long meshNumber)
@@ -129,12 +140,23 @@ namespace ISynergy.Framework.Geography
             return MeshNumber(new GlobalCoordinates(latitude, longitude));
         }
 
+        /// <summary>
+        /// Validates the mesh number.
+        /// </summary>
+        /// <param name="meshNumber">The mesh number.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void ValidateMeshNumber(long meshNumber)
         {
             if (meshNumber < 0 || meshNumber >= GlobalCount)
                 throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_MESH_NUMBER);
         }
 
+        /// <summary>
+        /// Meshes the origin.
+        /// </summary>
+        /// <param name="meshNumber">The mesh number.</param>
+        /// <param name="relX">The relative x.</param>
+        /// <param name="relY">The relative y.</param>
         private void MeshOrigin(long meshNumber, out long relX, out long relY)
         {
             var local = meshNumber % Count;
@@ -168,7 +190,7 @@ namespace ISynergy.Framework.Geography
         /// UTM grid. So if you convert them to a Latitude/Longitude and then back
         /// to an UtmCoordinate, you may get different values.
         /// </summary>
-        /// <param name="meshNumber"></param>
+        /// <param name="meshNumber">The mesh number.</param>
         /// <returns>The UTM coordinates of the lower left corner of the Mesh</returns>
         /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid mesh number is specified</exception>
         public UtmCoordinate LowerLeft(long meshNumber)
@@ -185,7 +207,7 @@ namespace ISynergy.Framework.Geography
         /// UTM grid. So if you convert them to a Latitude/Longitude and then back
         /// to an UtmCoordinate, you may get different values.
         /// </summary>
-        /// <param name="meshNumber"></param>
+        /// <param name="meshNumber">The mesh number.</param>
         /// <returns>The UTM coordinates of the lower right corner of the Mesh</returns>
         /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid mesh number is specified</exception>
         public UtmCoordinate LowerRight(long meshNumber)
@@ -203,7 +225,7 @@ namespace ISynergy.Framework.Geography
         /// UTM grid. So if you convert them to a Latitude/Longitude and then back
         /// to an UtmCoordinate, you may get different values.
         /// </summary>
-        /// <param name="meshNumber"></param>
+        /// <param name="meshNumber">The mesh number.</param>
         /// <returns>The UTM coordinates of the upper left corner of the Mesh</returns>
         /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid mesh number is specified</exception>
         public UtmCoordinate UpperLeft(long meshNumber)
@@ -221,7 +243,7 @@ namespace ISynergy.Framework.Geography
         /// UTM grid. So if you convert them to a Latitude/Longitude and then back
         /// to an UtmCoordinate, you may get different values.
         /// </summary>
-        /// <param name="meshNumber"></param>
+        /// <param name="meshNumber">The mesh number.</param>
         /// <returns>The UTM coordinates of the upper right corner of the Mesh</returns>
         /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid mesh number is specified</exception>
         public UtmCoordinate UpperRight(long meshNumber)
@@ -240,7 +262,7 @@ namespace ISynergy.Framework.Geography
         /// <param name="meshNumber">The mesh number</param>
         /// <param name="distance">The distance (0-3 currently supported)</param>
         /// <returns>The list of mesh numbers of the neighbors</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid mesh number is specified</exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public List<long> Neighborhood(long meshNumber, int distance)
         {
             const int maxDistance = 3;

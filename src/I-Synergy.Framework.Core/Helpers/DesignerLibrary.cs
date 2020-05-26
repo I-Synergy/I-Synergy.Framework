@@ -7,6 +7,10 @@ namespace ISynergy.Framework.Core.Helpers
     /// </summary>
     internal static class DesignerLibrary
     {
+        /// <summary>
+        /// Gets the detected designer library.
+        /// </summary>
+        /// <value>The detected designer library.</value>
         internal static DesignerPlatformLibrary DetectedDesignerLibrary
         {
             get
@@ -19,6 +23,10 @@ namespace ISynergy.Framework.Core.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets the current platform.
+        /// </summary>
+        /// <returns>DesignerPlatformLibrary.</returns>
         private static DesignerPlatformLibrary GetCurrentPlatform()
         {
             // We check Silverlight first because when in the VS designer, the .NET libraries will resolve
@@ -44,10 +52,20 @@ namespace ISynergy.Framework.Core.Helpers
         }
 
 
+        /// <summary>
+        /// The detected designer platform library
+        /// </summary>
         private static DesignerPlatformLibrary? _detectedDesignerPlatformLibrary;
 
+        /// <summary>
+        /// The is in design mode
+        /// </summary>
         private static bool? _isInDesignMode;
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is in design mode.
+        /// </summary>
+        /// <value><c>true</c> if this instance is in design mode; otherwise, <c>false</c>.</value>
         public static bool IsInDesignMode
         {
             get
@@ -234,11 +252,26 @@ namespace ISynergy.Framework.Core.Helpers
 #endif
     }
 
+    /// <summary>
+    /// Enum DesignerPlatformLibrary
+    /// </summary>
     internal enum DesignerPlatformLibrary
     {
+        /// <summary>
+        /// The unknown
+        /// </summary>
         Unknown,
+        /// <summary>
+        /// The net
+        /// </summary>
         Net,
+        /// <summary>
+        /// The win rt
+        /// </summary>
         WinRt,
+        /// <summary>
+        /// The silverlight
+        /// </summary>
         Silverlight
     }
 }

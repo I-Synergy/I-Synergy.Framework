@@ -11,6 +11,8 @@ namespace ISynergy.Framework.Windows.Locators
         /// <summary>
         /// Locates a dialog type based on the specified view model.
         /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <returns>Type.</returns>
         Type Locate(IViewModel viewModel);
     }
 }

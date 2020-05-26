@@ -6,18 +6,43 @@ using System.Security.Principal;
 
 namespace ISynergy.Framework.AspNetCore.Authentication.Services
 {
+    /// <summary>
+    /// Class TenantService.
+    /// Implements the <see cref="ITenantService" />
+    /// </summary>
+    /// <seealso cref="ITenantService" />
     public class TenantService : ITenantService
     {
+        /// <summary>
+        /// The HTTP context accessor
+        /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TenantService"/> class.
+        /// </summary>
+        /// <param name="httpContextAccessor">The HTTP context accessor.</param>
+        /// <exception cref="ArgumentNullException">httpContextAccessor</exception>
         public TenantService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
+        /// <summary>
+        /// Gets the tenant identifier.
+        /// </summary>
+        /// <value>The tenant identifier.</value>
         public Guid TenantId => RetrieveTenantId();
+        /// <summary>
+        /// Gets the name of the user.
+        /// </summary>
+        /// <value>The name of the user.</value>
         public string UserName => RetrieveUserName();
 
+        /// <summary>
+        /// Sets the tenant.
+        /// </summary>
+        /// <param name="tenantId">The tenant identifier.</param>
         public void SetTenant(Guid tenantId)
         {
             var claimIdentity = new ClaimsIdentity();
@@ -26,6 +51,11 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Services
             _httpContextAccessor.HttpContext.User = principal;
         }
 
+        /// <summary>
+        /// Sets the tenant.
+        /// </summary>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <param name="username">The username.</param>
         public void SetTenant(Guid tenantId, string username)
         {
             var identity = new GenericIdentity(username);
@@ -36,12 +66,20 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Services
             _httpContextAccessor.HttpContext.User = principal;
         }
 
+        /// <summary>
+        /// Retrieves the tenant identifier.
+        /// </summary>
+        /// <returns>Guid.</returns>
         private Guid RetrieveTenantId()
         {
             var principal = _httpContextAccessor.HttpContext.User;
             Guid.TryParse(principal?.FindFirst(Core.Constants.ClaimTypes.AccountIdType)?.Value, out var parsedtenant);
             return parsedtenant;
         }
+        /// <summary>
+        /// Retrieves the name of the user.
+        /// </summary>
+        /// <returns>System.String.</returns>
         private string RetrieveUserName()
         {
             var principal = _httpContextAccessor.HttpContext.User;

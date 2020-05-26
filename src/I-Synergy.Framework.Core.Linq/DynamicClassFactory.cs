@@ -18,37 +18,94 @@ namespace ISynergy.Framework.Core.Linq
     public static class DynamicClassFactory
     {
         // EmptyTypes is used to indicate that we are looking for someting without any parameters. 
+        /// <summary>
+        /// The empty types
+        /// </summary>
         private static readonly Type[] EmptyTypes = Array.Empty<Type>();
 
+        /// <summary>
+        /// The generated types
+        /// </summary>
         private static readonly ConcurrentDictionary<string, Type> GeneratedTypes = new ConcurrentDictionary<string, Type>();
 
+        /// <summary>
+        /// The module builder
+        /// </summary>
         private static readonly ModuleBuilder ModuleBuilder;
 
         // Some objects we cache
+        /// <summary>
+        /// The compiler generated attribute builder
+        /// </summary>
         private static readonly CustomAttributeBuilder CompilerGeneratedAttributeBuilder = new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(EmptyTypes), Array.Empty<object>());
+        /// <summary>
+        /// The debugger browsable attribute builder
+        /// </summary>
         private static readonly CustomAttributeBuilder DebuggerBrowsableAttributeBuilder = new CustomAttributeBuilder(typeof(DebuggerBrowsableAttribute).GetConstructor(new[] { typeof(DebuggerBrowsableState) }), new object[] { DebuggerBrowsableState.Never });
+        /// <summary>
+        /// The debugger hidden attribute builder
+        /// </summary>
         private static readonly CustomAttributeBuilder DebuggerHiddenAttributeBuilder = new CustomAttributeBuilder(typeof(DebuggerHiddenAttribute).GetConstructor(EmptyTypes), Array.Empty<object>());
 
+        /// <summary>
+        /// The object ctor
+        /// </summary>
         private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(EmptyTypes);
+        /// <summary>
+        /// The object to string
+        /// </summary>
         private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public);
 
+        /// <summary>
+        /// The string builder ctor
+        /// </summary>
         private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(EmptyTypes);
+        /// <summary>
+        /// The string builder append string
+        /// </summary>
         private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod("Append", new[] { typeof(string) });
+        /// <summary>
+        /// The string builder append object
+        /// </summary>
         private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod("Append", new[] { typeof(object) });
 
+        /// <summary>
+        /// The equality comparer
+        /// </summary>
         private static readonly Type EqualityComparer = typeof(EqualityComparer<>);
+        /// <summary>
+        /// The equality comparer generic argument
+        /// </summary>
         private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
+        /// <summary>
+        /// The equality comparer default
+        /// </summary>
         private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public);
+        /// <summary>
+        /// The equality comparer equals
+        /// </summary>
         private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument });
+        /// <summary>
+        /// The equality comparer get hash code
+        /// </summary>
         private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", new[] { EqualityComparerGenericArgument });
 
+        /// <summary>
+        /// The index
+        /// </summary>
         private static int _index = -1;
 
+        /// <summary>
+        /// The dynamic assembly name
+        /// </summary>
         private static readonly string DynamicAssemblyName = "System.Linq.Dynamic.Core.DynamicClasses, Version=1.0.0.0";
+        /// <summary>
+        /// The dynamic module name
+        /// </summary>
         private static readonly string DynamicModuleName = "System.Linq.Dynamic.Core.DynamicClasses";
 
         /// <summary>
-        /// Initializes the <see cref="DynamicClassFactory"/> class.
+        /// Initializes the <see cref="DynamicClassFactory" /> class.
         /// </summary>
         static DynamicClassFactory()
         {
@@ -59,25 +116,23 @@ namespace ISynergy.Framework.Core.Linq
         }
 
         /// <summary>
-        /// The CreateType method creates a new data class with a given set of public properties and returns the System.Type object for the newly created class. If a data class with an identical sequence of properties has already been created, the System.Type object for this class is returned.        
+        /// The CreateType method creates a new data class with a given set of public properties and returns the System.Type object for the newly created class. If a data class with an identical sequence of properties has already been created, the System.Type object for this class is returned.
         /// Data classes implement private instance variables and read/write property accessors for the specified properties.Data classes also override the Equals and GetHashCode members to implement by-value equality.
-        /// Data classes are created in an in-memory assembly in the current application domain. All data classes inherit from <see cref="DynamicClass"/> and are given automatically generated names that should be considered private (the names will be unique within the application domain but not across multiple invocations of the application). Note that once created, a data class stays in memory for the lifetime of the current application domain. There is currently no way to unload a dynamically created data class.
+        /// Data classes are created in an in-memory assembly in the current application domain. All data classes inherit from <see cref="DynamicClass" /> and are given automatically generated names that should be considered private (the names will be unique within the application domain but not across multiple invocations of the application). Note that once created, a data class stays in memory for the lifetime of the current application domain. There is currently no way to unload a dynamically created data class.
         /// The dynamic expression parser uses the CreateClass methods to generate classes from data object initializers. This feature in turn is often used with the dynamic Select method to create projections.
         /// </summary>
         /// <param name="properties">The DynamicProperties</param>
         /// <param name="createParameterCtor">Create a constructor with parameters. Default set to true. Note that for Linq-to-Database objects, this needs to be set to false.</param>
         /// <returns>Type</returns>
         /// <example>
-        /// <code>
-        /// <![CDATA[
+        ///   <code><![CDATA[
         /// DynamicProperty[] props = new DynamicProperty[] { new DynamicProperty("Name", typeof(string)), new DynamicProperty("Birthday", typeof(DateTime)) };
         /// Type type = DynamicClassFactory.CreateType(props);
         /// DynamicClass dynamicClass = TypeActivator.CreateInstance(type) as DynamicClass;
         /// dynamicClass.SetDynamicProperty("Name", "Albert");
         /// dynamicClass.SetDynamicProperty("Birthday", new DateTime(1879, 3, 14));
         /// Console.WriteLine(dynamicClass);
-        /// ]]>
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static Type CreateType(IList<DynamicProperty> properties, bool createParameterCtor = true)
         {
@@ -352,7 +407,7 @@ namespace ISynergy.Framework.Core.Linq
         /// </summary>
         /// <param name="dynamicProperties">The dynamic properties.</param>
         /// <param name="createParameterCtor">if set to <c>true</c> [create parameter ctor].</param>
-        /// <returns></returns>
+        /// <returns>System.String.</returns>
         private static string GenerateKey(IEnumerable<DynamicProperty> dynamicProperties, bool createParameterCtor)
         {
             // We recreate this by creating a fullName composed of all the property names and types, separated by a "|".
@@ -360,6 +415,11 @@ namespace ISynergy.Framework.Core.Linq
             return string.Format("{0}_{1}", string.Join("|", dynamicProperties.Select(p => Escape(p.Name) + "~" + p.Type.FullName).ToArray()), createParameterCtor ? "c" : string.Empty);
         }
 
+        /// <summary>
+        /// Escapes the specified string.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns>System.String.</returns>
         private static string Escape(string str)
         {
             // We escape the \ with \\, so that we can safely escape the "|" (that we use as a separator) with "\|"

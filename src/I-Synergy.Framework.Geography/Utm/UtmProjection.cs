@@ -9,7 +9,6 @@ namespace ISynergy.Framework.Geography
     {
         /// <summary>
         /// Instantiate an UTM projection with WGS84 as reference
-        /// ///
         /// </summary>
         public UtmProjection()
             : this(Ellipsoid.WGS84)
@@ -29,13 +28,22 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Minimum latitude mapped by the UTM projection
         /// </summary>
+        /// <value>The minimum latitude.</value>
         public override Angle MinLatitude => -80.0;
 
         /// <summary>
         /// Maximum latitude mapped by the UTM projection
         /// </summary>
+        /// <value>The maximum latitude.</value>
         public override Angle MaxLatitude => 84.0;
 
+        /// <summary>
+        /// Converts to utmcoordinates.
+        /// </summary>
+        /// <param name="coordinates">The coordinates.</param>
+        /// <param name="scaleFactor">The scale factor.</param>
+        /// <param name="meridianConvergence">The meridian convergence.</param>
+        /// <returns>EuclidianCoordinate.</returns>
         private EuclidianCoordinate ToUtmCoordinates(
             GlobalCoordinates coordinates,
             out double scaleFactor,
@@ -101,6 +109,14 @@ namespace ISynergy.Framework.Geography
             return ToUtmCoordinates(coordinates, out _, out _);
         }
 
+        /// <summary>
+        /// Froms the euclidian.
+        /// </summary>
+        /// <param name="xy">The xy.</param>
+        /// <param name="scaleFactor">The scale factor.</param>
+        /// <param name="meridianConvergence">The meridian convergence.</param>
+        /// <returns>GlobalCoordinates.</returns>
+        /// <exception cref="ArgumentException"></exception>
         internal GlobalCoordinates FromEuclidian(EuclidianCoordinate xy, out double scaleFactor, out double meridianConvergence)
         {
             if (xy is UtmCoordinate point)
@@ -200,13 +216,32 @@ namespace ISynergy.Framework.Geography
         // http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
 
         #region Math Const stuff
+        /// <summary>
+        /// Class MathConsts.
+        /// </summary>
         private class MathConsts
         {
+            /// <summary>
+            /// The alpha
+            /// </summary>
             public readonly double[] Alpha, Beta, Delta;
+            /// <summary>
+            /// The e0
+            /// </summary>
             public readonly double E0 = 500000;
+            /// <summary>
+            /// The k0
+            /// </summary>
             public readonly double K0 = 0.9996;
+            /// <summary>
+            /// The n
+            /// </summary>
             public readonly double N, A;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="MathConsts"/> class.
+            /// </summary>
+            /// <param name="ellipsoid">The ellipsoid.</param>
             internal MathConsts(Ellipsoid ellipsoid)
             {
                 N = ellipsoid.Flattening / (2.0 - ellipsoid.Flattening);
@@ -235,8 +270,16 @@ namespace ISynergy.Framework.Geography
             }
         }
 
+        /// <summary>
+        /// The m
+        /// </summary>
         private readonly MathConsts _m;
 
+        /// <summary>
+        /// Atanhes the specified x.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns>System.Double.</returns>
         private static double Atanh(double x)
         {
             return (Math.Log(1 + x) - Math.Log(1 - x)) / 2;

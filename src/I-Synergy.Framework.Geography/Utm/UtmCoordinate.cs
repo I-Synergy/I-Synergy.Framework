@@ -9,9 +9,21 @@ namespace ISynergy.Framework.Geography
     /// </summary>
     public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
     {
+        /// <summary>
+        /// The default precision
+        /// </summary>
         private const double DefaultPrecision = 0.01;
+        /// <summary>
+        /// The computed
+        /// </summary>
         private bool _computed;
+        /// <summary>
+        /// The meridian convergence
+        /// </summary>
         private double _meridianConvergence; // stored in radians
+        /// <summary>
+        /// The scale factor
+        /// </summary>
         private double _scaleFactor;
 
         /// <summary>
@@ -29,6 +41,14 @@ namespace ISynergy.Framework.Geography
             _computed = false;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UtmCoordinate"/> class.
+        /// </summary>
+        /// <param name="grid">The grid.</param>
+        /// <param name="easting">The easting.</param>
+        /// <param name="northing">The northing.</param>
+        /// <param name="scaleFactor">The scale factor.</param>
+        /// <param name="meridianConvergence">The meridian convergence.</param>
         internal UtmCoordinate(UtmGrid grid,
             double easting,
             double northing,
@@ -43,11 +63,13 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The UTM Grid this point belongs to.
         /// </summary>
+        /// <value>The grid.</value>
         public UtmGrid Grid { get; }
 
         /// <summary>
         /// The scale factor at this location
         /// </summary>
+        /// <value>The scale factor.</value>
         public double ScaleFactor
         {
             get
@@ -62,6 +84,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The meridian convergence at this location
         /// </summary>
+        /// <value>The meridian convergence.</value>
         public Angle MeridianConvergence
         {
             get
@@ -80,14 +103,16 @@ namespace ISynergy.Framework.Geography
         /// <returns>True if they belong to the same projection, false otherwise</returns>
         public override bool IsSameProjection(EuclidianCoordinate other)
         {
-            var utmOther = other as UtmCoordinate;
-            if (null != utmOther)
+            if (other is UtmCoordinate utmOther)
             {
                 return utmOther.Grid.Equals(Grid);
             }
             return false;
         }
 
+        /// <summary>
+        /// Computes this instance.
+        /// </summary>
         private void Compute()
         {
             _ = Grid.Projection.FromEuclidian(this, out _scaleFactor, out _meridianConvergence);
@@ -99,11 +124,10 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         /// <param name="other">The other point</param>
         /// <returns>The distance</returns>
-        /// <exception cref="ArgumentException">Raised if the two points don't belong to the same projection</exception>
+        /// <exception cref="ArgumentException"></exception>
         public override double DistanceTo(EuclidianCoordinate other)
         {
-            var obj = other as UtmCoordinate;
-            if (obj == null || !Grid.Equals(obj.Grid))
+            if (!(other is UtmCoordinate obj) || !Grid.Equals(obj.Grid))
                 throw new ArgumentException();
             return base.DistanceTo(other);
         }
@@ -146,7 +170,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The culture invariant string representation of the UTM coordinate
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             var x = (long)Math.Floor(X);

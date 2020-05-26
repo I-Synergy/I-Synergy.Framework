@@ -12,17 +12,22 @@ namespace ISynergy.Framework.Geography
     /// </summary>
     public struct GeodeticCurve : IEquatable<GeodeticCurve>
     {
-        /// <summary>Ellipsoidal distance (in meters).</summary>
+        /// <summary>
+        /// Ellipsoidal distance (in meters).
+        /// </summary>
+        /// <value>The ellipsoidal distance.</value>
         public double EllipsoidalDistance { get; }
 
         /// <summary>
         /// The calculator used to compute this curve
         /// </summary>
+        /// <value>The calculator.</value>
         public GeodeticCalculator Calculator { get; }
 
         /// <summary>
         /// Get the azimuth.  This is angle from north from start to end.
         /// </summary>
+        /// <value>The azimuth.</value>
         public Angle Azimuth { get; }
 
         /// <summary>
@@ -44,6 +49,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Get the reverse azimuth.  This is angle from north from end to start.
         /// </summary>
+        /// <value>The reverse azimuth.</value>
         public Angle ReverseAzimuth
         {
             get

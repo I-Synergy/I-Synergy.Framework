@@ -12,9 +12,9 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Get interfaces from type.
         /// </summary>
-        /// <param name="_self"></param>
-        /// <param name="includeInherited"></param>
-        /// <returns></returns>
+        /// <param name="_self">The self.</param>
+        /// <param name="includeInherited">if set to <c>true</c> [include inherited].</param>
+        /// <returns>IEnumerable&lt;Type&gt;.</returns>
         public static IEnumerable<Type> GetInterfaces(this Type _self, bool includeInherited)
         {
             if (includeInherited || _self.BaseType == null)

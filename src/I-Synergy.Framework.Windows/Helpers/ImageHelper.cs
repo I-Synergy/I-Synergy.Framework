@@ -13,8 +13,15 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ISynergy.Framework.Windows.Helpers
 {
+    /// <summary>
+    /// Class ImageHelper.
+    /// </summary>
     public static class ImageHelper
     {
+        /// <summary>
+        /// image from clipboard image as an asynchronous operation.
+        /// </summary>
+        /// <returns>BitmapSource.</returns>
         public static async Task<BitmapSource> ImageFromClipboardImageAsync()
         {
             var dataPackageView = Clipboard.GetContent();
@@ -35,6 +42,10 @@ namespace ISynergy.Framework.Windows.Helpers
             return null;
         }
 
+        /// <summary>
+        /// PNG byte array from clipboard image as an asynchronous operation.
+        /// </summary>
+        /// <returns>System.Byte[].</returns>
         public static async Task<byte[]> PngByteArrayFromClipboardImageAsync()
         {
             byte[] result = null;
@@ -48,35 +59,43 @@ namespace ISynergy.Framework.Windows.Helpers
                     var decoder = await BitmapDecoder.CreateAsync(imageStream);
                     var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-                    using (var memoryStream = new InMemoryRandomAccessStream())
+                    using var memoryStream = new InMemoryRandomAccessStream();
+                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, memoryStream);
+                    encoder.SetSoftwareBitmap(softwareBitmap);
+
+                    try
                     {
-                        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, memoryStream);
-                        encoder.SetSoftwareBitmap(softwareBitmap);
-
-                        try
-                        {
-                            await encoder.FlushAsync();
-                        }
-                        catch (Exception ex)
-                        { 
-                            return Array.Empty<byte>(); 
-                        }
-
-                        result = new byte[memoryStream.Size];
-                        await memoryStream.ReadAsync(result.AsBuffer(), (uint)memoryStream.Size, InputStreamOptions.None);
+                        await encoder.FlushAsync();
                     }
+                    catch (Exception)
+                    {
+                        return Array.Empty<byte>();
+                    }
+
+                    result = new byte[memoryStream.Size];
+                    await memoryStream.ReadAsync(result.AsBuffer(), (uint)memoryStream.Size, InputStreamOptions.None);
                 };
             }
 
             return result;
         }
 
+        /// <summary>
+        /// Converts the color of the integer2.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <returns>Color.</returns>
         public static Color ConvertInteger2Color(int color)
         {
             var bytes = BitConverter.GetBytes(color);
             return Color.FromArgb(bytes[3], bytes[2], bytes[1], bytes[0]);
         }
 
+        /// <summary>
+        /// Converts the color2 integer.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <returns>System.Int32.</returns>
         public static int ConvertColor2Integer(Color color)
         {
             var bytes = new byte[] { 255, color.R, color.G, color.B };
@@ -87,6 +106,11 @@ namespace ISynergy.Framework.Windows.Helpers
             return BitConverter.ToInt32(bytes, 0);
         }
 
+        /// <summary>
+        /// Converts the byte array2 image source asynchronous.
+        /// </summary>
+        /// <param name="image">The image.</param>
+        /// <returns>ImageSource.</returns>
         public static ImageSource ConvertByteArray2ImageSourceAsync(byte[] image)
         {
             ImageSource result = null;
@@ -105,6 +129,11 @@ namespace ISynergy.Framework.Windows.Helpers
             return result;
         }
 
+        /// <summary>
+        /// convert image source2 byte array as an asynchronous operation.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <returns>System.Byte[].</returns>
         public static async Task<byte[]> ConvertImageSource2ByteArrayAsync(Uri uri)
         {
             byte[] result = null;

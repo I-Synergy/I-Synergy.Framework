@@ -10,11 +10,11 @@ namespace ISynergy.Framework.MessageBus.BackgroundServices
 {
     /// <summary>
     /// Class BaseScopedSubscriberBackgroundService.
-    /// Implements the <see cref="Microsoft.Extensions.Hosting.BackgroundService" />
+    /// Implements the <see cref="BackgroundService" />
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <typeparam name="TService">The type of the t service.</typeparam>
-    /// <seealso cref="Microsoft.Extensions.Hosting.BackgroundService" />
+    /// <seealso cref="BackgroundService" />
     public abstract class BaseScopedSubscriberBackgroundService<TEntity, TService> : BackgroundService
         where TService : ISubscriberServiceBus<TEntity>
     {
@@ -28,7 +28,7 @@ namespace ISynergy.Framework.MessageBus.BackgroundServices
         protected readonly IServiceProvider _serviceProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseScopedSubscriberBackgroundService{TEntity, TService}"/> class.
+        /// Initializes a new instance of the <see cref="BaseScopedSubscriberBackgroundService{TEntity, TService}" /> class.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="logger">The logger.</param>
@@ -46,14 +46,12 @@ namespace ISynergy.Framework.MessageBus.BackgroundServices
         /// <returns>A <see cref="T:System.Threading.Tasks.Task" /> that represents the long running operations.</returns>
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var scopedProcessingService =
-                    scope.ServiceProvider
-                        .GetRequiredService<TService>();
+            using var scope = _serviceProvider.CreateScope();
+            var scopedProcessingService =
+                scope.ServiceProvider
+                    .GetRequiredService<TService>();
 
-                return scopedProcessingService.SubscribeToMessagesAsync(stoppingToken);
-            }
+            return scopedProcessingService.SubscribeToMessagesAsync(stoppingToken);
         }
     }
 }

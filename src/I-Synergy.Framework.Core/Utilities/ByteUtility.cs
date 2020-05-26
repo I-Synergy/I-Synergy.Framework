@@ -2,8 +2,18 @@
 
 namespace ISynergy.Framework.Core.Utilities
 {
+    /// <summary>
+    /// Class ByteUtility.
+    /// </summary>
     public static class ByteUtility
     {
+        /// <summary>
+        /// Writes the bytes to string.
+        /// </summary>
+        /// <param name="Input">The input.</param>
+        /// <param name="bytes">The bytes.</param>
+        /// <param name="start">The start.</param>
+        /// <returns>System.String.</returns>
         public static string WriteBytesToString(string Input, byte[] bytes, int start)
         {
             var g = new StringBuilder(Input);

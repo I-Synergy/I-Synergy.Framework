@@ -9,11 +9,19 @@ namespace ISynergy.Framework.Core.Extensions
 {
 #nullable disable
     /// <summary>
-    /// Extensions for the <see cref="ICollection"/> and <see cref="Collection{T}"/> classes.
+    /// Extensions for the <see cref="ICollection" /> and <see cref="Collection{T}" /> classes.
     /// </summary>
     public static class CollectionExtensions
     {
         //Linked list style enumerator
+        /// <summary>
+        /// Froms the hierarchy.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the t source.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="nextItem">The next item.</param>
+        /// <param name="canContinue">The can continue.</param>
+        /// <returns>IEnumerable&lt;TSource&gt;.</returns>
         public static IEnumerable<TSource> FromHierarchy<TSource>(
             this TSource source,
             Func<TSource, TSource> nextItem,
@@ -25,6 +33,13 @@ namespace ISynergy.Framework.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// Froms the hierarchy.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the t source.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="nextItem">The next item.</param>
+        /// <returns>IEnumerable&lt;TSource&gt;.</returns>
         public static IEnumerable<TSource> FromHierarchy<TSource>(
             this TSource source,
             Func<TSource, TSource> nextItem)
@@ -39,7 +54,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="list">The list.</param>
         /// <param name="item">The item to check.</param>
         /// <returns><c>true</c> if the item can be moved up in the list; otherwise, <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
         public static bool CanMoveItemUp(this IList list, object item)
         {
             Argument.IsNotNull(nameof(list), list);
@@ -68,8 +83,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="list">The list.</param>
         /// <param name="item">The item to move up.</param>
         /// <returns><c>true</c> if the item has successfully been moved up; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="item"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="item" /> is <c>null</c>.</exception>
         public static bool MoveItemUp(this IList list, object item)
         {
             Argument.IsNotNull(nameof(list), list);
@@ -91,7 +106,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="list">The list.</param>
         /// <param name="item">The item to check.</param>
         /// <returns><c>true</c> if the item can be moved down in the list; otherwise, <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
         public static bool CanMoveItemDown(this IList list, object item)
         {
             Argument.IsNotNull(nameof(list), list);
@@ -127,8 +142,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="list">The list.</param>
         /// <param name="index">The index of the item to move up.</param>
         /// <returns><c>true</c> if the item has successfully been moved up; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="index"/> is smaller than 0 or larger than the list count.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="index" /> is smaller than 0 or larger than the list count.</exception>
         public static bool MoveItemUpByIndex(this IList list, int index)
         {
             Argument.IsNotNull(nameof(list), list);
@@ -157,8 +172,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="list">The list.</param>
         /// <param name="item">The item to move down.</param>
         /// <returns><c>true</c> if the item has successfully been moved down; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="item"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="item" /> is <c>null</c>.</exception>
         public static bool MoveItemDown(this IList list, object item)
         {
             Argument.IsNotNull(nameof(list), list);
@@ -180,8 +195,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="list">The list.</param>
         /// <param name="index">The index of the item to move down.</param>
         /// <returns><c>true</c> if the item has successfully been moved down; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="index"/> is smaller than 0 or larger than the list count.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="index" /> is smaller than 0 or larger than the list count.</exception>
         public static bool MoveItemDownByIndex(this IList list, int index)
         {
             Argument.IsNotNull(nameof(list), list);
@@ -205,13 +220,13 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
-        /// Add an range of items to the specified <see cref="ICollection{T}"/>.
+        /// Add an range of items to the specified <see cref="ICollection{T}" />.
         /// </summary>
         /// <typeparam name="T">Type of items within the collection.</typeparam>
         /// <param name="collection">The collection.</param>
         /// <param name="range">An range of items.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="range"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="collection" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="range" /> is <c>null</c>.</exception>
         public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> range)
         {
             collection.EnsureNotNull();
@@ -223,7 +238,7 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
-        /// Add an new range of items to the specified <see cref="ICollection{T}"/>.
+        /// Add an new range of items to the specified <see cref="ICollection{T}" />.
         /// </summary>
         /// <typeparam name="T">Type of items within the collection.</typeparam>
         /// <param name="collection">The collection.</param>
@@ -236,14 +251,14 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
-        /// Replaces the whole range of the specified <paramref name="collection"/>. This is done by internally
-        /// calling <see cref="ICollection{T}.Clear"/> and finally <c>AddRange{T}</c>.
+        /// Replaces the whole range of the specified <paramref name="collection" />. This is done by internally
+        /// calling <see cref="ICollection{T}.Clear" /> and finally <c>AddRange{T}</c>.
         /// </summary>
         /// <typeparam name="T">Type of items within the collection.</typeparam>
         /// <param name="collection">The collection.</param>
         /// <param name="range">The range of items to add to the observable collection.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="range"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="collection" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="range" /> is <c>null</c>.</exception>
         public static void ReplaceRange<T>(this ICollection<T> collection, IEnumerable<T> range)
         {
             Argument.IsNotNull(nameof(collection), collection);
@@ -260,7 +275,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// When there are no items in the list, this method will silently exit.
         /// </summary>
         /// <param name="list">The list.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
         public static void RemoveFirst(this IList list)
         {
             Argument.IsNotNull(nameof(list), list);
@@ -279,7 +294,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// When there are no items in the list, this method will silently exit.
         /// </summary>
         /// <param name="list">The list.</param>
-        /// <exception cref="ArgumentNullException">The <paramref name="list"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
         public static void RemoveLast(this IList list)
         {
             Argument.IsNotNull(nameof(list), list);
@@ -293,10 +308,10 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
-        /// The for each extension on <see cref="IEnumerable{TItem}"/>.
+        /// The for each extension on <see cref="IEnumerable{TItem}" />.
         /// </summary>
-        /// <typeparam name="TItem">The type of the item.</typeparam>
-        /// <param name="collection">The collection.</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items">The items.</param>
         /// <param name="action">The action.</param>
         public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
         {
@@ -310,7 +325,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <typeparam name="T">Type of the items inside the collection.</typeparam>
         /// <param name="collection">The collection to convert.</param>
         /// <returns>The readonly version of the collection.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="collection"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="collection" /> is <c>null</c>.</exception>
         public static ReadOnlyCollection<T> AsReadOnly<T>(this IList<T> collection)
         {
             Argument.IsNotNull(nameof(collection), collection);

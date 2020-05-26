@@ -10,11 +10,26 @@ using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Core.Linq.Helpers
 {
+    /// <summary>
+    /// Class ExpressionHelper.
+    /// Implements the <see cref="IExpressionHelper" />
+    /// </summary>
+    /// <seealso cref="IExpressionHelper" />
     internal class ExpressionHelper : IExpressionHelper
     {
+        /// <summary>
+        /// The constant expression wrapper
+        /// </summary>
         private readonly IConstantExpressionWrapper _constantExpressionWrapper = new ConstantExpressionWrapper();
+        /// <summary>
+        /// The parsing configuration
+        /// </summary>
         private readonly ParsingConfig _parsingConfig;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionHelper"/> class.
+        /// </summary>
+        /// <param name="parsingConfig">The parsing configuration.</param>
         internal ExpressionHelper(ParsingConfig parsingConfig)
         {
             Argument.IsNotNull(nameof(parsingConfig), parsingConfig);
@@ -22,6 +37,10 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             _parsingConfig = parsingConfig;
         }
 
+        /// <summary>
+        /// Wraps the constant expression.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
         public void WrapConstantExpression(ref Expression argument)
         {
             if (_parsingConfig.UseParameterizedNamesInDynamicQuery)
@@ -30,6 +49,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             }
         }
 
+        /// <summary>
+        /// Converts the numeric type to biggest common type for binary operator.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         public void ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right)
         {
             if (left.Type == right.Type)
@@ -74,21 +98,45 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             }
         }
 
+        /// <summary>
+        /// Generates the add.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateAdd(Expression left, Expression right)
         {
             return Expression.Add(left, right);
         }
 
+        /// <summary>
+        /// Generates the string concat.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateStringConcat(Expression left, Expression right)
         {
             return GenerateStaticMethodCall("Concat", left, right);
         }
 
+        /// <summary>
+        /// Generates the subtract.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateSubtract(Expression left, Expression right)
         {
             return Expression.Subtract(left, right);
         }
 
+        /// <summary>
+        /// Generates the equal.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateEqual(Expression left, Expression right)
         {
             OptimizeForEqualityIfPossible(ref left, ref right);
@@ -98,6 +146,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return Expression.Equal(left, right);
         }
 
+        /// <summary>
+        /// Generates the not equal.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateNotEqual(Expression left, Expression right)
         {
             OptimizeForEqualityIfPossible(ref left, ref right);
@@ -107,6 +161,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return Expression.NotEqual(left, right);
         }
 
+        /// <summary>
+        /// Generates the greater than.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateGreaterThan(Expression left, Expression right)
         {
             if (left.Type == typeof(string))
@@ -126,6 +186,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return Expression.GreaterThan(left, right);
         }
 
+        /// <summary>
+        /// Generates the greater than equal.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateGreaterThanEqual(Expression left, Expression right)
         {
             if (left.Type == typeof(string))
@@ -144,6 +210,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return Expression.GreaterThanOrEqual(left, right);
         }
 
+        /// <summary>
+        /// Generates the less than.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateLessThan(Expression left, Expression right)
         {
             if (left.Type == typeof(string))
@@ -162,6 +234,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return Expression.LessThan(left, right);
         }
 
+        /// <summary>
+        /// Generates the less than equal.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         public Expression GenerateLessThanEqual(Expression left, Expression right)
         {
             if (left.Type == typeof(string))
@@ -180,6 +258,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return Expression.LessThanOrEqual(left, right);
         }
 
+        /// <summary>
+        /// Optimizes for equality if possible.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         public void OptimizeForEqualityIfPossible(ref Expression left, ref Expression right)
         {
             // The goal here is to provide the way to convert some types from the string form in a way that is compatible with Linq to Entities.
@@ -198,6 +281,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             }
         }
 
+        /// <summary>
+        /// Optimizes the string for equality if possible.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>Expression.</returns>
         public Expression OptimizeStringForEqualityIfPossible(string text, Type type)
         {
             if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
@@ -211,6 +300,13 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Gets the static method.
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>MethodInfo.</returns>
         private MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
         {
             var methodInfo = left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
@@ -222,11 +318,23 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return methodInfo;
         }
 
+        /// <summary>
+        /// Generates the static method call.
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>Expression.</returns>
         private Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
         {
             return Expression.Call(null, GetStaticMethod(methodName, left, right), new[] { left, right });
         }
 
+        /// <summary>
+        /// Wraps the constant expressions.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
         private void WrapConstantExpressions(ref Expression left, ref Expression right)
         {
             if (_parsingConfig.UseParameterizedNamesInDynamicQuery)
@@ -236,6 +344,13 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             }
         }
 
+        /// <summary>
+        /// Tries the generate and also not null expression.
+        /// </summary>
+        /// <param name="sourceExpression">The source expression.</param>
+        /// <param name="addSelf">if set to <c>true</c> [add self].</param>
+        /// <param name="generatedExpression">The generated expression.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public bool TryGenerateAndAlsoNotNullExpression(Expression sourceExpression, bool addSelf, out Expression generatedExpression)
         {
             var expressions = CollectExpressions(addSelf, sourceExpression);
@@ -262,6 +377,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return true;
         }
 
+        /// <summary>
+        /// Gets the member expression.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>Expression.</returns>
         private static Expression GetMemberExpression(Expression expression)
         {
             if (expression is MemberExpression memberExpression)
@@ -295,6 +415,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Collects the expressions.
+        /// </summary>
+        /// <param name="addSelf">if set to <c>true</c> [add self].</param>
+        /// <param name="sourceExpression">The source expression.</param>
+        /// <returns>List&lt;Expression&gt;.</returns>
         private static List<Expression> CollectExpressions(bool addSelf, Expression sourceExpression)
         {
             var expression = GetMemberExpression(sourceExpression);

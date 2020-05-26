@@ -12,15 +12,31 @@ using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
+    /// <summary>
+    /// Class SelectionViewModel.
+    /// Implements the <see name="ViewModelBlade{ObservableCollection{object}}" />
+    /// Implements the <see cref="IViewModelBlade" />
+    /// </summary>
+    /// <seealso name="ViewModelBlade{ObservableCollection{object}}" />
+    /// <seealso cref="IViewModelBlade" />
     public class SelectionViewModel : ViewModelBlade<ObservableCollection<object>>, IViewModelBlade
     {
+        /// <summary>
+        /// Gets the title.
+        /// </summary>
+        /// <value>The title.</value>
         public override string Title { get { return BaseCommonServices.LanguageService.GetString("Selection"); } }
 
+        /// <summary>
+        /// Gets or sets the raw items.
+        /// </summary>
+        /// <value>The raw items.</value>
         private IEnumerable<object> RawItems { get; set; }
 
         /// <summary>
         /// Gets or sets the SelectionMode property value.
         /// </summary>
+        /// <value>The selection mode.</value>
         public SelectionModes SelectionMode
         {
             get { return GetValue<SelectionModes>(); }
@@ -30,6 +46,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <summary>
         /// Gets or sets the Item property value.
         /// </summary>
+        /// <value>The items.</value>
         public ObservableCollection<object> Items
         {
             get { return GetValue<ObservableCollection<object>>(); }
@@ -39,6 +56,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <summary>
         /// Gets or sets the Query property value.
         /// </summary>
+        /// <value>The query.</value>
         public string Query
         {
             get { return GetValue<string>(); }
@@ -49,8 +67,21 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the search command.
+        /// </summary>
+        /// <value>The search command.</value>
         public RelayCommand Search_Command { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="commonServices">The common services.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="items">The items.</param>
+        /// <param name="selectedItems">The selected items.</param>
+        /// <param name="selectionMode">The selection mode.</param>
         public SelectionViewModel(
             IContext context,
             IBaseCommonServices commonServices,
@@ -81,6 +112,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             SelectedItem = new ObservableCollection<object>(selectedItems);
         }
 
+        /// <summary>
+        /// Queries the items.
+        /// </summary>
         private void QueryItems()
         {
             if (IsInitialized && RawItems != null)

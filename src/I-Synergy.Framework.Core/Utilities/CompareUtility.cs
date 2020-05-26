@@ -4,8 +4,17 @@ using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.Core.Utilities
 {
+    /// <summary>
+    /// Class CompareUtility.
+    /// </summary>
     public static class CompareUtility
     {
+        /// <summary>
+        /// Compares the object.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="destination">The destination.</param>
+        /// <returns>List&lt;System.String&gt;.</returns>
         public static List<string> CompareObject(object source, object destination)
         {
             var result = new List<string>();
@@ -31,6 +40,14 @@ namespace ISynergy.Framework.Core.Utilities
             return result;
         }
 
+        /// <summary>
+        /// Compares the specified operation.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="operation">The operation.</param>
+        /// <param name="value1">The value1.</param>
+        /// <param name="value2">The value2.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public static bool Compare<T>(string operation, T value1, T value2) where T : IComparable
         {
             return operation switch
@@ -45,6 +62,13 @@ namespace ISynergy.Framework.Core.Utilities
             };
         }
 
+        /// <summary>
+        /// Compares the specified operation.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <param name="value1">The value1.</param>
+        /// <param name="value2">The value2.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public static bool Compare(string operation, object value1, object value2)
         {
             return operation switch

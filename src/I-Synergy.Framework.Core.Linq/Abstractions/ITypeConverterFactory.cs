@@ -3,6 +3,9 @@ using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Linq.Abstractions
 {
+    /// <summary>
+    /// Interface ITypeConverterFactory
+    /// </summary>
     interface ITypeConverterFactory
     {
         /// <summary>

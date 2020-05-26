@@ -3,11 +3,17 @@ using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.Windows.Helpers
 {
+    /// <summary>
+    /// Class NavigationHelper.
+    /// </summary>
     public static class NavigationHelper
     {
         /// <summary>
         /// Looks for a child control within a parent by name
         /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="name">The name.</param>
+        /// <returns>DependencyObject.</returns>
         public static DependencyObject FindChild(DependencyObject parent, string name)
         {
             // confirm parent and name are valid.
@@ -32,6 +38,9 @@ namespace ISynergy.Framework.Windows.Helpers
         /// <summary>
         /// Looks for a child control within a parent by type
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parent">The parent.</param>
+        /// <returns>T.</returns>
         public static T FindChild<T>(DependencyObject parent) where T : DependencyObject
         {
             // confirm parent is valid.

@@ -6,8 +6,17 @@ using System.Linq;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {
+    /// <summary>
+    /// Class HtmlHelperExtensions.
+    /// </summary>
     public static class HtmlHelperExtensions
     {
+        /// <summary>
+        /// Gets the type of the file content.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>System.String.</returns>
+        /// <exception cref="ArgumentException">Unknown file type</exception>
         private static string GetFileContentType(string path)
         {
             if (path.EndsWith(".JPG", StringComparison.OrdinalIgnoreCase))
@@ -26,7 +35,16 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             throw new ArgumentException("Unknown file type");
         }
 
-        public static HtmlString InlineImageAsync(this IHtmlHelper html, string path, byte[] image, string extension, object? attributes = null)
+        /// <summary>
+        /// Inlines the image asynchronous.
+        /// </summary>
+        /// <param name="html">The HTML.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="image">The image.</param>
+        /// <param name="extension">The extension.</param>
+        /// <param name="attributes">The attributes.</param>
+        /// <returns>HtmlString.</returns>
+        public static HtmlString InlineImageAsync(this IHtmlHelper html, string path, byte[] image, string extension, object attributes = null)
         {
             if (image != null && !string.IsNullOrWhiteSpace(extension))
             {
@@ -38,13 +56,11 @@ namespace ISynergy.Framework.AspNetCore.Extensions
 
                 if(html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
                 {
-                    using (var stream = env.WebRootFileProvider.GetFileInfo(path).CreateReadStream())
-                    {
-                        var array = new byte[stream.Length];
-                        stream.Read(array, 0, array.Length);
+                    using var stream = env.WebRootFileProvider.GetFileInfo(path).CreateReadStream();
+                    var array = new byte[stream.Length];
+                    stream.Read(array, 0, array.Length);
 
-                        return ConvertArrayToHtmlString(array, contentType, attributes);
-                    }
+                    return ConvertArrayToHtmlString(array, contentType, attributes);
                 }
                 else
                 {
@@ -53,7 +69,14 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             }
         }
 
-        private static HtmlString ConvertArrayToHtmlString(byte[] array, string contentType, object? attributes = null)
+        /// <summary>
+        /// Converts the array to HTML string.
+        /// </summary>
+        /// <param name="array">The array.</param>
+        /// <param name="contentType">Type of the content.</param>
+        /// <param name="attributes">The attributes.</param>
+        /// <returns>HtmlString.</returns>
+        private static HtmlString ConvertArrayToHtmlString(byte[] array, string contentType, object attributes = null)
         {
             var base64 = Convert.ToBase64String(array);
 

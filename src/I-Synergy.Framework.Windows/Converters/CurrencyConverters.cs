@@ -7,8 +7,21 @@ using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Framework.Windows.Converters
 {
+    /// <summary>
+    /// Class CurrencyConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class CurrencyConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var currencySymbol = "$";
@@ -28,14 +41,36 @@ namespace ISynergy.Framework.Windows.Converters
             return string.Format(info, "{0:C2}", 0);
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         }
     }
 
+    /// <summary>
+    /// Class NegativeCurrencyConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class NegativeCurrencyConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var currencySymbol = "$";
@@ -55,6 +90,15 @@ namespace ISynergy.Framework.Windows.Converters
             return string.Format(info, "{0:C2}", 0);
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();

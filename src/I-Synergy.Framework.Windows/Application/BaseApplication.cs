@@ -38,12 +38,32 @@ using Window = ISynergy.Framework.Windows.Controls.Window;
 
 namespace ISynergy.Framework.Windows
 {
+    /// <summary>
+    /// Class BaseApplication.
+    /// Implements the <see cref="Windows.UI.Xaml.Application" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Application" />
     public abstract class BaseApplication : Application
     {
+        /// <summary>
+        /// Gets the context.
+        /// </summary>
+        /// <value>The context.</value>
         public IContext Context { get; private set; }
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <value>The logger.</value>
         public ILogger Logger { get; private set; }
+        /// <summary>
+        /// Gets the theme selector.
+        /// </summary>
+        /// <value>The theme selector.</value>
         public IThemeSelectorService ThemeSelector { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseApplication"/> class.
+        /// </summary>
         protected BaseApplication()
         {
             ConfigureServices();
@@ -86,17 +106,32 @@ namespace ISynergy.Framework.Windows
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
 
+        /// <summary>
+        /// Handles the UnobservedTaskException event of the TaskScheduler control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs"/> instance containing the event data.</param>
         private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             await HandleException(e.Exception, e.Exception.Message);
         }
 
+        /// <summary>
+        /// Handles the UnhandledException event of the Current control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
         private async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
             await HandleException(e.Exception, e.Message);
         }
 
+        /// <summary>
+        /// Handles the UnhandledException event of the CurrentDomain control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs"/> instance containing the event data.</param>
         private async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if(e.ExceptionObject is Exception exception)
@@ -105,6 +140,10 @@ namespace ISynergy.Framework.Windows
             }
         }
 
+        /// <summary>
+        /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
+        /// </summary>
+        /// <param name="args">Event data for the event.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
@@ -121,6 +160,9 @@ namespace ISynergy.Framework.Windows
             LaunchApplication();
         }
 
+        /// <summary>
+        /// Launches the application.
+        /// </summary>
         private void LaunchApplication()
         {
             ThemeSelector.SetRequestedTheme();
@@ -168,11 +210,17 @@ namespace ISynergy.Framework.Windows
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
+        /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
         private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:Navigated" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
         private static void OnNavigated(object sender, NavigationEventArgs e)
         {
             // Each time a navigation event occurs, update the Back button's visibility
@@ -182,6 +230,11 @@ namespace ISynergy.Framework.Windows
                 AppViewBackButtonVisibility.Collapsed;
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:BackRequested" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="BackRequestedEventArgs"/> instance containing the event data.</param>
         private static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
             var rootFrame = global::Windows.UI.Xaml.Window.Current.Content as Frame;
@@ -198,6 +251,12 @@ namespace ISynergy.Framework.Windows
             }
         }
 
+        /// <summary>
+        /// Gets the name of the descendant from.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="name">The name.</param>
+        /// <returns>FrameworkElement.</returns>
         public static FrameworkElement GetDescendantFromName(DependencyObject parent, string name)
         {
             var count = VisualTreeHelper.GetChildrenCount(parent);
@@ -242,8 +301,15 @@ namespace ISynergy.Framework.Windows
             deferral.Complete();
         }
 
+        /// <summary>
+        /// The factory
+        /// </summary>
         private ILoggerFactory _factory = null;
 
+        /// <summary>
+        /// Gets or sets the logger factory.
+        /// </summary>
+        /// <value>The logger factory.</value>
         private ILoggerFactory LoggerFactory
         {
             get
@@ -259,8 +325,15 @@ namespace ISynergy.Framework.Windows
             set { _factory = value; }
         }
 
+        /// <summary>
+        /// Configures the logger.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
         protected abstract void ConfigureLogger(ILoggerFactory factory);
-       
+
+        /// <summary>
+        /// Configures the services.
+        /// </summary>
         protected virtual void ConfigureServices()
         {
             ServiceLocator.Default.Register<ILoggerFactory>(() => new LoggerFactory());
@@ -296,10 +369,26 @@ namespace ISynergy.Framework.Windows
             });
         }
 
+        /// <summary>
+        /// Gets the view model types.
+        /// </summary>
+        /// <value>The view model types.</value>
         public List<Type> ViewModelTypes { get; private set; }
+        /// <summary>
+        /// Gets the view types.
+        /// </summary>
+        /// <value>The view types.</value>
         public List<Type> ViewTypes { get; private set; }
+        /// <summary>
+        /// Gets the window types.
+        /// </summary>
+        /// <value>The window types.</value>
         public List<Type> WindowTypes { get; private set; }
 
+        /// <summary>
+        /// Registers the assemblies.
+        /// </summary>
+        /// <param name="assemblies">The assemblies.</param>
         protected void RegisterAssemblies(List<Assembly> assemblies)
         {
             assemblies.Add(Assembly.Load("I-Synergy.Framework.Mvvm"));
@@ -406,6 +495,10 @@ namespace ISynergy.Framework.Windows
             SetContext();
         }
 
+        /// <summary>
+        /// Registers the type.
+        /// </summary>
+        /// <param name="implementationType">Type of the implementation.</param>
         private void RegisterType(Type implementationType)
         {
             // Get the Register<T1>() method
@@ -423,6 +516,11 @@ namespace ISynergy.Framework.Windows
             methodInfo.Invoke(ServiceLocator.Default, null);
         }
 
+        /// <summary>
+        /// Registers the type.
+        /// </summary>
+        /// <param name="interfaceType">Type of the interface.</param>
+        /// <param name="implementationType">Type of the implementation.</param>
         private void RegisterType(Type interfaceType, Type implementationType)
         {
             // Get the Register<T1,T2>() method
@@ -440,6 +538,9 @@ namespace ISynergy.Framework.Windows
             methodInfo.Invoke(ServiceLocator.Default, null);
         }
 
+        /// <summary>
+        /// Sets the context.
+        /// </summary>
         public virtual void SetContext()
         {
             Context = ServiceLocator.Default.GetInstance<IContext>();
@@ -455,6 +556,11 @@ namespace ISynergy.Framework.Windows
             localizationFunctions.SetLocalizationLanguage(ServiceLocator.Default.GetInstance<IApplicationSettingsService>().Culture);
         }
 
+        /// <summary>
+        /// Handles the exception.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        /// <param name="message">The message.</param>
         public virtual async Task HandleException(Exception ex, string message)
         {
             try

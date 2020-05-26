@@ -11,6 +11,9 @@ namespace ISynergy.Framework.Geography
     /// </summary>
     public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPosition>
     {
+        /// <summary>
+        /// The precision
+        /// </summary>
         private const double Precision = 0.000000000001;
 
         /// <summary>
@@ -28,23 +31,31 @@ namespace ISynergy.Framework.Geography
         /// Creates a new instance of GlobalPosition for a position on the surface of
         /// the reference ellipsoid.
         /// </summary>
-        /// <param name="coordinates"></param>
+        /// <param name="coordinates">The coordinates.</param>
         public GlobalPosition(GlobalCoordinates coordinates)
             : this(coordinates, 0.0)
         {
         }
 
-        /// <summary>Get/set global coordinates.</summary>
+        /// <summary>
+        /// Get/set global coordinates.
+        /// </summary>
         public GlobalCoordinates Coordinates;
 
-        /// <summary>Get/set latitude.</summary>
+        /// <summary>
+        /// Get/set latitude.
+        /// </summary>
+        /// <value>The latitude.</value>
         public Angle Latitude
         {
             get { return Coordinates.Latitude; }
             set { Coordinates.Latitude = value; }
         }
 
-        /// <summary>Get/set longitude.</summary>
+        /// <summary>
+        /// Get/set longitude.
+        /// </summary>
+        /// <value>The longitude.</value>
         public Angle Longitude
         {
             get { return Coordinates.Longitude; }
@@ -54,6 +65,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Get/set elevation, in meters, above the surface of the reference ellipsoid.
         /// </summary>
+        /// <value>The elevation.</value>
         public double Elevation { get; set; }
 
         /// <summary>
@@ -81,7 +93,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Calculate a hash code.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             var hash = Coordinates.GetHashCode();
@@ -107,7 +119,7 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         /// <param name="obj">Another object to compare to</param>
         /// <returns>true if the obj is a GlobalPosition and is the same.</returns>
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if(obj is GlobalPosition position)
             {

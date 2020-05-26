@@ -8,8 +8,19 @@ using ISynergy.Framework.Windows.Functions;
 
 namespace ISynergy.Framework.Windows.ViewModels
 {
+    /// <summary>
+    /// Class LanguageViewModel.
+    /// Implements the <see cref="ViewModelDialog{string}" />
+    /// Implements the <see cref="ILanguageViewModel" />
+    /// </summary>
+    /// <seealso cref="ViewModelDialog{string}" />
+    /// <seealso cref="ILanguageViewModel" />
     public class LanguageViewModel : ViewModelDialog<string>, ILanguageViewModel
     {
+        /// <summary>
+        /// Gets the title.
+        /// </summary>
+        /// <value>The title.</value>
         public override string Title
         {
             get
@@ -18,8 +29,18 @@ namespace ISynergy.Framework.Windows.ViewModels
             }
         }
 
+        /// <summary>
+        /// The localization functions
+        /// </summary>
         private readonly LocalizationFunctions _localizationFunctions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="commonServices">The common services.</param>
+        /// <param name="localizationFunctions">The localization functions.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         public LanguageViewModel(
             IContext context,
             IBaseCommonServices commonServices,
@@ -32,6 +53,11 @@ namespace ISynergy.Framework.Windows.ViewModels
             SelectedItem = BaseCommonServices.ApplicationSettingsService.Culture;
         }
 
+        /// <summary>
+        /// Submits the asynchronous.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>Task.</returns>
         public override Task SubmitAsync(string e)
         {
             BaseCommonServices.ApplicationSettingsService.Culture = e;

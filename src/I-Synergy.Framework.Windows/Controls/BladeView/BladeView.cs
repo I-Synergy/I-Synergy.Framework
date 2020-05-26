@@ -12,17 +12,23 @@ using Windows.UI.Xaml.Controls;
 namespace ISynergy.Framework.Windows.Controls
 {
     /// <summary>
-    /// A container that hosts <see cref="BladeItem"/> controls in a horizontal scrolling list
+    /// A container that hosts <see cref="BladeItem" /> controls in a horizontal scrolling list
     /// Based on the Azure portal UI
     /// </summary>
     public partial class BladeView : ItemsControl
     {
+        /// <summary>
+        /// The scroll viewer
+        /// </summary>
         private ScrollViewer _scrollViewer;
 
+        /// <summary>
+        /// The cached blade item sizes
+        /// </summary>
         private readonly Dictionary<BladeItem, Size> _cachedBladeItemSizes = new Dictionary<BladeItem, Size>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BladeView"/> class.
+        /// Initializes a new instance of the <see cref="BladeView" /> class.
         /// </summary>
         public BladeView()
         {
@@ -77,6 +83,9 @@ namespace ISynergy.Framework.Windows.Controls
             base.ClearContainerForItemOverride(element, item);
         }
 
+        /// <summary>
+        /// Cycles the blades.
+        /// </summary>
         private void CycleBlades()
         {
             ActiveBlades = new ObservableCollection<BladeItem>();
@@ -106,6 +115,11 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Gets the blade item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>BladeItem.</returns>
         private BladeItem GetBladeItem(object item)
         {
             if (!(item is BladeItem blade))
@@ -116,6 +130,11 @@ namespace ISynergy.Framework.Windows.Controls
             return blade;
         }
 
+        /// <summary>
+        /// Blades the on visibility changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="visibility">The visibility.</param>
         private async void BladeOnVisibilityChanged(object sender, Visibility visibility)
         {
             var blade = sender as BladeItem;
@@ -153,11 +172,18 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Gets the scroll viewer.
+        /// </summary>
+        /// <returns>ScrollViewer.</returns>
         private ScrollViewer GetScrollViewer()
         {
-            return _scrollViewer ?? (_scrollViewer = this.FindDescendant<ScrollViewer>());
+            return _scrollViewer ??= this.FindDescendant<ScrollViewer>();
         }
 
+        /// <summary>
+        /// Adjusts the size of the blade item.
+        /// </summary>
         private void AdjustBladeItemSize()
         {
             // Adjust blade items to be full screen
@@ -172,6 +198,11 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Itemses the vector changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="IVectorChangedEventArgs"/> instance containing the event data.</param>
         private void ItemsVectorChanged(IObservableVector<object> sender, IVectorChangedEventArgs e)
         {
             if (BladeMode == BladeMode.Fullscreen)

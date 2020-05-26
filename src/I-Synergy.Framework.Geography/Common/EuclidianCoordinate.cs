@@ -9,16 +9,21 @@ namespace ISynergy.Framework.Geography
     /// </summary>
     public class EuclidianCoordinate : IEquatable<EuclidianCoordinate>
     {
+        /// <summary>
+        /// The default precision
+        /// </summary>
         private const double DefaultPrecision = 1e-12;
 
         /// <summary>
         /// The X coordinate
         /// </summary>
+        /// <value>The x.</value>
         public double X { get; set; }
 
         /// <summary>
         /// The Y coordinate
         /// </summary>
+        /// <value>The y.</value>
         public double Y { get; set; }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         /// <param name="projection">The projection owning these coordinates</param>
         /// <param name="xy">List of xy coordinates</param>
-        /// <exception cref="IndexOutOfRangeException">Raised if the array is not two-dimensional</exception>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         public EuclidianCoordinate(MercatorProjection projection, IReadOnlyList<double> xy)
         {
             if (xy.Count != 2)
@@ -61,6 +66,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The Mercator projection that owns these coordinates
         /// </summary>
+        /// <value>The projection.</value>
         public MercatorProjection Projection { get; protected set; }
 
         /// <summary>
@@ -78,7 +84,7 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         /// <param name="other">The other point</param>
         /// <returns>The distance</returns>
-        /// <exception cref="ArgumentException">Raised if the two points don't belong to the same projection</exception>
+        /// <exception cref="ArgumentException"></exception>
         public virtual double DistanceTo(EuclidianCoordinate other)
         {
             if (!IsSameProjection(other))
@@ -133,7 +139,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The Hashcode of the coordinates
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             double[] xy = { X, Y, Projection.ReferenceGlobe.SemiMajorAxis, Projection.ReferenceGlobe.Flattening };

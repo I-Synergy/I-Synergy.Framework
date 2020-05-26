@@ -15,14 +15,22 @@ using ISynergy.Framework.Core.Validation;
 namespace ISynergy.Framework.Core.Linq.Extensions
 {
     /// <summary>
-    /// Provides a set of static (Shared in Visual Basic) methods for querying data structures that implement <see cref="IQueryable"/>.
+    /// Provides a set of static (Shared in Visual Basic) methods for querying data structures that implement <see cref="IQueryable" />.
     /// It allows dynamic string based querying. Very handy when, at compile time, you don't know the type of queries that will be generated,
     /// or when downstream components only return column names to sort and filter by.
     /// </summary>
     public static class DynamicQueryExtensions
     {
+        /// <summary>
+        /// The trace source
+        /// </summary>
         private static readonly TraceSource TraceSource = new TraceSource(typeof(DynamicQueryExtensions).Name);
 
+        /// <summary>
+        /// Optimizes the expression.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>Expression.</returns>
         private static Expression OptimizeExpression(Expression expression)
         {
             if (ExtensibilityPoint.QueryOptimizer != null)
@@ -93,44 +101,35 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion Aggregate
 
         #region All
+        /// <summary>
+        /// All predicate
+        /// </summary>
         private static readonly MethodInfo _AllPredicate = GetMethod(nameof(Queryable.All), 1);
 
         /// <summary>
-        ///     Determines whether all the elements of a sequence satisfy a condition.
+        /// Determines whether all the elements of a sequence satisfy a condition.
         /// </summary>
-        /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that All asynchronous operations have completed before calling another method on this context.
-        /// </remarks>
-        /// <param name="source">
-        ///     An <see cref="IQueryable" /> to calculate the All of.
-        /// </param>
+        /// <param name="source">An <see cref="IQueryable" /> to calculate the All of.</param>
         /// <param name="predicate">A projection function to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>
-        ///     true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.
-        /// </returns>
+        /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
+        /// <remarks>Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that All asynchronous operations have completed before calling another method on this context.</remarks>
         public static bool All(this IQueryable source, string predicate, params object[] args)
         {
             return All(source, ParsingConfig.Default, predicate, args);
         }
 
         /// <summary>
-        ///     Determines whether all the elements of a sequence satisfy a condition.
+        /// Determines whether all the elements of a sequence satisfy a condition.
         /// </summary>
-        /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that All asynchronous operations have completed before calling another method on this context.
-        /// </remarks>
-        /// <param name="source">
-        ///     An <see cref="IQueryable" /> to calculate the All of.
-        /// </param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">An <see cref="IQueryable" /> to calculate the All of.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A projection function to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>
-        ///     true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.
-        /// </returns>
+        /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
+        /// <remarks>Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that All asynchronous operations have completed before calling another method on this context.</remarks>
         public static bool All(this IQueryable source, ParsingConfig config, string predicate, params object[] args)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -145,19 +144,22 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion AllAsync
 
         #region Any
+        /// <summary>
+        /// Any
+        /// </summary>
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
         /// <summary>
         /// Determines whether a sequence contains any elements.
         /// </summary>
         /// <param name="source">A sequence to check for being empty.</param>
+        /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
         /// var result = queryable.Any();
         /// </code>
         /// </example>
-        /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
         public static bool Any(this IQueryable source)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -165,24 +167,27 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute<bool>(_any, source);
         }
 
+        /// <summary>
+        /// Any predicate
+        /// </summary>
         private static readonly MethodInfo _anyPredicate = GetMethod(nameof(Queryable.Any), 1);
 
         /// <summary>
         /// Determines whether a sequence contains any elements.
         /// </summary>
         /// <param name="source">A sequence to check for being empty.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
-        /// var result1 = queryable.Any("Income > 50");
-        /// var result2 = queryable.Any("Income > @0", 50);
+        /// var result1 = queryable.Any("Income &gt; 50");
+        /// var result2 = queryable.Any("Income &gt; @0", 50);
         /// var result3 = queryable.Select("Roles.Any()");
         /// </code>
         /// </example>
-        /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
         public static bool Any(this IQueryable source, ParsingConfig config, string predicate, params object[] args)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -195,7 +200,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute<bool>(_anyPredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="Any(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Anies the specified predicate.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        /// <inheritdoc cref="Any(IQueryable, ParsingConfig, string, object[])" />
         public static bool Any(this IQueryable source, string predicate, params object[] args)
         {
             return Any(source, ParsingConfig.Default, predicate, args);
@@ -221,14 +233,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Computes the average of a sequence of numeric values.
         /// </summary>
         /// <param name="source">A sequence of numeric values to calculate the average of.</param>
+        /// <returns>The average of the values in the sequence.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
         /// var result1 = queryable.Average();
         /// var result2 = queryable.Select("Roles.Average()");
         /// </code>
         /// </example>
-        /// <returns>The average of the values in the sequence.</returns>
         public static double Average(this IQueryable source)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -241,16 +253,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Computes the average of a sequence of numeric values.
         /// </summary>
         /// <param name="source">A sequence of numeric values to calculate the average of.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>The average of the values in the sequence.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
         /// var result = queryable.Average("Income");
         /// </code>
         /// </example>
-        /// <returns>The average of the values in the sequence.</returns>
         public static double Average(this IQueryable source, ParsingConfig config, string predicate, params object[] args)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -263,7 +275,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Average(source, lambda);
         }
 
-        /// <inheritdoc cref="Average(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Averages the specified predicate.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>System.Double.</returns>
+        /// <inheritdoc cref="Average(IQueryable, ParsingConfig, string, object[])" />
         public static double Average(this IQueryable source, string predicate, params object[] args)
         {
             return Average(source, ParsingConfig.Default, predicate, args);
@@ -295,10 +314,10 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         public static IEnumerable<object> AsEnumerable(this IQueryable source)
 #else
         /// <summary>
-        /// Returns the input typed as <see cref="IEnumerable{T}"/> of dynamic.
+        /// Returns the input typed as <see cref="IEnumerable{T}" /> of dynamic.
         /// </summary>
-        /// <param name="source">The sequence to type as <see cref="IEnumerable{T}"/> of dynamic.</param>
-        /// <returns>The input typed as <see cref="IEnumerable{T}"/> of dynamic.</returns>
+        /// <param name="source">The sequence to type as <see cref="IEnumerable{T}" /> of dynamic.</param>
+        /// <returns>The input typed as <see cref="IEnumerable{T}" /> of dynamic.</returns>
         public static IEnumerable<dynamic> AsEnumerable(this IQueryable source)
 #endif
         {
@@ -310,14 +329,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion AsEnumerable
 
         #region Cast
+        /// <summary>
+        /// The cast
+        /// </summary>
         private static readonly MethodInfo _cast = GetGenericMethod(nameof(Queryable.Cast));
 
         /// <summary>
-        /// Converts the elements of an <see cref="IQueryable"/> to the specified type.
+        /// Converts the elements of an <see cref="IQueryable" /> to the specified type.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be converted.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be converted.</param>
         /// <param name="type">The type to convert the elements of source to.</param>
-        /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+        /// <returns>An <see cref="IQueryable" /> that contains each element of the source sequence converted to the specified type.</returns>
         public static IQueryable Cast(this IQueryable source, Type type)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -329,12 +351,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         }
 
         /// <summary>
-        /// Converts the elements of an <see cref="IQueryable"/> to the specified type.
+        /// Converts the elements of an <see cref="IQueryable" /> to the specified type.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be converted.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be converted.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="typeName">The type to convert the elements of source to.</param>
-        /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+        /// <returns>An <see cref="IQueryable" /> that contains each element of the source sequence converted to the specified type.</returns>
         public static IQueryable Cast(this IQueryable source, ParsingConfig config, string typeName)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -348,11 +370,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         }
 
         /// <summary>
-        /// Converts the elements of an <see cref="IQueryable"/> to the specified type.
+        /// Converts the elements of an <see cref="IQueryable" /> to the specified type.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be converted.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be converted.</param>
         /// <param name="typeName">The type to convert the elements of source to.</param>
-        /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+        /// <returns>An <see cref="IQueryable" /> that contains each element of the source sequence converted to the specified type.</returns>
         public static IQueryable Cast(this IQueryable source, string typeName)
         {
             return Cast(source, ParsingConfig.Default, typeName);
@@ -360,19 +382,22 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion Cast
 
         #region Count
+        /// <summary>
+        /// The count
+        /// </summary>
         private static readonly MethodInfo _count = GetMethod(nameof(Queryable.Count));
 
         /// <summary>
         /// Returns the number of elements in a sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be counted.</param>
+        /// <returns>The number of elements in the input sequence.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
         /// var result = queryable.Count();
         /// </code>
         /// </example>
-        /// <returns>The number of elements in the input sequence.</returns>
         public static int Count(this IQueryable source)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -380,24 +405,27 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute<int>(_count, source);
         }
 
+        /// <summary>
+        /// The count predicate
+        /// </summary>
         private static readonly MethodInfo _countPredicate = GetMethod(nameof(Queryable.Count), 1);
 
         /// <summary>
         /// Returns the number of elements in a sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be counted.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
-        /// var result1 = queryable.Count("Income > 50");
-        /// var result2 = queryable.Count("Income > @0", 50);
+        /// var result1 = queryable.Count("Income &gt; 50");
+        /// var result2 = queryable.Count("Income &gt; @0", 50);
         /// var result3 = queryable.Select("Roles.Count()");
         /// </code>
         /// </example>
-        /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         public static int Count(this IQueryable source, ParsingConfig config, string predicate, params object[] args)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -410,7 +438,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute<int>(_countPredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="Count(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Counts the specified predicate.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>System.Int32.</returns>
+        /// <inheritdoc cref="Count(IQueryable, ParsingConfig, string, object[])" />
         public static int Count(this IQueryable source, string predicate, params object[] args)
         {
             return Count(source, ParsingConfig.Default, predicate, args);
@@ -419,7 +454,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Returns the number of elements in a sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be counted.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         public static int Count(this IQueryable source, LambdaExpression lambda)
@@ -432,19 +467,25 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion Count
 
         #region DefaultIfEmpty
+        /// <summary>
+        /// The default if empty
+        /// </summary>
         private static readonly MethodInfo _defaultIfEmpty = GetMethod(nameof(Queryable.DefaultIfEmpty));
+        /// <summary>
+        /// The default if empty with parameter
+        /// </summary>
         private static readonly MethodInfo _defaultIfEmptyWithParam = GetMethod(nameof(Queryable.DefaultIfEmpty), 1);
 
         /// <summary>
         /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return a default value for if empty.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return a default value for if empty.</param>
+        /// <returns>An <see cref="IQueryable" /> that contains default if source is empty; otherwise, source.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.DefaultIfEmpty();
         /// </code>
         /// </example>
-        /// <returns>An <see cref="IQueryable"/> that contains default if source is empty; otherwise, source.</returns>
         public static IQueryable DefaultIfEmpty(this IQueryable source)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -455,14 +496,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return a default value for if empty.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return a default value for if empty.</param>
         /// <param name="defaultValue">The value to return if the sequence is empty.</param>
+        /// <returns>An <see cref="IQueryable" /> that contains defaultValue if source is empty; otherwise, source.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.DefaultIfEmpty(new Employee());
         /// </code>
         /// </example>
-        /// <returns>An <see cref="IQueryable"/> that contains defaultValue if source is empty; otherwise, source.</returns>
         public static IQueryable DefaultIfEmpty(this IQueryable source, object defaultValue)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -472,20 +513,23 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion
 
         #region Distinct
+        /// <summary>
+        /// The distinct
+        /// </summary>
         private static readonly MethodInfo _distinct = GetMethod(nameof(Queryable.Distinct));
 
         /// <summary>
         /// Returns distinct elements from a sequence by using the default equality comparer to compare values.
         /// </summary>
         /// <param name="source">The sequence to remove duplicate elements from.</param>
+        /// <returns>An <see cref="IQueryable" /> that contains distinct elements from the source sequence.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
         /// var result1 = queryable.Distinct();
         /// var result2 = queryable.Select("Roles.Distinct()");
         /// </code>
         /// </example>
-        /// <returns>An <see cref="IQueryable"/> that contains distinct elements from the source sequence.</returns>
         public static IQueryable Distinct(this IQueryable source)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -495,12 +539,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion Distinct
 
         #region First
+        /// <summary>
+        /// The first
+        /// </summary>
         private static readonly MethodInfo _first = GetMethod(nameof(Queryable.First));
 
         /// <summary>
         /// Returns the first element of a sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the first element of.</param>
         /// <returns>The first element in source.</returns>
 #if NET35
         public static object First(this IQueryable source)
@@ -513,13 +560,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_first, source);
         }
 
+        /// <summary>
+        /// The first predicate
+        /// </summary>
         private static readonly MethodInfo _firstPredicate = GetMethod(nameof(Queryable.First), 1);
 
         /// <summary>
         /// Returns the first element of a sequence that satisfies a specified condition.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the first element of.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
@@ -539,7 +589,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_firstPredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="First(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Firsts the specified predicate.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>dynamic.</returns>
+        /// <inheritdoc cref="First(IQueryable, ParsingConfig, string, object[])" />
 #if NET35
         public static object First(this IQueryable source, string predicate, params object[] args)
 #else
@@ -552,7 +609,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Returns the first element of a sequence that satisfies a specified condition.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the first element of.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
@@ -567,12 +624,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion First
 
         #region FirstOrDefault
+        /// <summary>
+        /// The first or default
+        /// </summary>
         private static readonly MethodInfo _firstOrDefault = GetMethod(nameof(Queryable.FirstOrDefault));
 
         /// <summary>
         /// Returns the first element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the first element of.</param>
         /// <returns>default if source is empty; otherwise, the first element in source.</returns>
         public static dynamic FirstOrDefault(this IQueryable source)
         {
@@ -584,8 +644,8 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the first element of.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
@@ -601,7 +661,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_firstOrDefaultPredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="FirstOrDefault(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Firsts the or default.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>dynamic.</returns>
+        /// <inheritdoc cref="FirstOrDefault(IQueryable, ParsingConfig, string, object[])" />
         public static dynamic FirstOrDefault(this IQueryable source, string predicate, params object[] args)
         {
             return FirstOrDefault(source, ParsingConfig.Default, predicate, args);
@@ -610,7 +677,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the first element of.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
         public static dynamic FirstOrDefault(this IQueryable source, LambdaExpression lambda)
@@ -619,22 +686,25 @@ namespace ISynergy.Framework.Core.Linq.Extensions
 
             return Execute(_firstOrDefaultPredicate, source, lambda);
         }
+        /// <summary>
+        /// The first or default predicate
+        /// </summary>
         private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1);
         #endregion FirstOrDefault
 
         #region GroupBy
         /// <summary>
-        /// Groups the elements of a sequence according to a specified key string function 
+        /// Groups the elements of a sequence according to a specified key string function
         /// and creates a result value from each group and its key.
         /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">A <see cref="IQueryable" /> whose elements to group.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="keySelector">A string expression to specify the key for each element.</param>
         /// <param name="resultSelector">A string expression to specify a result value from each group.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
+        /// <returns>A <see cref="IQueryable" /> where each element represents a projection over a group and its key.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey", "StringProperty");
         /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
         /// </code>
@@ -658,23 +728,31 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string, object[])"/>
+        /// <summary>
+        /// Groups the by.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="keySelector">The key selector.</param>
+        /// <param name="resultSelector">The result selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string, object[])" />
         public static IQueryable GroupBy(this IQueryable source, string keySelector, string resultSelector, object[] args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, args);
         }
 
         /// <summary>
-        /// Groups the elements of a sequence according to a specified key string function 
+        /// Groups the elements of a sequence according to a specified key string function
         /// and creates a result value from each group and its key.
         /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">A <see cref="IQueryable" /> whose elements to group.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="keySelector">A string expression to specify the key for each element.</param>
         /// <param name="resultSelector">A string expression to specify a result value from each group.</param>
-        /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
+        /// <returns>A <see cref="IQueryable" /> where each element represents a projection over a group and its key.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey", "StringProperty");
         /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
         /// </code>
@@ -684,23 +762,30 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return GroupBy(source, config, keySelector, resultSelector, null);
         }
 
-        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string)"/>
+        /// <summary>
+        /// Groups the by.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="keySelector">The key selector.</param>
+        /// <param name="resultSelector">The result selector.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string)" />
         public static IQueryable GroupBy(this IQueryable source, string keySelector, string resultSelector)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector);
         }
 
         /// <summary>
-        /// Groups the elements of a sequence according to a specified key string function 
+        /// Groups the elements of a sequence according to a specified key string function
         /// and creates a result value from each group and its key.
         /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">A <see cref="IQueryable" /> whose elements to group.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="keySelector">A string expression to specify the key for each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
+        /// <returns>A <see cref="IQueryable" /> where each element represents a projection over a group and its key.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey");
         /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
         /// </code>
@@ -721,7 +806,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Groups the by.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="keySelector">The key selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, object[])" />
         public static IQueryable GroupBy(this IQueryable source, string keySelector, params object[] args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, args);
@@ -730,14 +822,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
 
         #region GroupByMany
         /// <summary>
-        /// Groups the elements of a sequence according to multiple specified key string functions 
+        /// Groups the elements of a sequence according to multiple specified key string functions
         /// and creates a result value from each group (and subgroups) and its key.
         /// </summary>
-        /// <typeparam name="TElement"></typeparam>
-        /// <param name="source">A <see cref="IEnumerable{T}"/> whose elements to group.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
-        /// <param name="keySelectors"><see cref="string"/> expressions to specify the keys for each element.</param>
-        /// <returns>A <see cref="IEnumerable{T}"/> of type <see cref="GroupResult"/> where each element represents a projection over a group, its key, and its subgroups.</returns>
+        /// <typeparam name="TElement">The type of the t element.</typeparam>
+        /// <param name="source">A <see cref="IEnumerable{T}" /> whose elements to group.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
+        /// <param name="keySelectors"><see cref="string" /> expressions to specify the keys for each element.</param>
+        /// <returns>A <see cref="IEnumerable{T}" /> of type <see cref="GroupResult" /> where each element represents a projection over a group, its key, and its subgroups.</returns>
         public static IEnumerable<GroupResult> GroupByMany<TElement>(this IEnumerable<TElement> source, ParsingConfig config, params string[] keySelectors)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -756,20 +848,27 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return GroupByManyInternal(source, selectors.ToArray(), 0);
         }
 
-        /// <inheritdoc cref="GroupByMany{TElement}(IEnumerable{TElement}, ParsingConfig, string[])"/>
+        /// <summary>
+        /// Groups the by many.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the t element.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="keySelectors">The key selectors.</param>
+        /// <returns>IEnumerable&lt;GroupResult&gt;.</returns>
+        /// <inheritdoc cref="GroupByMany{TElement}(IEnumerable{TElement}, ParsingConfig, string[])" />
         public static IEnumerable<GroupResult> GroupByMany<TElement>(this IEnumerable<TElement> source, params string[] keySelectors)
         {
             return GroupByMany(source, ParsingConfig.Default, keySelectors);
         }
 
         /// <summary>
-        /// Groups the elements of a sequence according to multiple specified key functions 
+        /// Groups the elements of a sequence according to multiple specified key functions
         /// and creates a result value from each group (and subgroups) and its key.
         /// </summary>
-        /// <typeparam name="TElement"></typeparam>
-        /// <param name="source">A <see cref="IEnumerable{T}"/> whose elements to group.</param>
+        /// <typeparam name="TElement">The type of the t element.</typeparam>
+        /// <param name="source">A <see cref="IEnumerable{T}" /> whose elements to group.</param>
         /// <param name="keySelectors">Lambda expressions to specify the keys for each element.</param>
-        /// <returns>A <see cref="IEnumerable{T}"/> of type <see cref="GroupResult"/> where each element represents a projection over a group, its key, and its subgroups.</returns>
+        /// <returns>A <see cref="IEnumerable{T}" /> of type <see cref="GroupResult" /> where each element represents a projection over a group, its key, and its subgroups.</returns>
         public static IEnumerable<GroupResult> GroupByMany<TElement>(this IEnumerable<TElement> source, params Func<TElement, object>[] keySelectors)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -778,6 +877,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return GroupByManyInternal(source, keySelectors, 0);
         }
 
+        /// <summary>
+        /// Groups the by many internal.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the t element.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="keySelectors">The key selectors.</param>
+        /// <param name="currentSelector">The current selector.</param>
+        /// <returns>IEnumerable&lt;GroupResult&gt;.</returns>
         private static IEnumerable<GroupResult> GroupByManyInternal<TElement>(IEnumerable<TElement> source, Func<TElement, object>[] keySelectors, int currentSelector)
         {
             if (currentSelector >= keySelectors.Length)
@@ -805,13 +912,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Correlates the elements of two sequences based on equality of keys and groups the results. The default equality comparer is used to compare keys.
         /// </summary>
         /// <param name="outer">The first sequence to join.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="inner">The sequence to join to the first sequence.</param>
         /// <param name="outerKeySelector">A dynamic function to extract the join key from each element of the first sequence.</param>
         /// <param name="innerKeySelector">A dynamic function to extract the join key from each element of the second sequence.</param>
         /// <param name="resultSelector">A dynamic function to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>An <see cref="IQueryable"/> obtained by performing a grouped join on two sequences.</returns>
+        /// <returns>An <see cref="IQueryable" /> obtained by performing a grouped join on two sequences.</returns>
         public static IQueryable GroupJoin(this IQueryable outer, ParsingConfig config, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object[] args)
         {
             Argument.IsNotNull(nameof(outer), outer); 
@@ -848,7 +955,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions
                 Expression.Quote(resultSelectorLambda)));
         }
 
-        /// <inheritdoc cref="GroupJoin(IQueryable, ParsingConfig, IEnumerable, string, string, string, object[])"/>
+        /// <summary>
+        /// Groups the join.
+        /// </summary>
+        /// <param name="outer">The outer.</param>
+        /// <param name="inner">The inner.</param>
+        /// <param name="outerKeySelector">The outer key selector.</param>
+        /// <param name="innerKeySelector">The inner key selector.</param>
+        /// <param name="resultSelector">The result selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="GroupJoin(IQueryable, ParsingConfig, IEnumerable, string, string, string, object[])" />
         public static IQueryable GroupJoin(this IQueryable outer, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object[] args)
         {
             return GroupJoin(outer, ParsingConfig.Default, inner, outerKeySelector, innerKeySelector, resultSelector, args);
@@ -860,13 +977,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
         /// </summary>
         /// <param name="outer">The first sequence to join.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="inner">The sequence to join to the first sequence.</param>
         /// <param name="outerKeySelector">A dynamic function to extract the join key from each element of the first sequence.</param>
         /// <param name="innerKeySelector">A dynamic function to extract the join key from each element of the second sequence.</param>
         /// <param name="resultSelector">A dynamic function to create a result element from two matching elements.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similar to the way String.Format formats strings.</param>
-        /// <returns>An <see cref="IQueryable"/> obtained by performing an inner join on two sequences.</returns>
+        /// <returns>An <see cref="IQueryable" /> obtained by performing an inner join on two sequences.</returns>
         public static IQueryable Join(this IQueryable outer, ParsingConfig config, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object[] args)
         {
             //http://stackoverflow.com/questions/389094/how-to-create-a-dynamic-linq-join-extension-method
@@ -908,7 +1025,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return outer.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="Join(IQueryable, ParsingConfig, IEnumerable, string, string, string, object[])"/>
+        /// <summary>
+        /// Joins the specified inner.
+        /// </summary>
+        /// <param name="outer">The outer.</param>
+        /// <param name="inner">The inner.</param>
+        /// <param name="outerKeySelector">The outer key selector.</param>
+        /// <param name="innerKeySelector">The inner key selector.</param>
+        /// <param name="resultSelector">The result selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="Join(IQueryable, ParsingConfig, IEnumerable, string, string, string, object[])" />
         public static IQueryable Join(this IQueryable outer, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object[] args)
         {
             return Join(outer, ParsingConfig.Default, inner, outerKeySelector, innerKeySelector, resultSelector, args);
@@ -919,20 +1046,31 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// </summary>
         /// <typeparam name="TElement">The type of the elements of both sequences, and the result.</typeparam>
         /// <param name="outer">The first sequence to join.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="inner">The sequence to join to the first sequence.</param>
         /// <param name="outerKeySelector">A dynamic function to extract the join key from each element of the first sequence.</param>
         /// <param name="innerKeySelector">A dynamic function to extract the join key from each element of the second sequence.</param>
         /// <param name="resultSelector">A dynamic function to create a result element from two matching elements.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similar to the way String.Format formats strings.</param>
+        /// <returns>An <see cref="IQueryable{T}" /> that has elements of type TResult obtained by performing an inner join on two sequences.</returns>
         /// <remarks>This overload only works on elements where both sequences and the resulting element match.</remarks>
-        /// <returns>An <see cref="IQueryable{T}"/> that has elements of type TResult obtained by performing an inner join on two sequences.</returns>
         public static IQueryable<TElement> Join<TElement>(this IQueryable<TElement> outer, ParsingConfig config, IEnumerable<TElement> inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object[] args)
         {
             return (IQueryable<TElement>)Join(outer, config, (IEnumerable)inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
 
-        /// <inheritdoc cref="Join{TElement}(IQueryable{TElement}, ParsingConfig, IEnumerable{TElement}, string, string, string, object[])"/>
+        /// <summary>
+        /// Joins the specified inner.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the t element.</typeparam>
+        /// <param name="outer">The outer.</param>
+        /// <param name="inner">The inner.</param>
+        /// <param name="outerKeySelector">The outer key selector.</param>
+        /// <param name="innerKeySelector">The inner key selector.</param>
+        /// <param name="resultSelector">The result selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable&lt;TElement&gt;.</returns>
+        /// <inheritdoc cref="Join{TElement}(IQueryable{TElement}, ParsingConfig, IEnumerable{TElement}, string, string, string, object[])" />
         public static IQueryable<TElement> Join<TElement>(this IQueryable<TElement> outer, IEnumerable<TElement> inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object[] args)
         {
             return Join(outer, ParsingConfig.Default, inner, outerKeySelector, innerKeySelector, resultSelector, args);
@@ -940,11 +1078,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion Join
 
         #region Last
+        /// <summary>
+        /// The last
+        /// </summary>
         private static readonly MethodInfo _last = GetMethod(nameof(Queryable.Last));
         /// <summary>
         /// Returns the last element of a sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
         /// <returns>The last element in source.</returns>
         public static dynamic Last(this IQueryable source)
         {
@@ -953,13 +1094,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_last, source);
         }
 
+        /// <summary>
+        /// The last predicate
+        /// </summary>
         private static readonly MethodInfo _lastPredicate = GetMethod(nameof(Queryable.Last), 1);
 
         /// <summary>
         /// Returns the last element of a sequence that satisfies a specified condition.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
@@ -975,7 +1119,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_lastPredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="Last(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Lasts the specified predicate.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>dynamic.</returns>
+        /// <inheritdoc cref="Last(IQueryable, ParsingConfig, string, object[])" />
         public static dynamic Last(this IQueryable source, string predicate, params object[] args)
         {
             return Last(source, ParsingConfig.Default, predicate, args);
@@ -985,7 +1136,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Returns the last element of a sequence that satisfies a specified condition.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
         public static dynamic Last(this IQueryable source, LambdaExpression lambda)
@@ -996,11 +1147,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion Last
 
         #region LastOrDefault
+        /// <summary>
+        /// The last default
+        /// </summary>
         private static readonly MethodInfo _lastDefault = GetMethod(nameof(Queryable.LastOrDefault));
         /// <summary>
         /// Returns the last element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
         /// <returns>default if source is empty; otherwise, the last element in source.</returns>
         public static dynamic LastOrDefault(this IQueryable source)
         {
@@ -1009,13 +1163,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_lastDefault, source);
         }
 
+        /// <summary>
+        /// The last default predicate
+        /// </summary>
         private static readonly MethodInfo _lastDefaultPredicate = GetMethod(nameof(Queryable.LastOrDefault), 1);
 
         /// <summary>
         /// Returns the last element of a sequence that satisfies a specified condition, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
@@ -1031,7 +1188,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_lastDefaultPredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="LastOrDefault(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Lasts the or default.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>dynamic.</returns>
+        /// <inheritdoc cref="LastOrDefault(IQueryable, ParsingConfig, string, object[])" />
         public static dynamic LastOrDefault(this IQueryable source, string predicate, params object[] args)
         {
             return LastOrDefault(source, ParsingConfig.Default, predicate, args);
@@ -1040,7 +1204,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Returns the last element of a sequence that satisfies a specified condition, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
         public static dynamic LastOrDefault(this IQueryable source, LambdaExpression lambda)
@@ -1051,19 +1215,22 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion LastOrDefault
 
         #region LongCount
+        /// <summary>
+        /// The long count
+        /// </summary>
         private static readonly MethodInfo _longCount = GetMethod(nameof(Queryable.LongCount));
 
         /// <summary>
         /// Returns the number of elements in a sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be counted.</param>
+        /// <returns>The number of elements in the input sequence.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
         /// var result = queryable.LongCount();
         /// </code>
         /// </example>
-        /// <returns>The number of elements in the input sequence.</returns>
         public static long LongCount(this IQueryable source)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -1071,24 +1238,27 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute<long>(_longCount, source);
         }
 
+        /// <summary>
+        /// The long count predicate
+        /// </summary>
         private static readonly MethodInfo _longCountPredicate = GetMethod(nameof(Queryable.LongCount), 1);
 
         /// <summary>
         /// Returns the number of elements in a sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be counted.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
-        /// var result1 = queryable.LongCount("Income > 50");
-        /// var result2 = queryable.LongCount("Income > @0", 50);
+        /// var result1 = queryable.LongCount("Income &gt; 50");
+        /// var result2 = queryable.LongCount("Income &gt; @0", 50);
         /// var result3 = queryable.Select("Roles.LongCount()");
         /// </code>
         /// </example>
-        /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         public static long LongCount(this IQueryable source, ParsingConfig config, string predicate, params object[] args)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -1101,7 +1271,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute<long>(_longCountPredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="LongCount(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Longs the count.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>System.Int64.</returns>
+        /// <inheritdoc cref="LongCount(IQueryable, ParsingConfig, string, object[])" />
         public static long LongCount(this IQueryable source, string predicate, params object[] args)
         {
             return LongCount(source, ParsingConfig.Default, predicate, args);
@@ -1110,7 +1287,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Returns the number of elements in a sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="source">The <see cref="IQueryable" /> that contains the elements to be counted.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         public static long LongCount(this IQueryable source, LambdaExpression lambda)
@@ -1123,12 +1300,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion LongCount
 
         #region OfType
+        /// <summary>
+        /// The of type
+        /// </summary>
         private static readonly MethodInfo _ofType = GetGenericMethod(nameof(Queryable.OfType));
 
         /// <summary>
-        /// Filters the elements of an <see cref="IQueryable"/> based on a specified type.
+        /// Filters the elements of an <see cref="IQueryable" /> based on a specified type.
         /// </summary>
-        /// <param name="source">An <see cref="IQueryable"/> whose elements to filter.</param>
+        /// <param name="source">An <see cref="IQueryable" /> whose elements to filter.</param>
         /// <param name="type">The type to filter the elements of the sequence on.</param>
         /// <returns>A collection that contains the elements from source that have the type.</returns>
         public static IQueryable OfType(this IQueryable source, Type type)
@@ -1142,10 +1322,10 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         }
 
         /// <summary>
-        /// Filters the elements of an <see cref="IQueryable"/> based on a specified type.
+        /// Filters the elements of an <see cref="IQueryable" /> based on a specified type.
         /// </summary>
-        /// <param name="source">An <see cref="IQueryable"/> whose elements to filter.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">An <see cref="IQueryable" /> whose elements to filter.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="typeName">The type to filter the elements of the sequence on.</param>
         /// <returns>A collection that contains the elements from source that have the type.</returns>
         public static IQueryable OfType(this IQueryable source, ParsingConfig config, string typeName)
@@ -1161,9 +1341,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         }
 
         /// <summary>
-        /// Filters the elements of an <see cref="IQueryable"/> based on a specified type.
+        /// Filters the elements of an <see cref="IQueryable" /> based on a specified type.
         /// </summary>
-        /// <param name="source">An <see cref="IQueryable"/> whose elements to filter.</param>
+        /// <param name="source">An <see cref="IQueryable" /> whose elements to filter.</param>
         /// <param name="typeName">The type to filter the elements of the sequence on.</param>
         /// <returns>A collection that contains the elements from source that have the type.</returns>
         public static IQueryable OfType(this IQueryable source, string typeName)
@@ -1178,24 +1358,30 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to order.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+        /// <returns>A <see cref="IQueryable{T}" /> whose elements are sorted according to the specified <paramref name="ordering" />.</returns>
         /// <example>
-        /// <code>
-        /// <![CDATA[
+        ///   <code><![CDATA[
         /// var resultSingle = queryable.OrderBy<User>("NumberProperty");
         /// var resultSingleDescending = queryable.OrderBy<User>("NumberProperty DESC");
         /// var resultMultiple = queryable.OrderBy<User>("NumberProperty, StringProperty");
-        /// ]]>
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, ParsingConfig config, string ordering, params object[] args)
         {
             return (IOrderedQueryable<TSource>)OrderBy((IQueryable)source, config, ordering, args);
         }
 
+        /// <summary>
+        /// Orders the by.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the t source.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="ordering">The ordering.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IOrderedQueryable&lt;TSource&gt;.</returns>
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string ordering, params object[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, args);
@@ -1205,12 +1391,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Sorts the elements of a sequence in ascending or descending order according to a key.
         /// </summary>
         /// <param name="source">A sequence of values to order.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+        /// <returns>A <see cref="IQueryable" /> whose elements are sorted according to the specified <paramref name="ordering" />.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var resultSingle = queryable.OrderBy("NumberProperty");
         /// var resultSingleDescending = queryable.OrderBy("NumberProperty DESC");
         /// var resultMultiple = queryable.OrderBy("NumberProperty, StringProperty DESC");
@@ -1240,7 +1426,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return (IOrderedQueryable)source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="OrderBy(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Orders the by.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="ordering">The ordering.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IOrderedQueryable.</returns>
+        /// <inheritdoc cref="OrderBy(IQueryable, ParsingConfig, string, object[])" />
         public static IOrderedQueryable OrderBy(this IQueryable source, string ordering, params object[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, args);
@@ -1253,7 +1446,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <param name="source">The IQueryable to return elements from.</param>
         /// <param name="page">The page to return.</param>
         /// <param name="pageSize">The number of elements per page.</param>
-        /// <returns>A <see cref="IQueryable"/> that contains the paged elements.</returns>
+        /// <returns>A <see cref="IQueryable" /> that contains the paged elements.</returns>
         public static IQueryable Page(this IQueryable source, int page, int pageSize)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -1270,7 +1463,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <param name="source">The IQueryable to return elements from.</param>
         /// <param name="page">The page to return.</param>
         /// <param name="pageSize">The number of elements per page.</param>
-        /// <returns>A <see cref="IQueryable{TSource}"/> that contains the paged elements.</returns>
+        /// <returns>A <see cref="IQueryable{TSource}" /> that contains the paged elements.</returns>
         public static IQueryable<TSource> Page<TSource>(this IQueryable<TSource> source, int page, int pageSize)
         {
             Argument.IsNotNull(nameof(source), source);
@@ -1339,7 +1532,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Inverts the order of the elements in a sequence.
         /// </summary>
         /// <param name="source">A sequence of values to reverse.</param>
-        /// <returns>A <see cref="IQueryable"/> whose elements correspond to those of the input sequence in reverse order.</returns>
+        /// <returns>A <see cref="IQueryable" /> whose elements correspond to those of the input sequence in reverse order.</returns>
         public static IQueryable Reverse(this IQueryable source)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -1353,12 +1546,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Projects each element of a sequence into a new form.
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
-        /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+        /// <returns>An <see cref="IQueryable" /> whose elements are the result of invoking a projection string on each element of source.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var singleField = queryable.Select("StringProperty");
         /// var dynamicObject = queryable.Select("new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
         /// </code>
@@ -1381,7 +1574,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="Select(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Selects the specified selector.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="selector">The selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="Select(IQueryable, ParsingConfig, string, object[])" />
         public static IQueryable Select(this IQueryable source, string selector, params object[] args)
         {
             return Select(source, ParsingConfig.Default, selector, args);
@@ -1389,20 +1589,18 @@ namespace ISynergy.Framework.Core.Linq.Extensions
 
         /// <summary>
         /// Projects each element of a sequence into a new class of type TResult.
-        /// Details see <see href="http://solutionizing.net/category/linq/"/>.
+        /// Details see <see href="http://solutionizing.net/category/linq/" />.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
-        /// <returns>An <see cref="IQueryable{TResult}"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+        /// <returns>An <see cref="IQueryable{TResult}" /> whose elements are the result of invoking a projection string on each element of source.</returns>
         /// <example>
-        /// <code language="cs">
-        /// <![CDATA[
+        ///   <code language="cs"><![CDATA[
         /// var users = queryable.Select<User>("new (Username, Pwd as Password)");
-        /// ]]>
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IQueryable<TResult> Select<TResult>(this IQueryable source, ParsingConfig config, string selector, params object[] args)
         {
@@ -1421,7 +1619,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery<TResult>(optimized);
         }
 
-        /// <inheritdoc cref="Select{TResult}(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Selects the specified selector.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the t result.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="selector">The selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable&lt;TResult&gt;.</returns>
+        /// <inheritdoc cref="Select{TResult}(IQueryable, ParsingConfig, string, object[])" />
         public static IQueryable<TResult> Select<TResult>(this IQueryable source, string selector, params object[] args)
         {
             return Select<TResult>(source, ParsingConfig.Default, selector, args);
@@ -1429,16 +1635,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions
 
         /// <summary>
         /// Projects each element of a sequence into a new class of type TResult.
-        /// Details see http://solutionizing.net/category/linq/ 
+        /// Details see http://solutionizing.net/category/linq/
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="resultType">The result type.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
-        /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+        /// <returns>An <see cref="IQueryable" /> whose elements are the result of invoking a projection string on each element of source.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var users = queryable.Select(typeof(User), "new (Username, Pwd as Password)");
         /// </code>
         /// </example>
@@ -1460,7 +1666,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="Select(IQueryable, ParsingConfig, Type, string, object[])"/>
+        /// <summary>
+        /// Selects the specified result type.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="resultType">Type of the result.</param>
+        /// <param name="selector">The selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="Select(IQueryable, ParsingConfig, Type, string, object[])" />
         public static IQueryable Select(this IQueryable source, Type resultType, string selector, params object[] args)
         {
             return Select(source, ParsingConfig.Default, resultType, selector, args);
@@ -1470,15 +1684,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions
 
         #region SelectMany
         /// <summary>
-        /// Projects each element of a sequence to an <see cref="IQueryable"/> and combines the resulting sequences into one sequence.
+        /// Projects each element of a sequence to an <see cref="IQueryable" /> and combines the resulting sequences into one sequence.
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
-        /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+        /// <returns>An <see cref="IQueryable" /> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var roles = users.SelectMany("Roles");
         /// </code>
         /// </example>
@@ -1487,23 +1701,30 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return SelectManyInternal(source, config, null, selector, args);
         }
 
-        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Selects the many.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="selector">The selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, object[])" />
         public static IQueryable SelectMany(this IQueryable source, string selector, params object[] args)
         {
             return SelectMany(source, ParsingConfig.Default, selector, args);
         }
 
         /// <summary>
-        /// Projects each element of a sequence to an <see cref="IQueryable"/> and combines the resulting sequences into one sequence.
+        /// Projects each element of a sequence to an <see cref="IQueryable" /> and combines the resulting sequences into one sequence.
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
-        /// <param name="selector">A projection string expression to apply to each element.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="resultType">The result type.</param>
+        /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+        /// <returns>An <see cref="IQueryable" /> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var permissions = users.SelectMany(typeof(Permission), "Roles.SelectMany(Permissions)");
         /// </code>
         /// </example>
@@ -1517,12 +1738,29 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return SelectManyInternal(source, config, resultType, selector, args);
         }
 
-        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, Type, string, object[])"/>
+        /// <summary>
+        /// Selects the many.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="resultType">Type of the result.</param>
+        /// <param name="selector">The selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, Type, string, object[])" />
         public static IQueryable SelectMany(this IQueryable source, Type resultType, string selector, params object[] args)
         {
             return SelectMany(source, ParsingConfig.Default, resultType, selector, args);
         }
 
+        /// <summary>
+        /// Selects the many internal.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="config">The configuration.</param>
+        /// <param name="resultType">Type of the result.</param>
+        /// <param name="selector">The selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
         private static IQueryable SelectManyInternal(IQueryable source, ParsingConfig config, Type resultType, string selector, params object[] args)
         {
             var createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
@@ -1562,20 +1800,18 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         }
 
         /// <summary>
-        /// Projects each element of a sequence to an <see cref="IQueryable{TResult}"/> and combines the resulting sequences into one sequence.
+        /// Projects each element of a sequence to an <see cref="IQueryable{TResult}" /> and combines the resulting sequences into one sequence.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>An <see cref="IQueryable{TResult}"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+        /// <returns>An <see cref="IQueryable{TResult}" /> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
         /// <example>
-        /// <code>
-        /// <![CDATA[
+        ///   <code><![CDATA[
         /// var permissions = users.SelectMany<Permission>("Roles.SelectMany(Permissions)");
-        /// ]]>
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IQueryable<TResult> SelectMany<TResult>(this IQueryable source, ParsingConfig config, string selector, params object[] args)
         {
@@ -1601,72 +1837,81 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery<TResult>(optimized);
         }
 
-        /// <inheritdoc cref="SelectMany{TResult}(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Selects the many.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the t result.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="selector">The selector.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable&lt;TResult&gt;.</returns>
+        /// <inheritdoc cref="SelectMany{TResult}(IQueryable, ParsingConfig, string, object[])" />
         public static IQueryable<TResult> SelectMany<TResult>(this IQueryable source, string selector, params object[] args)
         {
             return SelectMany<TResult>(source, ParsingConfig.Default, selector, args);
         }
 
         /// <summary>
-        /// Projects each element of a sequence to an <see cref="IQueryable"/>
+        /// Projects each element of a sequence to an <see cref="IQueryable" />
         /// and invokes a result selector function on each element therein. The resulting
         /// values from each intermediate sequence are combined into a single, one-dimensional
         /// sequence and returned.
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="collectionSelector">A projection function to apply to each element of the input sequence.</param>
         /// <param name="resultSelector">A projection function to apply to each element of each intermediate sequence. Should only use x and y as parameter names.</param>
         /// <param name="collectionSelectorArgs">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <param name="resultSelectorArgs">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>
-        /// An <see cref="IQueryable"/> whose elements are the result of invoking the one-to-many 
-        /// projection function <paramref name="collectionSelector"/> on each element of source and then mapping
-        /// each of those sequence elements and their corresponding source element to a result element.
-        /// </returns>
+        /// <returns>An <see cref="IQueryable" /> whose elements are the result of invoking the one-to-many
+        /// projection function <paramref name="collectionSelector" /> on each element of source and then mapping
+        /// each of those sequence elements and their corresponding source element to a result element.</returns>
         /// <example>
-        /// <code>
-        /// <![CDATA[
+        ///   <code><![CDATA[
         /// // TODO
-        /// ]]>
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IQueryable SelectMany(this IQueryable source, ParsingConfig config, string collectionSelector, string resultSelector, object[] collectionSelectorArgs = null, params object[] resultSelectorArgs)
         {
             return SelectMany(source, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
         }
 
-        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, string, string, string, object[], object[])"/>
+        /// <summary>
+        /// Selects the many.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="collectionSelector">The collection selector.</param>
+        /// <param name="resultSelector">The result selector.</param>
+        /// <param name="collectionSelectorArgs">The collection selector arguments.</param>
+        /// <param name="resultSelectorArgs">The result selector arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, string, string, string, object[], object[])" />
         public static IQueryable SelectMany(this IQueryable source, string collectionSelector, string resultSelector, object[] collectionSelectorArgs = null, params object[] resultSelectorArgs)
         {
             return SelectMany(source, ParsingConfig.Default, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
         }
 
         /// <summary>
-        /// Projects each element of a sequence to an <see cref="IQueryable"/>
+        /// Projects each element of a sequence to an <see cref="IQueryable" />
         /// and invokes a result selector function on each element therein. The resulting
         /// values from each intermediate sequence are combined into a single, one-dimensional
         /// sequence and returned.
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="collectionSelector">A projection function to apply to each element of the input sequence.</param>
-        /// <param name="collectionParameterName">The name from collectionParameter to use. Default is x.</param>
         /// <param name="resultSelector">A projection function to apply to each element of each intermediate sequence.</param>
+        /// <param name="collectionParameterName">The name from collectionParameter to use. Default is x.</param>
         /// <param name="resultParameterName">The name from resultParameterName to use. Default is y.</param>
         /// <param name="collectionSelectorArgs">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <param name="resultSelectorArgs">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>
-        /// An <see cref="IQueryable"/> whose elements are the result of invoking the one-to-many 
-        /// projection function <paramref name="collectionSelector"/> on each element of source and then mapping
-        /// each of those sequence elements and their corresponding source element to a result element.
-        /// </returns>
+        /// <returns>An <see cref="IQueryable" /> whose elements are the result of invoking the one-to-many
+        /// projection function <paramref name="collectionSelector" /> on each element of source and then mapping
+        /// each of those sequence elements and their corresponding source element to a result element.</returns>
         /// <example>
-        /// <code>
-        /// <![CDATA[
+        ///   <code><![CDATA[
         /// // TODO
-        /// ]]>
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IQueryable SelectMany(this IQueryable source, ParsingConfig config, string collectionSelector, string resultSelector, string collectionParameterName, string resultParameterName, object[] collectionSelectorArgs = null, params object[] resultSelectorArgs)
         {
@@ -1704,7 +1949,18 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, string, string, string, object[], object[])"/>
+        /// <summary>
+        /// Selects the many.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="collectionSelector">The collection selector.</param>
+        /// <param name="resultSelector">The result selector.</param>
+        /// <param name="collectionParameterName">Name of the collection parameter.</param>
+        /// <param name="resultParameterName">Name of the result parameter.</param>
+        /// <param name="collectionSelectorArgs">The collection selector arguments.</param>
+        /// <param name="resultSelectorArgs">The result selector arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, string, string, string, object[], object[])" />
         public static IQueryable SelectMany(this IQueryable source, string collectionSelector, string resultSelector, string collectionParameterName, string resultParameterName, object[] collectionSelectorArgs = null, params object[] resultSelectorArgs)
         {
             return SelectMany(source, ParsingConfig.Default, collectionSelector, resultSelector, collectionParameterName, resultParameterName, collectionSelectorArgs, resultSelectorArgs);
@@ -1717,7 +1973,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Returns the only element of a sequence, and throws an exception if there
         /// is not exactly one element in the sequence.
         /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> to return the single element of.</param>
+        /// <param name="source">A <see cref="IQueryable" /> to return the single element of.</param>
         /// <returns>The single element of the input sequence.</returns>
         public static dynamic Single(this IQueryable source)
         {
@@ -1727,14 +1983,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.Execute(optimized);
         }
 
+        /// <summary>
+        /// The single predicate
+        /// </summary>
         private static readonly MethodInfo _singlePredicate = GetMethod(nameof(Queryable.Single), 1);
 
         /// <summary>
         /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if there
         /// is not exactly one element in the sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
@@ -1750,7 +2009,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_singlePredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="Single(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Singles the specified predicate.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>dynamic.</returns>
+        /// <inheritdoc cref="Single(IQueryable, ParsingConfig, string, object[])" />
         public static dynamic Single(this IQueryable source, string predicate, params object[] args)
         {
             return Single(source, ParsingConfig.Default, predicate, args);
@@ -1760,7 +2026,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if there
         /// is not exactly one element in the sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
         public static dynamic Single(this IQueryable source, LambdaExpression lambda)
@@ -1774,7 +2040,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// is empty; this method throws an exception if there is more than one element
         /// in the sequence.
         /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> to return the single element of.</param>
+        /// <param name="source">A <see cref="IQueryable" /> to return the single element of.</param>
         /// <returns>The single element of the input sequence, or default if the sequence contains no elements.</returns>
         public static dynamic SingleOrDefault(this IQueryable source)
         {
@@ -1784,14 +2050,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.Execute(optimized);
         }
 
+        /// <summary>
+        /// The single default predicate
+        /// </summary>
         private static readonly MethodInfo _singleDefaultPredicate = GetMethod(nameof(Queryable.SingleOrDefault), 1);
 
         /// <summary>
         /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
         /// is empty; and throws an exception if there is not exactly one element in the sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
@@ -1807,7 +2076,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute(_singleDefaultPredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="SingleOrDefault(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Singles the or default.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>dynamic.</returns>
+        /// <inheritdoc cref="SingleOrDefault(IQueryable, ParsingConfig, string, object[])" />
         public static dynamic SingleOrDefault(this IQueryable source, string predicate, params object[] args)
         {
             return SingleOrDefault(source, ParsingConfig.Default, predicate, args);
@@ -1817,7 +2093,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
         /// is empty; and throws an exception if there is not exactly one element in the sequence.
         /// </summary>
-        /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
+        /// <param name="source">The <see cref="IQueryable" /> to return the last element of.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
         public static dynamic SingleOrDefault(this IQueryable source, LambdaExpression lambda)
@@ -1830,14 +2106,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion Single/SingleOrDefault
 
         #region Skip
+        /// <summary>
+        /// The skip
+        /// </summary>
         private static readonly MethodInfo _skip = GetMethod(nameof(Queryable.Skip), 1);
 
         /// <summary>
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
         /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> to return elements from.</param>
+        /// <param name="source">A <see cref="IQueryable" /> to return elements from.</param>
         /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
-        /// <returns>A <see cref="IQueryable"/> that contains elements that occur after the specified index in the input sequence.</returns>
+        /// <returns>A <see cref="IQueryable" /> that contains elements that occur after the specified index in the input sequence.</returns>
         public static IQueryable Skip(this IQueryable source, int count)
         {
             Argument.IsNotNull(nameof(source), source);
@@ -1853,6 +2132,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions
 
         #region SkipWhile
 
+        /// <summary>
+        /// The skip while predicate
+        /// </summary>
         private static readonly MethodInfo _skipWhilePredicate = GetMethod(nameof(Queryable.SkipWhile), 1, mi =>
         {
             return mi.GetParameters().Length == 2 &&
@@ -1866,17 +2148,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
         /// </summary>
         /// <param name="source">A sequence to check for being empty.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>An <see cref="IQueryable" /> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
-        /// var result1 = queryable.SkipWhile("Income > 50");
-        /// var result2 = queryable.SkipWhile("Income > @0", 50);
+        /// var result1 = queryable.SkipWhile("Income &gt; 50");
+        /// var result2 = queryable.SkipWhile("Income &gt; @0", 50);
         /// </code>
         /// </example>
-        /// <returns>An <see cref="IQueryable"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
         public static IQueryable SkipWhile(this IQueryable source, ParsingConfig config, string predicate, params object[] args)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -1889,7 +2171,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return CreateQuery(_skipWhilePredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="SkipWhile(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Skips the while.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="SkipWhile(IQueryable, ParsingConfig, string, object[])" />
         public static IQueryable SkipWhile(this IQueryable source, string predicate, params object[] args)
         {
             return SkipWhile(source, ParsingConfig.Default, predicate, args);
@@ -1902,14 +2191,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Computes the sum of a sequence of numeric values.
         /// </summary>
         /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+        /// <returns>The sum of the values in the sequence.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
         /// var result1 = queryable.Sum();
         /// var result2 = queryable.Select("Roles.Sum()");
         /// </code>
         /// </example>
-        /// <returns>The sum of the values in the sequence.</returns>
         public static object Sum(this IQueryable source)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -1922,16 +2211,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Computes the sum of a sequence of numeric values.
         /// </summary>
         /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>The sum of the values in the sequence.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
         /// var result = queryable.Sum("Income");
         /// </code>
         /// </example>
-        /// <returns>The sum of the values in the sequence.</returns>
         public static object Sum(this IQueryable source, ParsingConfig config, string predicate, params object[] args)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -1946,7 +2235,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return Execute<object>(sumSelector, source, lambda);
         }
 
-        /// <inheritdoc cref="Sum(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Sums the specified predicate.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>System.Object.</returns>
+        /// <inheritdoc cref="Sum(IQueryable, ParsingConfig, string, object[])" />
         public static object Sum(this IQueryable source, string predicate, params object[] args)
         {
             return Sum(source, ParsingConfig.Default, predicate, args);
@@ -1970,13 +2266,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         #endregion Sum
 
         #region Take
+        /// <summary>
+        /// The take
+        /// </summary>
         private static readonly MethodInfo _take = GetMethod(nameof(Queryable.Take), 1);
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
         /// <param name="source">The sequence to return elements from.</param>
         /// <param name="count">The number of elements to return.</param>
-        /// <returns>A <see cref="IQueryable"/> that contains the specified number of elements from the start of source.</returns>
+        /// <returns>A <see cref="IQueryable" /> that contains the specified number of elements from the start of source.</returns>
         public static IQueryable Take(this IQueryable source, int count)
         {
             Argument.IsNotNull(nameof(source), source);
@@ -1988,6 +2287,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions
 
         #region TakeWhile
 
+        /// <summary>
+        /// The take while predicate
+        /// </summary>
         private static readonly MethodInfo _takeWhilePredicate = GetMethod(nameof(Queryable.TakeWhile), 1, mi =>
         {
             return mi.GetParameters().Length == 2 &&
@@ -2001,17 +2303,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Returns elements from a sequence as long as a specified condition is true.
         /// </summary>
         /// <param name="source">A sequence to check for being empty.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>An <see cref="IQueryable" /> that contains elements from the input sequence occurring before the element at which the test specified by predicate no longer passes.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
-        /// var result1 = queryable.TakeWhile("Income > 50");
-        /// var result2 = queryable.TakeWhile("Income > @0", 50);
+        /// var result1 = queryable.TakeWhile("Income &gt; 50");
+        /// var result2 = queryable.TakeWhile("Income &gt; @0", 50);
         /// </code>
         /// </example>
-        /// <returns>An <see cref="IQueryable"/> that contains elements from the input sequence occurring before the element at which the test specified by predicate no longer passes.</returns>
         public static IQueryable TakeWhile(this IQueryable source, ParsingConfig config, string predicate, params object[] args)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -2024,7 +2326,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return CreateQuery(_takeWhilePredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="TakeWhile(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Takes the while.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="TakeWhile(IQueryable, ParsingConfig, string, object[])" />
         public static IQueryable TakeWhile(this IQueryable source, string predicate, params object[] args)
         {
             return TakeWhile(source, ParsingConfig.Default, predicate, args);
@@ -2038,26 +2347,32 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to order.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IOrderedQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+        /// <returns>A <see cref="IOrderedQueryable{T}" /> whose elements are sorted according to the specified <paramref name="ordering" />.</returns>
         /// <example>
-        /// <code>
-        /// <![CDATA[
+        ///   <code><![CDATA[
         /// var result = queryable.OrderBy<User>("LastName");
         /// var resultSingle = result.ThenBy<User>("NumberProperty");
         /// var resultSingleDescending = result.ThenBy<User>("NumberProperty DESC");
         /// var resultMultiple = result.ThenBy<User>("NumberProperty, StringProperty");
-        /// ]]>
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, ParsingConfig config, string ordering, params object[] args)
         {
             return (IOrderedQueryable<TSource>)ThenBy((IOrderedQueryable)source, config, ordering, args);
         }
 
-        /// <inheritdoc cref="ThenBy{TSource}(IOrderedQueryable{TSource}, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Thens the by.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the t source.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="ordering">The ordering.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IOrderedQueryable&lt;TSource&gt;.</returns>
+        /// <inheritdoc cref="ThenBy{TSource}(IOrderedQueryable{TSource}, ParsingConfig, string, object[])" />
         public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, string ordering, params object[] args)
         {
             return ThenBy(source, ParsingConfig.Default, ordering, args);
@@ -2066,12 +2381,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
         /// </summary>
         /// <param name="source">A sequence of values to order.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+        /// <returns>A <see cref="IQueryable" /> whose elements are sorted according to the specified <paramref name="ordering" />.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var result = queryable.OrderBy("LastName");
         /// var resultSingle = result.OrderBy("NumberProperty");
         /// var resultSingleDescending = result.OrderBy("NumberProperty DESC");
@@ -2102,7 +2417,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return (IOrderedQueryable)source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="ThenBy(IOrderedQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Thens the by.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="ordering">The ordering.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IOrderedQueryable.</returns>
+        /// <inheritdoc cref="ThenBy(IOrderedQueryable, ParsingConfig, string, object[])" />
         public static IOrderedQueryable ThenBy(this IOrderedQueryable source, string ordering, params object[] args)
         {
             return ThenBy(source, ParsingConfig.Default, ordering, args);
@@ -2115,13 +2437,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">A <see cref="IQueryable{TSource}"/> to filter.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">A <see cref="IQueryable{TSource}" /> to filter.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">An expression string to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IQueryable{TSource}"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
+        /// <returns>A <see cref="IQueryable{TSource}" /> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
         /// <example>
-        /// <code language="cs">
+        ///   <code language="cs">
         /// var result1 = queryable.Where("NumberProperty = 1");
         /// var result2 = queryable.Where("NumberProperty = @0", 1);
         /// var result3 = queryable.Where("StringProperty = null");
@@ -2134,7 +2456,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return (IQueryable<TSource>)Where((IQueryable)source, config, predicate, args);
         }
 
-        /// <inheritdoc cref="DynamicQueryableExtensions.Where{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Wheres the specified predicate.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the t source.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable&lt;TSource&gt;.</returns>
+        /// <inheritdoc cref="Where{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])" />
         public static IQueryable<TSource> Where<TSource>(this IQueryable<TSource> source, string predicate, params object[] args)
         {
             return Where(source, ParsingConfig.Default, predicate, args);
@@ -2143,13 +2473,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Filters a sequence of values based on a predicate.
         /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
-        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="source">A <see cref="IQueryable" /> to filter.</param>
+        /// <param name="config">The <see cref="ParsingConfig" />.</param>
         /// <param name="predicate">An expression string to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IQueryable"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
+        /// <returns>A <see cref="IQueryable" /> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
         /// <example>
-        /// <code>
+        ///   <code>
         /// var result1 = queryable.Where("NumberProperty = 1");
         /// var result2 = queryable.Where("NumberProperty = @0", 1);
         /// var result3 = queryable.Where("StringProperty = null");
@@ -2170,7 +2500,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc cref="DynamicQueryableExtensions.Where(IQueryable, ParsingConfig, string, object[])"/>
+        /// <summary>
+        /// Wheres the specified predicate.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>IQueryable.</returns>
+        /// <inheritdoc cref="Where(IQueryable, ParsingConfig, string, object[])" />
         public static IQueryable Where(this IQueryable source, string predicate, params object[] args)
         {
             return Where(source, ParsingConfig.Default, predicate, args);
@@ -2179,9 +2516,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         /// <summary>
         /// Filters a sequence of values based on a predicate.
         /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
+        /// <param name="source">A <see cref="IQueryable" /> to filter.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
-        /// <returns>A <see cref="IQueryable"/> that contains elements from the input sequence that satisfy the condition specified by LambdaExpression.</returns>
+        /// <returns>A <see cref="IQueryable" /> that contains elements from the input sequence that satisfy the condition specified by LambdaExpression.</returns>
         public static IQueryable Where(this IQueryable source, LambdaExpression lambda)
         {
             Argument.IsNotNull(nameof(source), source); 
@@ -2194,11 +2531,30 @@ namespace ISynergy.Framework.Core.Linq.Extensions
 
         #region Private Helpers
 
+        /// <summary>
+        /// Supportses the linq to objects.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="query">The query.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         private static bool SupportsLinqToObjects(ParsingConfig config, IQueryable query)
         {
             return config.QueryableAnalyzer.SupportsLinqToObjects(query);
         }
 
+        /// <summary>
+        /// Checks the outer and inner types.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="createParameterCtor">if set to <c>true</c> [create parameter ctor].</param>
+        /// <param name="outerType">Type of the outer.</param>
+        /// <param name="innerType">Type of the inner.</param>
+        /// <param name="outerKeySelector">The outer key selector.</param>
+        /// <param name="innerKeySelector">The inner key selector.</param>
+        /// <param name="outerSelectorLambda">The outer selector lambda.</param>
+        /// <param name="innerSelectorLambda">The inner selector lambda.</param>
+        /// <param name="args">The arguments.</param>
+        /// <exception cref="ParseException">-1</exception>
         private static void CheckOuterAndInnerTypes(ParsingConfig config, bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object[] args)
         {
             var outerSelectorReturnType = outerSelectorLambda.Body.Type;
@@ -2227,6 +2583,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions
         }
 
         // Code below is based on https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
+        /// <summary>
+        /// Creates the query.
+        /// </summary>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <returns>IQueryable.</returns>
         private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source)
         {
             if (operatorMethodInfo.IsGenericMethod)
@@ -2238,9 +2600,23 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery(optimized);
         }
 
+        /// <summary>
+        /// Creates the query.
+        /// </summary>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>IQueryable.</returns>
         private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
             => CreateQuery(operatorMethodInfo, source, Expression.Quote(expression));
 
+        /// <summary>
+        /// Creates the query.
+        /// </summary>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>IQueryable.</returns>
         private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, Expression expression)
         {
             operatorMethodInfo = operatorMethodInfo.GetGenericArguments().Length == 2
@@ -2250,6 +2626,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
         }
 
+        /// <summary>
+        /// Executes the specified operator method information.
+        /// </summary>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <returns>System.Object.</returns>
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source)
         {
             if (operatorMethodInfo.IsGenericMethod)
@@ -2261,6 +2643,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.Execute(optimized);
         }
 
+        /// <summary>
+        /// Executes the specified operator method information.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the t result.</typeparam>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <returns>TResult.</returns>
         private static TResult Execute<TResult>(MethodInfo operatorMethodInfo, IQueryable source)
         {
             if (operatorMethodInfo.IsGenericMethod)
@@ -2274,9 +2663,23 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
+        /// <summary>
+        /// Executes the specified operator method information.
+        /// </summary>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>System.Object.</returns>
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
             => Execute(operatorMethodInfo, source, Expression.Quote(expression));
 
+        /// <summary>
+        /// Executes the specified operator method information.
+        /// </summary>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>System.Object.</returns>
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, Expression expression)
         {
             operatorMethodInfo = operatorMethodInfo.GetGenericArguments().Length == 2
@@ -2287,9 +2690,25 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return source.Provider.Execute(optimized);
         }
 
+        /// <summary>
+        /// Executes the specified operator method information.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the t result.</typeparam>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>TResult.</returns>
         private static TResult Execute<TResult>(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
             => Execute<TResult>(operatorMethodInfo, source, Expression.Quote(expression));
 
+        /// <summary>
+        /// Executes the specified operator method information.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the t result.</typeparam>
+        /// <param name="operatorMethodInfo">The operator method information.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>TResult.</returns>
         private static TResult Execute<TResult>(MethodInfo operatorMethodInfo, IQueryable source, Expression expression)
         {
             operatorMethodInfo = operatorMethodInfo.GetGenericArguments().Length == 2
@@ -2302,17 +2721,47 @@ namespace ISynergy.Framework.Core.Linq.Extensions
             return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
+        /// <summary>
+        /// Gets the generic method.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>MethodInfo.</returns>
         private static MethodInfo GetGenericMethod(string name)
         {
             return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
         }
 
+        /// <summary>
+        /// Gets the method.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="argumentType">Type of the argument.</param>
+        /// <param name="returnType">Type of the return.</param>
+        /// <param name="parameterCount">The parameter count.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>MethodInfo.</returns>
         private static MethodInfo GetMethod(string name, Type argumentType, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             GetMethod(name, returnType, parameterCount, mi => mi.ToString().Contains(argumentType.ToString()) && ((predicate == null) || predicate(mi)));
 
+        /// <summary>
+        /// Gets the method.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="returnType">Type of the return.</param>
+        /// <param name="parameterCount">The parameter count.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>MethodInfo.</returns>
         private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
 
+        /// <summary>
+        /// Gets the method.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="parameterCount">The parameter count.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>MethodInfo.</returns>
+        /// <exception cref="Exception">Specific method not found: " + name</exception>
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null)
         {
             try

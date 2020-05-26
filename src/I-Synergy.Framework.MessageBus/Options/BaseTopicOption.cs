@@ -4,9 +4,9 @@ namespace ISynergy.Framework.MessageBus.Options
 {
     /// <summary>
     /// Class BaseTopicOption.
-    /// Implements the <see cref="ISynergy.Framework.MessageBus.Abstractions.ITopicOption" />
+    /// Implements the <see cref="ITopicOption" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.MessageBus.Abstractions.ITopicOption" />
+    /// <seealso cref="ITopicOption" />
     public abstract class BaseTopicOption : ITopicOption
     {
         /// <summary>

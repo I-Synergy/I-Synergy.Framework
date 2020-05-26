@@ -7,8 +7,21 @@ using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Framework.Windows.Converters
 {
+    /// <summary>
+    /// Class ChangeTrackingConverters.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class ChangeTrackingConverters : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is IModelBase model)
@@ -21,14 +34,14 @@ namespace ISynergy.Framework.Windows.Converters
                 if (!string.IsNullOrEmpty(model.CreatedBy)) userCreated = model.CreatedBy;
 
                 result.AppendLine($"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("InputFirst")} " +
-                    $"{model.CreatedDate.ToLocalTime().ToString("f")} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userCreated}");
+                    $"{model.CreatedDate.ToLocalTime():f} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userCreated}");
 
                 if (model.ChangedDate.HasValue)
                 {
                     if (!string.IsNullOrEmpty(model.ChangedBy)) userChanged = model.ChangedBy;
 
                     result.AppendLine($"{ServiceLocator.Default.GetInstance<ILanguageService>().GetString("InputLast")} " +
-                        $"{model.ChangedDate.Value.ToLocalTime().ToString("f")} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userChanged}");
+                        $"{model.ChangedDate.Value.ToLocalTime():f} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("By")} {userChanged}");
                 }
 
                 return result.ToString();
@@ -37,6 +50,15 @@ namespace ISynergy.Framework.Windows.Converters
             return string.Empty;
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();

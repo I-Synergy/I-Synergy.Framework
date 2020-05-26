@@ -8,16 +8,34 @@ namespace ISynergy.Framework.Windows.Controls
     /// </summary>
     public sealed class UserThemeResources
     {
+        /// <summary>
+        /// The dark resources path key name
+        /// </summary>
         internal const string DarkResourcesPathKeyName = "DarkResourcesPath";
+        /// <summary>
+        /// The light resources path key name
+        /// </summary>
         internal const string LightResourcesPathKeyName = "LightResourcesPath";
+        /// <summary>
+        /// The high contrast resources path key name
+        /// </summary>
         internal const string HighContrastResourcesPathKeyName = "HighContrastResourcesPath";
 
+        /// <summary>
+        /// The light resources path
+        /// </summary>
         private static string lightResourcesPath;
+        /// <summary>
+        /// The dark resources path
+        /// </summary>
         private static string darkResourcesPath;
+        /// <summary>
+        /// The high contrast resources path
+        /// </summary>
         private static string highContrastResourcesPath;
 
         /// <summary>
-        /// Initializes static members of the <see cref="UserThemeResources"/> class.
+        /// Initializes static members of the <see cref="UserThemeResources" /> class.
         /// </summary>
         static UserThemeResources()
         {
@@ -25,7 +43,7 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserThemeResources"/> class.
+        /// Initializes a new instance of the <see cref="UserThemeResources" /> class.
         /// </summary>
         public UserThemeResources()
         {
@@ -33,8 +51,9 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="Uri"/> path to the resource dictionary containing theme resource definitions for the Dark theme.
+        /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the Dark theme.
         /// </summary>
+        /// <value>The dark resources path.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public string DarkResourcesPath
         {
@@ -49,8 +68,9 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="Uri"/> path to the resource dictionary containing theme resource definitions for the Light theme.
+        /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the Light theme.
         /// </summary>
+        /// <value>The light resources path.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public string LightResourcesPath
         {
@@ -65,8 +85,9 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="Uri"/> path to the resource dictionary containing theme resource definitions for the HighContrast theme.
+        /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the HighContrast theme.
         /// </summary>
+        /// <value>The high contrast resources path.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public string HighContrastResourcesPath
         {
@@ -80,6 +101,11 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Gets the URI by path.
+        /// </summary>
+        /// <param name="resourceId">The resource identifier.</param>
+        /// <returns>Uri.</returns>
         internal static Uri GetUriByPath(string resourceId)
         {
             if (resourceId == LightResourcesPathKeyName)
@@ -107,6 +133,9 @@ namespace ISynergy.Framework.Windows.Controls
             return null;
         }
 
+        /// <summary>
+        /// Ensures the custom xaml resource loader.
+        /// </summary>
         private static void EnsureCustomXamlResourceLoader()
         {
             if (CustomXamlResourceLoader.Current == null)

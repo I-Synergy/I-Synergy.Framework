@@ -8,13 +8,25 @@ using ISynergy.Framework.Core.Linq.Tokenizer;
 
 namespace ISynergy.Framework.Core.Linq.Parsers
 {
+    /// <summary>
+    /// Class TextParser.
+    /// </summary>
     internal class TextParser
     {
+        /// <summary>
+        /// The default number decimal separator
+        /// </summary>
         private const char DefaultNumberDecimalSeparator = '.';
 
+        /// <summary>
+        /// The escape characters
+        /// </summary>
         private static readonly char[] EscapeCharacters = new[] { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
 
         // These aliases are supposed to simply the where clause and make it more human readable
+        /// <summary>
+        /// The predefined operator aliases
+        /// </summary>
         private static readonly Dictionary<string, TokenId> PredefinedOperatorAliases = new Dictionary<string, TokenId>(StringComparer.OrdinalIgnoreCase)
         {
             { "eq", TokenId.Equal },
@@ -38,15 +50,41 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             { "mod", TokenId.Percent }
         };
 
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly ParsingConfig _config;
+        /// <summary>
+        /// The number decimal separator
+        /// </summary>
         private readonly char _numberDecimalSeparator;
+        /// <summary>
+        /// The text
+        /// </summary>
         private readonly string _text;
+        /// <summary>
+        /// The text length
+        /// </summary>
         private readonly int _textLen;
 
+        /// <summary>
+        /// The text position
+        /// </summary>
         private int _textPos;
+        /// <summary>
+        /// The ch
+        /// </summary>
         private char _ch;
+        /// <summary>
+        /// The current token
+        /// </summary>
         public Token CurrentToken;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextParser"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="text">The text.</param>
         public TextParser(ParsingConfig config, string text)
         {
             _config = config;
@@ -59,12 +97,19 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             NextToken();
         }
 
+        /// <summary>
+        /// Sets the text position.
+        /// </summary>
+        /// <param name="pos">The position.</param>
         private void SetTextPos(int pos)
         {
             _textPos = pos;
             _ch = _textPos < _textLen ? _text[_textPos] : '\0';
         }
 
+        /// <summary>
+        /// Nexts the character.
+        /// </summary>
         private void NextChar()
         {
             if (_textPos < _textLen)
@@ -74,6 +119,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             _ch = _textPos < _textLen ? _text[_textPos] : '\0';
         }
 
+        /// <summary>
+        /// Peeks the next character.
+        /// </summary>
+        /// <returns>System.Char.</returns>
         public char PeekNextChar()
         {
             if (_textPos + 1 < _textLen)
@@ -84,6 +133,9 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return '\0';
         }
 
+        /// <summary>
+        /// Nexts the token.
+        /// </summary>
         public void NextToken()
         {
             while (char.IsWhiteSpace(_ch))
@@ -417,6 +469,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             CurrentToken.Id = GetAliasedTokenId(tokenId, CurrentToken.Text);
         }
 
+        /// <summary>
+        /// Validates the token.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="errorMessage">The error message.</param>
         public void ValidateToken(TokenId t, string errorMessage)
         {
             if (CurrentToken.Id != t)
@@ -425,6 +482,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Validates the token.
+        /// </summary>
+        /// <param name="t">The t.</param>
         public void ValidateToken(TokenId t)
         {
             if (CurrentToken.Id != t)
@@ -433,6 +494,9 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Validates the expression.
+        /// </summary>
         private void ValidateExpression()
         {
             if (char.IsLetterOrDigit(_ch))
@@ -441,6 +505,9 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Validates the digit.
+        /// </summary>
         private void ValidateDigit()
         {
             if (!char.IsDigit(_ch))
@@ -449,6 +516,9 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Validates the hexadecimal character.
+        /// </summary>
         private void ValidateHexChar()
         {
             if (!IsHexChar(_ch))
@@ -457,21 +527,45 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Parses the error.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>Exception.</returns>
         private Exception ParseError(string format, params object[] args)
         {
             return ParseError(CurrentToken.Pos, format, args);
         }
 
+        /// <summary>
+        /// Parses the error.
+        /// </summary>
+        /// <param name="pos">The position.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>Exception.</returns>
         private static Exception ParseError(int pos, string format, params object[] args)
         {
             return new ParseException(string.Format(CultureInfo.CurrentCulture, format, args), pos);
         }
 
+        /// <summary>
+        /// Gets the aliased token identifier.
+        /// </summary>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <param name="alias">The alias.</param>
+        /// <returns>TokenId.</returns>
         private static TokenId GetAliasedTokenId(TokenId tokenId, string alias)
         {
             return tokenId == TokenId.Identifier && PredefinedOperatorAliases.TryGetValue(alias, out var id) ? id : tokenId;
         }
 
+        /// <summary>
+        /// Determines whether [is hexadecimal character] [the specified c].
+        /// </summary>
+        /// <param name="c">The c.</param>
+        /// <returns><c>true</c> if [is hexadecimal character] [the specified c]; otherwise, <c>false</c>.</returns>
         private static bool IsHexChar(char c)
         {
             if (char.IsDigit(c))

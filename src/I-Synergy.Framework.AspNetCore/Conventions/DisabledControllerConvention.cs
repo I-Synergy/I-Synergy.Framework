@@ -7,6 +7,10 @@ namespace ISynergy.Framework.AspNetCore.Conventions
     /// </summary>
     public class DisabledControllerConvention : IApplicationModelConvention
     {
+        /// <summary>
+        /// Applies the specified application.
+        /// </summary>
+        /// <param name="application">The application.</param>
         public void Apply(ApplicationModel application)
         {
             for (var i = application.Controllers.Count - 1; i >= 0; i--)

@@ -4,6 +4,11 @@ using System.Globalization;
 
 namespace ISynergy.Framework.Core.Linq.Converters
 {
+    /// <summary>
+    /// Class CustomDateTimeConverter.
+    /// Implements the <see cref="DateTimeOffsetConverter" />
+    /// </summary>
+    /// <seealso cref="DateTimeOffsetConverter" />
     internal class CustomDateTimeConverter : DateTimeOffsetConverter
     {
         /// <summary>

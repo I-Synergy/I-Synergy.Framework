@@ -5,15 +5,34 @@ using System;
 
 namespace ISynergy.Framework.AspNetCore.Attributes
 {
+    /// <summary>
+    /// Class FormValueRequiredAttribute. This class cannot be inherited.
+    /// Implements the <see cref="ActionMethodSelectorAttribute" />
+    /// </summary>
+    /// <seealso cref="ActionMethodSelectorAttribute" />
     public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
     {
+        /// <summary>
+        /// The name
+        /// </summary>
         private readonly string _name;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormValueRequiredAttribute"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
         public FormValueRequiredAttribute(string name)
         {
             _name = name;
         }
 
+        /// <summary>
+        /// Determines whether the action selection is valid for the specified route context.
+        /// </summary>
+        /// <param name="routeContext">The route context.</param>
+        /// <param name="action">Information about the action.</param>
+        /// <returns><see langword="true" /> if the action  selection is valid for the specified context;
+        /// otherwise, <see langword="false" />.</returns>
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
             if (string.Equals(routeContext.HttpContext.Request.Method, "GET", StringComparison.OrdinalIgnoreCase) ||

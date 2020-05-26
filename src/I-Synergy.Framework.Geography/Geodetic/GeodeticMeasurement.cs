@@ -14,38 +14,45 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The calculator used to compute this measurement
         /// </summary>
+        /// <value>The calculator.</value>
         public GeodeticCalculator Calculator => AverageCurve.Calculator;
 
         /// <summary>
         /// Get the average geodetic curve.  This is the geodetic curve as measured
         /// at the average elevation between two points.
         /// </summary>
+        /// <value>The average curve.</value>
         public GeodeticCurve AverageCurve { get; }
 
         /// <summary>
         /// Get the ellipsoidal distance (in meters).  This is the length of the average geodetic
         /// curve.  For actual point-to-point distance, use PointToPointDistance property.
         /// </summary>
+        /// <value>The ellipsoidal distance.</value>
         public double EllipsoidalDistance => AverageCurve.EllipsoidalDistance;
 
         /// <summary>
         /// Get the azimuth.  This is angle from north from start to end.
         /// </summary>
+        /// <value>The azimuth.</value>
         public Angle Azimuth => AverageCurve.Azimuth;
 
         /// <summary>
         /// Get the reverse azimuth.  This is angle from north from end to start.
         /// </summary>
+        /// <value>The reverse azimuth.</value>
         public Angle ReverseAzimuth => AverageCurve.ReverseAzimuth;
 
         /// <summary>
         /// Get the elevation change, in meters, going from the starting to the ending point.
         /// </summary>
+        /// <value>The elevation change.</value>
         public double ElevationChange { get; }
 
         /// <summary>
         /// Get the distance travelled, in meters, going from one point to the next.
         /// </summary>
+        /// <value>The point to point distance.</value>
         public double PointToPointDistance { get; }
 
         /// <summary>

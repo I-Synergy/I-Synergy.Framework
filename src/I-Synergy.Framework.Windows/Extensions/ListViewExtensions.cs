@@ -23,32 +23,32 @@ namespace ISynergy.Framework.Windows.Extensions
                 new PropertyMetadata(null, OnBindableSelectionChanged));
 
         /// <summary>
-        /// Gets the BindableSelection property. This dependency property 
+        /// Gets the BindableSelection property. This dependency property
         /// indicates the list of selected items that is synchronized
         /// with the items selected in the ListView.
         /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns>ObservableCollection&lt;System.Object&gt;.</returns>
         public static ObservableCollection<object> GetBindableSelection(DependencyObject d) =>
             (ObservableCollection<object>)d.GetValue(BindableSelectionProperty);
 
         /// <summary>
-        /// Sets the BindableSelection property. This dependency property 
+        /// Sets the BindableSelection property. This dependency property
         /// indicates the list of selected items that is synchronized
         /// with the items selected in the ListView.
         /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="value">The value.</param>
         public static void SetBindableSelection(DependencyObject d, ObservableCollection<object> value) =>
             d.SetValue(BindableSelectionProperty, value);
 
         /// <summary>
         /// Handles changes to the BindableSelection property.
         /// </summary>
-        /// <param name="d">
-        /// The <see cref="DependencyObject"/> on which
-        /// the property has changed value.
-        /// </param>
-        /// <param name="e">
-        /// Event data that is issued by any event that
-        /// tracks changes to the effective value of this property.
-        /// </param>
+        /// <param name="d">The <see cref="DependencyObject" /> on which
+        /// the property has changed value.</param>
+        /// <param name="e">Event data that is issued by any event that
+        /// tracks changes to the effective value of this property.</param>
         private static void OnBindableSelectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if(d is ListViewBase listViewBase)
@@ -82,17 +82,21 @@ namespace ISynergy.Framework.Windows.Extensions
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Gets the BindableSelectionHandler property. This dependency property 
+        /// Gets the BindableSelectionHandler property. This dependency property
         /// indicates BindableSelectionHandler for a ListView - used
         /// to manage synchronization of BindableSelection and SelectedItems.
         /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns>ListViewBindableSelectionHandler.</returns>
         public static ListViewBindableSelectionHandler GetBindableSelectionHandler(DependencyObject d) =>
             (ListViewBindableSelectionHandler)d.GetValue(BindableSelectionHandlerProperty);
 
         /// <summary>
-        /// Sets the BindableSelectionHandler property. This dependency property 
+        /// Sets the BindableSelectionHandler property. This dependency property
         /// indicates BindableSelectionHandler for a ListView - used to manage synchronization of BindableSelection and SelectedItems.
         /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="value">The value.</param>
         public static void SetBindableSelectionHandler(DependencyObject d, ListViewBindableSelectionHandler value) =>
             d.SetValue(BindableSelectionHandlerProperty, value);
 
@@ -107,30 +111,30 @@ namespace ISynergy.Framework.Windows.Extensions
                 new PropertyMetadata(null, OnItemToBringIntoViewChanged));
 
         /// <summary>
-        /// Gets the ItemToBringIntoView property. This dependency property 
+        /// Gets the ItemToBringIntoView property. This dependency property
         /// indicates the item that should be brought into view.
         /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns>System.Object.</returns>
         public static object GetItemToBringIntoView(DependencyObject d) =>
             d.GetValue(ItemToBringIntoViewProperty);
 
         /// <summary>
-        /// Sets the ItemToBringIntoView property. This dependency property 
+        /// Sets the ItemToBringIntoView property. This dependency property
         /// indicates the item that should be brought into view when first set.
         /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="value">The value.</param>
         public static void SetItemToBringIntoView(DependencyObject d, object value) =>
             d.SetValue(ItemToBringIntoViewProperty, value);
 
         /// <summary>
         /// Handles changes to the ItemToBringIntoView property.
         /// </summary>
-        /// <param name="d">
-        /// The <see cref="DependencyObject"/> on which
-        /// the property has changed value.
-        /// </param>
-        /// <param name="e">
-        /// Event data that is issued by any event that
-        /// tracks changes to the effective value of this property.
-        /// </param>
+        /// <param name="d">The <see cref="DependencyObject" /> on which
+        /// the property has changed value.</param>
+        /// <param name="e">Event data that is issued by any event that
+        /// tracks changes to the effective value of this property.</param>
         private static void OnItemToBringIntoViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var newItemToBringIntoView = d.GetValue(ItemToBringIntoViewProperty);
@@ -145,7 +149,7 @@ namespace ISynergy.Framework.Windows.Extensions
         /// <summary>
         /// Scrolls a vertical ListView to the bottom.
         /// </summary>
-        /// <param name="listView"></param>
+        /// <param name="listView">The list view.</param>
         public static void ScrollToBottom(this ListView listView)
         {
             var scrollViewer = listView.FindParent<ScrollViewer>();
@@ -158,11 +162,17 @@ namespace ISynergy.Framework.Windows.Extensions
     /// </summary>
     public class ListViewBindableSelectionHandler
     {
+        /// <summary>
+        /// The list view
+        /// </summary>
         private ListViewBase _listView;
+        /// <summary>
+        /// The selection
+        /// </summary>
         private ObservableCollection<object> _selection;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ListViewBindableSelectionHandler"/> class.
+        /// Initializes a new instance of the <see cref="ListViewBindableSelectionHandler" /> class.
         /// </summary>
         /// <param name="listView">The ListView.</param>
         /// <param name="selection">The bound selection.</param>
@@ -171,6 +181,11 @@ namespace ISynergy.Framework.Windows.Extensions
             Attach(listView, selection);
         }
 
+        /// <summary>
+        /// Attaches the specified list view.
+        /// </summary>
+        /// <param name="listView">The list view.</param>
+        /// <param name="selection">The selection.</param>
         private void Attach(ListViewBase listView, ObservableCollection<object> selection)
         {
             _listView = listView;
@@ -187,6 +202,11 @@ namespace ISynergy.Framework.Windows.Extensions
             selection.CollectionChanged += OnCollectionChanged;
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:ListViewSelectionChanged" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
         private void OnListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             foreach (var item in e.RemovedItems)
@@ -202,6 +222,11 @@ namespace ISynergy.Framework.Windows.Extensions
             }
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:CollectionChanged" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Reset)
@@ -236,6 +261,9 @@ namespace ISynergy.Framework.Windows.Extensions
             }
         }
 
+        /// <summary>
+        /// Detaches this instance.
+        /// </summary>
         internal void Detach()
         {
             if(_listView != null)

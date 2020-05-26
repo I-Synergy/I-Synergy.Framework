@@ -5,8 +5,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.Core.Models.Accounts
 {
+    /// <summary>
+    /// Class Module.
+    /// Implements the <see cref="ModelBase" />
+    /// </summary>
+    /// <seealso cref="ModelBase" />
     public class Module : ModelBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Module"/> class.
+        /// </summary>
         public Module()
         {
             ModuleId = Guid.NewGuid();
@@ -15,6 +23,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Module_Id property value.
         /// </summary>
+        /// <value>The module identifier.</value>
         [Required]
         [JsonProperty]
         public Guid ModuleId
@@ -26,6 +35,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Code property value.
         /// </summary>
+        /// <value>The name.</value>
         [Required]
         [StringLength(32)]
         [JsonProperty]
@@ -38,6 +48,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Description property value.
         /// </summary>
+        /// <value>The description.</value>
         [Required]
         [StringLength(128)]
         [JsonProperty]

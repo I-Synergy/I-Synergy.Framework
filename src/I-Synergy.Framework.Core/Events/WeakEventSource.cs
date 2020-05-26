@@ -7,15 +7,30 @@ using System.Reflection;
 
 namespace ISynergy.Framework.Core.Events
 {
+    /// <summary>
+    /// Class WeakEventSource.
+    /// </summary>
+    /// <typeparam name="TEventArgs">The type of the t event arguments.</typeparam>
     public class WeakEventSource<TEventArgs>
     {
+        /// <summary>
+        /// The handlers
+        /// </summary>
         private readonly List<WeakDelegate> _handlers;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WeakEventSource{TEventArgs}"/> class.
+        /// </summary>
         public WeakEventSource()
         {
             _handlers = new List<WeakDelegate>();
         }
 
+        /// <summary>
+        /// Raises the specified sender.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see name="TEventArgs"/> instance containing the event data.</param>
         public void Raise(object sender, TEventArgs e)
         {
             lock (_handlers)
@@ -24,6 +39,10 @@ namespace ISynergy.Framework.Core.Events
             }
         }
 
+        /// <summary>
+        /// Subscribes the specified handler.
+        /// </summary>
+        /// <param name="handler">The handler.</param>
         public void Subscribe(EventHandler<TEventArgs> handler)
         {
             var weakHandlers = handler
@@ -37,6 +56,10 @@ namespace ISynergy.Framework.Core.Events
             }
         }
 
+        /// <summary>
+        /// Unsubscribes the specified handler.
+        /// </summary>
+        /// <param name="handler">The handler.</param>
         public void Unsubscribe(EventHandler<TEventArgs> handler)
         {
             lock (_handlers)
@@ -47,14 +70,31 @@ namespace ISynergy.Framework.Core.Events
             }
         }
 
+        /// <summary>
+        /// Class WeakDelegate.
+        /// </summary>
         private class WeakDelegate
         {
+            /// <summary>
+            /// Delegate OpenEventHandler
+            /// </summary>
+            /// <param name="target">The target.</param>
+            /// <param name="sender">The sender.</param>
+            /// <param name="e">The <see name="TEventArgs"/> instance containing the event data.</param>
             private delegate void OpenEventHandler(object target, object sender, TEventArgs e);
 
             // ReSharper disable once StaticMemberInGenericType (by design)
+            /// <summary>
+            /// The open handler cache
+            /// </summary>
             private static readonly ConcurrentDictionary<MethodInfo, OpenEventHandler> _openHandlerCache =
                 new ConcurrentDictionary<MethodInfo, OpenEventHandler>();
 
+            /// <summary>
+            /// Creates the open handler.
+            /// </summary>
+            /// <param name="method">The method.</param>
+            /// <returns>OpenEventHandler.</returns>
             private static OpenEventHandler CreateOpenHandler(MethodInfo method)
             {
                 var target = Expression.Parameter(typeof(object), "target");
@@ -82,10 +122,23 @@ namespace ISynergy.Framework.Core.Events
                 }
             }
 
+            /// <summary>
+            /// The weak target
+            /// </summary>
             private readonly WeakReference _weakTarget;
+            /// <summary>
+            /// The method
+            /// </summary>
             private readonly MethodInfo _method;
+            /// <summary>
+            /// The open handler
+            /// </summary>
             private readonly OpenEventHandler _openHandler;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="WeakDelegate"/> class.
+            /// </summary>
+            /// <param name="handler">The handler.</param>
             public WeakDelegate(Delegate handler)
             {
                 _weakTarget = handler.Target != null ? new WeakReference(handler.Target) : null;
@@ -93,6 +146,12 @@ namespace ISynergy.Framework.Core.Events
                 _openHandler = _openHandlerCache.GetOrAdd(_method, CreateOpenHandler);
             }
 
+            /// <summary>
+            /// Invokes the specified sender.
+            /// </summary>
+            /// <param name="sender">The sender.</param>
+            /// <param name="e">The <see name="TEventArgs"/> instance containing the event data.</param>
+            /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
             public bool Invoke(object sender, TEventArgs e)
             {
                 object target = null;
@@ -106,6 +165,11 @@ namespace ISynergy.Framework.Core.Events
                 return true;
             }
 
+            /// <summary>
+            /// Determines whether the specified handler is match.
+            /// </summary>
+            /// <param name="handler">The handler.</param>
+            /// <returns><c>true</c> if the specified handler is match; otherwise, <c>false</c>.</returns>
             public bool IsMatch(EventHandler<TEventArgs> handler)
             {
                 return ReferenceEquals(handler.Target, _weakTarget?.Target)

@@ -10,16 +10,53 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     /// </summary>
     public interface IDialogService
     {
+        /// <summary>
+        /// Shows the error asynchronous.
+        /// </summary>
+        /// <param name="error">The error.</param>
+        /// <param name="title">The title.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "");
 
+        /// <summary>
+        /// Shows the error asynchronous.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         Task<MessageBoxResult> ShowErrorAsync(string message, string title = "");
 
+        /// <summary>
+        /// Shows the information asynchronous.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         Task<MessageBoxResult> ShowInformationAsync(string message, string title = "");
 
+        /// <summary>
+        /// Shows the warning asynchronous.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         Task<MessageBoxResult> ShowWarningAsync(string message, string title = "");
 
+        /// <summary>
+        /// Shows the greeting asynchronous.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>Task.</returns>
         Task ShowGreetingAsync(string name);
 
+        /// <summary>
+        /// Shows the asynchronous.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="buttons">The buttons.</param>
+        /// <param name="image">The image.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         Task<MessageBoxResult> ShowAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.Information);
     }
 }

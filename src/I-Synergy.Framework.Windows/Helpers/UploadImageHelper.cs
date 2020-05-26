@@ -6,8 +6,15 @@ using Windows.Storage.Pickers;
 
 namespace ISynergy.Framework.Windows.Helpers
 {
+    /// <summary>
+    /// Class UploadImageHelper.
+    /// </summary>
     public static class UploadImageHelper
     {
+        /// <summary>
+        /// upload image as an asynchronous operation.
+        /// </summary>
+        /// <returns>System.String.</returns>
         public static async Task<string> UploadImageAsync()
         {
             var picker = new FileOpenPicker
@@ -26,6 +33,11 @@ namespace ISynergy.Framework.Windows.Helpers
             return await SaveImageAsync(file);
         }
 
+        /// <summary>
+        /// save image as an asynchronous operation.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <returns>System.String.</returns>
         private static async Task<string> SaveImageAsync(StorageFile file)
         {
             if (file is null)

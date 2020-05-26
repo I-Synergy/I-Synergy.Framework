@@ -12,8 +12,14 @@ namespace ISynergy.Framework.Windows.Controls
     /// has no accessible constructor</summary>
     public class InlineCollectionWrapper : IList<Inline>
     {
+        /// <summary>
+        /// The collection
+        /// </summary>
         private IList<Inline> _collection;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InlineCollectionWrapper"/> class.
+        /// </summary>
         internal InlineCollectionWrapper()
         {
             _collection = new List<Inline>();
@@ -90,9 +96,10 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Sets the items of this collection as <see cref="TextBlock.Inlines"/> to <paramref name="textBlock"/>.
+        /// Sets the items of this collection as <see cref="TextBlock.Inlines" /> to <paramref name="textBlock" />.
         /// </summary>
         /// <param name="textBlock">The textBlock where the items are added.</param>
+        /// <exception cref="ArgumentNullException">textBlock</exception>
         internal void AddItemsToTextBlock(TextBlock textBlock)
         {
             if (textBlock == null)
@@ -108,6 +115,10 @@ namespace ISynergy.Framework.Windows.Controls
             _collection = textBlock.Inlines;
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns>IEnumerator.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

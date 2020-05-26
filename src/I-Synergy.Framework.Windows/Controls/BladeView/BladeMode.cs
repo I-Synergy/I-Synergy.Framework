@@ -11,7 +11,7 @@
         Normal,
 
         /// <summary>
-        /// Fullscreen mode : each blade will take the entire Width and Height of the UI control container (cf <see cref="BladeView"/>)
+        /// Fullscreen mode : each blade will take the entire Width and Height of the UI control container (cf <see cref="BladeView" />)
         /// </summary>
         Fullscreen
     }

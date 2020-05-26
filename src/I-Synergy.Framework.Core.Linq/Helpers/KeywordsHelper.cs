@@ -7,24 +7,71 @@ using ISynergy.Framework.Core.Linq.Parsers;
 
 namespace ISynergy.Framework.Core.Linq.Helpers
 {
+    /// <summary>
+    /// Class KeywordsHelper.
+    /// Implements the <see cref="IKeywordsHelper" />
+    /// </summary>
+    /// <seealso cref="IKeywordsHelper" />
     internal class KeywordsHelper : IKeywordsHelper
     {
+        /// <summary>
+        /// The symbol it
+        /// </summary>
         public const string SYMBOL_IT = "$";
+        /// <summary>
+        /// The symbol parent
+        /// </summary>
         public const string SYMBOL_PARENT = "^";
+        /// <summary>
+        /// The symbol root
+        /// </summary>
         public const string SYMBOL_ROOT = "~";
 
+        /// <summary>
+        /// The keyword it
+        /// </summary>
         public const string KEYWORD_IT = "it";
+        /// <summary>
+        /// The keyword parent
+        /// </summary>
         public const string KEYWORD_PARENT = "parent";
+        /// <summary>
+        /// The keyword root
+        /// </summary>
         public const string KEYWORD_ROOT = "root";
 
+        /// <summary>
+        /// The function iif
+        /// </summary>
         public const string FUNCTION_IIF = "iif";
+        /// <summary>
+        /// The function isnull
+        /// </summary>
         public const string FUNCTION_ISNULL = "isnull";
+        /// <summary>
+        /// The function new
+        /// </summary>
         public const string FUNCTION_NEW = "new";
+        /// <summary>
+        /// The function nullpropagation
+        /// </summary>
         public const string FUNCTION_NULLPROPAGATION = "np";
+        /// <summary>
+        /// The function is
+        /// </summary>
         public const string FUNCTION_IS = "is";
+        /// <summary>
+        /// The function as
+        /// </summary>
         public const string FUNCTION_AS = "as";
+        /// <summary>
+        /// The function cast
+        /// </summary>
         public const string FUNCTION_CAST = "cast";
 
+        /// <summary>
+        /// The keywords
+        /// </summary>
         private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
         {
             { "true", Expression.Constant(true) },
@@ -32,6 +79,10 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             { "null", Expression.Constant(null) }
         };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeywordsHelper"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
         public KeywordsHelper(ParsingConfig config)
         {
             if (config.AreContextKeywordsEnabled)
@@ -89,6 +140,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             }
         }
 
+        /// <summary>
+        /// Tries the get value.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public bool TryGetValue(string name, out object type)
         {
             return _keywords.TryGetValue(name, out type);

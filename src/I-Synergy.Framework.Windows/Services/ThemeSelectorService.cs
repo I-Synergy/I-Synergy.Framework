@@ -11,20 +11,45 @@ using Windows.UI.Xaml;
 
 namespace ISynergy.Framework.Windows.Services
 {
+    /// <summary>
+    /// Class ThemeSelectorService.
+    /// Implements the <see cref="IThemeSelectorService" />
+    /// </summary>
+    /// <seealso cref="IThemeSelectorService" />
     public class ThemeSelectorService : IThemeSelectorService
     {
+        /// <summary>
+        /// The settings key
+        /// </summary>
         private const string SettingsKey = "RequestedTheme";
 
+        /// <summary>
+        /// Gets or sets the theme.
+        /// </summary>
+        /// <value>The theme.</value>
         public object Theme { get; set; }
+        /// <summary>
+        /// Gets a value indicating whether this instance is light theme enabled.
+        /// </summary>
+        /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
         public bool IsLightThemeEnabled => (ElementTheme)Theme == ElementTheme.Light;
 
+        /// <summary>
+        /// Occurs when [on theme changed].
+        /// </summary>
         public event EventHandler<object> OnThemeChanged = delegate { };
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         public void Initialize()
         {
             Theme = LoadThemeFromSetting();
         }
 
+        /// <summary>
+        /// Switches the theme.
+        /// </summary>
         public void SwitchTheme()
         {
             if ((ElementTheme)Theme == ElementTheme.Dark)
@@ -37,6 +62,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Sets the theme.
+        /// </summary>
+        /// <param name="theme">The theme.</param>
         public void SetTheme(object theme)
         {
             Theme = (ElementTheme)theme;
@@ -47,12 +76,15 @@ namespace ISynergy.Framework.Windows.Services
             OnThemeChanged(null, (ElementTheme)Theme);
         }
 
+        /// <summary>
+        /// Sets the requested theme.
+        /// </summary>
         public void SetRequestedTheme()
         {
             var color = ServiceLocator.Default.GetInstance<IApplicationSettingsService>().Color;
 
             Application.Current.Resources.ThemeDictionaries.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"ms-appx:///I-Synergy.Framework.Windows/Themes/Theme.{color.ToString()}.xaml", UriKind.RelativeOrAbsolute) });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"ms-appx:///I-Synergy.Framework.Windows/Themes/Theme.{color}.xaml", UriKind.RelativeOrAbsolute) });
 
             if (Window.Current.Content is FrameworkElement frameworkElement)
             {
@@ -67,6 +99,9 @@ namespace ISynergy.Framework.Windows.Services
             SetupTitlebar();
         }
 
+        /// <summary>
+        /// Setups the titlebar.
+        /// </summary>
         private void SetupTitlebar()
         {
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
@@ -99,6 +134,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Loads the theme from setting.
+        /// </summary>
+        /// <returns>System.Object.</returns>
         private static object LoadThemeFromSetting()
         {
             var cacheTheme = ElementTheme.Light;
@@ -116,6 +155,10 @@ namespace ISynergy.Framework.Windows.Services
             return cacheTheme;
         }
 
+        /// <summary>
+        /// Saves the theme in setting.
+        /// </summary>
+        /// <param name="theme">The theme.</param>
         private static void SaveThemeInSetting(ElementTheme theme)
         {
             ApplicationData.Current.LocalSettings.Values[SettingsKey] = theme.ToString();

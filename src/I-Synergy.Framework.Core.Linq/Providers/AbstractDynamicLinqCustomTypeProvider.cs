@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Core.Linq.Providers
         /// </summary>
         /// <param name="assemblies">The assemblies to inspect.</param>
         /// <param name="typeName">The type name to resolve.</param>
-        /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
+        /// <returns>A resolved <see cref="Type" /> or null when not found.</returns>
         protected Type ResolveType(IEnumerable<Assembly> assemblies, string typeName)
         {
             Argument.IsNotNull(nameof(assemblies), assemblies);
@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Core.Linq.Providers
         /// </summary>
         /// <param name="assemblies">The assemblies to inspect.</param>
         /// <param name="simpleTypeName">The simple type name to resolve.</param>
-        /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
+        /// <returns>A resolved <see cref="Type" /> or null when not found.</returns>
         protected Type ResolveTypeBySimpleName(IEnumerable<Assembly> assemblies, string simpleTypeName)
         {
             Argument.IsNotNull(nameof(assemblies), assemblies);
@@ -77,7 +77,7 @@ namespace ISynergy.Framework.Core.Linq.Providers
         }
 
         /// <summary>
-        /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
+        /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute" /> in an Exception friendly way.
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
         /// <returns><see cref="IEnumerable{Type}" /></returns>

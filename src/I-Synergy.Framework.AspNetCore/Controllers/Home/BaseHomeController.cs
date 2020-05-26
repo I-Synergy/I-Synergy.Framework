@@ -6,16 +6,32 @@ using System.Diagnostics;
 
 namespace ISynergy.Framework.AspNetCore.Controllers.Base
 {
+    /// <summary>
+    /// Class BaseHomeController.
+    /// Implements the <see cref="Controller" />
+    /// </summary>
+    /// <seealso cref="Controller" />
     [AllowAnonymous]
     public abstract class BaseHomeController : Controller
     {
+        /// <summary>
+        /// The environment
+        /// </summary>
         protected IWebHostEnvironment _environment;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseHomeController"/> class.
+        /// </summary>
+        /// <param name="environment">The environment.</param>
         protected BaseHomeController(IWebHostEnvironment environment)
         {
             _environment = environment;
         }
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         [AllowAnonymous]
         public virtual IActionResult Index()
@@ -23,6 +39,10 @@ namespace ISynergy.Framework.AspNetCore.Controllers.Base
             return View();
         }
 
+        /// <summary>
+        /// Errors this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public virtual IActionResult Error()
         {

@@ -19,22 +19,25 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Services
     /// </summary>
     public class JwtTokenService : IJwtTokenService
     {
+        /// <summary>
+        /// The JWT options
+        /// </summary>
         private readonly JwtOptions jwtOptions;
 
         /// <summary>
-        /// Constructor with dependency injection to <see cref="JwtOptions"/>
+        /// Constructor with dependency injection to <see cref="JwtOptions" />
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">The options.</param>
         public JwtTokenService(IOptions<JwtOptions> options)
         {
             jwtOptions = options.Value;
         }
 
         /// <summary>
-        /// Generates a HmacSha256 encoded <see cref="Token"/> from a <see cref="TokenRequest"/>
+        /// Generates a HmacSha256 encoded <see cref="Token" /> from a <see cref="TokenRequest" />
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The request.</param>
+        /// <returns>Token.</returns>
         public Token GenerateJwtToken(TokenRequest request)
         {
             // Use code below to generate symmetric secret key.
@@ -76,11 +79,12 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Services
         }
 
         /// <summary>
-        /// Validates a <see cref="Token"/> and returns a <see cref="ClaimsPrincipal"/> when successful
+        /// Validates a <see cref="Token" /> and returns a <see cref="ClaimsPrincipal" /> when successful
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        private ClaimsPrincipal? ValidateToken(Token token)
+        /// <param name="token">The token.</param>
+        /// <returns>System.Nullable&lt;ClaimsPrincipal&gt;.</returns>
+        /// <exception cref="SecurityTokenExpiredException"></exception>
+        private ClaimsPrincipal ValidateToken(Token token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(token.AccessToken);
@@ -115,10 +119,10 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Services
         }
 
         /// <summary>
-        /// Retrieves a list of <see cref="Claim"/> from a <see cref="Token"/>
+        /// Retrieves a list of <see cref="Claim" /> from a <see cref="Token" />
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="token">The token.</param>
+        /// <returns>List&lt;Claim&gt;.</returns>
         public List<Claim> GetClaims(Token token)
         {
             var principal = ValidateToken(token);
@@ -132,20 +136,20 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Services
         }
 
         /// <summary>
-        /// Retrieves a list of string from a <see cref="Token"/> and <see cref="Core.Constants.ClaimTypes"/>
+        /// Retrieves a list of string from a <see cref="Token" /> and <see cref="Core.Constants.ClaimTypes" />
         /// </summary>
-        /// <param name="token"></param>
-        /// <param name="claimType"></param>
-        /// <returns></returns>
+        /// <param name="token">The token.</param>
+        /// <param name="claimType">Type of the claim.</param>
+        /// <returns>List&lt;System.String&gt;.</returns>
         public List<string> GetClaims(Token token, string claimType) =>
             GetClaims(token).FindValues(claimType).ToList();
 
         /// <summary>
-        /// Retrieves a single of string from a <see cref="Token"/> and <see cref="Core.Constants.ClaimTypes"/>
+        /// Retrieves a single of string from a <see cref="Token" /> and <see cref="Core.Constants.ClaimTypes" />
         /// </summary>
-        /// <param name="token"></param>
-        /// <param name="claimType"></param>
-        /// <returns></returns>
+        /// <param name="token">The token.</param>
+        /// <param name="claimType">Type of the claim.</param>
+        /// <returns>System.String.</returns>
         public string GetSingleClaim(Token token, string claimType) =>
             GetClaims(token).FindSingleValue(claimType);
     }

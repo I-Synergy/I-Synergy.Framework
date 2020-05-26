@@ -8,14 +8,19 @@ using Windows.UI.Xaml.Markup;
 
 namespace ISynergy.Framework.Windows.Behaviors
 {
+    /// <summary>
+    /// Class MultiBindingBehavior.
+    /// Implements the <see cref="BehaviorBase{Windows.UI.Xaml.FrameworkElement}" />
+    /// </summary>
+    /// <seealso cref="BehaviorBase{Windows.UI.Xaml.FrameworkElement}" />
     [ContentProperty(Name = nameof(Items))]
     [TypeConstraint(typeof(FrameworkElement))]
     public class MultiBindingBehavior : BehaviorBase<FrameworkElement>
     {
         /// <summary>
-        /// Gets the <see cref="MultiBindingItem"/> collection within this <see cref="MultiBindingBehavior"/> instance.
+        /// Gets the <see cref="MultiBindingItem" /> collection within this <see cref="MultiBindingBehavior" /> instance.
         /// </summary>
-        /// <value>One or more <see cref="MultiBindingItem"/> objects.</value>
+        /// <value>One or more <see cref="MultiBindingItem" /> objects.</value>
         public MultiBindingItemCollection Items
         {
             get { return (MultiBindingItemCollection)GetValue(ItemsProperty); }
@@ -47,7 +52,7 @@ namespace ISynergy.Framework.Windows.Behaviors
         /// <summary>
         /// Gets or sets the converter to use to convert the source values to or from the target value.
         /// </summary>
-        /// <value>A resource reference to a class that implements the <see cref="IValueConverter"/> interface, which includes implementations of the <see cref="IValueConverter.Convert"/> and <see cref="IValueConverter.ConvertBack"/> methods.</value>
+        /// <value>A resource reference to a class that implements the <see cref="IValueConverter" /> interface, which includes implementations of the <see cref="IValueConverter.Convert" /> and <see cref="IValueConverter.ConvertBack" /> methods.</value>
         public IValueConverter Converter
         {
             get { return (IValueConverter)GetValue(ConverterProperty); }
@@ -92,6 +97,11 @@ namespace ISynergy.Framework.Windows.Behaviors
         public static readonly DependencyProperty ModeProperty =
             DependencyProperty.Register(nameof(Mode), typeof(BindingMode), typeof(MultiBindingBehavior), new PropertyMetadata(BindingMode.OneWay, OnPropertyChanged));
 
+        /// <summary>
+        /// Handles the <see cref="E:PropertyChanged" /> event.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var multiBindingBehavior = (MultiBindingBehavior)d;
@@ -100,7 +110,7 @@ namespace ISynergy.Framework.Windows.Behaviors
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MultiBindingBehavior"/> class.
+        /// Initializes a new instance of the <see cref="MultiBindingBehavior" /> class.
         /// </summary>
         public MultiBindingBehavior()
         {
@@ -110,7 +120,7 @@ namespace ISynergy.Framework.Windows.Behaviors
         /// <summary>
         /// Called after the behavior is attached to an AssociatedObject.
         /// </summary>
-        /// <remarks>Override this to hook up functionality to the AssociatedObject.</remarks>
+        /// <remarks>Override this to hook up functionality to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" /></remarks>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -118,6 +128,9 @@ namespace ISynergy.Framework.Windows.Behaviors
             Update();
         }
 
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
         private void Update()
         {
             if (AssociatedObject == null || string.IsNullOrEmpty(PropertyName))

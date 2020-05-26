@@ -11,12 +11,16 @@ namespace ISynergy.Framework.Geography
     /// be canonicalized such that:
     /// -90 &lt;= latitude &lt;= +90
     /// -180 &lt; longitude &lt;= +180
-    /// </summary>  
+    /// </summary>
     public struct GlobalCoordinates : IComparable<GlobalCoordinates>, IEquatable<GlobalCoordinates>
     {
-        /// <summary>Latitude.  Negative latitude is southern hemisphere.</summary>
+        /// <summary>
+        /// Latitude.  Negative latitude is southern hemisphere.
+        /// </summary>
         private Angle _mLatitude;
-        /// <summary>Longitude.  Negative longitude is western hemisphere.</summary>
+        /// <summary>
+        /// Longitude.  Negative longitude is western hemisphere.
+        /// </summary>
         private Angle _mLongitude;
 
         /// <summary>
@@ -36,6 +40,7 @@ namespace ISynergy.Framework.Geography
         /// Get/set latitude.  The latitude value will be canonicalized (which might
         /// result in a change to the longitude). Negative latitude is southern hemisphere.
         /// </summary>
+        /// <value>The latitude.</value>
         public Angle Latitude
         {
             get { return _mLatitude; }
@@ -51,6 +56,7 @@ namespace ISynergy.Framework.Geography
         /// Get/set longitude.  The longitude value will be canonicalized. Negative
         /// longitude is western hemisphere.
         /// </summary>
+        /// <value>The longitude.</value>
         public Angle Longitude
         {
             get { return _mLongitude; }
@@ -65,6 +71,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The coordinates of the Antipode of this point
         /// </summary>
+        /// <value>The antipode.</value>
         public GlobalCoordinates Antipode => new GlobalCoordinates(
             -_mLatitude.Degrees,
             -Math.Sign(_mLongitude.Degrees) * (180.0 - Math.Abs(_mLongitude.Degrees)));
@@ -161,9 +168,9 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Compare these coordinates to another object for equality.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="obj">The object to compare with the current instance.</param>
         /// <returns>True if they are the same</returns>
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if(obj is GlobalCoordinates coordinates)
             {

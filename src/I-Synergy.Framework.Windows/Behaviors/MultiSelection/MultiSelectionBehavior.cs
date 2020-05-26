@@ -6,8 +6,17 @@ using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Framework.Windows.Behaviors
 {
+    /// <summary>
+    /// Class MultiSelectionBehavior.
+    /// Implements the <see cref="BehaviorBase{Windows.UI.Xaml.Controls.ListView}" />
+    /// </summary>
+    /// <seealso cref="BehaviorBase{Windows.UI.Xaml.Controls.ListView}" />
     public class MultiSelectionBehavior : BehaviorBase<ListView>
     {
+        /// <summary>
+        /// Called after the behavior is attached to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" />.
+        /// </summary>
+        /// <remarks>Override this to hook up functionality to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" /></remarks>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -21,15 +30,27 @@ namespace ISynergy.Framework.Windows.Behaviors
             }
         }
 
+        /// <summary>
+        /// Gets or sets the selected items.
+        /// </summary>
+        /// <value>The selected items.</value>
         public IList<object> SelectedItems
         {
             get { return (IList<object>)GetValue(SelectedItemsProperty); }
             set { SetValue(SelectedItemsProperty, value); }
         }
 
+        /// <summary>
+        /// The selected items property
+        /// </summary>
         public static readonly DependencyProperty SelectedItemsProperty =
             DependencyProperty.Register(nameof(SelectedItems), typeof(IList<object>), typeof(MultiSelectionBehavior), new PropertyMetadata(null, SelectedItemsChanged));
 
+        /// <summary>
+        /// Selecteds the items changed.
+        /// </summary>
+        /// <param name="o">The o.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void SelectedItemsChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             if (!(o is MultiSelectionBehavior behavior))
@@ -54,9 +75,20 @@ namespace ISynergy.Framework.Windows.Behaviors
             }
         }
 
+        /// <summary>
+        /// The is updating target
+        /// </summary>
         private bool _isUpdatingTarget;
+        /// <summary>
+        /// The is updating source
+        /// </summary>
         private bool _isUpdatingSource;
 
+        /// <summary>
+        /// Sources the collection changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
         void SourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (_isUpdatingSource)
@@ -93,6 +125,11 @@ namespace ISynergy.Framework.Windows.Behaviors
             }
         }
 
+        /// <summary>
+        /// ListViews the selection changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
         private void ListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_isUpdatingTarget)

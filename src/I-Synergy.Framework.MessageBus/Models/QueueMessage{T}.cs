@@ -7,6 +7,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Models
     /// Class QueueMessage.
     /// Implements the <see cref="T:ISynergy.Framework.MessageBus.Abstractions.IQueueMessage{TEntity}" />
     /// </summary>
+    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     public abstract class QueueMessage<TEntity> : IQueueMessage<TEntity>
     {
         /// <summary>

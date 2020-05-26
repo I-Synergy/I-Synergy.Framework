@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Linq.Parsers
 {
+    /// <summary>
+    /// Class EnumerationsFromMscorlib.
+    /// </summary>
     internal static class EnumerationsFromMscorlib
     {
         /// <summary>

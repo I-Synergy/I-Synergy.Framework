@@ -12,12 +12,16 @@ namespace ISynergy.Framework.Core.Events
     /// by this weak reference.</typeparam>
     public class WeakFunc<TResult>
     {
+        /// <summary>
+        /// The static function
+        /// </summary>
         private Func<TResult> _staticFunc;
 
         /// <summary>
         /// Gets or sets the <see cref="MethodInfo" /> corresponding to this WeakFunc's
         /// method passed in the constructor.
         /// </summary>
+        /// <value>The method.</value>
         protected MethodInfo Method
         {
             get;
@@ -27,6 +31,7 @@ namespace ISynergy.Framework.Core.Events
         /// <summary>
         /// Get a value indicating whether the WeakFunc is static or not.
         /// </summary>
+        /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
         public bool IsStatic
         {
             get
@@ -38,6 +43,7 @@ namespace ISynergy.Framework.Core.Events
         /// <summary>
         /// Gets the name of the method that this WeakFunc represents.
         /// </summary>
+        /// <value>The name of the method.</value>
         public virtual string MethodName
         {
             get
@@ -57,6 +63,7 @@ namespace ISynergy.Framework.Core.Events
         /// <see cref="Reference" />, for example if the
         /// method is anonymous.
         /// </summary>
+        /// <value>The function reference.</value>
         protected WeakReference FuncReference
         {
             get;
@@ -64,10 +71,11 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Saves the <see cref="FuncReference"/> as a hard reference. This is
+        /// Saves the <see cref="FuncReference" /> as a hard reference. This is
         /// used in relation with this instance's constructor and only if
         /// the constructor's keepTargetAlive parameter is true.
         /// </summary>
+        /// <value>The live reference.</value>
         protected object LiveReference
         {
             get;
@@ -80,6 +88,7 @@ namespace ISynergy.Framework.Core.Events
         /// <see cref="FuncReference" />, for example if the
         /// method is anonymous.
         /// </summary>
+        /// <value>The reference.</value>
         protected WeakReference Reference
         {
             get;
@@ -99,7 +108,7 @@ namespace ISynergy.Framework.Core.Events
         /// <param name="func">The Func that will be associated to this instance.</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures. </param>
+        /// parameter to true if the action is using closures.</param>
         public WeakFunc(Func<TResult> func, bool keepTargetAlive = false)
             : this(func == null ? null : func.Target, func, keepTargetAlive)
         {
@@ -112,7 +121,7 @@ namespace ISynergy.Framework.Core.Events
         /// <param name="func">The Func that will be associated to this instance.</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures. </param>
+        /// parameter to true if the action is using closures.</param>
         [SuppressMessage(
             "Microsoft.Design",
             "CA1062:Validate arguments of public methods",
@@ -160,6 +169,7 @@ namespace ISynergy.Framework.Core.Events
         /// Gets a value indicating whether the Func's owner is still alive, or if it was collected
         /// by the Garbage Collector already.
         /// </summary>
+        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
         public virtual bool IsAlive
         {
             get
@@ -198,9 +208,10 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Gets the Func's owner. This object is stored as a 
+        /// Gets the Func's owner. This object is stored as a
         /// <see cref="WeakReference" />.
         /// </summary>
+        /// <value>The target.</value>
         public object Target
         {
             get
@@ -220,6 +231,7 @@ namespace ISynergy.Framework.Core.Events
         /// <see cref="Target" />, for example if the
         /// method is anonymous.
         /// </summary>
+        /// <value>The function target.</value>
         protected object FuncTarget
         {
             get

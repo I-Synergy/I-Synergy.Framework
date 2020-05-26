@@ -8,10 +8,13 @@ namespace ISynergy.Framework.Core.Linq.Parsers
     /// </summary>
     public class NumberParser
     {
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly ParsingConfig _config;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NumberParser"/> class.
+        /// Initializes a new instance of the <see cref="NumberParser" /> class.
         /// </summary>
         /// <param name="config">The ParsingConfig.</param>
         public NumberParser(ParsingConfig config)
@@ -24,6 +27,7 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="type">The type.</param>
+        /// <returns>System.Object.</returns>
         public object ParseNumber(string text, Type type)
         {
             try

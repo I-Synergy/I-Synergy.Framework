@@ -13,15 +13,33 @@ using ISynergy.Framework.AspNetCore.Startup;
 
 namespace ISynergy.Framework.AspNetCore.Authentication
 {
+    /// <summary>
+    /// Class BaseStartup.
+    /// Implements the <see cref="BaseStartup{TDbContext}" />
+    /// Implements the <see cref="IAsyncInitialization" />
+    /// </summary>
+    /// <typeparam name="TDbContext">The type of the t database context.</typeparam>
+    /// <typeparam name="TUser">The type of the t user.</typeparam>
+    /// <seealso cref="BaseStartup{TDbContext}" />
+    /// <seealso cref="IAsyncInitialization" />
     public abstract class BaseStartup<TDbContext, TUser> : BaseStartup<TDbContext>, IAsyncInitialization
         where TDbContext : DbContext
         where TUser : IdentityUser
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseStartup{TDbContext, TUser}"/> class.
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <param name="configuration">The configuration.</param>
         protected BaseStartup(IWebHostEnvironment environment, IConfiguration configuration)
             : base(environment, configuration)
         {
         }
 
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
@@ -37,9 +55,9 @@ namespace ISynergy.Framework.AspNetCore.Authentication
         /// <summary>
         /// AddMultiTenantActionFilter
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">The services.</param>
         /// <example>
-        /// <code>
+        ///   <code>
         /// services.AddScoped(typeof(TenantActionFilter));
         /// </code>
         /// </example>
@@ -47,11 +65,19 @@ namespace ISynergy.Framework.AspNetCore.Authentication
         {
         }
 
+        /// <summary>
+        /// Adds the multi tenancy.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddMultiTenancy(IServiceCollection services)
         {
             services.AddSingleton<ITenantService, TenantService>();
         }
 
+        /// <summary>
+        /// Adds the authorization.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void AddAuthorization(IServiceCollection services)
         {
             services.AddAuthorization(options =>

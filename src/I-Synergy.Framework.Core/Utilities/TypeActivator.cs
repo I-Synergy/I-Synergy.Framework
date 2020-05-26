@@ -10,8 +10,9 @@ namespace ISynergy.Framework.Core.Utilities
         /// <summary>
         /// Creates a new instance from AQN.
         /// </summary>
-        /// <param name="assemblyQualifiedName"></param>
-        /// <returns></returns>
+        /// <param name="assemblyQualifiedName">Name of the assembly qualified.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="ArgumentException">Unable to resolve object type: " + assemblyQualifiedName</exception>
         public static object CreateInstance(string assemblyQualifiedName)
         {
             var targetType = Type.GetType(assemblyQualifiedName, false, false);
@@ -26,14 +27,15 @@ namespace ISynergy.Framework.Core.Utilities
         /// Creates a new instance of object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <returns>T.</returns>
         public static T CreateInstance<T>() => (T)CreateInstance(typeof(T));
 
         /// <summary>
         /// general object creation
         /// </summary>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
+        /// <param name="targetType">Type of the target.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="ArgumentException">Unable to instantiate type: " + targetType.AssemblyQualifiedName + " - Unknown Error</exception>
         public static object CreateInstance(Type targetType)
         {
             object result;

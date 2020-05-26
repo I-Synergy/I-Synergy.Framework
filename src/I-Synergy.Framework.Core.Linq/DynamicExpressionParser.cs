@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(ParsingConfig parsingConfig, bool createParameterCtor, Type resultType, string expression, params object[] values)
         {
             Argument.IsNotNullOrEmpty(nameof(expression), expression);
@@ -36,7 +36,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="createParameterCtor">if set to <c>true</c> then also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="Expression"/></returns>
+        /// <returns>The generated <see cref="Expression" /></returns>
         public static Expression<Func<TResult>> ParseLambda<TResult>(ParsingConfig parsingConfig, bool createParameterCtor, string expression, params object[] values)
         {
             return (Expression<Func<TResult>>)ParseLambda(parsingConfig, createParameterCtor, typeof(TResult), expression, values);
@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(ParsingConfig parsingConfig, bool createParameterCtor, ParameterExpression[] parameters, Type resultType, string expression, params object[] values)
         {
             Argument.IsNotNull(nameof(parameters), parameters);
@@ -84,7 +84,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="parameters">A array from ParameterExpressions.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="Expression"/></returns>
+        /// <returns>The generated <see cref="Expression" /></returns>
         public static Expression<Func<TResult>> ParseLambda<TResult>(ParsingConfig parsingConfig, bool createParameterCtor, ParameterExpression[] parameters, string expression, params object[] values)
         {
             return (Expression<Func<TResult>>)ParseLambda(parsingConfig, createParameterCtor, parameters, typeof(TResult), expression, values);
@@ -98,7 +98,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(bool createParameterCtor, Type itType, Type resultType, string expression, params object[] values)
         {
             Argument.IsNotNull(nameof(itType), itType);
@@ -116,7 +116,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="createParameterCtor">if set to <c>true</c> then also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="Expression"/></returns>
+        /// <returns>The generated <see cref="Expression" /></returns>
         public static Expression<Func<T, TResult>> ParseLambda<T, TResult>(ParsingConfig parsingConfig, bool createParameterCtor, string expression, params object[] values)
         {
             Argument.IsNotNullOrEmpty(nameof(expression), expression);
@@ -131,7 +131,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(ParsingConfig parsingConfig, Type resultType, string expression, params object[] values)
         {
             return ParseLambda(parsingConfig, true, resultType, expression, values);
@@ -143,7 +143,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(Type resultType, string expression, params object[] values)
         {
             Argument.IsNotNullOrEmpty(nameof(expression), expression);
@@ -158,7 +158,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(Type itType, Type resultType, string expression, params object[] values)
         {
             return ParseLambda(true, itType, resultType, expression, values);
@@ -172,7 +172,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(ParsingConfig parsingConfig, Type itType, Type resultType, string expression, params object[] values)
         {
             return ParseLambda(parsingConfig, true, itType, resultType, expression, values);
@@ -187,7 +187,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(ParsingConfig parsingConfig, bool createParameterCtor, Type itType, Type resultType, string expression, params object[] values)
         {
             Argument.IsNotNull(nameof(itType), itType);
@@ -203,7 +203,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(ParameterExpression[] parameters, Type resultType, string expression, params object[] values)
         {
             return ParseLambda(null, true, parameters, resultType, expression, values);
@@ -217,7 +217,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(ParsingConfig parsingConfig, ParameterExpression[] parameters, Type resultType, string expression, params object[] values)
         {
             return ParseLambda(parsingConfig, true, parameters, resultType, expression, values);
@@ -231,7 +231,7 @@ namespace ISynergy.Framework.Core.Linq
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
-        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        /// <returns>The generated <see cref="LambdaExpression" /></returns>
         public static LambdaExpression ParseLambda(bool createParameterCtor, ParameterExpression[] parameters, Type resultType, string expression, params object[] values)
         {
             return ParseLambda(null, createParameterCtor, parameters, resultType, expression, values);

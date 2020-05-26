@@ -3,8 +3,17 @@ using Windows.ApplicationModel;
 
 namespace ISynergy.Framework.Windows
 {
+    /// <summary>
+    /// Class InfoService.
+    /// Implements the <see cref="IInfoService" />
+    /// </summary>
+    /// <seealso cref="IInfoService" />
     public class InfoService : IInfoService
     {
+        /// <summary>
+        /// Gets the application path.
+        /// </summary>
+        /// <value>The application path.</value>
         public string ApplicationPath
         {
             get
@@ -13,6 +22,10 @@ namespace ISynergy.Framework.Windows
             }
         }
 
+        /// <summary>
+        /// Gets the name of the company.
+        /// </summary>
+        /// <value>The name of the company.</value>
         public string CompanyName
         {
             get
@@ -21,6 +34,10 @@ namespace ISynergy.Framework.Windows
             }
         }
 
+        /// <summary>
+        /// Gets the product version.
+        /// </summary>
+        /// <value>The product version.</value>
         public string ProductVersion
         {
             get
@@ -29,6 +46,10 @@ namespace ISynergy.Framework.Windows
             }
         }
 
+        /// <summary>
+        /// Gets the name of the product.
+        /// </summary>
+        /// <value>The name of the product.</value>
         public string ProductName
         {
             get
@@ -37,6 +58,10 @@ namespace ISynergy.Framework.Windows
             }
         }
 
+        /// <summary>
+        /// Gets the copy rights detail.
+        /// </summary>
+        /// <value>The copy rights detail.</value>
         public string CopyRightsDetail
         {
             get

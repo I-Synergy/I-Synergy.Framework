@@ -4,6 +4,9 @@ using Windows.UI.Xaml.Data;
 
 namespace ISynergy.Framework.Windows.Converters
 {
+    /// <summary>
+    /// Class DateTimeOffsetConverter.
+    /// </summary>
     public static class DateTimeOffsetConverter
     {
         /// <summary>
@@ -26,6 +29,7 @@ namespace ISynergy.Framework.Windows.Converters
         /// <summary>
         /// Converts from Timespan to DateTime.
         /// </summary>
+        /// <param name="dt">The dt.</param>
         /// <param name="ts">The source TimeSpan value.</param>
         /// <returns>Returns a DateTime filled with date equals to mindate and time equals to time in timespan if succeeded, null otherwise.</returns>
         public static DateTimeOffset? TimeSpanToDateTimeOffset(DateTimeOffset dt, TimeSpan ts)
@@ -34,10 +38,26 @@ namespace ISynergy.Framework.Windows.Converters
         }
     }
 
+    /// <summary>
+    /// Class DateTimeOffsetToTimeSpanConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class DateTimeOffsetToTimeSpanConverter : IValueConverter
     {
+        /// <summary>
+        /// The original
+        /// </summary>
         private DateTimeOffset original;
 
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if(value is DateTimeOffset dt)
@@ -50,6 +70,14 @@ namespace ISynergy.Framework.Windows.Converters
             return TimeSpan.MinValue;
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             if(original is DateTimeOffset odt && value is TimeSpan ts)
@@ -62,8 +90,21 @@ namespace ISynergy.Framework.Windows.Converters
         }
     }
 
+    /// <summary>
+    /// Class DateOffsetCollectionToDateTimeCollectionConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var result = new ObservableCollection<DateTime>();
@@ -81,6 +122,14 @@ namespace ISynergy.Framework.Windows.Converters
             return result;
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             var result = new ObservableCollection<DateTimeOffset>();
@@ -112,8 +161,21 @@ namespace ISynergy.Framework.Windows.Converters
         }
     }
 
+    /// <summary>
+    /// Class DateTimeOffsetToLocalDateTimeOffsetConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class DateTimeOffsetToLocalDateTimeOffsetConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is DateTimeOffset datetime)
@@ -124,6 +186,14 @@ namespace ISynergy.Framework.Windows.Converters
             return DateTimeOffset.Now.ToLocalTime();
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             if (value is DateTimeOffset datetime)
@@ -135,6 +205,11 @@ namespace ISynergy.Framework.Windows.Converters
         }
     }
 
+    /// <summary>
+    /// Class DateTimeOffsetToLocalDateStringConverter.
+    /// Implements the <see cref="Windows.UI.Xaml.Data.IValueConverter" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.Data.IValueConverter" />
     public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
     {
         // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:d\} 2009-06-15T13:45:30 -> 6/15/2009 (en-US)
@@ -146,6 +221,14 @@ namespace ISynergy.Framework.Windows.Converters
         // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=T} 2009-06-15T13:45:30 -> 1:45 PM (en-US)
         // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=T} 2009-06-15T13:45:30 -> 1:45:30 PM (en-US)
 
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is DateTimeOffset datetime)
@@ -161,6 +244,15 @@ namespace ISynergy.Framework.Windows.Converters
             return DateTimeOffset.Now.ToString("f");
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="language">The language.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();

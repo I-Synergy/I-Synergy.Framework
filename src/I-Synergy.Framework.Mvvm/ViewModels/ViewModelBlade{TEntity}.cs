@@ -11,14 +11,30 @@ using ISynergy.Framework.Core.Utilities;
 
 namespace ISynergy.Framework.Mvvm
 {
+    /// <summary>
+    /// Class ViewModelBlade.
+    /// Implements the <see cref="ViewModel" />
+    /// Implements the <see cref="IViewModelBlade" />
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+    /// <seealso cref="ViewModel" />
+    /// <seealso cref="IViewModelBlade" />
     public abstract class ViewModelBlade<TEntity> : ViewModel, IViewModelBlade
     {
+        /// <summary>
+        /// Occurs when [submitted].
+        /// </summary>
         public event EventHandler<SubmitEventArgs<TEntity>> Submitted;
+        /// <summary>
+        /// Called when [submitted].
+        /// </summary>
+        /// <param name="e">The e.</param>
         protected virtual void OnSubmitted(SubmitEventArgs<TEntity> e) => Submitted?.Invoke(this, e);
 
         /// <summary>
         /// Gets or sets the SelectedItem property value.
         /// </summary>
+        /// <value>The selected item.</value>
         public TEntity SelectedItem
         {
             get { return GetValue<TEntity>(); }
@@ -28,6 +44,7 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the Owner property value.
         /// </summary>
+        /// <value>The owner.</value>
         public IViewModelBladeView Owner
         {
             get { return GetValue<IViewModelBladeView>(); }
@@ -37,6 +54,7 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the IsNew property value.
         /// </summary>
+        /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
         public bool IsNew
         {
             get { return GetValue<bool>(); }
@@ -46,14 +64,25 @@ namespace ISynergy.Framework.Mvvm
         /// <summary>
         /// Gets or sets the IsDisabled property value.
         /// </summary>
+        /// <value><c>true</c> if this instance is disabled; otherwise, <c>false</c>.</value>
         public bool IsDisabled
         {
             get { return GetValue<bool>(); }
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets the submit command.
+        /// </summary>
+        /// <value>The submit command.</value>
         public RelayCommand Submit_Command { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewModelBlade{TEntity}"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="commonServices">The common services.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         protected ViewModelBlade(
             IContext context,
             IBaseCommonServices commonServices,
@@ -80,6 +109,11 @@ namespace ISynergy.Framework.Mvvm
             Submit_Command = new RelayCommand(async () => await SubmitAsync(SelectedItem));
         }
 
+        /// <summary>
+        /// Submits the asynchronous.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>Task.</returns>
         public virtual Task SubmitAsync(TEntity e)
         {
             OnSubmitted(new SubmitEventArgs<TEntity>(e));

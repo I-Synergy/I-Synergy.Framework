@@ -6,11 +6,29 @@ using System;
 
 namespace ISynergy.Framework.AspNetCore.Authentication.Initializers
 {
+    /// <summary>
+    /// Class UserInfoTelemetryInitializer.
+    /// Implements the <see cref="ITelemetryInitializer" />
+    /// </summary>
+    /// <seealso cref="ITelemetryInitializer" />
     public class UserInfoTelemetryInitializer : ITelemetryInitializer
     {
+        /// <summary>
+        /// The claims accessor
+        /// </summary>
         private readonly ClaimsAccessor _claimsAccessor;
+        /// <summary>
+        /// The HTTP context accessor
+        /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserInfoTelemetryInitializer"/> class.
+        /// </summary>
+        /// <param name="httpContextAccessor">The HTTP context accessor.</param>
+        /// <param name="claimsAccessor">The claims accessor.</param>
+        /// <exception cref="ArgumentNullException">claimsAccessor</exception>
+        /// <exception cref="ArgumentNullException">httpContextAccessor</exception>
         public UserInfoTelemetryInitializer(IHttpContextAccessor httpContextAccessor, ClaimsAccessor claimsAccessor)
         {
             _claimsAccessor = claimsAccessor ?? throw new ArgumentNullException(nameof(claimsAccessor));

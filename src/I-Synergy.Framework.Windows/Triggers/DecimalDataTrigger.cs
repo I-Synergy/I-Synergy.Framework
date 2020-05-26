@@ -4,18 +4,35 @@ using Windows.UI.Xaml;
 
 namespace ISynergy.Framework.Windows.Triggers
 {
+    /// <summary>
+    /// Class DecimalDataTrigger.
+    /// Implements the <see cref="Windows.UI.Xaml.StateTriggerBase" />
+    /// </summary>
+    /// <seealso cref="Windows.UI.Xaml.StateTriggerBase" />
     public class DecimalDataTrigger : StateTriggerBase
     {
         #region DataValue
+        /// <summary>
+        /// Gets or sets the data value.
+        /// </summary>
+        /// <value>The data value.</value>
         public decimal DataValue
         {
             get { return (decimal)GetValue(DataValueProperty); }
             set { SetValue(DataValueProperty, value); }
         }
 
+        /// <summary>
+        /// The data value property
+        /// </summary>
         public static readonly DependencyProperty DataValueProperty =
             DependencyProperty.Register(nameof(DataValue), typeof(decimal), typeof(DecimalDataTrigger), new PropertyMetadata(0m, DataValueChanged));
 
+        /// <summary>
+        /// Datas the value changed.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void DataValueChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
         {
             TriggerStateCheck(
@@ -27,15 +44,27 @@ namespace ISynergy.Framework.Windows.Triggers
         #endregion
 
         #region TriggerValue
+        /// <summary>
+        /// Gets or sets the trigger value.
+        /// </summary>
+        /// <value>The trigger value.</value>
         public decimal TriggerValue
         {
             get { return (decimal)GetValue(TriggerValueProperty); }
             set { SetValue(TriggerValueProperty, value); }
         }
 
+        /// <summary>
+        /// The trigger value property
+        /// </summary>
         public static readonly DependencyProperty TriggerValueProperty =
             DependencyProperty.Register(nameof(TriggerValue), typeof(decimal), typeof(DecimalDataTrigger), new PropertyMetadata(0m, TriggerValueChanged));
 
+        /// <summary>
+        /// Triggers the value changed.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void TriggerValueChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
         {
             TriggerStateCheck(
@@ -47,16 +76,30 @@ namespace ISynergy.Framework.Windows.Triggers
         #endregion
 
         #region Operator
+        /// <summary>
+        /// Gets or sets the operator.
+        /// </summary>
+        /// <value>The operator.</value>
         public string Operator
         {
             get { return (string)GetValue(OperatorProperty); }
             set { SetValue(OperatorProperty, value); }
         }
 
+        /// <summary>
+        /// The operator property
+        /// </summary>
         public static readonly DependencyProperty OperatorProperty =
             DependencyProperty.Register(nameof(Operator), typeof(string), typeof(DecimalDataTrigger), new PropertyMetadata("=="));
         #endregion
 
+        /// <summary>
+        /// Triggers the state check.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="operation">The operation.</param>
+        /// <param name="dataValue">The data value.</param>
+        /// <param name="triggerValue">The trigger value.</param>
         private static void TriggerStateCheck(DependencyObject target, string operation, decimal dataValue, decimal triggerValue)
         {
             Argument.IsNotNull(nameof(target), target);

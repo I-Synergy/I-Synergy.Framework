@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.MessageBus.Abstractions
 {
-    /// <summary>Interface IPublisherServiceBus</summary>
+    /// <summary>
+    /// Interface IPublisherServiceBus
+    /// </summary>
     /// <typeparam name="TQueueMessage">The type of the t entity.</typeparam>
     public interface IPublisherServiceBus<TQueueMessage>
         where TQueueMessage : class, IBaseMessage

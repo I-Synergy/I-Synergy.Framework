@@ -12,6 +12,10 @@ namespace ISynergy.Framework.AspNetCore.Filters
     /// </summary>
     public sealed class NoNullModelsFilter : ActionFilterAttribute
     {
+        /// <summary>
+        /// Called when [action executing].
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var optionalParameters = context.ActionDescriptor.Parameters

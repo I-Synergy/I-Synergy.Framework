@@ -19,9 +19,10 @@ namespace ISynergy.Framework.Core.Listeners
         private readonly WeakReference weakInstance;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WeakEventListener{TInstance, TSource, TEventArgs}"/> class.
+        /// Initializes a new instance of the <see cref="WeakEventListener{TInstance, TSource, TEventArgs}" /> class.
         /// </summary>
         /// <param name="instance">Instance subscribing to the event.</param>
+        /// <exception cref="ArgumentNullException">instance</exception>
         public WeakEventListener(TInstance instance)
         {
             if (instance == null)
@@ -35,11 +36,13 @@ namespace ISynergy.Framework.Core.Listeners
         /// <summary>
         /// Gets or sets the method to call when the event fires.
         /// </summary>
+        /// <value>The on event action.</value>
         public Action<TInstance, TSource, TEventArgs> OnEventAction { get; set; }
 
         /// <summary>
         /// Gets or sets the method to call when detaching from the event.
         /// </summary>
+        /// <value>The on detach action.</value>
         public Action<WeakEventListener<TInstance, TSource, TEventArgs>> OnDetachAction { get; set; }
 
         /// <summary>

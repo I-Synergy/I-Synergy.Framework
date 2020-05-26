@@ -139,8 +139,8 @@ namespace ISynergy.Framework.Geography
         /// <param name="mercatorRhumbDistance">The distance of the two points on a Rhumb line on the Mercator projection</param>
         /// <param name="bearing">The constant course for the path</param>
         /// <param name="numberOfPoints">Number of points on the path (including start and end)</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the number of points is less than 2</exception>
         /// <returns>An array of points describing the loxodromic path from start to end</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public GlobalCoordinates[] CalculatePath(GlobalCoordinates start, GlobalCoordinates end, out double mercatorRhumbDistance, out Angle bearing, int numberOfPoints = 10)
         {
             mercatorRhumbDistance = 0;

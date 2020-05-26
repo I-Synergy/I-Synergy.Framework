@@ -5,11 +5,17 @@ using ISynergy.Framework.Core.Data;
 
 namespace ISynergy.Framework.Core.Models.Accounts
 {
+    /// <summary>
+    /// Class RegistrationData.
+    /// Implements the <see cref="ModelBase" />
+    /// </summary>
+    /// <seealso cref="ModelBase" />
     public class RegistrationData : ModelBase
     {
         /// <summary>
         /// Gets or sets the ApplicationId property value.
         /// </summary>
+        /// <value>The application identifier.</value>
         [Required]
         public int ApplicationId
         {
@@ -20,6 +26,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the RelationId property value.
         /// </summary>
+        /// <value>The relation identifier.</value>
         public Guid RelationId
         {
             get { return GetValue<Guid>(); }
@@ -29,6 +36,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the LicenseName property value.
         /// </summary>
+        /// <value>The name of the license.</value>
         [Required]
         public string LicenseName
         {
@@ -39,6 +47,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Modules property value.
         /// </summary>
+        /// <value>The modules.</value>
         [Required]
         public List<Module> Modules
         {
@@ -49,6 +58,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the UsersAllowed property value.
         /// </summary>
+        /// <value>The users allowed.</value>
         [Required]
         public int UsersAllowed
         {
@@ -59,6 +69,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Email property value.
         /// </summary>
+        /// <value>The email.</value>
         [Required]
         public string Email
         {
@@ -69,6 +80,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the TimeZoneId property value.
         /// </summary>
+        /// <value>The time zone identifier.</value>
         [Required]
         public string TimeZoneId
         {
@@ -79,6 +91,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Password property value.
         /// </summary>
+        /// <value>The password.</value>
         [Required]
         public string Password
         {

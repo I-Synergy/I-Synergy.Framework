@@ -24,31 +24,89 @@ namespace ISynergy.Framework.Core.Linq.Parsers
     /// </summary>
     public class ExpressionParser
     {
+        /// <summary>
+        /// The method order by
+        /// </summary>
         static readonly string methodOrderBy = nameof(Queryable.OrderBy);
+        /// <summary>
+        /// The method order by descending
+        /// </summary>
         static readonly string methodOrderByDescending = nameof(Queryable.OrderByDescending);
+        /// <summary>
+        /// The method then by
+        /// </summary>
         static readonly string methodThenBy = nameof(Queryable.ThenBy);
+        /// <summary>
+        /// The method then by descending
+        /// </summary>
         static readonly string methodThenByDescending = nameof(Queryable.ThenByDescending);
 
+        /// <summary>
+        /// The parsing configuration
+        /// </summary>
         private readonly ParsingConfig _parsingConfig;
+        /// <summary>
+        /// The method finder
+        /// </summary>
         private readonly MethodFinder _methodFinder;
+        /// <summary>
+        /// The keywords helper
+        /// </summary>
         private readonly IKeywordsHelper _keywordsHelper;
+        /// <summary>
+        /// The text parser
+        /// </summary>
         private readonly TextParser _textParser;
+        /// <summary>
+        /// The expression helper
+        /// </summary>
         private readonly IExpressionHelper _expressionHelper;
+        /// <summary>
+        /// The type finder
+        /// </summary>
         private readonly ITypeFinder _typeFinder;
+        /// <summary>
+        /// The type converter factory
+        /// </summary>
         private readonly ITypeConverterFactory _typeConverterFactory;
+        /// <summary>
+        /// The internals
+        /// </summary>
         private readonly Dictionary<string, object> _internals;
+        /// <summary>
+        /// The symbols
+        /// </summary>
         private readonly Dictionary<string, object> _symbols;
 
+        /// <summary>
+        /// The externals
+        /// </summary>
         private IDictionary<string, object> _externals;
+        /// <summary>
+        /// It
+        /// </summary>
         private ParameterExpression _it;
+        /// <summary>
+        /// The parent
+        /// </summary>
         private ParameterExpression _parent;
+        /// <summary>
+        /// The root
+        /// </summary>
         private ParameterExpression _root;
+        /// <summary>
+        /// The result type
+        /// </summary>
         private Type _resultType;
+        /// <summary>
+        /// The create parameter ctor
+        /// </summary>
         private bool _createParameterCtor;
 
         /// <summary>
         /// Gets name for the `it` field. By default this is set to the KeyWord value "it".
         /// </summary>
+        /// <value>It name.</value>
         public string ItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
 
         /// <summary>
@@ -58,10 +116,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         /// Not used internally by ExpressionParser, but used to preserve compatibility of parsingConfig.RenameParameterExpression
         /// which was designed to only work with mono-lambda expressions.
         /// </summary>
+        /// <value>The last name of the lambda it.</value>
         public string LastLambdaItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionParser"/> class.
+        /// Initializes a new instance of the <see cref="ExpressionParser" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <param name="expression">The expression.</param>
@@ -94,6 +153,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             _typeConverterFactory = new TypeConverterFactory(_parsingConfig);
         }
 
+        /// <summary>
+        /// Processes the parameters.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
         void ProcessParameters(ParameterExpression[] parameters)
         {
             foreach (var pe in parameters.Where(p => !string.IsNullOrEmpty(p.Name)))
@@ -114,6 +177,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Processes the values.
+        /// </summary>
+        /// <param name="values">The values.</param>
         void ProcessValues(object[] values)
         {
             for (var i = 0; i < values.Length; i++)
@@ -131,6 +198,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Adds the symbol.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
         private void AddSymbol(string name, object value)
         {
             if (_symbols.ContainsKey(name))
@@ -169,6 +241,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
 #pragma warning disable 0219
+        /// <summary>
+        /// Parses the ordering.
+        /// </summary>
+        /// <param name="forceThenBy">if set to <c>true</c> [force then by].</param>
+        /// <returns>IList&lt;DynamicOrdering&gt;.</returns>
         internal IList<DynamicOrdering> ParseOrdering(bool forceThenBy = false)
         {
             var orderings = new List<DynamicOrdering>();
@@ -212,6 +289,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
 #pragma warning restore 0219
 
         // ?: operator
+        /// <summary>
+        /// Parses the conditional operator.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseConditionalOperator()
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -229,6 +310,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // ?? (null-coalescing) operator
+        /// <summary>
+        /// Parses the null coalescing operator.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseNullCoalescingOperator()
         {
             var expr = ParseLambdaOperator();
@@ -242,6 +327,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // => operator - Added Support for projection operator
+        /// <summary>
+        /// Parses the lambda operator.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseLambdaOperator()
         {
             var expr = ParseOrOperator();
@@ -262,6 +351,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         // - ||
         // - Or
         // - OrElse
+        /// <summary>
+        /// Parses the or operator.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseOrOperator()
         {
             var left = ParseAndOperator();
@@ -280,6 +373,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         // - &&
         // - And
         // - AndAlso
+        /// <summary>
+        /// Parses the and operator.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseAndOperator()
         {
             var left = ParseIn();
@@ -297,6 +394,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         // in operator for literals - example: "x in (1,2,3,4)"
         // in operator to mimic contains - example: "x in @0", compare to @0.Contains(x)
         // Adapted from ticket submitted by github user mlewis9548 
+        /// <summary>
+        /// Parses the in.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseIn()
         {
             var left = ParseLogicalAndOrOperator();
@@ -377,6 +478,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // &, | bitwise operators
+        /// <summary>
+        /// Parses the logical and or operator.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseLogicalAndOrOperator()
         {
             var left = ParseComparisonOperator();
@@ -432,6 +537,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // =, ==, !=, <>, >, >=, <, <= operators
+        /// <summary>
+        /// Parses the comparison operator.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseComparisonOperator()
         {
             var left = ParseShiftOperator();
@@ -577,6 +686,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return left;
         }
 
+        /// <summary>
+        /// Determines whether [has implicit conversion] [the specified base type].
+        /// </summary>
+        /// <param name="baseType">Type of the base.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <returns><c>true</c> if [has implicit conversion] [the specified base type]; otherwise, <c>false</c>.</returns>
         private bool HasImplicitConversion(Type baseType, Type targetType)
         {
             var baseTypeHasConversion = baseType.GetMethods(BindingFlags.Public | BindingFlags.Static)
@@ -593,11 +708,25 @@ namespace ISynergy.Framework.Core.Linq.Parsers
                 .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
         }
 
+        /// <summary>
+        /// Parses the enum to constant expression.
+        /// </summary>
+        /// <param name="pos">The position.</param>
+        /// <param name="leftType">Type of the left.</param>
+        /// <param name="constantExpr">The constant expr.</param>
+        /// <returns>ConstantExpression.</returns>
         private ConstantExpression ParseEnumToConstantExpression(int pos, Type leftType, ConstantExpression constantExpr)
         {
             return Expression.Constant(ParseConstantExpressionToEnum(pos, leftType, constantExpr), leftType);
         }
 
+        /// <summary>
+        /// Parses the constant expression to enum.
+        /// </summary>
+        /// <param name="pos">The position.</param>
+        /// <param name="leftType">Type of the left.</param>
+        /// <param name="constantExpr">The constant expr.</param>
+        /// <returns>System.Object.</returns>
         private object ParseConstantExpressionToEnum(int pos, Type leftType, ConstantExpression constantExpr)
         {
             try
@@ -623,6 +752,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // <<, >> operators
+        /// <summary>
+        /// Parses the shift operator.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseShiftOperator()
         {
             var left = ParseAdditive();
@@ -647,6 +780,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // +, - operators
+        /// <summary>
+        /// Parses the additive.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseAdditive()
         {
             var left = ParseMultiplicative();
@@ -678,6 +815,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // *, /, %, mod operators
+        /// <summary>
+        /// Parses the multiplicative.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseMultiplicative()
         {
             var left = ParseUnary();
@@ -706,6 +847,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // -, !, not unary operators
+        /// <summary>
+        /// Parses the unary.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseUnary()
         {
             if (_textParser.CurrentToken.Id == TokenId.Minus || _textParser.CurrentToken.Id == TokenId.Exclamation || TokenIdentifierIs("not"))
@@ -737,6 +882,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return ParsePrimary();
         }
 
+        /// <summary>
+        /// Parses the primary.
+        /// </summary>
+        /// <returns>Expression.</returns>
+        /// <exception cref="NotSupportedException">An expression tree lambda may not contain a null propagating operator. Use the 'np()' or 'np(...)' (null-propagation) function instead.</exception>
         Expression ParsePrimary()
         {
             var expr = ParsePrimaryStart();
@@ -763,6 +913,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return expr;
         }
 
+        /// <summary>
+        /// Parses the primary start.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParsePrimaryStart()
         {
             switch (_textParser.CurrentToken.Id)
@@ -782,6 +936,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Parses the string literal.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseStringLiteral()
         {
             _textParser.ValidateToken(TokenId.StringLiteral);
@@ -816,6 +974,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return ConstantExpressionHelper.CreateLiteral(s, s);
         }
 
+        /// <summary>
+        /// Parses the integer literal.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseIntegerLiteral()
         {
             _textParser.ValidateToken(TokenId.IntegerLiteral);
@@ -913,6 +1075,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Parses the real literal.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseRealLiteral()
         {
             _textParser.ValidateToken(TokenId.RealLiteral);
@@ -924,6 +1090,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return TryParseAsFloat(text, qualifier);
         }
 
+        /// <summary>
+        /// Tries the parse as float.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="qualifier">The qualifier.</param>
+        /// <returns>Expression.</returns>
         Expression TryParseAsFloat(string text, char qualifier)
         {
             if (qualifier == 'F' || qualifier == 'f')
@@ -938,6 +1110,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return TryParseAsDecimal(text, qualifier);
         }
 
+        /// <summary>
+        /// Tries the parse as decimal.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="qualifier">The qualifier.</param>
+        /// <returns>Expression.</returns>
         Expression TryParseAsDecimal(string text, char qualifier)
         {
             if (qualifier == 'M' || qualifier == 'm')
@@ -952,6 +1130,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return TryParseAsDouble(text, qualifier);
         }
 
+        /// <summary>
+        /// Tries the parse as double.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="qualifier">The qualifier.</param>
+        /// <returns>Expression.</returns>
         Expression TryParseAsDouble(string text, char qualifier)
         {
             double d;
@@ -971,6 +1155,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             throw ParseError(Res.InvalidRealLiteral, text);
         }
 
+        /// <summary>
+        /// Parses the paren expression.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseParenExpression()
         {
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
@@ -981,6 +1169,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return e;
         }
 
+        /// <summary>
+        /// Parses the identifier.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseIdentifier()
         {
             _textParser.ValidateToken(TokenId.Identifier);
@@ -1063,6 +1255,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             throw ParseError(Res.UnknownIdentifier, _textParser.CurrentToken.Text);
         }
 
+        /// <summary>
+        /// Parses it.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseIt()
         {
             if (_it == null)
@@ -1073,6 +1269,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return _it;
         }
 
+        /// <summary>
+        /// Parses the parent.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseParent()
         {
             if (_parent == null)
@@ -1083,6 +1283,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return _parent;
         }
 
+        /// <summary>
+        /// Parses the root.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseRoot()
         {
             if (_root == null)
@@ -1094,6 +1298,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // isnull(a,b) function
+        /// <summary>
+        /// Parses the function is null.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseFunctionIsNull()
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1108,6 +1316,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // iif(test, ifTrue, ifFalse) function
+        /// <summary>
+        /// Parses the function iif.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseFunctionIif()
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1123,6 +1335,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // np(...) function
+        /// <summary>
+        /// Parses the function null propagation.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseFunctionNullPropagation()
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1152,6 +1368,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // Is(...) function
+        /// <summary>
+        /// Parses the function is.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseFunctionIs()
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1171,6 +1391,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // As(...) function
+        /// <summary>
+        /// Parses the function as.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseFunctionAs()
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1190,6 +1414,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // Cast(...) function
+        /// <summary>
+        /// Parses the function cast.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseFunctionCast()
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1208,6 +1436,14 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return Expression.ConvertChecked(_it, resolvedType);
         }
 
+        /// <summary>
+        /// Generates the conditional.
+        /// </summary>
+        /// <param name="test">The test.</param>
+        /// <param name="expressionIfTrue">The expression if true.</param>
+        /// <param name="expressionIfFalse">The expression if false.</param>
+        /// <param name="errorPos">The error position.</param>
+        /// <returns>Expression.</returns>
         Expression GenerateConditional(Expression test, Expression expressionIfTrue, Expression expressionIfFalse, int errorPos)
         {
             if (test.Type != typeof(bool))
@@ -1274,6 +1510,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
         }
 
         // new (...) function
+        /// <summary>
+        /// Parses the new.
+        /// </summary>
+        /// <returns>Expression.</returns>
         Expression ParseNew()
         {
             _textParser.NextToken();
@@ -1380,6 +1620,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return CreateNewExpression(properties, expressions, newType);
         }
 
+        /// <summary>
+        /// Creates the array initializer expression.
+        /// </summary>
+        /// <param name="expressions">The expressions.</param>
+        /// <param name="newType">The new type.</param>
+        /// <returns>Expression.</returns>
         private Expression CreateArrayInitializerExpression(List<Expression> expressions, Type newType)
         {
             if (expressions.Count == 0)
@@ -1395,6 +1641,13 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return Expression.NewArrayInit(expressions.All(expression => expression.Type == expressions[0].Type) ? expressions[0].Type : typeof(object), expressions);
         }
 
+        /// <summary>
+        /// Creates the new expression.
+        /// </summary>
+        /// <param name="properties">The properties.</param>
+        /// <param name="expressions">The expressions.</param>
+        /// <param name="newType">The new type.</param>
+        /// <returns>Expression.</returns>
         private Expression CreateNewExpression(List<DynamicProperty> properties, List<Expression> expressions, Type newType)
         {
             // http://solutionizing.net/category/linq/
@@ -1467,6 +1720,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return Expression.MemberInit(Expression.New(type), bindings);
         }
 
+        /// <summary>
+        /// Parses the lambda invocation.
+        /// </summary>
+        /// <param name="lambda">The lambda.</param>
+        /// <returns>Expression.</returns>
         Expression ParseLambdaInvocation(LambdaExpression lambda)
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1480,6 +1738,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return Expression.Invoke(lambda, args);
         }
 
+        /// <summary>
+        /// Parses the type access.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>Expression.</returns>
         Expression ParseTypeAccess(Type type)
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1537,6 +1800,13 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return ParseMemberAccess(type, null);
         }
 
+        /// <summary>
+        /// Generates the conversion.
+        /// </summary>
+        /// <param name="expr">The expr.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="errorPos">The error position.</param>
+        /// <returns>Expression.</returns>
         private Expression GenerateConversion(Expression expr, Type type, int errorPos)
         {
             var exprType = expr.Type;
@@ -1586,6 +1856,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             throw ParseError(errorPos, Res.CannotConvertValue, TypeHelper.GetTypeName(exprType), TypeHelper.GetTypeName(type));
         }
 
+        /// <summary>
+        /// Parses the member access.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="instance">The instance.</param>
+        /// <returns>Expression.</returns>
         Expression ParseMemberAccess(Type type, Expression instance)
         {
             if (instance != null)
@@ -1694,6 +1970,15 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
 
+        /// <summary>
+        /// Parses the aggregate.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="elementType">Type of the element.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="errorPos">The error position.</param>
+        /// <param name="isQueryable">if set to <c>true</c> [is queryable].</param>
+        /// <returns>Expression.</returns>
         Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, bool isQueryable)
         {
             var oldParent = _parent;
@@ -1790,6 +2075,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return Expression.Call(callType, methodName, typeArgs, args);
         }
 
+        /// <summary>
+        /// Resolves the type from argument expression.
+        /// </summary>
+        /// <param name="functionName">Name of the function.</param>
+        /// <param name="argumentExpression">The argument expression.</param>
+        /// <returns>Type.</returns>
         private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression)
         {
             var typeName = (argumentExpression as ConstantExpression)?.Value as string;
@@ -1807,6 +2098,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return resultType;
         }
 
+        /// <summary>
+        /// Parses the argument list.
+        /// </summary>
+        /// <returns>Expression[].</returns>
         Expression[] ParseArgumentList()
         {
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
@@ -1817,6 +2112,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return args;
         }
 
+        /// <summary>
+        /// Parses the arguments.
+        /// </summary>
+        /// <returns>Expression[].</returns>
         Expression[] ParseArguments()
         {
             var argList = new List<Expression>();
@@ -1839,6 +2138,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return argList.ToArray();
         }
 
+        /// <summary>
+        /// Parses the element access.
+        /// </summary>
+        /// <param name="expr">The expr.</param>
+        /// <returns>Expression.</returns>
         Expression ParseElementAccess(Expression expr)
         {
             var errorPos = _textParser.CurrentToken.Pos;
@@ -1878,6 +2182,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Converts to nullabletype.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>Type.</returns>
         internal static Type ToNullableType(Type type)
         {
             Argument.IsNotNull(nameof(type), type);
@@ -1890,6 +2199,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return typeof(Nullable<>).MakeGenericType(type);
         }
 
+        /// <summary>
+        /// Tries the name of the get member.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="memberName">Name of the member.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         static bool TryGetMemberName(Expression expression, out string memberName)
         {
             var memberExpression = expression as MemberExpression;
@@ -1908,6 +2223,13 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return false;
         }
 
+        /// <summary>
+        /// Checks the and promote operand.
+        /// </summary>
+        /// <param name="signatures">The signatures.</param>
+        /// <param name="opName">Name of the op.</param>
+        /// <param name="expr">The expr.</param>
+        /// <param name="errorPos">The error position.</param>
         void CheckAndPromoteOperand(Type signatures, string opName, ref Expression expr, int errorPos)
         {
             Expression[] args = { expr };
@@ -1920,6 +2242,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             expr = args[0];
         }
 
+        /// <summary>
+        /// Gets the name of the overloaded operation.
+        /// </summary>
+        /// <param name="tokenId">The token identifier.</param>
+        /// <returns>System.String.</returns>
         static string GetOverloadedOperationName(TokenId tokenId)
         {
             switch (tokenId)
@@ -1934,6 +2261,15 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Checks the and promote operands.
+        /// </summary>
+        /// <param name="signatures">The signatures.</param>
+        /// <param name="opId">The op identifier.</param>
+        /// <param name="opName">Name of the op.</param>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <param name="errorPos">The error position.</param>
         void CheckAndPromoteOperands(Type signatures, TokenId opId, string opName, ref Expression left, ref Expression right, int errorPos)
         {
             Expression[] args = { left, right };
@@ -1959,16 +2295,38 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             right = args[1];
         }
 
+        /// <summary>
+        /// Incompatibles the operand error.
+        /// </summary>
+        /// <param name="opName">Name of the op.</param>
+        /// <param name="expr">The expr.</param>
+        /// <param name="errorPos">The error position.</param>
+        /// <returns>Exception.</returns>
         static Exception IncompatibleOperandError(string opName, Expression expr, int errorPos)
         {
             return ParseError(errorPos, Res.IncompatibleOperand, opName, TypeHelper.GetTypeName(expr.Type));
         }
 
+        /// <summary>
+        /// Incompatibles the operands error.
+        /// </summary>
+        /// <param name="opName">Name of the op.</param>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <param name="errorPos">The error position.</param>
+        /// <returns>Exception.</returns>
         static Exception IncompatibleOperandsError(string opName, Expression left, Expression right, int errorPos)
         {
             return ParseError(errorPos, Res.IncompatibleOperands, opName, TypeHelper.GetTypeName(left.Type), TypeHelper.GetTypeName(right.Type));
         }
 
+        /// <summary>
+        /// Finds the property or field.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="memberName">Name of the member.</param>
+        /// <param name="staticAccess">if set to <c>true</c> [static access].</param>
+        /// <returns>MemberInfo.</returns>
         static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
         {
             foreach (var t in TypeHelper.GetSelfAndBaseTypes(type))
@@ -1992,11 +2350,20 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return null;
         }
 
+        /// <summary>
+        /// Tokens the identifier is.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         bool TokenIdentifierIs(string id)
         {
             return _textParser.CurrentToken.Id == TokenId.Identifier && string.Equals(id, _textParser.CurrentToken.Text, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Gets the identifier.
+        /// </summary>
+        /// <returns>System.String.</returns>
         string GetIdentifier()
         {
             _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
@@ -2009,11 +2376,24 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             return id;
         }
 
+        /// <summary>
+        /// Parses the error.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>Exception.</returns>
         Exception ParseError(string format, params object[] args)
         {
             return ParseError(_textParser?.CurrentToken.Pos ?? 0, format, args);
         }
 
+        /// <summary>
+        /// Parses the error.
+        /// </summary>
+        /// <param name="pos">The position.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>Exception.</returns>
         static Exception ParseError(int pos, string format, params object[] args)
         {
             return new ParseException(string.Format(CultureInfo.CurrentCulture, format, args), pos);

@@ -7,11 +7,17 @@ using System.Linq;
 
 namespace ISynergy.Framework.Core.Models.Accounts
 {
+    /// <summary>
+    /// Class User.
+    /// Implements the <see cref="ModelBase" />
+    /// </summary>
+    /// <seealso cref="ModelBase" />
     public class User : ModelBase
     {
         /// <summary>
         /// Gets or sets the Id property value.
         /// </summary>
+        /// <value>The identifier.</value>
         [JsonProperty]
         [Required]
         public string Id
@@ -23,6 +29,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the UserName property value.
         /// </summary>
+        /// <value>The name of the user.</value>
         [JsonProperty]
         [Required]
         public string UserName
@@ -34,6 +41,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the IsUnlocked property value.
         /// </summary>
+        /// <value><c>true</c> if this instance is unlocked; otherwise, <c>false</c>.</value>
         [JsonProperty]
         [Required]
         public bool IsUnlocked
@@ -43,11 +51,17 @@ namespace ISynergy.Framework.Core.Models.Accounts
         }
     }
 
+    /// <summary>
+    /// Class Role.
+    /// Implements the <see cref="ModelBase" />
+    /// </summary>
+    /// <seealso cref="ModelBase" />
     public class Role : ModelBase
     {
         /// <summary>
         /// Gets or sets the Id property value.
         /// </summary>
+        /// <value>The identifier.</value>
         [JsonProperty]
         [Required]
         public string Id
@@ -59,6 +73,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Name property value.
         /// </summary>
+        /// <value>The name.</value>
         [JsonProperty]
         [Required]
         public string Name
@@ -67,15 +82,25 @@ namespace ISynergy.Framework.Core.Models.Accounts
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        /// <value>The description.</value>
         [JsonIgnore]
         public string Description { get; set; } = string.Empty;
     }
 
+    /// <summary>
+    /// Class UserSelect.
+    /// Implements the <see cref="User" />
+    /// </summary>
+    /// <seealso cref="User" />
     public class UserSelect : User
     {
         /// <summary>
         /// Gets or sets the IsSelected property value.
         /// </summary>
+        /// <value><c>true</c> if this instance is selected; otherwise, <c>false</c>.</value>
         public bool IsSelected
         {
             get { return GetValue<bool>(); }
@@ -83,8 +108,16 @@ namespace ISynergy.Framework.Core.Models.Accounts
         }
     }
 
+    /// <summary>
+    /// Class UserAdd.
+    /// Implements the <see cref="User" />
+    /// </summary>
+    /// <seealso cref="User" />
     public class UserAdd : User
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserAdd"/> class.
+        /// </summary>
         public UserAdd()
         {
             Id = Guid.NewGuid().ToString();
@@ -93,6 +126,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the AccountId property value.
         /// </summary>
+        /// <value>The account identifier.</value>
         [JsonProperty]
         public Guid AccountId
         {
@@ -103,6 +137,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Password property value.
         /// </summary>
+        /// <value>The password.</value>
         [JsonProperty]
         public string Password
         {
@@ -113,6 +148,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Roles property value.
         /// </summary>
+        /// <value>The roles.</value>
         [JsonProperty]
         public List<Role> Roles
         {
@@ -121,11 +157,17 @@ namespace ISynergy.Framework.Core.Models.Accounts
         }
     }
 
+    /// <summary>
+    /// Class UserEdit.
+    /// Implements the <see cref="User" />
+    /// </summary>
+    /// <seealso cref="User" />
     public class UserEdit : User
     {
         /// <summary>
         /// Gets or sets the IsConfirmed property value.
         /// </summary>
+        /// <value><c>true</c> if this instance is confirmed; otherwise, <c>false</c>.</value>
         [JsonProperty]
         public bool IsConfirmed
         {
@@ -136,6 +178,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the Roles property value.
         /// </summary>
+        /// <value>The roles.</value>
         [JsonProperty]
         public List<Role> Roles
         {
@@ -144,11 +187,17 @@ namespace ISynergy.Framework.Core.Models.Accounts
         }
     }
 
+    /// <summary>
+    /// Class UserFull.
+    /// Implements the <see cref="User" />
+    /// </summary>
+    /// <seealso cref="User" />
     public class UserFull : User
     {
         /// <summary>
         /// Gets or sets the Roles property value.
         /// </summary>
+        /// <value>The roles.</value>
         [JsonProperty]
         public List<Role> Roles
         {
@@ -159,6 +208,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the RolesSummary property value.
         /// </summary>
+        /// <value>The roles summary.</value>
         public string RolesSummary
         {
             get
@@ -171,6 +221,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the IsConfirmed property value.
         /// </summary>
+        /// <value><c>true</c> if this instance is confirmed; otherwise, <c>false</c>.</value>
         [JsonProperty]
         [Required]
         public bool IsConfirmed
@@ -182,6 +233,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <summary>
         /// Gets or sets the FailedAttempts property value.
         /// </summary>
+        /// <value>The failed attempts.</value>
         [JsonProperty]
         [Required]
         public int FailedAttempts

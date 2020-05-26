@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Markup;
 namespace ISynergy.Framework.Windows.Controls
 {
     /// <summary>
-    /// The <see cref="Expander"/> control allows user to show/hide content based on a boolean state
+    /// The <see cref="Expander" /> control allows user to show/hide content based on a boolean state
     /// </summary>
     [TemplateVisualState(Name = StateContentLeftDirection, GroupName = ExpandDirectionGroupStateContent)]
     [TemplateVisualState(Name = StateContentDownDirection, GroupName = ExpandDirectionGroupStateContent)]
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Windows.Controls
     public partial class Expander : HeaderedContentControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Expander"/> class.
+        /// Initializes a new instance of the <see cref="Expander" /> class.
         /// </summary>
         public Expander()
         {
@@ -72,6 +72,11 @@ namespace ISynergy.Framework.Windows.Controls
             Collapsed?.Invoke(this, args);
         }
 
+        /// <summary>
+        /// Handles the KeyDown event of the ExpanderToggleButtonPart control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyRoutedEventArgs"/> instance containing the event data.</param>
         private void ExpanderToggleButtonPart_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key != VirtualKey.Enter)
@@ -89,12 +94,18 @@ namespace ISynergy.Framework.Windows.Controls
             e.Handled = true;
         }
 
+        /// <summary>
+        /// Expands the control.
+        /// </summary>
         private void ExpandControl()
         {
             OnDisplayModeOrIsExpandedChanged();
             OnExpanded(EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Collapses the control.
+        /// </summary>
         private void CollapseControl()
         {
             OnDisplayModeOrIsExpandedChanged();
@@ -104,6 +115,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Called when the ExpandDirection on Expander changes
         /// </summary>
+        /// <param name="useTransitions">if set to <c>true</c> [use transitions].</param>
         private void OnExpandDirectionChanged(bool useTransitions = true)
         {
             var button = (ToggleButton)GetTemplateChild(ExpanderToggleButtonPart);
@@ -139,11 +151,19 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Called when [display mode or is expanded changed].
+        /// </summary>
+        /// <param name="useTransitions">if set to <c>true</c> [use transitions].</param>
         private void OnDisplayModeOrIsExpandedChanged(bool useTransitions = true)
         {
             UpdateDisplayModeOrExpanderDirection(useTransitions);
         }
 
+        /// <summary>
+        /// Updates the display mode or expander direction.
+        /// </summary>
+        /// <param name="useTransitions">if set to <c>true</c> [use transitions].</param>
         private void UpdateDisplayModeOrExpanderDirection(bool useTransitions = true)
         {
             string visualState = null;
@@ -170,6 +190,12 @@ namespace ISynergy.Framework.Windows.Controls
             }
         }
 
+        /// <summary>
+        /// Gets the display state of the mode visual.
+        /// </summary>
+        /// <param name="collapsedState">State of the collapsed.</param>
+        /// <param name="visibleState">State of the visible.</param>
+        /// <returns>System.String.</returns>
         private string GetDisplayModeVisualState(string collapsedState, string visibleState)
         {
             return IsExpanded ? visibleState : collapsedState;

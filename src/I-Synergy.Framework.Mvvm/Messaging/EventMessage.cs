@@ -40,6 +40,7 @@
         /// <summary>
         /// Gets or sets the message's sender.
         /// </summary>
+        /// <value>The sender.</value>
         public object Sender { get; }
 
         /// <summary>
@@ -47,11 +48,13 @@
         /// to give an indication as to whom the message was intended for. Of course
         /// this is only an indication, and may be null.
         /// </summary>
+        /// <value>The target.</value>
         public object Target { get; }
 
         /// <summary>
         /// Property to mark message as handled or not.
         /// </summary>
+        /// <value><c>true</c> if handled; otherwise, <c>false</c>.</value>
         public bool Handled { get; set; } = false;
     }
 }

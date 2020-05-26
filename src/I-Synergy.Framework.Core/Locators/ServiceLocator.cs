@@ -15,30 +15,58 @@ namespace ISynergy.Framework.Core.Locators
     /// </summary>
     public class ServiceLocator : IServiceLocator
     {
+        /// <summary>
+        /// The constructor infos
+        /// </summary>
         private readonly Dictionary<Type, ConstructorInfo> _constructorInfos
             = new Dictionary<Type, ConstructorInfo>();
 
+        /// <summary>
+        /// The default key
+        /// </summary>
         private readonly string _defaultKey = Guid.NewGuid().ToString();
 
+        /// <summary>
+        /// The empty arguments
+        /// </summary>
         private readonly object[] _emptyArguments = new object[0];
 
+        /// <summary>
+        /// The factories
+        /// </summary>
         private readonly Dictionary<Type, Dictionary<string, Delegate>> _factories
             = new Dictionary<Type, Dictionary<string, Delegate>>();
 
+        /// <summary>
+        /// The instances registry
+        /// </summary>
         private readonly Dictionary<Type, Dictionary<string, object>> _instancesRegistry
             = new Dictionary<Type, Dictionary<string, object>>();
 
+        /// <summary>
+        /// The interface to class map
+        /// </summary>
         private readonly Dictionary<Type, Type> _interfaceToClassMap
             = new Dictionary<Type, Type>();
 
+        /// <summary>
+        /// The synchronize lock
+        /// </summary>
         private readonly object _syncLock = new object();
+        /// <summary>
+        /// The instance lock
+        /// </summary>
         private static readonly object _instanceLock = new object();
 
+        /// <summary>
+        /// The default
+        /// </summary>
         private static ServiceLocator _default;
 
         /// <summary>
         /// This class' default instance.
         /// </summary>
+        /// <value>The default.</value>
         public static ServiceLocator Default
         {
             get
@@ -144,6 +172,7 @@ namespace ISynergy.Framework.Core.Locators
         /// <typeparam name="TClass">The type that must be used to create instances.</typeparam>
         /// <param name="createInstanceImmediately">If true, forces the creation of the default
         /// instance of the provided class.</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void Register<TInterface, TClass>(bool createInstanceImmediately)
             where TInterface : class
             where TClass : class, TInterface
@@ -205,6 +234,8 @@ namespace ISynergy.Framework.Core.Locators
         /// <typeparam name="TClass">The type that must be used to create instances.</typeparam>
         /// <param name="createInstanceImmediately">If true, forces the creation of the default
         /// instance of the provided class.</param>
+        /// <exception cref="ArgumentException">An interface cannot be registered alone.</exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public void Register<TClass>(bool createInstanceImmediately)
             where TClass : class
         {
@@ -279,6 +310,8 @@ namespace ISynergy.Framework.Core.Locators
         /// must be returned when the given type is resolved.</param>
         /// <param name="createInstanceImmediately">If true, forces the creation of the default
         /// instance of the provided class.</param>
+        /// <exception cref="ArgumentNullException">factory</exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public void Register<TClass>(Func<TClass> factory, bool createInstanceImmediately)
             where TClass : class
         {
@@ -346,6 +379,8 @@ namespace ISynergy.Framework.Core.Locators
         /// <param name="key">The key for which the given instance is registered.</param>
         /// <param name="createInstanceImmediately">If true, forces the creation of the default
         /// instance of the provided class.</param>
+        /// <exception cref="ArgumentNullException">factory</exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public void Register<TClass>(
             Func<TClass> factory,
             string key,
@@ -513,6 +548,15 @@ namespace ISynergy.Framework.Core.Locators
             }
         }
 
+        /// <summary>
+        /// Does the get service.
+        /// </summary>
+        /// <param name="serviceType">Type of the service.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="cache">if set to <c>true</c> [cache].</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="ActivationException"></exception>
+        /// <exception cref="ActivationException"></exception>
         private object DoGetService(Type serviceType, string key, bool cache = true)
         {
             lock (_syncLock)
@@ -587,6 +631,13 @@ namespace ISynergy.Framework.Core.Locators
             }
         }
 
+        /// <summary>
+        /// Does the register.
+        /// </summary>
+        /// <typeparam name="TClass">The type of the t class.</typeparam>
+        /// <param name="classType">Type of the class.</param>
+        /// <param name="factory">The factory.</param>
+        /// <param name="key">The key.</param>
         private void DoRegister<TClass>(Type classType, Func<TClass> factory, string key)
         {
             if (_factories.ContainsKey(classType))
@@ -613,6 +664,13 @@ namespace ISynergy.Framework.Core.Locators
             }
         }
 
+        /// <summary>
+        /// Gets the constructor information.
+        /// </summary>
+        /// <param name="serviceType">Type of the service.</param>
+        /// <returns>ConstructorInfo.</returns>
+        /// <exception cref="ActivationException"></exception>
+        /// <exception cref="ActivationException"></exception>
         private ConstructorInfo GetConstructorInfo(Type serviceType)
         {
             Type resolveTo;
@@ -669,6 +727,13 @@ namespace ISynergy.Framework.Core.Locators
             return constructorInfos[0];
         }
 
+        /// <summary>
+        /// Gets the preferred constructor information.
+        /// </summary>
+        /// <param name="constructorInfos">The constructor infos.</param>
+        /// <param name="resolveTo">The resolve to.</param>
+        /// <returns>ConstructorInfo.</returns>
+        /// <exception cref="ActivationException"></exception>
         private static ConstructorInfo GetPreferredConstructorInfo(IEnumerable<ConstructorInfo> constructorInfos, Type resolveTo)
         {
             var preferredConstructorInfo
@@ -689,6 +754,11 @@ namespace ISynergy.Framework.Core.Locators
             return preferredConstructorInfo;
         }
 
+        /// <summary>
+        /// Makes the instance.
+        /// </summary>
+        /// <typeparam name="TClass">The type of the t class.</typeparam>
+        /// <returns>TClass.</returns>
         private TClass MakeInstance<TClass>()
         {
             var serviceType = typeof(TClass);
@@ -758,12 +828,10 @@ namespace ISynergy.Framework.Core.Locators
         /// <summary>
         /// Gets the service object of the specified type.
         /// </summary>
+        /// <param name="serviceType">An object that specifies the type of service object to get.</param>
+        /// <returns>A service object of type <paramref name="serviceType" />.</returns>
         /// <exception cref="ActivationException">If the type serviceType has not
         /// been registered before calling this method.</exception>
-        /// <returns>
-        /// A service object of type <paramref name="serviceType" />.
-        /// </returns>
-        /// <param name="serviceType">An object that specifies the type of service object to get.</param>
         public object GetService(Type serviceType)
         {
             return DoGetService(serviceType, _defaultKey);
@@ -815,15 +883,15 @@ namespace ISynergy.Framework.Core.Locators
         }
 
         /// <summary>
-        /// Provides a way to get an instance of a given type. If no instance had been instantiated 
+        /// Provides a way to get an instance of a given type. If no instance had been instantiated
         /// before, a new instance will be created. If an instance had already
         /// been created, that same instance will be returned.
         /// </summary>
-        /// <exception cref="ActivationException">If the type serviceType has not
-        /// been registered before calling this method.</exception>
         /// <param name="serviceType">The class of which an instance
         /// must be returned.</param>
         /// <returns>An instance of the given type.</returns>
+        /// <exception cref="ActivationException">If the type serviceType has not
+        /// been registered before calling this method.</exception>
         public object GetInstance(Type serviceType)
         {
             return DoGetService(serviceType, _defaultKey);
@@ -833,11 +901,11 @@ namespace ISynergy.Framework.Core.Locators
         /// Provides a way to get an instance of a given type. This method
         /// always returns a new instance and doesn't cache it in the IOC container.
         /// </summary>
-        /// <exception cref="ActivationException">If the type serviceType has not
-        /// been registered before calling this method.</exception>
         /// <param name="serviceType">The class of which an instance
         /// must be returned.</param>
         /// <returns>An instance of the given type.</returns>
+        /// <exception cref="ActivationException">If the type serviceType has not
+        /// been registered before calling this method.</exception>
         public object GetInstanceWithoutCaching(Type serviceType)
         {
             return DoGetService(serviceType, _defaultKey, false);
@@ -849,11 +917,11 @@ namespace ISynergy.Framework.Core.Locators
         /// key before, a new instance will be created. If an instance had already
         /// been created with the same key, that same instance will be returned.
         /// </summary>
-        /// <exception cref="ActivationException">If the type serviceType has not
-        /// been registered before calling this method.</exception>
         /// <param name="serviceType">The class of which an instance must be returned.</param>
         /// <param name="key">The key uniquely identifying this instance.</param>
         /// <returns>An instance corresponding to the given type and key.</returns>
+        /// <exception cref="ActivationException">If the type serviceType has not
+        /// been registered before calling this method.</exception>
         public object GetInstance(Type serviceType, string key)
         {
             return DoGetService(serviceType, key);
@@ -863,26 +931,26 @@ namespace ISynergy.Framework.Core.Locators
         /// Provides a way to get an instance of a given type. This method
         /// always returns a new instance and doesn't cache it in the IOC container.
         /// </summary>
-        /// <exception cref="ActivationException">If the type serviceType has not
-        /// been registered before calling this method.</exception>
         /// <param name="serviceType">The class of which an instance must be returned.</param>
         /// <param name="key">The key uniquely identifying this instance.</param>
         /// <returns>An instance corresponding to the given type and key.</returns>
+        /// <exception cref="ActivationException">If the type serviceType has not
+        /// been registered before calling this method.</exception>
         public object GetInstanceWithoutCaching(Type serviceType, string key)
         {
             return DoGetService(serviceType, key, false);
         }
 
         /// <summary>
-        /// Provides a way to get an instance of a given type. If no instance had been instantiated 
+        /// Provides a way to get an instance of a given type. If no instance had been instantiated
         /// before, a new instance will be created. If an instance had already
         /// been created, that same instance will be returned.
         /// </summary>
-        /// <exception cref="ActivationException">If the type TService has not
-        /// been registered before calling this method.</exception>
         /// <typeparam name="TService">The class of which an instance
         /// must be returned.</typeparam>
         /// <returns>An instance of the given type.</returns>
+        /// <exception cref="ActivationException">If the type TService has not
+        /// been registered before calling this method.</exception>
         public TService GetInstance<TService>()
         {
             return (TService)DoGetService(typeof(TService), _defaultKey);
@@ -892,11 +960,11 @@ namespace ISynergy.Framework.Core.Locators
         /// Provides a way to get an instance of a given type. This method
         /// always returns a new instance and doesn't cache it in the IOC container.
         /// </summary>
-        /// <exception cref="ActivationException">If the type TService has not
-        /// been registered before calling this method.</exception>
         /// <typeparam name="TService">The class of which an instance
         /// must be returned.</typeparam>
         /// <returns>An instance of the given type.</returns>
+        /// <exception cref="ActivationException">If the type TService has not
+        /// been registered before calling this method.</exception>
         public TService GetInstanceWithoutCaching<TService>()
         {
             return (TService)DoGetService(typeof(TService), _defaultKey, false);
@@ -908,11 +976,11 @@ namespace ISynergy.Framework.Core.Locators
         /// key before, a new instance will be created. If an instance had already
         /// been created with the same key, that same instance will be returned.
         /// </summary>
-        /// <exception cref="ActivationException">If the type TService has not
-        /// been registered before calling this method.</exception>
         /// <typeparam name="TService">The class of which an instance must be returned.</typeparam>
         /// <param name="key">The key uniquely identifying this instance.</param>
         /// <returns>An instance corresponding to the given type and key.</returns>
+        /// <exception cref="ActivationException">If the type TService has not
+        /// been registered before calling this method.</exception>
         public TService GetInstance<TService>(string key)
         {
             return (TService)DoGetService(typeof(TService), key);
@@ -922,11 +990,11 @@ namespace ISynergy.Framework.Core.Locators
         /// Provides a way to get an instance of a given type. This method
         /// always returns a new instance and doesn't cache it in the IOC container.
         /// </summary>
-        /// <exception cref="ActivationException">If the type TService has not
-        /// been registered before calling this method.</exception>
         /// <typeparam name="TService">The class of which an instance must be returned.</typeparam>
         /// <param name="key">The key uniquely identifying this instance.</param>
         /// <returns>An instance corresponding to the given type and key.</returns>
+        /// <exception cref="ActivationException">If the type TService has not
+        /// been registered before calling this method.</exception>
         public TService GetInstanceWithoutCaching<TService>(string key)
         {
             return (TService)DoGetService(typeof(TService), key, false);

@@ -12,8 +12,11 @@ namespace ISynergy.Framework.Windows.Dialogs
     {
         /// <summary>
         /// Creates a <see cref="ContentDialog" /> of specified type using
-        /// <see cref="TypeActivator.CreateInstance(Type)"/>.
+        /// <see cref="TypeActivator.CreateInstance(Type)" />.
         /// </summary>
+        /// <param name="dialogType">Type of the dialog.</param>
+        /// <returns>IContentDialog.</returns>
+        /// <exception cref="ArgumentException">Only dialogs of type {typeof(ContentDialog)} or {typeof(IContentDialog)} are supported.</exception>
         public IContentDialog Create(Type dialogType)
         {
             Argument.IsNotNull(nameof(dialogType), dialogType);

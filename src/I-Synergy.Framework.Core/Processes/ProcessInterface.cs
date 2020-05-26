@@ -10,7 +10,7 @@ namespace ISynergy.Framework.Core.Processes
     /// A ProcessEventHandler is a delegate for process input/output events.
     /// </summary>
     /// <param name="sender">The sender.</param>
-    /// <param name="args">The <see cref="ProcessEventArgs"/> instance containing the event data.</param>
+    /// <param name="args">The <see cref="ProcessEventArgs" /> instance containing the event data.</param>
     public delegate void ProcessEventHanlder(object sender, ProcessEventArgs args);
 
     /// <summary>
@@ -18,13 +18,16 @@ namespace ISynergy.Framework.Core.Processes
     /// </summary>
     public class ProcessInterface : IDisposable
     {
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ProcessInterface"/> class.
+        /// </summary>
         ~ProcessInterface()
         {
             Dispose(false);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
+        /// Initializes a new instance of the <see cref="ProcessInterface" /> class.
         /// </summary>
         public ProcessInterface()
         {
@@ -45,7 +48,7 @@ namespace ISynergy.Framework.Core.Processes
         /// Handles the ProgressChanged event of the outputWorker control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.ProgressChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="ProgressChangedEventArgs" /> instance containing the event data.</param>
         void OutputWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             //  We must be passed a string in the user state.
@@ -60,7 +63,7 @@ namespace ISynergy.Framework.Core.Processes
         /// Handles the DoWork event of the outputWorker control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.DoWorkEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="DoWorkEventArgs" /> instance containing the event data.</param>
         void OutputWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             while (OutputWorker.CancellationPending == false && OutputReader != null)
@@ -84,7 +87,7 @@ namespace ISynergy.Framework.Core.Processes
         /// Handles the ProgressChanged event of the errorWorker control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.ProgressChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="ProgressChangedEventArgs" /> instance containing the event data.</param>
         void ErrorWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             //  The userstate must be a string.
@@ -99,7 +102,7 @@ namespace ISynergy.Framework.Core.Processes
         /// Handles the DoWork event of the errorWorker control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.DoWorkEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="DoWorkEventArgs" /> instance containing the event data.</param>
         void ErrorWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             while (ErrorWorker.CancellationPending == false && ErrorReader != null)
@@ -124,6 +127,7 @@ namespace ISynergy.Framework.Core.Processes
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="arguments">The arguments.</param>
+        /// <param name="workingDirectory">The working directory.</param>
         public void StartProcess(string fileName, string arguments, string workingDirectory)
         {
             //  Create the process start info.
@@ -200,7 +204,7 @@ namespace ISynergy.Framework.Core.Processes
         /// Handles the Exited event of the currentProcess control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         void CurrentProcess_Exited(object sender, EventArgs e)
         {
             //  Fire process exited.
@@ -273,21 +277,25 @@ namespace ISynergy.Framework.Core.Processes
         /// <summary>
         /// The current process.
         /// </summary>
+        /// <value>The process.</value>
         public Process Process { get; private set; }
 
         /// <summary>
         /// The input writer.
         /// </summary>
+        /// <value>The input writer.</value>
         public StreamWriter InputWriter { get; private set; }
 
         /// <summary>
         /// The output reader.
         /// </summary>
+        /// <value>The output reader.</value>
         public TextReader OutputReader { get; private set; }
 
         /// <summary>
         /// The error reader.
         /// </summary>
+        /// <value>The error reader.</value>
         public TextReader ErrorReader { get; private set; }
 
         /// <summary>
@@ -303,11 +311,13 @@ namespace ISynergy.Framework.Core.Processes
         /// <summary>
         /// Current process file name.
         /// </summary>
+        /// <value>The name of the process file.</value>
         public string ProcessFileName { get; private set; }
 
         /// <summary>
         /// Arguments sent to the current process.
         /// </summary>
+        /// <value>The process arguments.</value>
         public string ProcessArguments { get; private set; }
 
 #nullable disable
@@ -335,9 +345,7 @@ namespace ISynergy.Framework.Core.Processes
         /// <summary>
         /// Gets a value indicating whether this instance is process running.
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is process running; otherwise, <c>false</c>.
-        /// </value>
+        /// <value><c>true</c> if this instance is process running; otherwise, <c>false</c>.</value>
         public bool IsProcessRunning
         {
             get
@@ -354,6 +362,10 @@ namespace ISynergy.Framework.Core.Processes
         }
 
         // The bulk of the clean-up code is implemented in Dispose(bool)
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -392,6 +404,9 @@ namespace ISynergy.Framework.Core.Processes
             }
         }
 
+        /// <summary>
+        /// Disposes this instance.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);

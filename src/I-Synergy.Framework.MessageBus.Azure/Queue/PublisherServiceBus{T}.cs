@@ -11,8 +11,10 @@ using Newtonsoft.Json;
 
 namespace ISynergy.Framework.MessageBus.Azure.Queue
 {
-    /// <summary>Message bus implementation on Azure Service Bus.</summary>
-    /// <typeparam name="TQueueMessage"></typeparam>
+    /// <summary>
+    /// Message bus implementation on Azure Service Bus.
+    /// </summary>
+    /// <typeparam name="TQueueMessage">The type of the t queue message.</typeparam>
     /// <typeparam name="TOption">The type of the t option.</typeparam>
     public abstract class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>
         where TQueueMessage : class, IBaseMessage
@@ -47,9 +49,10 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
         /// If sessionId is provided, messages retrieval is based on FIFO.
         /// If sessionId is Guid.Empty, sessionId is not added and retrieval is random.
         /// </summary>
-        /// <param name="queueMessage"></param>
+        /// <param name="queueMessage">The queue message.</param>
         /// <param name="sessionId">The session identifier.</param>
         /// <returns>Task.</returns>
+        /// <exception cref="ArgumentException">Entity should be type of IQueueMessage{TModel} instead of {queueMessage.GetType().FullName}</exception>
         public virtual Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId)
         {
             if(queueMessage is TQueueMessage model)

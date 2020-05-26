@@ -7,11 +7,22 @@ using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.Windows.Behaviors
 {
+    /// <summary>
+    /// Class ValidationBehaviorAttacher.
+    /// </summary>
     public static class ValidationBehaviorAttacher
     {
+        /// <summary>
+        /// The property name property
+        /// </summary>
         public static readonly DependencyProperty PropertyNameProperty = DependencyProperty.RegisterAttached(
         "PropertyName", typeof(string), typeof(ValidationBehaviorAttacher), new PropertyMetadata(default(string), PropertyNameChanged));
 
+        /// <summary>
+        /// Properties the name changed.
+        /// </summary>
+        /// <param name="dependencyObject">The dependency object.</param>
+        /// <param name="arg">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void PropertyNameChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs arg)
         {
             var control = (Control)dependencyObject;
@@ -46,11 +57,21 @@ namespace ISynergy.Framework.Windows.Behaviors
             control.SetValue(Interaction.BehaviorsProperty, collection);
         }
 
+        /// <summary>
+        /// Sets the name of the property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="value">The value.</param>
         public static void SetPropertyName(DependencyObject element, string value)
         {
             element.SetValue(PropertyNameProperty, value);
         }
 
+        /// <summary>
+        /// Gets the name of the property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns>System.String.</returns>
         public static string GetPropertyName(DependencyObject element)
         {
             return element.GetValue(PropertyNameProperty).ToString();

@@ -12,13 +12,27 @@ namespace ISynergy.Framework.Core.Linq.Binders
     /// <seealso cref="GetMemberBinder" />
     internal class DynamicGetMemberBinder : GetMemberBinder
     {
+        /// <summary>
+        /// The indexer
+        /// </summary>
         private static readonly PropertyInfo Indexer = typeof(IDictionary<string, object>).GetProperty("Item");
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicGetMemberBinder"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
         public DynamicGetMemberBinder(string name)
             : base(name, true)
         {
         }
 
+        /// <summary>
+        /// Fallbacks the get member.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="errorSuggestion">The error suggestion.</param>
+        /// <returns>DynamicMetaObject.</returns>
+        /// <exception cref="InvalidOperationException">Target object is not an ExpandoObject</exception>
         public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
         {
             if (!(target.Value is IDictionary<string, object> dictionary))

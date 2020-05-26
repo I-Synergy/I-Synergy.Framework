@@ -10,6 +10,9 @@ namespace ISynergy.Framework.Windows.Controls
     /// <typeparam name="TPropertyType">Type of the DependencyProperty</typeparam>
     internal class PropertyChangeEventSource<TPropertyType> : FrameworkElement
     {
+        /// <summary>
+        /// The source
+        /// </summary>
         private readonly DependencyObject _source;
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// Gets or sets the Value property. This dependency property
         /// indicates the value.
         /// </summary>
+        /// <value>The value.</value>
         public TPropertyType Value
         {
             get { return (TPropertyType)GetValue(ValueProperty); }
@@ -40,13 +44,9 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Handles changes to the Value property.
         /// </summary>
-        /// <param name="d">
-        /// The <see cref="DependencyObject"/> on which the property has changed value.
-        /// </param>
-        /// <param name="e">
-        /// Event data that is issued by any event that
-        /// tracks changes to the effective value of this property.
-        /// </param>
+        /// <param name="d">The <see cref="DependencyObject" /> on which the property has changed value.</param>
+        /// <param name="e">Event data that is issued by any event that
+        /// tracks changes to the effective value of this property.</param>
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var target = (PropertyChangeEventSource<TPropertyType>)d;
@@ -66,7 +66,7 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyChangeEventSource{TPropertyType}"/> class.
+        /// Initializes a new instance of the <see cref="PropertyChangeEventSource{TPropertyType}" /> class.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="propertyName">Name of the property.</param>

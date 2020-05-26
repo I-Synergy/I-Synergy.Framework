@@ -14,20 +14,30 @@ namespace ISynergy.Framework.Geography
     public struct Angle : IComparable<Angle>, IEquatable<Angle>
     {
         // precision to use in comparision operations
+        /// <summary>
+        /// The precision
+        /// </summary>
         private const double Precision = 0.00000000001;
 
-        /// <summary>Degrees/Radians conversion constant.</summary>
+        /// <summary>
+        /// Degrees/Radians conversion constant.
+        /// </summary>
         private const double PiOver180 = Math.PI / 180.0;
 
-        /// <summary>Zero Angle</summary>
+        /// <summary>
+        /// Zero Angle
+        /// </summary>
         public static readonly Angle Zero = new Angle(0.0);
 
-        /// <summary>180 degree Angle</summary>
+        /// <summary>
+        /// 180 degree Angle
+        /// </summary>
         public static readonly Angle Angle180 = new Angle(180.0);
 
         /// <summary>
         /// Get/set angle measured in degrees.
         /// </summary>
+        /// <value>The degrees.</value>
         public double Degrees { get; set; }
 
         /// <summary>
@@ -70,6 +80,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Get/set angle measured in radians.
         /// </summary>
+        /// <value>The radians.</value>
         public double Radians
         {
             get { return Degrees * PiOver180; }
@@ -80,7 +91,7 @@ namespace ISynergy.Framework.Geography
         /// Compare this angle to another angle.
         /// </summary>
         /// <param name="other">other angle to compare to.</param>
-        /// <returns>result according to IComparable contract/></returns>
+        /// <returns>result according to IComparable contract/&gt;</returns>
         public int CompareTo(Angle other)
         {
             if (this == other)
@@ -110,6 +121,11 @@ namespace ISynergy.Framework.Geography
             return rad / PiOver180;
         }
 
+        /// <summary>
+        /// Validates the minutes or seconds.
+        /// </summary>
+        /// <param name="timeval">The timeval.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static void ValidateMinutesOrSeconds(double timeval)
         {
             if (timeval < 0.0 || timeval >= 60.0)
@@ -119,6 +135,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Get the absolute value of the angle (in degrees).
         /// </summary>
+        /// <returns>Angle.</returns>
         public Angle Abs()
         {
             return new Angle(Math.Abs(Degrees));
@@ -152,7 +169,7 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         /// <param name="obj">object to compare to</param>
         /// <returns>'true' if angles are equal</returns>
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if(obj is Angle angle)
             {

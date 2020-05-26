@@ -10,7 +10,7 @@ namespace ISynergy.Framework.Core.Linq
     public class ExtensibilityPoint
     {
         /// <summary>
-        /// Place to optimize your queries. Example: Add a reference to Nuget package Linq.Expression.Optimizer 
+        /// Place to optimize your queries. Example: Add a reference to Nuget package Linq.Expression.Optimizer
         /// and in your program initializers set Extensibility.QueryOptimizer = ExpressionOptimizer.visit;
         /// </summary>
         public static Func<Expression, Expression> QueryOptimizer = e => e;

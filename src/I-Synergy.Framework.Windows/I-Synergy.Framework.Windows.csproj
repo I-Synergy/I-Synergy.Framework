@@ -12,7 +12,7 @@
     <AssemblyName>I-Synergy.Framework.Windows</AssemblyName>
     <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -272,9 +272,6 @@
     <PackageReference Include="Flurl.Http">
       <Version>2.4.2</Version>
     </PackageReference>
-    <PackageReference Include="I-Synergy.Framework.Core">
-      <Version>2020.1137.1</Version>
-    </PackageReference>
     <PackageReference Include="Mapster">
       <Version>5.3.1</Version>
     </PackageReference>
@@ -417,8 +414,12 @@
     <Content Include="Assets\Fonts\I-Synergy.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\I-Synergy.Framework.Mvvm\src\I-Synergy.Framework.Mvvm\I-Synergy.Framework.Mvvm.csproj">
-      <Project>{6accf963-da09-49ac-9e84-f9f00a340f21}</Project>
+    <ProjectReference Include="..\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj">
+      <Project>{90f74f51-a863-4229-ae7b-d6a8d22ad1be}</Project>
+      <Name>I-Synergy.Framework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\I-Synergy.Framework.Mvvm\I-Synergy.Framework.Mvvm.csproj">
+      <Project>{21628459-8f0e-465a-b67c-192b9bdd5e6e}</Project>
       <Name>I-Synergy.Framework.Mvvm</Name>
     </ProjectReference>
   </ItemGroup>

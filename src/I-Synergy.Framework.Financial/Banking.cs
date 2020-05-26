@@ -12,8 +12,8 @@ namespace ISynergy.Framework.Financial
         /// If the outcome is equal to zero, this means that the division by number 11 did not yield a residual value.
         /// If there is a residual value(so something remains left after all 11 parts are fully distributed), this number does not meet the eleven test.
         /// </summary>
-        /// <param name="nineCharactersLongNumber"></param>
-        /// <returns></returns>
+        /// <param name="nineCharactersLongNumber">The nine characters long number.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public static bool ElevenTest(string nineCharactersLongNumber)
         {
             if (nineCharactersLongNumber.Length != 9)

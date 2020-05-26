@@ -5,9 +5,20 @@ using System.Linq;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {
+    /// <summary>
+    /// Class ImageHelperExtensions.
+    /// </summary>
     public static class ImageHelperExtensions
     {
-        public static HtmlString InlineImageAsync(this IHtmlHelper html, string notfoundPath, string imagePath, object? attributes = null)
+        /// <summary>
+        /// Inlines the image asynchronous.
+        /// </summary>
+        /// <param name="html">The HTML.</param>
+        /// <param name="notfoundPath">The notfound path.</param>
+        /// <param name="imagePath">The image path.</param>
+        /// <param name="attributes">The attributes.</param>
+        /// <returns>HtmlString.</returns>
+        public static HtmlString InlineImageAsync(this IHtmlHelper html, string notfoundPath, string imagePath, object attributes = null)
         {
             if(html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
             {

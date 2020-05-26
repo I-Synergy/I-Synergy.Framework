@@ -6,12 +6,16 @@ using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.Windows.Helpers
 {
+    /// <summary>
+    /// Class ColorConverters.
+    /// </summary>
     public static class ColorConverters
     {
         /// <summary>
         /// Convert a hex string to a .NET Color object.
         /// </summary>
         /// <param name="hexColor">a hex string: "FFFFFF", "#000000"</param>
+        /// <returns>Color.</returns>
         public static Color HexStringToColor(string hexColor)
         {
             var hc = hexColor.ExtractHexDigits();
@@ -49,6 +53,12 @@ namespace ISynergy.Framework.Windows.Helpers
             return color;
         }
 
+        /// <summary>
+        /// Gets the solid color brush from hexadecimal string.
+        /// </summary>
+        /// <param name="hex">The hexadecimal.</param>
+        /// <returns>SolidColorBrush.</returns>
+        /// <exception cref="InvalidCastException">string is not an hex color code.</exception>
         public static SolidColorBrush GetSolidColorBrushFromHexString(string hex)
         {
             hex = hex.Replace("#", string.Empty);
@@ -77,6 +87,12 @@ namespace ISynergy.Framework.Windows.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets the color from hexadecimal string.
+        /// </summary>
+        /// <param name="hex">The hexadecimal.</param>
+        /// <returns>Color.</returns>
+        /// <exception cref="InvalidCastException">string is not an hex color code.</exception>
         public static Color GetColorFromHexString(string hex)
         {
             hex = hex.Replace("#", string.Empty);

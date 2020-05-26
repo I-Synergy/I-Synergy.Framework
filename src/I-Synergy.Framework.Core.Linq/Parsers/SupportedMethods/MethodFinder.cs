@@ -7,24 +7,47 @@ using ISynergy.Framework.Core.Linq.Helpers;
 
 namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
 {
+    /// <summary>
+    /// Class MethodFinder.
+    /// </summary>
     internal class MethodFinder
     {
+        /// <summary>
+        /// The parsing configuration
+        /// </summary>
         private readonly ParsingConfig _parsingConfig;
 
         /// <summary>
         /// Get an instance
         /// </summary>
-        /// <param name="parsingConfig"></param>
+        /// <param name="parsingConfig">The parsing configuration.</param>
         public MethodFinder(ParsingConfig parsingConfig)
         {
             _parsingConfig = parsingConfig;
         }
 
+        /// <summary>
+        /// Determines whether the specified type contains method.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="staticAccess">if set to <c>true</c> [static access].</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns><c>true</c> if the specified type contains method; otherwise, <c>false</c>.</returns>
         public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression[] args)
         {
             return FindMethod(type, methodName, staticAccess, args, out _) == 1;
         }
 
+        /// <summary>
+        /// Finds the method.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="staticAccess">if set to <c>true</c> [static access].</param>
+        /// <param name="args">The arguments.</param>
+        /// <param name="method">The method.</param>
+        /// <returns>System.Int32.</returns>
         public int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)
         {
             foreach (var t in SelfAndBaseTypes(type))
@@ -40,6 +63,13 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
             return 0;
         }
 
+        /// <summary>
+        /// Finds the best method.
+        /// </summary>
+        /// <param name="methods">The methods.</param>
+        /// <param name="args">The arguments.</param>
+        /// <param name="method">The method.</param>
+        /// <returns>System.Int32.</returns>
         public int FindBestMethod(IEnumerable<MethodBase> methods, Expression[] args, out MethodBase method)
         {
             var applicable = methods.
@@ -74,6 +104,13 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
             return applicable.Length;
         }
 
+        /// <summary>
+        /// Finds the indexer.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="args">The arguments.</param>
+        /// <param name="method">The method.</param>
+        /// <returns>System.Int32.</returns>
         public int FindIndexer(Type type, Expression[] args, out MethodBase method)
         {
             foreach (var t in SelfAndBaseTypes(type))
@@ -100,6 +137,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
             return 0;
         }
 
+        /// <summary>
+        /// Determines whether the specified method is applicable.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns><c>true</c> if the specified method is applicable; otherwise, <c>false</c>.</returns>
         bool IsApplicable(MethodData method, Expression[] args)
         {
             if (method.Parameters.Length != args.Length)
@@ -127,6 +170,13 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
             return true;
         }
 
+        /// <summary>
+        /// Determines whether [is better than] [the specified arguments].
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <param name="first">The first.</param>
+        /// <param name="second">The second.</param>
+        /// <returns><c>true</c> if [is better than] [the specified arguments]; otherwise, <c>false</c>.</returns>
         bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
         {
             var better = false;
@@ -159,6 +209,13 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
         // Return "First" if s -> t1 is a better conversion than s -> t2
         // Return "Second" if s -> t2 is a better conversion than s -> t1
         // Return "Both" if neither conversion is better
+        /// <summary>
+        /// Compares the conversions.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="first">The first.</param>
+        /// <param name="second">The second.</param>
+        /// <returns>CompareConversionType.</returns>
         CompareConversionType CompareConversions(Type source, Type first, Type second)
         {
             if (first == second)
@@ -198,6 +255,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
             return CompareConversionType.Both;
         }
 
+        /// <summary>
+        /// Selfs the and base types.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>IEnumerable&lt;Type&gt;.</returns>
         IEnumerable<Type> SelfAndBaseTypes(Type type)
         {
             if (type.GetTypeInfo().IsInterface)
@@ -209,6 +271,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
             return SelfAndBaseClasses(type);
         }
 
+        /// <summary>
+        /// Selfs the and base classes.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>IEnumerable&lt;Type&gt;.</returns>
         IEnumerable<Type> SelfAndBaseClasses(Type type)
         {
             while (type != null)
@@ -218,6 +285,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
             }
         }
 
+        /// <summary>
+        /// Adds the interface.
+        /// </summary>
+        /// <param name="types">The types.</param>
+        /// <param name="type">The type.</param>
         void AddInterface(List<Type> types, Type type)
         {
             if (!types.Contains(type))

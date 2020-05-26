@@ -2,7 +2,9 @@
 
 namespace ISynergy.Framework.MessageBus.Abstractions
 {
-    /// <summary>Interface IEmailMessage</summary>
+    /// <summary>
+    /// Interface IEmailMessage
+    /// </summary>
     public interface IEmailMessage : IBaseMessage
     {
         /// <summary>

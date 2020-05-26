@@ -10,6 +10,7 @@ namespace ISynergy.Framework.Core
         /// <summary>
         /// The result of the asynchronous initialization of this instance.
         /// </summary>
+        /// <value>The initialization.</value>
         Task Initialization { get; }
     }
 }

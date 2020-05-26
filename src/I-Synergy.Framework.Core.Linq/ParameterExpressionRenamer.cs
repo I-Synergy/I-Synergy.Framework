@@ -10,13 +10,22 @@ namespace ISynergy.Framework.Core.Linq
     /// <seealso cref="ExpressionVisitor" />
     internal class ParameterExpressionRenamer : ExpressionVisitor
     {
+        /// <summary>
+        /// The new name
+        /// </summary>
         private readonly string _newName;
+        /// <summary>
+        /// The old name
+        /// </summary>
         private readonly string _oldName;
 
+        /// <summary>
+        /// The parameter expression
+        /// </summary>
         private ParameterExpression _parameterExpression;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterExpressionRenamer"/> class.
+        /// Initializes a new instance of the <see cref="ParameterExpressionRenamer" /> class.
         /// </summary>
         /// <param name="newName">The new name (the oldName is assumed to be "").</param>
         public ParameterExpressionRenamer(string newName) : this("", newName)
@@ -24,7 +33,7 @@ namespace ISynergy.Framework.Core.Linq
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterExpressionRenamer"/> class.
+        /// Initializes a new instance of the <see cref="ParameterExpressionRenamer" /> class.
         /// </summary>
         /// <param name="oldName">The old name.</param>
         /// <param name="newName">The new name.</param>
@@ -52,7 +61,12 @@ namespace ISynergy.Framework.Core.Linq
             return visitedExpression;
         }
 
-        /// <inheritdoc cref="ExpressionVisitor.VisitParameter"/>
+        /// <summary>
+        /// Visits the parameter.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>Expression.</returns>
+        /// <inheritdoc cref="ExpressionVisitor.VisitParameter" />
         protected override Expression VisitParameter(ParameterExpression node)
         {
             if (string.Equals(_oldName, node.Name, StringComparison.Ordinal))

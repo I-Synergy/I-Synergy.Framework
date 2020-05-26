@@ -9,11 +9,29 @@ namespace ISynergy.Framework.Geography
     /// </summary>
     public struct UtmGrid : IEquatable<UtmGrid>
     {
+        /// <summary>
+        /// The delta
+        /// </summary>
         private const double Delta = 1e-12;
+        /// <summary>
+        /// The minimum zone
+        /// </summary>
         private const int MinZone = 1;
+        /// <summary>
+        /// The maximum zone
+        /// </summary>
         private const int MaxZone = 60;
+        /// <summary>
+        /// The minimum band
+        /// </summary>
         private const int MinBand = 0;
+        /// <summary>
+        /// The maximum band
+        /// </summary>
         private const int MaxBand = 19;
+        /// <summary>
+        /// The band chars
+        /// </summary>
         private const string BandChars = "CDEFGHJKLMNPQRSTUVWX";
 
         /// <summary>
@@ -28,7 +46,7 @@ namespace ISynergy.Framework.Geography
 
         /// <summary>
         /// The theoretical number of UTM Grids on the globe. Actually there are
-        /// fewer ones, because there are exceptions.  <seealso cref="NumberOfUsedGrids"/>
+        /// fewer ones, because there are exceptions.  <seealso cref="NumberOfUsedGrids" />
         /// </summary>
         public const int NumberOfGrids = MaxZone * (1 + MaxBand);
 
@@ -48,13 +66,36 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         public static readonly Angle Ystep = 8.0;
 
+        /// <summary>
+        /// The band
+        /// </summary>
         private int _band;
+        /// <summary>
+        /// The ll coordinates
+        /// </summary>
         private GlobalCoordinates _llCoordinates;
+        /// <summary>
+        /// The map height
+        /// </summary>
         private double _mapHeight;
+        /// <summary>
+        /// The map width
+        /// </summary>
         private double _mapWidth;
-        private UtmCoordinate? _origin;
+        /// <summary>
+        /// The origin
+        /// </summary>
+        private UtmCoordinate _origin;
+        /// <summary>
+        /// The zone
+        /// </summary>
         private int _zone;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UtmGrid"/> struct.
+        /// </summary>
+        /// <param name="projection">The projection.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         private UtmGrid(UtmProjection projection)
         {
             // Assign default values
@@ -102,7 +143,7 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         /// <param name="projection">The UTM projection this Grid belongs to</param>
         /// <param name="ordinal">The unique ordinal number of the grid</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the ordinal number is invalid</exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public UtmGrid(UtmProjection projection, int ordinal) : this(projection)
         {
             if (ordinal < 0 || ordinal >= NumberOfGrids)
@@ -116,7 +157,7 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         /// <param name="projection">The projection to use</param>
         /// <param name="coord">Latitude/Longitude of the location</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the latitude is out of the limits for the UTM projection</exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public UtmGrid(UtmProjection projection, GlobalCoordinates coord) : this(projection)
         {
             if (coord.Latitude < projection.MinLatitude || coord.Latitude > projection.MaxLatitude)
@@ -158,13 +199,15 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The projection this grid belongs to
         /// </summary>
+        /// <value>The projection.</value>
         public UtmProjection Projection { get; }
 
         /// <summary>
         /// The UTM coordinates of the left corner of the wider latitude of the zone
         /// which is the latitude closer to the aequator.
         /// </summary>
-        public UtmCoordinate? Origin
+        /// <value>The origin.</value>
+        public UtmCoordinate Origin
         {
             get
             {
@@ -177,6 +220,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The width of this grid (in meters)
         /// </summary>
+        /// <value>The width of the map.</value>
         public double MapWidth
         {
             get
@@ -190,6 +234,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The height of this grid (in meters)
         /// </summary>
+        /// <value>The height of the map.</value>
         public double MapHeight
         {
             get
@@ -203,7 +248,8 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The UTM zone the point belongs to.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid UTM zone number is specified</exception>
+        /// <value>The zone.</value>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public int Zone
         {
             get { return _zone; }
@@ -221,7 +267,8 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Get the numeric representation of the band (0 based)
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Raised if an invalid UTM band number is specified</exception>
+        /// <value>The band nr.</value>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public int BandNr
         {
             get { return _band; }
@@ -239,6 +286,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The UTM band the point belongs to.
         /// </summary>
+        /// <value>The band.</value>
         /// <exception cref="ArgumentOutOfRangeException">If the band character is out of its limits</exception>
         //TODO Check the correct Exception type
         public char Band
@@ -250,11 +298,13 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Width of the Grid (as an Angle)
         /// </summary>
+        /// <value>The width.</value>
         public Angle Width { get; private set; }
 
         /// <summary>
         /// Height of the Grid (as an Angle)
         /// </summary>
+        /// <value>The height.</value>
         public Angle Height { get; private set; }
 
         /// <summary>
@@ -263,13 +313,18 @@ namespace ISynergy.Framework.Geography
         /// northern limit we go to the lowest south of the next zone to the
         /// east of the current one.
         /// </summary>
+        /// <value>The ordinal.</value>
         public int Ordinal => (_zone - 1) * BandChars.Length + _band;
 
         /// <summary>
         /// Return true is this is a northern band
         /// </summary>
+        /// <value><c>true</c> if this instance is northern; otherwise, <c>false</c>.</value>
         public bool IsNorthern => _band >= NumberOfBands / 2;
 
+        /// <summary>
+        /// Computes the size of the flat.
+        /// </summary>
         private void ComputeFlatSize()
         {
             UtmCoordinate other;
@@ -309,6 +364,9 @@ namespace ISynergy.Framework.Geography
             return true;
         }
 
+        /// <summary>
+        /// Computes the sizes.
+        /// </summary>
         private void ComputeSizes()
         {
             // Intial position of the grid
@@ -344,6 +402,15 @@ namespace ISynergy.Framework.Geography
             }
         }
 
+        /// <summary>
+        /// Sets the zone and band in constructor.
+        /// </summary>
+        /// <param name="zone">The zone.</param>
+        /// <param name="band">The band.</param>
+        /// <param name="noGridException">if set to <c>true</c> [no grid exception].</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void SetZoneAndBandInConstructor(int zone, int band, bool noGridException = false)
         {
             if (!noGridException && (band == MaxBand) && (zone == 32 || zone == 34 || zone == 36))
@@ -361,6 +428,11 @@ namespace ISynergy.Framework.Geography
             ComputeSizes();
         }
 
+        /// <summary>
+        /// Sets the zone and band in constructor.
+        /// </summary>
+        /// <param name="zone">The zone.</param>
+        /// <param name="band">The band.</param>
         private void SetZoneAndBandInConstructor(int zone, char band)
         {
             SetZoneAndBandInConstructor(zone, BandChars.IndexOf(band), true);
@@ -396,8 +468,8 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Compare these coordinates to another object for equality.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">The object to compare with the current instance.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is UtmGrid))
@@ -431,7 +503,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The Hashcode
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return Ordinal;
@@ -450,6 +522,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The latitude/longitude of the lower left corner of this grid
         /// </summary>
+        /// <value>The lower left corner.</value>
         public GlobalCoordinates LowerLeftCorner
         {
             get { return _llCoordinates; }
@@ -458,6 +531,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The latitude/longitude of the upper right corner of this grid
         /// </summary>
+        /// <value>The upper right corner.</value>
         public GlobalCoordinates UpperRightCorner
         {
             get
@@ -471,6 +545,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The latitude/longitude of the upper left corner of this grid
         /// </summary>
+        /// <value>The upper left corner.</value>
         public GlobalCoordinates UpperLeftCorner
         {
             get
@@ -484,6 +559,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The latitude/longitude of the lower right corner of this grid
         /// </summary>
+        /// <value>The lower right corner.</value>
         public GlobalCoordinates LowerRightCorner
         {
             get
@@ -497,6 +573,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The longitude of the center of this Grid
         /// </summary>
+        /// <value>The center meridian.</value>
         public Angle CenterMeridian
         {
             get { return _llCoordinates.Longitude + Width * 0.5; }
@@ -507,6 +584,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The western neighbor of the grid
         /// </summary>
+        /// <value>The west.</value>
         public UtmGrid West
         {
             get
@@ -523,6 +601,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The eastern neighbor of the grid
         /// </summary>
+        /// <value>The east.</value>
         public UtmGrid East
         {
             get
@@ -539,7 +618,8 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The northern neighbor of the grid
         /// </summary>
-        /// <exception cref="GeodesyException">If there is no northern neighbor</exception>
+        /// <value>The north.</value>
+        /// <exception cref="Exception">If there is no northern neighbor</exception>
         public UtmGrid North
         {
             get
@@ -552,6 +632,7 @@ namespace ISynergy.Framework.Geography
 
                 if (newBand > MaxBand)
                     throw new Exception(Properties.Resources.NO_NORTH_NEIGHBOR);
+
                 return new UtmGrid(Projection, _zone, newBand);
             }
         }
@@ -559,7 +640,8 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The southern neighbor of the grid
         /// </summary>
-        /// <exception cref="GeodesyException">If there is no southern neighbor</exception>
+        /// <value>The south.</value>
+        /// <exception cref="Exception">If there is no southern neighbor</exception>
         public UtmGrid South
         {
             get

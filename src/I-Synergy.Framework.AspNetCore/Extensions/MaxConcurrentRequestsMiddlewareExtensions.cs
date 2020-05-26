@@ -4,8 +4,17 @@ using Microsoft.AspNetCore.Builder;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {
+    /// <summary>
+    /// Class MaxConcurrentRequestsMiddlewareExtensions.
+    /// </summary>
     public static class MaxConcurrentRequestsMiddlewareExtensions
     {
+        /// <summary>
+        /// Uses the maximum concurrent requests.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <returns>IApplicationBuilder.</returns>
+        /// <exception cref="ArgumentNullException">app</exception>
         public static IApplicationBuilder UseMaxConcurrentRequests(this IApplicationBuilder app)
         {
             if (app == null)

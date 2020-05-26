@@ -5,10 +5,24 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Routing
 {
+    /// <summary>
+    /// Class RouteDataRequestCultureProvider.
+    /// Implements the <see cref="RequestCultureProvider" />
+    /// </summary>
+    /// <seealso cref="RequestCultureProvider" />
     public class RouteDataRequestCultureProvider : RequestCultureProvider
     {
+        /// <summary>
+        /// The zero result task
+        /// </summary>
         private static readonly Task<ProviderCultureResult> ZeroResultTask = Task.FromResult(result: new ProviderCultureResult("en", "en"));
 
+        /// <summary>
+        /// Determines the provider culture result.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context.</param>
+        /// <returns>Task&lt;ProviderCultureResult&gt;.</returns>
+        /// <exception cref="ArgumentNullException">httpContext</exception>
         public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
             if (httpContext is null)

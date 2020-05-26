@@ -8,12 +8,16 @@ using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// Class StringExtensions.
+    /// </summary>
     public static class StringExtensions
     {
         /// <summary>
         /// Convert a hex string to a .NET Color object.
         /// </summary>
         /// <param name="self">a hex string: "FFFFFF", "#000000"</param>
+        /// <returns>Color.</returns>
         public static Color HexStringToColor(this string self)
         {
             var hc = self.ExtractHexDigits();
@@ -51,6 +55,11 @@ namespace ISynergy.Framework.Core.Extensions
             return color;
         }
 
+        /// <summary>
+        /// Coverts the string2 numeric.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>System.Int32.</returns>
         public static int CovertString2Numeric(this string self)
         {
             var iChars = new List<string>();
@@ -67,6 +76,11 @@ namespace ISynergy.Framework.Core.Extensions
             return Convert.ToInt32(strResult);
         }
 
+        /// <summary>
+        /// Determines whether the specified self is float.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns><c>true</c> if the specified self is float; otherwise, <c>false</c>.</returns>
         public static bool IsFloat(this string self)
         {
             try
@@ -79,6 +93,11 @@ namespace ISynergy.Framework.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified self is decimal.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns><c>true</c> if the specified self is decimal; otherwise, <c>false</c>.</returns>
         public static bool IsDecimal(this string self)
         {
             try
@@ -91,6 +110,11 @@ namespace ISynergy.Framework.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified self is integer.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns><c>true</c> if the specified self is integer; otherwise, <c>false</c>.</returns>
         public static bool IsInteger(this string self)
         {
             try
@@ -103,6 +127,12 @@ namespace ISynergy.Framework.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// Increases the string2 long.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <param name="summand">The summand.</param>
+        /// <returns>System.String.</returns>
         public static string IncreaseString2Long(this string self, long summand)
         {
             var numberString = string.Empty;
@@ -141,6 +171,12 @@ namespace ISynergy.Framework.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// Words the wrap.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <param name="width">The width.</param>
+        /// <returns>System.String.</returns>
         public static string WordWrap(this string self, int width)
         {
             if (self.Length <= width)
@@ -178,6 +214,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Extract only the hex digits from a string.
         /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>System.String.</returns>
         public static string ExtractHexDigits(this string self)
         {
             // remove any characters that are not digits (like #)
@@ -191,6 +229,11 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         //identical to Ruby's chop
+        /// <summary>
+        /// Chops the specified self.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>System.String.</returns>
         public static string Chop(this string self)
         {
             if (self.Length == 0)
@@ -205,6 +248,11 @@ namespace ISynergy.Framework.Core.Extensions
                 return self.Substring(0, self.Length - 1);
         }
 
+        /// <summary>
+        /// Counts the lines.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>System.Int32.</returns>
         public static int CountLines(this string self)
         {
             var pos = 0;
@@ -220,6 +268,11 @@ namespace ISynergy.Framework.Core.Extensions
             return count;
         }
 
+        /// <summary>
+        /// Firsts the line.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>System.String.</returns>
         public static string FirstLine(this string self)
         {
             var pos = self.IndexOf(Environment.NewLine);
@@ -229,21 +282,42 @@ namespace ISynergy.Framework.Core.Extensions
             return self.Substring(0, pos);
         }
 
+        /// <summary>
+        /// Determines whether [is alpha numeric] [the specified s].
+        /// </summary>
+        /// <param name="s">The s.</param>
+        /// <returns><c>true</c> if [is alpha numeric] [the specified s]; otherwise, <c>false</c>.</returns>
         public static bool IsAlphaNumeric(this string s)
         {
             return !new Regex("[^a-zA-Z0-9]").IsMatch(s);
         }
 
+        /// <summary>
+        /// Lasts the character at.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <param name="pos">The position.</param>
+        /// <returns>System.Char.</returns>
         public static char LastCharAt(this string self, int pos)
         {
             return self[self.Length + pos];
         }
 
+        /// <summary>
+        /// Makes the proper.
+        /// </summary>
+        /// <param name="s">The s.</param>
+        /// <returns>System.String.</returns>
         public static string MakeProper(this string s)
         {
             return s[0].ToString().ToUpper() + s.Substring(1).ToLower();
         }
 
+        /// <summary>
+        /// Removes the last character.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>System.String.</returns>
         public static string RemoveLastChar(this string self)
         {
             if (self.Length >= 1)
@@ -252,6 +326,12 @@ namespace ISynergy.Framework.Core.Extensions
                 return self;
         }
 
+        /// <summary>
+        /// Splits at.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <param name="positions">The positions.</param>
+        /// <returns>IEnumerable&lt;System.String&gt;.</returns>
         public static IEnumerable<string> SplitAt(this string self, params int[] positions)
         {
             var ret = new List<string>();
@@ -302,11 +382,24 @@ namespace ISynergy.Framework.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// Trims the end.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <param name="len">The length.</param>
+        /// <returns>System.String.</returns>
         public static string TrimEnd(this string self, int len)
         {
             return self.Substring(0, self.Length - len);
         }
 
+        /// <summary>
+        /// Replaces the last of.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <param name="fromStr">From string.</param>
+        /// <param name="toStr">To string.</param>
+        /// <returns>System.String.</returns>
         public static string ReplaceLastOf(this string str, string fromStr, string toStr)
         {
             var lastIndexOf = str.LastIndexOf(fromStr);
@@ -320,6 +413,12 @@ namespace ISynergy.Framework.Core.Extensions
             return leading + toStr + trailing;
         }
 
+        /// <summary>
+        /// Converts to camelwithseparator.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="separator">The separator.</param>
+        /// <returns>System.String.</returns>
         public static string ToCamelWithSeparator(this string source, char separator)
         {
             if (string.IsNullOrEmpty(source))
@@ -357,6 +456,12 @@ namespace ISynergy.Framework.Core.Extensions
             return string.Equals(a, b, comparisonType);
         }
 
+        /// <summary>
+        /// Wraps the specified width.
+        /// </summary>
+        /// <param name="a">a.</param>
+        /// <param name="width">The width.</param>
+        /// <returns>System.String.</returns>
         public static string Wrap(this string a, int width)
         {
             int pos, next;
@@ -428,11 +533,24 @@ namespace ISynergy.Framework.Core.Extensions
             return i + 1;
         }
 
+        /// <summary>
+        /// Removes the specified chars.
+        /// </summary>
+        /// <param name="s">The s.</param>
+        /// <param name="chars">The chars.</param>
+        /// <returns>System.String.</returns>
         public static string Remove(this string s, IEnumerable<char> chars)
         {
             return new string(s.Where(c => !chars.Contains(c)).ToArray());
         }
 
+        /// <summary>
+        /// Gets the bytes.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="NumBytes">The number bytes.</param>
+        /// <returns>System.Byte[].</returns>
         public static byte[] GetBytes(this string value, int start, int NumBytes)
         {
             var g = new StringBuilder(value);

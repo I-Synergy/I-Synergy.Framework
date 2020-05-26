@@ -4,14 +4,28 @@ using Windows.UI.Xaml;
 
 namespace ISynergy.Framework.Windows.Helpers
 {
+    /// <summary>
+    /// Class TitleBarHelper.
+    /// Implements the <see cref="INotifyPropertyChanged" />
+    /// </summary>
+    /// <seealso cref="INotifyPropertyChanged" />
     public class TitleBarHelper : INotifyPropertyChanged
     {
+        /// <summary>
+        /// The core title bar
+        /// </summary>
         private static CoreApplicationViewTitleBar _coreTitleBar;
+        /// <summary>
+        /// The title position
+        /// </summary>
         private Thickness _titlePosition;
+        /// <summary>
+        /// The title visibility
+        /// </summary>
         private Visibility _titleVisibility;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TitleBarHelper"/> class.
+        /// Initializes a new instance of the <see cref="TitleBarHelper" /> class.
         /// </summary>
         public TitleBarHelper()
         {
@@ -21,10 +35,22 @@ namespace ISynergy.Framework.Windows.Helpers
             _titleVisibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        /// <returns></returns>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
+        /// <value>The instance.</value>
         public static TitleBarHelper Instance { get; } = new TitleBarHelper();
 
+        /// <summary>
+        /// Gets the title bar.
+        /// </summary>
+        /// <value>The title bar.</value>
         public CoreApplicationViewTitleBar TitleBar
         {
             get
@@ -33,6 +59,10 @@ namespace ISynergy.Framework.Windows.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets or sets the title position.
+        /// </summary>
+        /// <value>The title position.</value>
         public Thickness TitlePosition
         {
             get
@@ -49,6 +79,10 @@ namespace ISynergy.Framework.Windows.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets or sets the title visibility.
+        /// </summary>
+        /// <value>The title visibility.</value>
         public Visibility TitleVisibility
         {
             get
@@ -62,21 +96,38 @@ namespace ISynergy.Framework.Windows.Helpers
             }
         }
 
+        /// <summary>
+        /// Exits the fullscreen.
+        /// </summary>
         public void ExitFullscreen()
         {
             TitleVisibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Goes the fullscreen.
+        /// </summary>
         public void GoFullscreen()
         {
             TitleVisibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// Cores the title bar layout metrics changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The arguments.</param>
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
             TitlePosition = CalculateTilebarOffset(_coreTitleBar.SystemOverlayLeftInset, _coreTitleBar.Height);
         }
 
+        /// <summary>
+        /// Calculates the tilebar offset.
+        /// </summary>
+        /// <param name="leftPosition">The left position.</param>
+        /// <param name="height">The height.</param>
+        /// <returns>Thickness.</returns>
         private static Thickness CalculateTilebarOffset(double leftPosition, double height)
         {
             // top position should be 6 pixels for a 32 pixel high titlebar hence scale by actual height

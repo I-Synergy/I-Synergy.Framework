@@ -20,10 +20,9 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the single child of the LayoutTransformControl.
         /// </summary>
-        /// <remarks>
-        /// Corresponds to WPF's Decorator.Child
-        /// property.
-        /// </remarks>
+        /// <value>The child.</value>
+        /// <remarks>Corresponds to WPF's Decorator.Child
+        /// property.</remarks>
         public FrameworkElement Child
         {
             get { return (FrameworkElement)GetValue(ChildProperty); }
@@ -74,9 +73,8 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the Transform of the LayoutTransformControl.
         /// </summary>
-        /// <remarks>
-        /// Corresponds to UIElement.RenderTransform.
-        /// </remarks>
+        /// <value>The transform.</value>
+        /// <remarks>Corresponds to UIElement.RenderTransform.</remarks>
         public Transform Transform
         {
             get { return (Transform)GetValue(TransformProperty); }
@@ -125,6 +123,10 @@ namespace ISynergy.Framework.Windows.Controls
             ProcessTransform();
         }
 
+        /// <summary>
+        /// Unsubscribes from transform property changes.
+        /// </summary>
+        /// <param name="transform">The transform.</param>
         private void UnsubscribeFromTransformPropertyChanges(Transform transform)
         {
             var propertyChangeEventSources =
@@ -138,6 +140,10 @@ namespace ISynergy.Framework.Windows.Controls
             _transformPropertyChangeEventSources.Remove(transform);
         }
 
+        /// <summary>
+        /// Subscribes to transform property changes.
+        /// </summary>
+        /// <param name="transform">The transform.</param>
         private void SubscribeToTransformPropertyChanges(Transform transform)
         {
             if (transform is TransformGroup transformGroup)
@@ -219,6 +225,8 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Called when a property of a Transform changes.
         /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void OnTransformPropertyChanged(object sender, double e)
         {
             TransformUpdated();
@@ -263,7 +271,7 @@ namespace ISynergy.Framework.Windows.Controls
         private Size _childActualSize = Size.Empty;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LayoutTransformControl"/> class.
+        /// Initializes a new instance of the <see cref="LayoutTransformControl" /> class.
         /// </summary>
         public LayoutTransformControl()
         {
@@ -302,10 +310,8 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Notifies the LayoutTransformControl that some aspect of its Transform property has changed.
         /// </summary>
-        /// <remarks>
-        /// Call this to update the LayoutTransform in cases where
-        /// LayoutTransformControl wouldn't otherwise know to do so.
-        /// </remarks>
+        /// <remarks>Call this to update the LayoutTransform in cases where
+        /// LayoutTransformControl wouldn't otherwise know to do so.</remarks>
         public void TransformUpdated()
         {
             ProcessTransform();
@@ -346,9 +352,9 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Walks the Transform and returns the corresponding matrix.
         /// </summary>
-        /// <param name="transform">The transform to create a matrix for.
-        /// </param>
+        /// <param name="transform">The transform to create a matrix for.</param>
         /// <returns>The matrix calculated from the transform.</returns>
+        /// <exception cref="NotSupportedException">CompositeTransforms are not supported (yet) by the LayoutTransformControl.</exception>
         private Matrix GetTransformMatrix(Transform transform)
         {
             if (transform != null)

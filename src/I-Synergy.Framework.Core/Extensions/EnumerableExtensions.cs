@@ -6,6 +6,9 @@ using ISynergy.Framework.Core.Exceptions;
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// Class EnumerableExtensions.
+    /// </summary>
     public static class EnumerableExtensions
     {
         /// <summary>
@@ -14,7 +17,6 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="value">Value to test</param>
         /// <param name="desiredFlags">Flags we wish to find</param>
         /// <returns>Whether the two specified values have any flags in common.</returns>
-        /// <exception cref="TypeArgumentException"><typeparamref name="T"/> is not a flags enum.</exception>
         public static bool HasAny(this Enum value, Enum desiredFlags)
         {
             foreach (var flag in desiredFlags.GetIndividualFlags().EnsureNotNull())
@@ -29,9 +31,13 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
-        /// Counts the pages of an <see cref="IEnumerable{T}"/> count result, according to a certain pagesize.
+        /// Counts the pages of an <see cref="IEnumerable{T}" /> count result, according to a certain pagesize.
         /// </summary>
+        /// <typeparam name="TSource">The type of the t source.</typeparam>
+        /// <param name="source">The source.</param>
         /// <param name="pageSize">Has to be greater than 0.</param>
+        /// <returns>System.Int32.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">pageSize - Value must be greater than 0.</exception>
         public static int CountPages<TSource>(this IEnumerable<TSource> source, int pageSize)
         {
             if (pageSize < 1)
@@ -41,11 +47,16 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
-        /// Applies paging to a <see cref="IEnumerable{T}"/>. Take note that this should be applied after
+        /// Applies paging to a <see cref="IEnumerable{T}" />. Take note that this should be applied after
         /// any Where-clauses, to make sure you're not missing any results.
         /// </summary>
+        /// <typeparam name="TSource">The type of the t source.</typeparam>
+        /// <param name="source">The source.</param>
         /// <param name="page">Has to be non-negative.</param>
         /// <param name="pageSize">Has to be greater than 0.</param>
+        /// <returns>IEnumerable&lt;TSource&gt;.</returns>
+        /// <exception cref="ArgumentBelowZeroException">pageSize</exception>
+        /// <exception cref="ArgumentOutOfRangeException">pageSize - Value must be greater than 0.</exception>
         public static IEnumerable<TSource> ToPage<TSource>(this IEnumerable<TSource> source, int page, int pageSize = int.MaxValue)
         {
             if (page < 0)
@@ -58,16 +69,32 @@ namespace ISynergy.Framework.Core.Extensions
                 .Take(pageSize);
         }
 
+        /// <summary>
+        /// Gets the flags.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>IEnumerable&lt;Enum&gt;.</returns>
         public static IEnumerable<Enum> GetFlags(this Enum value)
         {
             return GetFlags(value, Enum.GetValues(value.GetType()).Cast<Enum>().ToArray());
         }
 
+        /// <summary>
+        /// Gets the individual flags.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>IEnumerable&lt;Enum&gt;.</returns>
         public static IEnumerable<Enum> GetIndividualFlags(this Enum value)
         {
             return GetFlags(value, GetFlagValues(value.GetType()).ToArray());
         }
 
+        /// <summary>
+        /// Gets the flags.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="values">The values.</param>
+        /// <returns>IEnumerable&lt;Enum&gt;.</returns>
         private static IEnumerable<Enum> GetFlags(Enum value, Enum[] values)
         {
             var bits = Convert.ToUInt64(value);
@@ -92,6 +119,11 @@ namespace ISynergy.Framework.Core.Extensions
             return Enumerable.Empty<Enum>();
         }
 
+        /// <summary>
+        /// Gets the flag values.
+        /// </summary>
+        /// <param name="enumType">Type of the enum.</param>
+        /// <returns>IEnumerable&lt;Enum&gt;.</returns>
         private static IEnumerable<Enum> GetFlagValues(Type enumType)
         {
             ulong flag = 0x1;
@@ -107,6 +139,12 @@ namespace ISynergy.Framework.Core.Extensions
             }
         }
 
+        /// <summary>
+        /// Gets the type of t.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="_">The .</param>
+        /// <returns>Type.</returns>
         public static Type GetTypeOfT<T>(this IEnumerable<T> _)
         {
             return typeof(T);
@@ -114,6 +152,13 @@ namespace ISynergy.Framework.Core.Extensions
 
 #if !WINDOWS_UWP
 
+        /// <summary>
+        /// Converts to datatable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection">The collection.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns>DataTable.</returns>
         public static DataTable ToDataTable<T>(this IEnumerable<T> collection, string tableName)
         {
             var tbl = ToDataTable(collection);
@@ -121,6 +166,12 @@ namespace ISynergy.Framework.Core.Extensions
             return tbl;
         }
 
+        /// <summary>
+        /// Converts to datatable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection">The collection.</param>
+        /// <returns>DataTable.</returns>
         public static DataTable ToDataTable<T>(this IEnumerable<T> collection)
         {
             var dt = new DataTable();

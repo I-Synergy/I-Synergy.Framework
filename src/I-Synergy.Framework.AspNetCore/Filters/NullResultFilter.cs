@@ -10,6 +10,10 @@ namespace ISynergy.Framework.AspNetCore.Filters
     /// </summary>
     public sealed class NullResultFilter : ActionFilterAttribute
     {
+        /// <summary>
+        /// Called when [action executed].
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             var response = context.HttpContext.Response;

@@ -10,25 +10,56 @@ using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Core.Data
 {
+    /// <summary>
+    /// Class ObservableClass.
+    /// Implements the <see cref="IObservableClass" />
+    /// Implements the <see cref="INotifyPropertyChanged" />
+    /// </summary>
+    /// <seealso cref="IObservableClass" />
+    /// <seealso cref="INotifyPropertyChanged" />
     public abstract class ObservableClass : IObservableClass, INotifyPropertyChanged
     {
+        /// <summary>
+        /// Gets the validation trigger.
+        /// </summary>
+        /// <value>The validation trigger.</value>
         [JsonIgnore]
         private ValidationTriggers ValidationTrigger { get; }
 
+        /// <summary>
+        /// Gets the properties.
+        /// </summary>
+        /// <value>The properties.</value>
         [JsonIgnore]
         public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
             = new ObservableConcurrentDictionary<string, IProperty>();
 
+        /// <summary>
+        /// Gets the errors.
+        /// </summary>
+        /// <value>The errors.</value>
         [JsonIgnore]
         public ObservableCollection<string> Errors { get; }
             = new ObservableCollection<string>();
 
+        /// <summary>
+        /// Gets or sets the validator.
+        /// </summary>
+        /// <value>The validator.</value>
         [JsonIgnore]
         public Action<IObservableClass> Validator { set; get; }
 
+        /// <summary>
+        /// Returns true if ... is valid.
+        /// </summary>
+        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
         [JsonIgnore]
         public bool IsValid => !Errors.Any();
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is dirty.
+        /// </summary>
+        /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
         [JsonIgnore]
         public bool IsDirty
         {
@@ -38,8 +69,8 @@ namespace ISynergy.Framework.Core.Data
         /// <summary>
         /// Checks if both objects are the same based on common identity property.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">The object to compare with the current object.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             if (obj is IObservableClass observable && observable.HasIdentityProperty())
@@ -48,11 +79,32 @@ namespace ISynergy.Framework.Core.Data
             return base.Equals(obj);
         }
 
+
+        /// <summary>Returns a hash code for this instance.</summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        public override int GetHashCode()
+        {
+            if (this.HasIdentityProperty())
+                return this.GetIdentityValue().GetHashCode();
+
+            return base.GetHashCode();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableClass"/> class.
+        /// </summary>
+        /// <param name="validation">The validation.</param>
         protected ObservableClass(ValidationTriggers validation = ValidationTriggers.Manual)
         {
             ValidationTrigger = validation;
         }
 
+        /// <summary>
+        /// Gets the value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>T.</returns>
         protected T GetValue<T>([CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
@@ -68,6 +120,12 @@ namespace ISynergy.Framework.Core.Data
             return default;
         }
 
+        /// <summary>
+        /// Sets the value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="propertyName">Name of the property.</param>
         protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
@@ -92,6 +150,10 @@ namespace ISynergy.Framework.Core.Data
             }
         }
 
+        /// <summary>
+        /// Clears the errors.
+        /// </summary>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public bool ClearErrors()
         {
             Errors.Clear();
@@ -101,6 +163,10 @@ namespace ISynergy.Framework.Core.Data
             return IsValid;
         }
 
+        /// <summary>
+        /// Validates this instance.
+        /// </summary>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public bool Validate()
         {
             foreach (var property in Properties)
@@ -131,6 +197,9 @@ namespace ISynergy.Framework.Core.Data
             return IsValid;
         }
 
+        /// <summary>
+        /// Reverts this instance.
+        /// </summary>
         public void Revert()
         {
             foreach (var property in Properties)
@@ -144,6 +213,9 @@ namespace ISynergy.Framework.Core.Data
             }
         }
 
+        /// <summary>
+        /// Marks as clean.
+        /// </summary>
         public void MarkAsClean()
         {
             foreach (var property in Properties)
@@ -158,8 +230,16 @@ namespace ISynergy.Framework.Core.Data
         }
 
         #region INotifyPropertyChanged
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        /// <returns></returns>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Called when [property changed].
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -168,6 +248,9 @@ namespace ISynergy.Framework.Core.Data
 
         #region IDisposable
         // Dispose() calls Dispose(true)
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -184,6 +267,10 @@ namespace ISynergy.Framework.Core.Data
         //}
 
         // The bulk of the clean-up code is implemented in Dispose(bool)
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

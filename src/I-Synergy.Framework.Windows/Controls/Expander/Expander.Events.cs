@@ -3,7 +3,7 @@
 namespace ISynergy.Framework.Windows.Controls
 {
     /// <summary>
-    /// The <see cref="Expander"/> control allows user to show/hide content based on a boolean state
+    /// The <see cref="Expander" /> control allows user to show/hide content based on a boolean state
     /// </summary>
     public partial class Expander
     {

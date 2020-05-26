@@ -8,10 +8,16 @@ namespace ISynergy.Framework.Geography
     /// </summary>
     public struct Ellipsoid : IEquatable<Ellipsoid>
     {
-        /// <summary>Get semi major axis (meters).</summary>
+        /// <summary>
+        /// Get semi major axis (meters).
+        /// </summary>
+        /// <value>The semi major axis.</value>
         public double SemiMajorAxis { get; }
 
-        /// <summary>Get flattening.</summary>
+        /// <summary>
+        /// Get flattening.
+        /// </summary>
+        /// <value>The flattening.</value>
         public double Flattening { get; }
 
         /// <summary>
@@ -19,28 +25,36 @@ namespace ISynergy.Framework.Geography
         /// consistent (flattening = 1.0 / inverseFlattening).  Use the methods
         /// FromAAndInverseF() and FromAAndF() to create new instances.
         /// </summary>
-        /// <param name="semiMajor"></param>
-        /// <param name="flattening"></param>
+        /// <param name="semiMajor">The semi major.</param>
+        /// <param name="flattening">The flattening.</param>
         private Ellipsoid(double semiMajor, double flattening)
         {
             SemiMajorAxis = semiMajor;
             Flattening = flattening;
         }
 
-        /// <summary>Get semi minor axis (meters).</summary>
+        /// <summary>
+        /// Get semi minor axis (meters).
+        /// </summary>
+        /// <value>The semi minor axis.</value>
         public double SemiMinorAxis => (1.0 - Flattening) * SemiMajorAxis;
 
-        /// <summary>Get inverse flattening.</summary>
+        /// <summary>
+        /// Get inverse flattening.
+        /// </summary>
+        /// <value>The inverse flattening.</value>
         public double InverseFlattening => 1.0 / Flattening;
 
         /// <summary>
         /// Get axis ratio
         /// </summary>
+        /// <value>The ratio.</value>
         public double Ratio => 1.0 - Flattening;
 
         /// <summary>
         /// The eccentricity of the Ellipsoid
         /// </summary>
+        /// <value>The eccentricity.</value>
         public double Eccentricity => Math.Sqrt(1.0 - Math.Pow(Ratio, 2));
 
         /// <summary>
@@ -81,7 +95,7 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         /// <param name="obj">The other object</param>
         /// <returns>True, if the other object is an Ellipsoid with the same geometry</returns>
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if(obj is Ellipsoid ellipsoid)
             {
@@ -94,7 +108,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The hash code of the Ellipsoid
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             double[] xy = { SemiMajorAxis, SemiMajorAxis };
@@ -125,28 +139,44 @@ namespace ISynergy.Framework.Geography
         }
 
         #region References Ellipsoids
-        /// <summary>The WGS84 ellipsoid.</summary>
+        /// <summary>
+        /// The WGS84 ellipsoid.
+        /// </summary>
         public static readonly Ellipsoid WGS84 = FromAAndInverseF(6378137.0, 298.257223563);
 
-        /// <summary>The GRS80 ellipsoid.</summary>
+        /// <summary>
+        /// The GRS80 ellipsoid.
+        /// </summary>
         public static readonly Ellipsoid GRS80 = FromAAndInverseF(6378137.0, 298.257222101);
 
-        /// <summary>The GRS67 ellipsoid.</summary>
+        /// <summary>
+        /// The GRS67 ellipsoid.
+        /// </summary>
         public static readonly Ellipsoid GRS67 = FromAAndInverseF(6378160.0, 298.25);
 
-        /// <summary>The ANS ellipsoid.</summary>
+        /// <summary>
+        /// The ANS ellipsoid.
+        /// </summary>
         public static readonly Ellipsoid ANS = FromAAndInverseF(6378160.0, 298.25);
 
-        /// <summary>The WGS72 ellipsoid.</summary>
+        /// <summary>
+        /// The WGS72 ellipsoid.
+        /// </summary>
         public static readonly Ellipsoid WGS72 = FromAAndInverseF(6378135.0, 298.26);
 
-        /// <summary>The Clarke1858 ellipsoid.</summary>
+        /// <summary>
+        /// The Clarke1858 ellipsoid.
+        /// </summary>
         public static readonly Ellipsoid Clarke1858 = FromAAndInverseF(6378293.645, 294.26);
 
-        /// <summary>The Clarke1880 ellipsoid.</summary>
+        /// <summary>
+        /// The Clarke1880 ellipsoid.
+        /// </summary>
         public static readonly Ellipsoid Clarke1880 = FromAAndInverseF(6378249.145, 293.465);
 
-        /// <summary>A spherical "ellipsoid".</summary>
+        /// <summary>
+        /// A spherical "ellipsoid".
+        /// </summary>
         public static readonly Ellipsoid Sphere = FromAAndF(6371000, 0.0);
         #endregion
     }

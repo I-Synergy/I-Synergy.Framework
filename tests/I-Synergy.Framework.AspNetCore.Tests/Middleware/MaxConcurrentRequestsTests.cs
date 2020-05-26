@@ -61,30 +61,22 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         [Fact]
         public async Task SingleRequest_ReturnsSuccessfulResponse()
         {
-            using (var server = PrepareTestServer())
-            {
-                using (var client = server.CreateClient())
-                {
-                    var response = await client.GetAsync("/");
+            using var server = PrepareTestServer();
+            using var client = server.CreateClient();
+            var response = await client.GetAsync("/");
 
-                    Assert.True(response.IsSuccessStatusCode);
-                }
-            }
+            Assert.True(response.IsSuccessStatusCode);
         }
 
         [Fact]
         public async Task SingleRequest_ReturnsDefaultResponse()
         {
-            using (var server = PrepareTestServer())
-            {
-                using (var client = server.CreateClient())
-                {
-                    var response = await client.GetAsync("/");
-                    var responseText = await response.Content.ReadAsStringAsync();
+            using var server = PrepareTestServer();
+            using var client = server.CreateClient();
+            var response = await client.GetAsync("/");
+            var responseText = await response.Content.ReadAsStringAsync();
 
-                    Assert.Equal(DEFAULT_RESPONSE, responseText);
-                }
-            }
+            Assert.Equal(DEFAULT_RESPONSE, responseText);
         }
 
         [Fact]

@@ -10,10 +10,10 @@ namespace ISynergy.Framework.Core.Linq.Exceptions
     public sealed class ParseException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParseException"/> class with a specified error message and position.
+        /// Initializes a new instance of the <see cref="ParseException" /> class with a specified error message and position.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        /// <param name="position">The location in the parsed string that produced the <see cref="ParseException"/></param>
+        /// <param name="position">The location in the parsed string that produced the <see cref="ParseException" /></param>
         public ParseException(string message, int position)
             : base(message)
         {
@@ -21,8 +21,9 @@ namespace ISynergy.Framework.Core.Linq.Exceptions
         }
 
         /// <summary>
-        /// The location in the parsed string that produced the <see cref="ParseException"/>.
+        /// The location in the parsed string that produced the <see cref="ParseException" />.
         /// </summary>
+        /// <value>The position.</value>
         public int Position { get; }
 
         /// <summary>

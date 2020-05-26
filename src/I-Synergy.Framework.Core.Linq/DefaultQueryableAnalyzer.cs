@@ -11,7 +11,13 @@ namespace ISynergy.Framework.Core.Linq
     /// <seealso cref="IQueryableAnalyzer" />
     public class DefaultQueryableAnalyzer : IQueryableAnalyzer
     {
-        /// <inheritdoc cref="IQueryableAnalyzer.SupportsLinqToObjects"/>
+        /// <summary>
+        /// Determines whether the specified query (and provider) supports LinqToObjects.
+        /// </summary>
+        /// <param name="query">The query to check.</param>
+        /// <param name="provider">The provider to check (can be null).</param>
+        /// <returns>true/false</returns>
+        /// <inheritdoc cref="IQueryableAnalyzer.SupportsLinqToObjects" />
         public bool SupportsLinqToObjects(IQueryable query, IQueryProvider provider = null)
         {
             Argument.IsNotNull(nameof(query), query);

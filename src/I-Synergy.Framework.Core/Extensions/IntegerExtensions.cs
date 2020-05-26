@@ -4,8 +4,17 @@ using ISynergy.Framework.Core.Utilities;
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// Class IntegerExtensions.
+    /// </summary>
     public static class IntegerExtensions
     {
+        /// <summary>
+        /// Converts to guid.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>Guid.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Unsigned integer is greater than 24bit</exception>
         public static Guid ToGuid(this uint value)
         {
             if (value >= Math.Pow(2, 24))
@@ -19,6 +28,11 @@ namespace ISynergy.Framework.Core.Extensions
             return outg;
         }
 
+        /// <summary>
+        /// Generates the alpha numeric key.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>System.String.</returns>
         public static string GenerateAlphaNumericKey(this int self)
         {
             var vRawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
@@ -37,6 +51,11 @@ namespace ISynergy.Framework.Core.Extensions
             return vResult.ToString();
         }
 
+        /// <summary>
+        /// Generates the numeric key.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <returns>System.String.</returns>
         public static string GenerateNumericKey(this int self)
         {
             var vRawChars = "0123456789";

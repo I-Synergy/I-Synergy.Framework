@@ -5,7 +5,7 @@ ___
 
 | Build | Status |
 |:---|---|
-| [I-Synergy.Framework](https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework.Core%20CD?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=78&branchName=master)|
+| [I-Synergy.Framework](https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework%20CD?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=137&branchName=master)|
 
 ## Nuget Deployment Status
 | Release | Status |

@@ -14,8 +14,7 @@
 
         public bool Method3(object value)
         {
-            Item item = value as Item;
-            return item != null && item.Value == 1;
+            return value is Item item && item.Value == 1;
         }
 
         public class Item

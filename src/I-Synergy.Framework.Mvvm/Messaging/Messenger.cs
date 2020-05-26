@@ -12,16 +12,32 @@ namespace ISynergy.Framework.Mvvm.Messaging
     /// </summary>
     public class Messenger : IMessenger
     {
+        /// <summary>
+        /// The creation lock
+        /// </summary>
         private static readonly object CreationLock = new object();
+        /// <summary>
+        /// The default instance
+        /// </summary>
         private static IMessenger _defaultInstance;
+        /// <summary>
+        /// The register lock
+        /// </summary>
         private readonly object _registerLock = new object();
+        /// <summary>
+        /// The recipients of subclasses action
+        /// </summary>
         private Dictionary<Type, List<WeakActionAndToken>> _recipientsOfSubclassesAction;
+        /// <summary>
+        /// The recipients strict action
+        /// </summary>
         private Dictionary<Type, List<WeakActionAndToken>> _recipientsStrictAction;
 
         /// <summary>
         /// Gets the Messenger's default instance, allowing
         /// to register and send messages in a static manner.
         /// </summary>
+        /// <value>The default.</value>
         public static IMessenger Default
         {
             get
@@ -53,11 +69,12 @@ namespace ISynergy.Framework.Mvvm.Messaging
         /// for.</typeparam>
         /// <param name="recipient">The recipient that will receive the messages.</param>
         /// <param name="action">The action that will be executed when a message
-        /// of type TMessage is sent. IMPORTANT: If the action causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects. </param>
+        /// of type TMessage is sent. IMPORTANT: Note that closures are not supported at the moment
+        /// due to the use of WeakActions (see http://stackoverflow.com/questions/25730530/).</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.
+        /// parameter to true if the action is using closures. See
+        /// http://galasoft.ch/s/mvvmweakaction.</param>
         public virtual void Register<TMessage>(
             object recipient,
             Action<TMessage> action,
@@ -68,14 +85,12 @@ namespace ISynergy.Framework.Mvvm.Messaging
 
         /// <summary>
         /// Registers a recipient for a type of message TMessage.
-        /// The action parameter will be executed when a corresponding 
+        /// The action parameter will be executed when a corresponding
         /// message is sent. See the receiveDerivedMessagesToo parameter
         /// for details on how messages deriving from TMessage (or, if TMessage is an interface,
         /// messages implementing TMessage) can be received too.
         /// <para>Registering a recipient does not create a hard reference to it,
         /// so if this recipient is deleted, no memory leak is caused.</para>
-        /// <para>However if you use closures and set keepTargetAlive to true, you might
-        /// cause a memory leak if you don't call <see cref="Unregister"/> when you are cleaning up.</para>
         /// </summary>
         /// <typeparam name="TMessage">The type of message that the recipient registers
         /// for.</typeparam>
@@ -87,11 +102,11 @@ namespace ISynergy.Framework.Mvvm.Messaging
         /// get the message. Similarly, messages sent without any token, or with a different
         /// token, will not be delivered to that recipient.</param>
         /// <param name="action">The action that will be executed when a message
-        /// of type TMessage is sent. IMPORTANT: If the action causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects. </param>
+        /// of type TMessage is sent.</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.
+        /// parameter to true if the action is using closures. See
+        /// http://galasoft.ch/s/mvvmweakaction.</param>
         public virtual void Register<TMessage>(
             object recipient,
             object token,
@@ -103,7 +118,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
 
         /// <summary>
         /// Registers a recipient for a type of message TMessage.
-        /// The action parameter will be executed when a corresponding 
+        /// The action parameter will be executed when a corresponding
         /// message is sent. See the receiveDerivedMessagesToo parameter
         /// for details on how messages deriving from TMessage (or, if TMessage is an interface,
         /// messages implementing TMessage) can be received too.
@@ -128,14 +143,13 @@ namespace ISynergy.Framework.Mvvm.Messaging
         /// transmitted to the recipient. For example, if a SendOrderMessage
         /// and an ExecuteOrderMessage implement IOrderMessage, registering for IOrderMessage
         /// and setting receiveDerivedMessagesToo to true will send SendOrderMessage
-        /// and ExecuteOrderMessage to the recipient that registered.</para>
-        /// </param>
+        /// and ExecuteOrderMessage to the recipient that registered.</para></param>
         /// <param name="action">The action that will be executed when a message
-        /// of type TMessage is sent. IMPORTANT: If the action causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects. </param>
+        /// of type TMessage is sent.</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.
+        /// parameter to true if the action is using closures. See
+        /// http://galasoft.ch/s/mvvmweakaction.</param>
         public virtual void Register<TMessage>(
             object recipient,
             object token,
@@ -199,7 +213,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
 
         /// <summary>
         /// Registers a recipient for a type of message TMessage.
-        /// The action parameter will be executed when a corresponding 
+        /// The action parameter will be executed when a corresponding
         /// message is sent. See the receiveDerivedMessagesToo parameter
         /// for details on how messages deriving from TMessage (or, if TMessage is an interface,
         /// messages implementing TMessage) can be received too.
@@ -218,14 +232,13 @@ namespace ISynergy.Framework.Mvvm.Messaging
         /// transmitted to the recipient. For example, if a SendOrderMessage
         /// and an ExecuteOrderMessage implement IOrderMessage, registering for IOrderMessage
         /// and setting receiveDerivedMessagesToo to true will send SendOrderMessage
-        /// and ExecuteOrderMessage to the recipient that registered.</para>
-        /// </param>
+        /// and ExecuteOrderMessage to the recipient that registered.</para></param>
         /// <param name="action">The action that will be executed when a message
-        /// of type TMessage is sent. IMPORTANT: If the action causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects. </param>
+        /// of type TMessage is sent.</param>
         /// <param name="keepTargetAlive">If true, the target of the Action will
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.
+        /// parameter to true if the action is using closures. See
+        /// http://galasoft.ch/s/mvvmweakaction.</param>
         public virtual void Register<TMessage>(
             object recipient,
             bool receiveDerivedMessagesToo,
@@ -235,6 +248,9 @@ namespace ISynergy.Framework.Mvvm.Messaging
             Register(recipient, null, receiveDerivedMessagesToo, action, keepTargetAlive);
         }
 
+        /// <summary>
+        /// The is cleanup registered
+        /// </summary>
         private bool _isCleanupRegistered;
 
         /// <summary>
@@ -299,14 +315,14 @@ namespace ISynergy.Framework.Mvvm.Messaging
         }
 
         /// <summary>
-        /// Unregisters a message recipient for a given type of messages only. 
+        /// Unregisters a message recipient for a given type of messages only.
         /// After this method is executed, the recipient will not receive messages
         /// of type TMessage anymore, but will still receive other message types (if it
         /// registered for them previously).
         /// </summary>
-        /// <param name="recipient">The recipient that must be unregistered.</param>
         /// <typeparam name="TMessage">The type of messages that the recipient wants
         /// to unregister from.</typeparam>
+        /// <param name="recipient">The recipient that must be unregistered.</param>
         [SuppressMessage(
             "Microsoft.Design",
             "CA1004:GenericMethodsShouldProvideTypeParameter",
@@ -317,15 +333,15 @@ namespace ISynergy.Framework.Mvvm.Messaging
         }
 
         /// <summary>
-        /// Unregisters a message recipient for a given type of messages only and for a given token. 
+        /// Unregisters a message recipient for a given type of messages only and for a given token.
         /// After this method is executed, the recipient will not receive messages
         /// of type TMessage anymore with the given token, but will still receive other message types
         /// or messages with other tokens (if it registered for them previously).
         /// </summary>
-        /// <param name="recipient">The recipient that must be unregistered.</param>
-        /// <param name="token">The token for which the recipient must be unregistered.</param>
         /// <typeparam name="TMessage">The type of messages that the recipient wants
         /// to unregister from.</typeparam>
+        /// <param name="recipient">The recipient that must be unregistered.</param>
+        /// <param name="token">The token for which the recipient must be unregistered.</param>
         [SuppressMessage(
             "Microsoft.Design",
             "CA1004:GenericMethodsShouldProvideTypeParameter",
@@ -393,7 +409,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
         }
 
         /// <summary>
-        /// Provides a non-static access to the static <see cref="Reset"/> method.
+        /// Provides a non-static access to the static <see cref="Reset" /> method.
         /// Sets the Messenger's default (static) instance to null.
         /// </summary>
         [SuppressMessage(
@@ -405,6 +421,10 @@ namespace ISynergy.Framework.Mvvm.Messaging
             Reset();
         }
 
+        /// <summary>
+        /// Cleanups the list.
+        /// </summary>
+        /// <param name="lists">The lists.</param>
         private static void CleanupList(IDictionary<Type, List<WeakActionAndToken>> lists)
         {
             if (lists == null)
@@ -439,6 +459,14 @@ namespace ISynergy.Framework.Mvvm.Messaging
             }
         }
 
+        /// <summary>
+        /// Sends to list.
+        /// </summary>
+        /// <typeparam name="TMessage">The type of the t message.</typeparam>
+        /// <param name="message">The message.</param>
+        /// <param name="weakActionsAndTokens">The weak actions and tokens.</param>
+        /// <param name="messageTargetType">Type of the message target.</param>
+        /// <param name="token">The token.</param>
         private static void SendToList<TMessage>(
             TMessage message,
             IEnumerable<WeakActionAndToken> weakActionsAndTokens,
@@ -469,6 +497,11 @@ namespace ISynergy.Framework.Mvvm.Messaging
             }
         }
 
+        /// <summary>
+        /// Unregisters from lists.
+        /// </summary>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="lists">The lists.</param>
         private static void UnregisterFromLists(object recipient, Dictionary<Type, List<WeakActionAndToken>> lists)
         {
             if (recipient == null
@@ -496,6 +529,14 @@ namespace ISynergy.Framework.Mvvm.Messaging
             }
         }
 
+        /// <summary>
+        /// Unregisters from lists.
+        /// </summary>
+        /// <typeparam name="TMessage">The type of the t message.</typeparam>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="token">The token.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="lists">The lists.</param>
         private static void UnregisterFromLists<TMessage>(
             object recipient,
             object token,
@@ -532,13 +573,13 @@ namespace ISynergy.Framework.Mvvm.Messaging
         /// <summary>
         /// Notifies the Messenger that the lists of recipients should
         /// be scanned and cleaned up.
-        /// Since recipients are stored as <see cref="WeakReference"/>, 
-        /// recipients can be garbage collected even though the Messenger keeps 
+        /// Since recipients are stored as <see cref="WeakReference" />,
+        /// recipients can be garbage collected even though the Messenger keeps
         /// them in a list. During the cleanup operation, all "dead"
         /// recipients are removed from the lists. Since this operation
         /// can take a moment, it is only executed when the application is
         /// idle. For this reason, a user of the Messenger class should use
-        /// <see cref="RequestCleanup"/> instead of forcing one with the 
+        /// <see cref="RequestCleanup" /> instead of forcing one with the
         /// <see cref="Cleanup" /> method.
         /// </summary>
         public void RequestCleanup()
@@ -555,13 +596,13 @@ namespace ISynergy.Framework.Mvvm.Messaging
 
         /// <summary>
         /// Scans the recipients' lists for "dead" instances and removes them.
-        /// Since recipients are stored as <see cref="WeakReference"/>, 
-        /// recipients can be garbage collected even though the Messenger keeps 
+        /// Since recipients are stored as <see cref="WeakReference" />,
+        /// recipients can be garbage collected even though the Messenger keeps
         /// them in a list. During the cleanup operation, all "dead"
         /// recipients are removed from the lists. Since this operation
         /// can take a moment, it is only executed when the application is
         /// idle. For this reason, a user of the Messenger class should use
-        /// <see cref="RequestCleanup"/> instead of forcing one with the 
+        /// <see cref="RequestCleanup" /> instead of forcing one with the
         /// <see cref="Cleanup" /> method.
         /// </summary>
         public void Cleanup()
@@ -571,6 +612,13 @@ namespace ISynergy.Framework.Mvvm.Messaging
             _isCleanupRegistered = false;
         }
 
+        /// <summary>
+        /// Sends the type of to target or.
+        /// </summary>
+        /// <typeparam name="TMessage">The type of the t message.</typeparam>
+        /// <param name="message">The message.</param>
+        /// <param name="messageTargetType">Type of the message target.</param>
+        /// <param name="token">The token.</param>
         private void SendToTargetOrType<TMessage>(TMessage message, Type messageTargetType, object token)
         {
             var messageType = typeof(TMessage);
@@ -625,10 +673,19 @@ namespace ISynergy.Framework.Mvvm.Messaging
 
         #region Nested type: WeakActionAndToken
 
+        /// <summary>
+        /// Struct WeakActionAndToken
+        /// </summary>
         private struct WeakActionAndToken
         {
+            /// <summary>
+            /// The action
+            /// </summary>
             public WeakAction Action;
 
+            /// <summary>
+            /// The token
+            /// </summary>
             public object Token;
         }
 

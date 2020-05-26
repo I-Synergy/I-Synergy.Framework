@@ -10,15 +10,35 @@ namespace ISynergy.Framework.Windows.Controls
     /// </summary>
     public class WrapPanel : Panel
     {
+        /// <summary>
+        /// Struct UvMeasure
+        /// </summary>
         [System.Diagnostics.DebuggerDisplay("U = {U} V = {V}")]
         private struct UvMeasure
         {
+            /// <summary>
+            /// The zero
+            /// </summary>
             internal static readonly UvMeasure Zero = default;
 
+            /// <summary>
+            /// Gets or sets the u.
+            /// </summary>
+            /// <value>The u.</value>
             internal double U { get; set; }
 
+            /// <summary>
+            /// Gets or sets the v.
+            /// </summary>
+            /// <value>The v.</value>
             internal double V { get; set; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="UvMeasure"/> struct.
+            /// </summary>
+            /// <param name="orientation">The orientation.</param>
+            /// <param name="width">The width.</param>
+            /// <param name="height">The height.</param>
             public UvMeasure(Orientation orientation, double width, double height)
             {
                 if (orientation == Orientation.Horizontal)
@@ -35,9 +55,10 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Gets or sets a uniform Horizontal distance (in pixels) between items when <see cref="Orientation"/> is set to Horizontal,
-        /// or between columns of items when <see cref="Orientation"/> is set to Vertical.
+        /// Gets or sets a uniform Horizontal distance (in pixels) between items when <see cref="Orientation" /> is set to Horizontal,
+        /// or between columns of items when <see cref="Orientation" /> is set to Vertical.
         /// </summary>
+        /// <value>The horizontal spacing.</value>
         public double HorizontalSpacing
         {
             get { return (double)GetValue(HorizontalSpacingProperty); }
@@ -45,7 +66,7 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Identifies the <see cref="HorizontalSpacing"/> dependency property.
+        /// Identifies the <see cref="HorizontalSpacing" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty HorizontalSpacingProperty =
             DependencyProperty.Register(
@@ -55,9 +76,10 @@ namespace ISynergy.Framework.Windows.Controls
                 new PropertyMetadata(0d, LayoutPropertyChanged));
 
         /// <summary>
-        /// Gets or sets a uniform Vertical distance (in pixels) between items when <see cref="Orientation"/> is set to Vertical,
-        /// or between rows of items when <see cref="Orientation"/> is set to Horizontal.
+        /// Gets or sets a uniform Vertical distance (in pixels) between items when <see cref="Orientation" /> is set to Vertical,
+        /// or between rows of items when <see cref="Orientation" /> is set to Horizontal.
         /// </summary>
+        /// <value>The vertical spacing.</value>
         public double VerticalSpacing
         {
             get { return (double)GetValue(VerticalSpacingProperty); }
@@ -65,7 +87,7 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Identifies the <see cref="VerticalSpacing"/> dependency property.
+        /// Identifies the <see cref="VerticalSpacing" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty VerticalSpacingProperty =
             DependencyProperty.Register(
@@ -79,6 +101,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// Horizontal means that child controls will be added horizontally until the width of the panel is reached, then a new row is added to add new child controls.
         /// Vertical means that children will be added vertically until the height of the panel is reached, then a new column is added.
         /// </summary>
+        /// <value>The orientation.</value>
         public Orientation Orientation
         {
             get { return (Orientation)GetValue(OrientationProperty); }
@@ -86,7 +109,7 @@ namespace ISynergy.Framework.Windows.Controls
         }
 
         /// <summary>
-        /// Identifies the <see cref="Orientation"/> dependency property.
+        /// Identifies the <see cref="Orientation" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(
@@ -98,10 +121,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Gets or sets the distance between the border and its child object.
         /// </summary>
-        /// <returns>
-        /// The dimensions of the space between the border and its child as a Thickness value.
-        /// Thickness is a structure that stores dimension values using pixel measures.
-        /// </returns>
+        /// <value>The padding.</value>
         public Thickness Padding
         {
             get { return (Thickness)GetValue(PaddingProperty); }
@@ -111,7 +131,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <summary>
         /// Identifies the Padding dependency property.
         /// </summary>
-        /// <returns>The identifier for the <see cref="Padding"/> dependency property.</returns>
+        /// <returns>The identifier for the <see cref="Padding" /> dependency property.</returns>
         public static readonly DependencyProperty PaddingProperty =
             DependencyProperty.Register(
                 nameof(Padding),
@@ -119,6 +139,11 @@ namespace ISynergy.Framework.Windows.Controls
                 typeof(WrapPanel),
                 new PropertyMetadata(default(Thickness), LayoutPropertyChanged));
 
+        /// <summary>
+        /// Layouts the property changed.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private static void LayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is WrapPanel wp)

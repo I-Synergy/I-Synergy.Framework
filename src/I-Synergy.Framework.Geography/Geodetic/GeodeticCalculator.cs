@@ -11,12 +11,19 @@ namespace ISynergy.Framework.Geography
     /// </summary>
     public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
     {
+        /// <summary>
+        /// The two pi
+        /// </summary>
         private const double TwoPi = 2.0 * Math.PI;
+        /// <summary>
+        /// The precision
+        /// </summary>
         private const double Precision = 0.0000000000001;
 
         /// <summary>
         /// The reference Ellipsoid to use for the calculations
         /// </summary>
+        /// <value>The reference globe.</value>
         public Ellipsoid ReferenceGlobe { get; }
 
         /// <summary>
@@ -38,6 +45,7 @@ namespace ISynergy.Framework.Geography
         /// <param name="distance">distance to travel (meters)</param>
         /// <param name="endBearing">bearing at destination (degrees)</param>
         /// <returns>The coordinates of the final location of the traveling</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public GlobalCoordinates CalculateEndingGlobalCoordinates(
             GlobalCoordinates start,
             Angle startBearing,
@@ -181,7 +189,7 @@ namespace ISynergy.Framework.Geography
         /// This is the solution to the inverse geodetic problem.
         /// </summary>
         /// <param name="start">starting coordinates</param>
-        /// <param name="end">ending coordinates </param>
+        /// <param name="end">ending coordinates</param>
         /// <returns>The geodetic curve information to get from start to end</returns>
         public GeodeticCurve CalculateGeodeticCurve(
             GlobalCoordinates start,
@@ -381,8 +389,8 @@ namespace ISynergy.Framework.Geography
         /// <param name="start">starting coordinates</param>
         /// <param name="end">ending coordinates</param>
         /// <param name="numberOfPoints">Number of points on the path (including start and end)</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the number of points is less than 2</exception>
         /// <returns>An array of points describing the path from start to end</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public GlobalCoordinates[] CalculateGeodeticPath(
             GlobalCoordinates start,
             GlobalCoordinates end,

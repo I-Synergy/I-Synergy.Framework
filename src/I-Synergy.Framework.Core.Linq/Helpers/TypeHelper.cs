@@ -6,8 +6,17 @@ using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Core.Linq.Helpers
 {
+    /// <summary>
+    /// Class TypeHelper.
+    /// </summary>
     internal static class TypeHelper
     {
+        /// <summary>
+        /// Finds the type of the generic.
+        /// </summary>
+        /// <param name="generic">The generic.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>Type.</returns>
         public static Type FindGenericType(Type generic, Type type)
         {
             while (type != null && type != typeof(object))
@@ -32,6 +41,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Determines whether [is compatible with] [the specified source].
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <returns><c>true</c> if [is compatible with] [the specified source]; otherwise, <c>false</c>.</returns>
         public static bool IsCompatibleWith(Type source, Type target)
         {
             if (source == target)
@@ -106,16 +121,31 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return false;
         }
 
+        /// <summary>
+        /// Determines whether [is enum type] [the specified type].
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if [is enum type] [the specified type]; otherwise, <c>false</c>.</returns>
         public static bool IsEnumType(Type type)
         {
             return GetNonNullableType(type).GetTypeInfo().IsEnum;
         }
 
+        /// <summary>
+        /// Determines whether [is numeric type] [the specified type].
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if [is numeric type] [the specified type]; otherwise, <c>false</c>.</returns>
         public static bool IsNumericType(Type type)
         {
             return GetNumericTypeKind(type) != 0;
         }
 
+        /// <summary>
+        /// Determines whether [is nullable type] [the specified type].
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if [is nullable type] [the specified type]; otherwise, <c>false</c>.</returns>
         public static bool IsNullableType(Type type)
         {
             Argument.IsNotNull(nameof(type), type);
@@ -123,6 +153,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
+        /// <summary>
+        /// Converts to nullabletype.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>Type.</returns>
         public static Type ToNullableType(Type type)
         {
             Argument.IsNotNull(nameof(type), type);
@@ -130,16 +165,31 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return IsNullableType(type) ? type : typeof(Nullable<>).MakeGenericType(type);
         }
 
+        /// <summary>
+        /// Determines whether [is signed integral type] [the specified type].
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if [is signed integral type] [the specified type]; otherwise, <c>false</c>.</returns>
         public static bool IsSignedIntegralType(Type type)
         {
             return GetNumericTypeKind(type) == 2;
         }
 
+        /// <summary>
+        /// Determines whether [is unsigned integral type] [the specified type].
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if [is unsigned integral type] [the specified type]; otherwise, <c>false</c>.</returns>
         public static bool IsUnsignedIntegralType(Type type)
         {
             return GetNumericTypeKind(type) == 3;
         }
 
+        /// <summary>
+        /// Gets the kind of the numeric type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>System.Int32.</returns>
         private static int GetNumericTypeKind(Type type)
         {
             type = GetNonNullableType(type);
@@ -159,6 +209,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return 0;
         }
 
+        /// <summary>
+        /// Gets the name of the type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>System.String.</returns>
         public static string GetTypeName(Type type)
         {
             var baseType = GetNonNullableType(type);
@@ -172,6 +227,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return name;
         }
 
+        /// <summary>
+        /// Gets the type of the non nullable.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>Type.</returns>
         public static Type GetNonNullableType(Type type)
         {
             Argument.IsNotNull(nameof(type), type);
@@ -179,6 +239,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return IsNullableType(type) ? type.GetTypeInfo().GenericTypeArguments[0] : type;
         }
 
+        /// <summary>
+        /// Gets the type of the underlying.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>Type.</returns>
         public static Type GetUnderlyingType(Type type)
         {
             Argument.IsNotNull(nameof(type), type);
@@ -193,6 +258,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return type;
         }
 
+        /// <summary>
+        /// Gets the self and base types.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>IEnumerable&lt;Type&gt;.</returns>
         public static IEnumerable<Type> GetSelfAndBaseTypes(Type type)
         {
             if (type.GetTypeInfo().IsInterface)
@@ -204,6 +274,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             return GetSelfAndBaseClasses(type);
         }
 
+        /// <summary>
+        /// Gets the self and base classes.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>IEnumerable&lt;Type&gt;.</returns>
         private static IEnumerable<Type> GetSelfAndBaseClasses(Type type)
         {
             while (type != null)
@@ -213,6 +288,11 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             }
         }
 
+        /// <summary>
+        /// Adds the interface.
+        /// </summary>
+        /// <param name="types">The types.</param>
+        /// <param name="type">The type.</param>
         private static void AddInterface(List<Type> types, Type type)
         {
             if (!types.Contains(type))
@@ -225,6 +305,12 @@ namespace ISynergy.Framework.Core.Linq.Helpers
             }
         }
 
+        /// <summary>
+        /// Parses the enum.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>System.Object.</returns>
         public static object ParseEnum(string value, Type type)
         {
             if (type.GetTypeInfo().IsEnum && Enum.IsDefined(type, value))

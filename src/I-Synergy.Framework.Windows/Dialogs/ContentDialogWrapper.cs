@@ -5,15 +5,18 @@ using Windows.UI.Xaml.Controls;
 namespace ISynergy.Framework.Windows.Dialogs
 {
     /// <summary>
-    /// Class wrapping an instance of <see cref="ContentDialog"/> in <see cref="IContentDialog"/>.
+    /// Class wrapping an instance of <see cref="ContentDialog" /> in <see cref="IContentDialog" />.
     /// </summary>
     /// <seealso cref="IContentDialog" />
     public class ContentDialogWrapper : IContentDialog
     {
+        /// <summary>
+        /// The content dialog
+        /// </summary>
         private readonly ContentDialog contentDialog;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContentDialogWrapper"/> class.
+        /// Initializes a new instance of the <see cref="ContentDialogWrapper" /> class.
         /// </summary>
         /// <param name="contentDialog">The content dialog.</param>
         public ContentDialogWrapper(ContentDialog contentDialog)
@@ -24,9 +27,10 @@ namespace ISynergy.Framework.Windows.Dialogs
         }
 
         /// <summary>
-        /// Gets or sets the data context for a <see cref="FrameworkElement"/> when it participates
+        /// Gets or sets the data context for a <see cref="FrameworkElement" /> when it participates
         /// in data binding.
         /// </summary>
+        /// <value>The data context.</value>
         public object DataContext
         {
             get => contentDialog.DataContext;
@@ -36,10 +40,8 @@ namespace ISynergy.Framework.Windows.Dialogs
         /// <summary>
         /// Begins an asynchronous operation to show the dialog.
         /// </summary>
-        /// <returns>
-        /// An asynchronous operation showing the dialog. When complete, returns a
-        /// <see cref="ContentDialogResult"/>.
-        /// </returns>
+        /// <returns>An asynchronous operation showing the dialog. When complete, returns a
+        /// <see cref="ContentDialogResult" />.</returns>
         public IAsyncOperation<ContentDialogResult> ShowAsync() => contentDialog.ShowAsync();
     }
 }

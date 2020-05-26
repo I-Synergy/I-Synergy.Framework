@@ -8,15 +8,30 @@ using Windows.Storage;
 
 namespace ISynergy.Framework.Windows.Services
 {
+    /// <summary>
+    /// Class ApplicationSettingsService. This class cannot be inherited.
+    /// Implements the <see cref="IApplicationSettingsService" />
+    /// </summary>
+    /// <seealso cref="IApplicationSettingsService" />
     public sealed class ApplicationSettingsService : IApplicationSettingsService
     {
+        /// <summary>
+        /// The local settings
+        /// </summary>
         private readonly ApplicationDataContainer localSettings;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationSettingsService"/> class.
+        /// </summary>
         public ApplicationSettingsService()
         {
             localSettings = ApplicationData.Current.LocalSettings;
         }
 
+        /// <summary>
+        /// Gets or sets the color.
+        /// </summary>
+        /// <value>The color.</value>
         public string Color
         {
             get
@@ -50,6 +65,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets the culture.
+        /// </summary>
+        /// <value>The culture.</value>
         public string Culture
         {
             get
@@ -71,6 +90,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is fullscreen.
+        /// </summary>
+        /// <value><c>true</c> if this instance is fullscreen; otherwise, <c>false</c>.</value>
         public bool IsFullscreen
         {
             get
@@ -92,6 +115,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets the default user.
+        /// </summary>
+        /// <value>The default user.</value>
         public string DefaultUser
         {
             get
@@ -113,6 +140,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets the users.
+        /// </summary>
+        /// <value>The users.</value>
         public string Users
         {
             get
@@ -134,6 +165,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets the refresh token.
+        /// </summary>
+        /// <value>The refresh token.</value>
         public string RefreshToken
         {
             get
@@ -154,6 +189,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is automatic login.
+        /// </summary>
+        /// <value><c>true</c> if this instance is automatic login; otherwise, <c>false</c>.</value>
         public bool IsAutoLogin
         {
             get
@@ -174,6 +213,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets the wallpaper.
+        /// </summary>
+        /// <value>The wallpaper.</value>
         public byte[] Wallpaper
         {
             get
@@ -195,6 +238,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is update.
+        /// </summary>
+        /// <value><c>true</c> if this instance is update; otherwise, <c>false</c>.</value>
         public bool IsUpdate 
         {
             get
@@ -215,6 +262,10 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is advanced.
+        /// </summary>
+        /// <value><c>true</c> if this instance is advanced; otherwise, <c>false</c>.</value>
         public bool IsAdvanced
         {
             get

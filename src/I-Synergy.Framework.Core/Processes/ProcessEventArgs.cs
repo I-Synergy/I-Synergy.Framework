@@ -8,14 +8,14 @@ namespace ISynergy.Framework.Core.Processes
     public class ProcessEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProcessEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="ProcessEventArgs" /> class.
         /// </summary>
         public ProcessEventArgs()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProcessEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="ProcessEventArgs" /> class.
         /// </summary>
         /// <param name="content">The content.</param>
         public ProcessEventArgs(string content)
@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Core.Processes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProcessEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="ProcessEventArgs" /> class.
         /// </summary>
         /// <param name="code">The code.</param>
         public ProcessEventArgs(int code)
@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Core.Processes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProcessEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="ProcessEventArgs" /> class.
         /// </summary>
         /// <param name="content">The content.</param>
         /// <param name="code">The code.</param>
@@ -49,14 +49,13 @@ namespace ISynergy.Framework.Core.Processes
         /// <summary>
         /// Gets the content.
         /// </summary>
+        /// <value>The content.</value>
         public string Content { get; }
 
         /// <summary>
         /// Gets or sets the code.
         /// </summary>
-        /// <value>
-        /// The code.
-        /// </value>
+        /// <value>The code.</value>
         public int? Code { get; }
     }
 }

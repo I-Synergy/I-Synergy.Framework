@@ -13,12 +13,15 @@ namespace ISynergy.Framework.Geography
         /// </summary>
         public const double GreenwichMeridian = 0.0;
 
+        /// <summary>
+        /// The reference meridian
+        /// </summary>
         private Angle _referenceMeridian = GreenwichMeridian;
 
         /// <summary>
         /// Instantiate a Meractor projection with this reference Ellipsoid
         /// </summary>
-        /// <param name="referenceGlobe"></param>
+        /// <param name="referenceGlobe">The reference globe.</param>
         protected MercatorProjection(Ellipsoid referenceGlobe)
         {
             ReferenceGlobe = referenceGlobe;
@@ -27,6 +30,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The reference meridian for the projection, usually this is Greenwich with 0° longitude
         /// </summary>
+        /// <value>The reference meridian.</value>
         public Angle ReferenceMeridian
         {
             get { return _referenceMeridian; }
@@ -36,6 +40,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The reference Ellipsoid for this projection
         /// </summary>
+        /// <value>The reference globe.</value>
         public Ellipsoid ReferenceGlobe { get; }
 
         /// <summary>
@@ -74,6 +79,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Maximum possible longitude for this projection
         /// </summary>
+        /// <value>The maximum latitude.</value>
         public virtual Angle MaxLatitude
         {
             get { return Angle.RadToDeg(Math.Atan(Math.Sinh(Math.PI))); }
@@ -82,6 +88,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// Minimum possible longitude for this projection
         /// </summary>
+        /// <value>The minimum latitude.</value>
         public virtual Angle MinLatitude
         {
             get { return -MaxLatitude; }
@@ -128,8 +135,8 @@ namespace ISynergy.Framework.Geography
         /// <param name="point1">The first point</param>
         /// <param name="point2">The second point</param>
         /// <returns>The distance between the points</returns>
-        /// <exception cref="ArgumentException">Raised if the two points don't belong to the same projection</exception>
-        /// <exception cref="ArgumentNullException">Raised if one of the points is null</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public double EuclidianDistance(EuclidianCoordinate point1, EuclidianCoordinate point2)
         {
             if (point1 == null || point2 == null)
@@ -191,7 +198,7 @@ namespace ISynergy.Framework.Geography
         /// <param name="latitudeStart">The longitude of the starting point in degrees</param>
         /// <param name="longitudeEnd">The longitude of the endig point in degrees</param>
         /// <param name="latitudeEnd">The longitude of the ending point in degrees</param>
-        /// <returns></returns>
+        /// <returns>System.Double.</returns>
         public double GeodesicDistance(
             double longitudeStart,
             double latitudeStart,

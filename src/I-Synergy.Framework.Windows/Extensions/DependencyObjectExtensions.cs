@@ -5,8 +5,17 @@ using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.Windows.Extensions
 {
+    /// <summary>
+    /// Class DependencyObjectExtensions.
+    /// </summary>
     public static class DependencyObjectExtensions
     {
+        /// <summary>
+        /// Finds the children.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="startNode">The start node.</param>
+        /// <param name="results">The results.</param>
         public static void FindChildren<T>(this DependencyObject startNode, List<T> results) where T : DependencyObject
         {
             var count = VisualTreeHelper.GetChildrenCount(startNode);
@@ -22,6 +31,12 @@ namespace ISynergy.Framework.Windows.Extensions
             }
         }
 
+        /// <summary>
+        /// Finds the parent.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="startNode">The start node.</param>
+        /// <returns>T.</returns>
         public static T FindParent<T>(this DependencyObject startNode) where T : DependencyObject
         {
             var parentObject = VisualTreeHelper.GetParent(startNode);

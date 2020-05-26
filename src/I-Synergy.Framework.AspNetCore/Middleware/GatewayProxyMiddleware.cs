@@ -16,17 +16,30 @@ namespace ISynergy.Framework.AspNetCore.Middleware
     /// </summary>
     public class GatewayProxyMiddleware
     {
+        /// <summary>
+        /// The next
+        /// </summary>
         private readonly RequestDelegate _next;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger _logger;
+        /// <summary>
+        /// The options
+        /// </summary>
         private readonly GatewayProxyOptions _options;
+        /// <summary>
+        /// The HTTP client
+        /// </summary>
         private readonly HttpClient _httpClient;
 
         /// <summary>
         /// Constructor for the gateway proxy middleware.
         /// </summary>
-        /// <param name="next"></param>
-        /// <param name="options"></param>
-        /// <param name="logger"></param>
+        /// <param name="next">The next.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="httpClientFactory">The HTTP client factory.</param>
         public GatewayProxyMiddleware(RequestDelegate next, IOptions<GatewayProxyOptions> options, ILogger<GatewayProxyMiddleware> logger, IHttpClientFactory httpClientFactory)
         {
             Argument.IsNotNull(nameof(GatewayProxyOptions), options.Value);
@@ -40,9 +53,7 @@ namespace ISynergy.Framework.AspNetCore.Middleware
         /// <summary>
         /// Task to invoke the middleware.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="httpClientFactory"></param>
-        /// <returns></returns>
+        /// <param name="context">The context.</param>
         public async Task Invoke(HttpContext context)
         {
             foreach (var proxy in _options.GatewayProxies)
@@ -72,6 +83,11 @@ namespace ISynergy.Framework.AspNetCore.Middleware
             await _next(context).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Gets the method.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns>HttpMethod.</returns>
         private HttpMethod GetMethod(string method)
         {
             if (HttpMethods.IsDelete(method)) return HttpMethod.Delete;
@@ -84,6 +100,10 @@ namespace ISynergy.Framework.AspNetCore.Middleware
             return new HttpMethod(method);
         }
 
+        /// <summary>
+        /// Generates the debug output.
+        /// </summary>
+        /// <param name="request">The request.</param>
         private void GenerateDebugOutput(HttpRequest request)
         {
             var requestTrace = new StringBuilder();
@@ -96,11 +116,11 @@ namespace ISynergy.Framework.AspNetCore.Middleware
             requestTrace.AppendLine($"Body: {request.Body?.ToString()}");
             requestTrace.AppendLine($"ContentLength: {request.ContentLength?.ToString()}");
             requestTrace.AppendLine($"ContentType: {request.ContentType?.ToString()}");
-            requestTrace.AppendLine($"Host: {request.Host.ToString()}");
+            requestTrace.AppendLine($"Host: {request.Host}");
             requestTrace.AppendLine($"Method: {request.Method?.ToString()}");
-            requestTrace.AppendLine($"Path: {request.Path.ToString()}");
+            requestTrace.AppendLine($"Path: {request.Path}");
             requestTrace.AppendLine($"Query: {request.Query?.ToString()}");
-            requestTrace.AppendLine($"QueryString: {request.QueryString.ToString()}");
+            requestTrace.AppendLine($"QueryString: {request.QueryString}");
             requestTrace.AppendLine($"Scheme: {request.Scheme?.ToString()}");
 
             _logger.LogTrace(requestTrace.ToString());

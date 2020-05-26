@@ -6,14 +6,17 @@ using Windows.Storage.Pickers;
 namespace ISynergy.Framework.Windows.Dialogs
 {
     /// <summary>
-    /// Class wrapping <see cref="FileSavePicker"/>.
+    /// Class wrapping <see cref="FileSavePicker" />.
     /// </summary>
     internal sealed class FileSavePickerWrapper
     {
+        /// <summary>
+        /// The picker
+        /// </summary>
         private readonly FileSavePicker picker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileSavePickerWrapper"/> class.
+        /// Initializes a new instance of the <see cref="FileSavePickerWrapper" /> class.
         /// </summary>
         /// <param name="settings">The settings for the file save picker.</param>
         internal FileSavePickerWrapper(FileSavePickerSettings settings)
@@ -41,12 +44,10 @@ namespace ISynergy.Framework.Windows.Dialogs
         /// Shows the file picker so that the user can save a file and set the file name,
         /// extension, and location of the file to be saved.
         /// </summary>
-        /// <returns>
-        /// When the call to this method completes successfully, it returns a
-        /// <see cref="StorageFile"/> object that was created to represent the saved file. The file
-        /// name, extension, and location of this <see cref="StorageFile"/> match those specified
-        /// by the user, but the file has no content.
-        /// </returns>
+        /// <returns>When the call to this method completes successfully, it returns a
+        /// <see cref="StorageFile" /> object that was created to represent the saved file. The file
+        /// name, extension, and location of this <see cref="StorageFile" /> match those specified
+        /// by the user, but the file has no content.</returns>
         internal IAsyncOperation<StorageFile> PickSaveFileAsync() => picker.PickSaveFileAsync();
     }
 }

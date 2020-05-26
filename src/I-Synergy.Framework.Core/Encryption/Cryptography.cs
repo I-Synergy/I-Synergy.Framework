@@ -38,20 +38,35 @@ namespace ISynergy.Framework.Core.Encryption
         //        Legal min block size = 64
         //        Legal max block size = 64
 
+        /// <summary>
+        /// The key bit size
+        /// </summary>
         private readonly int _keyBitSize;
+        /// <summary>
+        /// The iterations
+        /// </summary>
         private readonly int _iterations;
+        /// <summary>
+        /// The hash
+        /// </summary>
         private readonly string _hash;
+        /// <summary>
+        /// The salt bytes
+        /// </summary>
         private readonly byte[] _saltBytes; // Random aselrias38490a32
+        /// <summary>
+        /// The vector bytes
+        /// </summary>
         private readonly byte[] _vectorBytes; // Random 8947az34awl34kjq
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="salt"></param>
-        /// <param name="vector"></param>
-        /// <param name="keySize"></param>
-        /// <param name="hash"></param>
-        /// <param name="iterations"></param>
+        /// <param name="salt">The salt.</param>
+        /// <param name="vector">The vector.</param>
+        /// <param name="keySize">Size of the key.</param>
+        /// <param name="hash">The hash.</param>
+        /// <param name="iterations">The iterations.</param>
         public Cryptography(string salt, string vector, CryptoKeySizes keySize, string hash = "SHA1", int iterations = 2)
         {
             _keyBitSize = keySize.GetHashCode();
@@ -64,9 +79,9 @@ namespace ISynergy.Framework.Core.Encryption
         /// <summary>
         /// Encrypt default with Managed AES.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
+        /// <param name="value">The value.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>System.String.</returns>
         public string Encrypt(string value, string password) =>
             Encrypt<AesManaged>(value, password);
 
@@ -74,8 +89,8 @@ namespace ISynergy.Framework.Core.Encryption
         /// Encrypt with custom SymmetricAlgoritm.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="password"></param>
+        /// <param name="value">The value.</param>
+        /// <param name="password">The password.</param>
         /// <returns>string</returns>
         public string Encrypt<T>(string value, string password) 
             where T : SymmetricAlgorithm, new() =>
@@ -85,8 +100,8 @@ namespace ISynergy.Framework.Core.Encryption
         /// Encrypt with custom SymmetricAlgoritm.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="password"></param>
+        /// <param name="value">The value.</param>
+        /// <param name="password">The password.</param>
         /// <returns>byte[]</returns>
         public byte[] Encrypt<T>(byte[] value, string password)
                 where T : SymmetricAlgorithm, new()
@@ -120,9 +135,9 @@ namespace ISynergy.Framework.Core.Encryption
         /// <summary>
         /// Decrypt string default with AES Managed.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
+        /// <param name="value">The value.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>System.String.</returns>
         public string Decrypt(string value, string password) =>
             Decrypt<AesManaged>(value, password);
 
@@ -130,9 +145,9 @@ namespace ISynergy.Framework.Core.Encryption
         /// Decrypt with custom SymmetricAlgoritm.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
+        /// <param name="value">The value.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>System.String.</returns>
         public string Decrypt<T>(string value, string password) 
             where T : SymmetricAlgorithm, new() =>
             Decrypt<T>(Convert.FromBase64String(value), password);
@@ -141,9 +156,9 @@ namespace ISynergy.Framework.Core.Encryption
         /// Decrypt with custom SymmetricAlgoritm.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
+        /// <param name="value">The value.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>System.String.</returns>
         public string Decrypt<T>(byte[] value, string password)
             where T : SymmetricAlgorithm, new()
         {
@@ -180,6 +195,14 @@ namespace ISynergy.Framework.Core.Encryption
             return Encoding.UTF8.GetString(decrypted, 0, decryptedByteCount);
         }
 
+        /// <summary>
+        /// Checks if key size is valid.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cipher">The cipher.</param>
+        /// <param name="keySize">Size of the key.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private bool CheckIfKeySizeIsValid<T>(T cipher, int keySize)
         {
             var errorString = new StringBuilder("Legal min or max key size exceeded.");
@@ -291,6 +314,14 @@ namespace ISynergy.Framework.Core.Encryption
             throw new ArgumentOutOfRangeException(errorString.ToString());
         }
 
+        /// <summary>
+        /// Checks if block size is valid.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cipher">The cipher.</param>
+        /// <param name="blockSize">Size of the block.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private bool CheckIfBlockSizeIsValid<T>(T cipher, int blockSize)
         {
             var errorString = new StringBuilder("Legal min or max block size exceeded.");

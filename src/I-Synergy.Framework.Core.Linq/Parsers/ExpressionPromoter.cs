@@ -6,12 +6,20 @@ using ISynergy.Framework.Core.Linq.Helpers;
 
 namespace ISynergy.Framework.Core.Linq.Parsers
 {
+    /// <summary>
+    /// Class ExpressionPromoter.
+    /// Implements the <see cref="IExpressionPromoter" />
+    /// </summary>
+    /// <seealso cref="IExpressionPromoter" />
     public class ExpressionPromoter : IExpressionPromoter
     {
+        /// <summary>
+        /// The number parser
+        /// </summary>
         private readonly NumberParser _numberParser;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionPromoter"/> class.
+        /// Initializes a new instance of the <see cref="ExpressionPromoter" /> class.
         /// </summary>
         /// <param name="config">The ParsingConfig.</param>
         public ExpressionPromoter(ParsingConfig config)
@@ -19,7 +27,15 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             _numberParser = new NumberParser(config);
         }
 
-        /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)"/>
+        /// <summary>
+        /// Promotes the specified expr.
+        /// </summary>
+        /// <param name="expr">The expr.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="exact">if set to <c>true</c> [exact].</param>
+        /// <param name="convertExpr">if set to <c>true</c> [convert expr].</param>
+        /// <returns>Expression.</returns>
+        /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)" />
         public virtual Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
         {
             if (expr.Type == type)

@@ -24,6 +24,11 @@ namespace ISynergy.Framework.Windows.Behaviors
         Disable
     }
 
+    /// <summary>
+    /// Class Authorization.
+    /// Implements the <see cref="BehaviorBase{Windows.UI.Xaml.Controls.Control}" />
+    /// </summary>
+    /// <seealso cref="BehaviorBase{Windows.UI.Xaml.Controls.Control}" />
     public class Authorization : BehaviorBase<Control>
     {
         /// <summary>
@@ -32,8 +37,9 @@ namespace ISynergy.Framework.Windows.Behaviors
         private static IAuthenticationProvider AuthenticationProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Authentication"/> class.
+        /// Initializes a new instance of the <see cref="Authentication" /> class.
         /// </summary>
+        /// <exception cref="NotSupportedException">No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider</exception>
         public Authorization()
         {
             if (!DesignMode.DesignModeEnabled)
@@ -57,13 +63,13 @@ namespace ISynergy.Framework.Windows.Behaviors
         }
 
         /// <summary>
-        /// Using a DependencyProperty as the backing store for Action.  This enables animation, styling, binding, etc... 
+        /// Using a DependencyProperty as the backing store for Action.  This enables animation, styling, binding, etc...
         /// </summary>
         public static readonly DependencyProperty ActionProperty = DependencyProperty.Register(nameof(Action), typeof(AuthenticationAction),
             typeof(Authorization), new PropertyMetadata(AuthenticationAction.Disable));
 
         /// <summary>
-        /// Gets or sets the authentication tag which can be used to provide additional information to the <see cref="IAuthenticationProvider"/>.
+        /// Gets or sets the authentication tag which can be used to provide additional information to the <see cref="IAuthenticationProvider" />.
         /// </summary>
         /// <value>The authentication tag.</value>
         public string AuthenticationTag
@@ -73,16 +79,17 @@ namespace ISynergy.Framework.Windows.Behaviors
         }
 
         /// <summary>
-        /// Using a DependencyProperty as the backing store for AuthenticationTag.  This enables animation, styling, binding, etc... 
+        /// Using a DependencyProperty as the backing store for AuthenticationTag.  This enables animation, styling, binding, etc...
         /// </summary>
         public static readonly DependencyProperty AuthenticationTagProperty =
             DependencyProperty.Register(nameof(AuthenticationTag), typeof(string), typeof(Authorization), new PropertyMetadata(string.Empty));
 
         /// <summary>
-        /// Called when the <see cref="Behavior{T}.AssociatedObject"/> has been loaded.
+        /// Called when the <see cref="Behavior{T}.AssociatedObject" /> has been loaded.
         /// </summary>
-        /// <exception cref="InvalidOperationException">No instance of <see cref="IAuthenticationProvider"/> is registered in the <see cref="IServiceLocator"/>.</exception>
-        /// <exception cref="InvalidOperationException">The <see cref="Action"/> is set to <see cref="AuthenticationAction.Disable"/> and the <see cref="Behavior{T}.AssociatedObject"/> is not a <see cref="Control"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="InvalidOperationException">No instance of <see cref="IAuthenticationProvider" /> is registered in the <see cref="IServiceLocator" />.</exception>
+        /// <exception cref="InvalidOperationException">The <see cref="Action" /> is set to <see cref="AuthenticationAction.Disable" /> and the <see cref="Behavior{T}.AssociatedObject" /> is not a <see cref="Control" />.</exception>
         protected override void OnAssociatedObjectLoaded()
         {
             if (!AuthenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))

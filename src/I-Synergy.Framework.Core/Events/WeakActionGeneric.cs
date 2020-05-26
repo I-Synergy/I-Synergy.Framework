@@ -11,11 +11,15 @@ namespace ISynergy.Framework.Core.Events
     ////[ClassInfo(typeof(WeakAction))]
     public class WeakAction<T> : WeakAction, IExecuteWithObject
     {
+        /// <summary>
+        /// The static action
+        /// </summary>
         private Action<T> _staticAction;
 
         /// <summary>
         /// Gets the name of the method that this WeakAction represents.
         /// </summary>
+        /// <value>The name of the method.</value>
         public override string MethodName
         {
             get
@@ -33,6 +37,7 @@ namespace ISynergy.Framework.Core.Events
         /// Gets a value indicating whether the Action's owner is still alive, or if it was collected
         /// by the Garbage Collector already.
         /// </summary>
+        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
         public override bool IsAlive
         {
             get

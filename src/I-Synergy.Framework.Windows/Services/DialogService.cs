@@ -14,33 +14,70 @@ namespace ISynergy.Framework.Windows.Services
     /// </summary>
     public class DialogService : IDialogService
     {
+        /// <summary>
+        /// Gets the language service.
+        /// </summary>
+        /// <value>The language service.</value>
         public ILanguageService LanguageService { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DialogService"/> class.
+        /// </summary>
+        /// <param name="languageService">The language service.</param>
         public DialogService(ILanguageService languageService)
         {
             LanguageService = languageService;
         }
 
+        /// <summary>
+        /// Shows the error asynchronous.
+        /// </summary>
+        /// <param name="error">The error.</param>
+        /// <param name="title">The title.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "")
         {
             return ShowAsync(error.Message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        /// <summary>
+        /// Shows the error asynchronous.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "")
         {
             return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        /// <summary>
+        /// Shows the information asynchronous.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "")
         {
             return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleInfo"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Shows the warning asynchronous.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "")
         {
             return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
+        /// <summary>
+        /// Shows the greeting asynchronous.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>Task.</returns>
         public Task ShowGreetingAsync(string name)
         {
             if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
@@ -65,6 +102,14 @@ namespace ISynergy.Framework.Windows.Services
             }
         }
 
+        /// <summary>
+        /// show as an asynchronous operation.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="buttons">The buttons.</param>
+        /// <param name="image">The image.</param>
+        /// <returns>MessageBoxResult.</returns>
         public virtual async Task<MessageBoxResult> ShowAsync(
             string message,
             string title = "",

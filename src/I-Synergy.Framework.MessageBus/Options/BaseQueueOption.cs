@@ -4,9 +4,9 @@ namespace ISynergy.Framework.MessageBus.Options
 {
     /// <summary>
     /// Class BaseQueueOption.
-    /// Implements the <see cref="ISynergy.Framework.MessageBus.Abstractions.IQueueOption" />
+    /// Implements the <see cref="IQueueOption" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.MessageBus.Abstractions.IQueueOption" />
+    /// <seealso cref="IQueueOption" />
     public abstract class BaseQueueOption : IQueueOption
     {
         /// <summary>

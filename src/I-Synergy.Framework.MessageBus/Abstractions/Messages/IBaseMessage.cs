@@ -1,6 +1,8 @@
 ﻿namespace ISynergy.Framework.MessageBus.Abstractions
 {
-    /// <summary>Interface IBusMessage</summary>
+    /// <summary>
+    /// Interface IBusMessage
+    /// </summary>
     public interface IBaseMessage
     {
         /// <summary>

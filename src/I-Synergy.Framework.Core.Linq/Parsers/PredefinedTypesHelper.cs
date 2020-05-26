@@ -5,9 +5,15 @@ using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Core.Linq.Parsers
 {
+    /// <summary>
+    /// Class PredefinedTypesHelper.
+    /// </summary>
     internal static class PredefinedTypesHelper
     {
         // These shorthands have different name than actual type and therefore not recognized by default from the PredefinedTypes.
+        /// <summary>
+        /// The predefined types shorthands
+        /// </summary>
         public static readonly IDictionary<string, Type> PredefinedTypesShorthands = new Dictionary<string, Type>
         {
             { "int", typeof(int) },
@@ -20,6 +26,9 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             { "float", typeof(float) }
         };
 
+        /// <summary>
+        /// The predefined types
+        /// </summary>
         public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> {
             { typeof(object), 0 },
             { typeof(bool), 0 },
@@ -45,6 +54,11 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             { typeof(Uri), 0 }
         });
 
+        /// <summary>
+        /// Tries the add.
+        /// </summary>
+        /// <param name="typeName">Name of the type.</param>
+        /// <param name="x">The x.</param>
         private static void TryAdd(string typeName, int x)
         {
             try
@@ -61,6 +75,12 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
         }
 
+        /// <summary>
+        /// Determines whether [is predefined type] [the specified configuration].
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if [is predefined type] [the specified configuration]; otherwise, <c>false</c>.</returns>
         public static bool IsPredefinedType(ParsingConfig config, Type type)
         {
             Argument.IsNotNull(nameof(config), config);

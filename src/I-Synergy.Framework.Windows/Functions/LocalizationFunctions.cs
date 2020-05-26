@@ -6,17 +6,35 @@ using Windows.Globalization;
 
 namespace ISynergy.Framework.Windows.Functions
 {
+    /// <summary>
+    /// Class LocalizationFunctions.
+    /// </summary>
     public class LocalizationFunctions
     {
+        /// <summary>
+        /// The context
+        /// </summary>
         public readonly IContext Context;
+        /// <summary>
+        /// The settings service
+        /// </summary>
         public readonly IApplicationSettingsService SettingsService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalizationFunctions"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="settingsService">The settings service.</param>
         public LocalizationFunctions(IContext context, IApplicationSettingsService settingsService)
         {
             Context = context;
             SettingsService = settingsService;
         }
 
+        /// <summary>
+        /// Sets the localization language.
+        /// </summary>
+        /// <param name="isoLanguage">The iso language.</param>
         public void SetLocalizationLanguage(string isoLanguage)
         {
             SettingsService.Culture = isoLanguage;

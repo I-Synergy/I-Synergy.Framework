@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace ISynergy.Framework.Core.Validation
 {
+    /// <summary>
+    /// Class Argument.
+    /// </summary>
     public static class Argument
     {
         /// <summary>
@@ -13,7 +16,7 @@ namespace ISynergy.Framework.Core.Validation
         /// <param name="paramName">Name of the parameter.</param>
         /// <param name="paramValue">Value of the parameter.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentNullException">If <paramref name="paramValue" /> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException"></exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNull(string paramName, object paramValue)
         {
@@ -21,7 +24,7 @@ namespace ISynergy.Framework.Core.Validation
             {
                 if (paramValue is null)
                 {
-                    var error = $"Argument '{paramName.ToString()}' cannot be null";
+                    var error = $"Argument '{paramName}' cannot be null";
                     throw new ArgumentNullException(paramName, error);
                 }
             }
@@ -33,7 +36,7 @@ namespace ISynergy.Framework.Core.Validation
         /// <param name="paramName">Name of the parameter.</param>
         /// <param name="paramValue">Value of the parameter.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentNullException">If <paramref name="paramValue" /> is <c>null</c> or empty.</exception>
+        /// <exception cref="ArgumentNullException"></exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNullOrEmpty(string paramName, string paramValue)
         {
@@ -49,7 +52,7 @@ namespace ISynergy.Framework.Core.Validation
         /// </summary>
         /// <param name="paramName">Name of the parameter.</param>
         /// <param name="paramValue">Value of the parameter.</param>
-        /// <exception cref="ArgumentException">If <paramref name="paramValue" /> is <c>null</c> or empty.</exception>
+        /// <exception cref="ArgumentException"></exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotEmpty(string paramName, Guid paramValue)
         {
@@ -66,7 +69,7 @@ namespace ISynergy.Framework.Core.Validation
         /// <param name="paramName">Name of the parameter.</param>
         /// <param name="paramValue">Value of the parameter.</param>
         /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentException">If <paramref name="paramValue" /> is <c>null</c> or empty.</exception>
+        /// <exception cref="ArgumentException"></exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNullOrEmpty(string paramName, Guid? paramValue)
         {
@@ -83,7 +86,7 @@ namespace ISynergy.Framework.Core.Validation
         /// <param name="paramName">Name of the parameter.</param>
         /// <param name="paramValue">Value of the parameter.</param>
         /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentException">If <paramref name="paramValue" /> is <c>null</c> or a whitespace.</exception>
+        /// <exception cref="ArgumentException"></exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNullOrWhitespace(string paramName, string paramValue)
         {
@@ -100,7 +103,7 @@ namespace ISynergy.Framework.Core.Validation
         /// <param name="paramName">Name of the parameter.</param>
         /// <param name="paramValue">Value of the parameter.</param>
         /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentException">If <paramref name="paramValue" /> is <c>null</c> or an empty array.</exception>
+        /// <exception cref="ArgumentException"></exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNullOrEmptyArray(string paramName, Array paramValue)
         {
@@ -114,10 +117,11 @@ namespace ISynergy.Framework.Core.Validation
         /// <summary>
         /// Determines whether the specified argument is not <c>null</c> or an empty array (.Length == 0).
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="paramName">Name of the parameter.</param>
         /// <param name="paramValue">Value of the parameter.</param>
         /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentException">If <paramref name="paramValue" /> is <c>null</c> or an empty array.</exception>
+        /// <exception cref="ArgumentException"></exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNullOrEmptyList<T>(string paramName, IList<T> paramValue)
         {
@@ -128,6 +132,14 @@ namespace ISynergy.Framework.Core.Validation
             }
         }
 
+        /// <summary>
+        /// Determines whether [has no nulls] [the specified parameter name].
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameterName">Name of the parameter.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>IList&lt;T&gt;.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static IList<T> HasNoNulls<T>(string parameterName, IList<T> value)
             where T : class
         {
@@ -153,8 +165,8 @@ namespace ISynergy.Framework.Core.Validation
         /// <param name="maximumValue">The maximum value.</param>
         /// <param name="validation">The validation function to call for validation.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="validation" /> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="paramValue" /> is out of range.</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="validation" /> is <c>null</c>.</exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotOutOfRange<T>(string paramName, T paramValue, T minimumValue, T maximumValue, Func<T, T, T, bool> validation)
         {
@@ -193,8 +205,8 @@ namespace ISynergy.Framework.Core.Validation
         /// <param name="minimumValue">The minimum value.</param>
         /// <param name="validation">The validation function to call for validation.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="validation" /> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="paramValue" /> is out of range.</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="validation" /> is <c>null</c>.</exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsMinimal<T>(string paramName, T paramValue, T minimumValue, Func<T, T, bool> validation)
         {
@@ -232,8 +244,8 @@ namespace ISynergy.Framework.Core.Validation
         /// <param name="maximumValue">The maximum value.</param>
         /// <param name="validation">The validation function to call for validation.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="validation" /> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="paramValue" /> is out of range.</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="validation" /> is <c>null</c>.</exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsMaximum<T>(string paramName, T paramValue, T maximumValue, Func<T, T, bool> validation)
         {
@@ -260,6 +272,15 @@ namespace ISynergy.Framework.Core.Validation
                 (innerParamValue, innerMaximumValue) => innerParamValue.CompareTo(innerMaximumValue) <= 0);
         }
 
+        /// <summary>
+        /// Conditions the specified parameter name.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameterName">Name of the parameter.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="condition">The condition.</param>
+        /// <returns>T.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static T Condition<T>(string parameterName, T value, Predicate<T> condition)
         {
             IsNotNull(nameof(condition), condition);

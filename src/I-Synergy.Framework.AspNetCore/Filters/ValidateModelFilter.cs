@@ -9,6 +9,10 @@ namespace ISynergy.Framework.AspNetCore.Filters
     /// </summary>
     public sealed class ValidateModelFilter : ActionFilterAttribute
     {
+        /// <summary>
+        /// Called when [action executing].
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             // Check if model is valid, with build-in modelstate validators.
