@@ -1,0 +1,26 @@
+name: $(Date:yyyy).1$(DayOfYear)$(Rev:.r)-preview.0
+
+trigger: none
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  BuildConfiguration: 'debug'
+
+stages:
+  - stage: Build
+    displayName: 'Build'
+    jobs:
+    - template: templates/build.jobs.yml
+      parameters:
+        BuildConfiguration: $(BuildConfiguration)
+
+  - stage: Test
+    displayName: 'Test'
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+    - template: templates/test.jobs.yml
+      parameters:
+        BuildConfiguration: $(BuildConfiguration)

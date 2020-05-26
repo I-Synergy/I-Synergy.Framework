@@ -1,0 +1,103 @@
+# File: pipelines/test.jobs.yml
+
+jobs:
+- job: TestsJob
+  displayName: 'Run Tests'
+  steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Core'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Core.Tests\I-Synergy.Framework.Core.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Core.Linq.Tests\I-Synergy.Framework.Core.Linq.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.AspNetCore.Tests\I-Synergy.Framework.AspNetCore.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.AspNetCore.Authentication'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.AspNetCore.Authentication.Tests\I-Synergy.Framework.AspNetCore.Authentication.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.EntityFramework'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.EntityFramework.Tests\I-Synergy.Framework.EntityFramework.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Financial'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Financial.Tests\I-Synergy.Framework.Financial.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Geography'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Geography.Tests\I-Synergy.Framework.Geography.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Mathematics'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Mathematics.Tests\I-Synergy.Framework.Mathematics.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.MessageBus'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.MessageBus.Tests\I-Synergy.Framework.MessageBus.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Mvvm'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Mvvm.Tests\I-Synergy.Framework.Mvvm.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Payment.Mollie'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Payment.Mollie.Tests\I-Synergy.Framework.Payment.Mollie.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Payment'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Payment.Tests\I-Synergy.Framework.Payment.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Storage'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Storage.Tests\I-Synergy.Framework.Storage.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Test: I-Synergy.Framework.Windows'
+      inputs:
+        command: test
+        projects: 'tests\I-Synergy.Framework.Windows.Tests\I-Synergy.Framework.Windows.Tests.csproj'
+        arguments: '-c $(BuildConfiguration)'

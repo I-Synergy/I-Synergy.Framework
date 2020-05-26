@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$ProjectName$</id>
+    <version>$Version$</version>
+    <authors>Ismail Hassani</authors>
+    <owners>International Intelligence</owners>
+    <iconUrl>https://app.i-synergy.nl/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>I-Synergy Framework Mathematics for .Net Standard 2.0</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2008-2019</copyright>
+    <tags>I-Synergy Framework Mathematics</tags>
+    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework</projectUrl>
+  </metadata>
+  
+  <files>
+    <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netstandard2.0\$projectname$.deps.json" target="lib\netstandard2.0" />
+    <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netstandard2.0\$projectname$.dll" target="lib\netstandard2.0" />
+    <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netstandard2.0\$projectname$.pdb" target="lib\netstandard2.0" />
+  </files>
+</package>

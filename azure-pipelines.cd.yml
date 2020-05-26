@@ -1,0 +1,36 @@
+name: $(Date:yyyy).1$(DayOfYear)$(Rev:.r).0
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  BuildConfiguration: 'release'
+  TimeStampUrl: 'http://timestamp.globalsign.com/scripts/timstamp.dll'
+
+stages:
+  - stage: Build
+    displayName: 'Build'
+    jobs:
+    - template: templates/build.jobs.yml
+
+  - stage: Test
+    displayName: 'Test'
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+    - template: templates/test.jobs.yml
+
+  - stage: Artifacts
+    displayName: 'Artifacts'
+    dependsOn: Test
+    condition: |
+      and
+      (
+        succeeded(), 
+        eq(variables['Build.SourceBranch'], 'refs/heads/master') 
+      )
+    jobs:
+    - template: templates/artifacts.jobs.yml

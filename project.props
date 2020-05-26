@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <DefaultLanguage>en</DefaultLanguage>
+    <Authors>Ismail Hassani</Authors>
+    <Company>International Intelligence</Company>
+    <Product>I-Synergy Framework</Product>
+    <Copyright>Copyright (c) 2008-2020 International Intelligence</Copyright>
+    <PackageProjectUrl>https://www.i-synergy.nl</PackageProjectUrl>
+    <PackageIconUrl>https://app.i-synergy.nl/favicon.ico</PackageIconUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>
