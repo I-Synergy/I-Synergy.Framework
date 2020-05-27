@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.EntityFramework.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace ISynergy.Entities.Base
+namespace ISynergy.Framework.Entities.Base
 {
     /// <summary>
     /// Class BaseRelation.

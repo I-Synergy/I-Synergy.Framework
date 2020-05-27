@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Extensions;
 
-namespace ISynergy.Models.Base
+namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseBusinessResourceDocumentBasic.
@@ -379,9 +379,9 @@ namespace ISynergy.Models.Base
 
     /// <summary>
     /// Class BaseBusinessResourceDocumentSearch.
-    /// Implements the <see cref="ISynergy.Models.Base.BaseBusinessResourceDocumentBasic" />
+    /// Implements the <see cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentBasic" />
     /// </summary>
-    /// <seealso cref="ISynergy.Models.Base.BaseBusinessResourceDocumentBasic" />
+    /// <seealso cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentBasic" />
     public abstract class BaseBusinessResourceDocumentSearch : BaseBusinessResourceDocumentBasic
     {
         /// <summary>
@@ -421,9 +421,9 @@ namespace ISynergy.Models.Base
 
     /// <summary>
     /// Class BaseBusinessResourceDocumentBase.
-    /// Implements the <see cref="ISynergy.Models.Base.BaseBusinessResourceDocumentSearch" />
+    /// Implements the <see cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentSearch" />
     /// </summary>
-    /// <seealso cref="ISynergy.Models.Base.BaseBusinessResourceDocumentSearch" />
+    /// <seealso cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentSearch" />
     public abstract class BaseBusinessResourceDocumentBase : BaseBusinessResourceDocumentSearch
     {
         /// <summary>
@@ -801,10 +801,10 @@ namespace ISynergy.Models.Base
 
     /// <summary>
     /// Class BaseBusinessResourceDocument.
-    /// Implements the <see cref="ISynergy.Models.Base.BaseBusinessResourceDocumentBase" />
+    /// Implements the <see cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentBase" />
     /// </summary>
     /// <typeparam name="TEntityLine">The type of the t entity line.</typeparam>
-    /// <seealso cref="ISynergy.Models.Base.BaseBusinessResourceDocumentBase" />
+    /// <seealso cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentBase" />
     public abstract class BaseBusinessResourceDocument<TEntityLine> : BaseBusinessResourceDocumentBase
         where TEntityLine : BaseBusinessResourceDocumentLine, new()
     {

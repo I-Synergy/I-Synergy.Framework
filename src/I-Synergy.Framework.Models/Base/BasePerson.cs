@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Core.Data;
-using ISynergy.Models.Enumerations;
+using ISynergy.Framework.Models.Enumerations;
 
-namespace ISynergy.Models.Base
+namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BasePerson.

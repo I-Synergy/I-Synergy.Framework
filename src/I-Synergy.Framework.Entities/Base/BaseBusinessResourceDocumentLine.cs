@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.EntityFramework.Entities;
 
-namespace ISynergy.Entities.Base
+namespace ISynergy.Framework.Entities.Base
 {
     /// <summary>
     /// BaseBusinessResourceDocumentLine model which fully supports serialization, property changed notifications,

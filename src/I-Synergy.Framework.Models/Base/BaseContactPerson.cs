@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ISynergy.Models.Base
+namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseContactPerson.
-    /// Implements the <see cref="ISynergy.Models.Base.BasePerson" />
+    /// Implements the <see cref="ISynergy.Framework.Models.Base.BasePerson" />
     /// </summary>
-    /// <seealso cref="ISynergy.Models.Base.BasePerson" />
+    /// <seealso cref="ISynergy.Framework.Models.Base.BasePerson" />
     public abstract class BaseContactPerson : BasePerson
     {
         /// <summary>

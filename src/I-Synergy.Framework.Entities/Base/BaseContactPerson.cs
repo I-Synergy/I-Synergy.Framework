@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ISynergy.Entities.Base
+namespace ISynergy.Framework.Entities.Base
 {
     /// <summary>
     /// ContactPerson model which fully supports serialization, property changed notifications,

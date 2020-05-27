@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Models.Constants
+﻿namespace ISynergy.Framework.Models.Constants
 {
     /// <summary>
     /// Class ControllerPaths.

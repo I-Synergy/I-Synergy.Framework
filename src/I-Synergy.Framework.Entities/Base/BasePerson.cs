@@ -1,9 +1,9 @@
 ﻿using ISynergy.Framework.EntityFramework.Entities;
-using ISynergy.Models.Enumerations;
+using ISynergy.Framework.Models.Enumerations;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ISynergy.Entities.Base
+namespace ISynergy.Framework.Entities.Base
 {
     /// <summary>
     /// Person model which fully supports serialization, property changed notifications,

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ISynergy.Models.Abstractions
+namespace ISynergy.Framework.Models.Abstractions
 {
     /// <summary>
     /// Interface ICaller

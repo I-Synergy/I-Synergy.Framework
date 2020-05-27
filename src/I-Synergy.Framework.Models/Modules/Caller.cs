@@ -2,17 +2,17 @@
 using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Data;
-using ISynergy.Models.Abstractions;
+using ISynergy.Framework.Models.Abstractions;
 
-namespace ISynergy.Models.Modules
+namespace ISynergy.Framework.Models.Modules
 {
     /// <summary>
     /// Class Caller.
     /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// Implements the <see cref="ISynergy.Models.Abstractions.ICaller" />
+    /// Implements the <see cref="ISynergy.Framework.Models.Abstractions.ICaller" />
     /// </summary>
     /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// <seealso cref="ISynergy.Models.Abstractions.ICaller" />
+    /// <seealso cref="ISynergy.Framework.Models.Abstractions.ICaller" />
     public class Caller : ModelBase, ICaller
     {
         /// <summary>
