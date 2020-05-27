@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.EntityFramework.Entities;
 
-namespace ISynergy.Entities.Base
+namespace ISynergy.Framework.Entities.Base
 {
     /// <summary>
     /// Class BaseImage.

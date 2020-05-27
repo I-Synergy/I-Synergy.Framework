@@ -1,17 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Core.Data;
-using ISynergy.Models.Abstractions;
-using ISynergy.Models.Enumerations;
+using ISynergy.Framework.Models.Abstractions;
+using ISynergy.Framework.Models.Enumerations;
 
-namespace ISynergy.Models.Base
+namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseAddress.
     /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// Implements the <see cref="ISynergy.Models.Abstractions.IAddress" />
+    /// Implements the <see cref="ISynergy.Framework.Models.Abstractions.IAddress" />
     /// </summary>
     /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// <seealso cref="ISynergy.Models.Abstractions.IAddress" />
+    /// <seealso cref="ISynergy.Framework.Models.Abstractions.IAddress" />
     public abstract class BaseAddress : ModelBase, IAddress
     {
         /// <summary>

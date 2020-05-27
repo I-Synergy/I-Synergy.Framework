@@ -1,6 +1,6 @@
-﻿using ISynergy.Models.Enumerations;
+﻿using ISynergy.Framework.Models.Enumerations;
 
-namespace ISynergy.Models.Abstractions
+namespace ISynergy.Framework.Models.Abstractions
 {
     /// <summary>
     /// Interface IInternetAddress

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Models.Enumerations
+﻿namespace ISynergy.Framework.Models.Enumerations
 {
     /// <summary>
     /// Enum OrderStates

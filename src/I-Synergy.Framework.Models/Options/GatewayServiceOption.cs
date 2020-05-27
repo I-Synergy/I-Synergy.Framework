@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ISynergy.Models.Options
+namespace ISynergy.Framework.Models.Options
 {
     /// <summary>
     /// Class GatewayServiceOption.

@@ -4,7 +4,7 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Financial;
 
-namespace ISynergy.Models.Base
+namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseBusinessResourceDocumentLineBase.
@@ -295,9 +295,9 @@ namespace ISynergy.Models.Base
 
     /// <summary>
     /// Class BaseBusinessResourceDocumentLine.
-    /// Implements the <see cref="ISynergy.Models.Base.BaseBusinessResourceDocumentLineBase" />
+    /// Implements the <see cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentLineBase" />
     /// </summary>
-    /// <seealso cref="ISynergy.Models.Base.BaseBusinessResourceDocumentLineBase" />
+    /// <seealso cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentLineBase" />
     public abstract class BaseBusinessResourceDocumentLine : BaseBusinessResourceDocumentLineBase
     {
     }

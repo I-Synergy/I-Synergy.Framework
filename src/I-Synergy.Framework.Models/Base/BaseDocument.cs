@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Core.Data;
 
-namespace ISynergy.Models.Base
+namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseDocument.
