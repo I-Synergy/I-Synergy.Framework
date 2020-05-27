@@ -100,12 +100,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{1217ABA2
 		nuget\I-Synergy.Framework.AspNetCore.nuspec = nuget\I-Synergy.Framework.AspNetCore.nuspec
 		nuget\I-Synergy.Framework.Core.Linq.nuspec = nuget\I-Synergy.Framework.Core.Linq.nuspec
 		nuget\I-Synergy.Framework.Core.nuspec = nuget\I-Synergy.Framework.Core.nuspec
+		nuget\I-Synergy.Framework.Entities.nuspec = nuget\I-Synergy.Framework.Entities.nuspec
 		nuget\I-Synergy.Framework.EntityFramework.nuspec = nuget\I-Synergy.Framework.EntityFramework.nuspec
 		nuget\I-Synergy.Framework.Financial.nuspec = nuget\I-Synergy.Framework.Financial.nuspec
 		nuget\I-Synergy.Framework.Geography.nuspec = nuget\I-Synergy.Framework.Geography.nuspec
 		nuget\I-Synergy.Framework.Mathematics.nuspec = nuget\I-Synergy.Framework.Mathematics.nuspec
 		nuget\I-Synergy.Framework.MessageBus.Azure.nuspec = nuget\I-Synergy.Framework.MessageBus.Azure.nuspec
 		nuget\I-Synergy.Framework.MessageBus.nuspec = nuget\I-Synergy.Framework.MessageBus.nuspec
+		nuget\I-Synergy.Framework.Models.nuspec = nuget\I-Synergy.Framework.Models.nuspec
 		nuget\I-Synergy.Framework.Mvvm.nuspec = nuget\I-Synergy.Framework.Mvvm.nuspec
 		nuget\I-Synergy.Framework.Payment.Mollie.nuspec = nuget\I-Synergy.Framework.Payment.Mollie.nuspec
 		nuget\I-Synergy.Framework.Payment.nuspec = nuget\I-Synergy.Framework.Payment.nuspec
@@ -123,6 +125,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.MessageBus.Sample.Subscriber", "samples\I-Synergy.Framework.MessageBus.Sample.Subscriber\I-Synergy.Framework.MessageBus.Sample.Subscriber.csproj", "{81924AC4-C08F-4E9B-BD05-FB7F75291609}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Core.Linq", "src\I-Synergy.Framework.Core.Linq\I-Synergy.Framework.Core.Linq.csproj", "{0055588A-955D-45ED-82A6-C75987CC9C17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Models", "src\I-Synergy.Framework.Models\I-Synergy.Framework.Models.csproj", "{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Entities", "src\I-Synergy.Framework.Entities\I-Synergy.Framework.Entities.csproj", "{23306885-4C44-4AC0-B324-BA71401E5348}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -767,6 +773,46 @@ Global
 		{0055588A-955D-45ED-82A6-C75987CC9C17}.Release|x64.Build.0 = Release|Any CPU
 		{0055588A-955D-45ED-82A6-C75987CC9C17}.Release|x86.ActiveCfg = Release|Any CPU
 		{0055588A-955D-45ED-82A6-C75987CC9C17}.Release|x86.Build.0 = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|ARM.Build.0 = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|x64.Build.0 = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Debug|x86.Build.0 = Debug|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|ARM.ActiveCfg = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|ARM.Build.0 = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|ARM64.Build.0 = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|x64.ActiveCfg = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|x64.Build.0 = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9}.Release|x86.Build.0 = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|ARM.Build.0 = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|x64.Build.0 = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Debug|x86.Build.0 = Debug|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|ARM.ActiveCfg = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|ARM.Build.0 = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|ARM64.Build.0 = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|x64.ActiveCfg = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|x64.Build.0 = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|x86.ActiveCfg = Release|Any CPU
+		{23306885-4C44-4AC0-B324-BA71401E5348}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -804,6 +850,8 @@ Global
 		{58AC244E-38E5-4165-A25E-FEDAD3AD26C2} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 		{81924AC4-C08F-4E9B-BD05-FB7F75291609} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 		{0055588A-955D-45ED-82A6-C75987CC9C17} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{D3562895-FD65-46A3-AE7D-84A7ADF0BBD9} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{23306885-4C44-4AC0-B324-BA71401E5348} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}

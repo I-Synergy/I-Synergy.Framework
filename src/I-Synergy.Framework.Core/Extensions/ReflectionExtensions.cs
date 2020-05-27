@@ -71,7 +71,18 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns>PropertyInfo.</returns>
         public static PropertyInfo GetIdentityProperty<T>(this T _self) where T : class
         {
-            return _self.GetIdentityProperty();
+            var result = _self.GetType().GetProperties().Where(
+                    e => e.IsDefined(typeof(IdentityAttribute))
+                );
+
+            if (result.Count() > 0)
+            {
+                return result.First();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -92,7 +103,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns><c>true</c> if [has identity property] [the specified self]; otherwise, <c>false</c>.</returns>
         public static bool HasIdentityProperty<T>(this T _self) where T : class
         {
-            return _self.HasIdentityProperty();
+            return _self.GetType().GetProperties().Any(e => e.IsDefined(typeof(IdentityAttribute)));
         }
 
         /// <summary>

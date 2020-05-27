@@ -5,13 +5,15 @@
     <version>$Version$</version>
     <authors>Ismail Hassani</authors>
     <owners>International Intelligence</owners>
-    <iconUrl>https://app.i-synergy.nl/favicon.ico</iconUrl>
+    <icon>Icon_128.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
     <description>I-Synergy Framework Authentication for Asp.Net Core 3.0</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2008-2020</copyright>
     <tags>I-Synergy Framework AspNetCore Authentication OAuth</tags>
-    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework.AspNetCore</projectUrl>
+    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework</projectUrl>
+    <repository type="git" url="https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
 
     <dependencies>
       <group targetFramework=".NETCoreApp3.1">
@@ -22,6 +24,7 @@
   </metadata>
   
   <files>
+    <file src="Icon_128.png" target="" />
     <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netcoreapp3.1\$projectname$.deps.json" target="lib\netcoreapp3.1" />
     <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netcoreapp3.1\$projectname$.dll" target="lib\netcoreapp3.1" />
     <file src="$AssemblyFolder$\$projectname$\$BuildConfiguration$\netcoreapp3.1\$projectname$.pdb" target="lib\netcoreapp3.1" />

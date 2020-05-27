@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\project.props" />
+  
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>ISynergy.Framework.Entities</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\output\I-Synergy.Framework.Entities\debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\output\I-Synergy.Framework.Entities\release</OutputPath>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\I-Synergy.Framework.EntityFramework\I-Synergy.Framework.EntityFramework.csproj" />
+    <ProjectReference Include="..\I-Synergy.Framework.Models\I-Synergy.Framework.Models.csproj" />
+  </ItemGroup>
+</Project>

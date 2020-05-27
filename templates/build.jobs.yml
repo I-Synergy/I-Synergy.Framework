@@ -112,6 +112,40 @@ jobs:
         nugetConfigPath: nuget.config
 
     - task: DotNetCoreCLI@2
+      displayName: 'Dotnet restore: I-Synergy.Framework.Models'
+      inputs:
+        command: restore
+        projects: 'src\I-Synergy.Framework.Models\I-Synergy.Framework.Models.csproj'
+        feedsToUse: config
+        nugetConfigPath: nuget.config
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet build: I-Synergy.Framework.Models'
+      inputs:
+        command: build
+        projects: 'src\I-Synergy.Framework.Models\I-Synergy.Framework.Models.csproj'
+        arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
+        feedsToUse: config
+        nugetConfigPath: nuget.config
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet restore: I-Synergy.Framework.Entities'
+      inputs:
+        command: restore
+        projects: 'src\I-Synergy.Framework.Entities\I-Synergy.Framework.Entities.csproj'
+        feedsToUse: config
+        nugetConfigPath: nuget.config
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet build: I-Synergy.Framework.Entities'
+      inputs:
+        command: build
+        projects: 'src\I-Synergy.Framework.Entities\I-Synergy.Framework.Entities.csproj'
+        arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
+        feedsToUse: config
+        nugetConfigPath: nuget.config
+
+    - task: DotNetCoreCLI@2
       displayName: 'Dotnet restore: I-Synergy.Framework.Geography'
       inputs:
         command: restore
