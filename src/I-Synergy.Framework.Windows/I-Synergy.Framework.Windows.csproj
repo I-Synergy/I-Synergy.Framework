@@ -273,7 +273,7 @@
       <Version>2.4.2</Version>
     </PackageReference>
     <PackageReference Include="Mapster">
-      <Version>5.3.1</Version>
+      <Version>5.3.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json">
       <Version>3.1.4</Version>
