@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Core.Models.Accounts
+﻿using System;
+
+namespace ISynergy.Framework.Core.Models.Accounts
 {
     /// <summary>
     /// Class RegistrationResult.
@@ -9,7 +11,7 @@
         /// Gets the user identifier.
         /// </summary>
         /// <value>The user identifier.</value>
-        public string UserId { get; }
+        public Guid UserId { get; }
         /// <summary>
         /// Gets the account.
         /// </summary>
@@ -33,7 +35,7 @@
         /// <param name="account">The account.</param>
         /// <param name="email">The email.</param>
         /// <param name="token">The token.</param>
-        public RegistrationResult(string userId, string account, string email, string token)
+        public RegistrationResult(Guid userId, string account, string email, string token)
         {
             UserId = userId;
             Account = account;
