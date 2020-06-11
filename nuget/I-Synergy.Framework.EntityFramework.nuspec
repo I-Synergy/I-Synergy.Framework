@@ -18,9 +18,9 @@
     <dependencies>
       <group targetFramework=".NETCoreApp3.1">
         <dependency id="Mapster" version="5.3.2" />
-        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="3.1.4" />
-        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.4" />
-        <dependency id="Microsoft.EntityFrameworkCore.SqlServer" version="3.1.4" />
+        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="3.1.5" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.5" />
+        <dependency id="Microsoft.EntityFrameworkCore.SqlServer" version="3.1.5" />
         <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
       </group>
     </dependencies>
