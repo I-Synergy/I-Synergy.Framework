@@ -18,9 +18,9 @@
     <dependencies>
       <group targetFramework=".NETCoreApp3.1">
         <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.14.0" />
-        <dependency id="Microsoft.AspNetCore.Mvc.NewtonsoftJson" version="3.1.4" />
+        <dependency id="Microsoft.AspNetCore.Mvc.NewtonsoftJson" version="3.1.5" />
         <dependency id="Microsoft.IdentityModel.Clients.ActiveDirectory" version="5.2.7" />
-        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.4" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.5" />
         <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
         <dependency id="Flurl.Http" version="2.4.2" />
       </group>
