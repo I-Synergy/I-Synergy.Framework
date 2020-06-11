@@ -147,6 +147,9 @@
     <Compile Include="Controls\Console\Console.xaml.cs">
       <DependentUpon>Console.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ImageView\ImageView.xaml.cs">
+      <DependentUpon>ImageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Menu\BaseMenu.xaml.cs">
       <DependentUpon>BaseMenu.xaml</DependentUpon>
     </Compile>
@@ -319,6 +322,10 @@
     <Page Include="Controls\HeaderedTextBlock\HeaderedTextBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ImageView\ImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\LayoutTransformControl\LayoutTransformControl.xaml">
       <Generator>MSBuild:Compile</Generator>
