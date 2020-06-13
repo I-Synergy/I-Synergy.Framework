@@ -18,13 +18,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <returns>Task.</returns>
         Task LogoutAsync();
         /// <summary>
-        /// Logins the asynchronous.
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <returns>Task.</returns>
-        Task LoginAsync(string username, string password);
-        /// <summary>
         /// Loads the settings asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
