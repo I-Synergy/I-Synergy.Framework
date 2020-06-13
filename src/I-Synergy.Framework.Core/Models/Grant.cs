@@ -42,6 +42,11 @@ namespace ISynergy.Framework.Core.Models
         /// </summary>
         /// <value>The scope.</value>
         [JsonProperty("scope")] public string scope { get; set; } = string.Empty;
+        /// <summary>
+        /// Gets or sets the code.
+        /// </summary>
+        /// <value>The code.</value>
+        [JsonProperty("code")] public string code { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -61,6 +66,10 @@ namespace ISynergy.Framework.Core.Models
         /// The client credentials
         /// </summary>
         public const string ClientCredentials = "client_credentials";
+        /// <summary>
+        /// The api key.
+        /// </summary>
+        public const string ApiKey = "api_key";
     }
 
     /// <summary>
