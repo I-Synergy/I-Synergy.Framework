@@ -37,5 +37,11 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <param name="refreshtoken">The refreshtoken.</param>
         /// <returns>Task.</returns>
         Task AuthenticateWithRefreshTokenAsync(string refreshtoken);
+        /// <summary>
+        /// Authenticates the with API key.
+        /// </summary>
+        /// <param name="apiKey">The API key.</param>
+        /// <returns>Task.</returns>
+        Task AuthenticateWithApiKey(string apiKey);
     }
 }
