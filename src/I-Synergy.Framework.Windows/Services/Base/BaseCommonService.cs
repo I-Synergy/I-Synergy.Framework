@@ -51,11 +51,6 @@ namespace ISynergy.Framework.Windows.Services
         /// <value>The navigation service.</value>
         public INavigationService NavigationService { get; }
         /// <summary>
-        /// Gets the login service.
-        /// </summary>
-        /// <value>The login service.</value>
-        public ILoginService LoginService { get; }
-        /// <summary>
         /// Gets the information service.
         /// </summary>
         /// <value>The information service.</value>
@@ -84,7 +79,6 @@ namespace ISynergy.Framework.Windows.Services
             IMessenger messenger,
             IBusyService busy,
             ILanguageService language,
-            ILoginService loginService,
             IApplicationSettingsService settings,
             ITelemetryService telemetry,
             IDialogService dialog,
@@ -101,7 +95,6 @@ namespace ISynergy.Framework.Windows.Services
             DialogService = dialog;
             UIVisualizerService = uiVisualizer;
             NavigationService = navigation;
-            LoginService = loginService;
             InfoService = info;
             ConverterService = converter;
         }
