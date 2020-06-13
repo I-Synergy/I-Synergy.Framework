@@ -16,11 +16,6 @@
         /// <value>The language service.</value>
         ILanguageService LanguageService { get; }
         /// <summary>
-        /// Gets the login service.
-        /// </summary>
-        /// <value>The login service.</value>
-        ILoginService LoginService { get; }
-        /// <summary>
         /// Gets the application settings service.
         /// </summary>
         /// <value>The application settings service.</value>
