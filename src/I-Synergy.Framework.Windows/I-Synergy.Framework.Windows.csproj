@@ -264,7 +264,6 @@
     <Compile Include="ViewModels\PincodeViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModelBase.cs" />
     <Compile Include="Mvvm\MessageBoxViewModel.cs" />
-    <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\ThemeViewModel.cs" />
     <Compile Include="Controls\Buttons\BaseDialogButtons.xaml.cs">
       <DependentUpon>BaseDialogButtons.xaml</DependentUpon>

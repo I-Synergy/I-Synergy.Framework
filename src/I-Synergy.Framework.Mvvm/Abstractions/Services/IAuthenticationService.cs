@@ -42,6 +42,9 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <returns>Task.</returns>
-        Task AuthenticateWithApiKey(string apiKey);
+        Task AuthenticateWithApiKeyAsync(string apiKey);
+        /// <summary>Logouts the asynchronous.</summary>
+        /// <returns>Task.</returns>
+        Task LogoutAsync();
     }
 }

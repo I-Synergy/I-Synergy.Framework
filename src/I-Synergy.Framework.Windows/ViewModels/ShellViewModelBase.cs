@@ -6,11 +6,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using ISynergy.Framework.Mvvm.Commands;
 using Windows.UI.Xaml.Controls;
-using ISynergy.Framework.Mvvm.Messaging;
 using ISynergy.Framework.Windows.Navigation;
 using Windows.System;
 using ISynergy.Framework.Mvvm;
-using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Windows.Abstractions.Services;
 using ISynergy.Framework.Core.Validation;
@@ -171,7 +169,6 @@ namespace ISynergy.Framework.Windows.ViewModels
             _themeSelector.OnThemeChanged += ThemeSelector_OnThemeChanged;
             _localizationFunctions = localizationFunctions;
 
-
             PrimaryItems = new ObservableCollection<NavigationItem>();
 
             RestartUpdate_Command = new RelayCommand(async () => await ShowDialogRestartAfterUpdateAsync());
@@ -182,9 +179,6 @@ namespace ISynergy.Framework.Windows.ViewModels
             Help_Command = new RelayCommand(async () => await OpenHelpAsync());
             Feedback_Command = new RelayCommand(async () => await CreateFeedbackAsync());
             Settings_Command = new RelayCommand(async () => await OpenSettingsAsync());
-
-            Messenger.Default.Register<AuthenticateUserMessageRequest>(this, async (request) => await ValidateTaskWithUserAsync(request));
-            Messenger.Default.Register<AuthenticateUserMessageResult>(this, async (result) => await OnAuthenticateUserMessageResult(result));
         }
 
         /// <summary>
@@ -261,114 +255,10 @@ namespace ISynergy.Framework.Windows.ViewModels
         }
 
         /// <summary>
-        /// Called when [authenticate user message result].
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private async Task OnAuthenticateUserMessageResult(AuthenticateUserMessageResult result)
-        {
-            try
-            {
-                await BaseCommonServices.BusyService.StartBusyAsync();
-
-                if (result != null && !result.Handled)
-                {
-                    if (result.Property.ToString() == nameof(Login_Command) && result.IsAuthenticated)
-                    {
-                        await BaseCommonServices.DialogService.ShowGreetingAsync(Context.CurrentProfile.Username);
-                        result.Handled = true;
-                    }
-                }
-            }
-            finally
-            {
-                await BaseCommonServices.BusyService.EndBusyAsync();
-            }
-        }
-
-        /// <summary>
-        /// validate task with user as an asynchronous operation.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        private async Task ValidateTaskWithUserAsync(AuthenticateUserMessageRequest request)
-        {
-            try
-            {
-                await BaseCommonServices.BusyService.StartBusyAsync();
-
-                if (request.ShowLogin)
-                {
-                    await ProcessAuthenticationRequestAsync();
-                }
-                else if (Context.Profiles?.Count > 0)
-                {
-                    var tagVM = new TagViewModel(Context, BaseCommonServices, _loggerFactory, request);
-                    //tagVM.Submitted += TagVM_Submitted;
-                    await BaseCommonServices.UIVisualizerService.ShowDialogAsync(typeof(ITagWindow), tagVM);
-                }
-            }
-            finally
-            {
-                await BaseCommonServices.BusyService.EndBusyAsync();
-            }
-        }
-
-        //private async void TagVM_Submitted(object sender, SubmitEventArgs<bool> e)
-        //{
-        //    if (e.Result)
-        //    {
-        //        var tag = Convert.ToInt32(tagVM.RfidTag, 16);
-
-        //        if (tag != 0
-        //            && Context.CurrentProfile?.RfidUid != 0
-        //            && Context.Profiles.Any(q => q.RfidUid == tag)
-        //            && Context.Profiles.Single(q => q.RfidUid == tag).Expiration.ToLocalTime() > DateTime.Now)
-        //        {
-        //            Context.CurrentProfile = null;
-        //            Context.CurrentProfile = Context.Profiles.Single(q => q.RfidUid == tag);
-
-        //            Messenger.Default.Send(new AuthenticateUserMessageResult(this, tagVM.Property, true));
-        //        }
-        //        else
-        //        {
-        //            await ProcessAuthenticationRequestAsync();
-        //        }
-        //    }
-        //    else if (!tagVM.IsLoginVisible)
-        //    {
-        //        var pinVM = new PincodeViewModel(Context, BaseCommonServices, _loggerFactory, tagVM.Property);
-        //        pinVM.Submitted += PinVM_Submitted;
-        //        await BaseCommonServices.UIVisualizerService.ShowDialogAsync(typeof(IPincodeWindow), pinVM);
-        //    }
-        //}
-
-        //private async void PinVM_Submitted(object sender, SubmitEventArgs<bool> e)
-        //{
-        //    if (e.Result)
-        //    {
-        //        Messenger.Default.Send(new AuthenticateUserMessageResult(this, pinVM.Property, true));
-        //    }
-        //    else
-        //    {
-        //        await BaseCommonServices.DialogService.ShowErrorAsync(BaseCommonServices.LanguageService.GetString("Warning_Pincode_Invalid"));
-        //    }
-        //}
-
-        /// <summary>
         /// process authentication request as an asynchronous operation.
         /// </summary>
         /// <returns>Task.</returns>
-        public async Task ProcessAuthenticationRequestAsync()
-        {
-            BaseCommonServices.ApplicationSettingsService.IsAutoLogin = false;
-
-            await BaseCommonServices.LoginService.ProcessLoginRequestAsync();
-
-            PopulateNavItems();
-
-            DisplayName = string.Empty;
-
-            await BaseCommonServices.NavigationService.NavigateAsync<ILoginViewModel>();
-        }
+        public abstract Task ProcessAuthenticationRequestAsync();
 
         /// <summary>
         /// Populates the nav items.
