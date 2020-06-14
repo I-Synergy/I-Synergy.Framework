@@ -13,7 +13,7 @@ using Windows.UI.Core;
 
 namespace ISynergy.Framework.Windows.Samples.ViewModels
 {
-    public class MainViewModel : ViewModelNavigation<MediaItem>
+    public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     {
         /// <summary>
         /// Gets the title.
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Windows.Samples.ViewModels
             set { SetValue(value); }
         }
 
-        public MainViewModel(
+        public SlideShowViewModel(
             IContext context,
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory)
