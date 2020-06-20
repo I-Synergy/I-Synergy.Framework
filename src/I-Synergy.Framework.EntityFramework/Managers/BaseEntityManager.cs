@@ -50,7 +50,7 @@ namespace ISynergy.Framework.EntityFramework.Managers
         }
 
         /// <summary>
-        /// Existses the asynchronous.
+        /// Exists the asynchronous.
         /// </summary>
         /// <typeparam name="TEntity">The type of the t entity.</typeparam>
         /// <param name="predicate">The predicate.</param>
@@ -70,11 +70,24 @@ namespace ISynergy.Framework.EntityFramework.Managers
         /// <param name="id">The identifier.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>ValueTask&lt;TEntity&gt;.</returns>
-        public virtual ValueTask<TEntity> GetItemByIdAsync<TEntity, TId>(TId id, CancellationToken cancellationToken = default)
+        public virtual async ValueTask<TEntity> GetItemByIdAsync<TEntity, TId>(TId id, CancellationToken cancellationToken = default)
             where TEntity : EntityBase, new()
             where TId : struct
         {
-            return _context.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
+            var targetPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
+
+            if (targetPropertyName != null)
+            {
+                var parameterExpression = Expression.Parameter(typeof(TEntity));
+                Expression query = Expression.Equal(Expression.Property(parameterExpression, targetPropertyName), Expression.Constant(id));
+                var predicate = Expression.Lambda<Func<TEntity, bool>>(query, parameterExpression);
+
+                return await _context.Set<TEntity>()
+                    .SingleOrDefaultAsync(predicate, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -183,7 +196,7 @@ namespace ISynergy.Framework.EntityFramework.Managers
                 if (target is null)
                 {
                     target = e.Adapt<TSource, TEntity>();
-                    _context.Add(target);
+                    _context.Set<TEntity>().Add(target);
                 }
                 else
                 {
