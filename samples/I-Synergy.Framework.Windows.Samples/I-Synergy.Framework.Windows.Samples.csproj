@@ -245,7 +245,7 @@
       <Version>2.4.2</Version>
     </PackageReference>
     <PackageReference Include="Moq">
-      <Version>4.14.1</Version>
+      <Version>4.14.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
