@@ -132,7 +132,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Entitie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Windows.Samples", "samples\I-Synergy.Framework.Windows.Samples\I-Synergy.Framework.Windows.Samples.csproj", "{5E8B5AE3-C39B-4BA3-B5AA-E9EAD02104D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Storage.Azure.Tests", "tests\I-Synergy.Framework.Storage.Azure.Tests\I-Synergy.Framework.Storage.Azure.Tests.csproj", "{902919D7-4373-46FC-BE81-BFA2B0164397}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Storage.Azure.Tests", "tests\I-Synergy.Framework.Storage.Azure.Tests\I-Synergy.Framework.Storage.Azure.Tests.csproj", "{902919D7-4373-46FC-BE81-BFA2B0164397}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Storage.Azure.Sample", "samples\I-Synergy.Framework.Storage.Azure.Sample\I-Synergy.Framework.Storage.Azure.Sample.csproj", "{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -863,6 +865,26 @@ Global
 		{902919D7-4373-46FC-BE81-BFA2B0164397}.Release|x64.Build.0 = Release|Any CPU
 		{902919D7-4373-46FC-BE81-BFA2B0164397}.Release|x86.ActiveCfg = Release|Any CPU
 		{902919D7-4373-46FC-BE81-BFA2B0164397}.Release|x86.Build.0 = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|ARM.Build.0 = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|x64.Build.0 = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Debug|x86.Build.0 = Debug|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|ARM.ActiveCfg = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|ARM.Build.0 = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|ARM64.Build.0 = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|x64.ActiveCfg = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|x64.Build.0 = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|x86.ActiveCfg = Release|Any CPU
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -904,6 +926,7 @@ Global
 		{23306885-4C44-4AC0-B324-BA71401E5348} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{5E8B5AE3-C39B-4BA3-B5AA-E9EAD02104D2} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 		{902919D7-4373-46FC-BE81-BFA2B0164397} = {600436D8-B218-4FC2-B2E0-90279B1D37D5}
+		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
