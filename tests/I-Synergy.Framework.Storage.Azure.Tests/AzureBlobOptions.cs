@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Storage.Abstractions;
 
-namespace ISynergy.Framework.Storage.Azure.Sample.Options
+namespace ISynergy.Framework.Storage.Azure.Tests
 {
     public class AzureBlobOptions : IStorageOptions
     {

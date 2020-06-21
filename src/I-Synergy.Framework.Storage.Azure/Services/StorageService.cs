@@ -8,23 +8,23 @@ using Azure.Storage.Blobs.Models;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Storage.Abstractions;
-using ISynergy.Framework.Storage.Azure.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace ISynergy.Framework.Storage.Azure.Services
 {
     /// <summary>
     /// Class StorageService.
-    /// Implements the <see cref="IStorageService" />
+    /// Implements the <see cref="IStorageService{TStorageOptions}" />
     /// </summary>
-    /// <typeparam name="TAzureBlobOptions">The type of the t azure BLOB options.</typeparam>
-    /// <seealso cref="IStorageService" />
-    public class StorageService<TAzureBlobOptions> : IStorageService
-        where TAzureBlobOptions : IAzureStorageBlobOptions
+    /// <typeparam name="TStorageOptions">The type of the t azure BLOB options.</typeparam>
+    /// <seealso cref="IStorageService{TStorageOptions}" />
+    public class StorageService<TStorageOptions> : IStorageService<TStorageOptions>
+        where TStorageOptions : class, IStorageOptions, new()
     {
         /// <summary>
         /// The azure document options
         /// </summary>
-        private readonly TAzureBlobOptions _azureBlobOptions;
+        private readonly TStorageOptions _storageOptions;
         /// <summary>
         /// The cloud storage account
         /// </summary>
@@ -35,41 +35,43 @@ namespace ISynergy.Framework.Storage.Azure.Services
         private readonly ITenantService _tenantService;
 
         /// <summary>
-        /// Initializes a new instance of the <see name="StorageService" /> class.
+        /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}" /> class.
         /// </summary>
-        /// <param name="azureBlobOptions">The azure BLOB options.</param>
+        /// <param name="storageOptions">The azure BLOB options.</param>
         /// <param name="tenantService">The tenant service.</param>
-        public StorageService(TAzureBlobOptions azureBlobOptions, ITenantService tenantService)
+        public StorageService(IOptions<TStorageOptions> storageOptions, ITenantService tenantService)
         {
+            Argument.IsNotNull(nameof(storageOptions), storageOptions.Value);
             Argument.IsNotNull(nameof(tenantService), tenantService);
             Argument.IsNotNullOrEmpty(nameof(tenantService.TenantId), tenantService.TenantId);
 
             _tenantService = tenantService;
-            _azureBlobOptions = azureBlobOptions;
+            _storageOptions = storageOptions.Value;
 
-            _blobContainer = new BlobContainerClient(_azureBlobOptions.ConnectionString, _tenantService.TenantId.ToString());
+            _blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, _tenantService.TenantId.ToString());
             _blobContainer.CreateIfNotExists(PublicAccessType.Blob);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StorageService{TAzureBlobOptions}"/> class.
+        /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}"/> class.
         /// </summary>
-        /// <param name="azureBlobOptions">The azure BLOB options.</param>
+        /// <param name="storageOptions">The azure BLOB options.</param>
         /// <param name="containerName">Name of the container.</param>
-        public StorageService(TAzureBlobOptions azureBlobOptions, string containerName)
+        public StorageService(IOptions<TStorageOptions> storageOptions, string containerName)
         {
+            Argument.IsNotNull(nameof(storageOptions), storageOptions.Value);
             Argument.IsNotNullOrEmpty(nameof(containerName), containerName);
 
-            _azureBlobOptions = azureBlobOptions;
+            _storageOptions = storageOptions.Value;
 
-            _blobContainer = new BlobContainerClient(_azureBlobOptions.ConnectionString, containerName);
+            _blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, containerName);
             _blobContainer.CreateIfNotExists(PublicAccessType.Blob);
         }
 
         /// <summary>
         /// upload file as an asynchronous operation.
         /// </summary>
-        /// <param name="stream">The file stream.</param>
+        /// <param name="fileBytes">The file stream.</param>
         /// <param name="contentType">Type of the content.</param>
         /// <param name="filename">The filename.</param>
         /// <param name="folder">The folder.</param>
@@ -78,12 +80,12 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <returns>Uri.</returns>
         /// <exception cref="System.IO.IOException">CloudBlob not found.</exception>
         /// <exception cref="IOException">CloudBlob not found.</exception>
-        public async Task<Uri> UploadFileAsync(Stream stream, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
+        public async Task<Uri> UploadFileAsync(byte[] fileBytes, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
         {
             if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
                 await blobClient.UploadAsync(
-                        stream,
+                        new MemoryStream(fileBytes),
                         new BlobHttpHeaders
                         {
                             ContentType = contentType
@@ -105,7 +107,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <param name="folder">The folder.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>MemoryStream.</returns>
-        public async Task<Stream> DownloadFileAsync(string filename, string folder, CancellationToken cancellationToken = default)
+        public async Task<byte[]> DownloadFileAsync(string filename, string folder, CancellationToken cancellationToken = default)
         {
             var stream = new MemoryStream();
 
@@ -118,13 +120,13 @@ namespace ISynergy.Framework.Storage.Azure.Services
                 stream.Seek(0, SeekOrigin.Begin);
             }
 
-            return stream;
+            return stream.ToArray();
         }
 
         /// <summary>
         /// update file as an asynchronous operation.
         /// </summary>
-        /// <param name="stream">The file stream.</param>
+        /// <param name="fileBytes">The file stream.</param>
         /// <param name="contentType">Type of the content.</param>
         /// <param name="filename">The filename.</param>
         /// <param name="folder">The folder.</param>
@@ -132,7 +134,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <returns>Uri.</returns>
         /// <exception cref="System.IO.IOException">CloudBlob not found.</exception>
         /// <exception cref="IOException">CloudBlob not found.</exception>
-        public async Task<Uri> UpdateFileAsync(Stream stream, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
+        public async Task<Uri> UpdateFileAsync(byte[] fileBytes, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
         {
             if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
@@ -140,7 +142,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
                     .ConfigureAwait(false);
 
                 await blobClient.UploadAsync(
-                        stream,
+                        new MemoryStream(fileBytes),
                         new BlobHttpHeaders
                         {
                             ContentType = contentType
