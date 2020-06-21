@@ -37,9 +37,9 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <summary>
         /// Initializes a new instance of the <see name="StorageService" /> class.
         /// </summary>
-        /// <param name="tenantService">The tenant service.</param>
         /// <param name="azureBlobOptions">The azure BLOB options.</param>
-        public StorageService(ITenantService tenantService, TAzureBlobOptions azureBlobOptions)
+        /// <param name="tenantService">The tenant service.</param>
+        public StorageService(TAzureBlobOptions azureBlobOptions, ITenantService tenantService)
         {
             Argument.IsNotNull(nameof(tenantService), tenantService);
             Argument.IsNotNullOrEmpty(nameof(tenantService.TenantId), tenantService.TenantId);
@@ -48,6 +48,21 @@ namespace ISynergy.Framework.Storage.Azure.Services
             _azureBlobOptions = azureBlobOptions;
 
             _blobContainer = new BlobContainerClient(_azureBlobOptions.ConnectionString, _tenantService.TenantId.ToString());
+            _blobContainer.CreateIfNotExists(PublicAccessType.Blob);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StorageService{TAzureBlobOptions}"/> class.
+        /// </summary>
+        /// <param name="azureBlobOptions">The azure BLOB options.</param>
+        /// <param name="containerName">Name of the container.</param>
+        public StorageService(TAzureBlobOptions azureBlobOptions, string containerName)
+        {
+            Argument.IsNotNullOrEmpty(nameof(containerName), containerName);
+
+            _azureBlobOptions = azureBlobOptions;
+
+            _blobContainer = new BlobContainerClient(_azureBlobOptions.ConnectionString, containerName);
             _blobContainer.CreateIfNotExists(PublicAccessType.Blob);
         }
 
@@ -61,6 +76,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <param name="overwrite">if set to <c>true</c> [overwrite].</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Uri.</returns>
+        /// <exception cref="System.IO.IOException">CloudBlob not found.</exception>
         /// <exception cref="IOException">CloudBlob not found.</exception>
         public async Task<Uri> UploadFileAsync(Stream stream, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
         {
@@ -89,14 +105,17 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <param name="folder">The folder.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>MemoryStream.</returns>
-        public async Task<MemoryStream> DownloadFileAsync(string filename, string folder, CancellationToken cancellationToken = default)
+        public async Task<Stream> DownloadFileAsync(string filename, string folder, CancellationToken cancellationToken = default)
         {
-            using var stream = new MemoryStream();
+            var stream = new MemoryStream();
+
             if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
                 await blobClient
                     .DownloadToAsync(stream, cancellationToken)
                     .ConfigureAwait(false);
+
+                stream.Seek(0, SeekOrigin.Begin);
             }
 
             return stream;
@@ -111,6 +130,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <param name="folder">The folder.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Uri.</returns>
+        /// <exception cref="System.IO.IOException">CloudBlob not found.</exception>
         /// <exception cref="IOException">CloudBlob not found.</exception>
         public async Task<Uri> UpdateFileAsync(Stream stream, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
         {
