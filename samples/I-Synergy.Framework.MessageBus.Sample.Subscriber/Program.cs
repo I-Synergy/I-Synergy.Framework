@@ -29,10 +29,10 @@ namespace ISynergy.Framework.MessageBus.Sample.Subscriber
                     .AddOptions()
                     .Configure<TestQueueOptions>(config.GetSection(nameof(TestQueueOptions)).BindWithReload)
                     .AddSubscribingQueueMessageBus<TestDataModel, SubscribeToQueueMessageBusService>()
-                    .AddScoped<ApplicationAzure>()
+                    .AddScoped<Startup>()
                     .BuildServiceProvider();
 
-                var application = serviceProvider.GetRequiredService<ApplicationAzure>();
+                var application = serviceProvider.GetRequiredService<Startup>();
                 application.RunAsync().GetAwaiter().GetResult();
             }
             catch (Exception e)

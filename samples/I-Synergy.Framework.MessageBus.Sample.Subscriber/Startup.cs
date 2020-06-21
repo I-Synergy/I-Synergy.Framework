@@ -9,15 +9,15 @@ namespace ISynergy.Framework.MessageBus.Sample.Subscriber
     /// <summary>
     /// Class ApplicationAzure.
     /// </summary>
-    public class ApplicationAzure
+    public class Startup
     {
         private readonly ISubscriberServiceBus<TestDataModel> _messageBus;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationAzure"/> class.
+        /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="messageBus">The message bus.</param>
-        public ApplicationAzure(ISubscriberServiceBus<TestDataModel> messageBus)
+        public Startup(ISubscriberServiceBus<TestDataModel> messageBus)
         {
             _messageBus = messageBus;
         }
