@@ -2,18 +2,19 @@
 using System.IO;
 using System.Threading.Tasks;
 using ISynergy.Framework.Storage.Abstractions;
+using ISynergy.Framework.Storage.Azure.Sample.Options;
 
 namespace ISynergy.Framework.Storage.Azure.Sample
 {
     public class Startup
     {
-        private readonly IStorageService _storageService;
+        private readonly IStorageService<AzureBlobOptions> _storageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="storageService">The Storage service.</param>
-        public Startup(IStorageService storageService)
+        public Startup(IStorageService<AzureBlobOptions> storageService)
         {
             _storageService = storageService;
         }
@@ -32,14 +33,14 @@ namespace ISynergy.Framework.Storage.Azure.Sample
             Console.WriteLine($"Upload completed to {url}.");
 
             Console.WriteLine("Download started...");
-            using var stream = await DownloadAsync(fileName).ConfigureAwait(false);
+            var fileBytes = await DownloadAsync(fileName).ConfigureAwait(false);
             
-            if(stream != null)
+            if(fileBytes != null)
             {
-                Console.WriteLine($"Download completed with {stream.Length} bits.");
+                Console.WriteLine($"Download completed with {fileBytes.Length} bits.");
 
                 Console.WriteLine("Update started...");
-                url = await UpdateAsync(stream, fileName).ConfigureAwait(false);
+                url = await UpdateAsync(fileBytes, fileName).ConfigureAwait(false);
 
                 Console.WriteLine($"Update completed of {url}.");
             }
@@ -63,20 +64,19 @@ namespace ISynergy.Framework.Storage.Azure.Sample
             var path = CreateTempFile();
 
             // Open the file and upload its data
-            using (FileStream file = File.OpenRead(path))
-            {
-              return await _storageService.UploadFileAsync(file, "text/plain", fileName, "");
-            }
+            var file = await File.ReadAllBytesAsync(path);
+
+            return await _storageService.UploadFileAsync(file, "text/plain", fileName, "");
         }
 
-        public Task<Stream> DownloadAsync(string fileName)
+        public Task<byte[]> DownloadAsync(string fileName)
         {
             return _storageService.DownloadFileAsync(fileName, "");
         }
 
-        public Task<Uri> UpdateAsync(Stream fileStream, string fileName)
+        public Task<Uri> UpdateAsync(byte[] fileBytes, string fileName)
         {
-            return _storageService.UpdateFileAsync(fileStream, "text/plain", fileName, "");
+            return _storageService.UpdateFileAsync(fileBytes, "text/plain", fileName, "");
         }
 
         public Task<bool> RemoveAsync(string fileName)
