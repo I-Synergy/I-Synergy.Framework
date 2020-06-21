@@ -1,9 +1,9 @@
-﻿namespace ISynergy.Framework.Storage.Azure.Abstractions
+﻿namespace ISynergy.Framework.Storage.Abstractions
 {
     /// <summary>
     /// Interface IAzureStorageBlobOptions
     /// </summary>
-    public interface IAzureStorageBlobOptions
+    public interface IStorageOptions
     {
         /// <summary>
         /// Gets or sets the connection string.
