@@ -16,13 +16,15 @@ namespace ISynergy.Framework.Storage.Azure.Services
     /// Class StorageService.
     /// Implements the <see cref="IStorageService" />
     /// </summary>
+    /// <typeparam name="TAzureBlobOptions">The type of the t azure BLOB options.</typeparam>
     /// <seealso cref="IStorageService" />
-    public class StorageService : IStorageService
+    public class StorageService<TAzureBlobOptions> : IStorageService
+        where TAzureBlobOptions : IAzureStorageBlobOptions
     {
         /// <summary>
         /// The azure document options
         /// </summary>
-        private readonly IAzureStorageBlobOptions _azureBlobOptions;
+        private readonly TAzureBlobOptions _azureBlobOptions;
         /// <summary>
         /// The cloud storage account
         /// </summary>
@@ -33,13 +35,11 @@ namespace ISynergy.Framework.Storage.Azure.Services
         private readonly ITenantService _tenantService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StorageService" /> class.
+        /// Initializes a new instance of the <see name="StorageService" /> class.
         /// </summary>
         /// <param name="tenantService">The tenant service.</param>
         /// <param name="azureBlobOptions">The azure BLOB options.</param>
-        public StorageService(
-            ITenantService tenantService,
-            IAzureStorageBlobOptions azureBlobOptions)
+        public StorageService(ITenantService tenantService, TAzureBlobOptions azureBlobOptions)
         {
             Argument.IsNotNull(nameof(tenantService), tenantService);
             Argument.IsNotNullOrEmpty(nameof(tenantService.TenantId), tenantService.TenantId);
