@@ -27,8 +27,8 @@ namespace ISynergy.Framework.Storage.Abstractions
         /// <param name="filename">The filename.</param>
         /// <param name="folder">The folder.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Task&lt;System.Byte[]&gt;.</returns>
-        Task<MemoryStream> DownloadFileAsync(string filename, string folder, CancellationToken cancellationToken = default);
+        /// <returns>Task&lt;System.IO.Stream&gt;.</returns>
+        Task<Stream> DownloadFileAsync(string filename, string folder, CancellationToken cancellationToken = default);
         /// <summary>
         /// Updates the file asynchronous.
         /// </summary>
