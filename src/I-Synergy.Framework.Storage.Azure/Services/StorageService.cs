@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <summary>
         /// upload file as an asynchronous operation.
         /// </summary>
-        /// <param name="fileStream">The file stream.</param>
+        /// <param name="stream">The file stream.</param>
         /// <param name="contentType">Type of the content.</param>
         /// <param name="filename">The filename.</param>
         /// <param name="folder">The folder.</param>
@@ -62,12 +62,12 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Uri.</returns>
         /// <exception cref="IOException">CloudBlob not found.</exception>
-        public async Task<Uri> UploadFileAsync(MemoryStream fileStream, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
+        public async Task<Uri> UploadFileAsync(Stream stream, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
         {
             if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
                 await blobClient.UploadAsync(
-                        fileStream,
+                        stream,
                         new BlobHttpHeaders
                         {
                             ContentType = contentType
@@ -105,14 +105,14 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <summary>
         /// update file as an asynchronous operation.
         /// </summary>
-        /// <param name="fileStream">The file stream.</param>
+        /// <param name="stream">The file stream.</param>
         /// <param name="contentType">Type of the content.</param>
         /// <param name="filename">The filename.</param>
         /// <param name="folder">The folder.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Uri.</returns>
         /// <exception cref="IOException">CloudBlob not found.</exception>
-        public async Task<Uri> UpdateFileAsync(MemoryStream fileStream, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
+        public async Task<Uri> UpdateFileAsync(Stream stream, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
         {
             if (_blobContainer.GetBlobClient(Path.Combine(folder, filename)) is BlobClient blobClient)
             {
@@ -120,7 +120,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
                     .ConfigureAwait(false);
 
                 await blobClient.UploadAsync(
-                        fileStream,
+                        stream,
                         new BlobHttpHeaders
                         {
                             ContentType = contentType
