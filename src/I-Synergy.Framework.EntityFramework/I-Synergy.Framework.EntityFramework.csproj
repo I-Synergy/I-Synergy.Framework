@@ -4,6 +4,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>ISynergy.Framework.EntityFramework</RootNamespace>
+
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{FCDB6358-94B5-48FE-A3BC-696280F1E896}</ProjectGuid>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

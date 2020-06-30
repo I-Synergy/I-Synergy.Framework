@@ -5,6 +5,9 @@
     <RootNamespace>ISynergy.Framework.Storage.Azure.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+      
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{EF2BC539-1E73-40B0-9E84-C3FE223BD6D6}</ProjectGuid>
   </PropertyGroup>
   
   <ItemGroup>

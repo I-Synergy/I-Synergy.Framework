@@ -4,6 +4,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>ISynergy.Framework.AspNetCore.Authentication</RootNamespace>
+
+    <!-- SonarQube needs this -->
+    <ProjectGuid>{A89FC9B1-9C6C-4F43-8E70-1669955F8435}</ProjectGuid>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

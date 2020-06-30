@@ -4,6 +4,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ISynergy.Framework.MessageBus</RootNamespace>
+
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{28A29566-6128-4FCA-92D7-8B5E01CB5960}</ProjectGuid>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

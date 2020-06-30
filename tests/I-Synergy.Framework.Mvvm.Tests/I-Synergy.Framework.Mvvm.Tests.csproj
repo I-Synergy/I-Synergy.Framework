@@ -5,6 +5,9 @@
     <RootNamespace>ISynergy.Framework.Mvvm.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{FCC46C77-97B6-4488-8738-AF264B996922}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ISynergy.Framework.Core.Linq</RootNamespace>
+
+    <!-- SonarQube needs this -->
+    <ProjectGuid>{74F1F4AD-6677-446F-AE74-12BFBA0E437B}</ProjectGuid>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

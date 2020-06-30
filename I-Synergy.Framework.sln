@@ -53,13 +53,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		docs\readme.md = docs\readme.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{3ED957F9-A589-433E-8C97-B365B356BCF7}"
-	ProjectSection(SolutionItems) = preProject
-		templates\artifacts.jobs.yml = templates\artifacts.jobs.yml
-		templates\build.jobs.yml = templates\build.jobs.yml
-		templates\test.jobs.yml = templates\test.jobs.yml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E60E85EB-6F23-4EDC-ACAA-B350BA26EFB6}"
 	ProjectSection(SolutionItems) = preProject
 		build\createplatformdll.ps1 = build\createplatformdll.ps1

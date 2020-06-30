@@ -5,6 +5,9 @@
     <RootNamespace>ISynergy.Framework.Payment.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+      
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{9C508EAA-FA51-443C-B1A2-F8B4FA58FD41}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
