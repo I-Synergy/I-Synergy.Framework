@@ -4,6 +4,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ISynergy.Framework.Payment.Mollie</RootNamespace>
+
+    <!-- SonarQube needs this -->
+    <ProjectGuid>{9746867D-B7F5-483B-B4E1-F38E85C2B794}</ProjectGuid>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

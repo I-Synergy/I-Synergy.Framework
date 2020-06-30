@@ -5,6 +5,9 @@
     <RootNamespace>ISynergy.Framework.Core.Linq.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <LangVersion>8.0</LangVersion>
+
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{F18AFC6A-A856-4500-8E1A-AFE034872ADF}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

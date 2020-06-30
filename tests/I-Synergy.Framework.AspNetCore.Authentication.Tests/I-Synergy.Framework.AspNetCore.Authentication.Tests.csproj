@@ -5,6 +5,9 @@
     <RootNamespace>ISynergy.Framework.AspNetCore.Authentication.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+      
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{10C32A17-857E-4FF9-94D6-755DEB531AF1}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
