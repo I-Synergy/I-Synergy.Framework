@@ -36,13 +36,11 @@ jobs:
 
     - task: DownloadSecureFile@1
       displayName: 'Download secure file'
-      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'release'))
       inputs:
         secureFile: 'i-synergy.pfx'
 
     - task: PowerShell@2
       displayName: 'Sign Artifacts: I-Synergy.Framework'
-      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'release'))
       inputs:
         targetType: filePath
         filePath: ./build/sign.ps1
