@@ -5,9 +5,9 @@ jobs:
   displayName: 'Build'
   steps:
     - task: NuGetToolInstaller@1
-      displayName: 'Use NuGet 4.9.1'
+      displayName: 'Use NuGet 5.6.0'
       inputs:
-        versionSpec: 4.9.1
+        versionSpec: 5.6.0
 
     - task: DotNetCoreCLI@2
       displayName: 'Dotnet restore: I-Synergy.Framework.Core'

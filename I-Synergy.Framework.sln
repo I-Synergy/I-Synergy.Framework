@@ -9,8 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		azure-pipelines.cd.yml = azure-pipelines.cd.yml
-		azure-pipelines.ci.yml = azure-pipelines.ci.yml
+		azure-pipelines.yml = azure-pipelines.yml
 		nuget.config = nuget.config
 		project.props = project.props
 		README.md = README.md
@@ -134,7 +133,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Windows
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Storage.Azure.Tests", "tests\I-Synergy.Framework.Storage.Azure.Tests\I-Synergy.Framework.Storage.Azure.Tests.csproj", "{902919D7-4373-46FC-BE81-BFA2B0164397}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Storage.Azure.Sample", "samples\I-Synergy.Framework.Storage.Azure.Sample\I-Synergy.Framework.Storage.Azure.Sample.csproj", "{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Storage.Azure.Sample", "samples\I-Synergy.Framework.Storage.Azure.Sample\I-Synergy.Framework.Storage.Azure.Sample.csproj", "{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
