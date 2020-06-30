@@ -11,7 +11,7 @@ stages:
     displayName: 'Build'
     jobs:
     - job: BuildJob
-      displayName: 'Build'
+      displayName: 'Build and Test'
       steps:
         - task: NuGetToolInstaller@1
           displayName: 'Use NuGet 5.6.0'
@@ -387,67 +387,62 @@ stages:
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
             clean: true
       
-        - task: PublishBuildArtifacts@1
-          displayName: 'Publish Artifacts'
-          inputs:
-            pathtoPublish: '$(System.DefaultWorkingDirectory)\Output'
-            artifactName: Output
-
-    - job: TestsJob
-      displayName: 'Run Tests'
-      dependsOn: BuildJob
-      condition: succeeded()
-      steps:
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Core.Tests\I-Synergy.Framework.Core.Tests.csproj'
-            arguments: '-c $(BuildConfiguration)'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Core.Linq.Tests\I-Synergy.Framework.Core.Linq.Tests.csproj'
-            arguments: '-c $(BuildConfiguration)'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.AspNetCore.Tests\I-Synergy.Framework.AspNetCore.Tests.csproj'
-            arguments: '-c $(BuildConfiguration)'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Financial'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Financial.Tests\I-Synergy.Framework.Financial.Tests.csproj'
-            arguments: '-c $(BuildConfiguration)'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Geography'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Geography.Tests\I-Synergy.Framework.Geography.Tests.csproj'
-            arguments: '-c $(BuildConfiguration)'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Mathematics'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Mathematics.Tests\I-Synergy.Framework.Mathematics.Tests.csproj'
-            arguments: '-c $(BuildConfiguration)'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Payment'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Payment.Tests\I-Synergy.Framework.Payment.Tests.csproj'
-            arguments: '-c $(BuildConfiguration)'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: SonarCloudAnalyze@1
+
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Artifacts'
+          inputs:
+            pathtoPublish: '$(System.DefaultWorkingDirectory)\Output'
+            artifactName: Output
 
   - stage: Release
     displayName: 'Release'
@@ -455,7 +450,7 @@ stages:
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
     - job: PackageJob
-      displayName: 'Create nuget packages'
+      displayName: 'Release nuget packages'
       steps:
         - task: DownloadBuildArtifacts@0
           inputs:
@@ -625,12 +620,7 @@ stages:
             packagesToPack: 'nuget/I-Synergy.Framework.Windows.nuspec'
             buildProperties: 'ProjectName=I-Synergy.Framework.Windows;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
-    - job: ReleaseJob
-      displayName: 'Release nuget packages'
-      dependsOn: PackageJob
-      condition: succeeded()
-      steps:
-      - task: NuGetCommand@2
+        - task: NuGetCommand@2
           displayName: 'NuGet push - I-Synergy.Framework'
           inputs:
             command: 'push'
