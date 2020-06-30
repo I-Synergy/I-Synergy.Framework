@@ -157,7 +157,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 CustomClassWithReversedValueTypeImplicitConversion reversedValueType)
             {
                 OneWay = oneWay;
-                Reversed = Reversed;
+                Reversed = reversed;
                 ValueType = valueType;
                 ReversedValueType = reversedValueType;
             }
@@ -210,9 +210,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
                 _customTypes =
                     new HashSet<Type>(
-                        FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }));
-                _customTypes.Add(typeof(CustomClassWithStaticMethod));
-                _customTypes.Add(typeof(StaticHelper));
+                        FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }))
+                    {
+                        typeof(CustomClassWithStaticMethod),
+                        typeof(StaticHelper)
+                    };
                 return _customTypes;
             }
 
@@ -789,7 +791,6 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         {
             // Arrange
             var user = new User();
-            Guid guidEmpty = Guid.Empty;
             Guid someId = Guid.NewGuid();
             string expressionText = $"iif(@0.Id == null, @0.Id == Guid.Parse(\"{someId}\"), Id == Id)";
 
@@ -810,7 +811,6 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         {
             // Arrange
             var user = new User();
-            Guid guidEmpty = Guid.Empty;
             Guid someId = Guid.NewGuid();
             string expressionText = $"iif(null == @0.Id, @0.Id == Guid.Parse(\"{someId}\"), Id == Id)";
 
@@ -832,8 +832,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             // Arrange
             Guid someId = Guid.NewGuid();
             Guid anotherId = Guid.NewGuid();
-            var user = new User();
-            user.Id = someId;
+
+            var user = new User
+            {
+                Id = someId
+            };
+
             Guid guidEmpty = Guid.Empty;
             string expressionText =
                 $"iif(@0.Id == \"{someId}\", Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
@@ -976,8 +980,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             // Arrange
             Guid someId = Guid.NewGuid();
             Guid anotherId = Guid.NewGuid();
-            var user = new User();
-            user.Id = someId;
+
+            var user = new User
+            {
+                Id = someId
+            };
+
             Guid guidEmpty = Guid.Empty;
             string expressionText =
                 $"iif(@0.Id == StaticHelper.GetGuid(\"name\"), Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";

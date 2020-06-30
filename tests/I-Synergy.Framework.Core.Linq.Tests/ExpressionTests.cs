@@ -290,9 +290,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var qry = new[] { null, new SimpleValuesModel() }.AsQueryable();
 
             // Act
-            var realResult1 = qry.Select(x => x != null ? x : null).ToList();
+            var realResult1 = qry.Select(x => x ?? null).ToList();
             var result1 = qry.Select("it != null ? it : null").ToDynamicList<SimpleValuesModel>();
-            var realResult2 = qry.Select(x => x == null ? null : x).ToList();
+            var realResult2 = qry.Select(x => x ?? null).ToList();
             var result2 = qry.Select("it == null ? null : it").ToDynamicList<SimpleValuesModel>();
 
             // Assert
@@ -994,7 +994,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             testModels[1].NullableInt = null;
             testModels[2].NullableInt = 5;
 
-            var expectedResult1 = testModels.AsQueryable().Select(u => new { UserName = u.UserName, X = u.NullableInt ?? (3 * u.Income) }).Cast<object>().ToArray();
+            var expectedResult1 = testModels.AsQueryable().Select(u => new { u.UserName, X = u.NullableInt ?? (3 * u.Income) }).Cast<object>().ToArray();
             var expectedResult2 = testModels.AsQueryable().Where(u => (u.NullableInt ?? 10) == 10).ToArray();
             var expectedResult3 = testModels.Select(m => m.NullableInt ?? 10).ToArray();
 
@@ -1283,7 +1283,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             testModels[1].NullableInt = null;
             testModels[2].NullableInt = 5;
 
-            var expectedResult1 = testModels.AsQueryable().Select(u => new { UserName = u.UserName, X = u.NullableInt ?? (3 * u.Income) }).Cast<object>().ToArray();
+            var expectedResult1 = testModels.AsQueryable().Select(u => new { u.UserName, X = u.NullableInt ?? (3 * u.Income) }).Cast<object>().ToArray();
             var expectedResult2 = testModels.AsQueryable().Where(u => (u.NullableInt ?? 10) == 10).ToArray();
             var expectedResult3 = testModels.Select(m => m.NullableInt ?? 10).ToArray();
 
@@ -1483,7 +1483,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var testModels = User.GenerateSampleModels(2, true).ToList();
 
             // Act
-            var result = testModels.AsQueryable().Select(t => t.UserName != null ? t.UserName : "x").ToArray();
+            var result = testModels.AsQueryable().Select(t => t.UserName ?? "x").ToArray();
             var resultDynamic = testModels.AsQueryable().Select("np(UserName, \"x\")").ToDynamicArray<string>();
 
             // Assert
