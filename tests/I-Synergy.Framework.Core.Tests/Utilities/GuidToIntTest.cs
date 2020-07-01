@@ -9,11 +9,9 @@ namespace ISynergy.Framework.Core.Utilities
         [Fact]
         public void ConvertTest()
         {
-            uint number = 1975;
-
-            var NewG = Guid.NewGuid();
+            int number = 1975;
             var EnryptedGuid = number.ToGuid();
-            var result = EnryptedGuid.ToUInt();
+            var result = EnryptedGuid.ToInt();
 
             Assert.Equal(number, result);
         }

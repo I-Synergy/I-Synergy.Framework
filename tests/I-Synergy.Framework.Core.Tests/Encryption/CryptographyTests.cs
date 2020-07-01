@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using ISynergy.Framework.Core.Encryption;
 using ISynergy.Framework.Core.Enumerations;
 using Xunit;
@@ -13,12 +12,8 @@ namespace ISynergy.Framework.Core.Tests.Encryption
         private readonly string _salt128 = "RandomSalt123456";
         private readonly string _salt192 = "RandomSalt123456789012";
         private readonly string _salt256 = "RandomSalt123456RandomSalt123456";
-
-        private readonly string _vector40 = "12345";
         private readonly string _vector64 = "12345678";
         private readonly string _vector128 = "RandomVector1234";
-        private readonly string _vector256 = "RandomVector1234RandomVector1234";
-
         private readonly string _password = "RandomPassword";
         private readonly string _secret = "This is a secret text.";
 
