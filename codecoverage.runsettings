@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+    <DataCollectionRunSettings>
+        <DataCollectors>
+            <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Culture=neutral">
+                <Configuration>
+                    <CodeCoverage>
+                        <!-- Match assembly file paths: -->
+                        <ModulePaths>
+                            <Include>
+                                <ModulePath>.*\I-Synergy.Framework.AspNetCore.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.AspNetCore.Authentication.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Core.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Core.Linq.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Entities.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.EntityFramework.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Financial.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Geography.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Mathematics.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.MessageBus.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.MessageBus.Azure.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Models.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Mvvm.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Payment.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Payment.Mollie.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Storage.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Storage.Azure.dll</ModulePath>
+                                <ModulePath>.*\I-Synergy.Framework.Windows.dll</ModulePath>
+                            </Include>
+                            <Exclude>
+                                <ModulePath>.*tests.dll</ModulePath>
+                            </Exclude>
+                        </ModulePaths>
+                    </CodeCoverage>
+                </Configuration>
+            </DataCollector>
+        </DataCollectors>
+    </DataCollectionRunSettings>
+</RunSettings>

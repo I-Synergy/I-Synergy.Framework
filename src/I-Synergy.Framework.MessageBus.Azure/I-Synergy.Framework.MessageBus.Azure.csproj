@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>ISynergy.Framework.MessageBus.Azure</RootNamespace>
+
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{CA80195C-80FD-4698-82CF-6260175D928C}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\output\I-Synergy.Framework.MessageBus.Azure\debug</OutputPath>
