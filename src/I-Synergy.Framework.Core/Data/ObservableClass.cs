@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Core.Data
             if (obj is IObservableClass observable && observable.HasIdentityProperty())
                 return observable.GetIdentityValue().Equals(this.GetIdentityValue());
 
-            return base.Equals(obj);
+            return false;
         }
 
 
