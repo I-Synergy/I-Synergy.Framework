@@ -38,5 +38,19 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             var result = "2016AZURE10STAGE001".IncreaseString2Long(99);
             Assert.Equal("2016AZURE10STAGE100", result);
         }
+
+        [Fact]
+        public void CovertString2NumericIntegerTest()
+        {
+            var result = "2016001".CovertString2Numeric();
+            Assert.Equal(2016001, result);
+        }
+
+        [Fact]
+        public void CovertString2NumericNonIntegerTest()
+        {
+            var result = "9999992016001".CovertString2Numeric();
+            Assert.Equal(0, result);
+        }
     }
 }
