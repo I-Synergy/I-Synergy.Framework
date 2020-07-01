@@ -1918,6 +1918,7 @@ namespace ISynergy.Framework.Core.Linq.Parsers
             }
 
             var member = FindPropertyOrField(type, id, instance == null);
+
             if (member is PropertyInfo property)
             {
                 return Expression.Property(instance, property);
@@ -1933,9 +1934,10 @@ namespace ISynergy.Framework.Core.Linq.Parsers
                 return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
             }
 
-            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback)
+            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instance != null)
             {
                 var indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
+
                 if (indexerMethod != null)
                 {
                     return Expression.Call(instance, indexerMethod, Expression.Constant(id));
