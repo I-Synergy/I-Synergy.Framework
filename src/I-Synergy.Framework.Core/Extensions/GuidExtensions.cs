@@ -1,5 +1,4 @@
 ﻿using System;
-using ISynergy.Framework.Core.Encryption;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -11,15 +10,12 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Converts to uint.
         /// </summary>
-        /// <param name="guid">The unique identifier.</param>
+        /// <param name="_self">The unique identifier.</param>
         /// <returns>System.UInt32.</returns>
-        public static uint ToUInt(this Guid guid)
+        public static int ToInt(this Guid _self)
         {
-            var strGuid = guid.ToString().Remove("-{}");
-            var EncryptedBytes = strGuid.GetBytes(9, 8);
-            var decrypted = Cypher.DecryptDES(EncryptedBytes, Cypher.Key);
-            var DecryptedUint = BitConverter.ToUInt32(decrypted, 0);
-            return DecryptedUint;
+            var value = _self.ToByteArray();
+            return BitConverter.ToInt32(value, 0);
         }
     }
 }

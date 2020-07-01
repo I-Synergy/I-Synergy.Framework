@@ -76,19 +76,14 @@ namespace ISynergy.Framework.Core.Data
             if (obj is IObservableClass observable && observable.HasIdentityProperty())
                 return observable.GetIdentityValue().Equals(this.GetIdentityValue());
 
-            return base.Equals(obj);
+            return false;
         }
 
 
         /// <summary>Returns a hash code for this instance.</summary>
         /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            if (this.HasIdentityProperty())
-                return this.GetIdentityValue().GetHashCode();
-
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() =>
+            this.GetIdentityValue().GetHashCode();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableClass"/> class.

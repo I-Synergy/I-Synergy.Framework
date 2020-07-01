@@ -1,6 +1,4 @@
 ﻿using System;
-using ISynergy.Framework.Core.Encryption;
-using ISynergy.Framework.Core.Utilities;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -12,20 +10,14 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Converts to guid.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="_self">The value.</param>
         /// <returns>Guid.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Unsigned integer is greater than 24bit</exception>
-        public static Guid ToGuid(this uint value)
+        public static Guid ToGuid(this int _self)
         {
-            if (value >= Math.Pow(2, 24))
-                throw new ArgumentOutOfRangeException("Unsigned integer is greater than 24bit");
-
-            var strGuid = Guid.NewGuid().ToString().Remove("-{}"); //Remove any '-' and '{}' characters
-            var bytes = BitConverter.GetBytes(value);
-            var encryptedarray = Cypher.EncryptDES(bytes, Cypher.Key);
-            var EncryptedGuid = ByteUtility.WriteBytesToString(strGuid, encryptedarray, 9);
-            Guid.TryParse(EncryptedGuid, out var outg);
-            return outg;
+            var result = new byte[16];
+            BitConverter.GetBytes(_self).CopyTo(result, 0);
+            return new Guid(result);
         }
 
         /// <summary>

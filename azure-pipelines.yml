@@ -25,6 +25,7 @@ stages:
             scannerMode: 'MSBuild'
             projectKey: 'I-Synergy.Framework'
             projectName: 'I-Synergy.Framework'
+            projectVersion: $(build.buildNumber)
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet restore: I-Synergy.Framework.Core'

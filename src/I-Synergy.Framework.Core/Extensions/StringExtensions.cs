@@ -37,11 +37,11 @@ namespace ISynergy.Framework.Core.Extensions
             try
             {
                 var ri
-                   = Int32.Parse(r, NumberStyles.HexNumber);
+                   = int.Parse(r, NumberStyles.HexNumber);
                 var gi
-                   = Int32.Parse(g, NumberStyles.HexNumber);
+                   = int.Parse(g, NumberStyles.HexNumber);
                 var bi
-                   = Int32.Parse(b, NumberStyles.HexNumber);
+                   = int.Parse(b, NumberStyles.HexNumber);
 
                 color = Color.FromArgb(ri, gi, bi);
             }
@@ -58,22 +58,26 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Coverts the string2 numeric.
         /// </summary>
-        /// <param name="self">The self.</param>
+        /// <param name="_self">The self.</param>
         /// <returns>System.Int32.</returns>
-        public static int CovertString2Numeric(this string self)
+        public static int CovertString2Numeric(this string _self)
         {
-            var iChars = new List<string>();
-            var strResult = string.Empty;
+            var result = string.Empty;
 
-            foreach (var iChar in iChars.EnsureNotNull())
+            foreach (var character in _self)
             {
-                if (IsInteger(iChar))
+                if (char.IsDigit(character))
                 {
-                    strResult += iChar;
+                    result += character;
                 }
             }
 
-            return Convert.ToInt32(strResult);
+            if (int.TryParse(result, out var output))
+            {
+                return output;
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -141,7 +145,7 @@ namespace ISynergy.Framework.Core.Extensions
             // Go back from end of id to the begin while a char is a number
             for (var i = self.Length - 1; i >= 0; i--)
             {
-                if (Char.IsDigit(self.Substring(i, 1).ToCharArray()[0]))
+                if (char.IsDigit(self.Substring(i, 1).First()))
                 {
                     // if found char isdigit set the position one element back
                     codePos--;
@@ -498,7 +502,7 @@ namespace ISynergy.Framework.Core.Extensions
                         // Trim whitespace following break
                         pos += len;
 
-                        while (pos < eol && Char.IsWhiteSpace(a[pos]))
+                        while (pos < eol && char.IsWhiteSpace(a[pos]))
                             pos++;
 
                     } while (eol > pos);
@@ -522,12 +526,12 @@ namespace ISynergy.Framework.Core.Extensions
             // Find last whitespace in line
             var i = max - 1;
 
-            while (i >= 0 && !Char.IsWhiteSpace(text[pos + i]))
+            while (i >= 0 && !char.IsWhiteSpace(text[pos + i]))
                 i--;
             if (i < 0)
                 return max; // No whitespace found; break at maximum length
                             // Find start of whitespace
-            while (i >= 0 && Char.IsWhiteSpace(text[pos + i]))
+            while (i >= 0 && char.IsWhiteSpace(text[pos + i]))
                 i--;
             // Return length of text before whitespace
             return i + 1;
