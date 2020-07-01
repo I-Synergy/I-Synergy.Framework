@@ -5,6 +5,9 @@
     <RootNamespace>ISynergy.Framework.Geography.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{4BFFB5F9-7D13-4319-9BD2-88EC532907FF}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

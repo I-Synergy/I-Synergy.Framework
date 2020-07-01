@@ -5,6 +5,9 @@
     <RootNamespace>ISynergy.Framework.AspNetCore.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+
+      <!-- SonarQube needs this -->
+      <ProjectGuid>{8113C8D2-D1FC-48AD-81D3-905E11506F09}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

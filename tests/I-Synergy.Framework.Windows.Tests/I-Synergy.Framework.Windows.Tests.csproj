@@ -20,7 +20,7 @@
     <PackageCertificateKeyFile>
     </PackageCertificateKeyFile>
     <UnitTestPlatformVersion Condition="'$(UnitTestPlatformVersion)' == ''">$(VisualStudioVersion)</UnitTestPlatformVersion>
-    <PackageCertificateThumbprint>C5B09A80A418CA34E2B5CB0DF7751CF08F439CAB</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>44D4086D72C5F54CE55AED695F00CD15F7FF9122</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -156,7 +156,7 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Moq">
-      <Version>4.14.3</Version>
+      <Version>4.14.4</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>2.1.2</Version>

@@ -39,8 +39,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             var theMesh = new GlobalMesh(1000);
             var nr = theMesh.MeshNumber(Constants.MyHome);
             var n0 = theMesh.Neighborhood(nr, 0);
-            Assert.Equal(n0.Count, 1);
-            Assert.Equal(n0[0], nr);
+            Assert.Single(n0);
+            Assert.Equal(nr, n0[0]);
             var n1 = theMesh.Neighborhood(nr, 1);
             Assert.Equal(8, n1.Count);
             var n2 = theMesh.Neighborhood(nr, 2);

@@ -18,7 +18,7 @@
     <dependencies>
       <group targetFramework=".NETCoreApp3.1">
         <dependency id="I-Synergy.Framework.AspNetCore" version="[$PackageVersion$]" />
-        <dependency id="System.IdentityModel.Tokens.Jwt" version="6.6.0" />
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="6.7.1" />
       </group>
     </dependencies>
   </metadata>
