@@ -563,15 +563,9 @@ namespace ISynergy.Framework.Windows
         /// <param name="message">The message.</param>
         public virtual async Task HandleException(Exception ex, string message)
         {
-            try
-            {
-                await ServiceLocator.Default.GetInstance<ITelemetryService>().TrackExceptionAsync(ex, message);
-            }
-            catch { }
-            finally
-            {
-                await ServiceLocator.Default.GetInstance<IBusyService>().EndBusyAsync();
-            }
+            // Set busyIndicator to false if it's true.
+            await ServiceLocator.Default.GetInstance<IBusyService>().EndBusyAsync();
+            await ServiceLocator.Default.GetInstance<ITelemetryService>().TrackExceptionAsync(ex, message);
 
             var connections = NetworkInformation.GetInternetConnectionProfile();
 
