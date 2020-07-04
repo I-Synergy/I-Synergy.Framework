@@ -17,7 +17,7 @@ stages:
           displayName: 'Use NuGet 5.6.0'
           inputs:
             versionSpec: 5.6.0
-      
+
         - task: SonarCloudPrepare@1
           inputs:
             SonarCloud: 'SonarCloud'
@@ -187,7 +187,6 @@ stages:
             platform: x86
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Build x86'
@@ -196,7 +195,6 @@ stages:
             platform: x86
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore x64'
@@ -205,7 +203,6 @@ stages:
             platform: x64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Build x64'
@@ -214,7 +211,6 @@ stages:
             platform: x64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore ARM'
@@ -223,7 +219,6 @@ stages:
             platform: ARM
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Build ARM'
@@ -232,7 +227,6 @@ stages:
             platform: ARM
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore ARM64'
@@ -241,7 +235,6 @@ stages:
             platform: ARM64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Build ARM64'
@@ -250,56 +243,55 @@ stages:
             platform: ARM64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-            clean: true
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Core.Tests\I-Synergy.Framework.Core.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Core.Linq.Tests\I-Synergy.Framework.Core.Linq.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.AspNetCore.Tests\I-Synergy.Framework.AspNetCore.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Financial'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Financial.Tests\I-Synergy.Framework.Financial.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Geography'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Geography.Tests\I-Synergy.Framework.Geography.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Mathematics'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Mathematics.Tests\I-Synergy.Framework.Mathematics.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Payment'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Payment.Tests\I-Synergy.Framework.Payment.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: SonarCloudAnalyze@1
 
