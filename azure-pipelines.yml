@@ -17,7 +17,7 @@ stages:
           displayName: 'Use NuGet 5.6.0'
           inputs:
             versionSpec: 5.6.0
-      
+
         - task: SonarCloudPrepare@1
           inputs:
             SonarCloud: 'SonarCloud'
@@ -28,27 +28,11 @@ stages:
             projectVersion: $(build.buildNumber)
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Core'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Core'
           inputs:
             command: build
             projects: 'src\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Core.Linq'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Core.Linq\I-Synergy.Framework.Core.Linq.csproj'
             feedsToUse: config
             nugetConfigPath: nuget.config
       
@@ -62,27 +46,11 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.AspNetCore'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.AspNetCore\I-Synergy.Framework.AspNetCore.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore'
           inputs:
             command: build
             projects: 'src\I-Synergy.Framework.AspNetCore\I-Synergy.Framework.AspNetCore.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.AspNetCore.Authentication'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.AspNetCore.Authentication\I-Synergy.Framework.AspNetCore.Authentication.csproj'
             feedsToUse: config
             nugetConfigPath: nuget.config
       
@@ -96,27 +64,11 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.EntityFramework'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.EntityFramework\I-Synergy.Framework.EntityFramework.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.EntityFramework'
           inputs:
             command: build
             projects: 'src\I-Synergy.Framework.EntityFramework\I-Synergy.Framework.EntityFramework.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Financial'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Financial\I-Synergy.Framework.Financial.csproj'
             feedsToUse: config
             nugetConfigPath: nuget.config
       
@@ -130,27 +82,11 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Models'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Models\I-Synergy.Framework.Models.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Models'
           inputs:
             command: build
             projects: 'src\I-Synergy.Framework.Models\I-Synergy.Framework.Models.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Entities'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Entities\I-Synergy.Framework.Entities.csproj'
             feedsToUse: config
             nugetConfigPath: nuget.config
       
@@ -164,27 +100,11 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Geography'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Geography\I-Synergy.Framework.Geography.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Geography'
           inputs:
             command: build
             projects: 'src\I-Synergy.Framework.Geography\I-Synergy.Framework.Geography.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Mathematics'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Mathematics\I-Synergy.Framework.Mathematics.csproj'
             feedsToUse: config
             nugetConfigPath: nuget.config
       
@@ -198,27 +118,11 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.MessageBus'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.MessageBus\I-Synergy.Framework.MessageBus.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.MessageBus'
           inputs:
             command: build
             projects: 'src\I-Synergy.Framework.MessageBus\I-Synergy.Framework.MessageBus.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.MessageBus.Azure'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.MessageBus.Azure\I-Synergy.Framework.MessageBus.Azure.csproj'
             feedsToUse: config
             nugetConfigPath: nuget.config
       
@@ -232,27 +136,11 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Mvvm'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Mvvm\I-Synergy.Framework.Mvvm.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Mvvm'
           inputs:
             command: build
             projects: 'src\I-Synergy.Framework.Mvvm\I-Synergy.Framework.Mvvm.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Payment'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Payment\I-Synergy.Framework.Payment.csproj'
             feedsToUse: config
             nugetConfigPath: nuget.config
       
@@ -266,14 +154,6 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Payment.Mollie'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Payment.Mollie\I-Synergy.Framework.Payment.Mollie.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Payment.Mollie'
           inputs:
             command: build
@@ -283,27 +163,11 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Storage'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Storage\I-Synergy.Framework.Storage.csproj'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Storage'
           inputs:
             command: build
             projects: 'src\I-Synergy.Framework.Storage\I-Synergy.Framework.Storage.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy.Framework.Storage.Azure'
-          inputs:
-            command: restore
-            projects: 'src\I-Synergy.Framework.Storage.Azure\I-Synergy.Framework.Storage.Azure.csproj'
             feedsToUse: config
             nugetConfigPath: nuget.config
       
@@ -323,7 +187,6 @@ stages:
             platform: x86
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Build x86'
@@ -332,7 +195,6 @@ stages:
             platform: x86
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore x64'
@@ -341,7 +203,6 @@ stages:
             platform: x64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Build x64'
@@ -350,7 +211,6 @@ stages:
             platform: x64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore ARM'
@@ -359,7 +219,6 @@ stages:
             platform: ARM
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Build ARM'
@@ -368,7 +227,6 @@ stages:
             platform: ARM
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore ARM64'
@@ -377,7 +235,6 @@ stages:
             platform: ARM64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-            clean: true
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Build ARM64'
@@ -386,56 +243,55 @@ stages:
             platform: ARM64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-            clean: true
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Core.Tests\I-Synergy.Framework.Core.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Core.Linq.Tests\I-Synergy.Framework.Core.Linq.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.AspNetCore.Tests\I-Synergy.Framework.AspNetCore.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Financial'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Financial.Tests\I-Synergy.Framework.Financial.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Geography'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Geography.Tests\I-Synergy.Framework.Geography.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Mathematics'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Mathematics.Tests\I-Synergy.Framework.Mathematics.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Payment'
           inputs:
             command: test
             projects: 'tests\I-Synergy.Framework.Payment.Tests\I-Synergy.Framework.Payment.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: SonarCloudAnalyze@1
 
