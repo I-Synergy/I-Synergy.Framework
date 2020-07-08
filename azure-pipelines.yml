@@ -8,10 +8,10 @@ pool:
 
 stages:
   - stage: Build
-    displayName: 'Build'
+    displayName: 'Build and Test'
     jobs:
     - job: BuildJob
-      displayName: 'Build and Test'
+      displayName: 'Build and Test assemblies'
       steps:
         - task: NuGetToolInstaller@1
           displayName: 'Use NuGet 5.6.0'
@@ -243,63 +243,63 @@ stages:
             platform: ARM64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Core'
-          inputs:
-            command: test
-            projects: 'tests\I-Synergy.Framework.Core.Tests\I-Synergy.Framework.Core.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
-          inputs:
-            command: test
-            projects: 'tests\I-Synergy.Framework.Core.Linq.Tests\I-Synergy.Framework.Core.Linq.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
-          inputs:
-            command: test
-            projects: 'tests\I-Synergy.Framework.AspNetCore.Tests\I-Synergy.Framework.AspNetCore.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Financial'
-          inputs:
-            command: test
-            projects: 'tests\I-Synergy.Framework.Financial.Tests\I-Synergy.Framework.Financial.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Geography'
-          inputs:
-            command: test
-            projects: 'tests\I-Synergy.Framework.Geography.Tests\I-Synergy.Framework.Geography.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Mathematics'
-          inputs:
-            command: test
-            projects: 'tests\I-Synergy.Framework.Mathematics.Tests\I-Synergy.Framework.Mathematics.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Payment'
-          inputs:
-            command: test
-            projects: 'tests\I-Synergy.Framework.Payment.Tests\I-Synergy.Framework.Payment.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --no-build --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - task: SonarCloudAnalyze@1
 
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Artifacts'
           inputs:
             pathtoPublish: '$(System.DefaultWorkingDirectory)\Output'
             artifactName: Output
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Core'
+          inputs:
+            command: test
+            projects: 'tests\I-Synergy.Framework.Core.Tests\I-Synergy.Framework.Core.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
+          inputs:
+            command: test
+            projects: 'tests\I-Synergy.Framework.Core.Linq.Tests\I-Synergy.Framework.Core.Linq.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
+          inputs:
+            command: test
+            projects: 'tests\I-Synergy.Framework.AspNetCore.Tests\I-Synergy.Framework.AspNetCore.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Financial'
+          inputs:
+            command: test
+            projects: 'tests\I-Synergy.Framework.Financial.Tests\I-Synergy.Framework.Financial.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Geography'
+          inputs:
+            command: test
+            projects: 'tests\I-Synergy.Framework.Geography.Tests\I-Synergy.Framework.Geography.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Mathematics'
+          inputs:
+            command: test
+            projects: 'tests\I-Synergy.Framework.Mathematics.Tests\I-Synergy.Framework.Mathematics.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Payment'
+          inputs:
+            command: test
+            projects: 'tests\I-Synergy.Framework.Payment.Tests\I-Synergy.Framework.Payment.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
+        - task: SonarCloudAnalyze@1
 
   - stage: Release
     displayName: 'Release'
