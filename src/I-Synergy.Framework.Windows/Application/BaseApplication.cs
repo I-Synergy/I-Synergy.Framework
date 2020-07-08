@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Flurl.Http;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
@@ -335,7 +334,7 @@ namespace ISynergy.Framework.Windows
         protected virtual void ConfigureServices()
         {
             ServiceLocator.Default.Register<ILoggerFactory>(() => new LoggerFactory());
-            ServiceLocator.Default.Register<IFlurlClient>(() => new FlurlClient());
+            
             ServiceLocator.Default.Register<IMessenger>(() => new Messenger());
             ServiceLocator.Default.Register<IBusyService, BusyService>();
             ServiceLocator.Default.Register<IThemeSelectorService, ThemeSelectorService>();
@@ -354,17 +353,6 @@ namespace ISynergy.Framework.Windows
 
             Logger = ServiceLocator.Default.GetInstance<ILoggerFactory>().CreateLogger(typeof(BaseApplication));
             Logger.LogInformation("Starting application");
-
-            Logger.LogInformation("Allow 404 errors in Flurl");
-            FlurlHttp.Configure(c =>
-            {
-                c.Timeout = TimeSpan.FromSeconds(30);
-                //c.AutoDispose = false;
-
-                // Statuses (in addition to 2xx) that won't throw exceptions.
-                // Set to "*" to allow everything.
-                c.AllowedHttpStatusRange = "404";
-            });
         }
 
         /// <summary>
