@@ -18,7 +18,6 @@
     <dependencies>
       <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
       <dependency id="I-Synergy.Framework.Mvvm" version="[$PackageVersion$]" />
-      <dependency id="Mapster" version="5.3.2" />
       <dependency id="Microsoft.Extensions.Configuration.Json" version="3.1.5" />
       <dependency id="Microsoft.Extensions.Logging" version="3.1.5" />
       <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.2.10" />

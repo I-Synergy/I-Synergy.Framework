@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ISynergy.Framework.Core.Data;
 
-namespace ISynergy.Framework.EntityFramework.Managers
+namespace ISynergy.Framework.EntityFramework.Abstractions
 {
     /// <summary>
     /// Interface IBaseEntityManager
