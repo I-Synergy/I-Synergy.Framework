@@ -8,10 +8,10 @@ pool:
 
 stages:
   - stage: Build
-    displayName: 'Build'
+    displayName: 'Build and Test'
     jobs:
     - job: BuildJob
-      displayName: 'Build assemblies'
+      displayName: 'Build and Test assemblies'
       steps:
         - task: NuGetToolInstaller@1
           displayName: 'Use NuGet 5.6.0'
@@ -243,8 +243,6 @@ stages:
             platform: ARM64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-      
-        - task: SonarCloudAnalyze@1
 
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Artifacts'
@@ -252,19 +250,6 @@ stages:
             pathtoPublish: '$(System.DefaultWorkingDirectory)\Output'
             artifactName: Output
 
-  - stage: Test
-    displayName: 'Test'
-    dependsOn: Build
-    condition: and(succeeded()
-    jobs:
-    - job: TestJob
-      displayName: 'Test assemblies'
-      steps:
-        - task: NuGetToolInstaller@1
-          displayName: 'Use NuGet 5.6.0'
-          inputs:
-            versionSpec: 5.6.0
-      
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core'
           inputs:
@@ -314,9 +299,11 @@ stages:
             projects: 'tests\I-Synergy.Framework.Payment.Tests\I-Synergy.Framework.Payment.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
+        - task: SonarCloudAnalyze@1
+
   - stage: Release
     displayName: 'Release'
-    dependsOn: Test
+    dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
     - job: PackageJob
