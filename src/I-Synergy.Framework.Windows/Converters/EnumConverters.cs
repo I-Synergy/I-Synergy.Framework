@@ -86,9 +86,8 @@ namespace ISynergy.Framework.Windows.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var list = new List<KeyValuePair<int, string>>();
-            var enumValues = Enum.GetValues(value.GetType());
 
-            foreach (Enum item in enumValues)
+            foreach (Enum item in Enum.GetValues(value.GetType()))
             {
                 list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
             }
@@ -123,14 +122,7 @@ namespace ISynergy.Framework.Windows.Converters
                 throw new ArgumentNullException(nameof(value));
             }
 
-            var description = value.ToString();
-            var fieldInfo = value.GetType().GetField(description);
-            var attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
-
-            if (attributes != null && attributes.Length > 0)
-                description = ServiceLocator.Default.GetInstance<ILanguageService>().GetString(attributes[0].Description);
-
-            return description;
+            return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(value.ToString());
         }
     }
 
