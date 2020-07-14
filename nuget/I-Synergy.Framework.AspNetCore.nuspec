@@ -19,7 +19,7 @@
       <group targetFramework=".NETCoreApp3.1">
         <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.14.0" />
         <dependency id="Microsoft.IdentityModel.Clients.ActiveDirectory" version="5.2.8" />
-        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.5" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.6" />
         <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
       </group>
     </dependencies>
