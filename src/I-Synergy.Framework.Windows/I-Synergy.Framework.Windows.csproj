@@ -210,7 +210,6 @@
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\ImagePicker.cs" />
-    <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\KeyboardHelper.cs" />
     <Compile Include="Helpers\NavigationAnimationHelpers.cs" />
     <Compile Include="Helpers\NavigationHelper.cs" />

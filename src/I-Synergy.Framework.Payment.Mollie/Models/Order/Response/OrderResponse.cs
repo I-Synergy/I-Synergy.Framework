@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using ISynergy.Framework.Payment.Converters;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
 using ISynergy.Framework.Payment.Mollie.Enumerations;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Order
 {
@@ -191,7 +189,7 @@ namespace ISynergy.Framework.Payment.Mollie.Models.Order
         /// <returns>T.</returns>
         public T GetMetadata<T>(JsonSerializerSettings jsonSerializerSettings = null)
         {
-            return JsonConvert.DeserializeObject<T>(Metadata, jsonSerializerSettings);
+            return JsonSerializer.Deserialize<T>(Metadata, jsonSerializerSettings);
         }
     }
 }

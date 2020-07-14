@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ISynergy.Framework.Payment.Converters;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.List
 {

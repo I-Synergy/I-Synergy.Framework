@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using ISynergy.Framework.Core.Validation;
@@ -7,7 +7,6 @@ using ISynergy.Framework.MessageBus.Abstractions;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.MessageBus.Azure.Queue
 {
@@ -97,7 +96,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
                 async (message, token) =>
                 {
                     var body = Encoding.UTF8.GetString(message.Body);
-                    var data = JsonConvert.DeserializeObject<TEntity>(body);
+                    var data = JsonSerializer.Deserialize<TEntity>(body);
 
                     if (ValidateMessage(data))
                     {

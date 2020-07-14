@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using ISynergy.Framework.Core.Utilities;
 using Xunit;

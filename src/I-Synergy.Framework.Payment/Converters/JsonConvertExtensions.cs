@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Payment.ContractResolvers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace ISynergy.Framework.Payment.Converters
 {
@@ -16,7 +14,7 @@ namespace ISynergy.Framework.Payment.Converters
         /// <returns>System.String.</returns>
         public static string SerializeObjectCamelCase(object value)
         {
-            return JsonConvert.SerializeObject(value,
+            return JsonSerializer.Serialize(value,
                 new JsonSerializerSettings
                 {
                     DateFormatString = "yyyy-MM-dd",
@@ -32,7 +30,7 @@ namespace ISynergy.Framework.Payment.Converters
         /// <returns>System.String.</returns>
         public static string SerializeObjectSnakeCase(object value)
         {
-            return JsonConvert.SerializeObject(value,
+            return JsonSerializer.Serialize(value,
                 new JsonSerializerSettings
                 {
                     DateFormatString = "yyyy-MM-dd",

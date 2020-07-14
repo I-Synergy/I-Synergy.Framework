@@ -1,5 +1,4 @@
 ﻿using System;
-using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Xunit;
 

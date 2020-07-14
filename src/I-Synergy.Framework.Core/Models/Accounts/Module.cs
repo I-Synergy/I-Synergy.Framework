@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Data;
-using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -25,7 +24,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// </summary>
         /// <value>The module identifier.</value>
         [Required]
-        [JsonProperty]
         public Guid ModuleId
         {
             get { return GetValue<Guid>(); }
@@ -38,7 +36,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <value>The name.</value>
         [Required]
         [StringLength(32)]
-        [JsonProperty]
         public string Name
         {
             get { return GetValue<string>(); }
@@ -51,7 +48,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <value>The description.</value>
         [Required]
         [StringLength(128)]
-        [JsonProperty]
         public string Description
         {
             get { return GetValue<string>(); }

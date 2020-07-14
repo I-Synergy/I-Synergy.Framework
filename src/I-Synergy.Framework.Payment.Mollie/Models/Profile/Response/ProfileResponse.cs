@@ -1,7 +1,6 @@
 ﻿using System;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
 using ISynergy.Framework.Payment.Mollie.Enumerations;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Profile.Response
 {
