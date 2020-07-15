@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Models
 {
@@ -11,42 +11,42 @@ namespace ISynergy.Framework.Core.Models
         /// Gets or sets the type of the grant.
         /// </summary>
         /// <value>The type of the grant.</value>
-        [JsonProperty("grant_type")] public string grant_type { get; set; } = string.Empty;
+        [JsonPropertyName("grant_type")] public string grant_type { get; set; } = string.Empty;
         /// <summary>
         /// Gets or sets the username.
         /// </summary>
         /// <value>The username.</value>
-        [JsonProperty("username")] public string username { get; set; } = string.Empty;
+        [JsonPropertyName("username")] public string username { get; set; } = string.Empty;
         /// <summary>
         /// Gets or sets the password.
         /// </summary>
         /// <value>The password.</value>
-        [JsonProperty("password")] public string password { get; set; } = string.Empty;
+        [JsonPropertyName("password")] public string password { get; set; } = string.Empty;
         /// <summary>
         /// Gets or sets the refresh token.
         /// </summary>
         /// <value>The refresh token.</value>
-        [JsonProperty("refresh_token")] public string refresh_token { get; set; } = string.Empty;
+        [JsonPropertyName("refresh_token")] public string refresh_token { get; set; } = string.Empty;
         /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
         /// <value>The client identifier.</value>
-        [JsonProperty("client_id")] public string client_id { get; set; } = string.Empty;
+        [JsonPropertyName("client_id")] public string client_id { get; set; } = string.Empty;
         /// <summary>
         /// Gets or sets the client secret.
         /// </summary>
         /// <value>The client secret.</value>
-        [JsonProperty("client_secret")] public string client_secret { get; set; } = string.Empty;
+        [JsonPropertyName("client_secret")] public string client_secret { get; set; } = string.Empty;
         /// <summary>
         /// Gets or sets the scope.
         /// </summary>
         /// <value>The scope.</value>
-        [JsonProperty("scope")] public string scope { get; set; } = string.Empty;
+        [JsonPropertyName("scope")] public string scope { get; set; } = string.Empty;
         /// <summary>
         /// Gets or sets the code.
         /// </summary>
         /// <value>The code.</value>
-        [JsonProperty("code")] public string code { get; set; } = string.Empty;
+        [JsonPropertyName("code")] public string code { get; set; } = string.Empty;
     }
 
     /// <summary>

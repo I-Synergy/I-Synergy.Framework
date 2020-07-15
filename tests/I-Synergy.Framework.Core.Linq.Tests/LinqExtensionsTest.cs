@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Xunit;
-using System.Reflection;
 using System.Linq;
-using System.Diagnostics;
-using Newtonsoft.Json;
-using System.Linq.Expressions;
 using ISynergy.Framework.Core.Linq.Exceptions;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
@@ -47,7 +42,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var array = new List<string> { "Name", "ProductId" };
             var data_sorted = CreateTestSet().AsQueryable().OrderBy(string.Join(" DESC, ", array)).ToList();
 
-            //Debug.WriteLine(JsonConvert.SerializeObject(data_sorted));
+            //Debug.WriteLine(JsonSerializer.Serialize(data_sorted));
 
             Assert.True(data_sorted.First().Name == "Test4");
             Assert.True(data_sorted.Last().Name == "Test1");

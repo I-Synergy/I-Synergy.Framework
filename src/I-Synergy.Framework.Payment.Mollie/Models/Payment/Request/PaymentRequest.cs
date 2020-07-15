@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Payment.Mollie.Enumerations;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Payment.Request
 {
@@ -114,7 +112,7 @@ namespace ISynergy.Framework.Payment.Mollie.Models.Payment.Request
         /// <param name="jsonSerializerSettings">The json serializer settings.</param>
         public void SetMetadata(object metadataObj, JsonSerializerSettings jsonSerializerSettings = null)
         {
-            Metadata = JsonConvert.SerializeObject(metadataObj, jsonSerializerSettings);
+            Metadata = JsonSerializer.Serialize(metadataObj, jsonSerializerSettings);
         }
 
         /// <summary>

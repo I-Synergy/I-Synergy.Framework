@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Models;
 
 namespace ISynergy.Framework.AspNetCore.Authentication.Services

@@ -9,7 +9,6 @@ using ISynergy.Framework.Payment.Converters;
 using ISynergy.Framework.Payment.Extensions;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
 using ISynergy.Framework.Payment.Mollie.Models.Connect;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Base
 {
@@ -108,7 +107,7 @@ namespace ISynergy.Framework.Payment.Mollie.Base
             var response = await _httpClient.SendAsync(httpRequest).ConfigureAwait(false);
             var resultContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return JsonConvert.DeserializeObject<TokenResponse>(resultContent, new JsonSerializerSettings { ContractResolver = new SnakeCasePropertyNamesContractResolver() });
+            return JsonSerializer.Deserialize<TokenResponse>(resultContent, new JsonSerializerSettings { ContractResolver = new SnakeCasePropertyNamesContractResolver() });
         }
 
         /// <summary>

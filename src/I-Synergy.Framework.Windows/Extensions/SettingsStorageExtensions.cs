@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Windows.Helpers;
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -37,7 +38,7 @@ namespace ISynergy.Framework.Windows.Extensions
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
             var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = await Json.StringifyAsync(content);
+            var fileContent = JsonSerializer.Serialize(content);
 
             await FileIO.WriteTextAsync(file, fileContent);
         }
@@ -59,7 +60,7 @@ namespace ISynergy.Framework.Windows.Extensions
             var file = await folder.GetFileAsync($"{name}.json");
             var fileContent = await FileIO.ReadTextAsync(file);
 
-            return await Json.ToObjectAsync<T>(fileContent);
+            return JsonSerializer.Deserialize<T>(fileContent);
         }
 
         /// <summary>
@@ -69,9 +70,10 @@ namespace ISynergy.Framework.Windows.Extensions
         /// <param name="settings">The settings.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
+        public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, await Json.StringifyAsync(value));
+            settings.SaveString(key, JsonSerializer.Serialize(value));
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -92,11 +94,11 @@ namespace ISynergy.Framework.Windows.Extensions
         /// <param name="settings">The settings.</param>
         /// <param name="key">The key.</param>
         /// <returns>T.</returns>
-        public static async Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
+        public static Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
         {
             if (settings.Values.TryGetValue(key, out var obj))
             {
-                return await Json.ToObjectAsync<T>((string)obj);
+                return Task.FromResult(JsonSerializer.Deserialize<T>((string)obj));
             }
 
             return default;

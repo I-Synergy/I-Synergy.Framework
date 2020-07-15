@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using NFluent;
+﻿using NFluent;
 using System.Collections.Generic;
 using System.Globalization;
 using ISynergy.Framework.Core.Linq.Exceptions;
@@ -1021,22 +1020,22 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.ThatCode(() => baseQuery.Select("isnull(it, 0, 4)")).Throws<ParseException>();
         }
 
-        [Fact]
-        public void ExpressionTests_Indexer_Issue57()
-        {
-            var rows = new List<JObject>
-            {
-                new JObject {["Column1"] = "B", ["Column2"] = 1},
-                new JObject {["Column1"] = "B", ["Column2"] = 2},
-                new JObject {["Column1"] = "A", ["Column2"] = 1},
-                new JObject {["Column1"] = "A", ["Column2"] = 2}
-            };
+        //[Fact]
+        //public void ExpressionTests_Indexer_Issue57()
+        //{
+        //    var rows = new List<JObject>
+        //    {
+        //        new JObject {["Column1"] = "B", ["Column2"] = 1},
+        //        new JObject {["Column1"] = "B", ["Column2"] = 2},
+        //        new JObject {["Column1"] = "A", ["Column2"] = 1},
+        //        new JObject {["Column1"] = "A", ["Column2"] = 2}
+        //    };
 
-            var expected = rows.OrderBy(x => x["Column1"]).ToList();
-            var result = rows.AsQueryable().OrderBy(@"it[""Column1""]").ToList();
+        //    var expected = rows.OrderBy(x => x["Column1"]).ToList();
+        //    var result = rows.AsQueryable().OrderBy(@"it[""Column1""]").ToList();
 
-            Assert.Equal(expected, result);
-        }
+        //    Assert.Equal(expected, result);
+        //}
 
         // [Fact]
         // public void ExpressionTests_IComparable_GreaterThan()

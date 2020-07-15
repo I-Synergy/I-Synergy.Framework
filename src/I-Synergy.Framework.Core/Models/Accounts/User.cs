@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Data;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +17,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the Id property value.
         /// </summary>
         /// <value>The identifier.</value>
-        [JsonProperty]
         [Required]
         public string Id
         {
@@ -30,7 +28,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the UserName property value.
         /// </summary>
         /// <value>The name of the user.</value>
-        [JsonProperty]
         [Required]
         public string UserName
         {
@@ -42,7 +39,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the IsUnlocked property value.
         /// </summary>
         /// <value><c>true</c> if this instance is unlocked; otherwise, <c>false</c>.</value>
-        [JsonProperty]
         [Required]
         public bool IsUnlocked
         {
@@ -88,7 +84,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the AccountId property value.
         /// </summary>
         /// <value>The account identifier.</value>
-        [JsonProperty]
         public Guid AccountId
         {
             get { return GetValue<Guid>(); }
@@ -99,7 +94,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the Password property value.
         /// </summary>
         /// <value>The password.</value>
-        [JsonProperty]
         public string Password
         {
             get { return GetValue<string>(); }
@@ -110,7 +104,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the Roles property value.
         /// </summary>
         /// <value>The roles.</value>
-        [JsonProperty]
         public List<Role> Roles
         {
             get { return GetValue<List<Role>>(); }
@@ -129,7 +122,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the IsConfirmed property value.
         /// </summary>
         /// <value><c>true</c> if this instance is confirmed; otherwise, <c>false</c>.</value>
-        [JsonProperty]
         public bool IsConfirmed
         {
             get { return GetValue<bool>(); }
@@ -140,7 +132,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the Roles property value.
         /// </summary>
         /// <value>The roles.</value>
-        [JsonProperty]
         public List<Role> Roles
         {
             get { return GetValue<List<Role>>(); }
@@ -159,7 +150,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the Roles property value.
         /// </summary>
         /// <value>The roles.</value>
-        [JsonProperty]
         public List<Role> Roles
         {
             get { return GetValue<List<Role>>(); }
@@ -183,7 +173,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the IsConfirmed property value.
         /// </summary>
         /// <value><c>true</c> if this instance is confirmed; otherwise, <c>false</c>.</value>
-        [JsonProperty]
         [Required]
         public bool IsConfirmed
         {
@@ -195,7 +184,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the FailedAttempts property value.
         /// </summary>
         /// <value>The failed attempts.</value>
-        [JsonProperty]
         [Required]
         public int FailedAttempts
         {

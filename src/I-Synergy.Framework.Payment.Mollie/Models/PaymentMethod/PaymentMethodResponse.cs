@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ISynergy.Framework.Payment.Mollie.Models.Issuer;
 using ISynergy.Framework.Payment.Mollie.Models.PaymentMethod.Pricing;
 using ISynergy.Framework.Payment.Mollie.Enumerations;

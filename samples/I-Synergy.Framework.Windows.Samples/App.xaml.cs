@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -83,6 +85,11 @@ namespace ISynergy.Framework.Windows.Samples
                 {
                     Assembly.Load("I-Synergy.Framework.Windows.Samples")
                 });
+        }
+
+        public override Task HandleException(Exception ex, string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -13,7 +13,6 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
-using ISynergy.Framework.Core.Utilities;
 
 namespace ISynergy.Framework.Mvvm
 {

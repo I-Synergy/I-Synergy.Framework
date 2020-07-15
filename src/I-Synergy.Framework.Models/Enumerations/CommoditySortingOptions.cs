@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ISynergy.Framework.Models.Enumerations
+﻿namespace ISynergy.Framework.Models.Enumerations
 {
     /// <summary>
     /// Enum CommoditySortingOptions

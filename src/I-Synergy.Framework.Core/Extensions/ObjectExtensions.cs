@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -14,16 +14,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <typeparam name="T">The type of object being copied.</typeparam>
         /// <param name="source">The object instance to copy.</param>
         /// <returns>The copied object.</returns>
-        public static T Clone<T>(this T source)
-        {
-            // initialize inner objects individually
-            // for example in default constructor some list property initialized with some values,
-            // but in 'source' these items are cleaned -
-            // without ObjectCreationHandling.Replace default constructor values will be added to result
-            var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
-
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
-        }
+        public static T Clone<T>(this T source) =>
+            JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(source));
 
         /// <summary>
         /// Checks if object is of a nullable type.

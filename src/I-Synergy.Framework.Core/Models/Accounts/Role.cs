@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using ISynergy.Framework.Core.Data;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Core.Models.Accounts
 {
@@ -16,7 +16,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the Id property value.
         /// </summary>
         /// <value>The identifier.</value>
-        [JsonProperty]
         [Required]
         public Guid Id
         {
@@ -28,7 +27,6 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// Gets or sets the Name property value.
         /// </summary>
         /// <value>The name.</value>
-        [JsonProperty]
         [Required]
         public string Name
         {

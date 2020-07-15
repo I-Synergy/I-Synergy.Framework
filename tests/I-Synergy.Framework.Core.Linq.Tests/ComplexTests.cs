@@ -2,7 +2,6 @@
 using System.Linq;
 using Xunit;
 using NFluent;
-using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Entities;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests

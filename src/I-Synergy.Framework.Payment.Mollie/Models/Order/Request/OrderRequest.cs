@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ISynergy.Framework.Payment.Converters;
 using ISynergy.Framework.Payment.Mollie.Enumerations;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Order
 {
@@ -92,7 +91,7 @@ namespace ISynergy.Framework.Payment.Mollie.Models.Order
         /// <param name="jsonSerializerSettings">The json serializer settings.</param>
         public void SetMetadata(object metadataObj, JsonSerializerSettings jsonSerializerSettings = null)
         {
-            Metadata = JsonConvert.SerializeObject(metadataObj, jsonSerializerSettings);
+            Metadata = JsonSerializer.Serialize(metadataObj, jsonSerializerSettings);
         }
     }
 }

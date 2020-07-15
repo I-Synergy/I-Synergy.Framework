@@ -2,17 +2,12 @@
 using ISynergy.Framework.AspNetCore.Options;
 using ISynergy.Framework.AspNetCore.Routing;
 using ISynergy.Framework.Core;
-using ISynergy.Framework.Core.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -246,52 +241,8 @@ namespace ISynergy.Framework.AspNetCore
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="authorizedRazorPages">The authorized razor pages.</param>
-        protected virtual void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null)
-        {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = _ => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.AddControllersWithViews();
-
-            services.Configure<MvcOptions>(options =>
-            {
-                if (!Environment.IsDevelopment())
-                    options.Filters.Add(new RequireHttpsAttribute());
-            });
-
-            services.AddMvc()
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization()
-                .AddNewtonsoftJson(options =>
-                {
-                    var jsonSettings = options.SerializerSettings;
-
-                    jsonSettings.Formatting = Formatting.None;
-                    jsonSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-                    // Don't include null objects in Json, but only for production environments.
-                    jsonSettings.NullValueHandling =
-                        !Environment.IsDevelopment()
-                            ? NullValueHandling.Ignore
-                            : NullValueHandling.Include;
-
-                    // Treat datetime as unspecified in Json serializer.
-                    // This means that there will be no offset information (Z/+00:00) in the output Json.
-                    jsonSettings.DateFormatString = GenericConstants.DateTimeOffsetFormat;
-                    jsonSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                    jsonSettings.DateParseHandling = DateParseHandling.DateTimeOffset;
-                    jsonSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-
-                    // Serialize enums as string, instead of by their integer value.
-                    var enumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
-                    jsonSettings.Converters.Add(enumConverter);
-                });
-        }
-
+        protected abstract void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null);
+        
         /// <summary>
         /// Adds the routing.
         /// </summary>

@@ -2,7 +2,6 @@
 using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
 using ISynergy.Framework.Payment.Mollie.Enumerations;
 using ISynergy.Framework.Payment.Mollie.Models.Settlement;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Invoice
 {

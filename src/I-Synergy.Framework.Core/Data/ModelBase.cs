@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Validation;
-using Newtonsoft.Json;
 using System;
 
 namespace ISynergy.Framework.Core.Data
@@ -11,7 +10,6 @@ namespace ISynergy.Framework.Core.Data
     /// </summary>
     /// <seealso cref="ObservableClass" />
     /// <seealso cref="IModelBase" />
-    [JsonObject(MemberSerialization.OptOut)]
     public abstract class ModelBase : ObservableClass, IModelBase
     {
         /// <summary>
