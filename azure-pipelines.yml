@@ -492,7 +492,7 @@ stages:
         - task: GitHubPagesPublish@1
           inputs:
             docPath: '$(System.DefaultWorkingDirectory)\docs\*'
-            githubusername: 'IsmailHassani'
+            githubusername: 'I-Synergy'
             githubemail: 'ismail.hassani@i-synergy.nl'
             githubaccesstoken: '$(GithubPages)'
             repositoryname: 'I-Synergy.Framework'
