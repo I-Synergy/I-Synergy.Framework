@@ -1,0 +1,85 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "src/I-Synergy.Framework.Core/I-Synergy.Framework.Core.csproj",
+            "src/I-Synergy.Framework.AspNetCore/I-Synergy.Framework.AspNetCore.csproj",
+            "src/I-Synergy.Framework.AspNetCore.Authentication/I-Synergy.Framework.AspNetCore.Authentication.csproj",
+            "src/I-Synergy.Framework.EntityFramework/I-Synergy.Framework.EntityFramework.csproj",
+            "src/I-Synergy.Framework.Financial/I-Synergy.Framework.Financial.csproj",
+            "src/I-Synergy.Framework.Models/I-Synergy.Framework.Models.csproj",
+            "src/I-Synergy.Framework.Entities/I-Synergy.Framework.Entities.csproj",
+            "src/I-Synergy.Framework.Geography/I-Synergy.Framework.Geography.csproj",
+            "src/I-Synergy.Framework.Mathematics/I-Synergy.Framework.Mathematics.csproj",
+            "src/I-Synergy.Framework.MessageBus/I-Synergy.Framework.MessageBus.csproj",
+            "src/I-Synergy.Framework.MessageBus.Azure/I-Synergy.Framework.MessageBus.Azure.csproj",
+            "src/I-Synergy.Framework.Mvvm/I-Synergy.Framework.Mvvm.csproj",
+            "src/I-Synergy.Framework.Storage/I-Synergy.Framework.Storage.csproj",
+            "src/I-Synergy.Framework.Storage.Azure/I-Synergy.Framework.Storage.Azure.csproj",
+            "src/I-Synergy.Framework.Windows/I-Synergy.Framework.Windows.csproj" 
+          ],
+          "src": "..",
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**",
+            "docs/**"
+          ]
+        }
+      ],
+      "dest": "api",
+      "filter": "filterConfig.yml",
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "articles/**.md",
+          "articles/**/toc.yml",
+          "toc.yml",
+          "*.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/**.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "docs/**"
+        ]
+      }
+    ],
+    "dest": "../docs",
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "template": [
+      "default"
+    ],
+    "postProcessors": [],
+    "markdownEngineName": "markdig",
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "cleanupCacheHistory": false,
+    "disableGitFeatures": false
+  }
+}

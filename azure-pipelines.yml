@@ -484,3 +484,17 @@ stages:
             packagesToPush: '$(Build.ArtifactStagingDirectory)/*$(build.buildNumber).nupkg'
             nuGetFeedType: 'external'
             publishFeedCredentials: 'Nuget.org'
+
+        - task: DocFxTask@0
+          inputs:
+            solution: 'docfx_project/docfx.json'
+
+        - task: GitHubPagesPublish@1
+          inputs:
+            docPath: '$(System.DefaultWorkingDirectory)\docs\*'
+            githubusername: 'IsmailHassani'
+            githubemail: 'ismail.hassani@i-synergy.nl'
+            githubaccesstoken: '$(GithubPages)'
+            repositoryname: 'I-Synergy.Framework'
+            branchname: 'gh-pages'
+            commitmessage: 'Automated Release $(Release.ReleaseId)'
