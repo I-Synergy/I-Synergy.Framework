@@ -520,3 +520,4 @@ stages:
             git push --tags
              Write-Host "Successfully pushed tag $tag"     
           failOnStderr: false    
+
