@@ -339,6 +339,20 @@ stages:
             filePath: ./build/createplatformdll.ps1
             arguments: '-file "$(System.ArtifactsDirectory)\Output\I-Synergy.Framework.Windows\$(BuildConfiguration)\I-Synergy.Framework.Windows.dll"'
       
+        - task: DocFxTask@0
+          inputs:
+            solution: 'docfx_project/docfx.json'
+
+        - task: GitHubPagesPublish@1
+          inputs:
+            docPath: '$(System.DefaultWorkingDirectory)\docs\*'
+            githubusername: 'I-Synergy'
+            githubemail: 'ismail.hassani@i-synergy.nl'
+            githubaccesstoken: '$(GithubPages)'
+            repositoryname: 'I-Synergy.Framework'
+            branchname: 'gh-pages'
+            commitmessage: 'Automated Release $(Release.ReleaseId)'
+
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
           inputs:
@@ -485,16 +499,24 @@ stages:
             nuGetFeedType: 'external'
             publishFeedCredentials: 'Nuget.org'
 
-        - task: DocFxTask@0
-          inputs:
-            solution: 'docfx_project/docfx.json'
-
-        - task: GitHubPagesPublish@1
-          inputs:
-            docPath: '$(System.DefaultWorkingDirectory)\docs\*'
-            githubusername: 'IsmailHassani'
-            githubemail: 'ismail.hassani@i-synergy.nl'
-            githubaccesstoken: '$(GithubPages)'
-            repositoryname: 'I-Synergy.Framework'
-            branchname: 'gh-pages'
-            commitmessage: 'Automated Release $(Release.ReleaseId)'
+    - job: TagSources
+      displayName: 'Tag Sources'
+      dependsOn: PackageJob
+      condition: succeeded()
+      
+      steps:
+      - checkout: self
+        persistCredentials: true
+        clean: true
+        fetchDepth: 1
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: |
+            $env:GIT_REDIRECT_STDERR` = '2>&1'
+            $tag = "manual_$(Build.BuildNumber)".replace(' ', '_')
+            git tag $tag
+            Write-Host "Successfully created tag $tag" 
+            git push --tags
+             Write-Host "Successfully pushed tag $tag"     
+          failOnStderr: false    
