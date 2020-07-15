@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: DocFxTask@0
+  inputs:
+    solution: 'docfx_project/docfx.json'
+
+- task: GitHubPagesPublish@1
+  inputs:
+    docPath: '$(System.DefaultWorkingDirectory)\docs\*'
+    githubusername: 'IsmailHassani'
+    githubemail: 'ismail.hassani@i-synergy.nl'
+    githubaccesstoken: '$(GithubPages)'
+    repositoryname: 'I-Synergy.Framework'
+    branchname: 'gh-pages'
+    commitmessage: 'Automated Release $(Release.ReleaseId)'
