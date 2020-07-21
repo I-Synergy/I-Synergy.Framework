@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Core.Data
 {
