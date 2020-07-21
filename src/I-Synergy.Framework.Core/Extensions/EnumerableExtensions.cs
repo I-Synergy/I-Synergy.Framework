@@ -150,8 +150,6 @@ namespace ISynergy.Framework.Core.Extensions
             return typeof(T);
         }
 
-#if !WINDOWS_UWP
-
         /// <summary>
         /// Converts to datatable.
         /// </summary>
@@ -161,7 +159,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns>DataTable.</returns>
         public static DataTable ToDataTable<T>(this IEnumerable<T> collection, string tableName)
         {
-            var tbl = ToDataTable(collection);
+            var tbl = collection.ToDataTable();
             tbl.TableName = tableName;
             return tbl;
         }
@@ -198,7 +196,7 @@ namespace ISynergy.Framework.Core.Extensions
 
                     if (temp is null || (temp.GetType().Name == "Char" && ((char)temp).Equals('\0')))
                     {
-                        dr[pia[i].Name] = (object)DBNull.Value;
+                        dr[pia[i].Name] = DBNull.Value;
                     }
                     else
                     {
@@ -211,7 +209,5 @@ namespace ISynergy.Framework.Core.Extensions
             }
             return dt;
         }
-
-#endif
     }
 }
