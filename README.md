@@ -1,11 +1,15 @@
 # I-Synergy Framework
 I-Synergy Framework for backend and frontend applications
+
+## Documentation
+ [I-Synergy Framework Documentation](https://i-synergy.github.io/I-Synergy.Framework/)
+
 ___
 ## I-Synergy Framework Build Status
 
 | Build | Status |
 |:---|---|
-| [I-Synergy.Framework](https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=147&branchName=master)|
+| [I-Synergy.Framework](https://github.com/I-Synergy/I-Synergy.Framework) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework%20CI?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=148&branchName=master)|
 
 ## Nuget Deployment Status
 | Release | Status |
