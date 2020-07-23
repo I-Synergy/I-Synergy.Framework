@@ -141,6 +141,24 @@
     <Compile Include="Common\Result.cs" />
     <Compile Include="Common\UserThemeResourceLoader.cs" />
     <Compile Include="Common\UserThemeResources.cs" />
+    <Compile Include="Controls\Charts\BarChart.cs" />
+    <Compile Include="Controls\Charts\Chart.cs" />
+    <Compile Include="Controls\Charts\ChartView.cs" />
+    <Compile Include="Controls\Charts\Enumerations\GraphPosition.cs" />
+    <Compile Include="Controls\Charts\Enumerations\LabelMode.cs" />
+    <Compile Include="Controls\Charts\Enumerations\LineMode.cs" />
+    <Compile Include="Controls\Charts\Enumerations\Orientation.cs" />
+    <Compile Include="Controls\Charts\Enumerations\PointMode.cs" />
+    <Compile Include="Controls\Charts\DonutChart.cs" />
+    <Compile Include="Controls\Charts\Events\InvalidatedWeakEventHandler.cs" />
+    <Compile Include="Controls\Charts\Extensions\CanvasExtensions.cs" />
+    <Compile Include="Controls\Charts\Helpers\RadialHelpers.cs" />
+    <Compile Include="Controls\Charts\LineChart.cs" />
+    <Compile Include="Controls\Charts\Models\ChartEntry.cs" />
+    <Compile Include="Controls\Charts\PieChart.cs" />
+    <Compile Include="Controls\Charts\PointChart.cs" />
+    <Compile Include="Controls\Charts\RadarChart.cs" />
+    <Compile Include="Controls\Charts\RadialGaugeChart.cs" />
     <Compile Include="Controls\CompositionShadow.xaml.cs">
       <DependentUpon>CompositionShadow.xaml</DependentUpon>
     </Compile>
@@ -284,6 +302,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="SkiaSharp">
+      <Version>2.80.1</Version>
+    </PackageReference>
+    <PackageReference Include="SkiaSharp.Views">
+      <Version>2.80.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
