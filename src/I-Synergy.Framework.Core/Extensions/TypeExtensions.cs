@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns>IEnumerable&lt;Type&gt;.</returns>
         public static IEnumerable<Type> GetInterfaces(this Type _self, bool includeInherited)
         {
-            if (includeInherited || _self.BaseType == null)
+            if (includeInherited || _self.BaseType is null)
                 return _self.GetInterfaces();
             else
                 return _self.GetInterfaces().Except(_self.BaseType.GetInterfaces());

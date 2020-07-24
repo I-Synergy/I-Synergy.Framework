@@ -145,7 +145,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             IsNotNull(parameterName, value);
 
-            if (value.Any(e => e == null))
+            if (value.Any(e => e is null))
             {
                 IsNotNullOrEmpty(nameof(parameterName), parameterName);
 

@@ -318,7 +318,7 @@ namespace ISynergy.Framework.Windows.Helpers
         /// <returns>Descendant control or null if not found.</returns>
         public static FrameworkElement FindDescendantByName(this DependencyObject element, string name)
         {
-            if (element == null || string.IsNullOrWhiteSpace(name))
+            if (element is null || string.IsNullOrWhiteSpace(name))
             {
                 return null;
             }
@@ -438,14 +438,14 @@ namespace ISynergy.Framework.Windows.Helpers
         /// <returns>Descendant control or null if not found.</returns>
         public static FrameworkElement FindAscendantByName(this DependencyObject element, string name)
         {
-            if (element == null || string.IsNullOrWhiteSpace(name))
+            if (element is null || string.IsNullOrWhiteSpace(name))
             {
                 return null;
             }
 
             var parent = VisualTreeHelper.GetParent(element);
 
-            if (parent == null)
+            if (parent is null)
             {
                 return null;
             }
@@ -469,7 +469,7 @@ namespace ISynergy.Framework.Windows.Helpers
         {
             var parent = VisualTreeHelper.GetParent(element);
 
-            if (parent == null)
+            if (parent is null)
             {
                 return null;
             }
@@ -492,7 +492,7 @@ namespace ISynergy.Framework.Windows.Helpers
         {
             var parent = VisualTreeHelper.GetParent(element);
 
-            if (parent == null)
+            if (parent is null)
             {
                 return null;
             }

@@ -49,8 +49,11 @@ namespace ISynergy.Framework.Windows.Services
         /// <value>The frame.</value>
         public object Frame
         {
-            get => _frame;
-            set => _frame = (Frame)value;
+            get => _frame ??= (Frame)global::Windows.UI.Xaml.Window.Current.Content;
+            set
+            {
+                _frame = (Frame)value;
+            }
         }
 
         /// <summary>
@@ -93,13 +96,6 @@ namespace ISynergy.Framework.Windows.Services
         public async Task<IView> NavigateAsync<TViewModel>(object parameter = null, object infoOverride = null)
             where TViewModel : class, IViewModel
         {
-            if (global::Windows.UI.Xaml.Window.Current.Content is Frame frame)
-            {
-                Frame = frame;
-            }
-
-            Argument.IsNotNull(nameof(Frame), Frame);
-
             await _semaphore.WaitAsync();
 
             try
@@ -107,7 +103,7 @@ namespace ISynergy.Framework.Windows.Services
                 IViewModel viewmodel = default;
                 IView view = default;
 
-                if(parameter is IViewModel instanceVM)
+                if (parameter is IViewModel instanceVM)
                 {
                     viewmodel = instanceVM;
                 }
@@ -115,7 +111,7 @@ namespace ISynergy.Framework.Windows.Services
                 {
                     viewmodel = ServiceLocator.Default.GetInstance<TViewModel>();
                 }
-                
+
                 if (!_pages.ContainsKey(viewmodel.GetType().FullName))
                 {
                     throw new ArgumentException($"Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?", viewmodel.GetType().FullName);
@@ -123,53 +119,56 @@ namespace ISynergy.Framework.Windows.Services
 
                 var page = _pages[viewmodel.GetType().FullName];
 
-                // Check if actual page is the same as destination page.
-                if (_frame.Content != null && _frame.Content.GetType().Equals(page))
+                if (_frame is Frame frame)
                 {
-                    return _frame.Content as IView;
-                }
-
-                if (parameter is IViewModel)
-                {
-                    viewmodel.IsInitialized = false;
-                    await InitializeViewModelAsync(viewmodel);
-                    view = _frame.NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
-                }
-                else
-                {
-                    if (page.GetInterfaces(true).Where(q => q == typeof(IView)).Any())
+                    // Check if actual page is the same as destination page.
+                    if (frame.Content != null && frame.Content.GetType().Equals(page))
                     {
-                        if (parameter != null && !string.IsNullOrEmpty(parameter.ToString()))
+                        return frame.Content as IView;
+                    }
+
+                    if (parameter is IViewModel)
+                    {
+                        viewmodel.IsInitialized = false;
+                        await InitializeViewModelAsync(viewmodel);
+                        view = frame.NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
+                    }
+                    else
+                    {
+                        if (page.GetInterfaces(true).Where(q => q == typeof(IView)).Any())
                         {
-                            Type genericPropertyType = null;
-
-                            // Has class GenericTypeArguments?
-                            if (viewmodel.GetType().GenericTypeArguments.Count() > 0)
+                            if (parameter != null && !string.IsNullOrEmpty(parameter.ToString()))
                             {
-                                genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
-                            }
+                                Type genericPropertyType = null;
 
-                            // Has BaseType GenericTypeArguments?
-                            else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Count() > 0)
-                            {
-                                genericPropertyType = baseType.GetGenericArguments().First();
-                            }
-
-                            if (genericPropertyType != null && parameter.GetType() == genericPropertyType)
-                            {
-                                var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
-
-                                // Check if instanceVM implements genericInterfaceType.
-                                if (genericInterfaceType.IsAssignableFrom(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
+                                // Has class GenericTypeArguments?
+                                if (viewmodel.GetType().GenericTypeArguments.Any())
                                 {
-                                    method.Invoke(viewmodel, new[] { parameter });
+                                    genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
+                                }
+
+                                // Has BaseType GenericTypeArguments?
+                                else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
+                                {
+                                    genericPropertyType = baseType.GetGenericArguments().First();
+                                }
+
+                                if (genericPropertyType != null && parameter.GetType() == genericPropertyType)
+                                {
+                                    var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
+
+                                    // Check if instanceVM implements genericInterfaceType.
+                                    if (genericInterfaceType.IsAssignableFrom(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
+                                    {
+                                        method.Invoke(viewmodel, new[] { parameter });
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    await InitializeViewModelAsync(viewmodel);
-                    view = _frame.NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
+                        await InitializeViewModelAsync(viewmodel);
+                        view = frame.NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
+                    }
                 }
 
                 return view;
@@ -186,7 +185,7 @@ namespace ISynergy.Framework.Windows.Services
         /// <param name="viewModel">The view model.</param>
         private async Task InitializeViewModelAsync(IViewModel viewModel)
         {
-            if(!viewModel.IsInitialized)
+            if (!viewModel.IsInitialized)
             {
                 await viewModel.InitializeAsync();
             }
@@ -255,7 +254,7 @@ namespace ISynergy.Framework.Windows.Services
                     {
                         owner.IsPaneEnabled = false;
                     }
-                    else if(owner.Blades.Last() is IView blade)
+                    else if (owner.Blades.Last() is IView blade)
                     {
                         blade.IsEnabled = true;
                     }
@@ -290,7 +289,7 @@ namespace ISynergy.Framework.Windows.Services
                     await viewModel.InitializeAsync();
                 }
 
-                if(TypeActivator.CreateInstance(_pages[viewModelKey]) is View view)
+                if (TypeActivator.CreateInstance(_pages[viewModelKey]) is View view)
                 {
                     var datacontextBinding = new Binding
                     {

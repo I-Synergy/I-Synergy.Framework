@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Core.Utilities
         [InlineData("test\\test")]
         public void TestIsNotValidFileName(string fileName)
         {
-            Assert.False(FileNameUtility.IsValidFileName(fileName));
+            Assert.False(FileNameExtensions.IsValidFileName(fileName));
         }
 
         [Theory]
@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Core.Utilities
         [InlineData("test")]
         public void TestIsValidFileName(string fileName)
         {
-            Assert.True(FileNameUtility.IsValidFileName(fileName));
+            Assert.True(FileNameExtensions.IsValidFileName(fileName));
         }
 
         [Theory]
@@ -37,7 +37,7 @@ namespace ISynergy.Framework.Core.Utilities
         [InlineData("test")]
         public void CreateValidFileName(string fileName)
         {
-            Assert.True(FileNameUtility.IsValidFileName(FileNameUtility.MakeValidFileName(fileName)));
+            Assert.True(FileNameExtensions.IsValidFileName(FileNameExtensions.MakeValidFileName(fileName)));
         }
     }
 }

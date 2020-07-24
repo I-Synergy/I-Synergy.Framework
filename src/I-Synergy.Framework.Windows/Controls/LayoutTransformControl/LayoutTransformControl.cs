@@ -426,7 +426,7 @@ namespace ISynergy.Framework.Windows.Controls
         protected override Size MeasureOverride(Size availableSize)
         {
             var child = Child;
-            if (_layoutRoot == null || child == null)
+            if (_layoutRoot is null || child is null)
             {
                 // No content, no size
                 return Size.Empty;
@@ -464,7 +464,7 @@ namespace ISynergy.Framework.Windows.Controls
         protected override Size ArrangeOverride(Size finalSize)
         {
             var child = Child;
-            if (_layoutRoot == null || child == null)
+            if (_layoutRoot is null || child is null)
             {
                 // No child, use whatever was given
                 return finalSize;

@@ -120,7 +120,7 @@ namespace ISynergy.Framework.Windows.Controls
         {
             var button = (ToggleButton)GetTemplateChild(ExpanderToggleButtonPart);
 
-            if (button == null)
+            if (button is null)
             {
                 return;
             }

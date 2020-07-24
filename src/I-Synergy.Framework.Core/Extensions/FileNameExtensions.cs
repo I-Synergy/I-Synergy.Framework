@@ -1,11 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace ISynergy.Framework.Core.Utilities
+namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
-    /// Class FileNameUtility.
+    /// Class FileNameExtensions.
     /// </summary>
-    public class FileNameUtility
+    public static class FileNameExtensions
     {
         /// <summary>
         /// The invalid chars
@@ -19,21 +19,17 @@ namespace ISynergy.Framework.Core.Utilities
         /// <summary>
         /// Determines whether [is valid file name] [the specified file name].
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="_self">Name of the file.</param>
         /// <returns><c>true</c> if [is valid file name] [the specified file name]; otherwise, <c>false</c>.</returns>
-        public static bool IsValidFileName(string fileName)
-        {
-            return !Regex.IsMatch(fileName, invalidRegStr);
-        }
+        public static bool IsValidFileName(this string _self) =>
+            !Regex.IsMatch(_self, invalidRegStr);
 
         /// <summary>
         /// Makes the name of the valid file.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="_self">Name of the file.</param>
         /// <returns>System.String.</returns>
-        public static string MakeValidFileName(string fileName)
-        {
-            return Regex.Replace(fileName, invalidRegStr, "_");
-        }
+        public static string MakeValidFileName(this string _self) =>
+            Regex.Replace(_self, invalidRegStr, "_");
     }
 }

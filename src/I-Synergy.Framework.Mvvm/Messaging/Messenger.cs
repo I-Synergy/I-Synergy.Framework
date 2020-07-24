@@ -42,11 +42,11 @@ namespace ISynergy.Framework.Mvvm.Messaging
         {
             get
             {
-                if (_defaultInstance == null)
+                if (_defaultInstance is null)
                 {
                     lock (CreationLock)
                     {
-                        if (_defaultInstance == null)
+                        if (_defaultInstance is null)
                         {
                             _defaultInstance = new Messenger();
                         }
@@ -165,7 +165,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
 
                 if (receiveDerivedMessagesToo)
                 {
-                    if (_recipientsOfSubclassesAction == null)
+                    if (_recipientsOfSubclassesAction is null)
                     {
                         _recipientsOfSubclassesAction = new Dictionary<Type, List<WeakActionAndToken>>();
                     }
@@ -174,7 +174,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
                 }
                 else
                 {
-                    if (_recipientsStrictAction == null)
+                    if (_recipientsStrictAction is null)
                     {
                         _recipientsStrictAction = new Dictionary<Type, List<WeakActionAndToken>>();
                     }
@@ -427,7 +427,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
         /// <param name="lists">The lists.</param>
         private static void CleanupList(IDictionary<Type, List<WeakActionAndToken>> lists)
         {
-            if (lists == null)
+            if (lists is null)
             {
                 return;
             }
@@ -438,7 +438,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
                 foreach (var list in lists)
                 {
                     var recipientsToRemove = list.Value
-                        .Where(item => item.Action == null || !item.Action.IsAlive)
+                        .Where(item => item.Action is null || !item.Action.IsAlive)
                         .ToList();
 
                     foreach (var recipient in recipientsToRemove)
@@ -485,10 +485,10 @@ namespace ISynergy.Framework.Mvvm.Messaging
                     if (item.Action is IExecuteWithObject executeAction
                         && item.Action.IsAlive
                         && item.Action.Target != null
-                        && (messageTargetType == null
+                        && (messageTargetType is null
                             || item.Action.Target.GetType() == messageTargetType
                             || messageTargetType.IsAssignableFrom(item.Action.Target.GetType()))
-                        && ((item.Token == null && token == null)
+                        && ((item.Token is null && token is null)
                             || item.Token != null && item.Token.Equals(token)))
                     {
                         executeAction.ExecuteWithObject(message);
@@ -504,8 +504,8 @@ namespace ISynergy.Framework.Mvvm.Messaging
         /// <param name="lists">The lists.</param>
         private static void UnregisterFromLists(object recipient, Dictionary<Type, List<WeakActionAndToken>> lists)
         {
-            if (recipient == null
-                || lists == null
+            if (recipient is null
+                || lists is null
                 || lists.Count == 0)
             {
                 return;
@@ -545,8 +545,8 @@ namespace ISynergy.Framework.Mvvm.Messaging
         {
             var messageType = typeof(TMessage);
 
-            if (recipient == null
-                || lists == null
+            if (recipient is null
+                || lists is null
                 || lists.Count == 0
                 || !lists.ContainsKey(messageType))
             {
@@ -559,9 +559,9 @@ namespace ISynergy.Framework.Mvvm.Messaging
                 {
                     if (item.Action is WeakAction<TMessage> weakActionCasted
                         && recipient == weakActionCasted.Target
-                        && (action == null
+                        && (action is null
                             || action.Method.Name == weakActionCasted.MethodName)
-                        && (token == null
+                        && (token is null
                             || token.Equals(item.Token)))
                     {
                         item.Action.MarkForDeletion();

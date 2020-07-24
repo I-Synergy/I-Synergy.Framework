@@ -136,7 +136,7 @@ namespace ISynergy.Framework.Windows.Behaviors
                 return;
 
             var selectedItems = SelectedItems;
-            if (selectedItems == null)
+            if (selectedItems is null)
                 return;
 
             try

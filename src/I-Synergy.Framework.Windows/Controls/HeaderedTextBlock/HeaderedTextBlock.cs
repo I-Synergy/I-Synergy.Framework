@@ -50,7 +50,7 @@ namespace ISynergy.Framework.Windows.Controls
         {
             if (_headerContentPresenter != null)
             {
-                _headerContentPresenter.Visibility = _headerContentPresenter.Content == null
+                _headerContentPresenter.Visibility = _headerContentPresenter.Content is null
                                                      ? Visibility.Collapsed
                                                      : Visibility.Visible;
             }

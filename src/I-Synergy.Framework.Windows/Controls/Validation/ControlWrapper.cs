@@ -32,7 +32,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <exception cref="KeyNotFoundException">PropertyName not found</exception>
         IProperty GetProperty(object context)
         {
-            if (context == null)
+            if (context is null)
                 return null;
             if (string.IsNullOrEmpty(PropertyName))
                 throw new NullReferenceException("PropertyName not set");

@@ -24,8 +24,6 @@ namespace ISynergy.Framework.Core.Extensions
 
             if (hc.Length != 6)
             {
-                // you can choose whether to throw an exception
-                //throw new ArgumentException("hexColor is not exactly 6 digits.");
                 return Color.Empty;
             }
 
@@ -47,8 +45,6 @@ namespace ISynergy.Framework.Core.Extensions
             }
             catch
             {
-                // you can choose whether to throw an exception
-                //throw new ArgumentException("Conversion failed.");
                 return Color.Empty;
             }
 
@@ -224,12 +220,13 @@ namespace ISynergy.Framework.Core.Extensions
         {
             // remove any characters that are not digits (like #)
             var isHexDigit = new Regex("[abcdefABCDEF\\d]+", RegexOptions.Compiled);
-            var newnum = "";
+            var result = new StringBuilder();
 
-            foreach (var c in self.EnsureNotNull())
-                if (isHexDigit.IsMatch(c.ToString())) newnum += c.ToString();
+            foreach (var character in self.EnsureNotNull())
+                if (isHexDigit.IsMatch(character.ToString())) 
+                    result.Append(character.ToString());
 
-            return newnum;
+            return result.ToString();
         }
 
         //identical to Ruby's chop
@@ -364,7 +361,6 @@ namespace ISynergy.Framework.Core.Extensions
                 case 1:
                     ret.Add(self.Substring(0, poses[0])); ret.Add(self.Substring(poses[0], self.Length - poses[0])); return ret;
                 default:
-                    var sb = new StringBuilder(255);
                     var pos1 = 0;
                     var len = poses[0];
                     ret.Add(self.Substring(pos1, len));

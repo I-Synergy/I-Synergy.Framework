@@ -170,7 +170,7 @@ namespace ISynergy.Framework.Windows.Controls.Charts
                     return 0;
                 }
 
-                if (InternalMinValue == null)
+                if (InternalMinValue is null)
                 {
                     return Math.Min(0, Entries.Min(x => x.Value));
                 }
@@ -195,7 +195,7 @@ namespace ISynergy.Framework.Windows.Controls.Charts
                     return 0;
                 }
 
-                if (InternalMaxValue == null)
+                if (InternalMaxValue is null)
                 {
                     return Math.Max(0, Entries.Max(x => x.Value));
                 }
@@ -344,7 +344,7 @@ namespace ISynergy.Framework.Windows.Controls.Charts
                     }
                     else
                     {   // Draws the chart centered for right labelmode only
-                        var left = isGraphCentered == true ? Math.Abs(width - DrawableChartArea.Right) : 0;
+                        var left = isGraphCentered ? Math.Abs(width - DrawableChartArea.Right) : 0;
                         DrawableChartArea = new SKRect(left, 0, Math.Min(DrawableChartArea.Right, labelBounds.Left), DrawableChartArea.Bottom);
                     }
 

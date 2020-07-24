@@ -108,7 +108,7 @@ namespace ISynergy.Framework.Core.Events
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
         /// parameter to true if the action is using closures.</param>
         public WeakAction(Action action, bool keepTargetAlive = false)
-            : this(action == null ? null : action.Target, action, keepTargetAlive)
+            : this(action?.Target, action, keepTargetAlive)
         {
         }
 
@@ -172,9 +172,9 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (_staticAction == null
-                    && Reference == null
-                    && LiveReference == null)
+                if (_staticAction is null
+                    && Reference is null
+                    && LiveReference is null)
                 {
                     return false;
                 }
@@ -214,7 +214,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (Reference == null)
+                if (Reference is null)
                 {
                     return null;
                 }
@@ -236,7 +236,7 @@ namespace ISynergy.Framework.Core.Events
                     return LiveReference;
                 }
 
-                if (ActionReference == null)
+                if (ActionReference is null)
                 {
                     return null;
                 }
@@ -257,19 +257,10 @@ namespace ISynergy.Framework.Core.Events
                 return;
             }
 
-            var actionTarget = ActionTarget;
-
-            if (IsAlive)
+            if (IsAlive && Method != null && (LiveReference != null || ActionReference != null) && ActionTarget != null)
             {
-                if (Method != null
-                    && (LiveReference != null
-                        || ActionReference != null)
-                    && actionTarget != null)
-                {
-                    Method.Invoke(actionTarget, null);
-
-                    return;
-                }
+                Method.Invoke(ActionTarget, null);
+                return;
             }
         }
 

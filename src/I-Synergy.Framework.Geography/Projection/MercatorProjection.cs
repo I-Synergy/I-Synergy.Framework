@@ -139,7 +139,7 @@ namespace ISynergy.Framework.Geography
         /// <exception cref="ArgumentException"></exception>
         public double EuclidianDistance(EuclidianCoordinate point1, EuclidianCoordinate point2)
         {
-            if (point1 == null || point2 == null)
+            if (point1 is null || point2 is null)
                 throw new ArgumentNullException();
             if (!(point1.Projection.Equals(this) && point2.Projection.Equals(this)))
                 throw new ArgumentException(Properties.Resources.POINT_NOT_OWNED);

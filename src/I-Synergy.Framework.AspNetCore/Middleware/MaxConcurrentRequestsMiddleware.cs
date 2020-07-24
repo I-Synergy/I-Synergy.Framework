@@ -135,7 +135,7 @@ namespace ISynergy.Framework.AspNetCore.Middleware
         private async Task<bool> ShouldDecrementConcurrentRequestsCountAsync()
         {
             return (_options.Limit != MaxConcurrentRequestsOptions.ConcurrentRequestsUnlimited)
-                && ((_enqueuer == null) || !(await _enqueuer.DequeueAsync().ConfigureAwait(false)));
+                && ((_enqueuer is null) || !(await _enqueuer.DequeueAsync().ConfigureAwait(false)));
         }
     }
 }

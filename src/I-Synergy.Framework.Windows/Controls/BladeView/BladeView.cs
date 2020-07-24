@@ -141,7 +141,7 @@ namespace ISynergy.Framework.Windows.Controls
 
             if (visibility == Visibility.Visible)
             {
-                if (Items == null)
+                if (Items is null)
                 {
                     return;
                 }

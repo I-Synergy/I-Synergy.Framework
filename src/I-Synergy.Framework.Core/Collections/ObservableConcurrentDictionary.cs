@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -14,9 +15,7 @@ namespace ISynergy.Framework.Core.Collections
     /// <typeparam name="TKey">Specifies the type of the keys in this collection.</typeparam>
     /// <typeparam name="TValue">Specifies the type of the values in this collection.</typeparam>
     [DebuggerDisplay("Count={Count}")]
-    public class ObservableConcurrentDictionary<TKey, TValue> :
-        ICollection<KeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>,
-        INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableConcurrentDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         /// <summary>
         /// The context
@@ -124,7 +123,8 @@ namespace ISynergy.Framework.Core.Collections
         /// <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</param>
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
-            TryAddWithNotification(item);
+            if(!TryAddWithNotification(item))
+                throw new InvalidOperationException($"{item.Key} could not be added.");
         }
 
         /// <summary>
