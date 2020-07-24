@@ -73,6 +73,7 @@ namespace ISynergy.Framework.Windows.Samples.ViewModels
 
         public override Task InitializeAsync(object parameter)
         {
+            CommonServices.NavigationService.Frame = parameter;
             return Task.CompletedTask;
         }
 
