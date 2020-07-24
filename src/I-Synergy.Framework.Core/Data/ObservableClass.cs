@@ -80,13 +80,15 @@ namespace ISynergy.Framework.Core.Data
         }
 
 
-        /// <summary>Returns a hash code for this instance.</summary>
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
         /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode() =>
             this.GetIdentityValue().GetHashCode();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObservableClass"/> class.
+        /// Initializes a new instance of the <see cref="ObservableClass" /> class.
         /// </summary>
         /// <param name="validation">The validation.</param>
         protected ObservableClass(ValidationTriggers validation = ValidationTriggers.Manual)
@@ -135,6 +137,37 @@ namespace ISynergy.Framework.Core.Data
                 if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType())
                 {
                     property.Value = value;
+                    OnPropertyChanged(propertyName);
+
+                    if (ValidationTrigger == ValidationTriggers.ChangedProperty)
+                    {
+                        Validate();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="field">The field.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            Argument.IsNotNull(propertyName, propertyName);
+
+            if (!Properties.ContainsKey(propertyName))
+                Properties.Add(propertyName, new Property<T>());
+
+            if (Properties[propertyName] is IProperty<T> property)
+            {
+                var previous = field;
+
+                if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType())
+                {
+                    field = value;
                     OnPropertyChanged(propertyName);
 
                     if (ValidationTrigger == ValidationTriggers.ChangedProperty)

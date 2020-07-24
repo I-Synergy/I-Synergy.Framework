@@ -12,8 +12,8 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2008-2020</copyright>
     <tags>I-Synergy Framework MessageBus</tags>
-    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework</projectUrl>
-    <repository type="git" url="https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
+    <projectUrl>https://github.com/I-Synergy/I-Synergy.Framework</projectUrl>
+    <repository type="git" url="https://github.com/I-Synergy/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
 
     <dependencies>
       <group targetFramework=".NETStandard2.0">

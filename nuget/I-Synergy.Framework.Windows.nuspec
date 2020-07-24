@@ -12,8 +12,8 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2008-2020</copyright>
     <tags>I-Synergy WinUI Framework Universal Windows Applications</tags>
-    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework</projectUrl>
-    <repository type="git" url="https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
+    <projectUrl>https://github.com/I-Synergy/I-Synergy.Framework</projectUrl>
+    <repository type="git" url="https://github.com/I-Synergy/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
 
     <dependencies>
       <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
@@ -23,6 +23,8 @@
       <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.2.10" />
       <dependency id="Microsoft.UI.Xaml" version="2.4.2" />
       <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.1" />
+      <dependency id="SkiaSharp" version="2.80.1" />
+      <dependency id="SkiaSharp.Views" version="2.80.1" />
     </dependencies>
   </metadata>
 

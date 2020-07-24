@@ -12,15 +12,15 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2008-2020</copyright>
     <tags>I-Synergy Framework Core</tags>
-    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework</projectUrl>
-    <repository type="git" url="https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
+    <projectUrl>https://github.com/I-Synergy/I-Synergy.Framework</projectUrl>
+    <repository type="git" url="https://github.com/I-Synergy/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
 
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="Microsoft.Extensions.Configuration.Abstractions" version="3.1.6" />
         <dependency id="Microsoft.Extensions.Configuration.Binder" version="3.1.6" />
         <dependency id="System.ComponentModel.Annotations" version="4.7.0" />
-        <dependency id="Newtonsoft.Json" version="12.0.3" />
+        <dependency id="System.Text.Json" version="4.7.2" />
       </group>
     </dependencies>
   </metadata>

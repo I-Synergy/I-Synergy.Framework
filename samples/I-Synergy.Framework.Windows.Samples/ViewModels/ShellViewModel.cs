@@ -22,6 +22,7 @@ namespace ISynergy.Framework.Windows.Samples.ViewModels
         public ICommonServices CommonServices { get; }
 
         public RelayCommand Display_Command { get; set; }
+        public RelayCommand Chart_Command { get; set; }
 
         public ShellViewModel(
             IContext context,
@@ -33,13 +34,17 @@ namespace ISynergy.Framework.Windows.Samples.ViewModels
         {
             CommonServices = commonServices;
 
-            PopulateNavItems();
-
             Display_Command = new RelayCommand(async () => await OpenDisplayAsync());
+            Chart_Command = new RelayCommand(async () => await OpenChartAsync());
+
+            PopulateNavItems();
         }
 
         private Task OpenDisplayAsync() =>
             CommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
+
+        private Task OpenChartAsync() =>
+            CommonServices.NavigationService.NavigateAsync<ChartViewModel>();
 
         /// <summary>
         /// initialize as an asynchronous operation.
@@ -53,6 +58,7 @@ namespace ISynergy.Framework.Windows.Samples.ViewModels
         {
             PrimaryItems.Clear();
             PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["icon_kiosk"] as string, ForegroundColor, Display_Command));
+            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["tile_chart"] as string, ForegroundColor, Chart_Command));
         }
 
         protected override Task CreateFeedbackAsync()
