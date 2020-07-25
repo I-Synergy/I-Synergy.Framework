@@ -327,15 +327,13 @@ namespace ISynergy.Framework.Windows.Controls.Charts
 
                     if (DrawDebugRectangles)
                     {
-                        using (var paint = new SKPaint
+                        using var paint = new SKPaint
                         {
                             Style = SKPaintStyle.Fill,
                             Color = entry.Color,
                             IsStroke = true
-                        })
-                        {
-                            canvas.DrawRect(labelBounds, paint);
-                        }
+                        };
+                        canvas.DrawRect(labelBounds, paint);
                     }
 
                     if (isLeft)

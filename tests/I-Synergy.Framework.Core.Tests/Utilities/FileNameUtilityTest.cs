@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using ISynergy.Framework.Core.Extensions;
+using Xunit;
 
 namespace ISynergy.Framework.Core.Utilities
 {
