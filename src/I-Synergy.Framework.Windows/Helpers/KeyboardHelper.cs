@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Windows.Controls.Helpers
         public static bool IsModifierKeyDown(VirtualKey key)
         {
             var window = CoreWindow.GetForCurrentThread();
-            if (window == null)
+            if (window is null)
             {
                 return false;
             }

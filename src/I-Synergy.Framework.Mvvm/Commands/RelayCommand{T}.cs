@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <exception cref="ArgumentNullException">execute</exception>
         public RelayCommand(Action<T> execute, Func<T, bool> canExecute, bool keepTargetAlive = false)
         {
-            if (execute == null)
+            if (execute is null)
             {
                 throw new ArgumentNullException("execute");
             }
@@ -90,20 +90,20 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <returns>true if this command can be executed; otherwise, false.</returns>
         public bool CanExecute(object parameter)
         {
-            if (_canExecute == null)
+            if (_canExecute is null)
             {
                 return true;
             }
 
             if (_canExecute.IsStatic || _canExecute.IsAlive)
             {
-                if (parameter == null
+                if (parameter is null
                     && typeof(T).IsValueType)
                 {
                     return _canExecute.Execute(default);
                 }
 
-                if (parameter == null || parameter is T)
+                if (parameter is null || parameter is T)
                 {
                     return _canExecute.Execute((T)parameter);
                 }
@@ -134,7 +134,7 @@ namespace ISynergy.Framework.Mvvm.Commands
                 && _execute != null
                 && (_execute.IsStatic || _execute.IsAlive))
             {
-                if (val == null)
+                if (val is null)
                 {
                     if (typeof(T).IsValueType)
                     {

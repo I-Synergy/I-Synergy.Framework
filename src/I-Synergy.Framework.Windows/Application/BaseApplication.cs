@@ -311,7 +311,7 @@ namespace ISynergy.Framework.Windows
         {
             get
             {
-                if (_factory == null)
+                if (_factory is null)
                 {
                     _factory = new LoggerFactory();
                     ConfigureLogger(_factory);

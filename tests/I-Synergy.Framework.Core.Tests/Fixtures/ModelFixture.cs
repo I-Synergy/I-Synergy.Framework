@@ -26,7 +26,7 @@ namespace ISynergy.Framework.Core.Fixtures
 
         public override string ToString()
         {
-            if (Value == null)
+            if (Value is null)
             {
                 return string.Empty;
             }

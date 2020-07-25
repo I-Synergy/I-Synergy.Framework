@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// <exception cref="ArgumentNullException">textBlock</exception>
         internal void AddItemsToTextBlock(TextBlock textBlock)
         {
-            if (textBlock == null)
+            if (textBlock is null)
             {
                 throw new ArgumentNullException(nameof(textBlock));
             }

@@ -11,12 +11,10 @@ namespace ISynergy.Framework.Core.Data
     /// <summary>
     /// Class Property.
     /// Implements the <see cref="IProperty{T}" />
-    /// Implements the <see cref="INotifyPropertyChanged" />
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="IProperty{T}" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public class Property<T> : IProperty<T>, INotifyPropertyChanged
+    public class Property<T> : IProperty<T>
     {
 
         /// <summary>
@@ -141,14 +139,13 @@ namespace ISynergy.Framework.Core.Data
         /// <param name="storage">The storage.</param>
         /// <param name="value">The value.</param>
         /// <param name="callerMemberName">Name of the caller member.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        private bool Set<V>(ref V storage, V value, [CallerMemberName]string callerMemberName = null)
+        private void Set<V>(ref V storage, V value, [CallerMemberName]string callerMemberName = null)
         {
-            if (Equals(storage, value))
-                return false;
-            storage = value;
-            OnPropertyChanged(callerMemberName);
-            return true;
+            if (!Equals(storage, value))
+            {
+                storage = value;
+                OnPropertyChanged(callerMemberName);
+            }
         }
 
         /// <summary>

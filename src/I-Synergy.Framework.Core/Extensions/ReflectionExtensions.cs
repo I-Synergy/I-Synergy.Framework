@@ -18,10 +18,9 @@ namespace ISynergy.Framework.Core.Extensions
         public static string GetIdentityPropertyName<T>() where T : class
         {
             var result = typeof(T).GetProperties().Where(
-                    e => e.IsDefined(typeof(IdentityAttribute))
-                );
+                    e => e.IsDefined(typeof(IdentityAttribute)));
 
-            if (result.Count() > 0)
+            if (result.Any())
             {
                 return result.First().Name;
             }
@@ -43,7 +42,7 @@ namespace ISynergy.Framework.Core.Extensions
                     e => e.IsDefined(typeof(IdentityAttribute))
                 );
 
-            if (result.Count() > 0)
+            if (result.Any())
             {
                 return result.First().GetValue(_self);
             }
@@ -75,7 +74,7 @@ namespace ISynergy.Framework.Core.Extensions
                     e => e.IsDefined(typeof(IdentityAttribute))
                 );
 
-            if (result.Count() > 0)
+            if (result.Any())
             {
                 return result.First();
             }
@@ -117,7 +116,7 @@ namespace ISynergy.Framework.Core.Extensions
                     e => e.IsDefined(typeof(ParentIdentityAttribute))
                 );
 
-            if (result.Count() > 0)
+            if (result.Any())
             {
                 return result.First().Name;
             }
@@ -138,7 +137,7 @@ namespace ISynergy.Framework.Core.Extensions
                     e => e.IsDefined(typeof(ParentIdentityAttribute))
                 );
 
-            if (result.Count() > 0)
+            if (result.Any())
             {
                 return result.First().PropertyType;
             }

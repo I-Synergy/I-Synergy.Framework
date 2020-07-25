@@ -124,7 +124,7 @@ namespace ISynergy.Framework.Windows.Behaviors
             if (_property != null)
                 return _property;
             var context = (AssociatedObject as FrameworkElement)?.DataContext;
-            if (context == null)
+            if (context is null)
                 if (throwException) throw new NullReferenceException("AssociatedObject is not valid");
                 else return null;
             if (string.IsNullOrEmpty(PropertyName))

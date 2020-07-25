@@ -42,8 +42,8 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (_staticAction == null
-                    && Reference == null)
+                if (_staticAction is null
+                    && Reference is null)
                 {
                     return false;
                 }
@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Core.Events
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
         /// parameter to true if the action is using closures.</param>
         public WeakAction(Action<T> action, bool keepTargetAlive = false)
-            : this(action == null ? null : action.Target, action, keepTargetAlive)
+            : this(action is null ? null : action.Target, action, keepTargetAlive)
         {
         }
 

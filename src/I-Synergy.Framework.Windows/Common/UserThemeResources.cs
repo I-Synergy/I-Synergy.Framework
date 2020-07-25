@@ -138,7 +138,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// </summary>
         private static void EnsureCustomXamlResourceLoader()
         {
-            if (CustomXamlResourceLoader.Current == null)
+            if (CustomXamlResourceLoader.Current is null)
             {
                 CustomXamlResourceLoader.Current = new UserThemeResourceLoader();
             }

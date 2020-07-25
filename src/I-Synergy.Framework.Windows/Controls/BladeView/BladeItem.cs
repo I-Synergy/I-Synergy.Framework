@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Windows.Controls
             _closeButton = GetTemplateChild("CloseButton") as Button;
             _enlargeButton = GetTemplateChild("EnlargeButton") as Button;
 
-            if (_closeButton == null)
+            if (_closeButton is null)
             {
                 return;
             }
@@ -61,7 +61,7 @@ namespace ISynergy.Framework.Windows.Controls
             _closeButton.Click -= CloseButton_Click;
             _closeButton.Click += CloseButton_Click;
 
-            if (_enlargeButton == null)
+            if (_enlargeButton is null)
             {
                 return;
             }

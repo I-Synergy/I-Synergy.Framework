@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Core.Helpers
         {
             get
             {
-                if (_detectedDesignerPlatformLibrary == null)
+                if (_detectedDesignerPlatformLibrary is null)
                 {
                     _detectedDesignerPlatformLibrary = GetCurrentPlatform();
                 }
@@ -130,14 +130,14 @@ namespace ISynergy.Framework.Core.Helpers
             {
                 var dm = Type.GetType("System.ComponentModel.DesignerProperties, System.Windows, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e");
 
-                if (dm == null)
+                if (dm is null)
                 {
                     return false;
                 }
 
                 var dme = dm.GetTypeInfo().GetDeclaredProperty("IsInDesignTool");
 
-                if (dme == null)
+                if (dme is null)
                 {
                     return false;
                 }
@@ -173,7 +173,7 @@ namespace ISynergy.Framework.Core.Helpers
                     Type.GetType(
                         "System.ComponentModel.DesignerProperties, PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
 
-                if (dm == null)
+                if (dm is null)
                 {
                     return false;
                 }
@@ -186,8 +186,8 @@ namespace ISynergy.Framework.Core.Helpers
                 var typeFe =
                     Type.GetType("System.Windows.FrameworkElement, PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
 
-                if (dpd == null
-                    || typeFe == null)
+                if (dpd is null
+                    || typeFe is null)
                 {
                     return false;
                 }
@@ -197,7 +197,7 @@ namespace ISynergy.Framework.Core.Helpers
                     .GetDeclaredMethods("FromProperty")
                     .ToList();
 
-                if (fromPropertys == null
+                if (fromPropertys is null
                     || fromPropertys.Count == 0)
                 {
                     return false;
@@ -206,21 +206,21 @@ namespace ISynergy.Framework.Core.Helpers
                 var fromProperty = fromPropertys
                     .FirstOrDefault(mi => mi.IsPublic && mi.IsStatic && mi.GetParameters().Length == 2);
 
-                if (fromProperty == null)
+                if (fromProperty is null)
                 {
                     return false;
                 }
 
                 var descriptor = fromProperty.Invoke(null, new[] { dmp, typeFe });
 
-                if (descriptor == null)
+                if (descriptor is null)
                 {
                     return false;
                 }
 
                 var metaProp = dpd.GetTypeInfo().GetDeclaredProperty("Metadata");
 
-                if (metaProp == null)
+                if (metaProp is null)
                 {
                     return false;
                 }
@@ -228,15 +228,15 @@ namespace ISynergy.Framework.Core.Helpers
                 var metadata = metaProp.GetValue(descriptor, null);
                 var tPropMeta = Type.GetType("System.Windows.PropertyMetadata, WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
 
-                if (metadata == null
-                    || tPropMeta == null)
+                if (metadata is null
+                    || tPropMeta is null)
                 {
                     return false;
                 }
 
                 var dvProp = tPropMeta.GetTypeInfo().GetDeclaredProperty("DefaultValue");
 
-                if (dvProp == null)
+                if (dvProp is null)
                 {
                     return false;
                 }

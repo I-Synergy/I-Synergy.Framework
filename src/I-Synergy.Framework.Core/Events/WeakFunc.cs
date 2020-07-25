@@ -110,7 +110,7 @@ namespace ISynergy.Framework.Core.Events
         /// be kept as a hard reference, which might cause a memory leak. You should only set this
         /// parameter to true if the action is using closures.</param>
         public WeakFunc(Func<TResult> func, bool keepTargetAlive = false)
-            : this(func == null ? null : func.Target, func, keepTargetAlive)
+            : this(func is null ? null : func.Target, func, keepTargetAlive)
         {
         }
 
@@ -174,9 +174,9 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (_staticFunc == null
-                    && Reference == null
-                    && LiveReference == null)
+                if (_staticFunc is null
+                    && Reference is null
+                    && LiveReference is null)
                 {
                     return false;
                 }
@@ -216,7 +216,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (Reference == null)
+                if (Reference is null)
                 {
                     return null;
                 }
@@ -241,7 +241,7 @@ namespace ISynergy.Framework.Core.Events
                     return LiveReference;
                 }
 
-                if (FuncReference == null)
+                if (FuncReference is null)
                 {
                     return null;
                 }

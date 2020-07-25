@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -23,47 +24,45 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Generates the alpha numeric key.
         /// </summary>
-        /// <param name="self">The self.</param>
+        /// <param name="_self">The self.</param>
         /// <returns>System.String.</returns>
-        public static string GenerateAlphaNumericKey(this int self)
+        public static string GenerateAlphaNumericKey(this int _self)
         {
-            var vRawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
-            var vResult = new System.Text.StringBuilder();
+            var rawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
+            var result = new StringBuilder();
 
-            for (var i = 1; i <= self; i++)
+            for (var i = 1; i <= _self; i++)
             {
-                vResult.Append(vRawChars.Trim().Substring(
+                result.Append(rawChars.Trim().Substring(
                     Convert.ToInt32(
-                            new Random().Next(int.MaxValue) * (vRawChars.Length - 1)
-                            )
+                            new Random().Next(int.MaxValue) * (rawChars.Length - 1))
                         , 1)
                     );
             }
 
-            return vResult.ToString();
+            return result.ToString();
         }
 
         /// <summary>
         /// Generates the numeric key.
         /// </summary>
-        /// <param name="self">The self.</param>
+        /// <param name="_self">The self.</param>
         /// <returns>System.String.</returns>
-        public static string GenerateNumericKey(this int self)
+        public static string GenerateNumericKey(this int _self)
         {
-            var vRawChars = "0123456789";
-            var vResult = new System.Text.StringBuilder();
+            var rawChars = "0123456789";
+            var result = new StringBuilder();
 
-            for (var i = 1; i <= self; i++)
+            for (var i = 1; i <= _self; i++)
             {
-                vResult.Append(vRawChars.Trim().Substring(
+                result.Append(rawChars.Trim().Substring(
                     Convert.ToInt32(
-                        new Random().Next(int.MaxValue) * (vRawChars.Length - 1)
-                        )
+                        new Random().Next(int.MaxValue) * (rawChars.Length - 1))
                     , 1)
                 );
             }
 
-            return vResult.ToString();
+            return result.ToString();
         }
     }
 }

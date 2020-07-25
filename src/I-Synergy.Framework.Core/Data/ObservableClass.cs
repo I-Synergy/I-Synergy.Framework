@@ -13,11 +13,9 @@ namespace ISynergy.Framework.Core.Data
     /// <summary>
     /// Class ObservableClass.
     /// Implements the <see cref="IObservableClass" />
-    /// Implements the <see cref="INotifyPropertyChanged" />
     /// </summary>
     /// <seealso cref="IObservableClass" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class ObservableClass : IObservableClass, INotifyPropertyChanged
+    public abstract class ObservableClass : IObservableClass
     {
         /// <summary>
         /// Gets the validation trigger.

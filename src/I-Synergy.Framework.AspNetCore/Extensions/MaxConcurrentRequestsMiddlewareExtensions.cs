@@ -17,7 +17,7 @@ namespace ISynergy.Framework.AspNetCore.Extensions
         /// <exception cref="ArgumentNullException">app</exception>
         public static IApplicationBuilder UseMaxConcurrentRequests(this IApplicationBuilder app)
         {
-            if (app == null)
+            if (app is null)
             {
                 throw new ArgumentNullException(nameof(app));
             }

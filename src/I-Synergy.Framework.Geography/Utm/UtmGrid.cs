@@ -472,7 +472,7 @@ namespace ISynergy.Framework.Geography
         /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is UtmGrid))
+            if (obj is null || !(obj is UtmGrid))
                 return false;
             var other = (UtmGrid)obj;
             return ((IEquatable<UtmGrid>)this).Equals(other);

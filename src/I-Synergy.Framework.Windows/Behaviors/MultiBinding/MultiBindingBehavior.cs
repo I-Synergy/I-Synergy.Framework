@@ -133,7 +133,7 @@ namespace ISynergy.Framework.Windows.Behaviors
         /// </summary>
         private void Update()
         {
-            if (AssociatedObject == null || string.IsNullOrEmpty(PropertyName))
+            if (AssociatedObject is null || string.IsNullOrEmpty(PropertyName))
             {
                 return;
             }
@@ -157,7 +157,7 @@ namespace ISynergy.Framework.Windows.Behaviors
 
             PropertyInfo targetDependencyPropertyField = null;
 
-            while (targetDependencyPropertyField == null && targetType != null)
+            while (targetDependencyPropertyField is null && targetType != null)
             {
                 var targetTypeInfo = targetType.GetTypeInfo();
 

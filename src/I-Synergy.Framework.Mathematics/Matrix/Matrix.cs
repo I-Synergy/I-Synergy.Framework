@@ -105,7 +105,7 @@ namespace ISynergy.Framework.Mathematics
         {
             Matrix a = this, b = (Matrix)obj;
 
-            if (b == null)
+            if (b is null)
                 return false;
             if (a.Rows != b.Rows || a.Columns != b.Columns)
                 return false;

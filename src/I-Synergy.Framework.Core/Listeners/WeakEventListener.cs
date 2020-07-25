@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Core.Listeners
         /// <exception cref="ArgumentNullException">instance</exception>
         public WeakEventListener(TInstance instance)
         {
-            if (instance == null)
+            if (instance is null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }

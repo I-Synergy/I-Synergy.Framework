@@ -21,12 +21,11 @@ namespace ISynergy.Framework.Core.Extensions
         public static List<T> MapToList<T>(this IDataReader datareader)
         {
             var list = new List<T>();
-            T obj = default;
 
             while (datareader.Read())
             {
                 var fieldNames = Enumerable.Range(0, datareader.FieldCount).Select(i => datareader.GetName(i)).ToArray();
-                obj = TypeActivator.CreateInstance<T>();
+                T obj = TypeActivator.CreateInstance<T>();
 
                 foreach (var prop in obj.GetType().GetProperties().EnsureNotNull())
                 {

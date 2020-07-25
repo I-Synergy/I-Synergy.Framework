@@ -341,7 +341,7 @@ namespace ISynergy.Framework.Windows.Controls
         /// </summary>
         private void UpdateTranslateXY()
         {
-            if (_translate == null)
+            if (_translate is null)
             {
                 return;
             }
@@ -469,14 +469,14 @@ namespace ISynergy.Framework.Windows.Controls
                 _nextElement.DataContext = GetNext();
             }
 
-            if (currentItem == null)
+            if (currentItem is null)
             {
                 _currentIndex = -1;
                 _timer?.Stop();
                 return;
             }
 
-            if (_timer == null)
+            if (_timer is null)
             {
                 _timer = new DispatcherTimer() { Interval = GetTileDuration() };
                 _timer.Tick += Timer_Tick;

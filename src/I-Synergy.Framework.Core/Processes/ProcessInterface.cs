@@ -66,7 +66,7 @@ namespace ISynergy.Framework.Core.Processes
         /// <param name="e">The <see cref="DoWorkEventArgs" /> instance containing the event data.</param>
         void OutputWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (OutputWorker.CancellationPending == false && OutputReader != null)
+            while (!OutputWorker.CancellationPending && OutputReader != null)
             {
                 //  Any lines to read?
                 int count;
@@ -105,7 +105,7 @@ namespace ISynergy.Framework.Core.Processes
         /// <param name="e">The <see cref="DoWorkEventArgs" /> instance containing the event data.</param>
         void ErrorWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (ErrorWorker.CancellationPending == false && ErrorReader != null)
+            while (!ErrorWorker.CancellationPending && ErrorReader != null)
             {
                 //  Any lines to read?
                 int count;
@@ -193,7 +193,7 @@ namespace ISynergy.Framework.Core.Processes
         public void StopProcess()
         {
             //  Handle the trivial case.
-            if (IsProcessRunning == false)
+            if (!IsProcessRunning)
                 return;
 
             //  Kill the process.
@@ -352,7 +352,7 @@ namespace ISynergy.Framework.Core.Processes
             {
                 try
                 {
-                    return Process != null && Process.HasExited == false;
+                    return Process != null && !Process.HasExited;
                 }
                 catch
                 {
