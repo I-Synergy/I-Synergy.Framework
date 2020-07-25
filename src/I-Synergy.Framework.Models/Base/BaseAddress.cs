@@ -7,11 +7,11 @@ namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseAddress.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// Implements the <see cref="ISynergy.Framework.Models.Abstractions.IAddress" />
+    /// Implements the <see cref="ModelBase" />
+    /// Implements the <see cref="IAddress" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// <seealso cref="ISynergy.Framework.Models.Abstractions.IAddress" />
+    /// <seealso cref="ModelBase" />
+    /// <seealso cref="IAddress" />
     public abstract class BaseAddress : ModelBase, IAddress
     {
         /// <summary>

@@ -78,7 +78,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <param name="overwrite">if set to <c>true</c> [overwrite].</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Uri.</returns>
-        /// <exception cref="System.IO.IOException">CloudBlob not found.</exception>
+        /// <exception cref="IOException">CloudBlob not found.</exception>
         /// <exception cref="IOException">CloudBlob not found.</exception>
         public async Task<Uri> UploadFileAsync(byte[] fileBytes, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default)
         {
@@ -132,7 +132,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <param name="folder">The folder.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Uri.</returns>
-        /// <exception cref="System.IO.IOException">CloudBlob not found.</exception>
+        /// <exception cref="IOException">CloudBlob not found.</exception>
         /// <exception cref="IOException">CloudBlob not found.</exception>
         public async Task<Uri> UpdateFileAsync(byte[] fileBytes, string contentType, string filename, string folder, CancellationToken cancellationToken = default)
         {

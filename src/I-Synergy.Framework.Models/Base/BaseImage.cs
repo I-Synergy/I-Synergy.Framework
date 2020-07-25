@@ -6,9 +6,9 @@ namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseImage.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// Implements the <see cref="ModelBase" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// <seealso cref="ModelBase" />
     public abstract class BaseImage : ModelBase
     {
         /// <summary>

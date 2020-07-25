@@ -84,7 +84,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{1217ABA2
 		nuget\I-Synergy.Framework.AspNetCore.Authentication.nuspec = nuget\I-Synergy.Framework.AspNetCore.Authentication.nuspec
 		nuget\I-Synergy.Framework.AspNetCore.nuspec = nuget\I-Synergy.Framework.AspNetCore.nuspec
 		nuget\I-Synergy.Framework.Core.nuspec = nuget\I-Synergy.Framework.Core.nuspec
-		nuget\I-Synergy.Framework.Entities.nuspec = nuget\I-Synergy.Framework.Entities.nuspec
 		nuget\I-Synergy.Framework.EntityFramework.nuspec = nuget\I-Synergy.Framework.EntityFramework.nuspec
 		nuget\I-Synergy.Framework.Financial.nuspec = nuget\I-Synergy.Framework.Financial.nuspec
 		nuget\I-Synergy.Framework.Geography.nuspec = nuget\I-Synergy.Framework.Geography.nuspec
@@ -107,8 +106,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.MessageBus.Sample.Subscriber", "samples\I-Synergy.Framework.MessageBus.Sample.Subscriber\I-Synergy.Framework.MessageBus.Sample.Subscriber.csproj", "{81924AC4-C08F-4E9B-BD05-FB7F75291609}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Models", "src\I-Synergy.Framework.Models\I-Synergy.Framework.Models.csproj", "{3D70F4CE-2E91-43DE-B278-D75B06C4B38E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Entities", "src\I-Synergy.Framework.Entities\I-Synergy.Framework.Entities.csproj", "{5332B938-2158-4C3C-968A-630BFBE5D4D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.Windows.Samples", "samples\I-Synergy.Framework.Windows.Samples\I-Synergy.Framework.Windows.Samples.csproj", "{5E8B5AE3-C39B-4BA3-B5AA-E9EAD02104D2}"
 EndProject
@@ -679,26 +676,6 @@ Global
 		{3D70F4CE-2E91-43DE-B278-D75B06C4B38E}.Release|x64.Build.0 = Release|Any CPU
 		{3D70F4CE-2E91-43DE-B278-D75B06C4B38E}.Release|x86.ActiveCfg = Release|Any CPU
 		{3D70F4CE-2E91-43DE-B278-D75B06C4B38E}.Release|x86.Build.0 = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|ARM.Build.0 = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|x64.Build.0 = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Debug|x86.Build.0 = Debug|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|ARM.ActiveCfg = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|ARM.Build.0 = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|ARM64.Build.0 = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|x64.ActiveCfg = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|x64.Build.0 = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|x86.ActiveCfg = Release|Any CPU
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5}.Release|x86.Build.0 = Release|Any CPU
 		{5E8B5AE3-C39B-4BA3-B5AA-E9EAD02104D2}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{5E8B5AE3-C39B-4BA3-B5AA-E9EAD02104D2}.Debug|ARM.ActiveCfg = Debug|ARM
 		{5E8B5AE3-C39B-4BA3-B5AA-E9EAD02104D2}.Debug|ARM.Build.0 = Debug|ARM
@@ -798,7 +775,6 @@ Global
 		{58AC244E-38E5-4165-A25E-FEDAD3AD26C2} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 		{81924AC4-C08F-4E9B-BD05-FB7F75291609} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 		{3D70F4CE-2E91-43DE-B278-D75B06C4B38E} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
-		{5332B938-2158-4C3C-968A-630BFBE5D4D5} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{5E8B5AE3-C39B-4BA3-B5AA-E9EAD02104D2} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 		{EF2BC539-1E73-40B0-9E84-C3FE223BD6D6} = {600436D8-B218-4FC2-B2E0-90279B1D37D5}
 		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
