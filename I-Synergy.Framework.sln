@@ -113,6 +113,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Storage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "I-Synergy.Framework.Storage.Azure.Sample", "samples\I-Synergy.Framework.Storage.Azure.Sample\I-Synergy.Framework.Storage.Azure.Sample.csproj", "{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-Synergy.Framework.AspNetCore.Sample", "samples\I-Synergy.Framework.AspNetCore.Sample\I-Synergy.Framework.AspNetCore.Sample.csproj", "{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\I-Synergy.Framework.Messagebus.Sample.Shared\I-Synergy.Framework.Messagebus.Sample.Shared.projitems*{58ac244e-38e5-4165-a25e-fedad3ad26c2}*SharedItemsImports = 13
@@ -742,6 +744,26 @@ Global
 		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|x64.Build.0 = Release|Any CPU
 		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|x86.ActiveCfg = Release|Any CPU
 		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93}.Release|x86.Build.0 = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|ARM.Build.0 = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Debug|x86.Build.0 = Debug|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|ARM.ActiveCfg = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|ARM.Build.0 = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|ARM64.Build.0 = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|x64.Build.0 = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|x86.ActiveCfg = Release|Any CPU
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -778,6 +800,7 @@ Global
 		{5E8B5AE3-C39B-4BA3-B5AA-E9EAD02104D2} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 		{EF2BC539-1E73-40B0-9E84-C3FE223BD6D6} = {600436D8-B218-4FC2-B2E0-90279B1D37D5}
 		{07376E2B-1FF8-4A6F-8EE7-BAB87983BE93} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
+		{7CEBC784-2ED9-4B7F-BFBD-5323AA038DDA} = {FC51DC02-2A9C-43A7-951A-9083E1A19E8C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
