@@ -420,7 +420,7 @@ namespace ISynergy.Framework.Windows.Controls.Charts
         /// <returns>The async.</returns>
         /// <param name="entrance">If set to <c>true</c> entrance.</param>
         /// <param name="token">Token.</param>
-        public async Task AnimateAsync(bool entrance, CancellationToken token = default(CancellationToken))
+        public async Task AnimateAsync(bool entrance, CancellationToken token = default)
         {
             var watch = new Stopwatch();
 

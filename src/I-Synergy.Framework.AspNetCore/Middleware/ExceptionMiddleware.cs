@@ -53,7 +53,10 @@ namespace ISynergy.Framework.AspNetCore.Middleware
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             return context.Response
-                .WriteAsync(new ErrorDetail(context.Response.StatusCode, exception.Message, exception.GetType().FullName)
+                .WriteAsync(new ErrorDetail(
+                    context.Response.StatusCode, 
+                    exception.Message, 
+                    exception.GetType().FullName)
                 .ToString());
         }
     }
