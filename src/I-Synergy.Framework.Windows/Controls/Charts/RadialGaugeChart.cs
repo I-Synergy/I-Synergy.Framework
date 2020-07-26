@@ -6,9 +6,9 @@ namespace ISynergy.Framework.Windows.Controls.Charts
 {
     /// <summary>
     /// Class RadialGaugeChart.
-    /// Implements the <see cref="ISynergy.Framework.Windows.Controls.Charts.Chart" />
+    /// Implements the <see cref="Chart" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Windows.Controls.Charts.Chart" />
+    /// <seealso cref="Chart" />
     public class RadialGaugeChart : Chart
     {
         /// <summary>
@@ -131,7 +131,7 @@ namespace ISynergy.Framework.Windows.Controls.Charts
         private void DrawCaption(SKCanvas canvas, int width, int height)
         {
             var rightValues = Entries.Take(Entries.Count() / 2).ToList();
-            var leftValues = Entries.Skip(rightValues.Count()).ToList();
+            var leftValues = Entries.Skip(rightValues.Count).ToList();
 
             leftValues.Reverse();
 

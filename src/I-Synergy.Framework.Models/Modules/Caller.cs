@@ -8,11 +8,11 @@ namespace ISynergy.Framework.Models.Modules
 {
     /// <summary>
     /// Class Caller.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// Implements the <see cref="ISynergy.Framework.Models.Abstractions.ICaller" />
+    /// Implements the <see cref="ModelBase" />
+    /// Implements the <see cref="ICaller" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// <seealso cref="ISynergy.Framework.Models.Abstractions.ICaller" />
+    /// <seealso cref="ModelBase" />
+    /// <seealso cref="ICaller" />
     public class Caller : ModelBase, ICaller
     {
         /// <summary>

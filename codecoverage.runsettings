@@ -12,7 +12,6 @@
                                 <ModulePath>.*\I-Synergy.Framework.AspNetCore.Authentication.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Core.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Core.Linq.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Entities.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.EntityFramework.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Financial.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Geography.dll</ModulePath>
@@ -21,8 +20,6 @@
                                 <ModulePath>.*\I-Synergy.Framework.MessageBus.Azure.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Models.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Mvvm.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Payment.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Payment.Mollie.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Storage.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Storage.Azure.dll</ModulePath>
                                 <ModulePath>.*\I-Synergy.Framework.Windows.dll</ModulePath>

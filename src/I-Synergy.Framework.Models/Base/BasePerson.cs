@@ -7,9 +7,9 @@ namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BasePerson.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// Implements the <see cref="ModelBase" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// <seealso cref="ModelBase" />
     public class BasePerson : ModelBase
     {
         /// <summary>

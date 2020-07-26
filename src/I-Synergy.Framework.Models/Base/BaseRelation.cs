@@ -5,9 +5,9 @@ namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseRelation.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// Implements the <see cref="ModelBase" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// <seealso cref="ModelBase" />
     public abstract class BaseRelation : ModelBase
     {
         /// <summary>

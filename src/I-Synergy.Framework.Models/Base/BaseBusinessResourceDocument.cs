@@ -8,9 +8,9 @@ namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseBusinessResourceDocumentBasic.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// Implements the <see cref="ModelBase" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// <seealso cref="ModelBase" />
     public abstract class BaseBusinessResourceDocumentBasic : ModelBase
     {
         /// <summary>
@@ -379,9 +379,9 @@ namespace ISynergy.Framework.Models.Base
 
     /// <summary>
     /// Class BaseBusinessResourceDocumentSearch.
-    /// Implements the <see cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentBasic" />
+    /// Implements the <see cref="BaseBusinessResourceDocumentBasic" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentBasic" />
+    /// <seealso cref="BaseBusinessResourceDocumentBasic" />
     public abstract class BaseBusinessResourceDocumentSearch : BaseBusinessResourceDocumentBasic
     {
         /// <summary>
@@ -421,9 +421,9 @@ namespace ISynergy.Framework.Models.Base
 
     /// <summary>
     /// Class BaseBusinessResourceDocumentBase.
-    /// Implements the <see cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentSearch" />
+    /// Implements the <see cref="BaseBusinessResourceDocumentSearch" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentSearch" />
+    /// <seealso cref="BaseBusinessResourceDocumentSearch" />
     public abstract class BaseBusinessResourceDocumentBase : BaseBusinessResourceDocumentSearch
     {
         /// <summary>
@@ -801,10 +801,10 @@ namespace ISynergy.Framework.Models.Base
 
     /// <summary>
     /// Class BaseBusinessResourceDocument.
-    /// Implements the <see cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentBase" />
+    /// Implements the <see cref="BaseBusinessResourceDocumentBase" />
     /// </summary>
     /// <typeparam name="TEntityLine">The type of the t entity line.</typeparam>
-    /// <seealso cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentBase" />
+    /// <seealso cref="BaseBusinessResourceDocumentBase" />
     public abstract class BaseBusinessResourceDocument<TEntityLine> : BaseBusinessResourceDocumentBase
         where TEntityLine : BaseBusinessResourceDocumentLine, new()
     {

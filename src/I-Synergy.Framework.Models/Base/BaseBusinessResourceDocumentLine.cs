@@ -8,9 +8,9 @@ namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Class BaseBusinessResourceDocumentLineBase.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// Implements the <see cref="ModelBase" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// <seealso cref="ModelBase" />
     public abstract class BaseBusinessResourceDocumentLineBase : ModelBase
     {
         /// <summary>
@@ -295,9 +295,9 @@ namespace ISynergy.Framework.Models.Base
 
     /// <summary>
     /// Class BaseBusinessResourceDocumentLine.
-    /// Implements the <see cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentLineBase" />
+    /// Implements the <see cref="BaseBusinessResourceDocumentLineBase" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Models.Base.BaseBusinessResourceDocumentLineBase" />
+    /// <seealso cref="BaseBusinessResourceDocumentLineBase" />
     public abstract class BaseBusinessResourceDocumentLine : BaseBusinessResourceDocumentLineBase
     {
     }

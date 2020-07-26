@@ -13,6 +13,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.AspNetCore.Extensions;
 
 namespace ISynergy.Framework.AspNetCore
 {
@@ -98,6 +99,8 @@ namespace ISynergy.Framework.AspNetCore
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            app.ConfigureExceptionHandlerMiddleware();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
