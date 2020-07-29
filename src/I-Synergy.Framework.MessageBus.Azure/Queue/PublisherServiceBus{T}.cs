@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
@@ -7,6 +7,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace ISynergy.Framework.MessageBus.Azure.Queue
 {
@@ -58,8 +59,8 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
             {
                 var sender = new MessageSender(_option.ConnectionString, _option.QueueName);
 
-                var body = JsonSerializer.SerializeToUtf8Bytes(queueMessage);
-                var message = new Message(body);
+                var body = JsonConvert.SerializeObject(queueMessage);
+                var message = new Message(Encoding.UTF8.GetBytes(body));
 
                 //If a session id is provided, add message to session.
                 if (sessionId != Guid.Empty)
