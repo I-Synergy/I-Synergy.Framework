@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="source">The object instance to copy.</param>
         /// <returns>The copied object.</returns>
         public static T Clone<T>(this T source) =>
-            JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(source));
+            JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source));
 
         /// <summary>
         /// Checks if object is of a nullable type.

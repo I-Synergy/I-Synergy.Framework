@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -37,7 +37,7 @@ namespace ISynergy.Framework.Windows.Extensions
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
             var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = JsonSerializer.Serialize(content);
+            var fileContent = JsonConvert.SerializeObject(content);
 
             await FileIO.WriteTextAsync(file, fileContent);
         }
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Windows.Extensions
             var file = await folder.GetFileAsync($"{name}.json");
             var fileContent = await FileIO.ReadTextAsync(file);
 
-            return JsonSerializer.Deserialize<T>(fileContent);
+            return JsonConvert.DeserializeObject<T>(fileContent);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace ISynergy.Framework.Windows.Extensions
         /// <param name="value">The value.</param>
         public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, JsonSerializer.Serialize(value));
+            settings.SaveString(key, JsonConvert.SerializeObject(value));
             return Task.CompletedTask;
         }
 
@@ -97,7 +97,7 @@ namespace ISynergy.Framework.Windows.Extensions
         {
             if (settings.Values.TryGetValue(key, out var obj))
             {
-                return Task.FromResult(JsonSerializer.Deserialize<T>((string)obj));
+                return Task.FromResult(JsonConvert.DeserializeObject<T>((string)obj));
             }
 
             return default;

@@ -18,11 +18,12 @@ namespace ISynergy.Framework.AspNetCore.Sample
 
             services
                 .AddMvc()
-                .AddJsonOptions(options =>
+                .AddNewtonsoftJson(options =>
                 {
                     //Use the default property(Pascal) casing.
-                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.UseMemberCasing();
+                    options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
                 });
         }
     }
