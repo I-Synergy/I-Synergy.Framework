@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -89,53 +90,10 @@ namespace ISynergy.Framework.Windows.Samples
                 });
         }
 
-        public override async Task HandleException(Exception ex, string message)
+        public override Task HandleException(Exception ex, string message)
         {
-            var connections = NetworkInformation.GetInternetConnectionProfile();
-
-            if (connections?.GetNetworkConnectivityLevel() != NetworkConnectivityLevel.InternetAccess)
-            {
-                await ServiceLocator.Default.GetInstance<IDialogService>().ShowInformationAsync(
-                    ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT_INTERNET"));
-            }
-            else
-            {
-                if (ex is NotImplementedException)
-                {
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowInformationAsync(
-                        ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_FUTURE_MODULE"));
-                }
-                else if (ex is UnauthorizedAccessException accessException)
-                {
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(accessException.Message);
-                }
-                else if (ex is IOException iOException)
-                {
-                    if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
-                    {
-                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_FILEINUSE"));
-                    }
-                    else
-                    {
-                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
-                    }
-                }
-                else if (ex is ArgumentException argumentException)
-                {
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowWarningAsync(
-                        string.Format(
-                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_ARGUMENTNULL"),
-                            argumentException.ParamName)
-                        );
-                }
-                else
-                {
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
-                }
-            }
+            Debug.WriteLine(message);
+            return Task.CompletedTask;
         }
     }
 }
