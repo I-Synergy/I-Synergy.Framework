@@ -103,6 +103,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -131,7 +132,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Context\Context.cs" />
-    <Compile Include="Data\ChartData.cs" />
     <Compile Include="Options\AppCenterOptions.cs" />
     <Compile Include="Options\ConfigurationOptions.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
@@ -148,11 +148,7 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TelemetryService.cs" />
     <Compile Include="Services\UpdateService.cs" />
-    <Compile Include="ViewModels\ChartViewModel.cs" />
     <Compile Include="ViewModels\SlideShowViewModel.cs" />
-    <Compile Include="Views\ChartView.xaml.cs">
-      <DependentUpon>ChartView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -235,10 +231,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ChartView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -253,10 +245,7 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.4.2</Version>
-    </PackageReference>
-    <PackageReference Include="Moq">
-      <Version>4.14.5</Version>
+      <Version>2.4.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

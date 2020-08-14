@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Listeners;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Windows.Abstractions.Views;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;

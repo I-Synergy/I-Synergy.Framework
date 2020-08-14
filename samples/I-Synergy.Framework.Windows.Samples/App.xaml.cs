@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
@@ -15,6 +17,7 @@ using ISynergy.Framework.Windows.Samples.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
+using Windows.Networking.Connectivity;
 
 namespace ISynergy.Framework.Windows.Samples
 {
@@ -89,7 +92,8 @@ namespace ISynergy.Framework.Windows.Samples
 
         public override Task HandleException(Exception ex, string message)
         {
-            throw new NotImplementedException();
+            Debug.WriteLine(message);
+            return Task.CompletedTask;
         }
     }
 }
