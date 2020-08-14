@@ -141,24 +141,6 @@
     <Compile Include="Common\Result.cs" />
     <Compile Include="Common\UserThemeResourceLoader.cs" />
     <Compile Include="Common\UserThemeResources.cs" />
-    <Compile Include="Controls\Charts\BarChart.cs" />
-    <Compile Include="Controls\Charts\Chart.cs" />
-    <Compile Include="Controls\Charts\ChartView.cs" />
-    <Compile Include="Controls\Charts\Enumerations\GraphPosition.cs" />
-    <Compile Include="Controls\Charts\Enumerations\LabelMode.cs" />
-    <Compile Include="Controls\Charts\Enumerations\LineMode.cs" />
-    <Compile Include="Controls\Charts\Enumerations\Orientation.cs" />
-    <Compile Include="Controls\Charts\Enumerations\PointMode.cs" />
-    <Compile Include="Controls\Charts\DonutChart.cs" />
-    <Compile Include="Controls\Charts\Events\InvalidatedWeakEventHandler.cs" />
-    <Compile Include="Controls\Charts\Extensions\CanvasExtensions.cs" />
-    <Compile Include="Controls\Charts\Helpers\RadialHelpers.cs" />
-    <Compile Include="Controls\Charts\LineChart.cs" />
-    <Compile Include="Controls\Charts\Models\ChartEntry.cs" />
-    <Compile Include="Controls\Charts\PieChart.cs" />
-    <Compile Include="Controls\Charts\PointChart.cs" />
-    <Compile Include="Controls\Charts\RadarChart.cs" />
-    <Compile Include="Controls\Charts\RadialGaugeChart.cs" />
     <Compile Include="Controls\CompositionShadow.xaml.cs">
       <DependentUpon>CompositionShadow.xaml</DependentUpon>
     </Compile>
@@ -209,11 +191,6 @@
     <Compile Include="Controls\ErrorPresenter\ErrorPresenter.xaml.cs">
       <DependentUpon>ErrorPresenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Expander\ExpandDirection.cs" />
-    <Compile Include="Controls\Expander\Expander.Constants.cs" />
-    <Compile Include="Controls\Expander\Expander.cs" />
-    <Compile Include="Controls\Expander\Expander.Events.cs" />
-    <Compile Include="Controls\Expander\Expander.Properties.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\DispatcherExtensions.cs" />
     <Compile Include="Extensions\FrameExtensions.cs" />
@@ -222,9 +199,6 @@
     <Compile Include="Extensions\ResourceExtensions.cs" />
     <Compile Include="Extensions\SettingsStorageExtensions.cs" />
     <Compile Include="Functions\LocalizationFunctions.cs" />
-    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
-    <Compile Include="Controls\HeaderedTextBlock\HeaderedTextBlock.cs" />
-    <Compile Include="Controls\HeaderedTextBlock\HeaderedTextBlock.Properties.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\ImagePicker.cs" />
@@ -236,8 +210,6 @@
     <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Helpers\UploadImageHelper.cs" />
     <Compile Include="Helpers\VisualHelpers.cs" />
-    <Compile Include="Controls\LayoutTransformControl\LayoutTransformControl.cs" />
-    <Compile Include="Controls\LayoutTransformControl\PropertyChangeEventSource.cs" />
     <Compile Include="Locators\DialogTypeLocator.cs" />
     <Compile Include="Locators\DialogTypeLocatorCache.cs" />
     <Compile Include="Locators\IDialogTypeLocator.cs" />
@@ -245,7 +217,6 @@
     <Compile Include="Navigation\MenuItemTemplateSelector.cs" />
     <Compile Include="Navigation\NavigationItem.cs" />
     <Compile Include="Controls\RadioButton\IconRadioButton.cs" />
-    <Compile Include="Controls\RotatorTile\RotatorTile.cs" />
     <Compile Include="Controls\TextBox\TextBoxAttached.cs" />
     <Compile Include="Controls\Tiles\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
@@ -259,7 +230,6 @@
     <Compile Include="Controls\Validation\ControlWrapper.cs" />
     <Compile Include="Controls\Views\View.cs" />
     <Compile Include="Controls\Windows\Window.cs" />
-    <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
     <Compile Include="Controls\Wrappers\InlineCollectionWrapper.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -289,25 +259,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json">
-      <Version>3.1.6</Version>
+      <Version>3.1.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging">
-      <Version>3.1.6</Version>
+      <Version>3.1.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>6.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.4.2</Version>
+      <Version>2.4.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="SkiaSharp">
-      <Version>2.80.1</Version>
-    </PackageReference>
-    <PackageReference Include="SkiaSharp.Views">
-      <Version>2.80.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -327,31 +294,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Expander\Expander.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\HeaderedTextBlock\HeaderedTextBlock.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\ImageView\ImageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\LayoutTransformControl\LayoutTransformControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\Menu\BaseMenu.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\RotatorTile\RotatorTile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
