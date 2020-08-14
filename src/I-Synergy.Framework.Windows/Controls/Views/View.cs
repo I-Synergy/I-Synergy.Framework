@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Listeners;
-using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;

@@ -9,11 +9,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
                 <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/BladeView/BladeView.xaml" />
-                <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/Expander/Expander.xaml" />
-                <!--<ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/HeaderedContentControl/HeaderedContentControl.xaml" />-->
-                <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/HeaderedTextBlock/HeaderedTextBlock.xaml" />
-                <!--<ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/LayoutTransformControl/LayoutTransformControl.xaml" />-->
-                <!--<ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/RotatorTile/RotatorTile.xaml" />-->
                 <ResourceDictionary Source="ms-appx:///I-Synergy.Framework.Windows/Controls/Validation/ControlWrapper.xaml" />
                 <ResourceDictionary Source="ms-appx:///Assets/Images.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Style.xaml" />
