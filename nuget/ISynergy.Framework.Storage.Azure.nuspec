@@ -27,8 +27,8 @@
   
   <files>
     <file src="Icon_128.png" target="" />
-    <file src="$AssemblyFolder$\ISynergy.Framework.Storage.Azure\$BuildConfiguration$\netcoreapp3.1\$projectname$.deps.json" target="lib\netcoreapp3.1" />
-    <file src="$AssemblyFolder$\ISynergy.Framework.Storage.Azure\$BuildConfiguration$\netcoreapp3.1\$projectname$.dll" target="lib\netcoreapp3.1" />
-    <file src="$AssemblyFolder$\ISynergy.Framework.Storage.Azure\$BuildConfiguration$\netcoreapp3.1\$projectname$.pdb" target="lib\netcoreapp3.1" />
+    <file src="$AssemblyFolder$\ISynergy.Framework.Storage.Azure\$BuildConfiguration$\netcoreapp3.1\ISynergy.Framework.Storage.Azure.deps.json" target="lib\netcoreapp3.1" />
+    <file src="$AssemblyFolder$\ISynergy.Framework.Storage.Azure\$BuildConfiguration$\netcoreapp3.1\ISynergy.Framework.Storage.Azure.dll" target="lib\netcoreapp3.1" />
+    <file src="$AssemblyFolder$\ISynergy.Framework.Storage.Azure\$BuildConfiguration$\netcoreapp3.1\ISynergy.Framework.Storage.Azure.pdb" target="lib\netcoreapp3.1" />
   </files>
 </package>

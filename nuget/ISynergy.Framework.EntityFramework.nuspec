@@ -27,8 +27,8 @@
   
   <files>
     <file src="Icon_128.png" target="" />
-    <file src="$AssemblyFolder$\ISynergy.Framework.EntityFramework\$BuildConfiguration$\netcoreapp3.1\$projectname$.deps.json" target="lib\netcoreapp3.1" />
-    <file src="$AssemblyFolder$\ISynergy.Framework.EntityFramework\$BuildConfiguration$\netcoreapp3.1\$projectname$.dll" target="lib\netcoreapp3.1" />
-    <file src="$AssemblyFolder$\ISynergy.Framework.EntityFramework\$BuildConfiguration$\netcoreapp3.1\$projectname$.pdb" target="lib\netcoreapp3.1" />
+    <file src="$AssemblyFolder$\ISynergy.Framework.EntityFramework\$BuildConfiguration$\netcoreapp3.1\ISynergy.Framework.EntityFramework.deps.json" target="lib\netcoreapp3.1" />
+    <file src="$AssemblyFolder$\ISynergy.Framework.EntityFramework\$BuildConfiguration$\netcoreapp3.1\ISynergy.Framework.EntityFramework.dll" target="lib\netcoreapp3.1" />
+    <file src="$AssemblyFolder$\ISynergy.Framework.EntityFramework\$BuildConfiguration$\netcoreapp3.1\ISynergy.Framework.EntityFramework.pdb" target="lib\netcoreapp3.1" />
   </files>
 </package>
