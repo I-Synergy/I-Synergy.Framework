@@ -8,7 +8,7 @@
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ISynergy.Framework.Windows.Samples</RootNamespace>
-    <AssemblyName>I-Synergy.Framework.Windows.Samples</AssemblyName>
+    <AssemblyName>ISynergy.Framework.Windows.Samples</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -249,17 +249,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj">
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj">
       <Project>{90f74f51-a863-4229-ae7b-d6a8d22ad1be}</Project>
-      <Name>I-Synergy.Framework.Core</Name>
+      <Name>ISynergy.Framework.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\I-Synergy.Framework.Mvvm\I-Synergy.Framework.Mvvm.csproj">
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj">
       <Project>{21628459-8f0e-465a-b67c-192b9bdd5e6e}</Project>
-      <Name>I-Synergy.Framework.Mvvm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj">
-      <Project>{035d0b2d-a55d-42ed-a654-44661e48a2f7}</Project>
-      <Name>I-Synergy.Framework.Windows</Name>
+      <Name>ISynergy.Framework.Mvvm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

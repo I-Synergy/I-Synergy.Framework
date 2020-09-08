@@ -86,7 +86,7 @@ namespace ISynergy.Framework.Windows.Samples
             //Load assemblies
             RegisterAssemblies(new List<Assembly>
                 {
-                    Assembly.Load("I-Synergy.Framework.Windows.Samples")
+                    Assembly.Load("ISynergy.Framework.Windows.Samples")
                 });
         }
 

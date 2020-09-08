@@ -4,21 +4,21 @@
       "src": [
         {
           "files": [
-            "src/I-Synergy.Framework.Core/I-Synergy.Framework.Core.csproj",
-            "src/I-Synergy.Framework.AspNetCore/I-Synergy.Framework.AspNetCore.csproj",
-            "src/I-Synergy.Framework.AspNetCore.Authentication/I-Synergy.Framework.AspNetCore.Authentication.csproj",
-            "src/I-Synergy.Framework.EntityFramework/I-Synergy.Framework.EntityFramework.csproj",
-            "src/I-Synergy.Framework.Financial/I-Synergy.Framework.Financial.csproj",
-            "src/I-Synergy.Framework.Models/I-Synergy.Framework.Models.csproj",
-            "src/I-Synergy.Framework.Entities/I-Synergy.Framework.Entities.csproj",
-            "src/I-Synergy.Framework.Geography/I-Synergy.Framework.Geography.csproj",
-            "src/I-Synergy.Framework.Mathematics/I-Synergy.Framework.Mathematics.csproj",
-            "src/I-Synergy.Framework.MessageBus/I-Synergy.Framework.MessageBus.csproj",
-            "src/I-Synergy.Framework.MessageBus.Azure/I-Synergy.Framework.MessageBus.Azure.csproj",
-            "src/I-Synergy.Framework.Mvvm/I-Synergy.Framework.Mvvm.csproj",
-            "src/I-Synergy.Framework.Storage/I-Synergy.Framework.Storage.csproj",
-            "src/I-Synergy.Framework.Storage.Azure/I-Synergy.Framework.Storage.Azure.csproj",
-            "src/I-Synergy.Framework.Windows/I-Synergy.Framework.Windows.csproj" 
+            "src/ISynergy.Framework.Core/ISynergy.Framework.Core.csproj",
+            "src/ISynergy.Framework.AspNetCore/ISynergy.Framework.AspNetCore.csproj",
+            "src/ISynergy.Framework.AspNetCore.Authentication/ISynergy.Framework.AspNetCore.Authentication.csproj",
+            "src/ISynergy.Framework.EntityFramework/ISynergy.Framework.EntityFramework.csproj",
+            "src/ISynergy.Framework.Financial/ISynergy.Framework.Financial.csproj",
+            "src/ISynergy.Framework.Models/ISynergy.Framework.Models.csproj",
+            "src/ISynergy.Framework.Entities/ISynergy.Framework.Entities.csproj",
+            "src/ISynergy.Framework.Geography/ISynergy.Framework.Geography.csproj",
+            "src/ISynergy.Framework.Mathematics/ISynergy.Framework.Mathematics.csproj",
+            "src/ISynergy.Framework.MessageBus/ISynergy.Framework.MessageBus.csproj",
+            "src/ISynergy.Framework.MessageBus.Azure/ISynergy.Framework.MessageBus.Azure.csproj",
+            "src/ISynergy.Framework.Mvvm/ISynergy.Framework.Mvvm.csproj",
+            "src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj",
+            "src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj",
+            "src/ISynergy.Framework.Windows/ISynergy.Framework.Windows.csproj" 
           ],
           "src": "..",
           "exclude": [

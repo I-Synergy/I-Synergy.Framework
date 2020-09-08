@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>717ffbcd-46f9-4af3-8713-b6ffb6baa6de</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ISynergy.Framework.UI.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\Providers\IAuthenticationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\Services\IThemeSelectorService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\Views\IShellView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\Windows\IThemeWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\CloseFlyoutAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\OpenFlyoutAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Adapters\FrameAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Adapters\IFrameAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\BaseApplication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Attachers\ValidationBehaviorAttacher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\AuthorizationBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Base\BehaviorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MultiBinding\MultiBindingBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MultiBinding\MultiBindingItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MultiBinding\MultiBindingItemCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\MultiSelection\MultiSelectionBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\NumericTextBoxBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\ValidationBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\DependencyObjectCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DeferredNavigation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DialogBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Result.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\UserThemeResourceLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\UserThemeResources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BladeView\BladeItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BladeView\BladeItem.Events.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BladeView\BladeItem.Properties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BladeView\BladeMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BladeView\BladeView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BladeView\BladeView.Events.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\BladeView\BladeView.Properties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Buttons\BaseDialogButtons.xaml.cs">
+      <DependentUpon>BaseDialogButtons.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Console\Console.xaml.cs">
+      <DependentUpon>Console.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ErrorPresenter\ErrorPresenter.xaml.cs">
+      <DependentUpon>ErrorPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ImageView\ImageView.xaml.cs">
+      <DependentUpon>ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Menu\BaseMenu.xaml.cs">
+      <DependentUpon>BaseMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton\IconRadioButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TextBox\TextBoxAttached.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Tiles\Tile.xaml.cs">
+      <DependentUpon>Tile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Views\View.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Windows\Window.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Wrappers\InlineCollectionWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\AutoSuggestQueryParameterConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\BladeConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\BooleanConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ByteConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ChangeTrackingConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\CollectionConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ColorConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\CurrencyConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\DashboardConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\DateTimeConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\DateTimeOffsetConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\DecimalConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\DecimalFormatConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\DoubleConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\EnumConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\GuidConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\IntegerConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\NullObjectConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\NumberFormatConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\PageConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ResourceConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\SelectionModeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\StateConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\StringConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\TimeSpanConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\ContentDialogFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\ContentDialogWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\FileOpen\FileOpenPickerSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\FileOpen\FileOpenPickerWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\FileSave\FileSavePickerSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\FileSave\FileSavePickerWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\Folder\FolderPickerSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\Folder\FolderPickerWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\IContentDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\IContentDialogFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DispatcherExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\FrameExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ListViewExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\MatrixExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ResourceExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SettingsStorageExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Functions\LocalizationFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ColorHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ImageHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ImagePicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\KeyboardHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\NavigationAnimationHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\NavigationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ResourceHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SingletonHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TitleBarHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\UploadImageHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\VisualHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locators\DialogTypeLocator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locators\DialogTypeLocatorCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locators\IDialogTypeLocator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\LanguageResource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\MessageBoxViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Navigation\MenuItemTemplateSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Navigation\NavigationItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Providers\AuthenticationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ApplicationSettingsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Base\BaseCommonService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Base\BaseFileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\BusyService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ConverterService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DialogService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\InfoService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\NavigationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ThemeSelectorService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\UIVisualizerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\FileDialogSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\FolderBrowserDialogSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\MessageBoxSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\OpenFileDialogSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\SaveFileDialogSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triggers\BooleanDataTrigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triggers\DecimalDataTrigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triggers\IntegerDataTrigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triggers\ObjectDataTrigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LanguageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\PincodeViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ThemeViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\BladeView\BladeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Buttons\BaseDialogButtons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Console\Console.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\ErrorPresenter\ErrorPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\ImageView\ImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Menu\BaseMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Tiles\Tile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Theme.Default.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Theme.Gold.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Theme.Lime.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Theme.Magenta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Theme.Maroon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Theme.OrangeRed.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Theme.RoyalBlue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\ISynergy.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\segoesb.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\segoeui.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\segoeuib.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\segoeuil.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\Error.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\Information.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\Question.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\Refresh.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\Warning.png" />
+  </ItemGroup>
+</Project>

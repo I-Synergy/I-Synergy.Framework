@@ -28,4 +28,4 @@ ___
 | [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage.Azure) |
 | [I-Synergy.Framework.Payment](https://www.nuget.org/packages/I-Synergy.Framework.Payment/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Payment) |
 | [I-Synergy.Framework.Payment.Mollie](https://www.nuget.org/packages/I-Synergy.Framework.Payment.Mollie/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Payment.Mollie) |
-| [I-Synergy.Framework.Windows](https://www.nuget.org/packages/I-Synergy.Framework.Windows/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Windows) |
+| [I-Synergy.Framework.UI](https://www.nuget.org/packages/I-Synergy.Framework.UI/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI) |

@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\I-Synergy.Framework.Payment.Mollie\I-Synergy.Framework.Payment.Mollie.csproj" />
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj" />
   </ItemGroup>
 
 </Project>
