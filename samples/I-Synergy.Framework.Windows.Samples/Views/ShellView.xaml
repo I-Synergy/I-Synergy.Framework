@@ -58,7 +58,7 @@
             </muxc:NavigationView.AutoSuggestBox>-->
 
             <!--<muxc:NavigationView.PaneHeader>
-                <TextBlock FontFamily="ms-appx:///I-Synergy.Framework.Windows/Assets/Fonts/I-Synergy.ttf#I-Synergy" Text="0" FontSize="22" />
+                <TextBlock FontFamily="ms-appx:///ISynergy.Framework.Windows/Assets/Fonts/ISynergy.ttf#I-Synergy" Text="0" FontSize="22" />
             </muxc:NavigationView.PaneHeader>-->
 
             <muxc:NavigationView.PaneFooter>

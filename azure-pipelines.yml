@@ -31,7 +31,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Core'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.Core\I-Synergy.Framework.Core.csproj'
+            projects: 'src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -40,7 +40,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.AspNetCore\I-Synergy.Framework.AspNetCore.csproj'
+            projects: 'src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -49,7 +49,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Authentication'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.AspNetCore.Authentication\I-Synergy.Framework.AspNetCore.Authentication.csproj'
+            projects: 'src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -58,7 +58,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.EntityFramework'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.EntityFramework\I-Synergy.Framework.EntityFramework.csproj'
+            projects: 'src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -67,7 +67,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Financial'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.Financial\I-Synergy.Framework.Financial.csproj'
+            projects: 'src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -76,7 +76,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Models'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.Models\I-Synergy.Framework.Models.csproj'
+            projects: 'src\ISynergy.Framework.Models\ISynergy.Framework.Models.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -85,7 +85,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Geography'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.Geography\I-Synergy.Framework.Geography.csproj'
+            projects: 'src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -94,7 +94,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Mathematics'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.Mathematics\I-Synergy.Framework.Mathematics.csproj'
+            projects: 'src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -103,7 +103,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.MessageBus'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.MessageBus\I-Synergy.Framework.MessageBus.csproj'
+            projects: 'src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -112,7 +112,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.MessageBus.Azure'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.MessageBus.Azure\I-Synergy.Framework.MessageBus.Azure.csproj'
+            projects: 'src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -121,7 +121,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Mvvm'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.Mvvm\I-Synergy.Framework.Mvvm.csproj'
+            projects: 'src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -130,7 +130,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Storage'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.Storage\I-Synergy.Framework.Storage.csproj'
+            projects: 'src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -139,7 +139,7 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Storage.Azure'
           inputs:
             command: build
-            projects: 'src\I-Synergy.Framework.Storage.Azure\I-Synergy.Framework.Storage.Azure.csproj'
+            projects: 'src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
@@ -147,7 +147,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore x86'
           inputs:
-            solution: 'src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj'
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
             platform: x86
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
@@ -155,7 +155,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Framework Windows - Build x86'
           inputs:
-            solution: 'src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj'
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
             platform: x86
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
@@ -163,7 +163,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore x64'
           inputs:
-            solution: 'src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj'
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
             platform: x64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
@@ -171,7 +171,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Framework Windows - Build x64'
           inputs:
-            solution: 'src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj'
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
             platform: x64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
@@ -179,7 +179,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore ARM'
           inputs:
-            solution: 'src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj'
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
             platform: ARM
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
@@ -187,7 +187,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Framework Windows - Build ARM'
           inputs:
-            solution: 'src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj'
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
             platform: ARM
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
@@ -195,7 +195,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore ARM64'
           inputs:
-            solution: 'src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj'
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
             platform: ARM64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
@@ -203,7 +203,7 @@ stages:
         - task: MSBuild@1
           displayName: 'Framework Windows - Build ARM64'
           inputs:
-            solution: 'src\I-Synergy.Framework.Windows\I-Synergy.Framework.Windows.csproj'
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
             platform: ARM64
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
@@ -218,35 +218,35 @@ stages:
           displayName: 'Run Test: I-Synergy.Framework.Core'
           inputs:
             command: test
-            projects: 'tests\I-Synergy.Framework.Core.Tests\I-Synergy.Framework.Core.Tests.csproj'
+            projects: 'tests\ISynergy.Framework.Core.Tests\ISynergy.Framework.Core.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
           inputs:
             command: test
-            projects: 'tests\I-Synergy.Framework.AspNetCore.Tests\I-Synergy.Framework.AspNetCore.Tests.csproj'
+            projects: 'tests\ISynergy.Framework.AspNetCore.Tests\ISynergy.Framework.AspNetCore.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Financial'
           inputs:
             command: test
-            projects: 'tests\I-Synergy.Framework.Financial.Tests\I-Synergy.Framework.Financial.Tests.csproj'
+            projects: 'tests\ISynergy.Framework.Financial.Tests\ISynergy.Framework.Financial.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Geography'
           inputs:
             command: test
-            projects: 'tests\I-Synergy.Framework.Geography.Tests\I-Synergy.Framework.Geography.Tests.csproj'
+            projects: 'tests\ISynergy.Framework.Geography.Tests\ISynergy.Framework.Geography.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Mathematics'
           inputs:
             command: test
-            projects: 'tests\I-Synergy.Framework.Mathematics.Tests\I-Synergy.Framework.Mathematics.Tests.csproj'
+            projects: 'tests\ISynergy.Framework.Mathematics.Tests\ISynergy.Framework.Mathematics.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: SonarCloudAnalyze@1
@@ -276,18 +276,18 @@ stages:
         - task: CopyFiles@2
           displayName: 'Copy Multi Platform File to Reference folder'
           inputs:
-            SourceFolder: '$(System.ArtifactsDirectory)\Output\I-Synergy.Framework.Windows\x86\$(BuildConfiguration)'
+            SourceFolder: '$(System.ArtifactsDirectory)\Output\ISynergy.Framework.UI\x86\$(BuildConfiguration)'
             Contents: |
-              I-Synergy.Framework.Windows.dll
-              I-Synergy.Framework.Windows.pri
-            TargetFolder: '$(System.ArtifactsDirectory)\Output\I-Synergy.Framework.Windows\$(BuildConfiguration)'
+              ISynergy.Framework.UI.dll
+              ISynergy.Framework.UI.pri
+            TargetFolder: '$(System.ArtifactsDirectory)\Output\ISynergy.Framework.UI\$(BuildConfiguration)'
       
         - task: PowerShell@2
           displayName: 'Create Multi Platform Reference file'
           inputs:
             targetType: filePath
             filePath: ./build/createplatformdll.ps1
-            arguments: '-file "$(System.ArtifactsDirectory)\Output\I-Synergy.Framework.Windows\$(BuildConfiguration)\I-Synergy.Framework.Windows.dll"'
+            arguments: '-file "$(System.ArtifactsDirectory)\Output\ISynergy.Framework.UI\$(BuildConfiguration)\ISynergy.Framework.UI.dll"'
       
         - task: DocFxTask@0
           inputs:
@@ -319,99 +319,99 @@ stages:
           displayName: 'NuGet pack: I-Synergy.Framework.Core'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Core.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Core;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.Core.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.AspNetCore'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.AspNetCore.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.AspNetCore;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.AspNetCore.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.AspNetCore.Authentication'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.AspNetCore.Authentication.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.AspNetCore.Authentication;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.AspNetCore.Authentication.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.EntityFramework'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.EntityFramework.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.EntityFramework;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.EntityFramework.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.Financial'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Financial.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Financial;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.Financial.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.Models'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Models.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Models;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.Models.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.Geography'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Geography.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Geography;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.Geography.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.Mathematics'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Mathematics.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Mathematics;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.Mathematics.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.MessageBus'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.MessageBus.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.MessageBus;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.MessageBus.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.MessageBus.Azure'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.MessageBus.Azure.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.MessageBus.Azure;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.MessageBus.Azure.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.Mvvm'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Mvvm.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Mvvm;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.Mvvm.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.Storage'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Storage.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Storage;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.Storage.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.Storage.Azure'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Storage.Azure.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Storage.Azure;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.Storage.Azure.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
         
         - task: NuGetCommand@2
           displayName: 'NuGet pack - Framework Windows'
           inputs:
             command: pack
-            packagesToPack: 'nuget/I-Synergy.Framework.Windows.nuspec'
-            buildProperties: 'ProjectName=I-Synergy.Framework.Windows;Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+            packagesToPack: 'nuget/ISynergy.Framework.UI.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
         - task: NuGetCommand@2
           displayName: 'NuGet push - I-Synergy.Framework'

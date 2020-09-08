@@ -15,6 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\I-Synergy.Framework.AspNetCore.Authentication\I-Synergy.Framework.AspNetCore.Authentication.csproj" />
+    <ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj" />
   </ItemGroup>
 </Project>

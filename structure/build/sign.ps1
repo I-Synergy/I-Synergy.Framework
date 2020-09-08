@@ -12,7 +12,7 @@ Write-Host $certFile
 $exe = Get-ChildItem -Path "C:\program files (x86)\Windows Kits" -Recurse -Include signtool.exe | select -First 1
 Write-Host $exe
  
-ForEach ($file in (Get-ChildItem $buildDir -Filter I-Synergy*))
+ForEach ($file in (Get-ChildItem $buildDir -Filter ISynergy*))
 {
   if ($file.Extension -eq ".dll")
   {
