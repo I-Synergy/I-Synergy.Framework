@@ -21,13 +21,13 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if ((double)value != 0 || value != null)
+            if (value is double doubleValue && doubleValue == 0d)
             {
-                return Visibility.Collapsed;
+                return Visibility.Visible;
             }
             else
             {
-                return Visibility.Visible;
+                return Visibility.Collapsed;
             }
         }
 
