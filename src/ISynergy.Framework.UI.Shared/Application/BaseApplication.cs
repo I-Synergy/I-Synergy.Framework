@@ -93,12 +93,6 @@ namespace ISynergy.Framework.UI
 
             Suspending += OnSuspending;
 
-            //Gets or sets a value that indicates whether to engage the text performance visualization feature of Microsoft Visual Studio when the app runs.
-            //this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
-
-            //Gets or sets a value that indicates whether to display frame-rate and per-frame CPU usage info. These display as an overlay of counters in the window chrome while the app runs.
-            //this.EnableFrameRateCounter = true;
-
             Current.UnhandledException += Current_UnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
@@ -198,9 +192,6 @@ namespace ISynergy.Framework.UI
 
             // Ensure the current window is active
             global::Windows.UI.Xaml.Window.Current.Activate();
-
-            //if (!System.Diagnostics.Debugger.IsAttached)
-            //    ISynergy.Framework.UI.Controls.ScreenSaver.InitializeScreensaver(new Uri("ms-appx://ISynergy.Pos/Assets/SplashScreen.scale-400.png"));
         }
 
         /// <summary>
