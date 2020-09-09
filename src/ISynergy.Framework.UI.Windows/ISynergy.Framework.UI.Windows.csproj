@@ -8,8 +8,7 @@
     <ProjectGuid>{C30789E2-2B8B-4A06-A5FC-D3E6B20E91D0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ISynergy.Framework.UI</RootNamespace>
-    <AssemblyName>ISynergy.Framework.UI.Windows</AssemblyName>
+    <AssemblyName>ISynergy.Framework.UI</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -127,7 +126,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\ISynergy.Framework.UI.Windows.rd.xml" />
+    <EmbeddedResource Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json">
