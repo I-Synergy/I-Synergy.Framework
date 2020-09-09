@@ -136,7 +136,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj">
       <Project>{c30789e2-2b8b-4a06-a5fc-d3e6b20e91d0}</Project>
-      <Name>ISynergy.Framework.UI.Windows</Name>
+      <Name>ISynergy.Framework.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
