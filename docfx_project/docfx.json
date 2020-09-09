@@ -18,7 +18,7 @@
             "src/ISynergy.Framework.Mvvm/ISynergy.Framework.Mvvm.csproj",
             "src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj",
             "src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj",
-            "src/ISynergy.Framework.Windows/ISynergy.Framework.Windows.csproj" 
+            "src/ISynergy.Framework.UI.Windows/ISynergy.Framework.UI.Windows.csproj" 
           ],
           "src": "..",
           "exclude": [
