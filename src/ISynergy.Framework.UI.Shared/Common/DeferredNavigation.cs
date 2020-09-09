@@ -42,42 +42,36 @@ namespace ISynergy.Framework.UI.Common
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="NavigatingCancelEventArgs"/> instance containing the event data.</param>
-        private void OnFrameNavigating(object sender, NavigatingCancelEventArgs e)
+        private async void OnFrameNavigating(object sender, NavigatingCancelEventArgs e)
         {
             e.Cancel = true;
             if (!_isBusy)
             {
-                HandleNavigationCancel(e);
-            }
-        }
+                _isBusy = true;
 
-        /// <summary>
-        /// Handles the navigation cancel.
-        /// </summary>
-        /// <param name="e">The <see cref="NavigatingCancelEventArgs"/> instance containing the event data.</param>
-        private async void HandleNavigationCancel(NavigatingCancelEventArgs e)
-        {
-            _isBusy = true;
-            if (OnNavigating != null)
-            {
-                await OnNavigating(e);
-                if (!e.Cancel)
+                if (OnNavigating != null)
                 {
-                    switch (e.NavigationMode)
+                    await OnNavigating(e);
+
+                    if (!e.Cancel)
                     {
-                        case NavigationMode.New:
-                        case NavigationMode.Refresh:
-                            Frame.Navigating -= OnFrameNavigating;
-                            Frame.Navigate(e.SourcePageType, e.Parameter);
-                            break;
-                        case NavigationMode.Back:
-                            Frame.Navigating -= OnFrameNavigating;
-                            Frame.GoBack();
-                            break;
+                        switch (e.NavigationMode)
+                        {
+                            case NavigationMode.New:
+                            case NavigationMode.Refresh:
+                                Frame.Navigating -= OnFrameNavigating;
+                                Frame.Navigate(e.SourcePageType, e.Parameter);
+                                break;
+                            case NavigationMode.Back:
+                                Frame.Navigating -= OnFrameNavigating;
+                                Frame.GoBack();
+                                break;
+                        }
                     }
                 }
+
+                _isBusy = false;
             }
-            _isBusy = false;
         }
     }
 }

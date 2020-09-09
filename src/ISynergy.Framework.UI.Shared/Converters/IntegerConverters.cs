@@ -63,13 +63,13 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if ((int)value != 0 || value != null)
+            if (value is int intValue && intValue == 0)
             {
-                return Visibility.Collapsed;
+                return Visibility.Visible;
             }
             else
             {
-                return Visibility.Visible;
+                return Visibility.Collapsed;
             }
         }
 
