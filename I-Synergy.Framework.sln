@@ -122,16 +122,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.UI.Sampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.UI.Windows", "src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj", "{C30789E2-2B8B-4A06-A5FC-D3E6B20E91D0}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ISynergy.Framework.UI.Shared", "src\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.shproj", "{717FFBCD-46F9-4AF3-8713-B6FFB6BAA6DE}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ISynergy.Framework.UI.Sample\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems*{289a8b10-f194-40c3-92cf-27fbf14911fb}*SharedItemsImports = 4
 		samples\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems*{58ac244e-38e5-4165-a25e-fedad3ad26c2}*SharedItemsImports = 13
 		samples\ISynergy.Framework.UI.Sample\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
-		src\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems*{717ffbcd-46f9-4af3-8713-b6ffb6baa6de}*SharedItemsImports = 13
 		samples\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems*{81924ac4-c08f-4e9b-bd05-fb7f75291609}*SharedItemsImports = 5
-		src\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems*{c30789e2-2b8b-4a06-a5fc-d3e6b20e91d0}*SharedItemsImports = 4
 		samples\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems*{f0a50d88-bf53-4772-9057-b1f89442d4c4}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1902,7 +1898,6 @@ Global
 		{6279C845-92F8-4333-AB99-3D213163593C} = {E6035F95-081B-416C-9F39-2C9C7D993A48}
 		{289A8B10-F194-40C3-92CF-27FBF14911FB} = {E6035F95-081B-416C-9F39-2C9C7D993A48}
 		{C30789E2-2B8B-4A06-A5FC-D3E6B20E91D0} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
-		{717FFBCD-46F9-4AF3-8713-B6FFB6BAA6DE} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
