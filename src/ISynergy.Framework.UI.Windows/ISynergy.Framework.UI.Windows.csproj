@@ -28,7 +28,7 @@
     <DefaultLanguage>en</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -241,30 +241,6 @@
     <Compile Include="Navigation\MenuItemTemplateSelector.cs" />
     <Compile Include="Navigation\NavigationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\AuthenticationProvider.cs" />
-    <Compile Include="Services\ApplicationSettingsService.cs" />
-    <Compile Include="Services\Base\BaseCommonService.cs" />
-    <Compile Include="Services\Base\BaseFileService.cs" />
-    <Compile Include="Services\BusyService.cs" />
-    <Compile Include="Services\ConverterService.cs" />
-    <Compile Include="Services\DialogService.cs" />
-    <Compile Include="Services\InfoService.cs" />
-    <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\ThemeSelectorService.cs" />
-    <Compile Include="Services\UIVisualizerService.cs" />
-    <Compile Include="Settings\FileDialogSettings.cs" />
-    <Compile Include="Settings\FolderBrowserDialogSettings.cs" />
-    <Compile Include="Settings\MessageBoxSettings.cs" />
-    <Compile Include="Settings\OpenFileDialogSettings.cs" />
-    <Compile Include="Settings\SaveFileDialogSettings.cs" />
-    <Compile Include="Triggers\BooleanDataTrigger.cs" />
-    <Compile Include="Triggers\DecimalDataTrigger.cs" />
-    <Compile Include="Triggers\IntegerDataTrigger.cs" />
-    <Compile Include="Triggers\ObjectDataTrigger.cs" />
-    <Compile Include="ViewModels\LanguageViewModel.cs" />
-    <Compile Include="ViewModels\PincodeViewModel.cs" />
-    <Compile Include="ViewModels\ShellViewModelBase.cs" />
-    <Compile Include="ViewModels\ThemeViewModel.cs" />
     <EmbeddedResource Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
