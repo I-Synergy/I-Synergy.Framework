@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace ISynergy.Framework.Core.Utilities
+namespace ISynergy.Framework.Core.Utilities.Tests
 {
     public class CompareUtilityTest
     {

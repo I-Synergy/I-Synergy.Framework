@@ -24,6 +24,6 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="self">The self.</param>
         /// <returns><c>true</c> if [is nullable type] [the specified self]; otherwise, <c>false</c>.</returns>
         public static bool IsNullableType<T>(this T self) where T : Type =>
-            Nullable.GetUnderlyingType(self) != null;
+            !self.IsValueType || Nullable.GetUnderlyingType(self) != null;
     }
 }

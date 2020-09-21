@@ -1,4 +1,5 @@
 ﻿using System;
+using ISynergy.Framework.Core.Attributes;
 
 namespace ISynergy.Framework.Core.Data.Tests.TestClasses
 {
@@ -22,6 +23,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// <summary>
         /// Gets or sets the ProductId property value.
         /// </summary>
+        [Identity]
         public Guid ProductId
         {
             get { return GetValue<Guid>(); }
