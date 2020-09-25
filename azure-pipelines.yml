@@ -37,6 +37,15 @@ stages:
             nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Core.Linq'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Core.Linq\ISynergy.Framework.Core.Linq.csproj'
+            arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
+            feedsToUse: config
+            nugetConfigPath: nuget.config
+
+        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore'
           inputs:
             command: build
@@ -134,7 +143,7 @@ stages:
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
-      
+
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Storage.Azure'
           inputs:
@@ -143,6 +152,25 @@ stages:
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Payment'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj'
+            arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
+            feedsToUse: config
+            nugetConfigPath: nuget.config
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Payment.Mollie'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj'
+            arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
+            feedsToUse: config
+            nugetConfigPath: nuget.config
+      
       
         - task: MSBuild@1
           displayName: 'Framework Windows - Nuget Restore x86'
@@ -222,6 +250,13 @@ stages:
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Core.Linq.Tests\ISynergy.Framework.Core.Linq.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+      
+        - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
           inputs:
             command: test
@@ -247,6 +282,13 @@ stages:
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.Mathematics.Tests\ISynergy.Framework.Mathematics.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Payment'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Payment.Tests\ISynergy.Framework.Payment.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: SonarCloudAnalyze@1
@@ -322,6 +364,13 @@ stages:
             packagesToPack: 'nuget/ISynergy.Framework.Core.nuspec'
             buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
+        - task: NuGetCommand@2
+          displayName: 'NuGet pack: I-Synergy.Framework.Core.Linq'
+          inputs:
+            command: pack
+            packagesToPack: 'nuget/ISynergy.Framework.Core.Linq.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+
         - task: NuGetCommand@2
           displayName: 'NuGet pack: I-Synergy.Framework.AspNetCore'
           inputs:
@@ -406,6 +455,21 @@ stages:
             packagesToPack: 'nuget/ISynergy.Framework.Storage.Azure.nuspec'
             buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
         
+        - task: NuGetCommand@2
+          displayName: 'NuGet pack: I-Synergy.Framework.Payment'
+          inputs:
+            command: pack
+            packagesToPack: 'nuget/ISynergy.Framework.Payment.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+      
+        - task: NuGetCommand@2
+          displayName: 'NuGet pack: I-Synergy.Framework.Payment.Mollie'
+          inputs:
+            command: pack
+            packagesToPack: 'nuget/ISynergy.Framework.Payment.Mollie.nuspec'
+            buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
+      
+
         - task: NuGetCommand@2
           displayName: 'NuGet pack - Framework Windows'
           inputs:
