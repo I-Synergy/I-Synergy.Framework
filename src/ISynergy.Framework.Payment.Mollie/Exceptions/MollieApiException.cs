@@ -1,5 +1,6 @@
 ﻿using System;
 using ISynergy.Framework.Payment.Mollie.Models.Error;
+using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Exceptions
 {
@@ -32,7 +33,7 @@ namespace ISynergy.Framework.Payment.Mollie.Exceptions
         /// <returns>MollieErrorMessage.</returns>
         private static MollieErrorMessage ParseErrorMessage(string json)
         {
-            return JsonSerializer.Deserialize<MollieErrorMessage>(json);
+            return JsonConvert.DeserializeObject<MollieErrorMessage>(json);
         }
     }
 }

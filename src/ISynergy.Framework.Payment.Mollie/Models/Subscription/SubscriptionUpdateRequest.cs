@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Subscription
 {
@@ -55,7 +56,7 @@ namespace ISynergy.Framework.Payment.Mollie.Models.Subscription
         /// <param name="jsonSerializerSettings">The json serializer settings.</param>
         public void SetMetadata(object metadataObj, JsonSerializerSettings jsonSerializerSettings = null)
         {
-            Metadata = JsonSerializer.Serialize(metadataObj, jsonSerializerSettings);
+            Metadata = JsonConvert.SerializeObject(metadataObj, jsonSerializerSettings);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
 using ISynergy.Framework.Payment.Mollie.Enumerations;
 using ISynergy.Framework.Payment.Mollie.Models.Order;
+using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Refund
 {

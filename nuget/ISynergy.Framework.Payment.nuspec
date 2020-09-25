@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$ProjectName$</id>
+    <id>I-Synergy.Framework.Payment</id>
     <version>$Version$</version>
     <authors>Ismail Hassani</authors>
     <owners>International Intelligence</owners>
@@ -12,13 +12,13 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2008-2020</copyright>
     <tags>I-Synergy Payment Framework</tags>
-    <projectUrl>https://dev.azure.com/i-synergy/I-Synergy.Framework</projectUrl>
-    <repository type="git" url="https://dev.azure.com/i-synergy/I-Synergy.Framework/_git/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
+    <projectUrl>https://github.com/I-Synergy/I-Synergy.Framework</projectUrl>
+    <repository type="git" url="https://github.com/I-Synergy/I-Synergy.Framework" branch="$Branch$" commit="$CommitId$" />
 
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
-        <dependency id="Microsoft.Extensions.Http" version="3.1.5" />
+        <dependency id="Microsoft.Extensions.Http" version="3.1.8" />
       </group>
     </dependencies>
   </metadata>
