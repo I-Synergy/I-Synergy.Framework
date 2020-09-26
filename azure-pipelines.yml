@@ -296,7 +296,7 @@ stages:
   - stage: Release
     displayName: 'Release'
     dependsOn: Build
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: succeeded()
     jobs:
     - job: PackageJob
       displayName: 'Release nuget packages'
@@ -330,20 +330,6 @@ stages:
             targetType: filePath
             filePath: ./build/createplatformdll.ps1
             arguments: '-file "$(System.ArtifactsDirectory)\Output\ISynergy.Framework.UI\$(BuildConfiguration)\ISynergy.Framework.UI.dll"'
-      
-        - task: DocFxTask@0
-          inputs:
-            solution: 'docfx_project/docfx.json'
-
-        - task: GitHubPagesPublish@1
-          inputs:
-            docPath: '$(System.DefaultWorkingDirectory)\docs\*'
-            githubusername: 'I-Synergy'
-            githubemail: 'ismail.hassani@i-synergy.nl'
-            githubaccesstoken: '$(GithubPages)'
-            repositoryname: 'I-Synergy.Framework'
-            branchname: 'gh-pages'
-            commitmessage: 'Automated Release $(Release.ReleaseId)'
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
@@ -468,7 +454,6 @@ stages:
             command: pack
             packagesToPack: 'nuget/ISynergy.Framework.Payment.Mollie.nuspec'
             buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
-      
 
         - task: NuGetCommand@2
           displayName: 'NuGet pack - Framework Windows'
@@ -477,6 +462,27 @@ stages:
             packagesToPack: 'nuget/ISynergy.Framework.UI.nuspec'
             buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
       
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish nuget packages'
+          inputs:
+            pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            artifactName: Nuget
+
+  - stage: Publish
+    displayName: 'Publish'
+    dependsOn: Release
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+    - job: PackageJob
+      displayName: 'Publish nuget packages'
+      steps:
+        - task: DownloadBuildArtifacts@0
+          inputs:
+            buildType: 'current'
+            downloadType: 'single'
+            artifactName: 'Nuget'
+            downloadPath: '$(System.ArtifactsDirectory)'
+
         - task: NuGetCommand@2
           displayName: 'NuGet push - I-Synergy.Framework'
           inputs:
@@ -484,3 +490,17 @@ stages:
             packagesToPush: '$(Build.ArtifactStagingDirectory)/*$(build.buildNumber).nupkg'
             nuGetFeedType: 'external'
             publishFeedCredentials: 'Nuget.org'
+
+        - task: DocFxTask@0
+          inputs:
+            solution: 'docfx_project/docfx.json'
+
+        - task: GitHubPagesPublish@1
+          inputs:
+            docPath: '$(System.DefaultWorkingDirectory)\docs\*'
+            githubusername: 'I-Synergy'
+            githubemail: 'ismail.hassani@i-synergy.nl'
+            githubaccesstoken: '$(GithubPages)'
+            repositoryname: 'I-Synergy.Framework'
+            branchname: 'gh-pages'
+            commitmessage: 'Automated Release $(Release.ReleaseId)'
