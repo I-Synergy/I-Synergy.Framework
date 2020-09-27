@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using ISynergy.Framework.Payment.Mollie.Models.Error;
 using Newtonsoft.Json;
 
@@ -9,6 +10,7 @@ namespace ISynergy.Framework.Payment.Mollie.Exceptions
     /// Implements the <see cref="Exception" />
     /// </summary>
     /// <seealso cref="Exception" />
+    [Serializable]
     public class MollieApiException : Exception
     {
         /// <summary>
@@ -24,6 +26,15 @@ namespace ISynergy.Framework.Payment.Mollie.Exceptions
         public MollieApiException(string json) : base(ParseErrorMessage(json).ToString())
         {
             Details = ParseErrorMessage(json);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MollieApiException"/> class.
+        /// </summary>
+        /// <param name="info">The <see cref="T:SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="T:StreamingContext"></see> that contains contextual information about the source or destination.</param>
+        protected MollieApiException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
 
         /// <summary>

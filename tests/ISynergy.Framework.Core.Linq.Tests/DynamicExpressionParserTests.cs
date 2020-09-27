@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         {
             public int? Age;
             public int TotalIncome;
-            public string Name;
+            public string Name = string.Empty;
         }
 
         [DynamicLinqType]
@@ -772,7 +772,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).IsEqualTo(10);
         }
 
-        // [Fact]
+        //[Fact]
         public void DynamicExpressionParser_ParseLambda_With_InnerStringLiteral()
         {
             // Assign
