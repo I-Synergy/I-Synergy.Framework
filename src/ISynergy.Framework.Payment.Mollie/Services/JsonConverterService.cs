@@ -1,6 +1,8 @@
 ﻿using ISynergy.Framework.Payment.Mollie.Abstractions.Services;
 using ISynergy.Framework.Payment.Mollie.Converters;
 using ISynergy.Framework.Payment.Mollie.Factories;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 
 namespace ISynergy.Framework.Payment.Mollie.Services
@@ -32,7 +34,7 @@ namespace ISynergy.Framework.Payment.Mollie.Services
         /// <returns>System.String.</returns>
         public string Serialize(object objectToSerialize)
         {
-            return JsonSerializer.Serialize(objectToSerialize,
+            return JsonConvert.SerializeObject(objectToSerialize,
                 new JsonSerializerSettings
                 {
                     DateFormatString = "yyyy-MM-dd",
@@ -49,7 +51,7 @@ namespace ISynergy.Framework.Payment.Mollie.Services
         /// <returns>T.</returns>
         public T Deserialize<T>(string json)
         {
-            return JsonSerializer.Deserialize<T>(json, _defaultJsonDeserializerSettings);
+            return JsonConvert.DeserializeObject<T>(json, _defaultJsonDeserializerSettings);
         }
 
         /// <summary>

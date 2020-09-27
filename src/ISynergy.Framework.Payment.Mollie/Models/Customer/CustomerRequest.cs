@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Payment.Mollie.Models.Customer
+﻿using Newtonsoft.Json;
+
+namespace ISynergy.Framework.Payment.Mollie.Models.Customer
 {
     /// <summary>
     /// Class CustomerRequest.
@@ -38,7 +40,7 @@
         /// <param name="jsonSerializerSettings">The json serializer settings.</param>
         public void SetMetadata(object metadataObj, JsonSerializerSettings jsonSerializerSettings = null)
         {
-            Metadata = JsonSerializer.Serialize(metadataObj, jsonSerializerSettings);
+            Metadata = JsonConvert.SerializeObject(metadataObj, jsonSerializerSettings);
         }
     }
 }

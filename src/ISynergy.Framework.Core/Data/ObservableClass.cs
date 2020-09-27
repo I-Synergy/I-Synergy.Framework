@@ -132,7 +132,7 @@ namespace ISynergy.Framework.Core.Data
             {
                 var previous = property.Value;
 
-                if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType())
+                if (!property.IsOriginalSet || !Equals(value, previous) || (typeof(T).IsNullableType() && value is null))
                 {
                     property.Value = value;
                     OnPropertyChanged(propertyName);
@@ -163,7 +163,7 @@ namespace ISynergy.Framework.Core.Data
             {
                 var previous = field;
 
-                if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType())
+                if (!property.IsOriginalSet || !Equals(value, previous) || (typeof(T).IsNullableType() && value is null))
                 {
                     field = value;
                     OnPropertyChanged(propertyName);

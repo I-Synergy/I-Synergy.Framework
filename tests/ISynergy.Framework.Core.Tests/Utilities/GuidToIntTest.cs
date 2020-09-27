@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using ISynergy.Framework.Core.Extensions;
 
-namespace ISynergy.Framework.Core.Utilities
+namespace ISynergy.Framework.Core.Utilities.Tests
 {
     public class GuidToIntTest
     {

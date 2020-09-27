@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Xunit;
 
-namespace ISynergy.Framework.Core.Utilities
+namespace ISynergy.Framework.Core.Utilities.Tests
 {
     public class TypeExtensionsTests
     {

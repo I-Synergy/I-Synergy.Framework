@@ -11,7 +11,7 @@ using ISynergy.Framework.Core.Linq.Abstractions;
 using ISynergy.Framework.Core.Linq.Parsers;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using System.Linq;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         {
             public int? Age;
             public int TotalIncome;
-            public string Name;
+            public string Name = string.Empty;
         }
 
         [DynamicLinqType]
@@ -626,34 +626,34 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         [Fact]
         public void DynamicExpressionParser_ParseLambda_MultipleLambdas()
         {
-            var users = new List<PersonAge>()
+            var users = new[]
             {
-                new PersonAge { Name = "Juan", Age = 25 },
-                new PersonAge { Name = "Juan", Age = 25 },
-                new PersonAge { Name = "David", Age = 12 },
-                new PersonAge { Name = "Juan", Age = 25 },
-                new PersonAge { Name = "Juan", Age = 4 },
-                new PersonAge { Name = "Pedro", Age = 2 },
-                new PersonAge { Name = "Juan", Age = 25 }
-            };
+                new { name = "Juan", age = 25 },
+                new { name = "Juan", age = 25 },
+                new { name = "David", age = 12 },
+                new { name = "Juan", age = 25 },
+                new { name = "Juan", age = 4 },
+                new { name = "Pedro", age = 2 },
+                new { name = "Juan", age = 25 }
+            }.ToList();
+
+            IQueryable query;
 
             // One lambda
-            string res1 = "[{\"Key\":{\"Name\":\"Juan\"},\"nativeAggregates\":{\"ageSum\":104},\"Grouping\":[{\"Name\":\"Juan\",\"Age\":25},{\"Name\":\"Juan\",\"Age\":25},{\"Name\":\"Juan\",\"Age\":25},{\"Name\":\"Juan\",\"Age\":4},{\"Name\":\"Juan\",\"Age\":25}]},{\"Key\":{\"Name\":\"David\"},\"nativeAggregates\":{\"ageSum\":12},\"Grouping\":[{\"Name\":\"David\",\"Age\":12}]},{\"Key\":{\"Name\":\"Pedro\"},\"nativeAggregates\":{\"ageSum\":2},\"Grouping\":[{\"Name\":\"Pedro\",\"Age\":2}]}]";
-            
-            var query = users
-                .AsQueryable()
-                .GroupBy("new(Name as name)", "it")
-                .Select("new (it.Key as Key, new(it.Sum(x => x.Age) as ageSum) as nativeAggregates, it as Grouping)")
-                .ToDynamicList<PersonAge>();
-
-            Assert.Equal(res1, JsonSerializer.Serialize(query));
+            string res1 = "[{\"Key\":{\"name\":\"Juan\"},\"nativeAggregates\":{\"ageSum\":104},\"Grouping\":[{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":4},{\"name\":\"Juan\",\"age\":25}]},{\"Key\":{\"name\":\"David\"},\"nativeAggregates\":{\"ageSum\":12},\"Grouping\":[{\"name\":\"David\",\"age\":12}]},{\"Key\":{\"name\":\"Pedro\"},\"nativeAggregates\":{\"ageSum\":2},\"Grouping\":[{\"name\":\"Pedro\",\"age\":2}]}]";
+            query = users.AsQueryable();
+            query = query.GroupBy("new(name as name)", "it");
+            query = query.Select("new (it.Key as Key, new(it.Sum(x => x.age) as ageSum) as nativeAggregates, it as Grouping)");
+            Assert.Equal(res1, JsonConvert.SerializeObject(query));
 
             // Multiple lambdas
-            //string res2 = "[{\"Key\":{\"name\":\"Juan\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":104},\"Grouping\":[{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":4},{\"name\":\"Juan\",\"age\":25}]},{\"Key\":{\"name\":\"David\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":12},\"Grouping\":[{\"name\":\"David\",\"age\":12}]},{\"Key\":{\"name\":\"Pedro\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":2},\"Grouping\":[{\"name\":\"Pedro\",\"age\":2}]}]";
-            //query = users.AsQueryable();
-            //query = query.GroupBy("new(name as name)", "it");
-            //query = query.Select("new (it.Key as Key, new(it.Sum(x => x.age > 25 ? 1 : 0) as ageSum, it.Sum(x => x.age) as ageSum2) as nativeAggregates, it as Grouping)");
-            //Assert.Equal(res2, JsonSerializer.Serialize(query));
+            string res2 = "[{\"Key\":{\"name\":\"Juan\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":104},\"Grouping\":[{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":4},{\"name\":\"Juan\",\"age\":25}]},{\"Key\":{\"name\":\"David\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":12},\"Grouping\":[{\"name\":\"David\",\"age\":12}]},{\"Key\":{\"name\":\"Pedro\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":2},\"Grouping\":[{\"name\":\"Pedro\",\"age\":2}]}]";
+            
+            query = users.AsQueryable();
+            query = query.GroupBy("new(name as name)", "it");
+            query = query.Select("new (it.Key as Key, new(it.Sum(x => x.age > 25 ? 1 : 0) as ageSum, it.Sum(x => x.age) as ageSum2) as nativeAggregates, it as Grouping)");
+            
+            Assert.Equal(res2, JsonConvert.SerializeObject(query));
         }
 
         [Fact]
@@ -772,7 +772,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).IsEqualTo(10);
         }
 
-        // [Fact]
+        //[Fact]
         public void DynamicExpressionParser_ParseLambda_With_InnerStringLiteral()
         {
             // Assign

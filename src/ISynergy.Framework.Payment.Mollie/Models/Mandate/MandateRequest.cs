@@ -1,5 +1,7 @@
 ﻿using System;
 using ISynergy.Framework.Payment.Mollie.Enumerations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Mandate
 {

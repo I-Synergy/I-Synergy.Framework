@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Payment.ContractResolvers
+﻿using Newtonsoft.Json.Serialization;
+
+namespace ISynergy.Framework.Payment.ContractResolvers
 {
     /// <summary>
     /// Class DeliminatorSeparatedPropertyNamesContractResolver.

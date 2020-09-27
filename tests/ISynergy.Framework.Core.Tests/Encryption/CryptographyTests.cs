@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Encryption;
 using ISynergy.Framework.Core.Enumerations;
 using Xunit;
 
-namespace ISynergy.Framework.Core.Tests.Encryption
+namespace ISynergy.Framework.Core.Encryption.Tests
 {
     public class CryptographyTests
     {
