@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6279c845-92f8-4333-ab99-3d213163593c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ISynergy.Framework.UI.Sample.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IClientMonitorService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ICommonServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IMasterDataService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPrintingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IReportingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ISettingsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IUpdateService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MediaItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\AppCenterOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\ConfigurationOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AuthenticationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CameraService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ClientMonitorService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ClipboardService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CommonServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DownloadFileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\LanguageService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\MasterDataService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\PrintingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ReportingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\TelemetryService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Styles\Style.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>
