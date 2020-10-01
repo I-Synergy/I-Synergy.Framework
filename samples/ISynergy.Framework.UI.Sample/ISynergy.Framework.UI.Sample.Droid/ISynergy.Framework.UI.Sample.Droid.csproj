@@ -86,6 +86,16 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj">
+      <Project>{3c9680bf-c7cd-4839-9487-79850cce180c}</Project>
+      <Name>ISynergy.Framework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj">
+      <Project>{3828a883-b771-4e6b-b004-e521b6d7ad52}</Project>
+      <Name>ISynergy.Framework.Mvvm</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems" Label="Shared" Condition="Exists('..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->
