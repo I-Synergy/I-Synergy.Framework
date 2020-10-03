@@ -63,28 +63,23 @@ namespace ISynergy.Framework.UI.Services
         }
 
         /// <summary>
+        /// Sets the requested theme.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        public void SetThemeColor(string color)
+        {
+            Application.Current.Resources.ThemeDictionaries.Clear();
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"ms-appx:///ISynergy.Framework.UI/Themes/Theme.{color}.xaml", UriKind.RelativeOrAbsolute) });
+        }
+
+        /// <summary>
         /// Sets the theme.
         /// </summary>
         /// <param name="theme">The theme.</param>
         public void SetTheme(object theme)
         {
             Theme = (ElementTheme)theme;
-
-            SetRequestedTheme();
             SaveThemeInSetting((ElementTheme)Theme);
-
-            OnThemeChanged(null, (ElementTheme)Theme);
-        }
-
-        /// <summary>
-        /// Sets the requested theme.
-        /// </summary>
-        public void SetRequestedTheme()
-        {
-            var color = ServiceLocator.Default.GetInstance<IApplicationSettingsService>().Color;
-
-            Application.Current.Resources.ThemeDictionaries.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"ms-appx:///ISynergy.Framework.UI/Themes/Theme.{color}.xaml", UriKind.RelativeOrAbsolute) });
 
             if (Window.Current.Content is FrameworkElement frameworkElement)
             {
@@ -97,6 +92,8 @@ namespace ISynergy.Framework.UI.Services
             }
 
             SetupTitlebar();
+
+            OnThemeChanged(null, (ElementTheme)Theme);
         }
 
         /// <summary>

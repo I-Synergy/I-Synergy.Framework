@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -18,7 +21,7 @@ namespace ISynergy.Framework.UI.Services
         /// Gets the language service.
         /// </summary>
         /// <value>The language service.</value>
-        public ILanguageService LanguageService { get; }
+        private readonly ILanguageService _languageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
@@ -26,7 +29,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="languageService">The language service.</param>
         public DialogService(ILanguageService languageService)
         {
-            LanguageService = languageService;
+            _languageService = languageService;
         }
 
         /// <summary>
@@ -37,7 +40,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "")
         {
-            return ShowAsync(error.Message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
+            return ShowAsync(error.Message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         public Task<MessageBoxResult> ShowErrorAsync(string message, string title = "")
         {
-            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
+            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -59,7 +62,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         public Task<MessageBoxResult> ShowInformationAsync(string message, string title = "")
         {
-            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleInfo"), MessageBoxButton.OK, MessageBoxImage.Information);
+            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -70,7 +73,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
         public Task<MessageBoxResult> ShowWarningAsync(string message, string title = "")
         {
-            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : LanguageService.GetString("TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            return ShowAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         /// <summary>
@@ -82,28 +85,115 @@ namespace ISynergy.Framework.UI.Services
         {
             if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
             {
-                return ShowAsync(string.Format(LanguageService.GetString("Greeting_Night"), name),
-                    LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return ShowAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
+                    _languageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
             {
-                return ShowAsync(string.Format(LanguageService.GetString("Greeting_Morning"), name),
-                    LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return ShowAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
+                    _languageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
             {
-                return ShowAsync(string.Format(LanguageService.GetString("Greeting_Afternoon"), name),
-                    LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return ShowAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
+                    _languageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                return ShowAsync(string.Format(LanguageService.GetString("Greeting_Evening"), name),
-                    LanguageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return ShowAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
+                    _languageService.GetString("TitleWelcome"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
         /// <summary>
-        /// show as an asynchronous operation.
+        /// show an Content Dialog.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="buttons">The buttons.</param>
+        /// <param name="image">The image.</param>
+        /// <returns>MessageBoxResult.</returns>
+        public virtual async Task<MessageBoxResult> ShowContentDialogAsync(
+            string message,
+            string title = "",
+            MessageBoxButton buttons = MessageBoxButton.OK,
+            MessageBoxImage image = MessageBoxImage.Information)
+        {
+            var result = MessageBoxResult.Cancel;
+
+            if (!Window.Current.Dispatcher.HasThreadAccess)
+                throw new InvalidOperationException("This method can only be invoked from UI thread.");
+
+            var dialog = new ContentDialog()
+            {
+                Title = title,
+                Content = message
+            };
+
+            switch (buttons)
+            {
+                case MessageBoxButton.OK:
+                    dialog.CloseButtonText = _languageService.GetString("Ok");
+                    break;
+                case MessageBoxButton.OKCancel:
+                    dialog.PrimaryButtonText = _languageService.GetString("Ok");
+                    dialog.CloseButtonText = _languageService.GetString("Cancel");
+                    break;
+                case MessageBoxButton.YesNoCancel:
+                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                    dialog.SecondaryButtonText = _languageService.GetString("No");
+                    dialog.CloseButtonText = _languageService.GetString("Cancel");
+                    break;
+                case MessageBoxButton.YesNo:
+                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                    dialog.CloseButtonText = _languageService.GetString("No");
+                    break;
+            }
+
+            var dialogResult = await dialog.ShowAsync();
+
+            switch (buttons)
+            {
+                case MessageBoxButton.OK:
+                    return MessageBoxResult.OK;
+                case MessageBoxButton.OKCancel:
+                    if(dialogResult == ContentDialogResult.Primary)
+                    {
+                        return MessageBoxResult.OK;
+                    }
+                    else
+                    {
+                        return MessageBoxResult.Cancel;
+                    }
+                case MessageBoxButton.YesNoCancel:
+                    if (dialogResult == ContentDialogResult.Primary)
+                    {
+                        return MessageBoxResult.Yes;
+                    }
+                    else if (dialogResult == ContentDialogResult.Secondary)
+                    {
+                        return MessageBoxResult.No;
+                    }
+                    else
+                    {
+                        return MessageBoxResult.Cancel;
+                    }
+                case MessageBoxButton.YesNo:
+                    if (dialogResult == ContentDialogResult.Primary)
+                    {
+                        return MessageBoxResult.Yes;
+                    }
+                    else
+                    {
+                        return MessageBoxResult.No;
+                    }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// show an asynchronous message dialog.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="title">The title.</param>
@@ -118,10 +208,13 @@ namespace ISynergy.Framework.UI.Services
         {
             var result = MessageBoxResult.Cancel;
 
-            var yesCommand = new UICommand(LanguageService.GetString("Yes"), cmd => { });
-            var noCommand = new UICommand(LanguageService.GetString("No"), cmd => { });
-            var okCommand = new UICommand(LanguageService.GetString("Ok"), cmd => { });
-            var cancelCommand = new UICommand(LanguageService.GetString("Cancel"), cmd => { });
+            if (!Window.Current.Dispatcher.HasThreadAccess)
+                throw new InvalidOperationException("This method can only be invoked from UI thread.");
+
+            var yesCommand = new UICommand(_languageService.GetString("Yes"), cmd => { }, "yesCommand");
+            var noCommand = new UICommand(_languageService.GetString("No"), cmd => { }, "noCommand");
+            var okCommand = new UICommand(_languageService.GetString("Ok"), cmd => { }, "okCommand");
+            var cancelCommand = new UICommand(_languageService.GetString("Cancel"), cmd => { }, "cancelCommand");
 
             var messageDialog = new MessageDialog(message, title)
             {
@@ -160,14 +253,7 @@ namespace ISynergy.Framework.UI.Services
                     break;
             }
 
-            IUICommand command = default;
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(
-                CoreDispatcherPriority.Normal,
-                async () =>
-                {
-                    command = await messageDialog.ShowAsync();
-                });
+            var command = await messageDialog.ShowAsync();
 
             if (command is null && cancelCommand != null)
             {

@@ -36,32 +36,20 @@ namespace ISynergy.Framework.UI.Services
         {
             get
             {
-                var result = ApplicationColors.Default;
                 var setting = localSettings.Values[nameof(Color)];
 
                 if (setting is null)
                 {
-                    localSettings.Values[nameof(Color)] = result.ToString();
-                    setting = localSettings.Values[nameof(Color)];
+                    setting = ApplicationColors.Default.ToString();
+                    localSettings.Values[nameof(Color)] = setting;
                 }
 
-                if (Enum.TryParse(setting.ToString(), out ApplicationColors color))
-                {
-                    result = color;
-                }
-                else
-                {
-                    localSettings.Values[nameof(Color)] = result.ToString();
-                    ServiceLocator.Default.GetInstance<IThemeSelectorService>().SetRequestedTheme();
-                }
-
-                return result.ToString();
+                return (string)setting;
             }
 
             set
             {
-                localSettings.Values[nameof(Color)] = value.ToString();
-                ServiceLocator.Default.GetInstance<IThemeSelectorService>().SetRequestedTheme();
+                localSettings.Values[nameof(Color)] = value;
             }
         }
 

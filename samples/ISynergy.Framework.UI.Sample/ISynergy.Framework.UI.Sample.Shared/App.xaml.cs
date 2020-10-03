@@ -85,9 +85,9 @@ namespace ISynergy.Framework.UI.Sample
 
             //Load assemblies
             RegisterAssemblies(new List<Assembly>
-                {
-                    Assembly.Load("ISynergy.Framework.UI.Sample")
-                });
+            {
+                Assembly.Load("ISynergy.Framework.UI.Sample")
+            });
         }
 
         public override Task HandleException(Exception ex, string message)

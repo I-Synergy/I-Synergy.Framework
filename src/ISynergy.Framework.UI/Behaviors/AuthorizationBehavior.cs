@@ -89,7 +89,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// Called when the <see cref="Behavior{T}.AssociatedObject" /> has been loaded.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="InvalidOperationException">No instance of <see cref="IAuthenticationProvider" /> is registered in the <see cref="IServiceLocator" />.</exception>
+        /// <exception cref="InvalidOperationException">No instance of <see cref="IAuthenticationProvider" /> is registered in the <see cref="ServiceLocator" />.</exception>
         /// <exception cref="InvalidOperationException">The <see cref="Action" /> is set to <see cref="AuthenticationAction.Disable" /> and the <see cref="Behavior{T}.AssociatedObject" /> is not a <see cref="Control" />.</exception>
         protected override void OnAssociatedObjectLoaded()
         {

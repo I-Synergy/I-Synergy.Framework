@@ -413,11 +413,11 @@ namespace ISynergy.Framework.UI.ViewModels
                 vm.Submitted -= LanguageVM_Submitted;
 
             if (await BaseCommonServices.DialogService.ShowAsync(
-                            BaseCommonServices.LanguageService.GetString("Warning_Language_Change") +
-                            Environment.NewLine +
-                            BaseCommonServices.LanguageService.GetString("Do_you_want_to_do_it_now"),
-                            BaseCommonServices.LanguageService.GetString("TitleQuestion"),
-                            MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        BaseCommonServices.LanguageService.GetString("Warning_Language_Change") +
+                        Environment.NewLine +
+                        BaseCommonServices.LanguageService.GetString("Do_you_want_to_do_it_now"),
+                        BaseCommonServices.LanguageService.GetString("TitleQuestion"),
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 await RestartApplicationAsync();
             }
@@ -431,7 +431,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             var themeVM = new ThemeViewModel(Context, BaseCommonServices, _loggerFactory);
             themeVM.Submitted += ThemeVM_Submitted;
-            return BaseCommonServices.UIVisualizerService.ShowDialogAsync<IThemeWindow, ThemeViewModel, bool>(themeVM);
+            return BaseCommonServices.UIVisualizerService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ApplicationColors>(themeVM);
         }
 
         /// <summary>
@@ -439,17 +439,17 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private async void ThemeVM_Submitted(object sender, SubmitEventArgs<bool> e)
+        private async void ThemeVM_Submitted(object sender, SubmitEventArgs<ApplicationColors> e)
         {
             if (sender is ThemeViewModel vm)
                 vm.Submitted -= ThemeVM_Submitted;
 
-            if (e.Result && await BaseCommonServices.DialogService.ShowAsync(
-                            BaseCommonServices.LanguageService.GetString("Warning_Color_Change") +
-                            Environment.NewLine +
-                            BaseCommonServices.LanguageService.GetString("Do_you_want_to_do_it_now"),
-                            BaseCommonServices.LanguageService.GetString("TitleQuestion"),
-                            MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (await BaseCommonServices.DialogService.ShowAsync(
+                        BaseCommonServices.LanguageService.GetString("Warning_Color_Change") +
+                        Environment.NewLine +
+                        BaseCommonServices.LanguageService.GetString("Do_you_want_to_do_it_now"),
+                        BaseCommonServices.LanguageService.GetString("TitleQuestion"),
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 await RestartApplicationAsync();
             }

@@ -5,6 +5,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Functions;
+using ISynergy.Framework.Mvvm.Commands;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
@@ -33,6 +34,12 @@ namespace ISynergy.Framework.UI.ViewModels
         private readonly LocalizationFunctions _localizationFunctions;
 
         /// <summary>
+        /// Gets or sets the color command.
+        /// </summary>
+        /// <value>The color command.</value>
+        public RelayCommand<string> SetLanguage_Command { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -47,7 +54,7 @@ namespace ISynergy.Framework.UI.ViewModels
             : base(context, commonServices, loggerFactory)
         {
             _localizationFunctions = localizationFunctions;
-            
+            SetLanguage_Command = new RelayCommand<string>((e) => SelectedItem = e);
             SelectedItem = BaseCommonServices.ApplicationSettingsService.Culture;
         }
 
@@ -59,7 +66,6 @@ namespace ISynergy.Framework.UI.ViewModels
         public override Task SubmitAsync(string e)
         {
             BaseCommonServices.ApplicationSettingsService.Culture = e;
-            
             _localizationFunctions.SetLocalizationLanguage(e);
             return base.SubmitAsync(e);
         }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -70,6 +71,7 @@ namespace ISynergy.Framework.UI
 
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceCollection _services;
+        private readonly INavigationService _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseApplication"/> class.
@@ -77,17 +79,22 @@ namespace ISynergy.Framework.UI
         protected BaseApplication()
         {
             _services = new ServiceCollection();
+            _navigationService = new NavigationService();
 
             ConfigureServices(_services);
-
+            
             _serviceProvider = _services.BuildServiceProvider();
+
+            ServiceLocator.SetLocatorProvider(_serviceProvider);
+
+            Logger = _serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(BaseApplication));
+            Logger.LogInformation("Starting application");
+
+            SetContext();
 
 #if NETFX_CORE
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 #endif
-
-            Logger = _serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(BaseApplication));
-            Logger.LogInformation("Starting application");
 
             ThemeSelector = _serviceProvider.GetRequiredService<IThemeSelectorService>();
             ThemeSelector.Initialize();
@@ -195,7 +202,7 @@ namespace ISynergy.Framework.UI
         /// </summary>
         private void LaunchApplication()
         {
-            ThemeSelector.SetRequestedTheme();
+            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Color);
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -376,7 +383,7 @@ namespace ISynergy.Framework.UI
             services.AddSingleton<IInfoService, InfoService>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IUIVisualizerService, UIVisualizerService>();
-            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton((s) => _navigationService);
             services.AddSingleton<IConverterService, ConverterService>();
             services.AddSingleton<IApplicationSettingsService, ApplicationSettingsService>();
 
@@ -454,11 +461,11 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction != null)
                 {
-                    RegisterType(abstraction, viewmodel);
+                    _services.AddSingleton(abstraction, viewmodel);
                 }
                 else
                 {
-                    RegisterType(viewmodel);
+                    _services.AddSingleton(viewmodel);
                 }
             }
 
@@ -473,18 +480,18 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction != null)
                 {
-                    RegisterType(abstraction, view);
+                    _services.AddSingleton(abstraction, view);
                 }
                 else
                 {
-                    RegisterType(view);
+                    _services.AddSingleton(view);
                 }
 
                 var viewmodel = ViewModelTypes.Find(q => q.Name == view.Name.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel));
 
                 if (viewmodel != null)
                 {
-                    _serviceProvider.GetRequiredService<INavigationService>().Configure(viewmodel.FullName, view);
+                    _navigationService.Configure(viewmodel.FullName, view);
                 }
             }
 
@@ -499,58 +506,13 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction != null)
                 {
-                    RegisterType(abstraction, window);
+                    _services.AddSingleton(abstraction, window);
                 }
                 else
                 {
-                    RegisterType(window);
+                    _services.AddSingleton(window);
                 }
             }
-
-            SetContext();
-        }
-
-        /// <summary>
-        /// Registers the type.
-        /// </summary>
-        /// <param name="implementationType">Type of the implementation.</param>
-        private void RegisterType(Type implementationType)
-        {
-            // Get the Register<T1>() method
-            var methodInfo =
-                _services.GetType().GetMethods()
-                         .Single(m => m.Name == "AddSingleton"
-                            && m.IsGenericMethod
-                            && m.GetGenericArguments().Length == 1
-                            && m.GetParameters().Length == 0);
-
-            // Create a version of the method that takes your types
-            methodInfo = methodInfo.MakeGenericMethod(implementationType);
-
-            // Invoke the method on the default container (no parameters)
-            methodInfo.Invoke(_services, null);
-        }
-
-        /// <summary>
-        /// Registers the type.
-        /// </summary>
-        /// <param name="interfaceType">Type of the interface.</param>
-        /// <param name="implementationType">Type of the implementation.</param>
-        private void RegisterType(Type interfaceType, Type implementationType)
-        {
-            // Get the Register<T1,T2>() method
-            var methodInfo =
-                _services.GetType().GetMethods()
-                         .Single(m => m.Name == "AddSingleton"
-                            && m.IsGenericMethod
-                            && m.GetGenericArguments().Length == 2
-                            && m.GetParameters().Length == 0);
-
-            // Create a version of the method that takes your types
-            methodInfo = methodInfo.MakeGenericMethod(interfaceType, implementationType);
-
-            // Invoke the method on the default container (no parameters)
-            methodInfo.Invoke(_services, null);
         }
 
         /// <summary>

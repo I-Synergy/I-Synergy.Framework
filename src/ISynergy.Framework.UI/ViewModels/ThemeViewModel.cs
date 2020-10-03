@@ -6,13 +6,14 @@ using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
+using ISynergy.Framework.UI.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
     /// <summary>
     /// Class ThemeViewModel.
     /// </summary>
-    public class ThemeViewModel : ViewModelDialog<bool>
+    public class ThemeViewModel : ViewModelDialog<ApplicationColors>
     {
         /// <summary>
         /// Gets the title.
@@ -31,11 +32,6 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <value>The color command.</value>
         public RelayCommand<string> Color_Command { get; set; }
-        /// <summary>
-        /// Gets or sets the background command.
-        /// </summary>
-        /// <value>The background command.</value>
-        public RelayCommand<byte[]> Background_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
@@ -49,52 +45,24 @@ namespace ISynergy.Framework.UI.ViewModels
             ILoggerFactory loggerFactory)
             : base(context, commonServices, loggerFactory)
         {
-            Color_Command = new RelayCommand<string>((e) => SetColor(e));
-            Background_Command = new RelayCommand<byte[]>((e) => SetWallpaper(e));
-
-            Color = BaseCommonServices.ApplicationSettingsService.Color;
-            Wallpaper = BaseCommonServices.ApplicationSettingsService.Wallpaper;
-        }
-
-        /// <summary>
-        /// Gets or sets the Color property value.
-        /// </summary>
-        /// <value>The color.</value>
-        public string Color
-        {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the Wallpaper property value.
-        /// </summary>
-        /// <value>The wallpaper.</value>
-        public byte[] Wallpaper
-        {
-            get { return GetValue<byte[]>(); }
-            set { SetValue(value); }
+            Color_Command = new RelayCommand<string>((e) => SelectedItem = SetColor(e));
+            SelectedItem = SetColor(BaseCommonServices.ApplicationSettingsService.Color);
         }
 
         /// <summary>
         /// Sets the color.
         /// </summary>
         /// <param name="e">The e.</param>
-        private void SetColor(string e)
+        private ApplicationColors SetColor(string e)
         {
             if (Enum.TryParse(e, out ApplicationColors color))
             {
-                Color = e;
+                return color;
             }
-        }
-
-        /// <summary>
-        /// Sets the wallpaper.
-        /// </summary>
-        /// <param name="wallpaper">The wallpaper.</param>
-        private void SetWallpaper(byte[] wallpaper)
-        {
-            Wallpaper = wallpaper;
+            else
+            {
+                return ApplicationColors.Default;
+            }
         }
 
         /// <summary>
@@ -102,10 +70,9 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="e">if set to <c>true</c> [e].</param>
         /// <returns>Task.</returns>
-        public override Task SubmitAsync(bool e)
+        public override Task SubmitAsync(ApplicationColors e)
         {
-            BaseCommonServices.ApplicationSettingsService.Color = Color;
-            BaseCommonServices.ApplicationSettingsService.Wallpaper = Wallpaper;
+            BaseCommonServices.ApplicationSettingsService.Color = e.ToString();
             return base.SubmitAsync(e);
         }
     }

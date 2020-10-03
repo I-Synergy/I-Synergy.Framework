@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 
 namespace ISynergy.Framework.Mvvm
 {
@@ -177,7 +176,6 @@ namespace ISynergy.Framework.Mvvm
         public virtual void Cleanup()
         {
             PropertyChanged -= OnPropertyChanged;
-            ServiceLocator.Default.Unregister(this);
         }
 
         /// <summary>

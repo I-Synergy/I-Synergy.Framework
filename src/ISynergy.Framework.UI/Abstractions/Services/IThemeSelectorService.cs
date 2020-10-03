@@ -30,7 +30,7 @@ namespace ISynergy.Framework.UI.Abstractions.Services
         /// <summary>
         /// Sets the requested theme.
         /// </summary>
-        void SetRequestedTheme();
+        void SetThemeColor(string color);
         /// <summary>
         /// Sets the theme.
         /// </summary>
