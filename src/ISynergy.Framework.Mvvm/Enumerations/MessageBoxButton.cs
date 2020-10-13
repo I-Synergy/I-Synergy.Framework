@@ -16,10 +16,10 @@
         /// <summary>
         /// The yes no cancel
         /// </summary>
-        YesNoCancel = 3,
+        YesNoCancel = 2,
         /// <summary>
         /// The yes no
         /// </summary>
-        YesNo = 4
+        YesNo = 3
     }
 }

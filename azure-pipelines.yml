@@ -170,69 +170,20 @@ stages:
             arguments: '-c $(BuildConfiguration) -p:Version=$(build.buildNumber)'
             feedsToUse: config
             nugetConfigPath: nuget.config
-      
-      
+
         - task: MSBuild@1
-          displayName: 'Framework Windows - Nuget Restore x86'
+          displayName: 'Framework UI - Nuget Restore'
           inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: x86
+            solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+            platform: AnyCpu
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
       
         - task: MSBuild@1
-          displayName: 'Framework Windows - Build x86'
+          displayName: 'Framework UI - Build'
           inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: x86
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-      
-        - task: MSBuild@1
-          displayName: 'Framework Windows - Nuget Restore x64'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: x64
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
-      
-        - task: MSBuild@1
-          displayName: 'Framework Windows - Build x64'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: x64
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-      
-        - task: MSBuild@1
-          displayName: 'Framework Windows - Nuget Restore ARM'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: ARM
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
-      
-        - task: MSBuild@1
-          displayName: 'Framework Windows - Build ARM'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: ARM
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-      
-        - task: MSBuild@1
-          displayName: 'Framework Windows - Nuget Restore ARM64'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: ARM64
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
-      
-        - task: MSBuild@1
-          displayName: 'Framework Windows - Build ARM64'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: ARM64
+            solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+            platform: AnyCpu
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
 
@@ -314,22 +265,6 @@ stages:
             targetType: filePath
             filePath: ./build/updatebuildnumber.ps1
             arguments: '-previousBuildNumber "$env:BUILD_BUILDNUMBER"'
-      
-        - task: CopyFiles@2
-          displayName: 'Copy Multi Platform File to Reference folder'
-          inputs:
-            SourceFolder: '$(System.ArtifactsDirectory)\Output\ISynergy.Framework.UI\x86\$(BuildConfiguration)'
-            Contents: |
-              ISynergy.Framework.UI.dll
-              ISynergy.Framework.UI.pri
-            TargetFolder: '$(System.ArtifactsDirectory)\Output\ISynergy.Framework.UI\$(BuildConfiguration)'
-      
-        - task: PowerShell@2
-          displayName: 'Create Multi Platform Reference file'
-          inputs:
-            targetType: filePath
-            filePath: ./build/createplatformdll.ps1
-            arguments: '-file "$(System.ArtifactsDirectory)\Output\ISynergy.Framework.UI\$(BuildConfiguration)\ISynergy.Framework.UI.dll"'
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
@@ -456,7 +391,7 @@ stages:
             buildProperties: 'Version=$(build.buildNumber);PackageVersion=$(build.buildNumber);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);AssemblyFolder=$(System.ArtifactsDirectory)\Output;BuildConfiguration=$(BuildConfiguration)'
 
         - task: NuGetCommand@2
-          displayName: 'NuGet pack - Framework Windows'
+          displayName: 'NuGet pack: I-Synergy.Framework.UI'
           inputs:
             command: pack
             packagesToPack: 'nuget/ISynergy.Framework.UI.nuspec'
@@ -487,7 +422,7 @@ stages:
           displayName: 'NuGet push - I-Synergy.Framework'
           inputs:
             command: 'push'
-            packagesToPush: '$(Build.ArtifactStagingDirectory)/*$(build.buildNumber).nupkg'
+            packagesToPush: '$(Build.ArtifactStagingDirectory)\Nuget\*.nupkg'
             nuGetFeedType: 'external'
             publishFeedCredentials: 'Nuget.org'
 
