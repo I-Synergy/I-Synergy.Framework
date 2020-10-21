@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Extensions;
-using Windows.ApplicationModel.Core;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -19,6 +18,10 @@ using System.Reflection;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Core.Locators;
+
+#if NETFX_CORE
+using Windows.ApplicationModel.Core;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -373,11 +376,15 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public async Task CleanBackStackAsync()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                ((Frame)Frame).BackStack.Clear();
-            });
+#if NETFX_CORE
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal, 
+                () => ((Frame)Frame).BackStack.Clear());
+#else
+            await CoreDispatcher.Main.RunAsync(
+                CoreDispatcherPriority.Normal, 
+                () => ((Frame)Frame).BackStack.Clear());
+#endif
         }
     }
 }
