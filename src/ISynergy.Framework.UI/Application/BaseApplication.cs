@@ -24,19 +24,15 @@ using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel;
+
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
 
-
-#if HAS_UNO
-using Windows.UI.WebUI;
-#endif
-
 #if NETFX_CORE
-using Windows.ApplicationModel;
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
 using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
@@ -330,10 +326,12 @@ namespace ISynergy.Framework.UI
             var deferral = e.SuspendingOperation.GetDeferral();
 
             //TODO: Save application state and stop any background activity
+#if NETFX_CORE
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
                 task.Value?.Unregister(true);
             }
+#endif
 
             deferral.Complete();
         }
