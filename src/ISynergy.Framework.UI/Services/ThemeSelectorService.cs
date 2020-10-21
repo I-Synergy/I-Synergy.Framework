@@ -91,11 +91,14 @@ namespace ISynergy.Framework.UI.Services
                 frameworkElement.RequestedTheme = (ElementTheme)Theme;
             }
 
+            #if NETFX_CORE
             SetupTitlebar();
+            #endif
 
             OnThemeChanged(null, (ElementTheme)Theme);
         }
 
+        #if NETFX_CORE
         /// <summary>
         /// Setups the titlebar.
         /// </summary>
@@ -130,6 +133,7 @@ namespace ISynergy.Framework.UI.Services
                 }
             }
         }
+        #endif
 
         /// <summary>
         /// Loads the theme from setting.
@@ -137,8 +141,9 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>System.Object.</returns>
         private static object LoadThemeFromSetting()
         {
-            var cacheTheme = ElementTheme.Light;
             var themeName = ApplicationData.Current.LocalSettings.Values[SettingsKey];
+
+            ElementTheme cacheTheme;
 
             if (themeName is null)
             {
