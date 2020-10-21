@@ -473,10 +473,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <summary>
         /// restart application as an asynchronous operation.
         /// </summary>
-        public async Task RestartApplicationAsync()
-        {
-            await BaseCommonServices.DialogService.ShowInformationAsync("Please restart the application.");
-            Application.Current.Exit();
-        }
+        public Task RestartApplicationAsync() =>
+            BaseCommonServices.DialogService.ShowInformationAsync("Please restart the application.");
     }
 }
