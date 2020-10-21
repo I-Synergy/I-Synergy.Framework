@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.UI.Helpers;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.UI.Extensions;
 using System;
 using System.IO;
 using Windows.UI.Xaml.Data;
@@ -22,9 +23,9 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value != null)
+            if (value is byte[] bytes)
             {
-                return ImageHelper.ConvertByteArray2ImageSourceAsync((byte[])value);
+                return bytes.ToImageSource();
             }
             else
             {
@@ -65,13 +66,9 @@ namespace ISynergy.Framework.UI.Converters
         {
             Stream result = null;
 
-            if (value is byte[] && value != null)
+            if (value is byte[] bytes)
             {
-                var bytes = value as byte[];
-
-                result = new MemoryStream();
-                result.Write(bytes, 0, bytes.Length);
-                result.Position = 0;
+                result = bytes.ToMemoryStream();
             }
 
             return result;

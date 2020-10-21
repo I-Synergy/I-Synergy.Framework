@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.UI.Helpers;
+using ISynergy.Framework.UI.Extensions;
 using System;
 using Windows.UI;
 using Windows.UI.Xaml.Data;
@@ -62,7 +62,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             if(value is int color && color != 0)
             {
-                return new SolidColorBrush(ImageHelper.ConvertInteger2Color(color));
+                return new SolidColorBrush(color.ConvertInteger2Color());
             }
 
             return null;
@@ -101,7 +101,13 @@ namespace ISynergy.Framework.UI.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             Argument.IsNotNull(nameof(value), value);
-            return ImageHelper.ConvertInteger2Color((int)value);
+
+            if (value is int color)
+            {
+                return color.ConvertInteger2Color();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -115,7 +121,13 @@ namespace ISynergy.Framework.UI.Converters
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             Argument.IsNotNull(nameof(value), value);
-            return ImageHelper.ConvertColor2Integer((Color)value);
+
+            if(value is Color color)
+            {
+                return color.ConvertColor2Integer();
+            }
+
+            return null;
         }
     }
 }

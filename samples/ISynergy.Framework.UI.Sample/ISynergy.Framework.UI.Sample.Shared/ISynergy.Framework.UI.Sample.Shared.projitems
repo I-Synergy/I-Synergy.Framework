@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\AuthenticationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CameraService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ClientMonitorService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\ClipboardService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommonServices.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DownloadFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />

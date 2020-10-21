@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Sample.Abstractions.Services;
 using ISynergy.Framework.UI.Sample.Options;
+using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.UI.Sample.Services;
 using ISynergy.Framework.UI.Sample.ViewModels;
 using ISynergy.Framework.UI.Sample.Views;

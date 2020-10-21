@@ -10,16 +10,16 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Converts the byte array2 stream.
         /// </summary>
-        /// <param name="self">The self.</param>
+        /// <param name="_self">The self.</param>
         /// <returns>MemoryStream.</returns>
-        public static MemoryStream ConvertByteArray2Stream(this byte[] self)
+        public static MemoryStream ToMemoryStream(this byte[] _self)
         {
             MemoryStream result = null;
 
-            if (self != null)
+            if (_self != null && _self.Length > 0)
             {
                 result = new MemoryStream();
-                result.Write(self, 0, self.Length);
+                result.Write(_self, 0, _self.Length);
                 result.Position = 0;
             }
 
