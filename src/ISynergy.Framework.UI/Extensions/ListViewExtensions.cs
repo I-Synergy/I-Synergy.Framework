@@ -140,7 +140,10 @@ namespace ISynergy.Framework.UI.Extensions
             if (newItemToBringIntoView != null)
             {
                 var listView = (ListView)d;
+
+#if NETFX_CORE || __ANDROID__
                 listView.ScrollIntoView(newItemToBringIntoView);
+#endif
             }
         }
 
