@@ -1,5 +1,12 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using System.Reflection;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using System.Diagnostics;
+
+#if NETFX_CORE
 using Windows.ApplicationModel;
+#else
+using System.IO;
+#endif
 
 namespace ISynergy.Framework.UI
 {
@@ -11,6 +18,20 @@ namespace ISynergy.Framework.UI
     public class InfoService : IInfoService
     {
         /// <summary>
+        /// The assembly
+        /// </summary>
+        private readonly Assembly _assembly;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InfoService"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        public InfoService(Assembly assembly)
+        {
+            _assembly = assembly;
+        }
+
+        /// <summary>
         /// Gets the application path.
         /// </summary>
         /// <value>The application path.</value>
@@ -18,7 +39,11 @@ namespace ISynergy.Framework.UI
         {
             get
             {
+#if NETFX_CORE
                 return Package.Current.InstalledLocation.Path;
+#else
+                return Path.GetDirectoryName(_assembly.Location);
+#endif
             }
         }
 
@@ -30,7 +55,7 @@ namespace ISynergy.Framework.UI
         {
             get
             {
-                return Package.Current.PublisherDisplayName;
+                return FileVersionInfo.GetVersionInfo(_assembly.Location).CompanyName;
             }
         }
 
@@ -42,7 +67,7 @@ namespace ISynergy.Framework.UI
         {
             get
             {
-                return $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
+                return FileVersionInfo.GetVersionInfo(_assembly.Location).FileVersion;
             }
         }
 
@@ -54,7 +79,7 @@ namespace ISynergy.Framework.UI
         {
             get
             {
-                return Package.Current.DisplayName;
+                return FileVersionInfo.GetVersionInfo(_assembly.Location).ProductName;
             }
         }
 
@@ -62,11 +87,11 @@ namespace ISynergy.Framework.UI
         /// Gets the copy rights detail.
         /// </summary>
         /// <value>The copy rights detail.</value>
-        public string CopyRightsDetail
+        public string Copyrights
         {
             get
             {
-                return Package.Current.Description;
+                return FileVersionInfo.GetVersionInfo(_assembly.Location).LegalCopyright;
             }
         }
     }

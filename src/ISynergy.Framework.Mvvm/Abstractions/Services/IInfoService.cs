@@ -25,5 +25,10 @@
         /// </summary>
         /// <value>The name of the product.</value>
         string ProductName { get; }
+        /// <summary>
+        /// Gets the copy rights.
+        /// </summary>
+        /// <value>The copy rights detail.</value>
+        string Copyrights { get;}
     }
 }

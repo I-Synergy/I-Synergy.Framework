@@ -7,6 +7,7 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Navigation;
 using ISynergy.Framework.UI.Sample.Abstractions.Services;
+using ISynergy.Framework.UI.Sample.Shared.ViewModels;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml;
@@ -22,6 +23,7 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
         public ICommonServices CommonServices { get; }
 
         public RelayCommand Display_Command { get; set; }
+        public RelayCommand Info_Command { get; set; }
 
         public ShellViewModel(
             IContext context,
@@ -34,9 +36,13 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
             CommonServices = commonServices;
 
             Display_Command = new RelayCommand(async () => await OpenDisplayAsync());
+            Info_Command = new RelayCommand(async () => await OpenInfoAsync());
 
             PopulateNavItems();
         }
+
+        private Task OpenInfoAsync() =>
+            CommonServices.NavigationService.NavigateAsync<InfoViewModel>();
 
         private Task OpenDisplayAsync() =>
             CommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
@@ -53,6 +59,7 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
         {
             PrimaryItems.Clear();
             PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["icon_kiosk"] as string, ForegroundColor, Display_Command));
+            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["tile_info"] as string, ForegroundColor, Info_Command));
         }
 
         protected override Task CreateFeedbackAsync()

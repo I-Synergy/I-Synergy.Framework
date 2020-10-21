@@ -380,7 +380,7 @@ namespace ISynergy.Framework.UI
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<IInfoService, InfoService>();
+            services.AddSingleton<IInfoService>((s) => new InfoService(Assembly.GetEntryAssembly()));
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IUIVisualizerService, UIVisualizerService>();
             services.AddSingleton((s) => _navigationService);
