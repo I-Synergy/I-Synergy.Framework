@@ -25,13 +25,11 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (parameter != null && parameter is string)
             {
-                return (Geometry)XamlReader.Load(
-                        "<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>"
-                        + Application.Current.Resources[parameter] + "</Geometry>");
+                return (Geometry)XamlReader.Load($"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>{Application.Current.Resources[parameter]}</Geometry>");
             }
             else
             {
-                return Geometry.Empty;
+                return (Geometry)XamlReader.Load("<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'></Geometry>");
             }
         }
 
