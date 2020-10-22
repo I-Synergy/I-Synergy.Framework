@@ -1,7 +1,11 @@
 ﻿using System;
+using Windows.UI.Xaml.Data;
+
+#if NETFX_CORE
+using System.Collections.Generic;
 using ISynergy.Framework.Core.Abstractions;
 using Windows.Globalization.NumberFormatting;
-using Windows.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {
@@ -22,6 +26,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+#if NETFX_CORE
             var decimalFormatter = new DecimalFormatter();
 
             if (value is IContext context && context.NumberFormat != null)
@@ -36,6 +41,9 @@ namespace ISynergy.Framework.UI.Converters
             decimalFormatter.IntegerDigits = 1;
 
             return decimalFormatter;
+#else
+            return null;
+#endif
         }
 
         /// <summary>
