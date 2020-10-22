@@ -41,22 +41,27 @@ namespace ISynergy.Framework.UI.Controls
         /// <param name="color">The color.</param>
         public async Task WriteOutputAsync(string output, Color color)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                var run = new Run();
-                var sb = new StringBuilder();
-                sb.AppendLine(output);
-                run.Text = sb.ToString();
-                run.Foreground = new SolidColorBrush(color);
-
-                if (RichTextBox_Console.Blocks.Count == 0)
-                    RichTextBox_Console.Blocks.Add(new Paragraph());
-
-                (RichTextBox_Console.Blocks.First() as Paragraph)?.Inlines.Add(run);
-            });
+#if NETFX_CORE
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => WriteOutput(output, color));
+#else
+            await CoreDispatcher.Main.RunAsync(CoreDispatcherPriority.Normal, () => WriteOutput(output, color));
+#endif
 
             RichTextBox_Scroll.ChangeView(null, RichTextBox_Console.ActualHeight, null);
+        }
+
+        private void WriteOutput(string output, Color color)
+        {
+            var run = new Run();
+            var sb = new StringBuilder();
+            sb.AppendLine(output);
+            run.Text = sb.ToString();
+            run.Foreground = new SolidColorBrush(color);
+
+            if (RichTextBox_Console.Blocks.Count == 0)
+                RichTextBox_Console.Blocks.Add(new Paragraph());
+
+            (RichTextBox_Console.Blocks.First() as Paragraph)?.Inlines.Add(run);
         }
 
         /// <summary>
