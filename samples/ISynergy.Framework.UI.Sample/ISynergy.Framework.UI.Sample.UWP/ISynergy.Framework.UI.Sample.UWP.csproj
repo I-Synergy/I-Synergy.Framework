@@ -14,7 +14,7 @@
       <Version>2.4.3</Version>
     </PackageReference>
     <PackageReference Include="Uno.Core" Version="2.0.0" />
-    <PackageReference Include="Uno.UI" Version="3.0.17" />
+    <PackageReference Include="Uno.UI" Version="3.1.6" />
   </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -152,6 +152,10 @@
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj">
       <Project>{fe7a8e6e-10a1-4c31-90d5-73ebb068e570}</Project>
       <Name>ISynergy.Framework.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ISynergy.Framework.UI.Sample.Resources\ISynergy.Framework.UI.Sample.Resources.csproj">
+      <Project>{71a29099-9433-41d6-ab01-610f501053b0}</Project>
+      <Name>ISynergy.Framework.UI.Sample.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems" Label="Shared" Condition="Exists('..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems')" />

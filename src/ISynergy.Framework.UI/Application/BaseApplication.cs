@@ -31,6 +31,8 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
+using ISynergy.Framework.UI.Properties;
+using System.Resources;
 
 #if NETFX_CORE
 using Windows.System.Profile;
@@ -65,17 +67,34 @@ namespace ISynergy.Framework.UI
         /// <value>The theme selector.</value>
         public IThemeSelectorService ThemeSelector { get; private set; }
 
+        /// <summary>
+        /// Gets the language service.
+        /// </summary>
+        /// <value>The language service.</value>
+        public ILanguageService LanguageService { get; private set; }
+
+        /// <summary>
+        /// The service provider
+        /// </summary>
         private readonly IServiceProvider _serviceProvider;
+        /// <summary>
+        /// The services
+        /// </summary>
         private readonly IServiceCollection _services;
+        /// <summary>
+        /// The navigation service
+        /// </summary>
         private readonly INavigationService _navigationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseApplication"/> class.
+        /// Initializes a new instance of the <see cref="BaseApplication" /> class.
         /// </summary>
         protected BaseApplication()
         {
             _services = new ServiceCollection();
             _navigationService = new NavigationService();
+
+            LanguageService = new LanguageService(new ResourceManager(typeof(Resources)));
 
             ConfigureServices(_services);
             
@@ -139,7 +158,7 @@ namespace ISynergy.Framework.UI
         /// Handles the UnobservedTaskException event of the TaskScheduler control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs" /> instance containing the event data.</param>
         private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             await HandleException(e.Exception, e.Exception.Message);
@@ -162,7 +181,7 @@ namespace ISynergy.Framework.UI
         /// Handles the UnhandledException event of the CurrentDomain control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs" /> instance containing the event data.</param>
         private async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
@@ -243,6 +262,7 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
+        /// <exception cref="System.Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
         /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
         private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
@@ -253,7 +273,7 @@ namespace ISynergy.Framework.UI
         /// Handles the <see cref="E:Navigated" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
         private static void OnNavigated(object sender, NavigationEventArgs e)
         {
             // Each time a navigation event occurs, update the Back button's visibility
@@ -267,7 +287,7 @@ namespace ISynergy.Framework.UI
         /// Handles the <see cref="E:BackRequested" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="BackRequestedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="BackRequestedEventArgs" /> instance containing the event data.</param>
         private static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
             var rootFrame = global::Windows.UI.Xaml.Window.Current.Content as Frame;
@@ -369,6 +389,7 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Configures the services.
         /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
@@ -378,12 +399,14 @@ namespace ISynergy.Framework.UI
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton((s) => LanguageService);
             services.AddSingleton<IInfoService>((s) => new InfoService(Assembly.GetEntryAssembly()));
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IUIVisualizerService, UIVisualizerService>();
             services.AddSingleton((s) => _navigationService);
             services.AddSingleton<IConverterService, ConverterService>();
             services.AddSingleton<IApplicationSettingsService, ApplicationSettingsService>();
+            services.AddSingleton<IFileService, FileService>();
 
             //Register functions
             services.AddSingleton<LocalizationFunctions>();
@@ -536,6 +559,7 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="ex">The ex.</param>
         /// <param name="message">The message.</param>
+        /// <returns>Task.</returns>
         public abstract Task HandleException(Exception ex, string message);
     }
 }

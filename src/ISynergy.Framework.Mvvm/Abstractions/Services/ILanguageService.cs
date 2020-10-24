@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services
+﻿using System.Resources;
+
+namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
     /// <summary>
     /// Interface ILanguageService
@@ -11,5 +13,11 @@
         /// <param name="key">The key.</param>
         /// <returns>System.String.</returns>
         string GetString(string key);
+
+        /// <summary>
+        /// Adds the resource manager.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        void AddResourceManager(ResourceManager resourceManager);
     }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Navigation;
@@ -24,6 +25,7 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
 
         public RelayCommand Display_Command { get; set; }
         public RelayCommand Info_Command { get; set; }
+        public RelayCommand Browse_Command { get; set; }
 
         public ShellViewModel(
             IContext context,
@@ -37,8 +39,17 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
 
             Display_Command = new RelayCommand(async () => await OpenDisplayAsync());
             Info_Command = new RelayCommand(async () => await OpenInfoAsync());
+            Browse_Command = new RelayCommand(async () => await BrowseFileAsync());
 
             PopulateNavItems();
+        }
+
+        private async Task BrowseFileAsync()
+        {
+            if (await CommonServices.FileService.BrowseFileAsync("*", 0) is FileResult file)
+            {
+                await CommonServices.DialogService.ShowInformationAsync($"File '{file.FileName}' is selected.");
+            }
         }
 
         private Task OpenInfoAsync() =>
@@ -60,6 +71,7 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
             PrimaryItems.Clear();
             PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["icon_kiosk"] as string, ForegroundColor, Display_Command));
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["tile_info"] as string, ForegroundColor, Info_Command));
+            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["tb_search"] as string, ForegroundColor, Browse_Command));
         }
 
         protected override Task CreateFeedbackAsync()

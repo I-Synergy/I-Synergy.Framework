@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Models;
 
 namespace ISynergy.Framework.UI.Sample.Services
 {

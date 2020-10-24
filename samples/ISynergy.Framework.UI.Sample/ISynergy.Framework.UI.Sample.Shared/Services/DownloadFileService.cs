@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Models;
 using Windows.Storage;
 using Windows.System;
 
@@ -31,11 +32,12 @@ namespace ISynergy.Framework.UI.Sample.Services
         /// <param name="file">The file.</param>
         /// <param name="filename">The filename.</param>
         /// <param name="filefilter">The filefilter.</param>
-        public async Task DownloadFileAsync(byte[] file, string filename, string filefilter)
+        public async Task DownloadFileAsync(string filename, byte[] file)
         {
-            var savedfile = (StorageFile)await FileService.SaveFileAsync(filefilter, filename);
-            await FileIO.WriteBytesAsync(savedfile, file);
-            await Launcher.LaunchFileAsync(savedfile);
+            if(await FileService.SaveFileAsync(filename, file) is FileResult result)
+            {
+                await Launcher.LaunchUriAsync(new Uri(result.FilePath));
+            };
         }
     }
 }

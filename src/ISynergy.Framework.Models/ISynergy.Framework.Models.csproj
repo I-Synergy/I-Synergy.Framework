@@ -23,4 +23,8 @@
     <ProjectReference Include="..\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MasterData\" />
+  </ItemGroup>
+
 </Project>

@@ -18,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
+using System.Resources;
+using ISynergy.Framework.UI.Samples;
 
 namespace ISynergy.Framework.UI.Sample
 {
@@ -64,8 +66,7 @@ namespace ISynergy.Framework.UI.Sample
 #if NETFX_CORE
             services.AddSingleton<IUpdateService, UpdateService>();
 #endif
-
-            services.AddSingleton<ILanguageService, LanguageService>();
+            
             services.AddSingleton<ISettingsService, SettingsService>();
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
@@ -74,7 +75,6 @@ namespace ISynergy.Framework.UI.Sample
             services.AddSingleton<ITelemetryService, TelemetryService>();
             services.AddSingleton<IMasterDataService, MasterDataService>();
             services.AddSingleton<IClientMonitorService, ClientMonitorService>();
-            services.AddSingleton<IFileService, FileService>();
             services.AddSingleton<ICameraService, CameraService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
             services.AddSingleton<IDownloadFileService, DownloadFileService>();
@@ -83,6 +83,8 @@ namespace ISynergy.Framework.UI.Sample
 
             services.AddSingleton<IShellViewModel, ShellViewModel>();
             services.AddSingleton<IShellView, ShellView>();
+
+            LanguageService.AddResourceManager(new ResourceManager(typeof(Resources)));
 
             //Load assemblies
             RegisterAssemblies(new List<Assembly>

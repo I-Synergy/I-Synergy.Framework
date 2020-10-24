@@ -11,7 +11,7 @@ namespace ISynergy.Framework.UI.Extensions
     /// <summary>
     /// Class UriExtensins.
     /// </summary>
-    public static class UriExtensins
+    public static class UriExtensions
     {
         /// <summary>
         /// convert image source to byte array as an asynchronous operation.

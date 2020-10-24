@@ -34,6 +34,7 @@ namespace ISynergy.Framework.UI.Controls
             InitializeComponent();
         }
 
+#if NETFX_CORE
         /// <summary>
         /// Writes the output to the console control.
         /// </summary>
@@ -41,22 +42,21 @@ namespace ISynergy.Framework.UI.Controls
         /// <param name="color">The color.</param>
         public async Task WriteOutputAsync(string output, Color color)
         {
-#if NETFX_CORE
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => WriteOutput(output, color));
-#else
-            await CoreDispatcher.Main.RunAsync(CoreDispatcherPriority.Normal, () => WriteOutput(output, color));
-#endif
 
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => WriteOutput(output, color));
             RichTextBox_Scroll.ChangeView(null, RichTextBox_Console.ActualHeight, null);
+
         }
 
         private void WriteOutput(string output, Color color)
         {
+
             var run = new Run();
             var sb = new StringBuilder();
             sb.AppendLine(output);
             run.Text = sb.ToString();
             run.Foreground = new SolidColorBrush(color);
+
 
             if (RichTextBox_Console.Blocks.Count == 0)
                 RichTextBox_Console.Blocks.Add(new Paragraph());
@@ -80,6 +80,7 @@ namespace ISynergy.Framework.UI.Controls
         /// <param name="workingDirectory">The working directory.</param>
         public async Task StartProcessAsync(string fileName, string arguments, string workingDirectory = null)
         {
+
             //  Are we showing diagnostics?
             if (ShowDiagnostics)
             {
@@ -91,7 +92,7 @@ namespace ISynergy.Framework.UI.Controls
                     await WriteOutputAsync("." + Environment.NewLine, Color.FromArgb(255, 0, 255, 0));
             }
 
-#if NETFX_CORE
+
             await CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 try
@@ -143,15 +144,13 @@ namespace ISynergy.Framework.UI.Controls
                     await WriteOutputAsync($"{ex.StackTrace}{Environment.NewLine}", Colors.Red);
                 }
             });
-#else
-            throw new NotSupportedException("Console script execution is only supported on UWP");
-#endif
         }
+#endif
 
-        /// <summary>
-        /// The show diagnostics property
-        /// </summary>
-        private static readonly DependencyProperty ShowDiagnosticsProperty =
+    /// <summary>
+    /// The show diagnostics property
+    /// </summary>
+    private static readonly DependencyProperty ShowDiagnosticsProperty =
           DependencyProperty.Register(nameof(ShowDiagnostics), typeof(bool), typeof(Console),
           new PropertyMetadata(false, OnShowDiagnosticsChanged));
 

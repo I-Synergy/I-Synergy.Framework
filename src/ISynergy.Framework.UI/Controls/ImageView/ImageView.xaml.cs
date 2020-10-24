@@ -49,7 +49,7 @@ namespace ISynergy.Framework.UI.Controls
         /// </summary>
         public ImageView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>
