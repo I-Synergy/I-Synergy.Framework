@@ -1,5 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.ViewModels;
@@ -25,7 +24,19 @@ namespace ISynergy.Framework.UI.Sample.Views.Library
             SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
         }
 
+#if NETFX_CORE
         private void ThemeWindow_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            SetColorButton();
+        }
+#elif __ANDROID__
+        private void ThemeWindow_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
+        {
+            SetColorButton();
+        }
+#endif
+        
+        private void SetColorButton()
         {
             if (DataContext is ThemeViewModel themeViewModel)
             {
