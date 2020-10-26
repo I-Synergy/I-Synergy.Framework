@@ -99,6 +99,7 @@ namespace ISynergy.Framework.UI.Sample.Views
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void RootNavigationView_Loaded(object sender, RoutedEventArgs e)
         {
+#if NETFX_CORE
             // add keyboard accelerators for backwards navigation
             var GoBack = new KeyboardAccelerator
             {
@@ -119,8 +120,11 @@ namespace ISynergy.Framework.UI.Sample.Views
 
             // ALT routes here
             AltLeft.Modifiers = VirtualKeyModifiers.Menu;
+#endif
         }
 
+
+#if NETFX_CORE
         /// <summary>
         /// Backs the invoked.
         /// </summary>
@@ -131,6 +135,7 @@ namespace ISynergy.Framework.UI.Sample.Views
             OnBackRequested();
             args.Handled = true;
         }
+#endif
 
         /// <summary>
         /// Roots the navigation view back requested.
