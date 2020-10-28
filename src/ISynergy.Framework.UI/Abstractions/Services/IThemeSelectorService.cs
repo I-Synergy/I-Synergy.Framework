@@ -1,4 +1,5 @@
 ﻿using System;
+using ISynergy.Framework.UI.Enumerations;
 
 namespace ISynergy.Framework.UI.Abstractions.Services
 {
@@ -30,7 +31,7 @@ namespace ISynergy.Framework.UI.Abstractions.Services
         /// <summary>
         /// Sets the requested theme.
         /// </summary>
-        void SetThemeColor(string color);
+        void SetThemeColor(ThemeColors color);
         /// <summary>
         /// Sets the theme.
         /// </summary>

@@ -1,12 +1,7 @@
 ﻿using System.Reflection;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.Diagnostics;
-
-#if NETFX_CORE
-using Windows.ApplicationModel;
-#else
 using System.IO;
-#endif
 
 namespace ISynergy.Framework.UI
 {
@@ -39,11 +34,7 @@ namespace ISynergy.Framework.UI
         {
             get
             {
-#if NETFX_CORE
-                return Package.Current.InstalledLocation.Path;
-#else
                 return Path.GetDirectoryName(_assembly.Location);
-#endif
             }
         }
 

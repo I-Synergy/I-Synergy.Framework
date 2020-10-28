@@ -19,6 +19,9 @@
     <UpToDateCheckInput Include="..\ISynergy.Framework.UI.Sample.Shared\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="WasmCSS\Fonts.css" />
     <EmbeddedResource Include="WasmScripts\AppManifest.js" />
   </ItemGroup>
@@ -32,6 +35,9 @@
 
     You can safely remove this ItemGroup completely.
     -->
+    <None Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Program.cs" />
     <None Include="LinkerConfig.xml" />
     <None Include="wwwroot\web.config" />

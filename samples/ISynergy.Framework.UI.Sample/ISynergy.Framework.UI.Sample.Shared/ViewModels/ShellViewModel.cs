@@ -12,11 +12,30 @@ using ISynergy.Framework.UI.Sample.Shared.ViewModels;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace ISynergy.Framework.UI.Sample.ViewModels
 {
     public class ShellViewModel : ShellViewModelBase, IShellViewModel
     {
+        /// <summary>
+        /// Gets or sets the NavigationPaneMode property value.
+        /// </summary>
+        public NavigationViewPaneDisplayMode NavigationPaneMode
+        {
+            get { return GetValue<NavigationViewPaneDisplayMode>(); }
+            set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the Version property value.
+        /// </summary>
+        public string Version
+        {
+            get { return GetValue<string>(); }
+            set { SetValue(value); }
+        }
+
         /// <summary>
         /// Gets the common services.
         /// </summary>
@@ -36,6 +55,14 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
             : base(context, commonServices, loggerFactory, themeSelectorService, localizationFunctions)
         {
             CommonServices = commonServices;
+
+            Version = commonServices.InfoService.ProductVersion;
+
+            #if NETFX_CORE
+            NavigationPaneMode = NavigationViewPaneDisplayMode.Auto;
+            #endif
+
+            DisplayName = "User";
 
             Display_Command = new RelayCommand(async () => await OpenDisplayAsync());
             Info_Command = new RelayCommand(async () => await OpenInfoAsync());

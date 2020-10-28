@@ -33,6 +33,8 @@ using Windows.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
 using ISynergy.Framework.UI.Properties;
 using System.Resources;
+using ISynergy.Framework.UI.Enumerations;
+
 
 #if NETFX_CORE
 using Windows.System.Profile;
@@ -105,6 +107,10 @@ namespace ISynergy.Framework.UI
             Logger = _serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(BaseApplication));
             Logger.LogInformation("Starting application");
 
+            Current.UnhandledException += Current_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
             SetContext();
 
 #if NETFX_CORE
@@ -146,13 +152,9 @@ namespace ISynergy.Framework.UI
 
             //Gets or sets a value that indicates whether to display frame-rate and per-frame CPU usage info. These display as an overlay of counters in the window chrome while the app runs.
             //this.EnableFrameRateCounter = true;
-
-#if NETFX_CORE
-            Current.UnhandledException += Current_UnhandledException;
-#endif
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
+
+        
 
         /// <summary>
         /// Handles the UnobservedTaskException event of the TaskScheduler control.
@@ -175,6 +177,17 @@ namespace ISynergy.Framework.UI
             e.Handled = true;
             await HandleException(e.Exception, e.Message);
         }
+#else
+        /// <summary>
+        /// Handles the UnhandledException event of the Current control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="Windows.UI.Xaml.UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        private async void Current_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            await HandleException(e.Exception, e.Message);
+        }
 #endif
 
         /// <summary>
@@ -193,8 +206,8 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
-        /// <param name="args">Event data for the event.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        /// <param name="e">Event data for the event.</param>
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if NETFX_CORE
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
@@ -209,19 +222,12 @@ namespace ISynergy.Framework.UI
             }
 #endif
 
-            LaunchApplication();
-        }
+            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Color.ToEnum(ThemeColors.Default));
 
-        /// <summary>
-        /// Launches the application.
-        /// </summary>
-        private void LaunchApplication()
-        {
-            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Color);
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (!(global::Windows.UI.Xaml.Window.Current.Content is Frame rootFrame))
+            if (!(Windows.UI.Xaml.Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
@@ -229,8 +235,10 @@ namespace ISynergy.Framework.UI
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
 
-                // Place the frame in the current Window
-                global::Windows.UI.Xaml.Window.Current.Content = rootFrame;
+                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    //TODO: Load state from previously suspended application
+                }
 
                 // Register a handler for BackRequested events and set the
                 // visibility of the Back button
@@ -240,21 +248,35 @@ namespace ISynergy.Framework.UI
                     rootFrame.CanGoBack ?
                     AppViewBackButtonVisibility.Visible :
                     AppViewBackButtonVisibility.Collapsed;
+
+                // Place the frame in the current Window
+                Windows.UI.Xaml.Window.Current.Content = rootFrame;
             }
 
-            if (rootFrame.Content is null)
+            if (e.PrelaunchActivated == false)
             {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame.Navigate(_serviceProvider.GetRequiredService<IShellView>().GetType());
+                if (rootFrame.Content == null)
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+
+                    try
+                    {
+                        var view = _serviceProvider.GetRequiredService<IShellView>();
+                        rootFrame.Navigate(view.GetType(), e.Arguments);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+                    
+                }
+
+                // Ensure the current window is active
+                Windows.UI.Xaml.Window.Current.Activate();
             }
-
-            // Ensure the current window is active
-            global::Windows.UI.Xaml.Window.Current.Activate();
-
-            //if (!System.Diagnostics.Debugger.IsAttached)
-            //    ISynergy.Framework.UI.Controls.ScreenSaver.InitializeScreensaver(new Uri("ms-appx://ISynergy.Pos/Assets/SplashScreen.scale-400.png"));
         }
 
         /// <summary>
@@ -262,12 +284,10 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
-        /// <exception cref="System.Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
         /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
-        private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
+        /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
+        private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
+            throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
 
         /// <summary>
         /// Handles the <see cref="E:Navigated" /> event.
@@ -290,9 +310,9 @@ namespace ISynergy.Framework.UI
         /// <param name="e">The <see cref="BackRequestedEventArgs" /> instance containing the event data.</param>
         private static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            var rootFrame = global::Windows.UI.Xaml.Window.Current.Content as Frame;
+            var rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
 
-            if (GetDescendantFromName(global::Windows.UI.Xaml.Window.Current.Content, "ContentRootFrame") is Frame _frame)
+            if (GetDescendantFromName(Windows.UI.Xaml.Window.Current.Content, "ContentRootFrame") is Frame _frame)
             {
                 rootFrame = _frame;
             }
@@ -544,11 +564,15 @@ namespace ISynergy.Framework.UI
             Context = _serviceProvider.GetRequiredService<IContext>();
             Context.ViewModels = ViewModelTypes;
 
-            var culture = CultureInfo.CurrentCulture;
-            culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
-            culture.NumberFormat.CurrencyNegativePattern = 1;
+#if NETFX_CORE
+                //Only in Windows i can set the culture.
+                var culture = CultureInfo.CurrentCulture;
 
-            Context.NumberFormat = culture.NumberFormat;
+                culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
+                culture.NumberFormat.CurrencyNegativePattern = 1;
+
+                Context.NumberFormat = culture.NumberFormat;
+#endif
 
             var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
             localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Culture);

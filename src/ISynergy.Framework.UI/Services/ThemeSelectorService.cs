@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Enumerations;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
@@ -8,6 +9,7 @@ using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -66,10 +68,34 @@ namespace ISynergy.Framework.UI.Services
         /// Sets the requested theme.
         /// </summary>
         /// <param name="color">The color.</param>
-        public void SetThemeColor(string color)
+        public void SetThemeColor(ThemeColors color)
         {
-            Application.Current.Resources.ThemeDictionaries.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"ms-appx:///ISynergy.Framework.UI/Themes/Theme.{color}.xaml", UriKind.RelativeOrAbsolute) });
+            // Default I-Synergy color.
+            var themeColor = Color.FromArgb(255,33,99,255);
+
+            switch (color)
+            {
+                case ThemeColors.Gold:
+                    themeColor = Colors.Gold;
+                    break;
+                case ThemeColors.Lime:
+                    themeColor = Colors.Lime;
+                    break;
+                case ThemeColors.Magenta:
+                    themeColor = Colors.Magenta;
+                    break;
+                case ThemeColors.Maroon:
+                    themeColor = Colors.Maroon;
+                    break;
+                case ThemeColors.OrangeRed:
+                    themeColor = Colors.OrangeRed;
+                    break;
+                case ThemeColors.RoyalBlue:
+                    themeColor = Colors.RoyalBlue;
+                    break;
+            }
+
+            Application.Current.Resources["SystemAccentColor"] = themeColor;
         }
 
         /// <summary>

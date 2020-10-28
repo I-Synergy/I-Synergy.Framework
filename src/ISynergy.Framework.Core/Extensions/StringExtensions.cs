@@ -565,5 +565,20 @@ namespace ISynergy.Framework.Core.Extensions
             }
             return Bytes;
         }
+
+        /// <summary>
+        /// Converts to enum.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="_self">The value.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>T.</returns>
+        public static T ToEnum<T>(this string _self, T defaultValue) where T : struct
+        {
+            if (string.IsNullOrEmpty(_self))
+                return defaultValue;
+
+            return Enum.TryParse<T>(_self, true, out var result) ? result : defaultValue;
+        }
     }
 }

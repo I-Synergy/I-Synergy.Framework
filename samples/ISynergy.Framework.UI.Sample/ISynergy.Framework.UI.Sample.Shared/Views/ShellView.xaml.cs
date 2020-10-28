@@ -1,14 +1,7 @@
 ﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
-using Microsoft.Toolkit.Uwp.Helpers;
-
-#if NETFX_CORE
-using Microsoft.UI.Xaml.Controls;
-#elif HAS_UNO
 using Windows.UI.Xaml.Controls;
-#endif
-
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
@@ -28,49 +21,23 @@ namespace ISynergy.Framework.UI.Sample.Views
         public IShellViewModel ViewModel => ServiceLocator.Default.GetInstance<IShellViewModel>();
 
         /// <summary>
-        /// The weak root navigation view loaded event
-        /// </summary>
-        private readonly WeakEventListener<ShellView, object, RoutedEventArgs> WeakRootNavigationViewLoadedEvent = null;
-        /// <summary>
-        /// The weak root navigation view back requested event
-        /// </summary>
-        private readonly WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs> WeakRootNavigationViewBackRequestedEvent = null;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ShellView"/> class.
         /// </summary>
         public ShellView()
         {
             InitializeComponent();
-
             DataContext = ViewModel;
-
-            WeakRootNavigationViewLoadedEvent = new WeakEventListener<ShellView, object, RoutedEventArgs>(this)
-            {
-                OnEventAction = (instance, source, eventargs) => instance.RootNavigationView_Loaded(source, eventargs),
-                OnDetachAction = (listener) => RootNavigationView.Loaded -= listener.OnEvent
-            };
-
-            RootNavigationView.Loaded += WeakRootNavigationViewLoadedEvent.OnEvent;
-
-            WeakRootNavigationViewBackRequestedEvent = new WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs>(this)
-            {
-                OnEventAction = (instance, source, eventargs) => instance.RootNavigationView_BackRequested(source, eventargs),
-                OnDetachAction = (listener) => RootNavigationView.BackRequested -= listener.OnEvent
-            };
-
-            RootNavigationView.BackRequested += WeakRootNavigationViewBackRequestedEvent.OnEvent;
         }
 
         /// <summary>
         /// Handles the <see cref="E:NavigatedTo" /> event.
         /// </summary>
         /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            await ViewModel.InitializeAsync(ContentRootFrame);
-        }
+        //protected override async void OnNavigatedTo(NavigationEventArgs e)
+        //{
+        //    base.OnNavigatedTo(e);
+        //    await ViewModel.InitializeAsync(ContentRootFrame);
+        //}
 
         /// <summary>
         /// Navigations the item invoked.
@@ -97,7 +64,7 @@ namespace ISynergy.Framework.UI.Sample.Views
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void RootNavigationView_Loaded(object sender, RoutedEventArgs e)
+        private void RootNavigationViewLoaded(object sender, RoutedEventArgs e)
         {
 #if NETFX_CORE
             // add keyboard accelerators for backwards navigation
@@ -142,7 +109,7 @@ namespace ISynergy.Framework.UI.Sample.Views
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="NavigationViewBackRequestedEventArgs"/> instance containing the event data.</param>
-        private void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        private void RootNavigationViewBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             OnBackRequested();
         }
@@ -152,7 +119,7 @@ namespace ISynergy.Framework.UI.Sample.Views
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
-        private void ContentRootFrame_Navigated(object sender, NavigationEventArgs e)
+        private void ContentRootFrameNavigated(object sender, NavigationEventArgs e)
         {
             RootNavigationView.IsBackEnabled = ViewModel.BaseCommonServices.NavigationService.CanGoBack;
         }

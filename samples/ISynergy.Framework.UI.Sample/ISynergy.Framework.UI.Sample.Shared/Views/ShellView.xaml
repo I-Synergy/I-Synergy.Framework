@@ -9,7 +9,6 @@
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
     xmlns:FrameworkNavigation="using:ISynergy.Framework.UI.Navigation"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
 
     <c:View.Resources>
@@ -19,23 +18,23 @@
         <FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
             <FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
                 <DataTemplate x:DataType="FrameworkNavigation:NavigationItem">
-                    <muxc:NavigationViewItem Content="{x:Bind Name}">
-                        <muxc:NavigationViewItem.Icon>
+                    <NavigationViewItem Content="{x:Bind Name}">
+                        <NavigationViewItem.Icon>
                             <PathIcon Data="{x:Bind Symbol}" />
-                        </muxc:NavigationViewItem.Icon>
+                        </NavigationViewItem.Icon>
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Tapped">
                                 <ic:InvokeCommandAction Command="{x:Bind Command}" CommandParameter="{x:Bind CommandParameter}" />
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
+                    </NavigationViewItem>
                 </DataTemplate>
             </FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
         </FrameworkNavigation:MenuItemTemplateSelector>
     </c:View.Resources>
 
     <RelativePanel>
-        <muxc:NavigationView x:Name="RootNavigationView"
+        <NavigationView x:Name="RootNavigationView"
                         RelativePanel.AlignTopWithPanel="True"
                         RelativePanel.AlignLeftWithPanel="True" 
                         RelativePanel.AlignRightWithPanel="True" 
@@ -46,60 +45,51 @@
                         MenuItemTemplateSelector="{StaticResource ItemSelector}"
                         SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         ItemInvoked="NavigationItemInvoked"
+                        Loaded="RootNavigationViewLoaded"
+                        BackRequested="RootNavigationViewBackRequested"
                         IsSettingsVisible="{Binding Context.IsAuthenticated, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         PaneDisplayMode="{Binding NavigationPaneMode}">
 
-            <!--<muxc:NavigationView.AutoSuggestBox>
-                -->
-            <!-- See AutoSuggestBox documentation for
-                 more info about how to implement search. -->
-            <!--
-                <AutoSuggestBox x:Name="NavViewSearchBox" QueryIcon="Find" IsEnabled="{Binding Context.IsAuthenticated}"/>
-            </muxc:NavigationView.AutoSuggestBox>-->
-
-            <!--<muxc:NavigationView.PaneHeader>
-                <TextBlock FontFamily="ms-appx:///ISynergy.Framework.UI/Assets/Fonts/ISynergy.ttf#I-Synergy" Text="0" FontSize="22" />
-            </muxc:NavigationView.PaneHeader>-->
-
-            <muxc:NavigationView.PaneFooter>
+            <NavigationView.PaneFooter>
                 <StackPanel>
-                    <muxc:NavigationViewItem x:Name="menuitem_Help" Content="Help" >
-                        <muxc:NavigationViewItem.Icon>
+                    <NavigationViewItem x:Name="menuitem_Help" Content="Help" >
+                        <NavigationViewItem.Icon>
                             <PathIcon Data="{StaticResource tile_help}"/>
-                        </muxc:NavigationViewItem.Icon>
+                        </NavigationViewItem.Icon>
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Tapped">
                                 <ic:InvokeCommandAction Command="{Binding Help_Command}" />
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem x:Name="menuitem_Language" Content="Language" >
-                        <muxc:NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                    <NavigationViewItem x:Name="menuitem_Language" Content="Language" >
+                        <NavigationViewItem.Icon>
                             <PathIcon Data="{StaticResource icon_flag}"/>
-                        </muxc:NavigationViewItem.Icon>
+                        </NavigationViewItem.Icon>
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Tapped">
                                 <ic:InvokeCommandAction Command="{Binding Language_Command}" />
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem x:Name="menuitem_Color" Content="Colors" >
-                        <muxc:NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                    <NavigationViewItem x:Name="menuitem_Color" Content="Colors" >
+                        <NavigationViewItem.Icon>
                             <PathIcon Data="{StaticResource icon_color}"/>
-                        </muxc:NavigationViewItem.Icon>
+                        </NavigationViewItem.Icon>
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Tapped">
                                 <ic:InvokeCommandAction Command="{Binding Color_Command}" />
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
+                    </NavigationViewItem>
 
-                    <muxc:NavigationViewItemSeparator />
-                    <muxc:NavigationViewItem x:Name="menuitem_Login">
-                        <muxc:NavigationViewItem.Content>
+                    <NavigationViewItemSeparator />
+                    <NavigationViewItem x:Name="menuitem_Login">
+                        <NavigationViewItem.Content>
                             <Grid Padding="-8,0">
                                 <RelativePanel>
-                                    <PersonPicture x:Name="Person_User" 
+                                    <PersonPicture x:Name="Person_User"
+                                                   Initials="T"
                                                    DisplayName="{Binding DisplayName, Mode=OneWay}" 
                                                    RelativePanel.AlignVerticalCenterWithPanel="True"
                                                    Width="24" 
@@ -112,20 +102,20 @@
                                                Text="{Binding Context.IsAuthenticated, Converter={StaticResource BooleanToStringConverter}}"/>
                                 </RelativePanel>
                             </Grid>
-                        </muxc:NavigationViewItem.Content>
+                        </NavigationViewItem.Content>
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Tapped">
                                 <ic:InvokeCommandAction Command="{Binding Login_Command}"/>
                             </ic:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
+                    </NavigationViewItem>
                 </StackPanel>
-            </muxc:NavigationView.PaneFooter>
+            </NavigationView.PaneFooter>
 
-            <muxc:NavigationView.Content>
+            <NavigationView.Content>
                 <Frame x:Name="ContentRootFrame"
                        Margin="10"
-                       Navigated="ContentRootFrame_Navigated" 
+                       Navigated="ContentRootFrameNavigated" 
                        IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
@@ -133,13 +123,13 @@
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
-            </muxc:NavigationView.Content>
-        </muxc:NavigationView>
+            </NavigationView.Content>
+        </NavigationView>
 
         <Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
             <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.75" />
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <muxc:ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
+                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
                 <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
             </StackPanel>
         </Grid>

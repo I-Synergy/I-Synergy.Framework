@@ -17,9 +17,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Windows.ApplicationModel;
 using System.Resources;
 using ISynergy.Framework.UI.Samples;
+using System.Runtime.CompilerServices;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
+
+#if NETFX_CORE
+using Windows.ApplicationModel;
+#endif
 
 namespace ISynergy.Framework.UI.Sample
 {
@@ -52,13 +60,13 @@ namespace ISynergy.Framework.UI.Sample
         {
             base.ConfigureServices(services);
 
-            var applicationExecutingPath = Package.Current.Installed­Location.Path;
+            var assembly = Assembly.GetAssembly(typeof(App));
 
             ConfigurationRoot = new ConfigurationBuilder()
-                .AddJsonFile($"{applicationExecutingPath}\\appsettings.json", false)
+                .AddJsonStream(assembly.GetManifestResourceStream($"{assembly.GetName().Name}.appsettings.json"))
                 .Build();
 
-            services.AddSingleton<ConfigurationOptions>((s) => ConfigurationRoot.GetSection(nameof(ConfigurationOptions)).Get<ConfigurationOptions>());
+            services.AddSingleton((s) => ConfigurationRoot.GetSection(nameof(ConfigurationOptions)).Get<ConfigurationOptions>());
 
             services.AddSingleton<IContext, Context>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
@@ -66,7 +74,7 @@ namespace ISynergy.Framework.UI.Sample
 #if NETFX_CORE
             services.AddSingleton<IUpdateService, UpdateService>();
 #endif
-            
+
             services.AddSingleton<ISettingsService, SettingsService>();
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
@@ -88,9 +96,9 @@ namespace ISynergy.Framework.UI.Sample
 
             //Load assemblies
             RegisterAssemblies(new List<Assembly>
-            {
-                Assembly.Load("ISynergy.Framework.UI.Sample")
-            });
+                {
+                    Assembly.GetAssembly(typeof(App))
+                });
         }
 
         public override Task HandleException(Exception ex, string message)
