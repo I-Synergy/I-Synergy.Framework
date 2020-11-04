@@ -35,7 +35,6 @@ using ISynergy.Framework.UI.Properties;
 using System.Resources;
 using ISynergy.Framework.UI.Enumerations;
 
-
 #if NETFX_CORE
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
@@ -407,6 +406,10 @@ namespace ISynergy.Framework.UI
         /// <param name="factory">The factory.</param>
         protected abstract void ConfigureLogger(ILoggerFactory factory);
 
+        /// <summary>
+        /// Gets the entry assembly.
+        /// </summary>
+        /// <returns>Assembly.</returns>
         protected abstract Assembly GetEntryAssembly();
 
         /// <summary>

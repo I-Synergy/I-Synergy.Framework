@@ -82,25 +82,11 @@
                     </NavigationViewItem>
 
                     <NavigationViewItemSeparator />
-                    <NavigationViewItem x:Name="menuitem_Login">
-                        <NavigationViewItem.Content>
-                            <Grid Padding="-8,0">
-                                <RelativePanel>
-                                    <PersonPicture x:Name="Person_User"
-                                                   Initials="T"
-                                                   DisplayName="{Binding DisplayName, Mode=OneWay}" 
-                                                   RelativePanel.AlignVerticalCenterWithPanel="True"
-                                                   Width="24" 
-                                                   Height="24"/>
-                                    <TextBlock x:Name="TextBlock_Login"
-                                               RelativePanel.RightOf="Person_User"
-                                               RelativePanel.AlignVerticalCenterWithPanel="True"
-                                               Margin="8,0"
-                                               TextWrapping="NoWrap"
-                                               Text="{Binding Context.IsAuthenticated, Converter={StaticResource BooleanToStringConverter}}"/>
-                                </RelativePanel>
-                            </Grid>
-                        </NavigationViewItem.Content>
+
+                    <NavigationViewItem x:Name="menuitem_Login" Content="{Binding Context.IsAuthenticated, Converter={StaticResource BooleanToStringConverter}}">
+                        <NavigationViewItem.Icon>
+                            <PathIcon Data="{StaticResource icon_user}"/>
+                        </NavigationViewItem.Icon>
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Tapped">
                                 <ic:InvokeCommandAction Command="{Binding Login_Command}"/>

@@ -20,6 +20,12 @@ namespace ISynergy.Framework.UI.Abstractions.Services
         object Theme { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IThemeSelectorService"/> is material.
+        /// </summary>
+        /// <value><c>true</c> if material; otherwise, <c>false</c>.</value>
+        bool Material { get; set; }
+
+        /// <summary>
         /// Occurs when [on theme changed].
         /// </summary>
         event EventHandler<object> OnThemeChanged;

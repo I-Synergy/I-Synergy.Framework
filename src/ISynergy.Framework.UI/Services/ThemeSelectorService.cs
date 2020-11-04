@@ -1,15 +1,13 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
+﻿using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Enumerations;
 using System;
+using Uno.Material;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -30,6 +28,13 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The theme.</value>
         public object Theme { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IThemeSelectorService" /> is material.
+        /// </summary>
+        /// <value><c>true</c> if material; otherwise, <c>false</c>.</value>
+        public bool Material { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether this instance is light theme enabled.
         /// </summary>
@@ -71,31 +76,59 @@ namespace ISynergy.Framework.UI.Services
         public void SetThemeColor(ThemeColors color)
         {
             // Default I-Synergy color.
-            var themeColor = Color.FromArgb(255,33,99,255);
+            var accentColor = "#3399ff";
+            var lightColor = "#79c9ff";
+            var darkColor = "#006ccb";
 
             switch (color)
             {
                 case ThemeColors.Gold:
-                    themeColor = Colors.Gold;
+                    accentColor = "#f3b200";
+                    lightColor = "#ffe44b";
+                    darkColor = "#bb8300";
                     break;
                 case ThemeColors.Lime:
-                    themeColor = Colors.Lime;
+                    accentColor = "#77b900";
+                    lightColor = "#abec49";
+                    darkColor = "#438900";
                     break;
                 case ThemeColors.Magenta:
-                    themeColor = Colors.Magenta;
+                    accentColor = "#ff00ff";
+                    lightColor = "#ff63ff";
+                    darkColor = "#c700cb";
                     break;
                 case ThemeColors.Maroon:
-                    themeColor = Colors.Maroon;
+                    accentColor = "#ac193d";
+                    lightColor = "#e35267";
+                    darkColor = "#760018";
                     break;
                 case ThemeColors.OrangeRed:
-                    themeColor = Colors.OrangeRed;
+                    accentColor = "#d24726";
+                    lightColor = "#ff7851";
+                    darkColor = "#9a0b00";
                     break;
                 case ThemeColors.RoyalBlue:
-                    themeColor = Colors.RoyalBlue;
+                    accentColor = "#0073cf";
+                    lightColor = "#5da1ff";
+                    darkColor = "#00489d";
                     break;
             }
 
-            Application.Current.Resources["SystemAccentColor"] = themeColor;
+            if(Material)
+            {
+                // Set a default palette to make sure all colors used by MaterialResources exist
+                Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
+
+                // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
+                Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
+
+
+                Application.Current.Resources["MaterialPrimaryColor"] = accentColor;
+                Application.Current.Resources["MaterialPrimaryVariantLightColor"] = lightColor;
+                Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = darkColor;
+            }
+
+            Application.Current.Resources["SystemAccentColor"] = accentColor;
         }
 
         /// <summary>
