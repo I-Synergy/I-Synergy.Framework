@@ -30,13 +30,13 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90'">
 		<PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.5" />
-		<PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.4" />
+		<PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
 		<PackageReference Include="Xamarin.AndroidX.Fragment" Version="1.2.5.3" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0'">
 		<PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.5" />
-		<PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.4" />
+		<PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
 	</ItemGroup>
         
     <ItemGroup>

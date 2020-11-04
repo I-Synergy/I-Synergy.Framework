@@ -29,7 +29,7 @@ namespace ISynergy.Framework.UI.Sample.Views.Library
         {
             SetColorButton();
         }
-#elif __ANDROID__
+#else
         private void ThemeWindow_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
         {
             SetColorButton();

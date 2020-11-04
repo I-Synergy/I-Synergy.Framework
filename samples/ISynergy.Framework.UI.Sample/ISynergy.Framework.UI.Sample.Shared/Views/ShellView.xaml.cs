@@ -6,6 +6,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace ISynergy.Framework.UI.Sample.Views
 {
@@ -21,23 +22,49 @@ namespace ISynergy.Framework.UI.Sample.Views
         public IShellViewModel ViewModel => ServiceLocator.Default.GetInstance<IShellViewModel>();
 
         /// <summary>
+        /// The weak root navigation view loaded event
+        /// </summary>
+        private readonly WeakEventListener<ShellView, object, RoutedEventArgs> WeakRootNavigationViewLoadedEvent = null;
+        /// <summary>
+        /// The weak root navigation view back requested event
+        /// </summary>
+        private readonly WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs> WeakRootNavigationViewBackRequestedEvent = null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ShellView"/> class.
         /// </summary>
         public ShellView()
         {
             InitializeComponent();
+
             DataContext = ViewModel;
+
+            WeakRootNavigationViewLoadedEvent = new WeakEventListener<ShellView, object, RoutedEventArgs>(this)
+            {
+                OnEventAction = (instance, source, eventargs) => instance.RootNavigationViewLoaded(source, eventargs),
+                OnDetachAction = (listener) => RootNavigationView.Loaded -= listener.OnEvent
+            };
+
+            RootNavigationView.Loaded += WeakRootNavigationViewLoadedEvent.OnEvent;
+
+            WeakRootNavigationViewBackRequestedEvent = new WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs>(this)
+            {
+                OnEventAction = (instance, source, eventargs) => instance.RootNavigationViewBackRequested(source, eventargs),
+                OnDetachAction = (listener) => RootNavigationView.BackRequested -= listener.OnEvent
+            };
+
+            RootNavigationView.BackRequested += WeakRootNavigationViewBackRequestedEvent.OnEvent;
         }
 
         /// <summary>
         /// Handles the <see cref="E:NavigatedTo" /> event.
         /// </summary>
         /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
-        //protected override async void OnNavigatedTo(NavigationEventArgs e)
-        //{
-        //    base.OnNavigatedTo(e);
-        //    await ViewModel.InitializeAsync(ContentRootFrame);
-        //}
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await ViewModel.InitializeAsync(ContentRootFrame);
+        }
 
         /// <summary>
         /// Navigations the item invoked.

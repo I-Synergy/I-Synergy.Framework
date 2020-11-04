@@ -45,8 +45,6 @@
                         MenuItemTemplateSelector="{StaticResource ItemSelector}"
                         SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         ItemInvoked="NavigationItemInvoked"
-                        Loaded="RootNavigationViewLoaded"
-                        BackRequested="RootNavigationViewBackRequested"
                         IsSettingsVisible="{Binding Context.IsAuthenticated, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         PaneDisplayMode="{Binding NavigationPaneMode}">
 

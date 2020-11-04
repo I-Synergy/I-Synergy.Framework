@@ -174,8 +174,8 @@ namespace ISynergy.Framework.UI
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
         private async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            await HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
             e.Handled = true;
-            await HandleException(e.Exception, e.Message);
         }
 #else
         /// <summary>
@@ -186,7 +186,8 @@ namespace ISynergy.Framework.UI
         private async void Current_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-            await HandleException(e.Exception, e.Message);
+            var ex = e.Exception;
+            await HandleException(ex, $"{ex.Message}{Environment.NewLine}{e.Message}");
         }
 #endif
 
@@ -406,6 +407,8 @@ namespace ISynergy.Framework.UI
         /// <param name="factory">The factory.</param>
         protected abstract void ConfigureLogger(ILoggerFactory factory);
 
+        protected abstract Assembly GetEntryAssembly();
+
         /// <summary>
         /// Configures the services.
         /// </summary>
@@ -420,7 +423,7 @@ namespace ISynergy.Framework.UI
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton((s) => LanguageService);
-            services.AddSingleton<IInfoService>((s) => new InfoService(Assembly.GetEntryAssembly()));
+            services.AddSingleton<IInfoService>((s) => new InfoService(GetEntryAssembly()));
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IUIVisualizerService, UIVisualizerService>();
             services.AddSingleton((s) => _navigationService);

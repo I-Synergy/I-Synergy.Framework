@@ -31,7 +31,7 @@ namespace ISynergy.Framework.UI.Sample.Views.Library
         {
             SetLanguageButton();
         }
-#elif __ANDROID__
+#else
         private void LanguageWindow_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
         {
             SetLanguageButton();

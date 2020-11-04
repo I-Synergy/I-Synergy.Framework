@@ -50,17 +50,25 @@ namespace ISynergy.Framework.UI.Sample
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        public App() : base() { }
+        public App() : base() 
+        {
+#if __ANDROID__
+            InitializeComponent();
+#endif
+        }
 
         protected override void ConfigureLogger(ILoggerFactory factory)
         {
         }
 
+        protected override Assembly GetEntryAssembly() => 
+            Assembly.GetAssembly(typeof(App));
+
         protected override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
 
-            var assembly = Assembly.GetAssembly(typeof(App));
+            var assembly = GetEntryAssembly();
 
             ConfigurationRoot = new ConfigurationBuilder()
                 .AddJsonStream(assembly.GetManifestResourceStream($"{assembly.GetName().Name}.appsettings.json"))
@@ -97,7 +105,7 @@ namespace ISynergy.Framework.UI.Sample
             //Load assemblies
             RegisterAssemblies(new List<Assembly>
                 {
-                    Assembly.GetAssembly(typeof(App))
+                    assembly
                 });
         }
 
