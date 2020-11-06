@@ -3,7 +3,7 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;uap10.0.18362;monoandroid10.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;uap10.0.18362;monoandroid90;MonoAndroid10.0</TargetFrameworks>
         <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
         <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
@@ -29,7 +29,7 @@
         <PackageReference Include="Uno.Material" Version="1.0.0-dev.578" />
     </ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'monoandroid90' Or '$(TargetFramework)' == 'MonoAndroid10.0'">
 		<PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.5" />
 		<PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
 	</ItemGroup>

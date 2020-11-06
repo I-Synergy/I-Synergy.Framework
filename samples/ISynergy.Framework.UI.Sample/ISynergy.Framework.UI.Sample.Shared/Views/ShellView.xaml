@@ -33,89 +33,91 @@
         </FrameworkNavigation:MenuItemTemplateSelector>
     </c:View.Resources>
 
-    <RelativePanel>
-        <NavigationView x:Name="RootNavigationView"
-                        RelativePanel.AlignTopWithPanel="True"
-                        RelativePanel.AlignLeftWithPanel="True" 
-                        RelativePanel.AlignRightWithPanel="True" 
-                        RelativePanel.AlignBottomWithPanel="True" 
-                        PaneTitle="{Binding Context.Title}"
-                        ExpandedModeThresholdWidth="1920"
-                        MenuItemsSource="{Binding PrimaryItems}"
-                        MenuItemTemplateSelector="{StaticResource ItemSelector}"
-                        SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        ItemInvoked="NavigationItemInvoked"
-                        IsSettingsVisible="{Binding Context.IsAuthenticated, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                        PaneDisplayMode="{Binding NavigationPaneMode}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <RelativePanel>
+            <NavigationView x:Name="RootNavigationView"
+                            RelativePanel.AlignTopWithPanel="True"
+                            RelativePanel.AlignLeftWithPanel="True" 
+                            RelativePanel.AlignRightWithPanel="True" 
+                            RelativePanel.AlignBottomWithPanel="True" 
+                            PaneTitle="{Binding Context.Title}"
+                            ExpandedModeThresholdWidth="1920"
+                            MenuItemsSource="{Binding PrimaryItems}"
+                            MenuItemTemplateSelector="{StaticResource ItemSelector}"
+                            SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            ItemInvoked="NavigationItemInvoked"
+                            IsSettingsVisible="{Binding Context.IsAuthenticated, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            PaneDisplayMode="{Binding NavigationPaneMode}">
 
-            <NavigationView.PaneFooter>
-                <StackPanel>
-                    <NavigationViewItem x:Name="menuitem_Help" Content="Help" >
-                        <NavigationViewItem.Icon>
-                            <PathIcon Data="{StaticResource tile_help}"/>
-                        </NavigationViewItem.Icon>
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{Binding Help_Command}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </NavigationViewItem>
-                    <NavigationViewItem x:Name="menuitem_Language" Content="Language" >
-                        <NavigationViewItem.Icon>
-                            <PathIcon Data="{StaticResource icon_flag}"/>
-                        </NavigationViewItem.Icon>
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{Binding Language_Command}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </NavigationViewItem>
-                    <NavigationViewItem x:Name="menuitem_Color" Content="Colors" >
-                        <NavigationViewItem.Icon>
-                            <PathIcon Data="{StaticResource icon_color}"/>
-                        </NavigationViewItem.Icon>
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{Binding Color_Command}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </NavigationViewItem>
+                <NavigationView.PaneFooter>
+                    <StackPanel>
+                        <NavigationViewItem x:Name="menuitem_Help" Content="Help" >
+                            <NavigationViewItem.Icon>
+                                <PathIcon Data="{StaticResource tile_help}"/>
+                            </NavigationViewItem.Icon>
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Tapped">
+                                    <ic:InvokeCommandAction Command="{Binding Help_Command}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </NavigationViewItem>
+                        <NavigationViewItem x:Name="menuitem_Language" Content="Language" >
+                            <NavigationViewItem.Icon>
+                                <PathIcon Data="{StaticResource icon_flag}"/>
+                            </NavigationViewItem.Icon>
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Tapped">
+                                    <ic:InvokeCommandAction Command="{Binding Language_Command}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </NavigationViewItem>
+                        <NavigationViewItem x:Name="menuitem_Color" Content="Colors" >
+                            <NavigationViewItem.Icon>
+                                <PathIcon Data="{StaticResource icon_color}"/>
+                            </NavigationViewItem.Icon>
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Tapped">
+                                    <ic:InvokeCommandAction Command="{Binding Color_Command}" />
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </NavigationViewItem>
 
-                    <NavigationViewItemSeparator />
+                        <NavigationViewItemSeparator />
 
-                    <NavigationViewItem x:Name="menuitem_Login" Content="{Binding Context.IsAuthenticated, Converter={StaticResource BooleanToStringConverter}}">
-                        <NavigationViewItem.Icon>
-                            <PathIcon Data="{StaticResource icon_user}"/>
-                        </NavigationViewItem.Icon>
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{Binding Login_Command}"/>
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </NavigationViewItem>
+                        <NavigationViewItem x:Name="menuitem_Login" Content="{Binding Context.IsAuthenticated, Converter={StaticResource BooleanToStringConverter}}">
+                            <NavigationViewItem.Icon>
+                                <PathIcon Data="{StaticResource icon_user}"/>
+                            </NavigationViewItem.Icon>
+                            <i:Interaction.Behaviors>
+                                <ic:EventTriggerBehavior EventName="Tapped">
+                                    <ic:InvokeCommandAction Command="{Binding Login_Command}"/>
+                                </ic:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </NavigationViewItem>
+                    </StackPanel>
+                </NavigationView.PaneFooter>
+
+                <NavigationView.Content>
+                    <Frame x:Name="ContentRootFrame"
+                           Margin="10"
+                           Navigated="ContentRootFrameNavigated" 
+                           IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
+                        <Frame.ContentTransitions>
+                            <TransitionCollection>
+                                <NavigationThemeTransition/>
+                            </TransitionCollection>
+                        </Frame.ContentTransitions>
+                    </Frame>
+                </NavigationView.Content>
+            </NavigationView>
+
+            <Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
+                <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.75" />
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
+                    <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
                 </StackPanel>
-            </NavigationView.PaneFooter>
-
-            <NavigationView.Content>
-                <Frame x:Name="ContentRootFrame"
-                       Margin="10"
-                       Navigated="ContentRootFrameNavigated" 
-                       IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
-                    <Frame.ContentTransitions>
-                        <TransitionCollection>
-                            <NavigationThemeTransition/>
-                        </TransitionCollection>
-                    </Frame.ContentTransitions>
-                </Frame>
-            </NavigationView.Content>
-        </NavigationView>
-
-        <Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.75" />
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
-                <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
-            </StackPanel>
-        </Grid>
-    </RelativePanel>
+            </Grid>
+        </RelativePanel>
+    </Grid>
 </c:View>

@@ -20,12 +20,10 @@ using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
-
 using Windows.UI.Xaml;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel;
-
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
@@ -34,6 +32,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ISynergy.Framework.UI.Properties;
 using System.Resources;
 using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.Mvvm;
 
 #if NETFX_CORE
 using Windows.System.Profile;
@@ -460,8 +459,8 @@ namespace ISynergy.Framework.UI
         /// <param name="assemblies">The assemblies.</param>
         protected void RegisterAssemblies(List<Assembly> assemblies)
         {
-            assemblies.Add(Assembly.Load("ISynergy.Framework.Mvvm"));
-            assemblies.Add(Assembly.Load("ISynergy.Framework.UI"));
+            assemblies.Add(Assembly.GetAssembly(typeof(MvvmAssemblyIdentifier)));
+            assemblies.Add(Assembly.GetAssembly(typeof(UIAssemblyIdentifier)));
 
             ViewTypes = new List<Type>();
             WindowTypes = new List<Type>();
@@ -570,7 +569,7 @@ namespace ISynergy.Framework.UI
             Context = _serviceProvider.GetRequiredService<IContext>();
             Context.ViewModels = ViewModelTypes;
 
-#if NETFX_CORE
+#if NETFX_CORE || __WASM__
                 //Only in Windows i can set the culture.
                 var culture = CultureInfo.CurrentCulture;
 

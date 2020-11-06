@@ -24,6 +24,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Options\AppCenterOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Options\ConfigurationOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\AuthenticationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CameraService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ClientMonitorService.cs" />
@@ -164,15 +170,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
+    <Resource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
       <DependentUpon>Resources.cs</DependentUpon>
-      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+    </EmbeddedResource>
+    <Resource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+    </Resource>
   </ItemGroup>
 </Project>

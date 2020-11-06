@@ -1,9 +1,9 @@
-﻿namespace ISynergy.Framework.UI.Samples
+﻿namespace ISynergy.Framework.UI.Sample
 {
     /// <summary>
     /// Class Resources.
     /// </summary>
-    public class Resources
+    public partial class Resources
     {
     }
 }

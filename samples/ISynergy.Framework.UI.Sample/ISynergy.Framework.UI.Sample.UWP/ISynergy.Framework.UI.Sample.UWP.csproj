@@ -150,10 +150,6 @@
       <Project>{fe7a8e6e-10a1-4c31-90d5-73ebb068e570}</Project>
       <Name>ISynergy.Framework.UI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ISynergy.Framework.UI.Sample.Resources\ISynergy.Framework.UI.Sample.Resources.csproj">
-      <Project>{71a29099-9433-41d6-ab01-610f501053b0}</Project>
-      <Name>ISynergy.Framework.UI.Sample.Resources</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems" Label="Shared" Condition="Exists('..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems')" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

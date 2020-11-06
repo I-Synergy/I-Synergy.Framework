@@ -18,7 +18,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Resources;
-using ISynergy.Framework.UI.Samples;
 using System.Runtime.CompilerServices;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -52,7 +51,7 @@ namespace ISynergy.Framework.UI.Sample
         /// </summary>
         public App() : base() 
         {
-#if __ANDROID__
+#if !NETFX_CORE
             InitializeComponent();
 #endif
         }
