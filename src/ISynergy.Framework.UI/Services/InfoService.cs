@@ -46,7 +46,7 @@ namespace ISynergy.Framework.UI
         {
             get
             {
-                return FileVersionInfo.GetVersionInfo(_assembly.Location).CompanyName;
+                return _assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
             }
         }
 
@@ -58,7 +58,7 @@ namespace ISynergy.Framework.UI
         {
             get
             {
-                return FileVersionInfo.GetVersionInfo(_assembly.Location).FileVersion;
+                return _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
             }
         }
 
@@ -70,7 +70,7 @@ namespace ISynergy.Framework.UI
         {
             get
             {
-                return FileVersionInfo.GetVersionInfo(_assembly.Location).ProductName;
+                return _assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
             }
         }
 
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.UI
         {
             get
             {
-                return FileVersionInfo.GetVersionInfo(_assembly.Location).LegalCopyright;
+                return _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
             }
         }
     }

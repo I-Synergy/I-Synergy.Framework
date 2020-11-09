@@ -91,6 +91,8 @@ namespace ISynergy.Framework.UI
         /// </summary>
         protected BaseApplication()
         {
+            ConfigureFilters(global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
+
             _services = new ServiceCollection();
             _navigationService = new NavigationService();
 
@@ -162,6 +164,7 @@ namespace ISynergy.Framework.UI
         private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             await HandleException(e.Exception, e.Exception.Message);
+            e.SetObserved();
         }
 
 #if NETFX_CORE
@@ -590,5 +593,60 @@ namespace ISynergy.Framework.UI
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
         public abstract Task HandleException(Exception ex, string message);
+
+        /// <summary>
+        /// Configures global logging
+        /// </summary>
+        /// <param name="factory"></param>
+		static void ConfigureFilters(ILoggerFactory factory)
+        {
+            factory
+                .WithFilter(new FilterLoggerSettings
+                    {
+                        { "Uno", LogLevel.Warning },
+
+                        { "Windows", LogLevel.Warning },
+                        { "Microsoft", LogLevel.Warning },
+
+						// Debug JS interop
+						 { "Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug },
+
+						// Generic Xaml events
+						// { "Microsoft.UI.Xaml", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.UIElement", LogLevel.Debug },
+
+						// Layouter specific messages
+						// { "Microsoft.UI.Xaml.Controls", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug },
+						// { "Windows.Storage", LogLevel.Debug },
+
+						// Binding related messages
+						// { "Microsoft.UI.Xaml.Data", LogLevel.Debug },
+
+						// DependencyObject memory references tracking
+						// { "ReferenceHolder", LogLevel.Debug },
+
+						// ListView-related messages
+						// { "Microsoft.UI.Xaml.Controls.ListViewBase", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.ListView", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.GridView", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.VirtualizingPanelLayout", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.NativeListViewBase", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.ListViewBaseSource", LogLevel.Debug }, //iOS
+						// { "Microsoft.UI.Xaml.Controls.ListViewBaseInternalContainer", LogLevel.Debug }, //iOS
+						// { "Microsoft.UI.Xaml.Controls.NativeListViewBaseAdapter", LogLevel.Debug }, //Android
+						// { "Microsoft.UI.Xaml.Controls.BufferViewCache", LogLevel.Debug }, //Android
+						// { "Microsoft.UI.Xaml.Controls.VirtualizingPanelGenerator", LogLevel.Debug }, //WASM
+					}
+                )
+#if DEBUG
+                .AddConsole(LogLevel.Debug);
+#else
+				.AddConsole(LogLevel.Information);
+#endif
+        }
     }
 }
