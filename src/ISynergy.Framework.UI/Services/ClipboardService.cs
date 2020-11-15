@@ -89,10 +89,13 @@ namespace ISynergy.Framework.UI.Services
                             break;
                     }
 
-                    encoder.SetSoftwareBitmap(softwareBitmap);
-
                     try
                     {
+                        if (encoder is null)
+                            return Array.Empty<byte>();
+
+                        encoder.SetSoftwareBitmap(softwareBitmap);
+
                         await encoder.FlushAsync();
                     }
                     catch (Exception)
