@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -22,7 +21,6 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -33,12 +31,13 @@ using ISynergy.Framework.UI.Properties;
 using System.Resources;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.Mvvm;
-using ISynergy.Framework.UI.Extensions;
 
 #if NETFX_CORE
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
 using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
+using System.Globalization;
+using Windows.ApplicationModel.Background;
 #endif
 
 using Window = ISynergy.Framework.UI.Controls.Window;

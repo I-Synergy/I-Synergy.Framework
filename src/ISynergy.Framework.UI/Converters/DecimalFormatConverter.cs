@@ -2,7 +2,6 @@
 using Windows.UI.Xaml.Data;
 
 #if NETFX_CORE
-using System.Collections.Generic;
 using ISynergy.Framework.Core.Abstractions;
 using Windows.Globalization.NumberFormatting;
 #endif

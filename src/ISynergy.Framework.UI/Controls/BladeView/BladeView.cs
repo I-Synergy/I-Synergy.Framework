@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.UI.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+﻿using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

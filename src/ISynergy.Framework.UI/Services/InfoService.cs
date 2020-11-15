@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using System.Diagnostics;
 using System.IO;
 
 namespace ISynergy.Framework.UI

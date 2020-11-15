@@ -20,7 +20,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.Mvvm.Events;
-using ISynergy.Framework.Core.Exceptions;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
