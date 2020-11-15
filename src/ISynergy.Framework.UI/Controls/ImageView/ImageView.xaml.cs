@@ -85,24 +85,20 @@ namespace ISynergy.Framework.UI.Controls
             {
                 var image = (BitmapImage)newSource;
 
+#if NETFX_CORE
                 // If the image is not a local resource or it was not cached
                 if (image.UriSource.Scheme != "ms-appx" && image.UriSource.Scheme != "ms-resource" && (image.PixelHeight * image.PixelWidth == 0))
                 {
-#if NETFX_CORE
                     image.ImageOpened += (sender, args) => control.LoadImage(image);
                     control.Staging.Source = image;
-#else
-                    control.Image.Source = image;
-#endif
                 }
                 else
                 {
-#if NETFX_CORE
                     control.LoadImage(newSource);
-#else
-                    control.Image.Source = image;
-#endif
                 }
+#else
+                control.Image.Source = image;
+#endif
             }
         }
     }
