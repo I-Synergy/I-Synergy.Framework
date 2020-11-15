@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Ui.Controls
         /// Gets the file types.
         /// </summary>
         /// <value>The file types.</value>
-        public static readonly List<FileType> FileTypes = new List<FileType>
+        public static List<FileType> FileTypes = new List<FileType>
         {
             new FileType(0, "Textfile", ".txt", false, "text/plain"),
             new FileType(1, "Microsoft Word (*.doc)", ".doc", false, "application/msword"),
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Ui.Controls
         /// <summary>
         /// Lazy-initialized file picker implementation
         /// </summary>
-        private static Lazy<IFilePicker> implementation = new Lazy<IFilePicker>(CreateFilePicker, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+        private static readonly Lazy<IFilePicker> implementation = new Lazy<IFilePicker>(CreateFilePicker, System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
         /// <summary>
         /// Current file picker plugin implementation to use
