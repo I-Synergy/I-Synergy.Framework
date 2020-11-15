@@ -55,57 +55,55 @@ namespace ISynergy.Framework.UI.Services
 
             if (dataPackageView.Contains(StandardDataFormats.Bitmap) && await dataPackageView.GetBitmapAsync() is RandomAccessStreamReference imageReceived)
             {
-                using (var imageStream = await imageReceived.OpenReadAsync())
+                using var imageStream = await imageReceived.OpenReadAsync();
+                var decoder = await BitmapDecoder.CreateAsync(imageStream);
+                var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+                using var memoryStream = new InMemoryRandomAccessStream();
+
+                BitmapEncoder encoder = null;
+
+                switch (format)
                 {
-                    var decoder = await BitmapDecoder.CreateAsync(imageStream);
-                    var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    case ImageFormats.bmp:
+                        encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.BmpEncoderId, memoryStream);
+                        break;
+                    case ImageFormats.gif:
+                        encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.GifEncoderId, memoryStream);
+                        break;
+                    case ImageFormats.jpg:
+                        encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, memoryStream);
+                        break;
+                    case ImageFormats.jpgXr:
+                        encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegXREncoderId, memoryStream);
+                        break;
+                    case ImageFormats.png:
+                        encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, memoryStream);
+                        break;
+                    case ImageFormats.tiff:
+                        encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.TiffEncoderId, memoryStream);
+                        break;
+                    case ImageFormats.heif:
+                        encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.HeifEncoderId, memoryStream);
+                        break;
+                }
 
-                    using var memoryStream = new InMemoryRandomAccessStream();
-
-                    BitmapEncoder encoder = null;
-
-                    switch (format)
-                    {
-                        case ImageFormats.bmp:
-                            encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.BmpEncoderId, memoryStream);
-                            break;
-                        case ImageFormats.gif:
-                            encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.GifEncoderId, memoryStream);
-                            break;
-                        case ImageFormats.jpg:
-                            encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, memoryStream);
-                            break;
-                        case ImageFormats.jpgXr:
-                            encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegXREncoderId, memoryStream);
-                            break;
-                        case ImageFormats.png:
-                            encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, memoryStream);
-                            break;
-                        case ImageFormats.tiff:
-                            encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.TiffEncoderId, memoryStream);
-                            break;
-                        case ImageFormats.heif:
-                            encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.HeifEncoderId, memoryStream);
-                            break;
-                    }
-
-                    try
-                    {
-                        if (encoder is null)
-                            return Array.Empty<byte>();
-
-                        encoder.SetSoftwareBitmap(softwareBitmap);
-
-                        await encoder.FlushAsync();
-                    }
-                    catch (Exception)
-                    {
+                try
+                {
+                    if (encoder is null)
                         return Array.Empty<byte>();
-                    }
 
-                    result = new byte[memoryStream.Size];
-                    await memoryStream.ReadAsync(result.AsBuffer(), (uint)memoryStream.Size, InputStreamOptions.None);
-                };
+                    encoder.SetSoftwareBitmap(softwareBitmap);
+
+                    await encoder.FlushAsync();
+                }
+                catch (Exception)
+                {
+                    return Array.Empty<byte>();
+                }
+
+                result = new byte[memoryStream.Size];
+                await memoryStream.ReadAsync(result.AsBuffer(), (uint)memoryStream.Size, InputStreamOptions.None);
             }
 
             return result;

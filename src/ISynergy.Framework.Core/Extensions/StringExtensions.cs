@@ -342,7 +342,7 @@ namespace ISynergy.Framework.Core.Extensions
             var poses = positions.Distinct().OrderBy(n => n).ToList();
 
             var indicesToRemove = new Queue<int>();
-            var total = poses.Count();
+            var total = poses.Count;
             var i = 0;
             while (i < total)
             {

@@ -92,7 +92,7 @@ namespace ISynergy.Framework.UI
         /// </summary>
         protected BaseApplication()
         {
-            ConfigureFilters(global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
+            ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
 
             _services = new ServiceCollection();
             _navigationService = new NavigationService();
@@ -512,10 +512,9 @@ namespace ISynergy.Framework.UI
             {
                 var abstraction = view
                     .GetInterfaces()
-                    .Where(q =>
+                    .FirstOrDefault(q =>
                         q.GetInterfaces().Contains(typeof(IView))
-                        && q.Name != nameof(IView))
-                    .FirstOrDefault();
+                        && q.Name != nameof(IView));
 
                 if (abstraction != null)
                 {
@@ -538,10 +537,9 @@ namespace ISynergy.Framework.UI
             {
                 var abstraction = window
                     .GetInterfaces()
-                    .Where(q =>
+                    .FirstOrDefault(q =>
                         q.GetInterfaces().Contains(typeof(IWindow))
-                        && q.Name != nameof(IWindow))
-                    .FirstOrDefault();
+                        && q.Name != nameof(IWindow));
 
                 if (abstraction != null)
                 {

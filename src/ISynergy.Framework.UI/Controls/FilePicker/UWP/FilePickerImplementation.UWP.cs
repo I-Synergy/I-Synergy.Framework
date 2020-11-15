@@ -27,7 +27,7 @@ namespace ISynergy.Framework.Ui.Controls
         /// <returns>
         /// File data object, or null when user cancelled picking file
         /// </returns>
-        public async Task<FileResult> PickFileAsync(string[] allowedTypes)
+        public async Task<FileResult> PickFileAsync(string[] allowedTypes = null)
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker
             {
@@ -67,7 +67,7 @@ namespace ISynergy.Framework.Ui.Controls
                     file.Name,
                     FilePicker.FileTypes.Where(q => q.Extension.EndsWith(Path.GetExtension(file.Path))).Select(s => s.FileTypeId).FirstOrDefault(),
                     () => file.OpenStreamForReadAsync().GetAwaiter().GetResult());
-            };
+            }
 
             return null;
         }

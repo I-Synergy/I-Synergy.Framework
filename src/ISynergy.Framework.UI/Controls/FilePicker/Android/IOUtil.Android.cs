@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Ui.Controls
     /// <summary>
     /// Android I/O utility functions
     /// </summary>
-    public class IOUtil
+    public static class IOUtil
     {
         /// <summary>
         /// Tries to find a file system path for given Uri. Note that this isn't always possible,

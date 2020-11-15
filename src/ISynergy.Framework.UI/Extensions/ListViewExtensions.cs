@@ -98,6 +98,7 @@ namespace ISynergy.Framework.UI.Extensions
         public static void SetBindableSelectionHandler(DependencyObject d, ListViewBindableSelectionHandler value) =>
             d.SetValue(BindableSelectionHandlerProperty, value);
 
+#if NETFX_CORE || __ANDROID__
         /// <summary>
         /// ItemToBringIntoView Attached Dependency Property
         /// </summary>
@@ -135,17 +136,16 @@ namespace ISynergy.Framework.UI.Extensions
         /// tracks changes to the effective value of this property.</param>
         private static void OnItemToBringIntoViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+
             var newItemToBringIntoView = d.GetValue(ItemToBringIntoViewProperty);
 
             if (newItemToBringIntoView != null)
             {
                 var listView = (ListView)d;
-
-#if NETFX_CORE || __ANDROID__
                 listView.ScrollIntoView(newItemToBringIntoView);
-#endif
             }
         }
+#endif
 
         /// <summary>
         /// Scrolls a vertical ListView to the bottom.

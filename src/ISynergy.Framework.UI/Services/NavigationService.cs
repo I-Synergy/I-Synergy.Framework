@@ -138,7 +138,7 @@ namespace ISynergy.Framework.UI.Services
                     }
                     else
                     {
-                        if (page.GetInterfaces(true).Where(q => q == typeof(IView)).Any())
+                        if (page.GetInterfaces(true).Any(q => q == typeof(IView)))
                         {
                             if (parameter != null && !string.IsNullOrEmpty(parameter.ToString()))
                             {
@@ -247,10 +247,9 @@ namespace ISynergy.Framework.UI.Services
             {
                 if (owner.Blades.Remove(
                     owner.Blades
-                        .Where(q =>
+                        .FirstOrDefault(q =>
                             q.DataContext == viewmodel &&
-                            ((IViewModelBlade)q.DataContext).Owner == viewmodel.Owner)
-                        .FirstOrDefault())
+                            ((IViewModelBlade)q.DataContext).Owner == viewmodel.Owner))
                     )
                 {
                     if (owner.Blades.Count < 1)

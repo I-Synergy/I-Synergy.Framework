@@ -52,6 +52,7 @@ namespace ISynergy.Framework.UI.Controls
             InitializeComponent();
         }
 
+#if NETFX_CORE
         /// <summary>
         /// Loads the image.
         /// </summary>
@@ -68,6 +69,7 @@ namespace ISynergy.Framework.UI.Controls
             ImageFadeOut.Completed += handler;
             ImageFadeOut.Begin();
         }
+#endif
 
         /// <summary>
         /// Sources the changed.
@@ -77,11 +79,8 @@ namespace ISynergy.Framework.UI.Controls
         private static void SourceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = (ImageView)dependencyObject;
-            var newSource = (ImageSource)dependencyPropertyChangedEventArgs.NewValue;
 
-            System.Diagnostics.Debug.WriteLine("Image source changed: {0}", ((BitmapImage)newSource).UriSource.AbsolutePath);
-
-            if (newSource != null)
+            if ((ImageSource)dependencyPropertyChangedEventArgs.NewValue is ImageSource newSource)
             {
                 var image = (BitmapImage)newSource;
 

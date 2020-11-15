@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Ui.Controls;
@@ -128,42 +129,12 @@ namespace ISynergy.Framework.UI.Services
             var filters = new List<string>();
             var filterArray = filefilter?.Split(';');
 
-            if (filterArray != null)
+            foreach (var filter in filterArray.EnsureNotNull())
             {
-                foreach (var filter in filterArray)
-                {
-                    var fileFilter = filter;
-
-                    // Support full .NET filters (like "Text files|*.txt") as well
-                    if (fileFilter.Contains("|"))
-                    {
-                        var splittedFilters = fileFilter.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
-                        if (splittedFilters.Length == 2)
-                        {
-                            fileFilter = splittedFilters[1].Trim();
-                        }
-                        else
-                        {
-                            fileFilter = null;
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(fileFilter))
-                    {
-                        if (fileFilter.Trim().StartsWith("*") && !fileFilter.Trim().Equals("*.*"))
-                        {
-                            fileFilter = fileFilter.Trim().Replace("*", string.Empty);
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(fileFilter))
-                    {
-                        filters.Add(fileFilter);
-                    }
-                }
+                filters.AddRange(GetFilters(filter));
             }
 
-            if(await FilePicker.Current.PickFileAsync(filters.ToArray()) is FileResult file)
+            if (await FilePicker.Current.PickFileAsync(filters.ToArray()) is FileResult file)
             {
                 if (file.File.Length <= maxfilesize || maxfilesize == 0)
                 {
@@ -178,6 +149,34 @@ namespace ISynergy.Framework.UI.Services
             return null;
         }
 
+        private List<string> GetFilters(string filter)
+        {
+            var result = new List<string>();
+            var fileFilter = string.Empty;
+
+            // Support full .NET filters (like "Text files|*.txt") as well
+            if (filter.Contains("|"))
+            {
+                var splittedFilters = filter.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+                if (splittedFilters.Length == 2)
+                {
+                    fileFilter = splittedFilters[1].Trim();
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(fileFilter))
+            {
+                if (filter.Trim().StartsWith("*") && !filter.Trim().Equals("*.*"))
+                {
+                    fileFilter = filter.Trim().Replace("*", string.Empty);
+                }
+
+                result.Add(fileFilter);
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// get image as an asynchronous operation.
         /// </summary>
@@ -185,12 +184,10 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>System.Byte[].</returns>
         public async Task<byte[]> BrowseImageAsync(long maxfilesize = 0)
         {
-            var filters = new List<string>();
-
 #if __ANDROID__
-            filters = FilePicker.FileTypes.Where(q => q.IsImage).Select(s => s.ContentType).ToList();
+            var filters = FilePicker.FileTypes.Where(q => q.IsImage).Select(s => s.ContentType).ToList();
 #else
-            filters = FilePicker.FileTypes.Where(q => q.IsImage).Select(s => s.Extension).ToList();
+            var filters = FilePicker.FileTypes.Where(q => q.IsImage).Select(s => s.Extension).ToList();
 #endif
 
             if(await BrowseFileAsync(string.Join(";", filters.ToArray()), maxfilesize) is FileResult result)
