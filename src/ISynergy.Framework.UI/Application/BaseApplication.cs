@@ -207,8 +207,8 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
-        /// <param name="e">Event data for the event.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        /// <param name="args">Event data for the event.</param>
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
 #if NETFX_CORE
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
@@ -236,7 +236,7 @@ namespace ISynergy.Framework.UI
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
                 }
@@ -254,7 +254,7 @@ namespace ISynergy.Framework.UI
                 Windows.UI.Xaml.Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (args.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
                 {
@@ -265,7 +265,7 @@ namespace ISynergy.Framework.UI
                     try
                     {
                         var view = _serviceProvider.GetRequiredService<IShellView>();
-                        rootFrame.Navigate(view.GetType(), e.Arguments);
+                        rootFrame.Navigate(view.GetType(), args.Arguments);
                     }
                     catch (Exception ex)
                     {
