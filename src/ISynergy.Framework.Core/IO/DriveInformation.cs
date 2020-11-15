@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Core.IO
 
             // Get just the drive letter for WMI call
             string driveletter = GetDriveName(path);
-            var drive = DriveInfo.GetDrives().Where(q => q.Name == driveletter).SingleOrDefault();
+            var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
 
             return drive.TotalFreeSpace > fileSize;
         }
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Core.IO
             // Get just the drive letter for WMI call
             string driveletter = GetDriveName(path);
             
-            var drive = DriveInfo.GetDrives().Where(q => q.Name == driveletter).SingleOrDefault();
+            var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
 
             if(drive != null && drive.DriveType == DriveType.Network)
             {
@@ -115,7 +115,7 @@ namespace ISynergy.Framework.Core.IO
             // Get just the drive letter for WMI call
             string driveletter = GetDriveName(path);
 
-            var drive = DriveInfo.GetDrives().Where(q => q.Name == driveletter).SingleOrDefault();
+            var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
 
             if (drive != null && drive.DriveType == DriveType.Network)
             {
