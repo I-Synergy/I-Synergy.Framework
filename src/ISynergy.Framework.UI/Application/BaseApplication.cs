@@ -254,25 +254,16 @@ namespace ISynergy.Framework.UI
                 Windows.UI.Xaml.Window.Current.Content = rootFrame;
             }
 
-            if (args.PrelaunchActivated == false)
+            if (!args.PrelaunchActivated)
             {
-                if (rootFrame.Content == null)
+                if (rootFrame.Content is null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
 
-                    try
-                    {
-                        var view = _serviceProvider.GetRequiredService<IShellView>();
-                        rootFrame.Navigate(view.GetType(), args.Arguments);
-                    }
-                    catch (Exception ex)
-                    {
-
-                        throw ex;
-                    }
-                    
+                    var view = _serviceProvider.GetRequiredService<IShellView>();
+                    rootFrame.Navigate(view.GetType(), args.Arguments);
                 }
 
                 // Ensure the current window is active
