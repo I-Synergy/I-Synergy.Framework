@@ -20,6 +20,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Core.Exceptions;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
@@ -459,8 +460,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Opens the help asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected Task OpenHelpAsync() =>
-            BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("EX_FUTURE_MODULE"));
+        protected Task OpenHelpAsync() => ThrowFeatureNotEnabledWarning();
 
         /// <summary>
         /// open feedback as an asynchronous operation.

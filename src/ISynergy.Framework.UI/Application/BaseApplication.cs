@@ -33,6 +33,7 @@ using ISynergy.Framework.UI.Properties;
 using System.Resources;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.Mvvm;
+using ISynergy.Framework.UI.Extensions;
 
 #if NETFX_CORE
 using Windows.System.Profile;
@@ -76,7 +77,8 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// The service provider
         /// </summary>
-        private readonly IServiceProvider _serviceProvider;
+        protected readonly IServiceProvider _serviceProvider;
+
         /// <summary>
         /// The services
         /// </summary>
@@ -154,8 +156,6 @@ namespace ISynergy.Framework.UI
             //this.EnableFrameRateCounter = true;
         }
 
-        
-
         /// <summary>
         /// Handles the UnobservedTaskException event of the TaskScheduler control.
         /// </summary>
@@ -175,8 +175,8 @@ namespace ISynergy.Framework.UI
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
         private async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            await HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
             e.Handled = true;
+            await HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
         }
 #else
         /// <summary>

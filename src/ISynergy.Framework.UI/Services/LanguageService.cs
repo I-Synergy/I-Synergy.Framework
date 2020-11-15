@@ -47,7 +47,11 @@ namespace ISynergy.Framework.UI.Services
             foreach (var manager in _managers)
             {
                 string result = manager.GetString(key, CultureInfo.CurrentCulture);
-                if(!string.IsNullOrEmpty(result))
+
+                if(string.IsNullOrEmpty(result))
+                    result = manager.GetString(key);
+
+                if (!string.IsNullOrEmpty(result))
                     return result;
             }
 

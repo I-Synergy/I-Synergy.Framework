@@ -208,66 +208,66 @@ namespace ISynergy.Framework.UI.Services
         {
             var result = MessageBoxResult.Cancel;
 
-            if (!Window.Current.Dispatcher.HasThreadAccess)
-                throw new InvalidOperationException("This method can only be invoked from UI thread.");
-
-            var yesCommand = new UICommand(_languageService.GetString("Yes"), cmd => { }, "yesCommand");
-            var noCommand = new UICommand(_languageService.GetString("No"), cmd => { }, "noCommand");
-            var okCommand = new UICommand(_languageService.GetString("Ok"), cmd => { }, "okCommand");
-            var cancelCommand = new UICommand(_languageService.GetString("Cancel"), cmd => { }, "cancelCommand");
-
-            var messageDialog = new MessageDialog(message, title)
+            try
             {
-                Options = MessageDialogOptions.None,
-                DefaultCommandIndex = 0,
-                CancelCommandIndex = 0
-            };
+                var yesCommand = new UICommand(_languageService.GetString("Yes"), cmd => { result = MessageBoxResult.Yes; }, "yesCommand");
+                var noCommand = new UICommand(_languageService.GetString("No"), cmd => { result = MessageBoxResult.No; }, "noCommand");
+                var okCommand = new UICommand(_languageService.GetString("Ok"), cmd => { result = MessageBoxResult.OK; }, "okCommand");
+                var cancelCommand = new UICommand(_languageService.GetString("Cancel"), cmd => { result = MessageBoxResult.Cancel; }, "cancelCommand");
 
-            switch (buttons)
-            {
-                case MessageBoxButton.OK:
-                    messageDialog.Commands.Add(okCommand);
-                    messageDialog.DefaultCommandIndex = 0;
-                    break;
-                case MessageBoxButton.OKCancel:
-                    messageDialog.Commands.Add(okCommand);
-                    messageDialog.Commands.Add(cancelCommand);
+                var messageDialog = new MessageDialog(message, title)
+                {
+                    Options = MessageDialogOptions.None,
+                    DefaultCommandIndex = 0,
+                    CancelCommandIndex = 0
+                };
 
-                    messageDialog.DefaultCommandIndex = 0;
-                    messageDialog.CancelCommandIndex = 1;
-                    break;
-                case MessageBoxButton.YesNoCancel:
-                    messageDialog.Commands.Add(yesCommand);
-                    messageDialog.Commands.Add(noCommand);
-                    messageDialog.Commands.Add(cancelCommand);
+                switch (buttons)
+                {
+                    case MessageBoxButton.OK:
+                        messageDialog.Commands.Add(okCommand);
+                        messageDialog.DefaultCommandIndex = 0;
+                        break;
+                    case MessageBoxButton.OKCancel:
+                        messageDialog.Commands.Add(okCommand);
+                        messageDialog.Commands.Add(cancelCommand);
 
-                    messageDialog.DefaultCommandIndex = 0;
-                    messageDialog.CancelCommandIndex = 2;
-                    break;
-                case MessageBoxButton.YesNo:
-                    messageDialog.Commands.Add(yesCommand);
-                    messageDialog.Commands.Add(noCommand);
+                        messageDialog.DefaultCommandIndex = 0;
+                        messageDialog.CancelCommandIndex = 1;
+                        break;
+                    case MessageBoxButton.YesNoCancel:
+                        messageDialog.Commands.Add(yesCommand);
+                        messageDialog.Commands.Add(noCommand);
+                        messageDialog.Commands.Add(cancelCommand);
 
-                    messageDialog.DefaultCommandIndex = 0;
-                    messageDialog.CancelCommandIndex = 1;
-                    break;
+                        messageDialog.DefaultCommandIndex = 0;
+                        messageDialog.CancelCommandIndex = 2;
+                        break;
+                    case MessageBoxButton.YesNo:
+                        messageDialog.Commands.Add(yesCommand);
+                        messageDialog.Commands.Add(noCommand);
+
+                        messageDialog.DefaultCommandIndex = 0;
+                        messageDialog.CancelCommandIndex = 1;
+                        break;
+                }
+
+#if NETFX_CORE
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+#else
+                await CoreDispatcher.Main.RunAsync(
+                    CoreDispatcherPriority.Normal,
+#endif
+                async () =>
+                {
+                    await messageDialog.ShowAsync();
+                });
             }
-
-            var command = await messageDialog.ShowAsync();
-
-            if (command is null && cancelCommand != null)
+            catch (Exception ex)
             {
-                // back button was pressed
-                // invoke the UICommand
-                cancelCommand.Invoked(cancelCommand);
-                result = MessageBoxResult.Cancel;
+                throw ex;
             }
-            else if (command == okCommand)
-                result = MessageBoxResult.OK;
-            else if (command == yesCommand)
-                result = MessageBoxResult.Yes;
-            else if (command == noCommand)
-                result = MessageBoxResult.No;
 
             return result;
         }

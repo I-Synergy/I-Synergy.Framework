@@ -17,10 +17,10 @@
 
     <dependencies>
       <group targetFramework=".NETCoreApp3.1">
-        <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.15.0" />
+        <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.16.0" />
         <dependency id="Microsoft.IdentityModel.Clients.ActiveDirectory" version="5.2.8" />
-        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.8" />
-        <dependency id="Microsoft.AspNetCore.Mvc.NewtonsoftJson" version="3.1.8" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.9" />
+        <dependency id="Microsoft.AspNetCore.Mvc.NewtonsoftJson" version="3.1.9" />
         <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
       </group>
     </dependencies>

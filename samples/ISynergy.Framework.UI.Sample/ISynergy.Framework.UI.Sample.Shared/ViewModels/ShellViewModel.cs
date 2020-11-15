@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Exceptions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Models;
@@ -58,9 +59,7 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
 
             Version = commonServices.InfoService.ProductVersion;
 
-            #if NETFX_CORE
             NavigationPaneMode = NavigationViewPaneDisplayMode.Auto;
-            #endif
 
             DisplayName = "User";
 
@@ -101,15 +100,9 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["tb_search"] as string, ForegroundColor, Browse_Command));
         }
 
-        protected override Task CreateFeedbackAsync()
-        {
-            throw new NotImplementedException();
-        }
+        protected override Task CreateFeedbackAsync() => ThrowFeatureNotEnabledWarning();
 
-        protected override Task OpenSettingsAsync()
-        {
-            throw new NotImplementedException();
-        }
+        protected override Task OpenSettingsAsync() => ThrowFeatureNotEnabledWarning();
 
         public override Task InitializeAsync(object parameter)
         {

@@ -23,6 +23,10 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
+using ISynergy.Framework.Core.Locators;
+using System.IO;
+using ISynergy.Framework.Core.Exceptions;
+using System.Net.WebSockets;
 
 #if NETFX_CORE
 using Windows.ApplicationModel;
@@ -108,10 +112,57 @@ namespace ISynergy.Framework.UI.Sample
                 });
         }
 
-        public override Task HandleException(Exception ex, string message)
+        public override async Task HandleException(Exception exception, string message)
         {
-            Debug.WriteLine(message);
-            return Task.CompletedTask;
+            try
+            {
+                Debug.WriteLine(message);
+
+                if(exception.InnerException is WebSocketException)
+                    return;
+
+                if(message.Equals(@"A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. ()"))
+                    return;
+
+                // Set busyIndicator to false if it's true.
+                await ServiceLocator.Default.GetInstance<IBusyService>().EndBusyAsync();
+
+                if (exception is UnauthorizedAccessException accessException)
+                {
+                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(accessException.Message);
+                }
+                else if (exception is IOException iOException)
+                {
+                    if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
+                    {
+                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
+                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_FILEINUSE"));
+                    }
+                    else
+                    {
+                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
+                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
+                    }
+                }
+                else if (exception is ArgumentException argumentException)
+                {
+                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowWarningAsync(
+                        string.Format(
+                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_ARGUMENTNULL"),
+                            argumentException.ParamName)
+                        );
+                }
+                else
+                {
+                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
+                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
     }
 }

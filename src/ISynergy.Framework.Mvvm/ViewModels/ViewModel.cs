@@ -226,5 +226,14 @@ namespace ISynergy.Framework.Mvvm
             Cleanup();
             base.Dispose(disposing);
         }
+
+
+        /// <summary>
+        /// Throws a warning that feature is not available.
+        /// </summary>
+        /// <returns></returns>
+        protected Task ThrowFeatureNotEnabledWarning() => BaseCommonServices.DialogService.ShowInformationAsync(
+            BaseCommonServices.LanguageService.GetString("EX_FUTURE_MODULE"),
+            "Features");
     }
 }

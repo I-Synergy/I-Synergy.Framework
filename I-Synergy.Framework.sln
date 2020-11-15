@@ -133,7 +133,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ISynergy.Framework.UI.Sampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.UI.Sample.Droid", "samples\ISynergy.Framework.UI.Sample\ISynergy.Framework.UI.Sample.Droid\ISynergy.Framework.UI.Sample.Droid.csproj", "{8D7F5A42-90A1-4E77-A1A7-78E4C3C498A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.UI.Sample.UWP", "samples\ISynergy.Framework.UI.Sample\ISynergy.Framework.UI.Sample.UWP\ISynergy.Framework.UI.Sample.UWP.csproj", "{B3BCCAB0-E662-4443-8AF3-63721F4DADB5}"
+Project("{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}") = "ISynergy.Framework.UI.Sample.UWP", "samples\ISynergy.Framework.UI.Sample\ISynergy.Framework.UI.Sample.UWP\ISynergy.Framework.UI.Sample.UWP.csproj", "{B3BCCAB0-E662-4443-8AF3-63721F4DADB5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.Sample.Wasm", "samples\ISynergy.Framework.UI.Sample\ISynergy.Framework.UI.Sample.Wasm\ISynergy.Framework.UI.Sample.Wasm.csproj", "{2FCA2C67-D44E-4F96-9D59-A03503418DCA}"
 EndProject
@@ -2296,6 +2296,30 @@ Global
 		{FE7A8E6E-10A1-4C31-90D5-73EBB068E570}.Release|x64.Build.0 = Release|Any CPU
 		{FE7A8E6E-10A1-4C31-90D5-73EBB068E570}.Release|x86.ActiveCfg = Release|Any CPU
 		{FE7A8E6E-10A1-4C31-90D5-73EBB068E570}.Release|x86.Build.0 = Release|Any CPU
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Ad-Hoc|ARM.ActiveCfg = Debug|ARM
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Ad-Hoc|ARM.Build.0 = Debug|ARM
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Ad-Hoc|ARM64.ActiveCfg = Debug|ARM64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Ad-Hoc|ARM64.Build.0 = Debug|ARM64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Ad-Hoc|x64.ActiveCfg = Debug|x64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Ad-Hoc|x64.Build.0 = Debug|x64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Ad-Hoc|x86.ActiveCfg = Debug|x86
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Ad-Hoc|x86.Build.0 = Debug|x86
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Debug|ARM.Build.0 = Debug|ARM
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Debug|ARM64.Build.0 = Debug|ARM64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Debug|x64.ActiveCfg = Debug|x64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Debug|x64.Build.0 = Debug|x64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Debug|x86.ActiveCfg = Debug|x86
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Debug|x86.Build.0 = Debug|x86
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Release|ARM.ActiveCfg = Release|ARM
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Release|ARM.Build.0 = Release|ARM
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Release|ARM64.ActiveCfg = Release|ARM64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Release|ARM64.Build.0 = Release|ARM64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Release|x64.ActiveCfg = Release|x64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Release|x64.Build.0 = Release|x64
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Release|x86.ActiveCfg = Release|x86
+		{05843D85-795A-4C30-A9E6-8BFFB5ABB5AA}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

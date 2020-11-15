@@ -13,12 +13,12 @@
     SecondaryButtonStyle="{ThemeResource DefaultButtonStyle}">
 
   <StackPanel Orientation="Vertical">
-    <RadioButton x:Name="Button_Color_Default" Command="{Binding Color_Command}" CommandParameter="Default" GroupName="Color" Foreground="DeepSkyBlue" Content="Default" FontSize="18" Height="24" />
-    <RadioButton x:Name="Button_Color_RoyalBlue" Command="{Binding Color_Command}" CommandParameter="RoyalBlue" GroupName="Color" Foreground="RoyalBlue" Content="Royal Blue" FontSize="18" Height="24" />
-    <RadioButton x:Name="Button_Color_Maroon" Command="{Binding Color_Command}" CommandParameter="Maroon" GroupName="Color" Foreground="Maroon" Content="Maroon" FontSize="18" Height="24"/>
-    <RadioButton x:Name="Button_Color_OrangeRed" Command="{Binding Color_Command}" CommandParameter="OrangeRed" GroupName="Color" Foreground="OrangeRed" Content="Orange Red" FontSize="18" Height="24" />
-    <RadioButton x:Name="Button_Color_Gold" Command="{Binding Color_Command}" CommandParameter="Gold" GroupName="Color" Foreground="Gold" Content="Gold" FontSize="18" Height="24" />
-    <RadioButton x:Name="Button_Color_Lime" Command="{Binding Color_Command}" CommandParameter="Lime" GroupName="Color" Foreground="Lime" Content="Lime" FontSize="18" Height="24" />
-    <RadioButton x:Name="Button_Color_Magenta" Command="{Binding Color_Command}" CommandParameter="Magenta" GroupName="Color" Foreground="Magenta" Content="Magenta" FontSize="18" Height="24"/>
+    <RadioButton x:Name="Button_Color_Default" Command="{Binding Color_Command}" CommandParameter="Default" GroupName="Color" Foreground="DeepSkyBlue" Content="Default" FontSize="18"/>
+    <RadioButton x:Name="Button_Color_RoyalBlue" Command="{Binding Color_Command}" CommandParameter="RoyalBlue" GroupName="Color" Foreground="RoyalBlue" Content="Royal Blue" FontSize="18" />
+    <RadioButton x:Name="Button_Color_Maroon" Command="{Binding Color_Command}" CommandParameter="Maroon" GroupName="Color" Foreground="Maroon" Content="Maroon" FontSize="18"/>
+    <RadioButton x:Name="Button_Color_OrangeRed" Command="{Binding Color_Command}" CommandParameter="OrangeRed" GroupName="Color" Foreground="OrangeRed" Content="Orange Red" FontSize="18"/>
+    <RadioButton x:Name="Button_Color_Gold" Command="{Binding Color_Command}" CommandParameter="Gold" GroupName="Color" Foreground="Gold" Content="Gold" FontSize="18" />
+    <RadioButton x:Name="Button_Color_Lime" Command="{Binding Color_Command}" CommandParameter="Lime" GroupName="Color" Foreground="Lime" Content="Lime" FontSize="18"/>
+    <RadioButton x:Name="Button_Color_Magenta" Command="{Binding Color_Command}" CommandParameter="Magenta" GroupName="Color" Foreground="Magenta" Content="Magenta" FontSize="18"/>
   </StackPanel>
 </c:Window>
