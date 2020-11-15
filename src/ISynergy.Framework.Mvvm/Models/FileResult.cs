@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Mvvm.Models
     /// <summary>
     /// Class FileResult.
     /// </summary>
-    public class FileResult : IDisposable
+    public sealed class FileResult : IDisposable
     {
         /// <summary>
         /// Backing store for the FileName property
