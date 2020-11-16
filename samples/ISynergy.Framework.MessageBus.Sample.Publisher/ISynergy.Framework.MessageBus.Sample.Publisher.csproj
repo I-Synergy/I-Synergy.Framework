@@ -1,27 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>57f1ce89-fdf7-46f2-99d7-cf0363b7fbc8</UserSecretsId>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UserSecretsId>57f1ce89-fdf7-46f2-99d7-cf0363b7fbc8</UserSecretsId>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.9" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.9" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.9" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj" />
+    </ItemGroup>
 
-  <Import Project="..\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems" Label="Shared" />
+    <Import Project="..\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems" Label="Shared" />
 
 </Project>

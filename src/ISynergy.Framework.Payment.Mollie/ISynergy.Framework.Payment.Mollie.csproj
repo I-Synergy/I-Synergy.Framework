@@ -1,23 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\project.props" />
-  
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ISynergy.Framework.Payment.Mollie</RootNamespace>
+    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
+    
+    <Import Project="..\..\project.props" />
 
-    <!-- SonarQube needs this -->
-    <ProjectGuid>{9746867D-B7F5-483B-B4E1-F38E85C2B794}</ProjectGuid>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>ISynergy.Framework.Payment.Mollie</RootNamespace>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.Payment.Mollie\debug</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.Payment.Mollie\release</OutputPath>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj" />
-  </ItemGroup>
+        <!-- SonarQube needs this -->
+        <ProjectGuid>{9746867D-B7F5-483B-B4E1-F38E85C2B794}</ProjectGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.Payment.Mollie\debug</OutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.Payment.Mollie\release</OutputPath>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj" />
+    </ItemGroup>
 </Project>

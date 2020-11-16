@@ -1,22 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\project.props" />
-  
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
+    
+    <Import Project="..\..\project.props" />
 
-      <!-- SonarQube needs this -->
-      <ProjectGuid>{A5B0727D-FA08-4BFD-A04B-5E54183AD55C}</ProjectGuid>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.Financial\debug</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.Financial\release</OutputPath>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-  </ItemGroup>
-  
+        <!-- SonarQube needs this -->
+        <ProjectGuid>{A5B0727D-FA08-4BFD-A04B-5E54183AD55C}</ProjectGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.Financial\debug</OutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.Financial\release</OutputPath>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+    </ItemGroup>
+
 </Project>

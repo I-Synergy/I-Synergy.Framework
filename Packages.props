@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <PackageReference Update="Azure.Storage.Blobs" Version="[12.7.0]" />
+        <PackageReference Update="Microsoft.ApplicationInsights.AspNetCore" Version="[2.16.0]" />
+        <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.AspNetCore.TestHost" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Azure.ServiceBus" Version="[5.0.0]" />
+        <PackageReference Update="Microsoft.CSharp" Version="[4.7.0]" />
+        <PackageReference Update="Microsoft.EntityFrameworkCore" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Configuration" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Configuration.Abstractions" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Configuration.Binder" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Configuration.UserSecrets" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Hosting.Abstractions" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Http" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Identity.Stores" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Logging" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.Extensions.Logging.Console" Version="[1.1.1]" />
+        <PackageReference Update="Microsoft.Extensions.Logging.Filter" Version="[1.1.1]" />
+        <PackageReference Update="Microsoft.Extensions.Options" Version="[3.1.10]" />
+        <PackageReference Update="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="[5.2.8]" />
+        <PackageReference Update="Newtonsoft.Json" Version="[12.0.3]" />
+        <PackageReference Update="System.ComponentModel.Annotations" Version="[5.0.0]" />
+        <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="[6.8.0]" />
+        <PackageReference Update="System.Reflection.Emit" Version="[4.7.0]" />
+        <PackageReference Update="Uno.Core" Version="[2.0.0]" />
+        <PackageReference Update="Uno.Material" Version="[1.0.0-dev.578]" />
+        <PackageReference Update="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="[6.1.0-build.191.gc988bdd4ff]" />
+        <PackageReference Update="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="[2.0.2-uno.79]" />
+        <PackageReference Update="Uno.UI" Version="[3.2.0]" />
+        <PackageReference Update="Xamarin.AndroidX.AppCompat" Version="[1.2.0.5]" />
+        <PackageReference Update="Xamarin.AndroidX.Legacy.Support.v4" Version="[1.0.0.5]" />
+
+        <PackageReference Update="FluentAssertions" Version="[5.10.3]" />
+        <PackageReference Update="Linq.PropertyTranslator.Core" Version="[1.0.5]" />
+        <PackageReference Update="Microsoft.NET.Test.Sdk" Version="[16.8.0]" />
+        <PackageReference Update="Moq" Version="[4.15.1]" />
+        <PackageReference Update="NFluent" Version="[2.7.0]" />
+        <PackageReference Update="QueryInterceptor.Core" Version="[1.0.7]" />
+        <PackageReference Update="xunit" Version="[2.4.1]" />
+        <PackageReference Update="xunit.runner.visualstudio" Version="[2.4.3]">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Update="coverlet.collector" Version="[1.3.0]">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>
