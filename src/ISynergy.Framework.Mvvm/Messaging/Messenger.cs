@@ -478,7 +478,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
                 // Clone to protect from people registering in a "receive message" method
                 // Correction Messaging BL0004.007
                 var list = weakActionsAndTokens.ToList();
-                var listClone = list.Take(list.Count()).ToList();
+                var listClone = list.Take(list.Count).ToList();
 
                 foreach (var item in listClone)
                 {
@@ -628,7 +628,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
                 // Clone to protect from people registering in a "receive message" method
                 // Correction Messaging BL0008.002
                 var listClone =
-                    _recipientsOfSubclassesAction.Keys.Take(_recipientsOfSubclassesAction.Count()).ToList();
+                    _recipientsOfSubclassesAction.Keys.Take(_recipientsOfSubclassesAction.Count).ToList();
 
                 foreach (var type in listClone)
                 {
@@ -640,7 +640,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
                     {
                         lock (_recipientsOfSubclassesAction)
                         {
-                            list = _recipientsOfSubclassesAction[type].Take(_recipientsOfSubclassesAction[type].Count()).ToList();
+                            list = _recipientsOfSubclassesAction[type].Take(_recipientsOfSubclassesAction[type].Count).ToList();
                         }
                     }
 
@@ -657,7 +657,7 @@ namespace ISynergy.Framework.Mvvm.Messaging
                     if (_recipientsStrictAction.ContainsKey(messageType))
                     {
                         list = _recipientsStrictAction[messageType]
-                            .Take(_recipientsStrictAction[messageType].Count())
+                            .Take(_recipientsStrictAction[messageType].Count)
                             .ToList();
                     }
                 }

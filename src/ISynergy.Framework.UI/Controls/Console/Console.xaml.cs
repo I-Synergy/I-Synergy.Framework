@@ -1,17 +1,20 @@
-﻿using System;
+﻿using Windows.Storage.Streams;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
+
+#if NETFX_CORE
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
-using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -34,6 +37,7 @@ namespace ISynergy.Framework.UI.Controls
             InitializeComponent();
         }
 
+#if NETFX_CORE
         /// <summary>
         /// Writes the output to the console control.
         /// </summary>
@@ -41,22 +45,26 @@ namespace ISynergy.Framework.UI.Controls
         /// <param name="color">The color.</param>
         public async Task WriteOutputAsync(string output, Color color)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                var run = new Run();
-                var sb = new StringBuilder();
-                sb.AppendLine(output);
-                run.Text = sb.ToString();
-                run.Foreground = new SolidColorBrush(color);
 
-                if (RichTextBox_Console.Blocks.Count == 0)
-                    RichTextBox_Console.Blocks.Add(new Paragraph());
-
-                (RichTextBox_Console.Blocks.First() as Paragraph)?.Inlines.Add(run);
-            });
-
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => WriteOutput(output, color));
             RichTextBox_Scroll.ChangeView(null, RichTextBox_Console.ActualHeight, null);
+
+        }
+
+        private void WriteOutput(string output, Color color)
+        {
+
+            var run = new Run();
+            var sb = new StringBuilder();
+            sb.AppendLine(output);
+            run.Text = sb.ToString();
+            run.Foreground = new SolidColorBrush(color);
+
+
+            if (RichTextBox_Console.Blocks.Count == 0)
+                RichTextBox_Console.Blocks.Add(new Paragraph());
+
+            (RichTextBox_Console.Blocks.First() as Paragraph)?.Inlines.Add(run);
         }
 
         /// <summary>
@@ -75,6 +83,7 @@ namespace ISynergy.Framework.UI.Controls
         /// <param name="workingDirectory">The working directory.</param>
         public async Task StartProcessAsync(string fileName, string arguments, string workingDirectory = null)
         {
+
             //  Are we showing diagnostics?
             if (ShowDiagnostics)
             {
@@ -86,7 +95,7 @@ namespace ISynergy.Framework.UI.Controls
                     await WriteOutputAsync("." + Environment.NewLine, Color.FromArgb(255, 0, 255, 0));
             }
 
-#if NETFX_CORE
+
             await CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 try
@@ -138,15 +147,13 @@ namespace ISynergy.Framework.UI.Controls
                     await WriteOutputAsync($"{ex.StackTrace}{Environment.NewLine}", Colors.Red);
                 }
             });
-#else
-            throw new NotSupportedException("Console script execution is only supported on UWP");
-#endif
         }
+#endif
 
-        /// <summary>
-        /// The show diagnostics property
-        /// </summary>
-        private static readonly DependencyProperty ShowDiagnosticsProperty =
+    /// <summary>
+    /// The show diagnostics property
+    /// </summary>
+    private static readonly DependencyProperty ShowDiagnosticsProperty =
           DependencyProperty.Register(nameof(ShowDiagnostics), typeof(bool), typeof(Console),
           new PropertyMetadata(false, OnShowDiagnosticsChanged));
 

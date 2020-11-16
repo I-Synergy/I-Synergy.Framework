@@ -1,13 +1,16 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
+﻿using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Enumerations;
 using System;
+using Uno.Material;
+using Windows.Storage;
+using Windows.UI.Xaml;
+
+#if NETFX_CORE
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
-using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -28,6 +31,13 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The theme.</value>
         public object Theme { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IThemeSelectorService" /> is material.
+        /// </summary>
+        /// <value><c>true</c> if material; otherwise, <c>false</c>.</value>
+        public bool Material { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether this instance is light theme enabled.
         /// </summary>
@@ -66,10 +76,62 @@ namespace ISynergy.Framework.UI.Services
         /// Sets the requested theme.
         /// </summary>
         /// <param name="color">The color.</param>
-        public void SetThemeColor(string color)
+        public void SetThemeColor(ThemeColors color)
         {
-            Application.Current.Resources.ThemeDictionaries.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"ms-appx:///ISynergy.Framework.UI/Themes/Theme.{color}.xaml", UriKind.RelativeOrAbsolute) });
+            // Default I-Synergy color.
+            var accentColor = "#3399ff";
+            var lightColor = "#79c9ff";
+            var darkColor = "#006ccb";
+
+            switch (color)
+            {
+                case ThemeColors.Gold:
+                    accentColor = "#f3b200";
+                    lightColor = "#ffe44b";
+                    darkColor = "#bb8300";
+                    break;
+                case ThemeColors.Lime:
+                    accentColor = "#77b900";
+                    lightColor = "#abec49";
+                    darkColor = "#438900";
+                    break;
+                case ThemeColors.Magenta:
+                    accentColor = "#ff00ff";
+                    lightColor = "#ff63ff";
+                    darkColor = "#c700cb";
+                    break;
+                case ThemeColors.Maroon:
+                    accentColor = "#ac193d";
+                    lightColor = "#e35267";
+                    darkColor = "#760018";
+                    break;
+                case ThemeColors.OrangeRed:
+                    accentColor = "#d24726";
+                    lightColor = "#ff7851";
+                    darkColor = "#9a0b00";
+                    break;
+                case ThemeColors.RoyalBlue:
+                    accentColor = "#0073cf";
+                    lightColor = "#5da1ff";
+                    darkColor = "#00489d";
+                    break;
+            }
+
+            if(Material)
+            {
+                // Set a default palette to make sure all colors used by MaterialResources exist
+                Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
+
+                // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
+                Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
+
+
+                Application.Current.Resources["MaterialPrimaryColor"] = accentColor;
+                Application.Current.Resources["MaterialPrimaryVariantLightColor"] = lightColor;
+                Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = darkColor;
+            }
+
+            Application.Current.Resources["SystemAccentColor"] = accentColor;
         }
 
         /// <summary>
@@ -91,11 +153,14 @@ namespace ISynergy.Framework.UI.Services
                 frameworkElement.RequestedTheme = (ElementTheme)Theme;
             }
 
+#if NETFX_CORE
             SetupTitlebar();
+#endif
 
             OnThemeChanged(null, (ElementTheme)Theme);
         }
 
+#if NETFX_CORE
         /// <summary>
         /// Setups the titlebar.
         /// </summary>
@@ -130,6 +195,7 @@ namespace ISynergy.Framework.UI.Services
                 }
             }
         }
+#endif
 
         /// <summary>
         /// Loads the theme from setting.
@@ -137,8 +203,9 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>System.Object.</returns>
         private static object LoadThemeFromSetting()
         {
-            var cacheTheme = ElementTheme.Light;
             var themeName = ApplicationData.Current.LocalSettings.Values[SettingsKey];
+
+            ElementTheme cacheTheme;
 
             if (themeName is null)
             {

@@ -21,24 +21,32 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MediaItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Options\AppCenterOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Options\ConfigurationOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\AuthenticationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CameraService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ClientMonitorService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\ClipboardService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommonServices.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DownloadFileService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\FileService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\LanguageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\MasterDataService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\PrintingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ReportingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\TelemetryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InfoViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\InfoView.xaml.cs">
+      <DependentUpon>InfoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\Library\LanguageWindow.xaml.cs">
       <DependentUpon>LanguageWindow.xaml</DependentUpon>
     </Compile>
@@ -68,6 +76,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Styles\Style.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Views\InfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,8 +163,28 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-400.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)appsettings.json">
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+    </EmbeddedResource>
+    <Resource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <DependentUpon>Resources.cs</DependentUpon>
+    </Resource>
   </ItemGroup>
 </Project>

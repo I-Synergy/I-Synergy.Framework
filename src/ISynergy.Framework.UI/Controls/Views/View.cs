@@ -40,9 +40,6 @@ namespace ISynergy.Framework.UI.Controls
         /// </summary>
         protected View()
         {
-            // By default, all pages are cached to increase performance
-            NavigationCacheMode = NavigationCacheMode.Required;
-
             WeakViewLoadedEvent = new WeakEventListener<IView, object, RoutedEventArgs>(this)
             {
                 OnEventAction = (instance, source, eventargs) => instance.View_Loaded(source, eventargs),
@@ -101,12 +98,6 @@ namespace ISynergy.Framework.UI.Controls
         protected override async void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            if (e.NavigationMode == NavigationMode.Back)
-            {
-                NavigationCacheMode = NavigationCacheMode.Disabled;
-            }
-
             await DataContext?.OnDeactivateAsync();
         }
     }

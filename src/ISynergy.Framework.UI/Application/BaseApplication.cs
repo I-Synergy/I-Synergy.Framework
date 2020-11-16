@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -20,26 +19,25 @@ using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
-
 using Windows.UI.Xaml;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
-
-
-#if HAS_UNO
-using Windows.UI.WebUI;
-#endif
+using ISynergy.Framework.UI.Properties;
+using System.Resources;
+using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.Mvvm;
 
 #if NETFX_CORE
-using Windows.ApplicationModel;
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
 using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
+using System.Globalization;
+using Windows.ApplicationModel.Background;
 #endif
 
 using Window = ISynergy.Framework.UI.Controls.Window;
@@ -69,17 +67,37 @@ namespace ISynergy.Framework.UI
         /// <value>The theme selector.</value>
         public IThemeSelectorService ThemeSelector { get; private set; }
 
-        private readonly IServiceProvider _serviceProvider;
+        /// <summary>
+        /// Gets the language service.
+        /// </summary>
+        /// <value>The language service.</value>
+        public ILanguageService LanguageService { get; private set; }
+
+        /// <summary>
+        /// The service provider
+        /// </summary>
+        protected readonly IServiceProvider _serviceProvider;
+
+        /// <summary>
+        /// The services
+        /// </summary>
         private readonly IServiceCollection _services;
+        /// <summary>
+        /// The navigation service
+        /// </summary>
         private readonly INavigationService _navigationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseApplication"/> class.
+        /// Initializes a new instance of the <see cref="BaseApplication" /> class.
         /// </summary>
         protected BaseApplication()
         {
+            ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
+
             _services = new ServiceCollection();
             _navigationService = new NavigationService();
+
+            LanguageService = new LanguageService(new ResourceManager(typeof(Resources)));
 
             ConfigureServices(_services);
             
@@ -89,6 +107,10 @@ namespace ISynergy.Framework.UI
 
             Logger = _serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(BaseApplication));
             Logger.LogInformation("Starting application");
+
+            Current.UnhandledException += Current_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             SetContext();
 
@@ -131,22 +153,17 @@ namespace ISynergy.Framework.UI
 
             //Gets or sets a value that indicates whether to display frame-rate and per-frame CPU usage info. These display as an overlay of counters in the window chrome while the app runs.
             //this.EnableFrameRateCounter = true;
-
-#if NETFX_CORE
-            Current.UnhandledException += Current_UnhandledException;
-#endif
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
 
         /// <summary>
         /// Handles the UnobservedTaskException event of the TaskScheduler control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs" /> instance containing the event data.</param>
         private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             await HandleException(e.Exception, e.Exception.Message);
+            e.SetObserved();
         }
 
 #if NETFX_CORE
@@ -158,7 +175,19 @@ namespace ISynergy.Framework.UI
         private async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-            await HandleException(e.Exception, e.Message);
+            await HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
+        }
+#else
+        /// <summary>
+        /// Handles the UnhandledException event of the Current control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="Windows.UI.Xaml.UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        private async void Current_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            var ex = e.Exception;
+            await HandleException(ex, $"{ex.Message}{Environment.NewLine}{e.Message}");
         }
 #endif
 
@@ -166,7 +195,7 @@ namespace ISynergy.Framework.UI
         /// Handles the UnhandledException event of the CurrentDomain control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs" /> instance containing the event data.</param>
         private async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
@@ -194,19 +223,12 @@ namespace ISynergy.Framework.UI
             }
 #endif
 
-            LaunchApplication();
-        }
+            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Color.ToEnum(ThemeColors.Default));
 
-        /// <summary>
-        /// Launches the application.
-        /// </summary>
-        private void LaunchApplication()
-        {
-            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Color);
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (!(global::Windows.UI.Xaml.Window.Current.Content is Frame rootFrame))
+            if (!(Windows.UI.Xaml.Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
@@ -214,8 +236,10 @@ namespace ISynergy.Framework.UI
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
 
-                // Place the frame in the current Window
-                global::Windows.UI.Xaml.Window.Current.Content = rootFrame;
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    //TODO: Load state from previously suspended application
+                }
 
                 // Register a handler for BackRequested events and set the
                 // visibility of the Back button
@@ -225,21 +249,26 @@ namespace ISynergy.Framework.UI
                     rootFrame.CanGoBack ?
                     AppViewBackButtonVisibility.Visible :
                     AppViewBackButtonVisibility.Collapsed;
+
+                // Place the frame in the current Window
+                Windows.UI.Xaml.Window.Current.Content = rootFrame;
             }
 
-            if (rootFrame.Content is null)
+            if (!args.PrelaunchActivated)
             {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame.Navigate(_serviceProvider.GetRequiredService<IShellView>().GetType());
+                if (rootFrame.Content is null)
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+
+                    var view = _serviceProvider.GetRequiredService<IShellView>();
+                    rootFrame.Navigate(view.GetType(), args.Arguments);
+                }
+
+                // Ensure the current window is active
+                Windows.UI.Xaml.Window.Current.Activate();
             }
-
-            // Ensure the current window is active
-            global::Windows.UI.Xaml.Window.Current.Activate();
-
-            //if (!System.Diagnostics.Debugger.IsAttached)
-            //    ISynergy.Framework.UI.Controls.ScreenSaver.InitializeScreensaver(new Uri("ms-appx://ISynergy.Pos/Assets/SplashScreen.scale-400.png"));
         }
 
         /// <summary>
@@ -248,16 +277,15 @@ namespace ISynergy.Framework.UI
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
         /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
-        private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
+        /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
+        private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
+            throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
 
         /// <summary>
         /// Handles the <see cref="E:Navigated" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
         private static void OnNavigated(object sender, NavigationEventArgs e)
         {
             // Each time a navigation event occurs, update the Back button's visibility
@@ -271,12 +299,12 @@ namespace ISynergy.Framework.UI
         /// Handles the <see cref="E:BackRequested" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="BackRequestedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="BackRequestedEventArgs" /> instance containing the event data.</param>
         private static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            var rootFrame = global::Windows.UI.Xaml.Window.Current.Content as Frame;
+            var rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
 
-            if (GetDescendantFromName(global::Windows.UI.Xaml.Window.Current.Content, "ContentRootFrame") is Frame _frame)
+            if (GetDescendantFromName(Windows.UI.Xaml.Window.Current.Content, "ContentRootFrame") is Frame _frame)
             {
                 rootFrame = _frame;
             }
@@ -330,10 +358,12 @@ namespace ISynergy.Framework.UI
             var deferral = e.SuspendingOperation.GetDeferral();
 
             //TODO: Save application state and stop any background activity
+#if NETFX_CORE
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
                 task.Value?.Unregister(true);
             }
+#endif
 
             deferral.Complete();
         }
@@ -369,8 +399,15 @@ namespace ISynergy.Framework.UI
         protected abstract void ConfigureLogger(ILoggerFactory factory);
 
         /// <summary>
+        /// Gets the entry assembly.
+        /// </summary>
+        /// <returns>Assembly.</returns>
+        protected abstract Assembly GetEntryAssembly();
+
+        /// <summary>
         /// Configures the services.
         /// </summary>
+        /// <param name="services">The services.</param>
         protected virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
@@ -380,12 +417,14 @@ namespace ISynergy.Framework.UI
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<IInfoService, InfoService>();
+            services.AddSingleton((s) => LanguageService);
+            services.AddSingleton<IInfoService>((s) => new InfoService(GetEntryAssembly()));
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IUIVisualizerService, UIVisualizerService>();
             services.AddSingleton((s) => _navigationService);
             services.AddSingleton<IConverterService, ConverterService>();
             services.AddSingleton<IApplicationSettingsService, ApplicationSettingsService>();
+            services.AddSingleton<IFileService, FileService>();
 
             //Register functions
             services.AddSingleton<LocalizationFunctions>();
@@ -413,8 +452,8 @@ namespace ISynergy.Framework.UI
         /// <param name="assemblies">The assemblies.</param>
         protected void RegisterAssemblies(List<Assembly> assemblies)
         {
-            assemblies.Add(Assembly.Load("ISynergy.Framework.Mvvm"));
-            assemblies.Add(Assembly.Load("ISynergy.Framework.UI"));
+            assemblies.Add(Assembly.GetAssembly(typeof(MvvmAssemblyIdentifier)));
+            assemblies.Add(Assembly.GetAssembly(typeof(UIAssemblyIdentifier)));
 
             ViewTypes = new List<Type>();
             WindowTypes = new List<Type>();
@@ -473,10 +512,9 @@ namespace ISynergy.Framework.UI
             {
                 var abstraction = view
                     .GetInterfaces()
-                    .Where(q =>
+                    .FirstOrDefault(q =>
                         q.GetInterfaces().Contains(typeof(IView))
-                        && q.Name != nameof(IView))
-                    .FirstOrDefault();
+                        && q.Name != nameof(IView));
 
                 if (abstraction != null)
                 {
@@ -499,10 +537,9 @@ namespace ISynergy.Framework.UI
             {
                 var abstraction = window
                     .GetInterfaces()
-                    .Where(q =>
+                    .FirstOrDefault(q =>
                         q.GetInterfaces().Contains(typeof(IWindow))
-                        && q.Name != nameof(IWindow))
-                    .FirstOrDefault();
+                        && q.Name != nameof(IWindow));
 
                 if (abstraction != null)
                 {
@@ -523,11 +560,15 @@ namespace ISynergy.Framework.UI
             Context = _serviceProvider.GetRequiredService<IContext>();
             Context.ViewModels = ViewModelTypes;
 
-            var culture = CultureInfo.CurrentCulture;
-            culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
-            culture.NumberFormat.CurrencyNegativePattern = 1;
+#if NETFX_CORE || __WASM__
+                //Only in Windows i can set the culture.
+                var culture = CultureInfo.CurrentCulture;
 
-            Context.NumberFormat = culture.NumberFormat;
+                culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
+                culture.NumberFormat.CurrencyNegativePattern = 1;
+
+                Context.NumberFormat = culture.NumberFormat;
+#endif
 
             var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
             localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Culture);
@@ -538,6 +579,62 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="ex">The ex.</param>
         /// <param name="message">The message.</param>
+        /// <returns>Task.</returns>
         public abstract Task HandleException(Exception ex, string message);
+
+        /// <summary>
+        /// Configures global logging
+        /// </summary>
+        /// <param name="factory"></param>
+		static void ConfigureFilters(ILoggerFactory factory)
+        {
+            factory
+                .WithFilter(new FilterLoggerSettings
+                    {
+                        { "Uno", LogLevel.Warning },
+
+                        { "Windows", LogLevel.Warning },
+                        { "Microsoft", LogLevel.Warning },
+
+						// Debug JS interop
+						 { "Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug },
+
+						// Generic Xaml events
+						// { "Microsoft.UI.Xaml", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.UIElement", LogLevel.Debug },
+
+						// Layouter specific messages
+						// { "Microsoft.UI.Xaml.Controls", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug },
+						// { "Windows.Storage", LogLevel.Debug },
+
+						// Binding related messages
+						// { "Microsoft.UI.Xaml.Data", LogLevel.Debug },
+
+						// DependencyObject memory references tracking
+						// { "ReferenceHolder", LogLevel.Debug },
+
+						// ListView-related messages
+						// { "Microsoft.UI.Xaml.Controls.ListViewBase", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.ListView", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.GridView", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.VirtualizingPanelLayout", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.NativeListViewBase", LogLevel.Debug },
+						// { "Microsoft.UI.Xaml.Controls.ListViewBaseSource", LogLevel.Debug }, //iOS
+						// { "Microsoft.UI.Xaml.Controls.ListViewBaseInternalContainer", LogLevel.Debug }, //iOS
+						// { "Microsoft.UI.Xaml.Controls.NativeListViewBaseAdapter", LogLevel.Debug }, //Android
+						// { "Microsoft.UI.Xaml.Controls.BufferViewCache", LogLevel.Debug }, //Android
+						// { "Microsoft.UI.Xaml.Controls.VirtualizingPanelGenerator", LogLevel.Debug }, //WASM
+					}
+                )
+#if DEBUG
+                .AddConsole(LogLevel.Debug);
+#else
+				.AddConsole(LogLevel.Information);
+#endif
+        }
     }
 }

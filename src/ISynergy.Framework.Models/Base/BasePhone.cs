@@ -61,22 +61,15 @@ namespace ISynergy.Framework.Models.Base
         /// Gets the phonenumber short.
         /// </summary>
         /// <value>The phonenumber short.</value>
-        public string PhonenumberShort
+        public string PhonenumberShort()
         {
-            get
+            if (AreaCode != null && SubscriberNumber != null)
             {
-                if (AreaCode != null && SubscriberNumber != null)
-                {
-                    return AreaCode + SubscriberNumber;
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                return AreaCode + SubscriberNumber;
             }
-            private set
+            else
             {
-                return;
+                return string.Empty;
             }
         }
 
@@ -84,23 +77,16 @@ namespace ISynergy.Framework.Models.Base
         /// Gets the phonenumber.
         /// </summary>
         /// <value>The phonenumber.</value>
-        public string Phonenumber
+        public string Phonenumber()
         {
-            get
+            if (CountryPrefix != null && AreaCode != null && SubscriberNumber != null)
             {
-                if (CountryPrefix != null && AreaCode != null && SubscriberNumber != null)
-                {
-                    return $"+{CountryPrefix} {AreaCode.Replace("0", "(0)")} {SubscriberNumber}";
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                return $"+{CountryPrefix} {AreaCode.Replace("0", "(0)")} {SubscriberNumber}";
             }
-            private set
+            else
             {
-                return;
+                return string.Empty;
             }
-        }
+        }   
     }
 }

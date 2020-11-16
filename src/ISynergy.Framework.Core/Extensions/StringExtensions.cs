@@ -342,7 +342,7 @@ namespace ISynergy.Framework.Core.Extensions
             var poses = positions.Distinct().OrderBy(n => n).ToList();
 
             var indicesToRemove = new Queue<int>();
-            var total = poses.Count();
+            var total = poses.Count;
             var i = 0;
             while (i < total)
             {
@@ -564,6 +564,21 @@ namespace ISynergy.Framework.Core.Extensions
                 Bytes[i] = byte.Parse(temp, NumberStyles.HexNumber);
             }
             return Bytes;
+        }
+
+        /// <summary>
+        /// Converts to enum.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="_self">The value.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>T.</returns>
+        public static T ToEnum<T>(this string _self, T defaultValue) where T : struct
+        {
+            if (string.IsNullOrEmpty(_self))
+                return defaultValue;
+
+            return Enum.TryParse<T>(_self, true, out var result) ? result : defaultValue;
         }
     }
 }

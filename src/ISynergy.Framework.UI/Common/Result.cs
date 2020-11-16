@@ -42,7 +42,7 @@ namespace ISynergy.Framework.UI.Common
         /// <param name="message">The message.</param>
         /// <param name="description">The description.</param>
         /// <returns>Result.</returns>
-        public static Result Ok(string message = null, string description = null)
+        public static Result Ok(string message, string description = null)
         {
             return new Result { IsOk = true, Message = message, Description = description };
         }

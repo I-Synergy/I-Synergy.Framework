@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ISynergy.Framework.Core.Enumerations;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
@@ -8,9 +9,15 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     public interface IClipboardService
     {
         /// <summary>
-        /// Gets the PNG image from clipboard asynchronous.
+        /// Gets the bitmap source from clipboard asynchronous.
+        /// </summary>
+        /// <returns>Task&lt;System.Object&gt;.</returns>
+        Task<object> GetBitmapSourceFromClipboardAsync();
+
+        /// <summary>
+        /// Gets the byte array from clipboard image asynchronous.
         /// </summary>
         /// <returns>Task&lt;System.Byte[]&gt;.</returns>
-        Task<byte[]> GetPngImageFromClipboardAsync();
+        Task<byte[]> GetByteArrayFromClipboardImageAsync(ImageFormats format);
     }
 }

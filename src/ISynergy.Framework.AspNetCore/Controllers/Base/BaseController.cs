@@ -26,6 +26,6 @@ namespace ISynergy.Framework.AspNetCore.Controllers.Base
         /// Gets the get current user.
         /// </summary>
         /// <value>The get current user.</value>
-        public string GetCurrentUser { get => User.Claims.Where(q => q.Type == Core.Constants.ClaimTypes.UserNameType).FirstOrDefault()?.Value ?? string.Empty; }
+        public string GetCurrentUser { get => User.Claims.FirstOrDefault(q => q.Type == Core.Constants.ClaimTypes.UserNameType)?.Value ?? string.Empty; }
     }
 }

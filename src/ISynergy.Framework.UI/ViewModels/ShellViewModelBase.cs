@@ -459,8 +459,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Opens the help asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected Task OpenHelpAsync() =>
-            BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("EX_FUTURE_MODULE"));
+        protected Task OpenHelpAsync() => ThrowFeatureNotEnabledWarning();
 
         /// <summary>
         /// open feedback as an asynchronous operation.
@@ -473,10 +472,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <summary>
         /// restart application as an asynchronous operation.
         /// </summary>
-        public async Task RestartApplicationAsync()
-        {
-            await BaseCommonServices.DialogService.ShowInformationAsync("Please restart the application.");
-            Application.Current.Exit();
-        }
+        public Task RestartApplicationAsync() =>
+            BaseCommonServices.DialogService.ShowInformationAsync("Please restart the application.");
     }
 }

@@ -131,26 +131,18 @@ namespace ISynergy.Framework.Models.Base
         /// Gets the address short.
         /// </summary>
         /// <value>The address short.</value>
-        public string AddressShort
-        {
-            get { return (Street + " " + HouseNumber + (Addition != null ? Addition.ToUpper() : string.Empty) + (ExtraAddressLine != null ? " " + ExtraAddressLine : string.Empty)).Trim(); }
-            private set
-            {
-                return;
-            }
-        }
+        public string AddressShort() =>
+            $"{Street} {HouseNumber}{(Addition != null ? Addition.ToUpper() : string.Empty)}" +
+            $"{(ExtraAddressLine != null ? " " + ExtraAddressLine : string.Empty)}"
+            .Trim();
 
         /// <summary>
         /// Gets the address long.
         /// </summary>
         /// <value>The address long.</value>
-        public string AddressLong
-        {
-            get { return (Street + " " + HouseNumber + (Addition != null ? Addition.ToUpper() : string.Empty) + (ExtraAddressLine != null ? " " + ExtraAddressLine : string.Empty)).Trim() + ", " + Zipcode + " " + City; }
-            private set
-            {
-                return;
-            }
-        }
+        public string AddressLong() =>
+            $"{Street} {HouseNumber}{(Addition != null ? Addition.ToUpper() : string.Empty)}" +
+            $"{(ExtraAddressLine != null ? " " + ExtraAddressLine : string.Empty)}"
+            .Trim() + $", {Zipcode} {City}"; 
     }
 }

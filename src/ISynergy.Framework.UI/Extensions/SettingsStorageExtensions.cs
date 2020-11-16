@@ -3,7 +3,11 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
+using ISynergy.Framework.Core.Validation;
+
+#if NETFX_CORE
 using Windows.Storage.Streams;
+#endif
 
 namespace ISynergy.Framework.UI.Extensions
 {
@@ -15,17 +19,17 @@ namespace ISynergy.Framework.UI.Extensions
         /// <summary>
         /// The file extension
         /// </summary>
-        private const string FileExtension = ".json";
+        private const string _jsonExtension = ".json";
 
+#if NETFX_CORE
         /// <summary>
         /// Determines whether [is roaming storage available] [the specified application data].
         /// </summary>
         /// <param name="appData">The application data.</param>
         /// <returns><c>true</c> if [is roaming storage available] [the specified application data]; otherwise, <c>false</c>.</returns>
-        public static bool IsRoamingStorageAvailable(this ApplicationData appData)
-        {
-            return appData.RoamingStorageQuota == 0;
-        }
+        public static bool IsRoamingStorageAvailable(this ApplicationData appData) =>
+            appData.RoamingStorageQuota == 0;
+#endif
 
         /// <summary>
         /// save as an asynchronous operation.
@@ -36,7 +40,7 @@ namespace ISynergy.Framework.UI.Extensions
         /// <param name="content">The content.</param>
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
-            var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
+            var file = await folder.CreateFileAsync(GetJsonFileName(name), CreationCollisionOption.ReplaceExisting);
             var fileContent = JsonConvert.SerializeObject(content);
 
             await FileIO.WriteTextAsync(file, fileContent);
@@ -51,12 +55,12 @@ namespace ISynergy.Framework.UI.Extensions
         /// <returns>T.</returns>
         public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name)
         {
-            if (!File.Exists(Path.Combine(folder.Path, GetFileName(name))))
+            if (!File.Exists(Path.Combine(folder.Path, GetJsonFileName(name))))
             {
                 return default;
             }
 
-            var file = await folder.GetFileAsync($"{name}.json");
+            var file = await folder.GetFileAsync(GetJsonFileName(name));
             var fileContent = await FileIO.ReadTextAsync(file);
 
             return JsonConvert.DeserializeObject<T>(fileContent);
@@ -115,21 +119,15 @@ namespace ISynergy.Framework.UI.Extensions
         /// <exception cref="ArgumentException">ExceptionSettingsStorageExtensionsFileNameIsNullOrEmpty".GetLocalized() - fileName</exception>
         public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
         {
-            if (content is null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
-            if (string.IsNullOrEmpty(fileName))
-            {
-                throw new ArgumentException("ExceptionSettingsStorageExtensionsFileNameIsNullOrEmpty".GetLocalized(), nameof(fileName));
-            }
+            Argument.IsNotNull(nameof(content), content);
+            Argument.IsNotNullOrEmpty(nameof(fileName), fileName);
 
             var storageFile = await folder.CreateFileAsync(fileName, options);
             await FileIO.WriteBytesAsync(storageFile, content);
             return storageFile;
         }
 
+#if NETFX_CORE
         /// <summary>
         /// read file as an asynchronous operation.
         /// </summary>
@@ -149,7 +147,9 @@ namespace ISynergy.Framework.UI.Extensions
 
             return null;
         }
+#endif
 
+#if NETFX_CORE
         /// <summary>
         /// read bytes as an asynchronous operation.
         /// </summary>
@@ -169,15 +169,13 @@ namespace ISynergy.Framework.UI.Extensions
 
             return null;
         }
+#endif
 
         /// <summary>
         /// Gets the name of the file.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>System.String.</returns>
-        private static string GetFileName(string name)
-        {
-            return string.Concat(name, FileExtension);
-        }
+        private static string GetJsonFileName(string name) => $"{name}.{_jsonExtension}";
     }
 }

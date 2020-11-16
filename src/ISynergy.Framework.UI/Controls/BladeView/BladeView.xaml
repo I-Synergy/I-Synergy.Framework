@@ -160,7 +160,7 @@
                                     Width="32"
                                     Height="32"
                                     Content="&#xE73F;"
-                                    FontFamily="Segoe MDL2 Assets"
+                                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                                     FontSize="14" 
                                     Foreground="{TemplateBinding CloseButtonForeground}" />
                             <Button Name="CloseButton"
@@ -173,7 +173,7 @@
                                     Width="32"
                                     Height="32"
                                     Content="&#xE711;"
-                                    FontFamily="Segoe MDL2 Assets"
+                                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                                     FontSize="14"
                                     Foreground="{TemplateBinding CloseButtonForeground}" />
                         </Grid>

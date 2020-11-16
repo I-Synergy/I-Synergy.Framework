@@ -49,9 +49,10 @@ namespace ISynergy.Framework.UI.Controls
         /// </summary>
         public ImageView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
+#if NETFX_CORE
         /// <summary>
         /// Loads the image.
         /// </summary>
@@ -68,6 +69,7 @@ namespace ISynergy.Framework.UI.Controls
             ImageFadeOut.Completed += handler;
             ImageFadeOut.Begin();
         }
+#endif
 
         /// <summary>
         /// Sources the changed.
@@ -77,14 +79,12 @@ namespace ISynergy.Framework.UI.Controls
         private static void SourceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = (ImageView)dependencyObject;
-            var newSource = (ImageSource)dependencyPropertyChangedEventArgs.NewValue;
 
-            System.Diagnostics.Debug.WriteLine("Image source changed: {0}", ((BitmapImage)newSource).UriSource.AbsolutePath);
-
-            if (newSource != null)
+            if ((ImageSource)dependencyPropertyChangedEventArgs.NewValue is ImageSource newSource)
             {
                 var image = (BitmapImage)newSource;
 
+#if NETFX_CORE
                 // If the image is not a local resource or it was not cached
                 if (image.UriSource.Scheme != "ms-appx" && image.UriSource.Scheme != "ms-resource" && (image.PixelHeight * image.PixelWidth == 0))
                 {
@@ -95,6 +95,9 @@ namespace ISynergy.Framework.UI.Controls
                 {
                     control.LoadImage(newSource);
                 }
+#else
+                control.Image.Source = image;
+#endif
             }
         }
     }

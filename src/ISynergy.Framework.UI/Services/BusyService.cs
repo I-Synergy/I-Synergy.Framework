@@ -87,7 +87,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task.</returns>
         public Task StartBusyAsync()
         {
-            return this.StartBusyAsync(LanguageService.GetString("PleaseWait"));
+            return StartBusyAsync(LanguageService.GetString("PleaseWait"));
         }
 
         /// <summary>

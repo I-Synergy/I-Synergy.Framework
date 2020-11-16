@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Locators;
+﻿using System;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.ViewModels;
@@ -25,9 +26,21 @@ namespace ISynergy.Framework.UI.Sample.Views.Library
             SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
         }
 
+#if NETFX_CORE
         private void LanguageWindow_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            if(DataContext is LanguageViewModel languageViewModel)
+            SetLanguageButton();
+        }
+#else
+        private void LanguageWindow_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
+        {
+            SetLanguageButton();
+        }
+#endif
+
+        private void SetLanguageButton()
+        {
+            if (DataContext is LanguageViewModel languageViewModel)
             {
                 if (!string.IsNullOrEmpty(languageViewModel.SelectedItem))
                 {

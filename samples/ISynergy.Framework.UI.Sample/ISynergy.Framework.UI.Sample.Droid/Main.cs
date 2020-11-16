@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -18,7 +17,8 @@ namespace ISynergy.Framework.UI.Sample.Droid
 		Label = "@string/ApplicationName",
 		LargeHeap = true,
 		HardwareAccelerated = true,
-		Theme = "@style/AppTheme"
+		Theme = "@style/AppTheme",
+        UsesCleartextTraffic = true
 	)]
 	public class Application : Windows.UI.Xaml.NativeApplication
 	{

@@ -1,4 +1,5 @@
 ﻿using System;
+using ISynergy.Framework.UI.Enumerations;
 
 namespace ISynergy.Framework.UI.Abstractions.Services
 {
@@ -19,6 +20,12 @@ namespace ISynergy.Framework.UI.Abstractions.Services
         object Theme { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IThemeSelectorService"/> is material.
+        /// </summary>
+        /// <value><c>true</c> if material; otherwise, <c>false</c>.</value>
+        bool Material { get; set; }
+
+        /// <summary>
         /// Occurs when [on theme changed].
         /// </summary>
         event EventHandler<object> OnThemeChanged;
@@ -30,7 +37,7 @@ namespace ISynergy.Framework.UI.Abstractions.Services
         /// <summary>
         /// Sets the requested theme.
         /// </summary>
-        void SetThemeColor(string color);
+        void SetThemeColor(ThemeColors color);
         /// <summary>
         /// Sets the theme.
         /// </summary>

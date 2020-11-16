@@ -208,13 +208,10 @@ namespace ISynergy.Framework.UI.Services
         {
             var result = MessageBoxResult.Cancel;
 
-            if (!Window.Current.Dispatcher.HasThreadAccess)
-                throw new InvalidOperationException("This method can only be invoked from UI thread.");
-
-            var yesCommand = new UICommand(_languageService.GetString("Yes"), cmd => { }, "yesCommand");
-            var noCommand = new UICommand(_languageService.GetString("No"), cmd => { }, "noCommand");
-            var okCommand = new UICommand(_languageService.GetString("Ok"), cmd => { }, "okCommand");
-            var cancelCommand = new UICommand(_languageService.GetString("Cancel"), cmd => { }, "cancelCommand");
+            var yesCommand = new UICommand(_languageService.GetString("Yes"), cmd => { result = MessageBoxResult.Yes; }, "yesCommand");
+            var noCommand = new UICommand(_languageService.GetString("No"), cmd => { result = MessageBoxResult.No; }, "noCommand");
+            var okCommand = new UICommand(_languageService.GetString("Ok"), cmd => { result = MessageBoxResult.OK; }, "okCommand");
+            var cancelCommand = new UICommand(_languageService.GetString("Cancel"), cmd => { result = MessageBoxResult.Cancel; }, "cancelCommand");
 
             var messageDialog = new MessageDialog(message, title)
             {
@@ -253,21 +250,17 @@ namespace ISynergy.Framework.UI.Services
                     break;
             }
 
-            var command = await messageDialog.ShowAsync();
-
-            if (command is null && cancelCommand != null)
-            {
-                // back button was pressed
-                // invoke the UICommand
-                cancelCommand.Invoked(cancelCommand);
-                result = MessageBoxResult.Cancel;
-            }
-            else if (command == okCommand)
-                result = MessageBoxResult.OK;
-            else if (command == yesCommand)
-                result = MessageBoxResult.Yes;
-            else if (command == noCommand)
-                result = MessageBoxResult.No;
+#if NETFX_CORE
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+#else
+            await CoreDispatcher.Main.RunAsync(
+                CoreDispatcherPriority.Normal,
+#endif
+                async () =>
+                {
+                    await messageDialog.ShowAsync();
+                });
 
             return result;
         }

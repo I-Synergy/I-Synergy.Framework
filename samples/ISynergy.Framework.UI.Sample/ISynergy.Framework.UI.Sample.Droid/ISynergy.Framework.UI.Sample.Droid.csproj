@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -60,9 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.0.17" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.0.17" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.32" />
+    <PackageReference Include="Uno.UI" Version="3.2.0" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.2.0" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.33" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -95,6 +96,13 @@
       <Project>{3828a883-b771-4e6b-b004-e521b6d7ad52}</Project>
       <Name>ISynergy.Framework.Mvvm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj">
+      <Project>{fe7a8e6e-10a1-4c31-90d5-73ebb068e570}</Project>
+      <Name>ISynergy.Framework.UI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\splash.xml" />
   </ItemGroup>
   <Import Project="..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems" Label="Shared" Condition="Exists('..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

@@ -1,18 +1,12 @@
 ﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
-using Microsoft.Toolkit.Uwp.Helpers;
-
-#if NETFX_CORE
-using Microsoft.UI.Xaml.Controls;
-#elif HAS_UNO
 using Windows.UI.Xaml.Controls;
-#endif
-
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace ISynergy.Framework.UI.Sample.Views
 {
@@ -47,7 +41,7 @@ namespace ISynergy.Framework.UI.Sample.Views
 
             WeakRootNavigationViewLoadedEvent = new WeakEventListener<ShellView, object, RoutedEventArgs>(this)
             {
-                OnEventAction = (instance, source, eventargs) => instance.RootNavigationView_Loaded(source, eventargs),
+                OnEventAction = (instance, source, eventargs) => instance.RootNavigationViewLoaded(source, eventargs),
                 OnDetachAction = (listener) => RootNavigationView.Loaded -= listener.OnEvent
             };
 
@@ -55,7 +49,7 @@ namespace ISynergy.Framework.UI.Sample.Views
 
             WeakRootNavigationViewBackRequestedEvent = new WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs>(this)
             {
-                OnEventAction = (instance, source, eventargs) => instance.RootNavigationView_BackRequested(source, eventargs),
+                OnEventAction = (instance, source, eventargs) => instance.RootNavigationViewBackRequested(source, eventargs),
                 OnDetachAction = (listener) => RootNavigationView.BackRequested -= listener.OnEvent
             };
 
@@ -97,8 +91,9 @@ namespace ISynergy.Framework.UI.Sample.Views
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void RootNavigationView_Loaded(object sender, RoutedEventArgs e)
+        private void RootNavigationViewLoaded(object sender, RoutedEventArgs e)
         {
+#if NETFX_CORE
             // add keyboard accelerators for backwards navigation
             var GoBack = new KeyboardAccelerator
             {
@@ -119,8 +114,11 @@ namespace ISynergy.Framework.UI.Sample.Views
 
             // ALT routes here
             AltLeft.Modifiers = VirtualKeyModifiers.Menu;
+#endif
         }
 
+
+#if NETFX_CORE
         /// <summary>
         /// Backs the invoked.
         /// </summary>
@@ -131,13 +129,14 @@ namespace ISynergy.Framework.UI.Sample.Views
             OnBackRequested();
             args.Handled = true;
         }
+#endif
 
         /// <summary>
         /// Roots the navigation view back requested.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="NavigationViewBackRequestedEventArgs"/> instance containing the event data.</param>
-        private void RootNavigationView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        private void RootNavigationViewBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             OnBackRequested();
         }
@@ -147,7 +146,7 @@ namespace ISynergy.Framework.UI.Sample.Views
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
-        private void ContentRootFrame_Navigated(object sender, NavigationEventArgs e)
+        private void ContentRootFrameNavigated(object sender, NavigationEventArgs e)
         {
             RootNavigationView.IsBackEnabled = ViewModel.BaseCommonServices.NavigationService.CanGoBack;
         }

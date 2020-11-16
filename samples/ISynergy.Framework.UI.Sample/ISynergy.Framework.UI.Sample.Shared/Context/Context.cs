@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.UI.Sample.Options;
+using ISynergy.Framework.UI.Sample.Shared.Models;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 
 namespace ISynergy.Framework.UI.Sample
 {
@@ -28,8 +31,14 @@ namespace ISynergy.Framework.UI.Sample
         {
             _configurationOptions = configurationOptions;
 
-            Profiles = new ObservableCollection<IProfile>();
+            Profiles = new ObservableCollection<IProfile>() {  new Profile() };
+            CurrentProfile = Profiles.FirstOrDefault();
             ViewModels = new List<Type>();
+
+            Title = "Sample";
+            CurrencyCode = "EURO";
+            CurrencySymbol = "€";
+            
         }
 
         /// <summary>
