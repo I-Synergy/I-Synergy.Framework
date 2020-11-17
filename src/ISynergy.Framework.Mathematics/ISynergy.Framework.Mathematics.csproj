@@ -1,18 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\project.props" />
-  
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
+    
+    <Import Project="..\..\project.props" />
 
-    <!-- SonarQube needs this -->
-    <ProjectGuid>{7D4AFE36-1589-4AAB-9D15-85DEBE74DDF6}</ProjectGuid>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.Mathematics\debug</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.Mathematics\release</OutputPath>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
+        <!-- SonarQube needs this -->
+        <ProjectGuid>{7D4AFE36-1589-4AAB-9D15-85DEBE74DDF6}</ProjectGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.Mathematics\debug</OutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.Mathematics\release</OutputPath>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
 </Project>

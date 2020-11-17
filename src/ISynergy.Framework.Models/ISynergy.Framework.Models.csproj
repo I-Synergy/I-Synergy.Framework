@@ -1,30 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\project.props" />
-  
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-      <!-- SonarQube needs this -->
-      <ProjectGuid>{3D70F4CE-2E91-43DE-B278-D75B06C4B38E}</ProjectGuid>
-  </PropertyGroup>
+    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
+    
+    <Import Project="..\..\project.props" />
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.Models\debug</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.Models\release</OutputPath>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- SonarQube needs this -->
+        <ProjectGuid>{3D70F4CE-2E91-43DE-B278-D75B06C4B38E}</ProjectGuid>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
-  </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.Models\debug</OutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.Models\release</OutputPath>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MasterData\" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="MasterData\" />
+    </ItemGroup>
 
 </Project>

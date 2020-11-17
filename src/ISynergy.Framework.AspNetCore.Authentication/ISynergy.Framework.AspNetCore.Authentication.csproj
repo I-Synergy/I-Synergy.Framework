@@ -1,27 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\project.props" />
-  
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
 
-    <!-- SonarQube needs this -->
-    <ProjectGuid>{A89FC9B1-9C6C-4F43-8E70-1669955F8435}</ProjectGuid>
-  </PropertyGroup>
+    <Import Project="..\..\project.props" />
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.AspNetCore.Authentication\debug</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\output\ISynergy.Framework.AspNetCore.Authentication\release</OutputPath>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
-  </ItemGroup>
+        <!-- SonarQube needs this -->
+        <ProjectGuid>{A89FC9B1-9C6C-4F43-8E70-1669955F8435}</ProjectGuid>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
-  </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.AspNetCore.Authentication\debug</OutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <OutputPath>..\..\output\ISynergy.Framework.AspNetCore.Authentication\release</OutputPath>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
+    </ItemGroup>
 </Project>
