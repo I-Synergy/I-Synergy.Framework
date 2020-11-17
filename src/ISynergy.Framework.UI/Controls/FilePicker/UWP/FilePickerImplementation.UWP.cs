@@ -65,7 +65,6 @@ namespace ISynergy.Framework.Ui.Controls
                 return new FileResult(
                     file.Path, 
                     file.Name,
-                    FilePicker.FileTypes.Where(q => q.Extension.EndsWith(Path.GetExtension(file.Path))).Select(s => s.FileTypeId).FirstOrDefault(),
                     () => file.OpenStreamForReadAsync().GetAwaiter().GetResult());
             }
 
@@ -89,7 +88,6 @@ namespace ISynergy.Framework.Ui.Controls
             return new FileResult(
                     createdFile.Path,
                     createdFile.Name,
-                    FilePicker.FileTypes.Where(q => q.Extension.EndsWith(Path.GetExtension(createdFile.Path))).Select(s => s.FileTypeId).FirstOrDefault(),
                     () => createdFile.OpenStreamForReadAsync().GetAwaiter().GetResult());
         }
 

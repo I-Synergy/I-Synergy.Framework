@@ -28,24 +28,15 @@ namespace ISynergy.Framework.Mvvm.Models
         /// </summary>
         /// <param name="filePath">The file path.</param>
         /// <param name="fileName">Name of the file.</param>
-        /// <param name="fileTypeId">The file type identifier.</param>
         /// <param name="streamGetter">The stream getter.</param>
         /// <param name="dispose">The dispose.</param>
-        public FileResult(string filePath, string fileName, int fileTypeId, Func<Stream> streamGetter, Action<bool> dispose = null)
+        public FileResult(string filePath, string fileName, Func<Stream> streamGetter, Action<bool> dispose = null)
         {
             _filePath = filePath;
             _fileName = fileName;
             _dispose = dispose;
             _streamGetter = streamGetter;
-
-            FileTypeId = fileTypeId;
         }
-
-        /// <summary>
-        /// Gets or sets the file type identifier.
-        /// </summary>
-        /// <value>The file type identifier.</value>
-        public int FileTypeId { get; private set; }
 
         /// <summary>
         /// Filename of the picked file, without path

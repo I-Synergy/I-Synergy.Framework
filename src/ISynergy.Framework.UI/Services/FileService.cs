@@ -180,17 +180,12 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// get image as an asynchronous operation.
         /// </summary>
+        /// <param name="filter"></param>
         /// <param name="maxfilesize">The maxfilesize.</param>
         /// <returns>System.Byte[].</returns>
-        public async Task<byte[]> BrowseImageAsync(long maxfilesize = 0)
+        public async Task<byte[]> BrowseImageAsync(string[] filter, long maxfilesize = 0)
         {
-#if __ANDROID__
-            var filters = FilePicker.FileTypes.Where(q => q.IsImage).Select(s => s.ContentType).ToList();
-#else
-            var filters = FilePicker.FileTypes.Where(q => q.IsImage).Select(s => s.Extension).ToList();
-#endif
-
-            if(await BrowseFileAsync(string.Join(";", filters.ToArray()), maxfilesize) is FileResult result)
+            if(await BrowseFileAsync(string.Join(";", filter), maxfilesize) is FileResult result)
             {
                 return result.File;
             }
