@@ -7,7 +7,7 @@ namespace ISynergy.Framework.AspNetCore.Filters
     /// Checks if ModelState is valid.
     /// If the requirements are not met, bad request is set as result.
     /// </summary>
-    public sealed class ValidateModelFilter : ActionFilterAttribute
+    public sealed class ValidateModelFilterAttribute : ActionFilterAttribute
     {
         /// <summary>
         /// Called when [action executing].

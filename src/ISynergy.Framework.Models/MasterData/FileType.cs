@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm.Models
+﻿namespace ISynergy.Framework.Models.MasterData
 {
     /// <summary>
     /// Class FileType.

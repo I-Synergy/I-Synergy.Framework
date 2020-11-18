@@ -18,15 +18,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="MasterData\" />
     </ItemGroup>
 
 </Project>

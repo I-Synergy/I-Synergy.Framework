@@ -74,8 +74,9 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <summary>
         /// Browses the image asynchronous.
         /// </summary>
+        /// <param name="filter"></param>
         /// <param name="maxfilesize">The maxfilesize.</param>
         /// <returns>Task&lt;System.Byte[]&gt;.</returns>
-        Task<byte[]> BrowseImageAsync(long maxfilesize = 0);
+        Task<byte[]> BrowseImageAsync(string[] filter, long maxfilesize = 0);
     }
 }

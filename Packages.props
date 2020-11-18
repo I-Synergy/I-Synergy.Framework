@@ -33,7 +33,7 @@
         <PackageReference Update="Uno.Material" Version="[1.0.0-dev.578]" />
         <PackageReference Update="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="[6.1.0-build.191.gc988bdd4ff]" />
         <PackageReference Update="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="[2.0.2-uno.79]" />
-        <PackageReference Update="Uno.UI" Version="[3.2.0]" />
+        <PackageReference Update="Uno.UI" Version="[3.3.0]" />
         <PackageReference Update="Xamarin.AndroidX.AppCompat" Version="[1.2.0.5]" />
         <PackageReference Update="Xamarin.AndroidX.Legacy.Support.v4" Version="[1.0.0.5]" />
 

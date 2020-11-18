@@ -8,7 +8,7 @@ namespace ISynergy.Framework.AspNetCore.Filters
     /// Checks if HttpResponse content is null.
     /// If it's null, then return a HTTP 404 (Not Found) instead of HTTP 200 (OK).
     /// </summary>
-    public sealed class NullResultFilter : ActionFilterAttribute
+    public sealed class NullResultFilterAttribute : ActionFilterAttribute
     {
         /// <summary>
         /// Called when [action executed].

@@ -102,7 +102,6 @@ namespace ISynergy.Framework.Ui.Controls
                     tcs?.SetResult(new FileResult(
                         e.FilePath,
                         e.FileName,
-                        FilePicker.FileTypes.Where(q => q.Extension.EndsWith(System.IO.Path.GetExtension(e.FilePath))).Select(s => s.FileTypeId).FirstOrDefault(),
                         () =>
                         {
                             if (IOUtil.IsMediaStore(e.FilePath))
@@ -188,7 +187,6 @@ namespace ISynergy.Framework.Ui.Controls
             return Task.FromResult(new FileResult(
                 myFile.Path,
                 myFile.Name,
-                FilePicker.FileTypes.Where(q => q.Extension.EndsWith(System.IO.Path.GetExtension(myFile.Path))).Select(s => s.FileTypeId).FirstOrDefault(),
                 () =>
                 {
                     if (IOUtil.IsMediaStore(myFile.Path))

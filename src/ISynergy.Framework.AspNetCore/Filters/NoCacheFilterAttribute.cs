@@ -9,7 +9,7 @@ namespace ISynergy.Framework.AspNetCore.Filters
     /// Implements the <see cref="ActionFilterAttribute" />
     /// </summary>
     /// <seealso cref="ActionFilterAttribute" />
-    public sealed class NoCacheFilter : ActionFilterAttribute
+    public sealed class NoCacheFilterAttribute : ActionFilterAttribute
     {
         /// <summary>
         /// Called when [action executed].
