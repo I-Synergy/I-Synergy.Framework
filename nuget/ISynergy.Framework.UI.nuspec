@@ -55,21 +55,6 @@
                 <dependency id="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.2-uno.79" />
                 <dependency id="Uno.Material" version="1.0.0-dev.578" />
             </group>
-            <group targetFramework="monoandroid90">
-                <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
-                <dependency id="I-Synergy.Framework.Mvvm" version="[$PackageVersion$]" />
-                <dependency id="Microsoft.Extensions.Configuration.Json" version="3.1.10" />
-                <dependency id="Microsoft.Extensions.Logging" version="3.1.10" />
-                <dependency id="Microsoft.Extensions.Logging.Console" version="1.1.1" />
-                <dependency id="Microsoft.Extensions.Logging.Filter" version="1.1.1" />
-                <dependency id="Uno.Core" version="2.0.0" />
-                <dependency id="Uno.UI" version="3.3.0" />
-                <dependency id="Uno.Microsoft.Toolkit.Uwp.UI.Controls" version="6.1.0-build.191.gc988bdd4ff" />
-                <dependency id="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.2-uno.79" />
-                <dependency id="Xamarin.AndroidX.Legacy.Support.v4" version="1.0.0.5" />
-                <dependency id="Xamarin.AndroidX.AppCompat" version="1.2.0.5" />
-                <dependency id="Uno.Material" version="1.0.0-dev.578" />
-            </group>
             <group targetFramework="monoandroid10.0">
                 <dependency id="I-Synergy.Framework.Core" version="[$PackageVersion$]" />
                 <dependency id="I-Synergy.Framework.Mvvm" version="[$PackageVersion$]" />
@@ -91,8 +76,6 @@
     <files>
         <file src="Icon_128.png" target="" />
 
-        <!--Android 9-->
-        <file src="$AssemblyFolder$\ISynergy.Framework.UI\$BuildConfiguration$\monoandroid90\**" target="lib\monoandroid90" />
         <!--Android 10-->
         <file src="$AssemblyFolder$\ISynergy.Framework.UI\$BuildConfiguration$\monoandroid10.0\**" target="lib\monoandroid10.0" />
         <!--UAP 10.0.18362-->
