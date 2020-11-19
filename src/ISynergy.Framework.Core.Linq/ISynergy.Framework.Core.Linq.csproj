@@ -1,6 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
-	
     <Import Project="..\..\project.props" />
   
     <PropertyGroup>
@@ -8,18 +6,17 @@
 
 	    <!-- SonarQube needs this -->
 	    <ProjectGuid>{74F1F4AD-6677-446F-AE74-12BFBA0E437B}</ProjectGuid>
-    </PropertyGroup>
-  
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	    <OutputPath>..\..\output\ISynergy.Framework.Core.Linq\debug</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	    <OutputPath>..\..\output\ISynergy.Framework.Core.Linq\release</OutputPath>
-	    <NoWarn>1701;1702;1591</NoWarn>
+
+        <PackageId>I-Synergy.Framework.Core.Linq</PackageId>
+        <Description>I-Synergy Framework Core Dynamic Linq for .Net Standard 2.0</Description>
+        <PackageTags>I-Synergy, Framework, Core, Dynamic, Linq</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>
-	    <PackageReference Include="System.Reflection.Emit" />
+	    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		azure-pipelines.yml = azure-pipelines.yml
 		codecoverage.runsettings = codecoverage.runsettings
 		nuget.config = nuget.config
-		Packages.props = Packages.props
 		project.props = project.props
 		README.md = README.md
 	EndProjectSection
@@ -48,13 +47,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		docs\readme.md = docs\readme.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{E60E85EB-6F23-4EDC-ACAA-B350BA26EFB6}"
-	ProjectSection(SolutionItems) = preProject
-		build\createplatformdll.ps1 = build\createplatformdll.ps1
-		build\sign.ps1 = build\sign.ps1
-		build\updatebuildnumber.ps1 = build\updatebuildnumber.ps1
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCore.Authentication.Tests", "tests\ISynergy.Framework.AspNetCore.Authentication.Tests\ISynergy.Framework.AspNetCore.Authentication.Tests.csproj", "{10C32A17-857E-4FF9-94D6-755DEB531AF1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCore.Tests", "tests\ISynergy.Framework.AspNetCore.Tests\ISynergy.Framework.AspNetCore.Tests.csproj", "{8113C8D2-D1FC-48AD-81D3-905E11506F09}"
@@ -74,27 +66,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Mvvm.Tests", "tests\ISynergy.Framework.Mvvm.Tests\ISynergy.Framework.Mvvm.Tests.csproj", "{FCC46C77-97B6-4488-8738-AF264B996922}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Storage.Tests", "tests\ISynergy.Framework.Storage.Tests\ISynergy.Framework.Storage.Tests.csproj", "{90EA3365-8763-4163-905F-3F4EE36883A9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{1217ABA2-166D-4C13-AC93-B66CE90FA4D7}"
-	ProjectSection(SolutionItems) = preProject
-		nuget\ISynergy.Framework.AspNetCore.Authentication.nuspec = nuget\ISynergy.Framework.AspNetCore.Authentication.nuspec
-		nuget\ISynergy.Framework.AspNetCore.nuspec = nuget\ISynergy.Framework.AspNetCore.nuspec
-		nuget\ISynergy.Framework.Core.Linq.nuspec = nuget\ISynergy.Framework.Core.Linq.nuspec
-		nuget\ISynergy.Framework.Core.nuspec = nuget\ISynergy.Framework.Core.nuspec
-		nuget\ISynergy.Framework.EntityFramework.nuspec = nuget\ISynergy.Framework.EntityFramework.nuspec
-		nuget\ISynergy.Framework.Financial.nuspec = nuget\ISynergy.Framework.Financial.nuspec
-		nuget\ISynergy.Framework.Geography.nuspec = nuget\ISynergy.Framework.Geography.nuspec
-		nuget\ISynergy.Framework.Mathematics.nuspec = nuget\ISynergy.Framework.Mathematics.nuspec
-		nuget\ISynergy.Framework.MessageBus.Azure.nuspec = nuget\ISynergy.Framework.MessageBus.Azure.nuspec
-		nuget\ISynergy.Framework.MessageBus.nuspec = nuget\ISynergy.Framework.MessageBus.nuspec
-		nuget\ISynergy.Framework.Models.nuspec = nuget\ISynergy.Framework.Models.nuspec
-		nuget\ISynergy.Framework.Mvvm.nuspec = nuget\ISynergy.Framework.Mvvm.nuspec
-		nuget\ISynergy.Framework.Payment.Mollie.nuspec = nuget\ISynergy.Framework.Payment.Mollie.nuspec
-		nuget\ISynergy.Framework.Payment.nuspec = nuget\ISynergy.Framework.Payment.nuspec
-		nuget\ISynergy.Framework.Storage.Azure.nuspec = nuget\ISynergy.Framework.Storage.Azure.nuspec
-		nuget\ISynergy.Framework.Storage.nuspec = nuget\ISynergy.Framework.Storage.nuspec
-		nuget\ISynergy.Framework.UI.nuspec = nuget\ISynergy.Framework.UI.nuspec
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{FC51DC02-2A9C-43A7-951A-9083E1A19E8C}"
 EndProject
