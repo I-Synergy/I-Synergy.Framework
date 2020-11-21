@@ -1,6 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
-
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
@@ -8,19 +6,17 @@
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{A89FC9B1-9C6C-4F43-8E70-1669955F8435}</ProjectGuid>
-    </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.AspNetCore.Authentication\debug</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.AspNetCore.Authentication\release</OutputPath>
-        <NoWarn>1701;1702;1591</NoWarn>
+        <PackageId>I-Synergy.Framework.AspNetCore.Authentication</PackageId>
+        <Description>I-Synergy Framework Authentication for Asp.Net Core 3.0</Description>
+        <PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     </ItemGroup>
 
     <ItemGroup>

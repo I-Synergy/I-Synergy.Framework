@@ -1,24 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
-    
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <!-- SonarQube needs this -->
         <ProjectGuid>{3D70F4CE-2E91-43DE-B278-D75B06C4B38E}</ProjectGuid>
-    </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.Models\debug</OutputPath>
+        <PackageId>I-Synergy.Framework.Models</PackageId>
+        <Description>I-Synergy Framework Models for .Net Standard 2.0</Description>
+        <PackageTags>I-Synergy, Framework, Models</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.Models\release</OutputPath>
-        <NoWarn>1701;1702;1591</NoWarn>
-    </PropertyGroup>
-
     <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     </ItemGroup>
 
     <ItemGroup>

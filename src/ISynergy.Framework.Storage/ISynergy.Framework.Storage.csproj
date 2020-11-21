@@ -1,6 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
-    
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
@@ -8,15 +6,15 @@
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{6E5DB5ED-80F1-4DC7-BEED-B3DDB6149F51}</ProjectGuid>
+
+        <PackageId>I-Synergy.Framework.Storage</PackageId>
+        <Description>I-Synergy Framework Storage for .Net Standard 2.0</Description>
+        <PackageTags>I-Synergy, Framework, Storage</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.Storage\debug</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.Storage\release</OutputPath>
-        <NoWarn>1701;1702;1591</NoWarn>
-    </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>

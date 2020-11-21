@@ -1,6 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
-    
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
@@ -8,18 +6,18 @@
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{B7A9DB2D-EEE5-44B5-9F09-2B044C48E25D}</ProjectGuid>
+
+        <PackageId>I-Synergy.Framework.Storage.Azure</PackageId>
+        <Description>I-Synergy Framework Azure Storage for .Net Standard 2.0</Description>
+        <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.Storage.Azure\debug</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.Storage.Azure\release</OutputPath>
-        <NoWarn>1701;1702;1591</NoWarn>
-    </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Azure.Storage.Blobs" />
-        <PackageReference Include="Microsoft.Extensions.Options" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.7.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.10" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />

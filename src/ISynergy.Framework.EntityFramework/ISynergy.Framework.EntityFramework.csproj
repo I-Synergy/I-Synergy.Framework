@@ -1,6 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
-    
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
@@ -8,20 +6,19 @@
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{FCDB6358-94B5-48FE-A3BC-696280F1E896}</ProjectGuid>
+
+        <PackageId>I-Synergy.Framework.EntityFramework</PackageId>
+        <Description>I-Synergy Entity Framework for .Net Core 3.1</Description>
+        <PackageTags>I-Synergy, Entity, Framework</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.EntityFramework\debug</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <OutputPath>..\..\output\ISynergy.Framework.EntityFramework\release</OutputPath>
-        <NoWarn>1701;1702;1591</NoWarn>
-    </PropertyGroup>
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
