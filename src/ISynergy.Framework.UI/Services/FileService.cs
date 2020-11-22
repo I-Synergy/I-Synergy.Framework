@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
-using ISynergy.Framework.Ui.Controls;
+using ISynergy.Framework.UI.Controls;
 
 namespace ISynergy.Framework.UI.Services
 {

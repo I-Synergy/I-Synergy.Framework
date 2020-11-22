@@ -10,9 +10,9 @@ using System.Linq;
 using System.Net;
 using Android;
 using Android.Content.PM;
-using ISynergy.Framework.Ui.Controls.Events;
+using ISynergy.Framework.UI.Controls.Events;
 
-namespace ISynergy.Framework.Ui.Controls
+namespace ISynergy.Framework.UI.Controls
 {
     /// <summary>
     /// Activity that is shown in order to start Android file picking using ActionGetContent
