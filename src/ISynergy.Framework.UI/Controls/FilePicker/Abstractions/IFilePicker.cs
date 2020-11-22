@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Models;
 
-namespace ISynergy.Framework.Ui.Controls.Abstractions
+namespace ISynergy.Framework.UI.Controls.Abstractions
 {
     /// <summary>
     /// Interface for FilePicker plugin. Access the platform specific instance

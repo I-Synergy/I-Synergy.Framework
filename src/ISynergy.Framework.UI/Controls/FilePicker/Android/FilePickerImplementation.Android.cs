@@ -3,12 +3,12 @@ using Android.App;
 using Android.Content;
 using Android.Runtime;
 using Java.IO;
-using ISynergy.Framework.Ui.Controls.Abstractions;
+using ISynergy.Framework.UI.Controls.Abstractions;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Framework.Ui.Controls.Events;
+using ISynergy.Framework.UI.Controls.Events;
 using ISynergy.Framework.Mvvm.Models;
 using System.Linq;
 
@@ -16,7 +16,7 @@ using System.Linq;
 // the user of the plugin having to add it by himself/herself.
 [assembly: UsesPermission(Android.Manifest.Permission.ReadExternalStorage)]
 
-namespace ISynergy.Framework.Ui.Controls
+namespace ISynergy.Framework.UI.Controls
 {
     /// <summary>
     /// Implementation for file picking on Android

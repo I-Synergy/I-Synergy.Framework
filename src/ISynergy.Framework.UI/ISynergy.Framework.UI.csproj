@@ -9,12 +9,13 @@
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{FE7A8E6E-10A1-4C31-90D5-73EBB068E570}</ProjectGuid>
-        
+
         <PackageId>I-Synergy.Framework.UI</PackageId>
         <Description>I-Synergy UI Framework for Uno Platform Applications</Description>
         <PackageTags>I-Synergy, Framework, UI, Uno, Platform, UWP, WebAssembly, WASM, Android</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
@@ -30,10 +31,10 @@
         <PackageReference Include="Uno.Material" Version="1.0.0-dev.578" />
     </ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0'">
-		<PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.5" />
-		<PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
-	</ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0'">
+        <PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.5" />
+        <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
+    </ItemGroup>
 
     <ItemGroup>
         <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

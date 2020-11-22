@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Ui.Controls.Abstractions;
+﻿using ISynergy.Framework.UI.Controls.Abstractions;
 using System;
 
-namespace ISynergy.Framework.Ui.Controls
+namespace ISynergy.Framework.UI.Controls
 {
     /// <summary>
     /// Cross-platform FilePicker implementation

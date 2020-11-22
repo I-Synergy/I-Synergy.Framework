@@ -304,7 +304,7 @@ stages:
           displayName: 'NuGet push - I-Synergy.Framework'
           inputs:
             command: 'push'
-            packagesToPush: '$(Build.ArtifactStagingDirectory)\*.nupkg'
+            packagesToPush: '$(Build.ArtifactStagingDirectory)\Output\*.nupkg'
             nuGetFeedType: 'external'
             publishFeedCredentials: 'Nuget.org'
 

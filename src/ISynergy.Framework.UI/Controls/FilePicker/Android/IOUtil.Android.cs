@@ -6,7 +6,7 @@ using Android.Provider;
 using Android.Webkit;
 using System;
 
-namespace ISynergy.Framework.Ui.Controls
+namespace ISynergy.Framework.UI.Controls
 {
     /// <summary>
     /// Android I/O utility functions

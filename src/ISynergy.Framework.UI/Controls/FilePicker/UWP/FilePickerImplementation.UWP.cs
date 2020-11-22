@@ -1,6 +1,6 @@
 ﻿#if NETFX_CORE
 using ISynergy.Framework.Mvvm.Models;
-using ISynergy.Framework.Ui.Controls.Abstractions;
+using ISynergy.Framework.UI.Controls.Abstractions;
 using System;
 using System.IO;
 using System.Linq;
@@ -9,7 +9,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
 
-namespace ISynergy.Framework.Ui.Controls
+namespace ISynergy.Framework.UI.Controls
 {
     /// <summary>
     /// Implementation for file picking on UWP

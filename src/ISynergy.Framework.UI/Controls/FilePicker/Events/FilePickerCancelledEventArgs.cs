@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ISynergy.Framework.Ui.Controls.Events
+namespace ISynergy.Framework.UI.Controls.Events
 {
     /// <summary>
     /// Event arguments for the event when file picking was cancelled, either
