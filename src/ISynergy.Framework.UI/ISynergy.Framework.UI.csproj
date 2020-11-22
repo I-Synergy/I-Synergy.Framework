@@ -17,6 +17,8 @@
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeBuildOutput>true</IncludeBuildOutput>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+        <OutputPath>$(BaseOutputPath)</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
