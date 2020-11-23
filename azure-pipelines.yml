@@ -219,7 +219,7 @@ stages:
             solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
             platform: AnyCpu
             configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:OutputPath=$(Build.ArtifactStagingDirectory)'
+            msbuildArguments: '/p:BaseOutputPath=$(Build.ArtifactStagingDirectory)'
         
         - task: NuGetCommand@2
           displayName: 'Sign Nuget packages'
