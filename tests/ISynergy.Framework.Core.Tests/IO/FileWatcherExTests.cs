@@ -18,10 +18,10 @@ namespace ISynergy.Framework.Core.IO.Tests
         [Fact]
         public void FileWatcherExAddedTest()
         {
-            var count = 10000;
+            var count = 1000;
 
             var location = AppDomain.CurrentDomain.BaseDirectory;
-            var folder = Directory.CreateDirectory(Path.Combine(location, "FileWatcherExAddedTest")).FullName;
+            var folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherExAddedTest))).FullName;
 
             if (_fixture.InitializeWatcher(folder, false))
             {
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Core.IO.Tests
             var count = 1000;
 
             var location = AppDomain.CurrentDomain.BaseDirectory;
-            var folder = Directory.CreateDirectory(Path.Combine(location, "FileWatcherExDeletedTest")).FullName;
+            var folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherExDeletedTest))).FullName;
 
             if (_fixture.InitializeWatcher(folder, false))
             {

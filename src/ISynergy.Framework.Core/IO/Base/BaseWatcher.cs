@@ -12,20 +12,15 @@ namespace ISynergy.Framework.Core.IO.Base
     public abstract class BaseWatcher : IDisposable
     {
         /// <summary>
-        /// The disposed
-        /// </summary>
-        private bool _disposed = false;
-
-        /// <summary>
         /// The watcher information
         /// </summary>
         protected WatcherInfo _watcherInfo = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseWatcher"/> class.
+        /// Initializes a new instance of the <see cref="BaseWatcher" /> class.
         /// </summary>
         /// <param name="info">The information.</param>
-        public BaseWatcher(WatcherInfo info)
+        protected BaseWatcher(WatcherInfo info)
         {
             Argument.IsNotNull(nameof(info), info);
             _watcherInfo = info;
@@ -77,14 +72,25 @@ namespace ISynergy.Framework.Core.IO.Base
         /// </summary>
         public void Dispose()
         {
-            if (!_disposed)
-            {
-                DisposeWatchers();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-                _disposed = true;
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            }
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            DisposeWatchers();
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="BaseWatcher"/> class.
+        /// </summary>
+        ~BaseWatcher()
+        {
+            Dispose(false);
         }
 
         /// <summary>
