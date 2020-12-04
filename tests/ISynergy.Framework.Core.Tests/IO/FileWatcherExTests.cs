@@ -15,13 +15,12 @@ namespace ISynergy.Framework.Core.IO.Tests
             _fixture = fixture;
         }
 
-        [Fact]
         public void FileWatcherExAddedTest()
         {
-            var count = 10000;
+            var count = 1000;
 
             var location = AppDomain.CurrentDomain.BaseDirectory;
-            var folder = Directory.CreateDirectory(Path.Combine(location, "FileWatcherExAddedTest")).FullName;
+            var folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherExAddedTest))).FullName;
 
             if (_fixture.InitializeWatcher(folder, false))
             {
@@ -42,13 +41,12 @@ namespace ISynergy.Framework.Core.IO.Tests
             Assert.Equal(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created").Count());
         }
 
-        [Fact]
         public void FileWatcherExDeletedTest()
         {
             var count = 1000;
 
             var location = AppDomain.CurrentDomain.BaseDirectory;
-            var folder = Directory.CreateDirectory(Path.Combine(location, "FileWatcherExDeletedTest")).FullName;
+            var folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherExDeletedTest))).FullName;
 
             if (_fixture.InitializeWatcher(folder, false))
             {

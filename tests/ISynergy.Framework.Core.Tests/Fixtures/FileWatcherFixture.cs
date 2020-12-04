@@ -14,15 +14,12 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
 
         public List<ObservedFile> ObservedFiles { get; private set; }
 
-        public FileWatcherFixture()
-        {
-            ObservedFiles = new List<ObservedFile>();
-        }
-
         public bool InitializeWatcher(string fileOrFolderToWatch, bool includeSubFolder)
         {
             if (Directory.Exists(fileOrFolderToWatch) || File.Exists(fileOrFolderToWatch))
             {
+                ObservedFiles = new List<ObservedFile>();
+
                 FileWatcher = new Watcher(new WatcherInfo
                 {
                     ChangesFilters = NotifyFilters.Attributes |

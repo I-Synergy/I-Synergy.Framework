@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Core.IO
         /// <summary>
         /// The watchers
         /// </summary>
-        private WatchersList _watchers = new WatchersList();
+        private readonly WatchersList _watchers = new WatchersList();
 
         /// <summary>
         /// Occurs when [event changed attribute].
@@ -111,89 +111,78 @@ namespace ISynergy.Framework.Core.IO
             // fire TWO events for  certain changes. For example, Notepad sends two 
             // events when a file is created. One for CreationTime, and one for 
             // Attributes.
-            if (changedWatcher)
+            if (changedWatcher && HandleNotifyFilter(filter))
             {
-                // if we're not handling the currently specified filter, get out
-                if (HandleNotifyFilter(filter))
+                watcher = new FileSystemWatcher(_watcherInfo.WatchPath)
                 {
-                    watcher = new FileSystemWatcher(_watcherInfo.WatchPath)
-                    {
-                        IncludeSubdirectories = _watcherInfo.IncludeSubFolders,
-                        Filter = _watcherInfo.FileFilter,
-                        NotifyFilter = filter,
-                        InternalBufferSize = bufferSize
-                    };
+                    IncludeSubdirectories = _watcherInfo.IncludeSubFolders,
+                    Filter = _watcherInfo.FileFilter,
+                    NotifyFilter = filter,
+                    InternalBufferSize = bufferSize
+                };
 
-                    switch (filter)
-                    {
-                        case NotifyFilters.Attributes:
-                            watcher.Changed += new FileSystemEventHandler(watcher_ChangedAttribute);
-                            break;
-                        case NotifyFilters.CreationTime:
-                            watcher.Changed += new FileSystemEventHandler(watcher_ChangedCreationTime);
-                            break;
-                        case NotifyFilters.DirectoryName:
-                            watcher.Changed += new FileSystemEventHandler(watcher_ChangedDirectoryName);
-                            break;
-                        case NotifyFilters.FileName:
-                            watcher.Changed += new FileSystemEventHandler(watcher_ChangedFileName);
-                            break;
-                        case NotifyFilters.LastAccess:
-                            watcher.Changed += new FileSystemEventHandler(watcher_ChangedLastAccess);
-                            break;
-                        case NotifyFilters.LastWrite:
-                            watcher.Changed += new FileSystemEventHandler(watcher_ChangedLastWrite);
-                            break;
-                        case NotifyFilters.Security:
-                            watcher.Changed += new FileSystemEventHandler(watcher_ChangedSecurity);
-                            break;
-                        case NotifyFilters.Size:
-                            watcher.Changed += new FileSystemEventHandler(watcher_ChangedSize);
-                            break;
-                    }
+                switch (filter)
+                {
+                    case NotifyFilters.Attributes:
+                        watcher.Changed += new FileSystemEventHandler(watcher_ChangedAttribute);
+                        break;
+                    case NotifyFilters.CreationTime:
+                        watcher.Changed += new FileSystemEventHandler(watcher_ChangedCreationTime);
+                        break;
+                    case NotifyFilters.DirectoryName:
+                        watcher.Changed += new FileSystemEventHandler(watcher_ChangedDirectoryName);
+                        break;
+                    case NotifyFilters.FileName:
+                        watcher.Changed += new FileSystemEventHandler(watcher_ChangedFileName);
+                        break;
+                    case NotifyFilters.LastAccess:
+                        watcher.Changed += new FileSystemEventHandler(watcher_ChangedLastAccess);
+                        break;
+                    case NotifyFilters.LastWrite:
+                        watcher.Changed += new FileSystemEventHandler(watcher_ChangedLastWrite);
+                        break;
+                    case NotifyFilters.Security:
+                        watcher.Changed += new FileSystemEventHandler(watcher_ChangedSecurity);
+                        break;
+                    case NotifyFilters.Size:
+                        watcher.Changed += new FileSystemEventHandler(watcher_ChangedSize);
+                        break;
                 }
             }
+
             // All other FileSystemWatcher events are handled through a single "main" 
             // watcher.
-            else
-            {
-                if (HandleWatchesFilter(WatcherChangeTypes.Created) ||
+            else if (HandleWatchesFilter(WatcherChangeTypes.Created) ||
                     HandleWatchesFilter(WatcherChangeTypes.Deleted) ||
                     HandleWatchesFilter(WatcherChangeTypes.Renamed) ||
                     _watcherInfo.WatchForError ||
                     _watcherInfo.WatchForDisposed)
+            {
+                watcher = new FileSystemWatcher(_watcherInfo.WatchPath)
                 {
-                    watcher = new FileSystemWatcher(_watcherInfo.WatchPath)
-                    {
-                        IncludeSubdirectories = _watcherInfo.IncludeSubFolders,
-                        Filter = _watcherInfo.FileFilter,
-                        InternalBufferSize = bufferSize
-                    };
-                }
+                    IncludeSubdirectories = _watcherInfo.IncludeSubFolders,
+                    Filter = _watcherInfo.FileFilter,
+                    InternalBufferSize = bufferSize
+                };
 
                 if (HandleWatchesFilter(WatcherChangeTypes.Created))
-                {
                     watcher.Created += new FileSystemEventHandler(watcher_CreatedDeleted);
-                }
+                    
                 if (HandleWatchesFilter(WatcherChangeTypes.Deleted))
-                {
                     watcher.Deleted += new FileSystemEventHandler(watcher_CreatedDeleted);
-                }
+
                 if (HandleWatchesFilter(WatcherChangeTypes.Renamed))
-                {
                     watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
-                }
             }
+
             if (watcher != null)
             {
                 if (_watcherInfo.WatchForError)
-                {
                     watcher.Error += new ErrorEventHandler(watcher_Error);
-                }
+
                 if (_watcherInfo.WatchForDisposed)
-                {
                     watcher.Disposed += new EventHandler(watcher_Disposed);
-                }
+
                 _watchers.Add(watcher);
             }
         }
