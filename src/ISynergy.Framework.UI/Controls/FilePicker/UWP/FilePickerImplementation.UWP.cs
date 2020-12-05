@@ -3,7 +3,6 @@ using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Controls.Abstractions;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;

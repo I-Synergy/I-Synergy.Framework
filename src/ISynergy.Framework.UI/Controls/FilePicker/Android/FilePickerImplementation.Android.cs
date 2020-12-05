@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ISynergy.Framework.UI.Controls.Events;
 using ISynergy.Framework.Mvvm.Models;
-using System.Linq;
 
 // Adds permission for READ_EXTERNAL_STORAGE to the AndroidManifest.xml of the app project without
 // the user of the plugin having to add it by himself/herself.
