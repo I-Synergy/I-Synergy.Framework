@@ -15,7 +15,6 @@ namespace ISynergy.Framework.Core.IO.Tests
             _fixture = fixture;
         }
 
-        [Fact]
         public void FileWatcherAddedTest()
         {
             var count = 1000;
@@ -42,7 +41,6 @@ namespace ISynergy.Framework.Core.IO.Tests
             Assert.Equal(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created").Count());
         }
 
-        [Fact]
         public void FileWatcherDeletedTest()
         {
             var count = 1000;
