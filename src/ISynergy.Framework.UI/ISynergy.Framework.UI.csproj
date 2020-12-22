@@ -27,15 +27,15 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
         <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
         <PackageReference Include="Uno.Core" Version="2.1.0" />
-        <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.201.gdd585882df" />
+        <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.205.g2e0e348372" />
         <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.79" />
         <PackageReference Include="Uno.UI" Version="3.3.0" />
         <PackageReference Include="Uno.Material" Version="1.0.0-dev.578" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0'">
-        <PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.5" />
-        <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
+        <PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.6" />
+        <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.6" />
     </ItemGroup>
 
     <ItemGroup>
