@@ -31,6 +31,8 @@ using ISynergy.Framework.UI.Properties;
 using System.Resources;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.Mvvm;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 
 #if NETFX_CORE
 using Windows.System.Profile;

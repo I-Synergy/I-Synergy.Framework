@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;

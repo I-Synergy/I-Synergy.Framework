@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Storage.Abstractions;
 using Moq;
 using Xunit;

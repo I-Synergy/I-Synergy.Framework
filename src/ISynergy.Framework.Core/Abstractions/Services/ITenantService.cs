@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ISynergy.Framework.Core.Services
+namespace ISynergy.Framework.Core.Abstractions.Services
 {
     /// <summary>
     /// Interface ITenantService
