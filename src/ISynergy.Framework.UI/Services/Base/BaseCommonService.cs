@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Messaging;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services
 {

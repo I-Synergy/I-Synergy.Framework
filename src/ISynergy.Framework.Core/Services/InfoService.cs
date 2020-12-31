@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System.IO;
+using ISynergy.Framework.Core.Abstractions.Services;
 
-namespace ISynergy.Framework.UI
+namespace ISynergy.Framework.Core.Services
 {
     /// <summary>
     /// Class InfoService.

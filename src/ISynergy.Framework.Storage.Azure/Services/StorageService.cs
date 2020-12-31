@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Storage.Abstractions;
 using Microsoft.Extensions.Options;
