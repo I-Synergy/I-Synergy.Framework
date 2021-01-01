@@ -2,14 +2,13 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <RootNamespace>ISynergy.Framework.Payment.Mollie</RootNamespace>
+        <TargetFramework>net5.0</TargetFramework>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{9746867D-B7F5-483B-B4E1-F38E85C2B794}</ProjectGuid>
 
         <PackageId>I-Synergy.Framework.Payment.Mollie</PackageId>
-        <Description>I-Synergy Framework Mollie Payment for .Net Standard 2.0</Description>
+        <Description>I-Synergy Framework Mollie Payment for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Mollie, Payment</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>

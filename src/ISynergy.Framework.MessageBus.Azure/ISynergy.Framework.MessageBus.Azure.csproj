@@ -2,13 +2,13 @@
     <Import Project="..\..\project.props" />
     
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{CA80195C-80FD-4698-82CF-6260175D928C}</ProjectGuid>
 
         <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
-        <Description>I-Synergy Framework Azure MessageBus for .Net Standard 2.0</Description>
+        <Description>I-Synergy Framework Azure MessageBus for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\project.props" />
+    
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>ISynergy.Framework.Core.Linq.Tests</RootNamespace>
+        <TargetFramework>net5.0</TargetFramework>
         <IsPackable>false</IsPackable>
-        <LangVersion>8.0</LangVersion>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{F18AFC6A-A856-4500-8E1A-AFE034872ADF}</ProjectGuid>
@@ -12,7 +12,7 @@
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.5" />
-        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.10" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
         <PackageReference Include="Moq" Version="4.15.2" />
         <PackageReference Include="NFluent" Version="2.7.1" />
