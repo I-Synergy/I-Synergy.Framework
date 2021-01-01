@@ -2,13 +2,13 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{B7A9DB2D-EEE5-44B5-9F09-2B044C48E25D}</ProjectGuid>
 
         <PackageId>I-Synergy.Framework.Storage.Azure</PackageId>
-        <Description>I-Synergy Framework Azure Storage for .Net Standard 2.0</Description>
+        <Description>I-Synergy Framework Azure Storage for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
@@ -17,8 +17,9 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Storage.Blobs" Version="12.7.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.10" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
         <ProjectReference Include="..\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj" />

@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\project.props" />
+        
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <IsPackable>false</IsPackable>
-        <LangVersion>8.0</LangVersion>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{39D5EB9A-C11D-4C8B-B949-A0426E2CAF86}</ProjectGuid>

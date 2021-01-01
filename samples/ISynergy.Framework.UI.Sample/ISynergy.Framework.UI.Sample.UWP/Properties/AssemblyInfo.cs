@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TestCompany")]
 [assembly: AssemblyProduct("ISynergy.Framework.UI.Sample.UWP")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright (c) 2008-2021 International Intelligence")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
