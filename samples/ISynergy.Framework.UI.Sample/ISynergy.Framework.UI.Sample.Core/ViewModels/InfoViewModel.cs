@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 
-namespace ISynergy.Framework.UI.Sample.Shared.ViewModels
+namespace ISynergy.Framework.UI.Sample.ViewModels
 {
     public class InfoViewModel : ViewModelNavigation<object>
     {

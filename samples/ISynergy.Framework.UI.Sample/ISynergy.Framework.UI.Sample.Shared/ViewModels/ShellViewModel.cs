@@ -7,7 +7,6 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Navigation;
 using ISynergy.Framework.UI.Sample.Abstractions.Services;
-using ISynergy.Framework.UI.Sample.Shared.ViewModels;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml;

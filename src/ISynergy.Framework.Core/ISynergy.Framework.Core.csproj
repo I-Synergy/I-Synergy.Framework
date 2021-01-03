@@ -2,13 +2,13 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{3C9680BF-C7CD-4839-9487-79850CCE180C}</ProjectGuid>
         
         <PackageId>I-Synergy.Framework.Core</PackageId>
-        <Description>I-Synergy Framework Core for .Net Standrad 2.0 and .Net 5.0</Description>
+        <Description>I-Synergy Framework Core for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Core</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
@@ -18,17 +18,8 @@
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.10" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.10" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.10" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     </ItemGroup>
 </Project>
