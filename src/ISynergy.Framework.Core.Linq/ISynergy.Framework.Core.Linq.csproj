@@ -1,14 +1,14 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
   
     <PropertyGroup>
-	    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+	    <TargetFramework>netstandard2.0</TargetFramework>
 
 	    <!-- SonarQube needs this -->
 	    <ProjectGuid>{74F1F4AD-6677-446F-AE74-12BFBA0E437B}</ProjectGuid>
 
         <PackageId>I-Synergy.Framework.Core.Linq</PackageId>
-        <Description>I-Synergy Framework Core Dynamic Linq for .Net Standrad 2.0 and .Net 5.0</Description>
+        <Description>I-Synergy Framework Core Dynamic Linq for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Core, Dynamic, Linq</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>

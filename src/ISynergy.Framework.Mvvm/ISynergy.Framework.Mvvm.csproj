@@ -1,26 +1,22 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{3828A883-B771-4E6B-B004-E521B6D7AD52}</ProjectGuid>
 
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
-        <Description>I-Synergy Framework Mvvm for .Net Standrad 2.0 and .Net 5.0</Description>
+        <Description>I-Synergy Framework Mvvm for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.10" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
