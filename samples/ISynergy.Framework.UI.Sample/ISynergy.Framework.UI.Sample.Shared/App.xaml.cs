@@ -108,7 +108,8 @@ namespace ISynergy.Framework.UI.Sample
             //Load assemblies
             RegisterAssemblies(new List<Assembly>
                 {
-                    assembly
+                    assembly,
+                    Assembly.GetAssembly(typeof(ISynergy.Framework.UI.Sample.Core.Assembly.CoreIdentifier)),
                 });
         }
 
