@@ -22,7 +22,7 @@
     <ProjectGuid>{B3BCCAB0-E662-4443-8AF3-63721F4DADB5}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ISynergy.Framework.UI.Sample</RootNamespace>
+    <RootNamespace>ISynergy.Framework.UI.Sample.UWP</RootNamespace>
     <AssemblyName>ISynergy.Framework.UI.Sample</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
@@ -32,7 +32,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>ISynergy.Framework.UI.Sample.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>8F60E1DC7119B0E27D8F9BD1A1F1E5E0C8EEEA2F</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>35E40D79FB9DDF7A059E833D846E202EB06C3F9F</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -135,7 +135,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="ISynergy.Framework.UI.Sample.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -157,6 +156,9 @@
       <Project>{6b0dfcdf-7038-43bc-a033-2f80b9d9d3be}</Project>
       <Name>ISynergy.Framework.UI.Sample.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ISynergy.Framework.UI.Sample.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <Import Project="..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems" Label="Shared" Condition="Exists('..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems')" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

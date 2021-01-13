@@ -8,7 +8,7 @@
 
   <Identity
     Name="b3bccab0-e662-4443-8af3-63721f4dadb5"
-    Publisher="CN=IsmailHassani"
+    Publisher="CN=Sample"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="55bbe6ec-ac44-4518-80f4-da5c6033bae6" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
