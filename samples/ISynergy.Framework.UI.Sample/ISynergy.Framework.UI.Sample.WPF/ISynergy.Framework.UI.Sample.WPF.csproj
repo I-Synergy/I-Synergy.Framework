@@ -1,34 +1,31 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
     <PropertyGroup>
         <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
         <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>ISynergy.Framework.UI.Sample</AssemblyName>
+        <ApplicationIcon>Icon.ico</ApplicationIcon>
         <Product>ISynergy.Framework.UI.Sample</Product>
         <Copyright>Copyright (c) 2008-2021 International Intelligence</Copyright>
         <Company>International Intelligence</Company>
         <Authors>Ismail Hassani</Authors>
         <AssemblyName>ISynergy.Framework.UI.Sample</AssemblyName>
     </PropertyGroup>
+    <ItemGroup>
+        <UpToDateCheckInput Include="..\ISynergy.Framework.UI.Sample.Shared\**\*.xaml" />
+    </ItemGroup>
     <ItemGroup Condition="exists('..\ISynergy.Framework.UI.Sample.Shared')">
         <Content Include="..\ISynergy.Framework.UI.Sample.Shared\Assets\StoreLogo.scale-100.png" Link="Assets\StoreLogo.png" />
         <Content Include="..\ISynergy.Framework.UI.Sample.Shared\Assets\Fonts\uno-fluentui-assets.ttf" Link="Assets\Fonts\uno-fluentui-assets.ttf" />
     </ItemGroup>
+
     <ItemGroup>
-        <UpToDateCheckInput Include="..\ISynergy.Framework.UI.Sample.Shared\**\*.xaml" />
-    </ItemGroup>
-    <ItemGroup>
-        <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
-        <PackageReference Include="Uno.UI.Skia.Gtk" Version="3.4.0" />
+        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.4.0" />
         <PackageReference Include="Uno.UI.RemoteControl" Version="3.4.0" Condition="'$(Configuration)'=='Debug'" />
     </ItemGroup>
+    
     <ItemGroup>
-        <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-        <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-        <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
-        <ProjectReference Include="..\ISynergy.Framework.UI.Sample.Core\ISynergy.Framework.UI.Sample.Core.csproj" />
+        <ProjectReference Include="..\ISynergy.Framework.UI.Sample.Skia.Gtk.WPF\ISynergy.Framework.UI.Sample.Skia.Gtk.WPF.csproj" />
     </ItemGroup>
-    <Import Project="..\ISynergy.Framework.UI.Sample.Shared\ISynergy.Framework.UI.Sample.Shared.projitems" Label="Shared" />
-
 </Project>

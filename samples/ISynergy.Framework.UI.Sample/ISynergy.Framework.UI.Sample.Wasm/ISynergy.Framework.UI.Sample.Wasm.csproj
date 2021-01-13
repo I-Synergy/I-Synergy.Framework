@@ -4,15 +4,13 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netstandard2.0</TargetFramework>
         <NoWarn>NU1701</NoWarn>
-        <LangVersion>8.0</LangVersion>
-        <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
-        <WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
         <Product>ISynergy.Framework.UI.Sample</Product>
         <Copyright>Copyright (c) 2008-2021 International Intelligence</Copyright>
         <Company>International Intelligence</Company>
         <Authors>Ismail Hassani</Authors>
-        <PackageId>ISynergy.Framework.UI.Sample</PackageId>
         <AssemblyName>ISynergy.Framework.UI.Sample</AssemblyName>
+        <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
+        <WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
@@ -22,9 +20,6 @@
     </PropertyGroup>
     <ItemGroup>
         <UpToDateCheckInput Include="..\ISynergy.Framework.UI.Sample.Shared\**\*.xaml" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Remove="appsettings.json" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="WasmCSS\Fonts.css" />
