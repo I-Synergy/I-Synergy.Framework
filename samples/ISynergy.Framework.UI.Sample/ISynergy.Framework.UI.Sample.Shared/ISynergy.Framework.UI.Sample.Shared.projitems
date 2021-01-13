@@ -6,7 +6,7 @@
     <SharedGUID>6279c845-92f8-4333-ab99-3d213163593c</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>ISynergy.Framework.UI.Sample.Shared</Import_RootNamespace>
+    <Import_RootNamespace>ISynergy.Framework.UI.Sample</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IClientMonitorService.cs" />
@@ -149,7 +149,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-256.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-32.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-48.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.backup.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-100.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-125.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-150.png" />
@@ -178,6 +177,7 @@
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <LogicalName>appsettings.json</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
       <DependentUpon>Resources.cs</DependentUpon>
@@ -185,5 +185,8 @@
     <Resource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx">
       <DependentUpon>Resources.cs</DependentUpon>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Fonts\uno-fluentui-assets.ttf" />
   </ItemGroup>
 </Project>

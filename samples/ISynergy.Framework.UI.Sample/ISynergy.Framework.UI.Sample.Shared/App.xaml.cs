@@ -37,7 +37,7 @@ namespace ISynergy.Framework.UI.Sample
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : BaseApplication
+    public sealed partial class App : BaseApplication
     {
         /// <summary>
         /// The configuration root
@@ -74,7 +74,7 @@ namespace ISynergy.Framework.UI.Sample
             var assembly = GetEntryAssembly();
 
             ConfigurationRoot = new ConfigurationBuilder()
-                .AddJsonStream(assembly.GetManifestResourceStream($"{assembly.GetName().Name}.appsettings.json"))
+                .AddJsonStream(assembly.GetManifestResourceStream("appsettings.json"))
                 .Build();
 
             services.AddSingleton((s) => ConfigurationRoot.GetSection(nameof(ConfigurationOptions)).Get<ConfigurationOptions>());
