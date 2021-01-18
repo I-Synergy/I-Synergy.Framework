@@ -1,0 +1,88 @@
+<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
+    <Import Project="..\..\project.props" />
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;uap10.0.18362;uap10.0.19041;MonoAndroid10.0</TargetFrameworks>
+
+        <!-- SonarQube needs this -->
+        <ProjectGuid>{0B4D006F-7F03-49AB-B4A0-1F0E53A55542}</ProjectGuid>
+
+        <PackageId>I-Synergy.Framework.UI.Syncfusion</PackageId>
+        <Description>Syncfusion Chart control for Uno</Description>
+        <Copyright>Syncfusion</Copyright>
+        <PackageProjectUrl>https://www.syncfusion.com</PackageProjectUrl>
+        <PackageTags>I-Synergy, Framework, UI, Uno, Platform, UWP, WebAssembly, WASM, Android</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+        <OutputPath>$(BaseOutputPath)</OutputPath>
+
+        <AssemblyName>Syncfusion.SfChart.Uno</AssemblyName>
+
+        <RootNamespace>Syncfusion.SfChart.Uno</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+        <DefineConstants>TRACE;__WASM__;NETFX_CORE;WINDOWS_UAP;SyncfusionFramework4_6;UNIVERSALWINDOWS;Uno;</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='uap10.0.18362' or '$(TargetFramework)'=='uap10.0.19041'">
+        <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UAP;SyncfusionFramework4_6;UNIVERSALWINDOWS;Uno;</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0'">
+        <PackageReference Include="Uno.UI" Version="3.4.0" />
+    </ItemGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='monoandroid10.0'">
+        <DesignTimeBuild>false</DesignTimeBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Serialization\**" />
+        <EmbeddedResource Remove="Serialization\**" />
+        <None Remove="Serialization\**" />
+        <Page Remove="Serialization\**" />
+        <UpToDateCheckInput Remove="Serialization\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <PRIResource Include="Resources\en-US\Syncfusion.SfChart.Uno.Resources.resw" />
+        <None Remove="Themes\ChartArea.xaml" />
+        <None Remove="Themes\ChartAxis.xaml" />
+        <None Remove="Themes\ChartSeries.xaml" />
+        <None Remove="Themes\ChartToolBar.xaml" />
+        <None Remove="Themes\Generic.Common.xaml" />
+        <None Remove="Themes\Generic.Legend.xaml" />
+        <None Remove="Themes\Generic.Symbol.xaml" />
+        <None Remove="Themes\generic.xaml" />
+        <None Remove="Themes\ResizableScrollBar.xaml" />
+        <None Remove="Themes\Resizer.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <UpToDateCheckInput Remove="Themes\ChartArea.xaml" />
+        <UpToDateCheckInput Remove="Themes\ChartAxis.xaml" />
+        <UpToDateCheckInput Remove="Themes\ChartSeries.xaml" />
+        <UpToDateCheckInput Remove="Themes\ChartToolBar.xaml" />
+        <UpToDateCheckInput Remove="Themes\Generic.Common.xaml" />
+        <UpToDateCheckInput Remove="Themes\Generic.Legend.xaml" />
+        <UpToDateCheckInput Remove="Themes\Generic.Symbol.xaml" />
+        <UpToDateCheckInput Remove="Themes\generic.xaml" />
+        <UpToDateCheckInput Remove="Themes\ResizableScrollBar.xaml" />
+        <UpToDateCheckInput Remove="Themes\Resizer.xaml" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\en-US\Syncfusion.SfChart.Uno.Resources.resw" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+        <EmbeddedResource Include="LinkerDefinition.Wasm.xml">
+            <LogicalName>$(AssemblyName).xml</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+</Project>
