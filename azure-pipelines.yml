@@ -53,6 +53,7 @@ stages:
              src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
              src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
              src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
+             src\ISynergy.Framework.UI.Syncfusion\ISynergy.Framework.UI.Syncfusion.csproj
             InsertAttributes: true
             WriteBOM: true
             GeneratePackageOnBuild: true
@@ -217,6 +218,22 @@ stages:
           displayName: 'Framework UI - Build'
           inputs:
             solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+            platform: AnyCpu
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/p:BaseOutputPath=$(Build.ArtifactStagingDirectory)'
+
+        - task: MSBuild@1
+          displayName: 'Syncfusion SfChart for Uno - Nuget Restore'
+          inputs:
+            solution: 'src\ISynergy.Framework.UI.Syncfusion\ISynergy.Framework.UI.Syncfusion.csproj'
+            platform: AnyCpu
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/t:restore'
+      
+        - task: MSBuild@1
+          displayName: 'Syncfusion SfChart for Uno - Build'
+          inputs:
+            solution: 'src\ISynergy.Framework.UI.Syncfusion\ISynergy.Framework.UI.Syncfusion.csproj'
             platform: AnyCpu
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/p:BaseOutputPath=$(Build.ArtifactStagingDirectory)'
