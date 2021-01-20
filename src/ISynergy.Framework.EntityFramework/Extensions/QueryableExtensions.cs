@@ -18,13 +18,12 @@ namespace ISynergy.Framework.EntityFramework.Extensions
         /// <param name="pagesize">Has to be greater than 0.</param>
         /// <returns>System.Int32.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Value must be greater than 0. - pagesize</exception>
-        public static async Task<int> CountPagesAsync<TEntity>(this IQueryable<TEntity> query, int pagesize)
+        public static int CountPages<TEntity>(this IQueryable<TEntity> query, int pagesize)
         {
             if (pagesize < 1)
                 throw new ArgumentOutOfRangeException("Value must be greater than 0.", "pagesize");
 
-            var countPages = Convert.ToDecimal(await query.CountAsync().ConfigureAwait(false));
-
+            var countPages = Convert.ToDecimal(query.Count());
             return Convert.ToInt32(Math.Ceiling(countPages / pagesize));
         }
 
@@ -47,7 +46,7 @@ namespace ISynergy.Framework.EntityFramework.Extensions
                 throw new ArgumentOutOfRangeException("Value must be greater than 0.", "pagesize");
 
             return query
-                .Skip(page * pagesize)
+                .Skip((page - 1) * pagesize)
                 .Take(pagesize);
         }
     }
