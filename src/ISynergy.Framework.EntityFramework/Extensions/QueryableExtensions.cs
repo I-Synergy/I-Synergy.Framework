@@ -21,7 +21,7 @@ namespace ISynergy.Framework.EntityFramework.Extensions
         public static int CountPages<TEntity>(this IQueryable<TEntity> query, int pagesize)
         {
             if (pagesize < 1)
-                throw new ArgumentOutOfRangeException("Value must be greater than 0.", "pagesize");
+                throw new ArgumentOutOfRangeException(nameof(pagesize), "Value must be greater than 0.");
 
             var countPages = Convert.ToDecimal(query.Count());
             return Convert.ToInt32(Math.Ceiling(countPages / pagesize));
@@ -41,9 +41,9 @@ namespace ISynergy.Framework.EntityFramework.Extensions
         public static IQueryable<TEntity> ToPage<TEntity>(this IQueryable<TEntity> query, int page, int pagesize)
         {
             if (page < 0)
-                throw new ArgumentOutOfRangeException("Value must be non-negative.", "page");
+                throw new ArgumentOutOfRangeException(nameof(page), "Value must be non-negative.");
             if (pagesize < 1)
-                throw new ArgumentOutOfRangeException("Value must be greater than 0.", "pagesize");
+                throw new ArgumentOutOfRangeException(nameof(pagesize), "Value must be greater than 0.");
 
             return query
                 .Skip((page - 1) * pagesize)
