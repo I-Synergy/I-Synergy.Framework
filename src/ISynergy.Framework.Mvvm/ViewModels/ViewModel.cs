@@ -175,7 +175,6 @@ namespace ISynergy.Framework.Mvvm
         /// </summary>
         public virtual void Cleanup()
         {
-            PropertyChanged -= OnPropertyChanged;
         }
 
         /// <summary>
@@ -223,7 +222,10 @@ namespace ISynergy.Framework.Mvvm
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
+            PropertyChanged -= OnPropertyChanged;
+
             Cleanup();
+            
             base.Dispose(disposing);
         }
 
