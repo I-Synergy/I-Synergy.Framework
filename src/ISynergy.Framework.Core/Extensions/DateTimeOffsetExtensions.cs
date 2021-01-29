@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Constants;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -196,5 +197,15 @@ namespace ISynergy.Framework.Core.Extensions
 
             return string.Join(seperator, result);
         }
+
+        /// <summary>
+        /// Converts DateTimeOffset to Local DateTime string according to format and culture.
+        /// </summary>
+        /// <param name="self">The self.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.String.</returns>
+        public static string ToLocalDateString(this DateTimeOffset self, string format = "f", CultureInfo culture = default) =>
+            self.ToLocalTime().ToString(format, culture.DateTimeFormat);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Data;
+using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.UI.Converters
 {
@@ -212,13 +213,13 @@ namespace ISynergy.Framework.UI.Converters
     /// <seealso cref="IValueConverter" />
     public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
     {
-        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:d\} 2009-06-15T13:45:30 -> 6/15/2009 (en-US)
-        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:D\} 2009-06-15T13:45:30 -> Monday, June 15, 2009 (en-US)
-        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:f\} 2009-06-15T13:45:30 -> Monday, June 15, 2009 1:45 PM (en-US)
-        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:F\} 2009-06-15T13:45:30 -> Monday, June 15, 2009 1:45:30 PM (en-US)
-        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:g\} 2009-06-15T13:45:30 -> 6/15/2009 1:45 PM (en-US)
-        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:G\} 2009-06-15T13:45:30 -> 6/15/2009 1:45:30 PM (en-US)
-        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=T} 2009-06-15T13:45:30 -> 1:45 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=d} 2009-06-15T13:45:30 -> 6/15/2009 (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=D} 2009-06-15T13:45:30 -> Monday, June 15, 2009 (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=f} 2009-06-15T13:45:30 -> Monday, June 15, 2009 1:45 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=F} 2009-06-15T13:45:30 -> Monday, June 15, 2009 1:45:30 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=g} 2009-06-15T13:45:30 -> 6/15/2009 1:45 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=G} 2009-06-15T13:45:30 -> 6/15/2009 1:45:30 PM (en-US)
+        // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=t} 2009-06-15T13:45:30 -> 1:45 PM (en-US)
         // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=T} 2009-06-15T13:45:30 -> 1:45:30 PM (en-US)
 
         /// <summary>
@@ -235,10 +236,10 @@ namespace ISynergy.Framework.UI.Converters
             {
                 if (parameter != null)
                 {
-                    return datetime.ToLocalTime().ToString(parameter.ToString());
+                    return datetime.ToLocalDateString(parameter.ToString());
                 }
 
-                return datetime.ToLocalTime().ToString("f");
+                return datetime.ToLocalDateString("f");
             }
 
             return DateTimeOffset.Now.ToString("f");
