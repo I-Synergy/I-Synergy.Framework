@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using ISynergy.Framework.Core.Constants;
 using Xunit;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
@@ -126,6 +128,46 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         {
             var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfWorkWeek();
             Assert.Equal(new DateTimeOffset(1975, 10, 3, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay(), result);
+        }
+
+        [Fact]
+        public void ToUniversalTimeStringTest()
+        {
+            var timezoneWesternEurope = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35,  timezoneWesternEurope.BaseUtcOffset).ToUniversalTimeString();
+            var expected = new DateTimeOffset(1975, 10, 1, 13, 43, 35, TimeSpan.FromHours(0)).ToString(GenericConstants.DateTimeOffsetFormat); ; 
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("d", "6/15/2009", "en-US")]
+        [InlineData("D", "Monday, June 15, 2009", "en-US")]
+        [InlineData("f", "maandag 15 juni 2009 13:45", "nl-NL")]
+        [InlineData("F", "Monday, June 15, 2009 1:45:30 PM", "en-US")]
+        [InlineData("g", "6/15/2009 1:45 PM", "en-US")]
+        [InlineData("G", "15.06.2009 13:45:30", "de-DE")]
+        [InlineData("t", "1:45 PM", "en-US")]
+        [InlineData("T", "1:45:30 PM", "en-US")]
+        public void ToLocalDateStringTest(string format, string expected, string culture)
+        {
+            var sourceDate =  new DateTime(2009, 6, 15, 13, 45, 30, DateTimeKind.Local);
+            var date = new DateTimeOffset(sourceDate).ToUniversalTime();
+            var result = date.ToLocalDateString(format, new CultureInfo(culture));
+            Assert.Equal(expected, result);
+        }
+
+
+        [Theory]
+        [InlineData("2021-01-29 19:56:18.3907747 +00:00", 1, 20)]
+        [InlineData("2021-01-29 20:44:55.0977507 +00:00", 1, 21)]
+        [InlineData("2021-01-29 20:55:47.8056804 +01:00", 1, 20)]
+        public void ToLocalDateTimeOffsetTest(string datetime, int offset, int hour)
+        {
+            if(DateTimeOffset.TryParse(datetime, out var actualDateTime))
+            {
+                var localDateTime = actualDateTime.ToOffset(TimeSpan.FromHours(offset));
+                Assert.Equal(hour, localDateTime.Hour);
+            }
         }
     }
 }
