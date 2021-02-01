@@ -2,6 +2,9 @@
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Data;
 using ISynergy.Framework.Core.Extensions;
+using System.Globalization;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Abstractions;
 
 namespace ISynergy.Framework.UI.Converters
 {
@@ -234,12 +237,22 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is DateTimeOffset datetime)
             {
-                if (parameter != null)
+                var culture = CultureInfo.CurrentCulture;
+
+                if (!string.IsNullOrEmpty(language))
+                    culture = new CultureInfo(language);
+
+                var offset = TimeZoneInfo.Local.BaseUtcOffset;
+
+                if(ServiceLocator.Default.GetInstance<IContext>() is IContext context)
                 {
-                    return datetime.ToLocalDateString(parameter.ToString());
+                    offset = context.CurrentTimeZone.BaseUtcOffset;
                 }
 
-                return datetime.ToLocalDateString("f");
+                if (parameter != null)
+                    return datetime.ToLocalDateString(parameter.ToString(), offset, culture);
+
+                return datetime.ToLocalDateString("f", offset, culture);
             }
 
             return DateTimeOffset.Now.ToString("f");

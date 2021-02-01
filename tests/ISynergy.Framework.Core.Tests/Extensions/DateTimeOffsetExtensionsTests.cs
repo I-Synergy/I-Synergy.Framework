@@ -150,9 +150,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [InlineData("T", "1:45:30 PM", "en-US")]
         public void ToLocalDateStringTest(string format, string expected, string culture)
         {
-            var sourceDate =  new DateTime(2009, 6, 15, 13, 45, 30, DateTimeKind.Local);
-            var date = new DateTimeOffset(sourceDate).ToUniversalTime();
-            var result = date.ToLocalDateString(format, new CultureInfo(culture));
+            var sourceDate =  new DateTime(2009, 6, 15, 13, 45, 30, DateTimeKind.Utc);
+            var date = new DateTimeOffset(sourceDate);
+            var result = date.ToLocalDateString(format, TimeSpan.FromHours(0), new CultureInfo(culture));
             Assert.Equal(expected, result);
         }
 

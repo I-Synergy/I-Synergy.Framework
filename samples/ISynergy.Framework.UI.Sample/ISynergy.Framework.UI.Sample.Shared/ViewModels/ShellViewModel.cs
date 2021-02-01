@@ -69,7 +69,9 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
 
         private async Task BrowseFileAsync()
         {
-            if (await CommonServices.FileService.BrowseFileAsync("*", 0) is FileResult file)
+            var imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
+
+            if (await CommonServices.FileService.BrowseFileAsync(imageFilter, 0) is FileResult file)
             {
                 await CommonServices.DialogService.ShowInformationAsync($"File '{file.FileName}' is selected.");
             }

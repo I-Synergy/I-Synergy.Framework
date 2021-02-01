@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -199,13 +200,21 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
-        /// Converts DateTimeOffset to Local DateTime string according to format and culture.
+        /// Converts to localdatestring.
         /// </summary>
         /// <param name="self">The self.</param>
         /// <param name="format">The format.</param>
+        /// <param name="offset">The offset.</param>
         /// <param name="culture">The culture.</param>
         /// <returns>System.String.</returns>
-        public static string ToLocalDateString(this DateTimeOffset self, string format = "f", CultureInfo culture = default) =>
-            self.ToLocalTime().ToString(format, culture.DateTimeFormat);
+        public static string ToLocalDateString(this DateTimeOffset self, string format, TimeSpan offset, CultureInfo culture = null)
+        {
+            Argument.IsNotNullOrEmpty(nameof(format), format);
+
+            if (culture is null)
+                culture = CultureInfo.InvariantCulture;
+
+            return self.ToOffset(offset).ToString(format, culture.DateTimeFormat);
+        }
     }
 }

@@ -125,13 +125,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>FileResult.</returns>
         public async Task<FileResult> BrowseFileAsync(string filefilter, long maxfilesize)
         {
-            var filters = new List<string>();
-            var filterArray = filefilter?.Split(';');
-
-            foreach (var filter in filterArray.EnsureNotNull())
-            {
-                filters.AddRange(GetFilters(filter));
-            }
+            var filters = GetFilters(filefilter);
 
             if (await FilePicker.Current.PickFileAsync(filters.ToArray()) is FileResult file)
             {
@@ -165,12 +159,19 @@ namespace ISynergy.Framework.UI.Services
 
             if (!string.IsNullOrWhiteSpace(fileFilter))
             {
-                if (filter.Trim().StartsWith("*") && !filter.Trim().Equals("*.*"))
-                {
-                    fileFilter = filter.Trim().Replace("*", string.Empty);
-                }
+                var array = fileFilter.Split(';');
 
-                result.Add(fileFilter);
+                foreach (var item in array.EnsureNotNull())
+                {
+                    if (item.Trim().StartsWith("*") && !item.Trim().Equals("*.*"))
+                    {
+                        result.Add(item.Trim().Replace("*", string.Empty));
+                    }
+                    else
+                    {
+                        result.Add(item);
+                    }
+                }
             }
 
             return result;
