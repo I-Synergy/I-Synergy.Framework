@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{C3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC7EDEE6-465F-4AC7-B976-8C42D7426365}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		azure-pipelines.yml = azure-pipelines.yml
 		codecoverage.runsettings = codecoverage.runsettings
@@ -119,7 +118,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.Sampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.Sample.Skia.Gtk.WPF", "samples\ISynergy.Framework.UI.Sample\ISynergy.Framework.UI.Sample.Skia.Gtk.WPF\ISynergy.Framework.UI.Sample.Skia.Gtk.WPF.csproj", "{CD5786A2-EE61-4883-B328-F1DB11FBBDDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.UI.Syncfusion", "src\ISynergy.Framework.UI.Syncfusion\ISynergy.Framework.UI.Syncfusion.csproj", "{0B4D006F-7F03-49AB-B4A0-1F0E53A55542}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.Syncfusion", "src\ISynergy.Framework.UI.Syncfusion\ISynergy.Framework.UI.Syncfusion.csproj", "{0B4D006F-7F03-49AB-B4A0-1F0E53A55542}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

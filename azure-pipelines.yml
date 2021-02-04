@@ -3,6 +3,11 @@ name: $(Date:yyyy).1$(DayOfYear)$(Rev:.r)
 trigger:
 - master
 
+variables:
+  version.Revision: $[counter(variables['VersionMajor'], 0)]
+  VersionMajor: ''
+  VersionMinor: ''
+
 pool:
   vmImage: 'windows-latest'
 
@@ -13,6 +18,24 @@ stages:
     - job: BuildJob
       displayName: 'Build and Test assemblies'
       steps:
+        - task: PowerShell@2
+          displayName: Set the Major Version variable value
+          inputs:
+            targetType: 'inline'
+            script: |
+              [string] $version = "$((Get-Date).Year)"
+              Write-Host "Setting the major version number variable to '$version'."
+              Write-Host "##vso[task.setvariable variable=VersionMajor]$version"
+        
+        - task: PowerShell@2
+          displayName: Set the Minor Version variable value
+          inputs:
+            targetType: 'inline'
+            script: |
+              [string] $version = "1$("{0:000}" -f (Get-Date).DayOfYear)"
+              Write-Host "Setting the minor version number variable to '$version'."
+              Write-Host "##vso[task.setvariable variable=VersionMinor]$version"
+
         - task: NuGetToolInstaller@1
           displayName: 'Use NuGet 5.8.0'
           inputs:
@@ -30,7 +53,7 @@ stages:
             scannerMode: 'MSBuild'
             projectKey: 'I-Synergy.Framework'
             projectName: 'I-Synergy.Framework'
-            projectVersion: $(build.buildNumber)
+            projectVersion: '$(VersionPackage)'
       
         - task: Assembly-Info-NetCore@2
           displayName: 'Set Assembly Manifest Data v2'
@@ -57,10 +80,10 @@ stages:
             InsertAttributes: true
             WriteBOM: true
             GeneratePackageOnBuild: true
-            VersionNumber: '$(build.buildNumber).0'
-            FileVersionNumber: '$(build.buildNumber).0'
-            InformationalVersion: '$(build.buildNumber)'
-            PackageVersion: '$(build.buildNumber)$(suffix)'
+            VersionNumber: '$(VersionNumber)'
+            FileVersionNumber: '$(VersionFile)'
+            InformationalVersion: '$(VersionInformational)'
+            PackageVersion: '$(VersionPackage)'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Core'
@@ -305,7 +328,7 @@ stages:
   - stage: Release
     displayName: 'Release'
     dependsOn: Build
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: succeeded()
     jobs:
     - job: PackageJob
       displayName: 'Publish nuget packages'
