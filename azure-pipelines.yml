@@ -18,6 +18,10 @@ stages:
     - job: BuildJob
       displayName: 'Build and Test assemblies'
       steps:
+        - checkout: self
+          clean: true
+          persistCredentials: true
+
         - task: PowerShell@2
           displayName: Set the Major Version variable value
           inputs:
@@ -281,6 +285,15 @@ stages:
             projects: 'tests\ISynergy.Framework.Core.Tests\ISynergy.Framework.Core.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
+        - powershell: |
+            Write-Host "Tagging Build: $(VersionPackage)"
+
+            git tag $(VersionPackage)
+            git push $(VersionPackage)
+          env:
+            BuildNumber: $(VersionPackage)
+          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
           inputs:
@@ -360,4 +373,4 @@ stages:
             githubaccesstoken: '$(GithubPages)'
             repositoryname: 'I-Synergy.Framework'
             branchname: 'gh-pages'
-            commitmessage: 'Automated Release $(Release.ReleaseId)'
+            commitmessage: 'Automated Document Release $(build.buildNumber)'
