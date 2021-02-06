@@ -43,6 +43,7 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
         public RelayCommand Display_Command { get; set; }
         public RelayCommand Info_Command { get; set; }
         public RelayCommand Browse_Command { get; set; }
+        public RelayCommand Converter_Command { get; set; }
 
         public ShellViewModel(
             IContext context,
@@ -63,9 +64,13 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
             Display_Command = new RelayCommand(async () => await OpenDisplayAsync());
             Info_Command = new RelayCommand(async () => await OpenInfoAsync());
             Browse_Command = new RelayCommand(async () => await BrowseFileAsync());
+            Converter_Command = new RelayCommand(async () => await OpenConvertersAsync());
 
             PopulateNavItems();
         }
+
+        private Task OpenConvertersAsync() =>
+            CommonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
 
         private async Task BrowseFileAsync()
         {
@@ -97,6 +102,7 @@ namespace ISynergy.Framework.UI.Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["icon_kiosk"] as string, ForegroundColor, Display_Command));
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["tile_info"] as string, ForegroundColor, Info_Command));
             PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["tb_search"] as string, ForegroundColor, Browse_Command));
+            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["tb_products"] as string, ForegroundColor, Converter_Command));
         }
 
         protected override Task CreateFeedbackAsync() => ThrowFeatureNotEnabledWarning();

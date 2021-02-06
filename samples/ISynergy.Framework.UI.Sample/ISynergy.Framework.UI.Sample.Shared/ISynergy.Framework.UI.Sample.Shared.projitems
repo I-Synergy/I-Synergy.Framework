@@ -41,8 +41,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\TelemetryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ConvertersView.xaml.cs">
+      <DependentUpon>ConvertersView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\InfoView.xaml.cs">
       <DependentUpon>InfoView.xaml</DependentUpon>
     </Compile>
@@ -75,6 +79,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Styles\Style.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Views\ConvertersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

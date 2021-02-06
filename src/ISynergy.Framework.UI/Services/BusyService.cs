@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services

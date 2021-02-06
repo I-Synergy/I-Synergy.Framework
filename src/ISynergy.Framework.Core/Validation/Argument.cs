@@ -132,6 +132,16 @@ namespace ISynergy.Framework.Core.Validation
             }
         }
 
+        [DebuggerNonUserCode, DebuggerStepThrough]
+        public static void IsNotEnum<T>(string paramName, T paramValue)
+        {
+            if (!typeof(T).IsEnum)
+            {
+                var error = string.Format("Argument '{0}' can only be an Enum", paramName.ToString());
+                throw new ArgumentException(error, paramName);
+            }
+        }
+
         /// <summary>
         /// Determines whether [has no nulls] [the specified parameter name].
         /// </summary>

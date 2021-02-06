@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Mvvm.Messaging;
 using ISynergy.Framework.UI.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Sample.Abstractions.Services;
-using ISynergy.Framework.Core.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Sample.Services
 {

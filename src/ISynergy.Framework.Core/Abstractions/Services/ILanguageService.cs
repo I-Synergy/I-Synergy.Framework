@@ -1,6 +1,6 @@
 ﻿using System.Resources;
 
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+namespace ISynergy.Framework.Core.Abstractions.Services
 {
     /// <summary>
     /// Interface ILanguageService

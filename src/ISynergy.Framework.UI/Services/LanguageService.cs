@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Resources;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services
 {

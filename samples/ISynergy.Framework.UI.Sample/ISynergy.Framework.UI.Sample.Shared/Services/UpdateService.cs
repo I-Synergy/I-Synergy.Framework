@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.UI.Sample.Abstractions.Services;
 using Windows.Services.Store;
 

@@ -123,6 +123,9 @@
   <data name="Colors" xml:space="preserve">
     <value>Set theme color...</value>
   </data>
+  <data name="Converters" xml:space="preserve">
+    <value>XAML Converters</value>
+  </data>
   <data name="EX_FUTURE_MODULE" xml:space="preserve">
     <value>This feature is not available at this moment in this version.</value>
   </data>

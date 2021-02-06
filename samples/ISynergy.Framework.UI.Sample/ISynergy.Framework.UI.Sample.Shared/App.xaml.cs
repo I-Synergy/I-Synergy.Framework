@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
