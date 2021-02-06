@@ -37,7 +37,7 @@ namespace ISynergy.Framework.UI.Controls
         /// <returns>file picker instance</returns>
         private static IFilePicker CreateFilePicker()
         {
-#if NETSTANDARD1_0 || NETSTANDARD2_0
+#if NETSTANDARD1_0 || NETSTANDARD2_0 || NET5_0
             return null;
 #else
             return new FilePickerImplementation();
