@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method ExpressionOptimizerIsNull.
+        /// </summary>
         [Fact]
         public void ExpressionOptimizerIsNull()
         {

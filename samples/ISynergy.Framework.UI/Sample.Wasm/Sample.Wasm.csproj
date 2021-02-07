@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+		<OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <NoWarn>NU1701</NoWarn>
+        <Product>Sample</Product>
+        <Copyright>Copyright (c) 2008-2021 International Intelligence</Copyright>
+        <Company>International Intelligence</Company>
+        <Authors>Ismail Hassani</Authors>
+        <AssemblyName>Sample</AssemblyName>
+        <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+        <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
+    <ItemGroup>
+        <UpToDateCheckInput Include="..\Sample.Shared\**\*.xaml" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="WasmCSS\Fonts.css" />
+        <EmbeddedResource Include="WasmScripts\AppManifest.js" />
+    </ItemGroup>
+    <ItemGroup>
+        <LinkerDescriptor Include="LinkerConfig.xml" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
+        <PackageReference Include="Uno.UI.WebAssembly" Version="3.5.0-dev.482" />
+        <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.0-dev.482" Condition="'$(Configuration)'=='Debug'" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.158" />
+        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.158" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+        <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+        <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+        <ProjectReference Include="..\Sample.Core\Sample.Core.csproj" />
+    </ItemGroup>
+    <Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.Shared\Sample.Shared.projitems')" />
+</Project>

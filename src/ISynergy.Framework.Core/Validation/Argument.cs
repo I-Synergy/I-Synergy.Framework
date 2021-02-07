@@ -132,6 +132,13 @@ namespace ISynergy.Framework.Core.Validation
             }
         }
 
+        /// <summary>
+        /// Determines whether [is not enum] [the specified parameter name].
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="paramName">Name of the parameter.</param>
+        /// <param name="paramValue">The parameter value.</param>
+        /// <exception cref="System.ArgumentException"></exception>
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotEnum<T>(string paramName, T paramValue)
         {

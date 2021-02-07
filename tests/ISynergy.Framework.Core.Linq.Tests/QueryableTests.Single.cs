@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Single.
+        /// </summary>
         [Fact]
         public void Single()
         {
@@ -21,6 +27,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList[0].Id, result.Id);
         }
 
+        /// <summary>
+        /// Defines the test method Single_Predicate.
+        /// </summary>
         [Fact]
         public void Single_Predicate()
         {
@@ -36,6 +45,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected as object, result);
         }
 
+        /// <summary>
+        /// Defines the test method SingleOrDefault.
+        /// </summary>
         [Fact]
         public void SingleOrDefault()
         {
@@ -52,6 +64,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Null(defaultResult);
         }
 
+        /// <summary>
+        /// Defines the test method SingleOrDefault_Predicate.
+        /// </summary>
         [Fact]
         public void SingleOrDefault_Predicate()
         {
@@ -67,6 +82,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected as object, result);
         }
 
+        /// <summary>
+        /// Defines the test method Single_Dynamic.
+        /// </summary>
         [Fact]
         public void Single_Dynamic()
         {

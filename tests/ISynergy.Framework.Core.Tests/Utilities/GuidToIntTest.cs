@@ -3,8 +3,14 @@ using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.Core.Utilities.Tests
 {
+    /// <summary>
+    /// Class GuidToIntTest.
+    /// </summary>
     public class GuidToIntTest
     {
+        /// <summary>
+        /// Defines the test method ConvertTest.
+        /// </summary>
         [Fact]
         public void ConvertTest()
         {

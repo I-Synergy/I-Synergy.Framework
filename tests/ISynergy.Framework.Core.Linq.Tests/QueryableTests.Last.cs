@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Last.
+        /// </summary>
         [Fact]
         public void Last()
         {
@@ -22,6 +28,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(realResult.Id, result.Id);
         }
 
+        /// <summary>
+        /// Defines the test method Last_Predicate.
+        /// </summary>
         [Fact]
         public void Last_Predicate()
         {
@@ -37,6 +46,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected as object, result);
         }
 
+        /// <summary>
+        /// Defines the test method LastOrDefault.
+        /// </summary>
         [Fact]
         public void LastOrDefault()
         {
@@ -54,6 +66,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Null(defaultResult);
         }
 
+        /// <summary>
+        /// Defines the test method LastOrDefault_Predicate.
+        /// </summary>
         [Fact]
         public void LastOrDefault_Predicate()
         {
@@ -69,6 +84,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected as object, result);
         }
 
+        /// <summary>
+        /// Defines the test method Last_Dynamic.
+        /// </summary>
         [Fact]
         public void Last_Dynamic()
         {

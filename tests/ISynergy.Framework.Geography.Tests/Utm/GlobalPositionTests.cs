@@ -2,13 +2,31 @@
 
 namespace ISynergy.Framework.Geography.Utm.Tests
 {
+    /// <summary>
+    /// Class GlobalPositionTests.
+    /// </summary>
     public class GlobalPositionTests
     {
+        /// <summary>
+        /// The c1
+        /// </summary>
         GlobalCoordinates c1 = new GlobalCoordinates(45, 9);
+        /// <summary>
+        /// The c2
+        /// </summary>
         GlobalCoordinates c2 = new GlobalCoordinates(45, 10);
+        /// <summary>
+        /// The c3
+        /// </summary>
         GlobalCoordinates c3 = new GlobalCoordinates(46, 9);
+        /// <summary>
+        /// The c4
+        /// </summary>
         GlobalCoordinates c4 = new GlobalCoordinates(44, 9);
 
+        /// <summary>
+        /// Defines the test method TestConstructor1.
+        /// </summary>
         [Fact]
         public void TestConstructor1()
         {
@@ -18,6 +36,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(0, a.Elevation);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor2.
+        /// </summary>
         [Fact]
         public void TestConstructor2()
         {
@@ -26,6 +47,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(100, a.Elevation);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor3.
+        /// </summary>
         [Fact]
         public void TestConstructor3()
         {
@@ -34,6 +58,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(0, a.Elevation);
         }
 
+        /// <summary>
+        /// Defines the test method TestCoordSetter.
+        /// </summary>
         [Fact]
         public void TestCoordSetter()
         {
@@ -44,6 +71,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(a.Coordinates, c2);
         }
 
+        /// <summary>
+        /// Defines the test method TestLatSetter.
+        /// </summary>
         [Fact]
         public void TestLatSetter()
         {
@@ -54,6 +84,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(a.Coordinates, c3);
         }
 
+        /// <summary>
+        /// Defines the test method TestLongSetter.
+        /// </summary>
         [Fact]
         public void TestLongSetter()
         {
@@ -64,6 +97,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(a.Coordinates, c2);
         }
 
+        /// <summary>
+        /// Defines the test method TestElevSetter.
+        /// </summary>
         [Fact]
         public void TestElevSetter()
         {
@@ -74,6 +110,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(a.Elevation, -100);
         }
 
+        /// <summary>
+        /// Defines the test method TestCompareTo1.
+        /// </summary>
         [Fact]
         public void TestCompareTo1()
         {
@@ -88,6 +127,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(1, a.CompareTo(b));
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals.
+        /// </summary>
         [Fact]
         public void TestEquals()
         {
@@ -101,6 +143,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.False(a.Equals(b));
         }
 
+        /// <summary>
+        /// Defines the test method TestToString.
+        /// </summary>
         [Fact]
         public void TestToString()
         {
@@ -108,6 +153,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal("45N;9E;200m", a.ToString());
         }
 
+        /// <summary>
+        /// Defines the test method TestGetHash.
+        /// </summary>
         [Fact]
         public void TestGetHash()
         {
@@ -116,6 +164,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.NotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
+        /// <summary>
+        /// Defines the test method TestGetHash2.
+        /// </summary>
         [Fact]
         public void TestGetHash2()
         {
@@ -124,6 +175,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.NotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
+        /// <summary>
+        /// Defines the test method TestEquality.
+        /// </summary>
         [Fact]
         public void TestEquality()
         {
@@ -136,6 +190,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.False(a == b);
         }
 
+        /// <summary>
+        /// Defines the test method TestInEquality.
+        /// </summary>
         [Fact]
         public void TestInEquality()
         {
@@ -148,6 +205,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.True(a != b);
         }
 
+        /// <summary>
+        /// Defines the test method TestGreater.
+        /// </summary>
         [Fact]
         public void TestGreater()
         {
@@ -162,6 +222,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.False(a > b);
         }
 
+        /// <summary>
+        /// Defines the test method TestGreaterEqual.
+        /// </summary>
         [Fact]
         public void TestGreaterEqual()
         {
@@ -176,6 +239,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.True(a >= b);
         }
 
+        /// <summary>
+        /// Defines the test method TestLess.
+        /// </summary>
         [Fact]
         public void TestLess()
         {
@@ -190,6 +256,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.False(b < a);
         }
 
+        /// <summary>
+        /// Defines the test method TestLessEqual.
+        /// </summary>
         [Fact]
         public void TestLessEqual()
         {

@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
+using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -14,6 +15,7 @@ namespace ISynergy.Framework.UI.Controls
     /// </summary>
     /// <seealso cref="Page" />
     /// <seealso cref="IView" />
+    [Bindable(true)]
     public abstract partial class View : Page, IView
     {
         /// <summary>

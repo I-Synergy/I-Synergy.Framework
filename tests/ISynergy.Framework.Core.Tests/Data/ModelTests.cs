@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
+    /// <summary>
+    /// Class ModelTests.
+    /// </summary>
     public class ModelTests
     {
+        /// <summary>
+        /// Defines the test method ViewModelFieldNotifyPropertyChangedNotifiesOnNewValueTest.
+        /// </summary>
         [Fact]
         public void ViewModelFieldNotifyPropertyChangedNotifiesOnNewValueTest()
         {
@@ -30,6 +36,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(gotEvent, "Didn't get the PropertyChanged event.");
         }
 
+        /// <summary>
+        /// Defines the test method ViewModelFieldNotifyPropertyChangedDoesNotNotifyOnSameValueTest.
+        /// </summary>
         [Fact]
         public void ViewModelFieldNotifyPropertyChangedDoesNotNotifyOnSameValueTest()
         {
@@ -52,6 +61,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.False(gotEvent, "Should not have gotten the PropertyChanged event.");
         }
 
+        /// <summary>
+        /// Defines the test method ViewModelFieldConstructorEmptyTest.
+        /// </summary>
         [Fact]
         public void ViewModelFieldConstructorEmptyTest()
         {
@@ -60,6 +72,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(instance.Value is null, "Value should be null.");
         }
 
+        /// <summary>
+        /// Defines the test method ViewModelFieldConstructorWithValueTest.
+        /// </summary>
         [Fact]
         public void ViewModelFieldConstructorWithValueTest()
         {
@@ -70,6 +85,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(expectedValue.Equals(instance.Value), "Value was wrong.");
         }
 
+        /// <summary>
+        /// Defines the test method ViewModelFieldToStringReturnsEmptyStringWhenValueIsNullTest.
+        /// </summary>
         [Fact]
         public void ViewModelFieldToStringReturnsEmptyStringWhenValueIsNullTest()
         {
@@ -79,6 +97,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(instance.ToString().Equals(string.Empty), "ToString() should return empty.");
         }
 
+        /// <summary>
+        /// Defines the test method ViewModelFieldToStringTest.
+        /// </summary>
         [Fact]
         public void ViewModelFieldToStringTest()
         {

@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Average.
+        /// </summary>
         [Fact]
         public void Average()
         {
@@ -20,6 +26,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, actual);
         }
 
+        /// <summary>
+        /// Defines the test method Average_Selector.
+        /// </summary>
         [Fact]
         public void Average_Selector()
         {

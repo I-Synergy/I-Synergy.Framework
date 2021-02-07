@@ -4,8 +4,16 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Util
 {
+    /// <summary>
+    /// Class ParameterExpressionRenamerTests.
+    /// </summary>
     public class ParameterExpressionRenamerTests
     {
+        /// <summary>
+        /// Defines the test method ParameterExpressionRenamer_Rename_ToNewName.
+        /// </summary>
+        /// <param name="newName">The new name.</param>
+        /// <param name="resultString">The result string.</param>
         [Theory]
         [InlineData("test", "(test + 42)")]
         public void ParameterExpressionRenamer_Rename_ToNewName(string newName, string resultString)
@@ -22,6 +30,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Util
             Check.That(parameterExpression.Name).IsEqualTo(newName);
         }
 
+        /// <summary>
+        /// Defines the test method ParameterExpressionRenamer_Rename_OldNameInNewName.
+        /// </summary>
+        /// <param name="oldName">The old name.</param>
+        /// <param name="newName">The new name.</param>
+        /// <param name="resultString">The result string.</param>
         [Theory]
         [InlineData("", "test", "(test + 42)")]
         [InlineData("x", "test", "(test + 42)")]
@@ -39,6 +53,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Util
             Check.That(parameterExpression.Name).IsEqualTo(newName);
         }
 
+        /// <summary>
+        /// Defines the test method ParameterExpressionRenamer_Rename_NoParameterExpressionPresent.
+        /// </summary>
         [Fact]
         public void ParameterExpressionRenamer_Rename_NoParameterExpressionPresent()
         {

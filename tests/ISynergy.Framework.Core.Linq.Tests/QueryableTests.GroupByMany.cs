@@ -6,8 +6,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method GroupByMany_Dynamic_LambdaExpressions.
+        /// </summary>
         [Fact]
         public void GroupByMany_Dynamic_LambdaExpressions()
         {
@@ -29,6 +35,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(2, sel.Skip(1).First().Subgroups.Count());
         }
 
+        /// <summary>
+        /// Defines the test method GroupByMany_Dynamic_StringExpressions.
+        /// </summary>
         [Fact]
         public void GroupByMany_Dynamic_StringExpressions()
         {

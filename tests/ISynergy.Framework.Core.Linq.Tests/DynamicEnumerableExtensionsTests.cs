@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class DynamicEnumerableExtensionsTests.
+    /// </summary>
     public class DynamicEnumerableExtensionsTests
     {
+        /// <summary>
+        /// Defines the test method DynamicEnumerableExtensions_ToDynamicArray_int_to_int.
+        /// </summary>
         [Fact]
         public void DynamicEnumerableExtensions_ToDynamicArray_int_to_int()
         {
@@ -16,6 +22,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(0, 1);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicEnumerableExtensions_ToDynamicArray_dynamic_to_int.
+        /// </summary>
         [Fact]
         public void DynamicEnumerableExtensions_ToDynamicArray_dynamic_to_int()
         {
@@ -26,6 +35,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(0, 1);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicEnumerableExtensions_ToDynamicArray_object_to_int.
+        /// </summary>
         [Fact]
         public void DynamicEnumerableExtensions_ToDynamicArray_object_to_int()
         {

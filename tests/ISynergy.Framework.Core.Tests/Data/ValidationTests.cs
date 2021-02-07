@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
+    /// <summary>
+    /// Class ValidationTests.
+    /// </summary>
     public class ValidationTests
     {
+        /// <summary>
+        /// Defines the test method ValidateIsNullTest.
+        /// </summary>
         [Fact]
         public void ValidateIsNullTest()
         {
@@ -28,6 +34,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.False(model.Validate());
         }
 
+        /// <summary>
+        /// Defines the test method ValidateIsNotNullTest.
+        /// </summary>
         [Fact]
         public void ValidateIsNotNullTest()
         {
@@ -49,6 +58,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(model.Validate());
         }
 
+        /// <summary>
+        /// Defines the test method ValidateIsNotInRangeTest.
+        /// </summary>
         [Fact]
         public void ValidateIsNotInRangeTest()
         {
@@ -70,6 +82,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.False(model.Validate());
         }
 
+        /// <summary>
+        /// Defines the test method ValidateIsInRangeTest.
+        /// </summary>
         [Fact]
         public void ValidateIsInRangeTest()
         {
@@ -91,6 +106,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(model.Validate());
         }
 
+        /// <summary>
+        /// Defines the test method ValidateStringLengthIsNotInRangeTest.
+        /// </summary>
         [Fact]
         public void ValidateStringLengthIsNotInRangeTest()
         {
@@ -112,6 +130,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.False(model.Validate());
         }
 
+        /// <summary>
+        /// Defines the test method ValidateStringLengthIsInRangeTest.
+        /// </summary>
         [Fact]
         public void ValidateStringLengthIsInRangeTest()
         {

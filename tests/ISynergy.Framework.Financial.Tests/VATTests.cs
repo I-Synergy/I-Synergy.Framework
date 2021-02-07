@@ -2,8 +2,14 @@
 
 namespace ISynergy.Framework.Financial.Tests
 {
+    /// <summary>
+    /// Class VATTests.
+    /// </summary>
     public class VATTests
     {
+        /// <summary>
+        /// Defines the test method CalcPriceExclVATTest.
+        /// </summary>
         [Fact]
         public void CalcPriceExclVATTest()
         {
@@ -11,6 +17,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.Equal(100, result);
         }
 
+        /// <summary>
+        /// Defines the test method CalcPriceInclVATTest.
+        /// </summary>
         [Fact]
         public void CalcPriceInclVATTest()
         {
@@ -18,6 +27,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.Equal(121, result);
         }
 
+        /// <summary>
+        /// Defines the test method CalcVATExclVATTest.
+        /// </summary>
         [Fact]
         public void CalcVATExclVATTest()
         {
@@ -25,6 +37,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.Equal(21, result);
         }
 
+        /// <summary>
+        /// Defines the test method CalcVATInclVATTest.
+        /// </summary>
         [Fact]
         public void CalcVATInclVATTest()
         {

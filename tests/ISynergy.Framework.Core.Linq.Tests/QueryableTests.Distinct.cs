@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Distinct.
+        /// </summary>
         [Fact]
         public void Distinct()
         {
@@ -21,6 +27,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method Distinct_Dynamic_1.
+        /// </summary>
         [Fact]
         public void Distinct_Dynamic_1()
         {
@@ -40,6 +49,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method Distinct_Dynamic_2.
+        /// </summary>
         [Fact]
         public void Distinct_Dynamic_2()
         {

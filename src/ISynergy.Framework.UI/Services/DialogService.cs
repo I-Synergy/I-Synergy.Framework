@@ -251,7 +251,7 @@ namespace ISynergy.Framework.UI.Services
                     break;
             }
 
-#if NETFX_CORE
+#if NETFX_CORE || NET5_0
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
 #else

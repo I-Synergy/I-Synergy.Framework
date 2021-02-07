@@ -3,8 +3,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
+    /// <summary>
+    /// Class DateTimeExtensionsTests.
+    /// </summary>
     public class DateTimeExtensionsTests
     {
+        /// <summary>
+        /// Defines the test method ToStartOfDayTest.
+        /// </summary>
         [Fact]
         public void ToStartOfDayTest()
         {
@@ -12,6 +18,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 10, 29, 0, 0, 0), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfDayTest.
+        /// </summary>
         [Fact]
         public void ToEndOfDayTest()
         {
@@ -19,6 +28,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 10, 29, 0, 0, 0, 0).AddDays(1).AddTicks(-1), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfMontTest.
+        /// </summary>
         [Fact]
         public void ToStartOfMontTest()
         {
@@ -26,6 +38,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 10, 1, 0, 0, 0), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfMonthTest.
+        /// </summary>
         [Fact]
         public void ToEndOfMonthTest()
         {
@@ -33,6 +48,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 10, 31, 0, 0, 0, 0).AddDays(1).AddTicks(-1), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfYearTest.
+        /// </summary>
         [Fact]
         public void ToStartOfYearTest()
         {
@@ -40,6 +58,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 1, 1, 0, 0, 0), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfYearTest.
+        /// </summary>
         [Fact]
         public void ToEndOfYearTest()
         {
@@ -47,6 +68,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 1, 1).AddYears(1).AddTicks(-1), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfWeekOnMondayTest.
+        /// </summary>
         [Fact]
         public void ToStartOfWeekOnMondayTest()
         {
@@ -54,6 +78,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 9, 29).ToStartOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfWeekOnMondayTest.
+        /// </summary>
         [Fact]
         public void ToEndOfWeekOnMondayTest()
         {
@@ -61,6 +88,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 10, 5).ToEndOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfWeekOnSundayTest.
+        /// </summary>
         [Fact]
         public void ToStartOfWeekOnSundayTest()
         {
@@ -68,6 +98,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 9, 28).ToStartOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfWeekOnSundayTest.
+        /// </summary>
         [Fact]
         public void ToEndOfWeekOnSundayTest()
         {
@@ -75,6 +108,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 10, 4).ToEndOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfWorkWeekTest.
+        /// </summary>
         [Fact]
         public void ToStartOfWorkWeekTest()
         {
@@ -82,6 +118,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTime(1975, 9, 29).ToStartOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfWorkWeekTest.
+        /// </summary>
         [Fact]
         public void ToEndOfWorkWeekTest()
         {

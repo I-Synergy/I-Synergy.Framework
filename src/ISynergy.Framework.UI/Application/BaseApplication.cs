@@ -33,15 +33,11 @@ using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
-
-#if NETFX_CORE
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
 using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 using System.Globalization;
 using Windows.ApplicationModel.Background;
-#endif
-
 using Window = ISynergy.Framework.UI.Controls.Window;
 
 namespace ISynergy.Framework.UI
@@ -116,7 +112,7 @@ namespace ISynergy.Framework.UI
 
             SetContext();
 
-#if NETFX_CORE
+#if NETFX_CORE|| (NET5_0 && WINDOWS)
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 #endif
 
@@ -132,7 +128,7 @@ namespace ISynergy.Framework.UI
                 RequestedTheme = ApplicationTheme.Light;
             }
 
-#if NETFX_CORE
+#if NETFX_CORE || (NET5_0 && WINDOWS)
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
                 case "Windows.Desktop":
@@ -146,9 +142,8 @@ namespace ISynergy.Framework.UI
             }
 
             RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-
-            Suspending += OnSuspending;
 #endif
+            Suspending += OnSuspending;
 
             //Gets or sets a value that indicates whether to engage the text performance visualization feature of Microsoft Visual Studio when the app runs.
             //this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
@@ -168,7 +163,7 @@ namespace ISynergy.Framework.UI
             e.SetObserved();
         }
 
-#if NETFX_CORE
+#if NETFX_CORE|| (NET5_0 && WINDOWS)
         /// <summary>
         /// Handles the UnhandledException event of the Current control.
         /// </summary>
@@ -212,7 +207,7 @@ namespace ISynergy.Framework.UI
         /// <param name="args">Event data for the event.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-#if NETFX_CORE
+#if NETFX_CORE|| (NET5_0 && WINDOWS)
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
                 case "Windows.Desktop":
@@ -360,7 +355,7 @@ namespace ISynergy.Framework.UI
             var deferral = e.SuspendingOperation.GetDeferral();
 
             //TODO: Save application state and stop any background activity
-#if NETFX_CORE
+#if NETFX_CORE|| (NET5_0 && WINDOWS)
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
                 task.Value?.Unregister(true);
@@ -562,9 +557,9 @@ namespace ISynergy.Framework.UI
             Context = _serviceProvider.GetRequiredService<IContext>();
             Context.ViewModels = ViewModelTypes;
 
-#if NETFX_CORE || __WASM__
-                //Only in Windows i can set the culture.
-                var culture = CultureInfo.CurrentCulture;
+#if NETFX_CORE || (NET5_0 && WINDOWS) || __WASM__
+            //Only in Windows i can set the culture.
+            var culture = CultureInfo.CurrentCulture;
 
                 culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
                 culture.NumberFormat.CurrencyNegativePattern = 1;

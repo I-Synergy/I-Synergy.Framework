@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
+    /// <summary>
+    /// Class CollectionExtensionsTests.
+    /// </summary>
     public class CollectionExtensionsTests
     {
+        /// <summary>
+        /// Defines the test method NullObservableCollectionNonFailableTest.
+        /// </summary>
         [Fact]
         public void NullObservableCollectionNonFailableTest()
         {
@@ -20,6 +26,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.True(result);
         }
 
+        /// <summary>
+        /// Defines the test method NullObservableCollectionFailableTest.
+        /// </summary>
         [Fact]
         public void NullObservableCollectionFailableTest()
         {

@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Geography.Utm.Tests
 {
+    /// <summary>
+    /// Class GlobalMeshTests.
+    /// </summary>
     public class GlobalMeshTests
     {
+        /// <summary>
+        /// Defines the test method TestAllCenters.
+        /// </summary>
         [Fact]
         public void TestAllCenters()
         {
@@ -18,6 +24,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method TestBoundingBox.
+        /// </summary>
         [Fact]
         public void TestBoundingBox()
         {
@@ -33,6 +42,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(ul.Y, ur.Y);
         }
 
+        /// <summary>
+        /// Defines the test method TestNeighborHood.
+        /// </summary>
         [Fact]
         public void TestNeighborHood()
         {
@@ -49,6 +61,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(24, n3.Count);
         }
 
+        /// <summary>
+        /// Defines the test method TestMeshSizeInMetersValidation.
+        /// </summary>
         [Fact]
         public void TestMeshSizeInMetersValidation()
         {

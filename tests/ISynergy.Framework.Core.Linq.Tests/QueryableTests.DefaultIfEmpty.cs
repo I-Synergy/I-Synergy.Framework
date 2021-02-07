@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method DefaultIfEmpty.
+        /// </summary>
         [Fact]
         public void DefaultIfEmpty()
         {
@@ -21,6 +27,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method DefaultIfEmpty_Dynamic.
+        /// </summary>
         [Fact]
         public void DefaultIfEmpty_Dynamic()
         {
@@ -35,6 +44,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method DefaultIfEmpty_Empty.
+        /// </summary>
         [Fact]
         public void DefaultIfEmpty_Empty()
         {
@@ -50,6 +62,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(expected).IsNotNull();
         }
 
+        /// <summary>
+        /// Defines the test method DefaultIfEmpty_Empty_Dynamic.
+        /// </summary>
         [Fact]
         public void DefaultIfEmpty_Empty_Dynamic()
         {
@@ -64,6 +79,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method DefaultIfEmpty_WithDefaultValue.
+        /// </summary>
         [Fact]
         public void DefaultIfEmpty_WithDefaultValue()
         {
@@ -79,6 +97,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method DefaultIfEmpty_WithDefaultValue_Dynamic.
+        /// </summary>
         [Fact]
         public void DefaultIfEmpty_WithDefaultValue_Dynamic()
         {
@@ -94,6 +115,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method DefaultIfEmpty_Empty_WithDefaultValue.
+        /// </summary>
         [Fact]
         public void DefaultIfEmpty_Empty_WithDefaultValue()
         {
@@ -109,6 +133,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method DefaultIfEmpty_Empty_WithDefaultValue_Dynamic.
+        /// </summary>
         [Fact]
         public void DefaultIfEmpty_Empty_WithDefaultValue_Dynamic()
         {

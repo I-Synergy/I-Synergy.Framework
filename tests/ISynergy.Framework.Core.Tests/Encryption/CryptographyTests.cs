@@ -5,16 +5,46 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Encryption.Tests
 {
+    /// <summary>
+    /// Class CryptographyTests.
+    /// </summary>
     public class CryptographyTests
     {
+        /// <summary>
+        /// The salt40
+        /// </summary>
         private readonly string _salt40 = "12345";
+        /// <summary>
+        /// The salt64
+        /// </summary>
         private readonly string _salt64 = "12345678";
+        /// <summary>
+        /// The salt128
+        /// </summary>
         private readonly string _salt128 = "RandomSalt123456";
+        /// <summary>
+        /// The salt192
+        /// </summary>
         private readonly string _salt192 = "RandomSalt123456789012";
+        /// <summary>
+        /// The salt256
+        /// </summary>
         private readonly string _salt256 = "RandomSalt123456RandomSalt123456";
+        /// <summary>
+        /// The vector64
+        /// </summary>
         private readonly string _vector64 = "12345678";
+        /// <summary>
+        /// The vector128
+        /// </summary>
         private readonly string _vector128 = "RandomVector1234";
+        /// <summary>
+        /// The password
+        /// </summary>
         private readonly string _password = "RandomPassword";
+        /// <summary>
+        /// The secret
+        /// </summary>
         private readonly string _secret = "This is a secret text.";
 
         // https://stackoverflow.com/questions/2919228/specified-key-is-not-a-valid-size-for-this-algorithm?noredirect=1&lq=1
@@ -22,6 +52,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
 
         // DES
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionDESCryptoServiceProvider64Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionDESCryptoServiceProvider64Test()
         {
@@ -34,6 +67,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
 
         // AESManaged
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionAesManaged128Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionAesManaged128Test()
         {
@@ -44,6 +80,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
             Assert.Equal(_secret, result);
         }
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionAesManaged256Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionAesManaged256Test()
         {
@@ -56,6 +95,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
 
         //RIJNDAEL
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionRijndaelManaged128Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionRijndaelManaged128Test()
         {
@@ -66,6 +108,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
             Assert.Equal(_secret, result);
         }
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionRijndaelManaged256Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionRijndaelManaged256Test()
         {
@@ -78,6 +123,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
 
         // RC2
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionRC2CryptoServiceProvider40Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionRC2CryptoServiceProvider40Test()
         {
@@ -88,6 +136,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
             Assert.Equal(_secret, result);
         }
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionRC2CryptoServiceProvider64Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionRC2CryptoServiceProvider64Test()
         {
@@ -98,6 +149,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
             Assert.Equal(_secret, result);
         }
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionRC2CryptoServiceProvider128Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionRC2CryptoServiceProvider128Test()
         {
@@ -110,6 +164,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
 
         // TRIPLE DES
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionTripleDESCryptoServiceProvider128Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionTripleDESCryptoServiceProvider128Test()
         {
@@ -120,6 +177,9 @@ namespace ISynergy.Framework.Core.Encryption.Tests
             Assert.Equal(_secret, result);
         }
 
+        /// <summary>
+        /// Defines the test method EncryptionAndDecryptionTripleDESCryptoServiceProvider192Test.
+        /// </summary>
         [Fact]
         public void EncryptionAndDecryptionTripleDESCryptoServiceProvider192Test()
         {

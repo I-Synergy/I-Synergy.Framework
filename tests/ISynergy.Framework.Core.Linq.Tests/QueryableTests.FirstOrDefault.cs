@@ -6,8 +6,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method FirstOrDefault.
+        /// </summary>
         [Fact]
         public void FirstOrDefault()
         {
@@ -28,6 +34,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Null(resultDefault);
         }
 
+        /// <summary>
+        /// Defines the test method FirstOrDefault_Predicate.
+        /// </summary>
         [Fact]
         public void FirstOrDefault_Predicate()
         {
@@ -43,6 +52,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).Equals(expected);
         }
 
+        /// <summary>
+        /// Defines the test method FirstOrDefault_Predicate_WithArgs.
+        /// </summary>
         [Fact]
         public void FirstOrDefault_Predicate_WithArgs()
         {
@@ -60,6 +72,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).Equals(expected);
         }
 
+        /// <summary>
+        /// Defines the test method FirstOrDefault_Dynamic.
+        /// </summary>
         [Fact]
         public void FirstOrDefault_Dynamic()
         {

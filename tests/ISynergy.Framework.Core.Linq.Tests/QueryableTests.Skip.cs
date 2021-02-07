@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Skip.
+        /// </summary>
         [Fact]
         public void Skip()
         {
@@ -27,6 +33,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList.Skip(100).ToArray(), resultNone.Cast<User>().ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method SkipTestForEqualType.
+        /// </summary>
         [Fact]
         public void SkipTestForEqualType()
         {
@@ -46,6 +55,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal("ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models.User", skipResultType.FullName);
         }
 
+        /// <summary>
+        /// Defines the test method SkipTestForEqualElementType.
+        /// </summary>
         [Fact]
         public void SkipTestForEqualElementType()
         {

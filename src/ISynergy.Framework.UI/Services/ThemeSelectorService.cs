@@ -4,13 +4,10 @@ using System;
 using Uno.Material;
 using Windows.Storage;
 using Windows.UI.Xaml;
-
-#if NETFX_CORE
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.ViewManagement;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -153,14 +150,14 @@ namespace ISynergy.Framework.UI.Services
                 frameworkElement.RequestedTheme = (ElementTheme)Theme;
             }
 
-#if NETFX_CORE
+#if NETFX_CORE || (NET5_0 && WINDOWS)
             SetupTitlebar();
 #endif
 
             OnThemeChanged(null, (ElementTheme)Theme);
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         /// <summary>
         /// Setups the titlebar.
         /// </summary>

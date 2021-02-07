@@ -4,10 +4,19 @@ using Xunit;
 
 namespace ISynergy.Framework.Geography.Geodetic.Tests
 {
+    /// <summary>
+    /// Class GeodeticCalculatorTests.
+    /// </summary>
     public class GeodeticCalculatorTests
     {
+        /// <summary>
+        /// The calculate
+        /// </summary>
         private readonly GeodeticCalculator calc = new GeodeticCalculator(Ellipsoid.WGS84);
 
+        /// <summary>
+        /// Defines the test method TestCurve.
+        /// </summary>
         [Fact]
         public void TestCurve()
         {
@@ -19,6 +28,9 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
             Assert.Equal(curve.Calculator, calc);
         }
 
+        /// <summary>
+        /// Defines the test method TestCurve2.
+        /// </summary>
         [Fact]
         public void TestCurve2()
         {
@@ -30,6 +42,9 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
             Assert.Equal(curve.Calculator, calc);
         }
 
+        /// <summary>
+        /// Defines the test method TestMeasurement.
+        /// </summary>
         [Fact]
         public void TestMeasurement()
         {
@@ -40,6 +55,9 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
             Assert.True(m.EllipsoidalDistance > c.EllipsoidalDistance);
         }
 
+        /// <summary>
+        /// Defines the test method TestNearAntipodicCurve.
+        /// </summary>
         [Fact]
         public void TestNearAntipodicCurve()
         {
@@ -51,6 +69,9 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
             Assert.Equal(curve.Calculator, calc);
         }
 
+        /// <summary>
+        /// Defines the test method TestEnding.
+        /// </summary>
         [Fact]
         public void TestEnding()
         {
@@ -63,6 +84,9 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
             Assert.Equal(curve.Calculator, calc);
         }
 
+        /// <summary>
+        /// Defines the test method TestEndingNegDist.
+        /// </summary>
         [Fact]
         public void TestEndingNegDist()
         {
@@ -72,6 +96,9 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
                 -1.0));
         }
 
+        /// <summary>
+        /// Defines the test method TestEndingZeroDist.
+        /// </summary>
         [Fact]
         public void TestEndingZeroDist()
         {
@@ -84,6 +111,9 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
             Assert.Equal(curve.Calculator, calc);
         }
 
+        /// <summary>
+        /// Defines the test method TestPath1.
+        /// </summary>
         [Fact]
         public void TestPath1()
         {
@@ -93,6 +123,9 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
             Assert.Equal(calc.ReferenceGlobe, Ellipsoid.WGS84);
         }
 
+        /// <summary>
+        /// Defines the test method TestPath2.
+        /// </summary>
         [Fact]
         public void TestPath2()
         {
@@ -102,12 +135,18 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
             Assert.Equal(calc.ReferenceGlobe, Ellipsoid.WGS84);
         }
 
+        /// <summary>
+        /// Defines the test method TestPath3.
+        /// </summary>
         [Fact]
         public void TestPath3()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice, 1));
         }
 
+        /// <summary>
+        /// Defines the test method TestPath4.
+        /// </summary>
         [Fact]
         public void TestPath4()
         {

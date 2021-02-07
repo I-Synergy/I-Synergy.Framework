@@ -11,45 +11,117 @@ using ISynergy.Framework.Core.Linq.Parsers;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class ExpressionTests.
+    /// </summary>
     public class ExpressionTests
     {
+        /// <summary>
+        /// Enum TestEnum2
+        /// </summary>
         public enum TestEnum2 : sbyte
         {
+            /// <summary>
+            /// The var1
+            /// </summary>
             Var1 = 0,
+            /// <summary>
+            /// The var2
+            /// </summary>
             Var2 = 1,
+            /// <summary>
+            /// The var3
+            /// </summary>
             Var3 = 2,
+            /// <summary>
+            /// The var4
+            /// </summary>
             Var4 = 4,
+            /// <summary>
+            /// The var5
+            /// </summary>
             Var5 = 8,
+            /// <summary>
+            /// The var6
+            /// </summary>
             Var6 = 16,
         }
 
+        /// <summary>
+        /// Class TestEnumClass.
+        /// </summary>
         public class TestEnumClass
         {
+            /// <summary>
+            /// Gets or sets a.
+            /// </summary>
+            /// <value>a.</value>
             public TestEnum A { get; set; }
 
+            /// <summary>
+            /// Gets or sets the b.
+            /// </summary>
+            /// <value>The b.</value>
             public TestEnum2 B { get; set; }
 
+            /// <summary>
+            /// Gets or sets the c.
+            /// </summary>
+            /// <value>The c.</value>
             public TestEnum2? C { get; set; }
 
+            /// <summary>
+            /// Gets or sets the identifier.
+            /// </summary>
+            /// <value>The identifier.</value>
             public int Id { get; set; }
         }
 
+        /// <summary>
+        /// Class TestGuidNullClass.
+        /// </summary>
         public class TestGuidNullClass
         {
+            /// <summary>
+            /// Gets or sets the unique identifier null.
+            /// </summary>
+            /// <value>The unique identifier null.</value>
             public Guid? GuidNull { get; set; }
 
+            /// <summary>
+            /// Gets or sets the unique identifier normal.
+            /// </summary>
+            /// <value>The unique identifier normal.</value>
             public Guid GuidNormal { get; set; }
 
+            /// <summary>
+            /// Gets or sets the identifier.
+            /// </summary>
+            /// <value>The identifier.</value>
             public int Id { get; set; }
         }
 
+        /// <summary>
+        /// Class TestObjectIdClass.
+        /// </summary>
         public class TestObjectIdClass
         {
+            /// <summary>
+            /// Gets or sets the identifier.
+            /// </summary>
+            /// <value>The identifier.</value>
             public int Id { get; set; }
 
+            /// <summary>
+            /// Gets or sets the object identifier.
+            /// </summary>
+            /// <value>The object identifier.</value>
             public long ObjectId { get; set; }
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Add_Number.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Add_Number()
         {
@@ -64,6 +136,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Add_String.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Add_String()
         {
@@ -79,6 +154,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_AndAlso.
+        /// </summary>
         [Fact]
         public void ExpressionTests_AndAlso()
         {
@@ -93,6 +171,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_ArrayInitializer.
+        /// </summary>
         [Fact]
         public void ExpressionTests_ArrayInitializer()
         {
@@ -115,6 +196,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new] {}"));
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_BinaryAndNumericConvert.
+        /// </summary>
         [Fact]
         public void ExpressionTests_BinaryAndNumericConvert()
         {
@@ -166,6 +250,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(3, result17.Id);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_BinaryOrNumericConvert.
+        /// </summary>
         [Fact]
         public void ExpressionTests_BinaryOrNumericConvert()
         {
@@ -217,6 +304,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(3, result17.Id);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Cast_To_nullableint.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Cast_To_nullableint()
         {
@@ -234,6 +324,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<int?>());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Cast_Automatic_To_nullablelong.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Cast_Automatic_To_nullablelong()
         {
@@ -248,6 +341,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<long?>());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Cast_To_newnullableint.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Cast_To_newnullableint()
         {
@@ -265,6 +361,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Conditional_With_Automatic_Cast_NullableInt.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Conditional_With_Automatic_Cast_NullableInt()
         {
@@ -282,6 +381,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result2).ContainsExactly(realResult2);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Conditional_With_No_Automatic_Cast.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Conditional_With_No_Automatic_Cast()
         {
@@ -299,6 +401,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result2).ContainsExactly(realResult2);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Conditional.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Conditional()
         {
@@ -314,6 +419,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(realResult);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_ConditionalOr1.
+        /// </summary>
         [Fact]
         public void ExpressionTests_ConditionalOr1()
         {
@@ -329,6 +437,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(realResult).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_ConditionalOr2.
+        /// </summary>
         [Fact]
         public void ExpressionTests_ConditionalOr2()
         {
@@ -344,6 +455,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(realResult).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_ConditionalAnd1.
+        /// </summary>
         [Fact]
         public void ExpressionTests_ConditionalAnd1()
         {
@@ -359,6 +473,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(realResult).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_ConditionalAnd2.
+        /// </summary>
         [Fact]
         public void ExpressionTests_ConditionalAnd2()
         {
@@ -374,6 +491,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(realResult).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_ContainsGuid.
+        /// </summary>
         [Fact]
         public void ExpressionTests_ContainsGuid()
         {
@@ -403,6 +523,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.False(notFound2.Any());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_DateTimeString.
+        /// </summary>
         [Fact]
         public void ExpressionTests_DateTimeString()
         {
@@ -420,6 +543,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(lst[0], result2.Single());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_DecimalQualifiers.
+        /// </summary>
         [Fact]
         public void ExpressionTests_DecimalQualifiers()
         {
@@ -436,6 +562,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_DecimalQualifiers_Negative.
+        /// </summary>
         [Fact]
         public void ExpressionTests_DecimalQualifiers_Negative()
         {
@@ -453,6 +582,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_DistinctBy.
+        /// </summary>
         [Fact]
         public void ExpressionTests_DistinctBy()
         {
@@ -484,6 +616,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(2, qry3.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Divide_Number.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Divide_Number()
         {
@@ -498,6 +633,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Double.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Double()
         {
@@ -514,6 +652,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Double_Negative.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Double_Negative()
         {
@@ -550,6 +691,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         //    GlobalConfig.NumberDecimalSeparator = default(char);
         //}
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_DoubleQualifiers.
+        /// </summary>
         [Fact]
         public void ExpressionTests_DoubleQualifiers()
         {
@@ -566,6 +710,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_DoubleQualifiers_Negative.
+        /// </summary>
         [Fact]
         public void ExpressionTests_DoubleQualifiers_Negative()
         {
@@ -582,6 +729,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Enum.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Enum()
         {
@@ -636,6 +786,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultEqualStringMixedCaseParamRight.Single()).Equals(TestEnum.Var5);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Enum_Property.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Enum_Property()
         {
@@ -657,6 +810,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum2.Var2);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Enum_NullableProperty.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Enum_NullableProperty()
         {
@@ -678,6 +834,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum2.Var2);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Enum_MoreTests.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Enum_MoreTests()
         {
@@ -700,6 +859,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var r10 = qry.GroupBy(config, "it").FirstOrDefault();
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Enum_Nullable.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Enum_Nullable()
         {
@@ -730,6 +892,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal((TestEnum?)TestEnum.Var1, result11b.Single());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_FirstOrDefault.
+        /// </summary>
         [Fact]
         public void ExpressionTests_FirstOrDefault()
         {
@@ -752,6 +917,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(realSingleFailResult, (User)testSingleFailResult);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_FloatQualifiers.
+        /// </summary>
         [Fact]
         public void ExpressionTests_FloatQualifiers()
         {
@@ -768,6 +936,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_FloatQualifiers_Negative.
+        /// </summary>
         [Fact]
         public void ExpressionTests_FloatQualifiers_Negative()
         {
@@ -784,6 +955,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Guid_CompareTo_String.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Guid_CompareTo_String()
         {
@@ -811,6 +985,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(lst[0], result2b.Single());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Guid_CompareTo_Guid.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Guid_CompareTo_Guid()
         {
@@ -828,6 +1005,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testValue, resultb.Single());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_GuidNullable_CompareTo_Guid.
+        /// </summary>
         [Fact]
         public void ExpressionTests_GuidNullable_CompareTo_Guid()
         {
@@ -845,6 +1025,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testValue, resultb.Single());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_GuidNullable_CompareTo_GuidNullable.
+        /// </summary>
         [Fact]
         public void ExpressionTests_GuidNullable_CompareTo_GuidNullable()
         {
@@ -862,6 +1045,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testValue, resultb.Single());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Guid_CompareTo_Null.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Guid_CompareTo_Null()
         {
@@ -882,6 +1068,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(1, result2b.Id);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_HexadecimalInteger.
+        /// </summary>
         [Fact]
         public void ExpressionTests_HexadecimalInteger()
         {
@@ -908,6 +1097,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Throws<ParseException>(() => values.AsQueryable().Where("it < 11a"));
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_In_Enum.
+        /// </summary>
         [Fact]
         public void ExpressionTests_In_Enum()
         {
@@ -928,6 +1120,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result2).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_In_Short.
+        /// </summary>
         [Fact]
         public void ExpressionTests_In_Short()
         {
@@ -942,6 +1137,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultExpected.ToArray()).ContainsExactly(result.ToDynamicArray<short>());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_In_String.
+        /// </summary>
         [Fact]
         public void ExpressionTests_In_String()
         {
@@ -970,6 +1168,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(new[] { 2, 4, 6, 8 }, result4);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_IsNull_Simple.
+        /// </summary>
         [Fact]
         public void ExpressionTests_IsNull_Simple()
         {
@@ -984,6 +1185,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult, result1.ToDynamicArray<int>());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_IsNull_Complex.
+        /// </summary>
         [Fact]
         public void ExpressionTests_IsNull_Complex()
         {
@@ -1010,6 +1214,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_IsNull_ThrowsException.
+        /// </summary>
         [Fact]
         public void ExpressionTests_IsNull_ThrowsException()
         {
@@ -1082,6 +1289,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         //     Check.That(dynamicResult.Id).Equals(result.Id);
         // }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_LogicalAndOr.
+        /// </summary>
         [Fact]
         public void ExpressionTests_LogicalAndOr()
         {
@@ -1098,6 +1308,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(qry.Where(x => (x & 32) > 0).ToArray(), result2.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Method_NoParams.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Method_NoParams()
         {
@@ -1112,6 +1325,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected.Count(), result.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Method_OneParam_With_it.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Method_OneParam_With_it()
         {
@@ -1127,6 +1343,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_MethodCall_ValueTypeToValueTypeParameter.
+        /// </summary>
         [Fact]
         public void ExpressionTests_MethodCall_ValueTypeToValueTypeParameter()
         {
@@ -1142,6 +1361,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast.
+        /// </summary>
         [Fact]
         public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast()
         {
@@ -1157,6 +1379,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast.
+        /// </summary>
         [Fact]
         public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast()
         {
@@ -1172,6 +1397,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_MethodCall_NullableValueTypeToObjectParameter.
+        /// </summary>
         [Fact]
         public void ExpressionTests_MethodCall_NullableValueTypeToObjectParameter()
         {
@@ -1187,6 +1415,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_MethodCall_ReferenceTypeToObjectParameter.
+        /// </summary>
         [Fact]
         public void ExpressionTests_MethodCall_ReferenceTypeToObjectParameter()
         {
@@ -1202,6 +1433,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NewAnonymousType_Paren.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NewAnonymousType_Paren()
         {
@@ -1216,6 +1450,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).Equals(expectedResult);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NewAnonymousType_CurlyParen.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NewAnonymousType_CurlyParen()
         {
@@ -1230,6 +1467,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).Equals(expectedResult);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Method_OneParam_With_user.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Method_OneParam_With_user()
         {
@@ -1245,6 +1485,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected.Count(), result.Count());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Modulo_Number.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Modulo_Number()
         {
@@ -1259,6 +1502,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Multiply_Number.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Multiply_Number()
         {
@@ -1273,6 +1519,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullCoalescing.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullCoalescing()
         {
@@ -1299,6 +1548,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagating.
+        /// </summary>
+        /// <param name="test">The test.</param>
+        /// <param name="query">The query.</param>
         [Theory]
         [InlineData("np(str)", "Select(Param_0 => Param_0.str)")]
         [InlineData("np(strNull)", "Select(Param_0 => Param_0.strNull)")]
@@ -1384,6 +1638,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(queryAsString).Equals(query);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagation_Method.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagation_Method()
         {
@@ -1397,6 +1654,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.True(resultDynamic[0] == null);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagation_Method_WithDefaultValue.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagation_Method_WithDefaultValue()
         {
@@ -1411,6 +1671,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.True(resultDynamic[0] == "x");
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagating_DateTime.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagating_DateTime()
         {
@@ -1428,6 +1691,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagation_NullableDateTime.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagation_NullableDateTime()
         {
@@ -1445,6 +1711,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagating_NestedInteger_WithoutDefaultValue.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagating_NestedInteger_WithoutDefaultValue()
         {
@@ -1461,6 +1730,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagating_NullableInteger_WithDefaultValue.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagating_NullableInteger_WithDefaultValue()
         {
@@ -1475,6 +1747,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagating_String_WithDefaultValue.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagating_String_WithDefaultValue()
         {
@@ -1489,6 +1764,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagatingNested_WithDefaultValue.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagatingNested_WithDefaultValue()
         {
@@ -1505,6 +1783,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_NullPropagation_ThrowsException.
+        /// </summary>
         [Fact]
         public void ExpressionTests_NullPropagation_ThrowsException()
         {
@@ -1517,6 +1798,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.ThatCode(() => q.Select("np(1)")).Throws<ParseException>();
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_OrElse.
+        /// </summary>
         [Fact]
         public void ExpressionTests_OrElse()
         {
@@ -1531,6 +1815,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic).ContainsExactly(result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_OrderBy.
+        /// </summary>
         [Fact]
         public void ExpressionTests_OrderBy()
         {
@@ -1545,6 +1832,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
         //[Fact]
+        /// <summary>
+        /// Expressions the tests select dynamic objects.
+        /// </summary>
         public void ExpressionTests_Select_DynamicObjects()
         {
             // Arrange
@@ -1582,6 +1872,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 #endif
+        /// <summary>
+        /// Defines the test method ExpressionTests_Shift.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Shift()
         {
@@ -1595,6 +1888,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             ExpressionTests_ShiftInternal<ulong, ulong>();
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Shift_Exception.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Shift_Exception()
         {
@@ -1605,6 +1901,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.ThatCode(() => qry.Select("it <<< 1")).Throws<ParseException>();
         }
 
+        /// <summary>
+        /// Expressions the tests shift internal.
+        /// </summary>
+        /// <typeparam name="TItemType">The type of the t item type.</typeparam>
+        /// <typeparam name="TResult">The type of the t result.</typeparam>
         private static void ExpressionTests_ShiftInternal<TItemType, TResult>()
         {
             // Arrange
@@ -1625,6 +1926,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(Convert.ChangeType(20, typeof(TItemType)), result4.Single());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_SkipAndTake.
+        /// </summary>
         [Fact]
         public void ExpressionTests_SkipAndTake()
         {
@@ -1653,6 +1957,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_ImplicitCast.
+        /// </summary>
         [Fact]
         public void ExpressionTests_ImplicitCast()
         {
@@ -1681,6 +1988,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal("alive", result2[0].State.Description);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_StringCompare.
+        /// </summary>
         [Fact]
         public void ExpressionTests_StringCompare()
         {
@@ -1702,6 +2012,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultLessThanEqual.ToArray()).ContainsExactly("1", "2", "3");
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_StringConcatenation.
+        /// </summary>
         [Fact]
         public void ExpressionTests_StringConcatenation()
         {
@@ -1723,6 +2036,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal("FirstNamex y", resultAddWithAmpAndParams.First());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_BinaryAnd.
+        /// </summary>
         [Fact]
         public void ExpressionTests_BinaryAnd()
         {
@@ -1740,6 +2056,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(4, resultAddWithAmp3.First());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Subtract_Number.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Subtract_Number()
         {
@@ -1754,6 +2073,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Sum.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Sum()
         {
@@ -1768,6 +2090,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(15, result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Sum_LowerCase.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Sum_LowerCase()
         {
@@ -1782,6 +2107,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(15, result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Sum2.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Sum2()
         {
@@ -1805,6 +2133,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Type_Integer.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Type_Integer()
         {
@@ -1837,6 +2168,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultEqualIntParamRight.Single()).Equals(5);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Type_Integer_Qualifiers.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Type_Integer_Qualifiers()
         {
@@ -1861,6 +2195,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValuesUL.ToArray(), resultUL.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Type_StructWithIntegerEquality.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Type_StructWithIntegerEquality()
         {
@@ -1885,6 +2222,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValuesL.ToArray(), resultIn);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Type_StructWithIntegerEquality_BothVariablesInStruct.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Type_StructWithIntegerEquality_BothVariablesInStruct()
         {
@@ -1924,6 +2264,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValuesL.ToArray(), resultLs);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Type_Integer_Qualifiers_Negative.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Type_Integer_Qualifiers_Negative()
         {
@@ -1940,6 +2283,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(resultValuesL.ToArray(), resultIn);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Type_Integer_Qualifiers_Exceptions.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Type_Integer_Qualifiers_Exceptions()
         {
@@ -1959,6 +2305,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Throws<ParseException>(() => values.Where("it < -2B"));
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Uri.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Uri()
         {
@@ -2002,6 +2351,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionTests_Where_WithCachedLambda.
+        /// </summary>
         [Fact]
         public void ExpressionTests_Where_WithCachedLambda()
         {

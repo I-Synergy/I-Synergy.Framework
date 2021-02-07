@@ -8,8 +8,14 @@ using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method GroupBy_Dynamic.
+        /// </summary>
         [Fact]
         public void GroupBy_Dynamic()
         {
@@ -27,6 +33,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/75
+        /// <summary>
+        /// Defines the test method GroupBy_Dynamic_Issue75.
+        /// </summary>
         [Fact]
         public void GroupBy_Dynamic_Issue75()
         {
@@ -42,6 +51,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(propertiesDynamic.Length).IsStrictlyGreaterThan(properties.Length);
         }
 
+        /// <summary>
+        /// Defines the test method GroupBy_Dynamic_Exceptions.
+        /// </summary>
         [Fact]
         public void GroupBy_Dynamic_Exceptions()
         {

@@ -3,8 +3,17 @@ using Xunit;
 
 namespace ISynergy.Framework.Financial.Tests
 {
+    /// <summary>
+    /// Class PercentageTests.
+    /// </summary>
     public class PercentageTests
     {
+        /// <summary>
+        /// Defines the test method CalcPercAmountOfAmountTest.
+        /// </summary>
+        /// <param name="amount">The amount.</param>
+        /// <param name="mainamount">The mainamount.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData(1, 50, 49)]
         [InlineData(100, 120, 0.2)]
@@ -19,6 +28,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.Equal(result, assert);
         }
 
+        /// <summary>
+        /// Defines the test method CalcPercAmountOfAmountDevideByZeroTest.
+        /// </summary>
         [Fact]
         public void CalcPercAmountOfAmountDevideByZeroTest()
         {
@@ -26,6 +38,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.Equal(0, result);
         }
 
+        /// <summary>
+        /// Defines the test method CalcAmountOfPercentageTest.
+        /// </summary>
         [Fact]
         public void CalcAmountOfPercentageTest()
         {
@@ -33,6 +48,12 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.Equal(25.41m, result);
         }
 
+        /// <summary>
+        /// Defines the test method CalcMarginPercentageTest.
+        /// </summary>
+        /// <param name="purchasePrice">The purchase price.</param>
+        /// <param name="salesPrice">The sales price.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData(1, 50, 49)]
         [InlineData(10, 100, 9)]
@@ -46,6 +67,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.Equal(result, assert);
         }
 
+        /// <summary>
+        /// Defines the test method CalcMarginPercentageDevideByZeroTest.
+        /// </summary>
         [Fact]
         public void CalcMarginPercentageDevideByZeroTest()
         {

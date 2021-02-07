@@ -6,8 +6,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method ThenBy_Dynamic.
+        /// </summary>
         [Fact]
         public void ThenBy_Dynamic()
         {
@@ -25,6 +31,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList.OrderBy(x => x.Id).ThenBy(x => x.Profile.Age).ThenBy(x => x.Income).ToArray(), thenByComplex1.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ThenBy_Dynamic_AsStringExpression.
+        /// </summary>
         [Fact]
         public void ThenBy_Dynamic_AsStringExpression()
         {
@@ -40,6 +49,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected.ToArray(), orderById.Cast<string>().ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method ThenBy_Dynamic_Exceptions.
+        /// </summary>
         [Fact]
         public void ThenBy_Dynamic_Exceptions()
         {

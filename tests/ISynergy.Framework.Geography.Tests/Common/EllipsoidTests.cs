@@ -3,8 +3,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Geography.Common.Tests
 {
+    /// <summary>
+    /// Class EllipsoidTests.
+    /// </summary>
     public class EllipsoidTests
     {
+        /// <summary>
+        /// Defines the test method TestFactory1.
+        /// </summary>
         [Fact]
         public void TestFactory1()
         {
@@ -15,6 +21,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(e.Ratio, 1.0 - 0.01);
         }
 
+        /// <summary>
+        /// Defines the test method TestFactory2.
+        /// </summary>
         [Fact]
         public void TestFactory2()
         {
@@ -25,6 +34,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(e.Ratio, 1.0 - 0.01);
         }
 
+        /// <summary>
+        /// Defines the test method TestEquality.
+        /// </summary>
         [Fact]
         public void TestEquality()
         {
@@ -39,6 +51,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.False(e1 == e5);
         }
 
+        /// <summary>
+        /// Defines the test method TestInEquality.
+        /// </summary>
         [Fact]
         public void TestInEquality()
         {
@@ -51,6 +66,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.False(e1 != e4);
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals.
+        /// </summary>
         [Fact]
         public void TestEquals()
         {
@@ -66,6 +84,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.False(e1.Equals(s));
         }
 
+        /// <summary>
+        /// Defines the test method TestHashCode.
+        /// </summary>
         [Fact]
         public void TestHashCode()
         {
@@ -74,6 +95,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.NotEqual(e1.GetHashCode(), e2.GetHashCode());
         }
 
+        /// <summary>
+        /// Defines the test method TestEccentricity.
+        /// </summary>
         [Fact]
         public void TestEccentricity()
         {

@@ -6,15 +6,30 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.IO.Tests
 {
+    /// <summary>
+    /// Class FileWatcherExTests.
+    /// Implements the <see cref="IClassFixture{FileWatcherExFixture}" />
+    /// </summary>
+    /// <seealso cref="IClassFixture{FileWatcherExFixture}" />
     public class FileWatcherExTests : IClassFixture<FileWatcherExFixture>
     {
+        /// <summary>
+        /// The fixture
+        /// </summary>
         private readonly FileWatcherExFixture _fixture;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileWatcherExTests"/> class.
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
         public FileWatcherExTests(FileWatcherExFixture fixture)
         {
             _fixture = fixture;
         }
 
+        /// <summary>
+        /// Files the watcher ex added test.
+        /// </summary>
         public void FileWatcherExAddedTest()
         {
             var count = 1000;
@@ -41,6 +56,9 @@ namespace ISynergy.Framework.Core.IO.Tests
             Assert.Equal(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created").Count());
         }
 
+        /// <summary>
+        /// Files the watcher ex deleted test.
+        /// </summary>
         public void FileWatcherExDeletedTest()
         {
             var count = 1000;

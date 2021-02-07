@@ -4,9 +4,9 @@ trigger:
 - master
 
 variables:
-  version.Revision: $[counter(variables['VersionMajor'], 0)]
   VersionMajor: ''
   VersionMinor: ''
+  VersionRevision: $[counter('$(Date:yyyy).1$(DayOfYear)', 0)]
 
 pool:
   vmImage: 'windows-latest'
@@ -27,7 +27,7 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-              [string] $version = "$((Get-Date).Year)"
+              [string] $version = $((Get-Date).Year)
               Write-Host "Setting the major version number variable to '$version'."
               Write-Host "##vso[task.setvariable variable=VersionMajor]$version"
         
@@ -41,9 +41,9 @@ stages:
               Write-Host "##vso[task.setvariable variable=VersionMinor]$version"
 
         - task: NuGetToolInstaller@1
-          displayName: 'Use NuGet 5.8.0'
+          displayName: 'Use NuGet 5.8.1'
           inputs:
-            versionSpec: 5.8.0
+            versionSpec: 5.8.1
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
@@ -90,13 +90,20 @@ stages:
             PackageVersion: '$(VersionPackage)'
 
         - task: DotNetCoreCLI@2
+          displayName: 'Dotnet restore: I-Synergy Framework'
+          inputs:
+            command: restore
+            projects: 'I-Synergy.Framework.sln'
+            arguments: '-c $(BuildConfiguration)'
+            feedsToUse: config
+            nugetConfigPath: nuget.config
+
+        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Core'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Core.Linq'
@@ -104,8 +111,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Core.Linq\ISynergy.Framework.Core.Linq.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore'
@@ -113,8 +118,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Authentication'
@@ -122,8 +125,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.EntityFramework'
@@ -131,8 +132,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Financial'
@@ -140,8 +139,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Models'
@@ -149,8 +146,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Models\ISynergy.Framework.Models.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Geography'
@@ -158,8 +153,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Mathematics'
@@ -167,8 +160,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.MessageBus'
@@ -176,8 +167,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.MessageBus.Azure'
@@ -185,8 +174,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Mvvm'
@@ -194,8 +181,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
       
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Storage'
@@ -203,8 +188,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Storage.Azure'
@@ -212,8 +195,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Payment'
@@ -221,8 +202,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Payment.Mollie'
@@ -230,8 +209,6 @@ stages:
             command: build
             projects: 'src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj'
             arguments: '-c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
 
         - task: MSBuild@1
           displayName: 'Framework UI - Nuget Restore'

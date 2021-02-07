@@ -13,36 +13,111 @@ using Linq.PropertyTranslator.Core;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Class Example.
+        /// </summary>
         public class Example
         {
+            /// <summary>
+            /// Gets or sets the time.
+            /// </summary>
+            /// <value>The time.</value>
             public DateTime Time { get; set; }
+            /// <summary>
+            /// Gets or sets the time null.
+            /// </summary>
+            /// <value>The time null.</value>
             public DateTime? TimeNull { get; set; }
+            /// <summary>
+            /// Gets or sets the dow null.
+            /// </summary>
+            /// <value>The dow null.</value>
             public DayOfWeek? DOWNull { get; set; }
+            /// <summary>
+            /// Gets or sets the dow.
+            /// </summary>
+            /// <value>The dow.</value>
             public DayOfWeek DOW { get; set; }
+            /// <summary>
+            /// Gets or sets the sec.
+            /// </summary>
+            /// <value>The sec.</value>
             public int Sec { get; set; }
+            /// <summary>
+            /// Gets or sets the sec null.
+            /// </summary>
+            /// <value>The sec null.</value>
             public int? SecNull { get; set; }
 
+            /// <summary>
+            /// Class NestedDto.
+            /// </summary>
             public class NestedDto
             {
+                /// <summary>
+                /// Gets or sets the name.
+                /// </summary>
+                /// <value>The name.</value>
                 public string Name { get; set; }
 
+                /// <summary>
+                /// Class NestedDto2.
+                /// </summary>
                 public class NestedDto2
                 {
+                    /// <summary>
+                    /// Gets or sets the name2.
+                    /// </summary>
+                    /// <value>The name2.</value>
                     public string Name2 { get; set; }
                 }
             }
         }
 
+        /// <summary>
+        /// Class ExampleWithConstructor.
+        /// </summary>
         public class ExampleWithConstructor
         {
+            /// <summary>
+            /// Gets or sets the time.
+            /// </summary>
+            /// <value>The time.</value>
             public DateTime Time { get; set; }
+            /// <summary>
+            /// Gets or sets the dow null.
+            /// </summary>
+            /// <value>The dow null.</value>
             public DayOfWeek? DOWNull { get; set; }
+            /// <summary>
+            /// Gets or sets the dow.
+            /// </summary>
+            /// <value>The dow.</value>
             public DayOfWeek DOW { get; set; }
+            /// <summary>
+            /// Gets or sets the sec.
+            /// </summary>
+            /// <value>The sec.</value>
             public int Sec { get; set; }
+            /// <summary>
+            /// Gets or sets the sec null.
+            /// </summary>
+            /// <value>The sec null.</value>
             public int? SecNull { get; set; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ExampleWithConstructor"/> class.
+            /// </summary>
+            /// <param name="t">The t.</param>
+            /// <param name="dn">The dn.</param>
+            /// <param name="d">The d.</param>
+            /// <param name="s">The s.</param>
+            /// <param name="sn">The sn.</param>
             public ExampleWithConstructor(DateTime t, DayOfWeek? dn, DayOfWeek d, int s, int? sn)
             {
                 Time = t;
@@ -67,6 +142,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected.ToArray(), dynamic.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic1.
+        /// </summary>
         [Fact]
         public void Select_Dynamic1()
         {
@@ -82,6 +160,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(userRoles2.Count()).IsEqualTo(1);
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic2.
+        /// </summary>
         [Fact]
         public void Select_Dynamic2()
         {
@@ -95,6 +176,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(userRoles.Count()).IsEqualTo(1);
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic3.
+        /// </summary>
         [Fact]
         public void Select_Dynamic3()
         {
@@ -127,6 +211,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 #endif
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_Add_Integers.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_Add_Integers()
         {
@@ -140,6 +227,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(range.Select(x => x + 1).ToArray(), rangeResult.Cast<int>().ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_Add_Strings.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_Add_Strings()
         {
@@ -153,6 +243,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(range.Select(x => x + "c").ToArray(), rangeResult.Cast<string>().ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_WithIncludes.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_WithIncludes()
         {
@@ -170,6 +263,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.NotNull(userNames);
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_WithPropertyVisitorAndQueryInterceptor.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_WithPropertyVisitorAndQueryInterceptor()
         {
@@ -189,6 +285,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal("first last", firstEmployee.FullName);
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_TResult.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_TResult()
         {
@@ -208,6 +307,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList.Select(x => x.Profile).ToList(), userProfiles);
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_IntoType.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_IntoType()
         {
@@ -227,6 +329,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList.Select(x => x.Profile).Cast<object>().ToList(), userProfiles.ToDynamicList());
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_IntoTypeWithNullableProperties1.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_IntoTypeWithNullableProperties1()
         {
@@ -247,6 +352,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic.Last()).Equals(result.Last());
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_IntoTypeWithNullableProperties2.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_IntoTypeWithNullableProperties2()
         {
@@ -267,6 +375,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(resultDynamic.Last()).Equals(result.Last());
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_IntoKnownNestedType.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_IntoKnownNestedType()
         {
@@ -285,6 +396,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(projectedData.Last().Name).Equals("name2");
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_IntoKnownNestedTypeSecondLevel.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
         {
@@ -304,6 +418,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(projectedData.Last().Name2).Equals("name2");
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_RenameParameterExpression_Is_False.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_RenameParameterExpression_Is_False()
         {
@@ -321,6 +438,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).Equals("System.Int32[].Select(Param_0 => (Param_0 * Param_0))");
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_RenameParameterExpression_Is_True.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_RenameParameterExpression_Is_True()
         {
@@ -338,6 +458,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).Equals("System.Int32[].Select(it => (it * it))");
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_ReservedKeyword.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_ReservedKeyword()
         {
@@ -351,6 +474,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).IsNotNull();
         }
 
+        /// <summary>
+        /// Defines the test method Select_Dynamic_Exceptions.
+        /// </summary>
         [Fact]
         public void Select_Dynamic_Exceptions()
         {

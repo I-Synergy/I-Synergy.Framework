@@ -9,14 +9,32 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
+    /// <summary>
+    /// Class TypeFinderTests.
+    /// </summary>
     public class TypeFinderTests
     {
+        /// <summary>
+        /// The parsing configuration
+        /// </summary>
         private readonly ParsingConfig _parsingConfig = new ParsingConfig();
+        /// <summary>
+        /// The keywords helper mock
+        /// </summary>
         private readonly Mock<IKeywordsHelper> _keywordsHelperMock;
+        /// <summary>
+        /// The dynamic type provider mock
+        /// </summary>
         private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicTypeProviderMock;
 
+        /// <summary>
+        /// The sut
+        /// </summary>
         private readonly TypeFinder _sut;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeFinderTests"/> class.
+        /// </summary>
         public TypeFinderTests()
         {
             _dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
@@ -35,6 +53,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             _sut = new TypeFinder(_parsingConfig, _keywordsHelperMock.Object);
         }
 
+        /// <summary>
+        /// Defines the test method TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_false.
+        /// </summary>
         [Fact]
         public void TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_false()
         {
@@ -48,6 +69,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(result).IsNull();
         }
 
+        /// <summary>
+        /// Defines the test method TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_true.
+        /// </summary>
         [Fact]
         public void TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_true()
         {
@@ -61,6 +85,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(result).Equals(typeof(Boss));
         }
 
+        /// <summary>
+        /// Defines the test method TypeFinder_FindTypeByName_With_SimpleTypeName_basedon_it.
+        /// </summary>
         [Fact]
         public void TypeFinder_FindTypeByName_With_SimpleTypeName_basedon_it()
         {

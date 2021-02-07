@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method OrderByDescending_Dynamic.
+        /// </summary>
         [Fact]
         public void OrderByDescending_Dynamic()
         {
@@ -24,6 +30,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList.OrderByDescending(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex2.ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method OrderByDescending_Dynamic_AsStringExpression.
+        /// </summary>
         [Fact]
         public void OrderByDescending_Dynamic_AsStringExpression()
         {

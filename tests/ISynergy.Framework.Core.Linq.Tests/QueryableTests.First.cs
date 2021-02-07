@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method First.
+        /// </summary>
         [Fact]
         public void First()
         {
@@ -21,6 +27,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList[0].Id, result.Id);
         }
 
+        /// <summary>
+        /// Defines the test method First_Predicate.
+        /// </summary>
         [Fact]
         public void First_Predicate()
         {
@@ -36,6 +45,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected as object, result);
         }
 
+        /// <summary>
+        /// Defines the test method First_Predicate_WithArgs.
+        /// </summary>
         [Fact]
         public void First_Predicate_WithArgs()
         {
@@ -53,6 +65,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected as object, result);
         }
 
+        /// <summary>
+        /// Defines the test method First_Dynamic.
+        /// </summary>
         [Fact]
         public void First_Dynamic()
         {

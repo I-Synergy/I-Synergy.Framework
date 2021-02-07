@@ -2,8 +2,14 @@
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
+    /// <summary>
+    /// Class StringExtensionsTests.
+    /// </summary>
     public class StringExtensionsTests
     {
+        /// <summary>
+        /// Defines the test method IncreaseStringNumericSummand1.
+        /// </summary>
         [Fact]
         public void IncreaseStringNumericSummand1()
         {
@@ -11,6 +17,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal("11", result);
         }
 
+        /// <summary>
+        /// Defines the test method IncreaseStringNumericSummand3.
+        /// </summary>
         [Fact]
         public void IncreaseStringNumericSummand3()
         {
@@ -18,6 +27,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal("6281085010560", result);
         }
 
+        /// <summary>
+        /// Defines the test method IncreaseStringAlphaNumericSummand1.
+        /// </summary>
         [Fact]
         public void IncreaseStringAlphaNumericSummand1()
         {
@@ -25,6 +37,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal("A20", result);
         }
 
+        /// <summary>
+        /// Defines the test method IncreaseStringAlphaNumericSummand8.
+        /// </summary>
         [Fact]
         public void IncreaseStringAlphaNumericSummand8()
         {
@@ -32,6 +47,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal("AZURE10", result);
         }
 
+        /// <summary>
+        /// Defines the test method IncreaseStringAlphaNumericComplex.
+        /// </summary>
         [Fact]
         public void IncreaseStringAlphaNumericComplex()
         {
@@ -39,6 +57,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal("2016AZURE10STAGE100", result);
         }
 
+        /// <summary>
+        /// Defines the test method CovertString2NumericIntegerTest.
+        /// </summary>
         [Fact]
         public void CovertString2NumericIntegerTest()
         {
@@ -46,6 +67,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(2016001, result);
         }
 
+        /// <summary>
+        /// Defines the test method CovertString2NumericNonIntegerTest.
+        /// </summary>
         [Fact]
         public void CovertString2NumericNonIntegerTest()
         {

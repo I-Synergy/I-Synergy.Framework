@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,6 +16,7 @@ namespace ISynergy.Framework.UI.Controls
     /// </summary>
     /// <seealso cref="ContentDialog" />
     /// <seealso cref="Mvvm.Abstractions.IWindow" />
+    [Bindable(true)]
     public partial class Window : ContentDialog, IWindow
     {
         /// <summary>

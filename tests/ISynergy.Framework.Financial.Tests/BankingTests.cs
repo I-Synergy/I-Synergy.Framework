@@ -2,8 +2,14 @@
 
 namespace ISynergy.Framework.Financial.Tests
 {
+    /// <summary>
+    /// Class BankingTests.
+    /// </summary>
     public class BankingTests
     {
+        /// <summary>
+        /// Defines the test method CheckAccountBankTest.
+        /// </summary>
         [Fact]
         public void CheckAccountBankTest()
         {
@@ -11,6 +17,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.True(result);
         }
 
+        /// <summary>
+        /// Defines the test method CheckAccountGiroTest.
+        /// </summary>
         [Fact]
         public void CheckAccountGiroTest()
         {
@@ -18,6 +27,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.False(result);
         }
 
+        /// <summary>
+        /// Defines the test method CheckSofinummerTest.
+        /// </summary>
         [Fact]
         public void CheckSofinummerTest()
         {
@@ -25,6 +37,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.False(result);
         }
 
+        /// <summary>
+        /// Defines the test method CheckAccountStringTest.
+        /// </summary>
         [Fact]
         public void CheckAccountStringTest()
         {
@@ -32,6 +47,9 @@ namespace ISynergy.Framework.Financial.Tests
             Assert.False(result);
         }
 
+        /// <summary>
+        /// Defines the test method CheckAccountNumbersTest.
+        /// </summary>
         [Fact]
         public void CheckAccountNumbersTest()
         {

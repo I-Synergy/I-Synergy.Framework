@@ -18,10 +18,7 @@ using System.Reflection;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Core.Locators;
-
-#if NETFX_CORE
 using Windows.ApplicationModel.Core;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -375,7 +372,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public async Task CleanBackStackAsync()
         {
-#if NETFX_CORE
+#if NETFX_CORE || NET5_0
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal, 
                 () => ((Frame)Frame).BackStack.Clear());

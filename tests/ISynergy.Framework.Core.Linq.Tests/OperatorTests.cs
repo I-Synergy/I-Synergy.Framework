@@ -7,8 +7,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class OperatorTests.
+    /// </summary>
     public class OperatorTests
     {
+        /// <summary>
+        /// Defines the test method Operator_NullPropagation.
+        /// </summary>
         [Fact]
         public void Operator_NullPropagation()
         {
@@ -24,6 +30,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.ThatCode(() => users.Select("Profile?.Age")).Throws<NotSupportedException>();
         }
 
+        /// <summary>
+        /// Defines the test method Operator_Multiplication_Single_Float_ParseException.
+        /// </summary>
         [Fact]
         public void Operator_Multiplication_Single_Float_ParseException()
         {
@@ -34,6 +43,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Throws<ParseException>(() => models.Select("FloatValue * DecimalValue"));
         }
 
+        /// <summary>
+        /// Defines the test method Operator_Multiplication_Single_Float_Cast.
+        /// </summary>
         [Fact]
         public void Operator_Multiplication_Single_Float_Cast()
         {

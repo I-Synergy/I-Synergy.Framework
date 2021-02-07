@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Page.
+        /// </summary>
         [Fact]
         public void Page()
         {
@@ -23,6 +29,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.ToDynamicArray<User>());
         }
 
+        /// <summary>
+        /// Defines the test method Page_TSource.
+        /// </summary>
         [Fact]
         public void Page_TSource()
         {
@@ -40,6 +49,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.ToDynamicArray<User>());
         }
 
+        /// <summary>
+        /// Defines the test method PageResult.
+        /// </summary>
         [Fact]
         public void PageResult()
         {
@@ -61,6 +73,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.Queryable.ToDynamicArray<User>());
         }
 
+        /// <summary>
+        /// Defines the test method PageResult_TSource.
+        /// </summary>
         [Fact]
         public void PageResult_TSource()
         {

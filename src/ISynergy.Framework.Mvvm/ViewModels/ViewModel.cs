@@ -19,6 +19,7 @@ namespace ISynergy.Framework.Mvvm
     /// </summary>
     /// <seealso cref="ObservableClass" />
     /// <seealso cref="IViewModel" />
+    [Bindable(true)]
     public abstract class ViewModel : ObservableClass, IViewModel
     {
         /// <summary>

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
+        <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>Sample</AssemblyName>
+        <ApplicationIcon>Icon.ico</ApplicationIcon>
+        <Product>Sample</Product>
+        <Copyright>Copyright (c) 2008-2021 International Intelligence</Copyright>
+        <Company>International Intelligence</Company>
+        <Authors>Ismail Hassani</Authors>
+        <AssemblyName>Sample</AssemblyName>
+    </PropertyGroup>
+    <ItemGroup>
+        <UpToDateCheckInput Include="..\Sample.Shared\**\*.xaml" />
+    </ItemGroup>
+    <ItemGroup Condition="exists('..\Sample.Shared')">
+        <Content Include="..\Sample.Shared\Assets\StoreLogo.scale-100.png" Link="Assets\StoreLogo.png" />
+        <Content Include="..\Sample.Shared\Assets\Fonts\uno-fluentui-assets.ttf" Link="Assets\Fonts\uno-fluentui-assets.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.5.0-dev.482" />
+        <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.0-dev.482" Condition="'$(Configuration)'=='Debug'" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Sample.Skia.Gtk.WPF\Sample.Skia.Gtk.WPF.csproj" />
+    </ItemGroup>
+</Project>

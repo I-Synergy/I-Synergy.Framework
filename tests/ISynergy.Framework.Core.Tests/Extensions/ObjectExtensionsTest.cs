@@ -5,8 +5,15 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
+    /// <summary>
+    /// Class ObjectExtensionTests.
+    /// </summary>
     public class ObjectExtensionTests
     {
+        /// <summary>
+        /// Defines the test method NonNullableTypeTest.
+        /// </summary>
+        /// <param name="type">The type.</param>
         [Theory]
         [InlineData(typeof(int))]
         [InlineData(typeof(bool))]
@@ -15,6 +22,10 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.False(type.IsNullableType());
         }
 
+        /// <summary>
+        /// Defines the test method NullableTypeTest.
+        /// </summary>
+        /// <param name="type">The type.</param>
         [Theory]
         [InlineData(typeof(string))]
         [InlineData(typeof(object))]

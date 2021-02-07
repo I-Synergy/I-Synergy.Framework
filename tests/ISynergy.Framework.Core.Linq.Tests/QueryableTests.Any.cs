@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Any.
+        /// </summary>
         [Fact]
         public void Any()
         {
@@ -26,6 +32,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.False(resultNone);
         }
 
+        /// <summary>
+        /// Defines the test method Any_Predicate.
+        /// </summary>
         [Fact]
         public void Any_Predicate()
         {
@@ -40,6 +49,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method Any_Predicate_WithArgs.
+        /// </summary>
         [Fact]
         public void Any_Predicate_WithArgs()
         {
@@ -56,6 +68,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method Any_Dynamic_Select.
+        /// </summary>
         [Fact]
         public void Any_Dynamic_Select()
         {
@@ -70,6 +85,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method Any_Dynamic_Where.
+        /// </summary>
         [Fact]
         public void Any_Dynamic_Where()
         {
@@ -87,6 +105,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
         // https://dynamiclinq.codeplex.com/discussions/654313
+        /// <summary>
+        /// Defines the test method Any_Dynamic_Where_Nested.
+        /// </summary>
         [Fact]
         public void Any_Dynamic_Where_Nested()
         {
@@ -104,6 +125,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
         // http://stackoverflow.com/questions/30846189/nested-any-in-is-not-working-in-dynamic-linq
+        /// <summary>
+        /// Defines the test method Any_Dynamic_Where_Nested2.
+        /// </summary>
         [Fact]
         public void Any_Dynamic_Where_Nested2()
         {
@@ -125,30 +149,65 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected2, result2);
         }
 
+        /// <summary>
+        /// Class A.
+        /// </summary>
         class A
         {
+            /// <summary>
+            /// Gets or sets the name.
+            /// </summary>
+            /// <value>The name.</value>
             public string Name { get; set; }
+            /// <summary>
+            /// Gets or sets the bs.
+            /// </summary>
+            /// <value>The bs.</value>
             public IList<B> Bs
             {
                 get { return bs; }
                 set { bs = value; }
             }
+            /// <summary>
+            /// The bs
+            /// </summary>
             private IList<B> bs = new List<B>(0);
         }
 
+        /// <summary>
+        /// Class B.
+        /// </summary>
         class B
         {
+            /// <summary>
+            /// Gets or sets a.
+            /// </summary>
+            /// <value>a.</value>
             public A A { get; set; }
+            /// <summary>
+            /// Gets or sets the cs.
+            /// </summary>
+            /// <value>The cs.</value>
             public IList<C> Cs
             {
                 get { return cs; }
                 set { cs = value; }
             }
+            /// <summary>
+            /// The cs
+            /// </summary>
             private IList<C> cs = new List<C>(0);
         }
 
+        /// <summary>
+        /// Class C.
+        /// </summary>
         class C
         {
+            /// <summary>
+            /// Gets or sets the b.
+            /// </summary>
+            /// <value>The b.</value>
             public B B { get; set; }
         }
     }

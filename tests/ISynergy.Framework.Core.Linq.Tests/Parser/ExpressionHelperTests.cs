@@ -7,15 +7,27 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
+    /// <summary>
+    /// Class ExpressionHelperTests.
+    /// </summary>
     public class ExpressionHelperTests
     {
+        /// <summary>
+        /// The expression helper
+        /// </summary>
         private readonly ExpressionHelper _expressionHelper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionHelperTests"/> class.
+        /// </summary>
         public ExpressionHelperTests()
         {
             _expressionHelper = new ExpressionHelper(ParsingConfig.Default);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionHelper_WrapConstantExpression_false.
+        /// </summary>
         [Fact]
         public void ExpressionHelper_WrapConstantExpression_false()
         {
@@ -37,6 +49,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(expression.ToString()).Equals("\"test\"");
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionHelper_WrapConstantExpression_true.
+        /// </summary>
         [Fact]
         public void ExpressionHelper_WrapConstantExpression_true()
         {
@@ -59,6 +74,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(expression.ToString()).Equals("value(ISynergy.Framework.Core.Linq.Parsers.WrappedValue`1[System.String]).Value");
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid.
+        /// </summary>
         [Fact]
         public void ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid()
         {
@@ -73,6 +91,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(result.ToString()).Equals(guidAsString);
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid_Invalid.
+        /// </summary>
         [Fact]
         public void ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid_Invalid()
         {
@@ -86,6 +107,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(result).IsNull();
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNonNullable.
+        /// </summary>
         [Fact]
         public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNonNullable()
         {
@@ -100,6 +124,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(generatedExpression.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfFalse.
+        /// </summary>
         [Fact]
         public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfFalse()
         {
@@ -114,6 +141,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(generatedExpression.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfTrue.
+        /// </summary>
         [Fact]
         public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfTrue()
         {
@@ -128,6 +158,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(generatedExpression.ToString()).IsEqualTo("((((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null)) AndAlso (x => x.Relation1.Relation2.IdNullable != null))");
         }
 
+        /// <summary>
+        /// Defines the test method ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NonNullable.
+        /// </summary>
         [Fact]
         public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NonNullable()
         {
@@ -142,22 +175,55 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(generatedExpression.ToString()).IsEqualTo("x => x.Id");
         }
 
+        /// <summary>
+        /// Class Item.
+        /// </summary>
         class Item
         {
+            /// <summary>
+            /// Gets or sets the identifier.
+            /// </summary>
+            /// <value>The identifier.</value>
             public int Id { get; set; }
+            /// <summary>
+            /// Gets or sets the relation1.
+            /// </summary>
+            /// <value>The relation1.</value>
             public Relation1 Relation1 { get; set; }
         }
 
+        /// <summary>
+        /// Class Relation1.
+        /// </summary>
         class Relation1
         {
+            /// <summary>
+            /// Gets or sets the identifier.
+            /// </summary>
+            /// <value>The identifier.</value>
             public int Id { get; set; }
+            /// <summary>
+            /// Gets or sets the relation2.
+            /// </summary>
+            /// <value>The relation2.</value>
             public Relation2 Relation2 { get; set; }
         }
 
+        /// <summary>
+        /// Class Relation2.
+        /// </summary>
         class Relation2
         {
+            /// <summary>
+            /// Gets or sets the identifier.
+            /// </summary>
+            /// <value>The identifier.</value>
             public int Id { get; set; }
 
+            /// <summary>
+            /// Gets or sets the identifier nullable.
+            /// </summary>
+            /// <value>The identifier nullable.</value>
             public int? IdNullable { get; set; }
         }
     }

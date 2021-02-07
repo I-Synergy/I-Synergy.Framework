@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Geography.Projection.Tests
 {
+    /// <summary>
+    /// Class MercatorProjectionTests.
+    /// </summary>
     public class MercatorProjectionTests
     {
+        /// <summary>
+        /// Defines the test method TestLoxodromeToOffice.
+        /// </summary>
         [Fact]
         public void TestLoxodromeToOffice()
         {
