@@ -1,4 +1,4 @@
-name: $(Date:yyyy).1$(DayOfYear)$(Rev:.r)
+name: 'Set dynamically below in a task'
 
 trigger:
 - master
@@ -39,6 +39,15 @@ stages:
               [string] $version = "1$("{0:000}" -f (Get-Date).DayOfYear)"
               Write-Host "Setting the minor version number variable to '$version'."
               Write-Host "##vso[task.setvariable variable=VersionMinor]$version"
+
+        - task: PowerShell@2
+          displayName: Set the name of the build (i.e. the Build.BuildNumber)
+          inputs:
+            targetType: 'inline'
+            script: |
+              [string] $buildName = "$(VersionPackage)"
+              Write-Host "Setting the name of the build to '$buildName'."
+              Write-Host "##vso[build.updatebuildnumber]$buildName"
 
         - task: NuGetToolInstaller@1
           displayName: 'Use NuGet 5.8.1'
@@ -88,15 +97,6 @@ stages:
             FileVersionNumber: '$(VersionFile)'
             InformationalVersion: '$(VersionInformational)'
             PackageVersion: '$(VersionPackage)'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet restore: I-Synergy Framework'
-          inputs:
-            command: restore
-            projects: 'I-Synergy.Framework.sln'
-            arguments: '-c $(BuildConfiguration)'
-            feedsToUse: config
-            nugetConfigPath: nuget.config
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Core'
@@ -217,7 +217,7 @@ stages:
             platform: AnyCpu
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-      
+
         - task: MSBuild@1
           displayName: 'Framework UI - Build'
           inputs:
@@ -233,7 +233,7 @@ stages:
             platform: AnyCpu
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-      
+
         - task: MSBuild@1
           displayName: 'Syncfusion SfChart for Uno - Build'
           inputs:
@@ -261,15 +261,6 @@ stages:
             command: test
             projects: 'tests\ISynergy.Framework.Core.Tests\ISynergy.Framework.Core.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
-      
-        - powershell: |
-            Write-Host "Tagging Build: $(VersionPackage)"
-
-            git tag $(VersionPackage)
-            git push $(VersionPackage)
-          env:
-            BuildNumber: $(VersionPackage)
-          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core.Linq'
