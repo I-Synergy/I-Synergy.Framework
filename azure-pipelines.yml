@@ -1,4 +1,4 @@
-name: 'Set dynamically below in a task'
+name: $(Date:yyyy).1$(DayOfYear)$(Rev:.r)
 
 trigger:
 - master
@@ -6,7 +6,7 @@ trigger:
 variables:
   VersionMajor: ''
   VersionMinor: ''
-  VersionRevision: $[counter('$(Date:yyyy).1$(DayOfYear)', 0)]
+  VersionRevision: $[counter('$(version.MajorMinor)', 0)]
 
 pool:
   vmImage: 'windows-latest'
@@ -18,9 +18,11 @@ stages:
     - job: BuildJob
       displayName: 'Build and Test assemblies'
       steps:
-        - checkout: self
-          clean: true
-          persistCredentials: true
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'sdk'
+            useGlobalJson: true
+            vsVersion: '16.8.4'
 
         - task: PowerShell@2
           displayName: Set the Major Version variable value
