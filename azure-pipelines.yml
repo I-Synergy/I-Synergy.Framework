@@ -6,7 +6,7 @@ trigger:
 variables:
   VersionMajor: ''
   VersionMinor: ''
-  VersionRevision: $[counter('$(version.MajorMinor)', 0)]
+  VersionRevision: ''
 
 pool:
   vmImage: 'windows-latest'
@@ -43,13 +43,14 @@ stages:
               Write-Host "##vso[task.setvariable variable=VersionMinor]$version"
 
         - task: PowerShell@2
-          displayName: Set the name of the build (i.e. the Build.BuildNumber)
+          displayName: Set the Revision Version variable value
           inputs:
             targetType: 'inline'
             script: |
-              [string] $buildName = "$(VersionPackage)"
-              Write-Host "Setting the name of the build to '$buildName'."
-              Write-Host "##vso[build.updatebuildnumber]$buildName"
+              [string] $buildNumber = $Env:BUILD_BUILDNUMBER
+              [string] $revision = $buildNumber.Substring($buildNumber.LastIndexOf('.') + 1)
+              Write-Host "Setting the revision number variable to '$revision'."
+              Write-Host "##vso[task.setvariable variable=VersionRevision]$revision"
 
         - task: NuGetToolInstaller@1
           displayName: 'Use NuGet 5.8.1'
