@@ -69,6 +69,7 @@ stages:
             projectKey: 'I-Synergy.Framework'
             projectName: 'I-Synergy.Framework'
             projectVersion: '$(VersionPackage)'
+            extraProperties: sonar.exclusions=**/ISynergy.Framework.UI.Syncfusion/**
       
         - task: Assembly-Info-NetCore@2
           displayName: 'Set Assembly Manifest Data v2'
