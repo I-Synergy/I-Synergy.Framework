@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.EntityFramework</PackageId>
         <Description>I-Synergy Entity Framework for .Net 5.0</Description>
         <PackageTags>I-Synergy, Entity, Framework</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

@@ -14,7 +14,7 @@
       <Version>2.6.0-prerelease.210129001</Version>
     </PackageReference>
     <PackageReference Include="Uno.Core" Version="2.2.0" />
-    <PackageReference Include="Uno.UI" Version="3.6.0-dev.27" />
+    <PackageReference Include="Uno.UI" Version="3.6.0-dev.39" />
   </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>

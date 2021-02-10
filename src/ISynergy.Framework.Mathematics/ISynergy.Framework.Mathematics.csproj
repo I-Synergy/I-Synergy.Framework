@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.Mathematics</PackageId>
         <Description>I-Synergy Framework Mathematics for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Mathematics</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

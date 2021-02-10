@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.Storage.Azure</PackageId>
         <Description>I-Synergy Framework Azure Storage for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

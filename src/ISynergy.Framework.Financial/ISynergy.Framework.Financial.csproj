@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.Financial</PackageId>
         <Description>I-Synergy Financial Framework for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Financial, Framework</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

@@ -9,7 +9,6 @@
         <PackageId>I-Synergy.Framework.Models</PackageId>
         <Description>I-Synergy Framework Models for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Models</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
         <Description>I-Synergy Framework Mvvm for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

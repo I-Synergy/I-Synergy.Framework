@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.Core</PackageId>
         <Description>I-Synergy Framework Core for .Net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Core</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

@@ -15,7 +15,6 @@
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeBuildOutput>true</IncludeBuildOutput>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <OutputPath>$(BaseOutputPath)</OutputPath>
         <AssemblyName>Syncfusion.SfChart.Uno</AssemblyName>
         <RootNamespace>Syncfusion.SfChart.Uno</RootNamespace>
 		<NoWarn>1701;1702;CS1591;CS1570;CS0108;CS1574;CS1572;CS1573;CS1587;CS1710;CS1711;CS1712;CS0419;CS0169;CS1584;CS1658;CS1584;CS1571;CS0649;CS8073;CS0114</NoWarn>
@@ -28,7 +27,7 @@
         <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UAP;SyncfusionFramework4_6;UNIVERSALWINDOWS;Uno;</DefineConstants>
     </PropertyGroup>
     <ItemGroup Condition="'$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0' or '$(TargetFramework)'=='net5.0'">
-        <PackageReference Include="Uno.UI" Version="3.6.0-dev.27" />
+        <PackageReference Include="Uno.UI" Version="3.6.0-dev.39" />
     </ItemGroup>
     <PropertyGroup Condition="'$(TargetFramework)'=='monoandroid10.0'">
         <DesignTimeBuild>false</DesignTimeBuild>

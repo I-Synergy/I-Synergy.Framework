@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.Storage</PackageId>
         <Description>I-Synergy Framework Storage for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Storage</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

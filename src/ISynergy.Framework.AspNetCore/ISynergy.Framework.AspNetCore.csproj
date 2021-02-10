@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.AspNetCore</PackageId>
         <Description>I-Synergy Framework AspNetCore for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

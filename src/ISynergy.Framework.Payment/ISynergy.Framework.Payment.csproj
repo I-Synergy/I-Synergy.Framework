@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.Payment</PackageId>
         <Description>I-Synergy Framework Payment for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Payment</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

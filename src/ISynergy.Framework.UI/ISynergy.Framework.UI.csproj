@@ -17,7 +17,6 @@
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeBuildOutput>true</IncludeBuildOutput>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <OutputPath>$(BaseOutputPath)</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,7 +25,7 @@
         <PackageReference Include="Uno.Core" Version="2.2.0" />
         <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.207.gcac670e618" />
         <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.81" />
-        <PackageReference Include="Uno.UI" Version="3.6.0-dev.27" />
+        <PackageReference Include="Uno.UI" Version="3.6.0-dev.39" />
         <PackageReference Include="Uno.Material" Version="1.0.0-dev.612" />
     </ItemGroup>
 
