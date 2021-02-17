@@ -30,6 +30,7 @@ using ISynergy.Framework.Core.Exceptions;
 using System.Net.WebSockets;
 using ISynergy.Framework.UI;
 using Windows.ApplicationModel;
+using ISynergy.Framework.Core.Services;
 
 namespace Sample
 {
@@ -61,14 +62,11 @@ namespace Sample
         {
         }
 
-        protected override Assembly GetEntryAssembly() => 
-            Assembly.GetAssembly(typeof(App));
-
         protected override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
 
-            var assembly = GetEntryAssembly();
+            var assembly = Assembly.GetAssembly(typeof(App));
 
             ConfigurationRoot = new ConfigurationBuilder()
                 .AddJsonStream(assembly.GetManifestResourceStream("appsettings.json"))
@@ -76,6 +74,7 @@ namespace Sample
 
             services.AddSingleton((s) => ConfigurationRoot.GetSection(nameof(ConfigurationOptions)).Get<ConfigurationOptions>());
 
+            services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
@@ -119,9 +118,6 @@ namespace Sample
                 if(exception.InnerException is WebSocketException)
                     return;
 
-                if(message.Equals(@"A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. ()"))
-                    return;
-
                 // Set busyIndicator to false if it's true.
                 await ServiceLocator.Default.GetInstance<IBusyService>().EndBusyAsync();
 
@@ -138,8 +134,7 @@ namespace Sample
                     }
                     else
                     {
-                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
+                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(iOException.Message);
                     }
                 }
                 else if (exception is ArgumentException argumentException)
@@ -152,8 +147,7 @@ namespace Sample
                 }
                 else
                 {
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_DEFAULT"));
+                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(exception.Message);
                 }
             }
             catch (Exception ex)

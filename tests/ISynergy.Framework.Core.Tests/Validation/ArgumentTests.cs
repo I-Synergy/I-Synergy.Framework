@@ -50,7 +50,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void GuidIsNotNullOrEmptyTest()
         {
             Guid test = default;
-            Assert.Throws<ArgumentException>(() => Argument.IsNotNullOrEmpty(nameof(test), test));
+            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(nameof(test), test));
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotNullOrWhitespaceTest()
         {
             string test = " ";
-            Assert.Throws<ArgumentException>(() => Argument.IsNotNullOrWhitespace(nameof(test), test));
+            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrWhitespace(nameof(test), test));
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotNullOrEmptyArrayTest()
         {
             Array test = Array.Empty<object>();
-            Assert.Throws<ArgumentException>(() => Argument.IsNotNullOrEmptyArray(nameof(test), test));
+            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmptyArray(nameof(test), test));
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotNullOrEmptyListTTest()
         {
             var test = new List<object>();
-            Assert.Throws<ArgumentException>(() => Argument.IsNotNullOrEmptyList(nameof(test), test));
+            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(nameof(test), test));
         }
 
         /// <summary>

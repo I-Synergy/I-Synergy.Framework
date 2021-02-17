@@ -23,25 +23,32 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
         <PackageReference Include="Uno.Core" Version="2.2.0" />
-        <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.207.gcac670e618" />
+		<PackageReference Include="Uno.UI" Version="3.6.0-dev.178" />
         <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.81" />
-        <PackageReference Include="Uno.UI" Version="3.6.0-dev.39" />
-        <PackageReference Include="Uno.Material" Version="1.0.0-dev.612" />
-    </ItemGroup>
+		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.207.gcac670e618" />
+        <PackageReference Include="Uno.Material" Version="1.0.0-dev.625" />
+	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' != 'net5.0'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.18362' or '$(TargetFramework)' == 'uap10.0.19041'">
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.12" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.12" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.12" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
 	</ItemGroup>
-	
+		
     <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0'">
-        <PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.6" />
-        <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.6" />
+        <PackageReference Include="Xamarin.AndroidX.Legacy.Support.v4" Version="1.0.0.7" />
+        <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.7" />
+		<PackageReference Include="Xamarin.AndroidX.AppCompat.AppCompatResources" Version="1.2.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.12" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.12" />
     </ItemGroup>
 
     <ItemGroup>

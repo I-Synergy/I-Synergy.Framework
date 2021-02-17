@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
-        <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
-        <TargetFramework>net5.0-windows</TargetFramework>
+	<Import Project="..\..\..\project.props" />
+	<PropertyGroup>
+		<OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
+		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
+		<TargetFramework>net5.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <AssemblyName>Sample</AssemblyName>
         <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -12,6 +13,9 @@
         <Authors>Ismail Hassani</Authors>
         <AssemblyName>Sample</AssemblyName>
     </PropertyGroup>
+    <PropertyGroup>
+		<UnoSourceGeneratorUseGenerationController>false</UnoSourceGeneratorUseGenerationController>
+	</PropertyGroup>
     <ItemGroup>
         <UpToDateCheckInput Include="..\Sample.Shared\**\*.xaml" />
     </ItemGroup>
@@ -21,8 +25,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.6.0-dev.39" />
-        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.39" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.Material" Version="1.0.0-dev.625" />
+		<PackageReference Include="Uno.UI.Lottie" Version="3.6.0-dev.178" />
+        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.6.0-dev.178" />
+        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.178" Condition="'$(Configuration)'=='Debug'" />
     </ItemGroup>
     
     <ItemGroup>

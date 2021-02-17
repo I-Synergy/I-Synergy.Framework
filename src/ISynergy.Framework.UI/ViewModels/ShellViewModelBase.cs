@@ -96,47 +96,47 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets or sets the restart update command.
         /// </summary>
         /// <value>The restart update command.</value>
-        public RelayCommand RestartUpdate_Command { get; set; }
+        public Command RestartUpdate_Command { get; set; }
         /// <summary>
         /// Gets or sets the login command.
         /// </summary>
         /// <value>The login command.</value>
-        public RelayCommand Login_Command { get; set; }
+        public Command Login_Command { get; set; }
         /// <summary>
         /// Gets or sets the language command.
         /// </summary>
         /// <value>The language command.</value>
-        public RelayCommand Language_Command { get; set; }
+        public Command Language_Command { get; set; }
         /// <summary>
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
-        public RelayCommand Color_Command { get; set; }
+        public Command Color_Command { get; set; }
         /// <summary>
         /// Gets or sets the help command.
         /// </summary>
         /// <value>The help command.</value>
-        public RelayCommand Help_Command { get; set; }
+        public Command Help_Command { get; set; }
         /// <summary>
         /// Gets or sets the settings command.
         /// </summary>
         /// <value>The settings command.</value>
-        public RelayCommand Settings_Command { get; set; }
+        public Command Settings_Command { get; set; }
         /// <summary>
         /// Gets or sets the background command.
         /// </summary>
         /// <value>The background command.</value>
-        public RelayCommand Background_Command { get; set; }
+        public Command Background_Command { get; set; }
         /// <summary>
         /// Gets or sets the feedback command.
         /// </summary>
         /// <value>The feedback command.</value>
-        public RelayCommand Feedback_Command { get; set; }
+        public Command Feedback_Command { get; set; }
         /// <summary>
         /// Gets or sets the state changed command.
         /// </summary>
         /// <value>The state changed command.</value>
-        public RelayCommand<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
+        public Command<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
 
         /// <summary>
         /// The theme selector
@@ -170,15 +170,16 @@ namespace ISynergy.Framework.UI.ViewModels
             _localizationFunctions = localizationFunctions;
 
             PrimaryItems = new ObservableCollection<NavigationItem>();
+            SecondaryItems = new ObservableCollection<NavigationItem>();
 
-            RestartUpdate_Command = new RelayCommand(async () => await ShowDialogRestartAfterUpdateAsync());
-            StateChanged_Command = new RelayCommand<VisualStateChangedEventArgs>(args => GoToState(args.NewState.Name));
+            RestartUpdate_Command = new Command(async () => await ShowDialogRestartAfterUpdateAsync());
+            StateChanged_Command = new Command<VisualStateChangedEventArgs>(args => GoToState(args.NewState.Name));
 
-            Language_Command = new RelayCommand(async () => await OpenLanguageAsync());
-            Color_Command = new RelayCommand(async () => await OpenColorsAsync());
-            Help_Command = new RelayCommand(async () => await OpenHelpAsync());
-            Feedback_Command = new RelayCommand(async () => await CreateFeedbackAsync());
-            Settings_Command = new RelayCommand(async () => await OpenSettingsAsync());
+            Language_Command = new Command(async () => await OpenLanguageAsync());
+            Color_Command = new Command(async () => await OpenColorsAsync());
+            Help_Command = new Command(async () => await OpenHelpAsync());
+            Feedback_Command = new Command(async () => await CreateFeedbackAsync());
+            Settings_Command = new Command(async () => await OpenSettingsAsync());
         }
 
         /// <summary>
@@ -297,6 +298,16 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <value>The primary items.</value>
         public ObservableCollection<NavigationItem> PrimaryItems
+        {
+            get { return GetValue<ObservableCollection<NavigationItem>>(); }
+            set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the SecondaryItems property value.
+        /// </summary>
+        /// <value>The primary items.</value>
+        public ObservableCollection<NavigationItem> SecondaryItems
         {
             get { return GetValue<ObservableCollection<NavigationItem>>(); }
             set { SetValue(value); }
@@ -459,7 +470,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Opens the help asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected Task OpenHelpAsync() => ThrowFeatureNotEnabledWarning();
+        protected virtual Task OpenHelpAsync() => ThrowFeatureNotEnabledWarning();
 
         /// <summary>
         /// open feedback as an asynchronous operation.

@@ -67,7 +67,7 @@ namespace ISynergy.Framework.Mvvm
         /// Gets or sets the close command.
         /// </summary>
         /// <value>The close command.</value>
-        public RelayCommand Close_Command { get; protected set; }
+        public Command Close_Command { get; protected set; }
 
         /// <summary>
         /// Gets or sets the Title property value.
@@ -112,7 +112,7 @@ namespace ISynergy.Framework.Mvvm
             PropertyChanged += OnPropertyChanged;
             IsInitialized = false;
 
-            Close_Command = new RelayCommand(async () => await CloseAsync());
+            Close_Command = new Command(async () => await CloseAsync());
         }
 
         /// <summary>

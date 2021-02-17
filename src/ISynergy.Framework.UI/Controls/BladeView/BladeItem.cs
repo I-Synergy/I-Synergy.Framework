@@ -2,10 +2,10 @@
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -39,7 +39,6 @@ namespace ISynergy.Framework.UI.Controls
         public BladeItem()
         {
             DefaultStyleKey = typeof(BladeItem);
-
             SizeChanged += OnSizeChanged;
         }
 

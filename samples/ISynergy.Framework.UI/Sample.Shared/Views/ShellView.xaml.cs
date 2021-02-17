@@ -1,12 +1,13 @@
 ﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
-using Windows.UI.Xaml.Controls;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Windows.UI.Xaml.Navigation;
+using ISynergy.Framework.Core.Events;
 
 namespace Sample.Views
 {
@@ -77,7 +78,8 @@ namespace Sample.Views
             {
                 if (ViewModel.Context.IsAuthenticated)
                 {
-                    if (ViewModel.Settings_Command.CanExecute(null)) ViewModel.Settings_Command.Execute(null);
+                    if (ViewModel.Settings_Command.CanExecute(null)) 
+                        ViewModel.Settings_Command.Execute(null);
                 }
                 else
                 {
@@ -157,29 +159,13 @@ namespace Sample.Views
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         private bool OnBackRequested()
         {
-            var navigated = false;
+            if (ViewModel.BaseCommonServices.NavigationService.CanGoBack)
+            {
+                ViewModel.BaseCommonServices.NavigationService.GoBack();
+                return true;
+            }
 
-            // don't go back if the navigation pane is overlaid
-            if (RootNavigationView.IsPaneOpen)
-            {
-#if HAS_UNO
-                return false;
-#elif NETFX_CORE
-                if (RootNavigationView.DisplayMode == NavigationViewDisplayMode.Compact || RootNavigationView.DisplayMode == NavigationViewDisplayMode.Minimal)
-                {
-                    return false;
-                }
-#endif
-            }
-            else
-            {
-                if (ViewModel.BaseCommonServices.NavigationService.CanGoBack)
-                {
-                    ViewModel.BaseCommonServices.NavigationService.GoBack();
-                    navigated = true;
-                }
-            }
-            return navigated;
+            return false;
         }
     }
 }

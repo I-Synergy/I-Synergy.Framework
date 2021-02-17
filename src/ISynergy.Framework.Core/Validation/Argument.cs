@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Core.Validation
             if (!paramValue.HasValue || paramValue.Value == Guid.Empty)
             {
                 var error = string.Format("Argument '{0}' cannot be null or Guid.Empty", paramName.ToString());
-                throw new ArgumentException(error, paramName);
+                throw new ArgumentNullException(error, paramName);
             }
         }
 
@@ -93,7 +93,7 @@ namespace ISynergy.Framework.Core.Validation
             if (string.IsNullOrEmpty(paramValue) || (string.CompareOrdinal(paramValue.Trim(), string.Empty) == 0))
             {
                 var error = string.Format("Argument '{0}' cannot be null or whitespace", paramName.ToString());
-                throw new ArgumentException(error, paramName);
+                throw new ArgumentNullException(error, paramName);
             }
         }
 
@@ -110,7 +110,7 @@ namespace ISynergy.Framework.Core.Validation
             if ((paramValue is null) || (paramValue.Length == 0))
             {
                 var error = string.Format("Argument '{0}' cannot be null or an empty array", paramName.ToString());
-                throw new ArgumentException(error, paramName);
+                throw new ArgumentNullException(error, paramName);
             }
         }
 
@@ -128,7 +128,7 @@ namespace ISynergy.Framework.Core.Validation
             if ((paramValue is null) || (paramValue.Count == 0))
             {
                 var error = string.Format("Argument '{0}' cannot be null or an empty list", paramName.ToString());
-                throw new ArgumentException(error, paramName);
+                throw new ArgumentNullException(error, paramName);
             }
         }
 

@@ -88,9 +88,12 @@ namespace ISynergy.Framework.UI.Converters
         {
             var list = new List<KeyValuePair<int, string>>();
 
-            foreach (Enum item in Enum.GetValues(value.GetType()))
+            if (value is Enum)
             {
-                list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
+                foreach (Enum item in Enum.GetValues(value.GetType()))
+                {
+                    list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
+                }
             }
 
             return list;

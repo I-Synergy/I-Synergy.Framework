@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Messaging;
-using ISynergy.Framework.UI.Services;
+﻿using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Sample.Abstractions.Services;
@@ -62,7 +61,6 @@ namespace Sample.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="CommonServices"/> class.
         /// </summary>
-        /// <param name="messenger">The messenger.</param>
         /// <param name="busyService">The busy service.</param>
         /// <param name="languageService">The language service.</param>
         /// <param name="settingsService">The settings service.</param>
@@ -81,7 +79,6 @@ namespace Sample.Services
         /// <param name="printingService">The printing service.</param>
         /// <param name="clipboardService">The clipboard service.</param>
         public CommonServices(
-            IMessenger messenger,
             IBusyService busyService,
             ILanguageService languageService,
             ISettingsService settingsService,
@@ -101,7 +98,7 @@ namespace Sample.Services
             IPrintingService printingService,
             IClipboardService clipboardService,
             IClientMonitorService clientMonitorService)
-            :base(messenger, busyService, languageService, applicationSettingsService, telemetryService, dialogService, uiVisualizerService, navigationService, infoService, converterService)
+            :base(busyService, languageService, applicationSettingsService, telemetryService, dialogService, uiVisualizerService, navigationService, infoService, converterService)
         {
             AuthenticationService = authenticationService;
             MasterDataService = masterDataService;

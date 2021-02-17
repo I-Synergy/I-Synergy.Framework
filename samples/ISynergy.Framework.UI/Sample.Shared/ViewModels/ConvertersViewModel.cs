@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Sample.ViewModels
 {
@@ -20,7 +21,7 @@ namespace Sample.ViewModels
             ILoggerFactory loggerFactory)
             : base(context, commonServices, loggerFactory)
         {
-            SelectedSoftwareEnvironment = SoftwareEnvironments.Production;
+            SelectedSoftwareEnvironment = (int)SoftwareEnvironments.Production;
         }
 
         /// <summary>
@@ -35,9 +36,9 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the SelectedSoftwareEnvironment property value.
         /// </summary>
-        public SoftwareEnvironments SelectedSoftwareEnvironment
+        public int SelectedSoftwareEnvironment
         {
-            get { return GetValue<SoftwareEnvironments>(); }
+            get { return GetValue<int>(); }
             set { SetValue(value); }
         }
 

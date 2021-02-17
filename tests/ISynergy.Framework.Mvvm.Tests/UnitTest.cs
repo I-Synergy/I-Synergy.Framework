@@ -8,10 +8,10 @@ namespace ISynergy.Framework.Mvvm.Tests
     public class UnitTest
     {
         /// <summary>
-        /// Defines the test method MockTest.
+        /// Defines the test method Test.
         /// </summary>
         [Fact]
-        public void MockTest()
+        public void Test()
         {
             Assert.True(true);
         }

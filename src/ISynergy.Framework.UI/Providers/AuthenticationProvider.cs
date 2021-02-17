@@ -31,10 +31,10 @@ namespace ISynergy.Framework.UI.Providers
         /// <summary>
         /// Determines whether this instance [can command be executed] the specified relay command.
         /// </summary>
-        /// <param name="RelayCommand">The relay command.</param>
+        /// <param name="Command">The relay command.</param>
         /// <param name="commandParameter">The command parameter.</param>
         /// <returns><c>true</c> if this instance [can command be executed] the specified relay command; otherwise, <c>false</c>.</returns>
-        public bool CanCommandBeExecuted(ICommand RelayCommand, object commandParameter)
+        public bool CanCommandBeExecuted(ICommand Command, object commandParameter)
         {
             return true;
         }

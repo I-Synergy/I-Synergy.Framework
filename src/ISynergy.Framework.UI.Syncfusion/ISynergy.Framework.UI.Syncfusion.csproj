@@ -1,7 +1,7 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.23">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-        <TargetFrameworks>net5.0;netstandard2.0;uap10.0.18362;uap10.0.19041;MonoAndroid10.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;uap10.0.18362;uap10.0.19041;MonoAndroid10.0</TargetFrameworks>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{0B4D006F-7F03-49AB-B4A0-1F0E53A55542}</ProjectGuid>
@@ -20,14 +20,14 @@
 		<NoWarn>1701;1702;CS1591;CS1570;CS0108;CS1574;CS1572;CS1573;CS1587;CS1710;CS1711;CS1712;CS0419;CS0169;CS1584;CS1658;CS1584;CS1571;CS0649;CS8073;CS0114</NoWarn>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'or '$(TargetFramework)'=='net5.0'">
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
         <DefineConstants>TRACE;__WASM__;NETFX_CORE;WINDOWS_UAP;SyncfusionFramework4_6;UNIVERSALWINDOWS;Uno;</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition="'$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='uap10.0.18362' or '$(TargetFramework)'=='uap10.0.19041'">
         <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UAP;SyncfusionFramework4_6;UNIVERSALWINDOWS;Uno;</DefineConstants>
     </PropertyGroup>
-    <ItemGroup Condition="'$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0' or '$(TargetFramework)'=='net5.0'">
-        <PackageReference Include="Uno.UI" Version="3.6.0-dev.39" />
+    <ItemGroup Condition="'$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0'">
+        <PackageReference Include="Uno.UI" Version="3.6.0-dev.178" />
     </ItemGroup>
     <PropertyGroup Condition="'$(TargetFramework)'=='monoandroid10.0'">
         <DesignTimeBuild>false</DesignTimeBuild>
@@ -77,7 +77,7 @@
     <ItemGroup>
         <EmbeddedResource Include="Resources\en-US\Syncfusion.SfChart.Uno.Resources.resw" />
     </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0' or '$(TargetFramework)'=='net5.0'">
+    <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
         <EmbeddedResource Include="LinkerDefinition.Wasm.xml">
             <LogicalName>$(AssemblyName).xml</LogicalName>
         </EmbeddedResource>

@@ -10,6 +10,7 @@
 	xmlns:Converters="using:ISynergy.Framework.UI.Converters"
 	xmlns:FrameworkNavigation="using:ISynergy.Framework.UI.Navigation"
 	xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
 	mc:Ignorable="d">
 
 	<c:View.Resources>
@@ -19,24 +20,24 @@
 		<FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
 			<FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
 				<DataTemplate x:DataType="FrameworkNavigation:NavigationItem">
-					<NavigationViewItem Content="{x:Bind Name}">
-						<NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem Content="{x:Bind Name}">
+                        <muxc:NavigationViewItem.Icon>
 							<PathIcon Data="{x:Bind Symbol}" />
-						</NavigationViewItem.Icon>
+						</muxc:NavigationViewItem.Icon>
 						<i:Interaction.Behaviors>
 							<ic:EventTriggerBehavior EventName="Tapped">
 								<ic:InvokeCommandAction Command="{x:Bind Command}" CommandParameter="{x:Bind CommandParameter}" />
 							</ic:EventTriggerBehavior>
 						</i:Interaction.Behaviors>
-					</NavigationViewItem>
+					</muxc:NavigationViewItem>
 				</DataTemplate>
-			</FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
+            </FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
 		</FrameworkNavigation:MenuItemTemplateSelector>
 	</c:View.Resources>
 
 	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 		<RelativePanel>
-			<NavigationView x:Name="RootNavigationView"
+            <muxc:NavigationView x:Name="RootNavigationView"
 							RelativePanel.AlignTopWithPanel="True"
 							RelativePanel.AlignLeftWithPanel="True" 
 							RelativePanel.AlignRightWithPanel="True" 
@@ -44,60 +45,58 @@
 							PaneTitle="{Binding Context.Title}"
 							ExpandedModeThresholdWidth="1920"
 							MenuItemsSource="{Binding PrimaryItems}"
+                            FooterMenuItemsSource="{Binding SecondaryItems}"
 							MenuItemTemplateSelector="{StaticResource ItemSelector}"
-							SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 							ItemInvoked="NavigationItemInvoked"
 							IsSettingsVisible="{Binding Context.IsAuthenticated, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-							PaneDisplayMode="{Binding NavigationPaneMode}"
+                            PaneDisplayMode="Left"
                             AlwaysShowHeader="False">
 
-				<NavigationView.PaneFooter>
-					<StackPanel>
-						<NavigationViewItem x:Name="menuitem_Help" Content="Help" >
-							<NavigationViewItem.Icon>
-								<PathIcon Data="{StaticResource tile_help}"/>
-							</NavigationViewItem.Icon>
-							<i:Interaction.Behaviors>
-								<ic:EventTriggerBehavior EventName="Tapped">
-									<ic:InvokeCommandAction Command="{Binding Help_Command}" />
-								</ic:EventTriggerBehavior>
-							</i:Interaction.Behaviors>
-						</NavigationViewItem>
-						<NavigationViewItem x:Name="menuitem_Language" Content="Language" >
-							<NavigationViewItem.Icon>
-								<PathIcon Data="{StaticResource icon_flag}"/>
-							</NavigationViewItem.Icon>
-							<i:Interaction.Behaviors>
-								<ic:EventTriggerBehavior EventName="Tapped">
-									<ic:InvokeCommandAction Command="{Binding Language_Command}" />
-								</ic:EventTriggerBehavior>
-							</i:Interaction.Behaviors>
-						</NavigationViewItem>
-						<NavigationViewItem x:Name="menuitem_Color" Content="Colors" >
-							<NavigationViewItem.Icon>
-								<PathIcon Data="{StaticResource icon_color}"/>
-							</NavigationViewItem.Icon>
-							<i:Interaction.Behaviors>
-								<ic:EventTriggerBehavior EventName="Tapped">
-									<ic:InvokeCommandAction Command="{Binding Color_Command}" />
-								</ic:EventTriggerBehavior>
-							</i:Interaction.Behaviors>
-						</NavigationViewItem>
+                <!--<muxc:NavigationView.FooterMenuItems>
+                    <muxc:NavigationViewItem Content="Help">
+                        <muxc:NavigationViewItem.Icon>
+                            <PathIcon Data="{StaticResource tile_help}"/>
+                        </muxc:NavigationViewItem.Icon>
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="Tapped">
+                                <ic:InvokeCommandAction Command="{Binding Help_Command}" />
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem Content="Language" >
+                        <muxc:NavigationViewItem.Icon>
+                            <PathIcon Data="{StaticResource icon_flag}"/>
+                        </muxc:NavigationViewItem.Icon>
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="Tapped">
+                                <ic:InvokeCommandAction Command="{Binding Language_Command}" />
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </muxc:NavigationViewItem>
+                    <muxc:NavigationViewItem Content="Colors" >
+                        <muxc:NavigationViewItem.Icon>
+                            <PathIcon Data="{StaticResource icon_color}"/>
+                        </muxc:NavigationViewItem.Icon>
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="Tapped">
+                                <ic:InvokeCommandAction Command="{Binding Color_Command}" />
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </muxc:NavigationViewItem>
 
-						<NavigationViewItemSeparator />
+                    <muxc:NavigationViewItemSeparator />
 
-						<NavigationViewItem x:Name="menuitem_Login" Content="{Binding Context.IsAuthenticated, Converter={StaticResource BooleanToStringConverter}}">
-							<NavigationViewItem.Icon>
-								<PathIcon Data="{StaticResource icon_user}"/>
-							</NavigationViewItem.Icon>
-							<i:Interaction.Behaviors>
-								<ic:EventTriggerBehavior EventName="Tapped">
-									<ic:InvokeCommandAction Command="{Binding Login_Command}"/>
-								</ic:EventTriggerBehavior>
-							</i:Interaction.Behaviors>
-						</NavigationViewItem>
-					</StackPanel>
-				</NavigationView.PaneFooter>
+                    <muxc:NavigationViewItem Content="{Binding Context.IsAuthenticated, Converter={StaticResource BooleanToStringConverter}}">
+                        <muxc:NavigationViewItem.Icon>
+                            <PathIcon Data="{StaticResource icon_user}"/>
+                        </muxc:NavigationViewItem.Icon>
+                        <i:Interaction.Behaviors>
+                            <ic:EventTriggerBehavior EventName="Tapped">
+                                <ic:InvokeCommandAction Command="{Binding Login_Command}"/>
+                            </ic:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </muxc:NavigationViewItem>
+                </muxc:NavigationView.FooterMenuItems>-->
 
 				<Frame x:Name="ContentRootFrame"
 						   Margin="10"
@@ -109,12 +108,12 @@
 						</not_wasm:TransitionCollection>
 					</not_wasm:Frame.ContentTransitions>
 				</Frame>
-			</NavigationView>
+			</muxc:NavigationView>
 
 			<Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
 				<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.75" />
 				<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-					<ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
+                    <muxc:ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
 					<TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
 				</StackPanel>
 			</Grid>

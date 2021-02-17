@@ -10,7 +10,6 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Messaging;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
@@ -163,7 +162,7 @@ namespace ISynergy.Framework.UI
             e.SetObserved();
         }
 
-#if NETFX_CORE|| (NET5_0 && WINDOWS)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         /// <summary>
         /// Handles the UnhandledException event of the Current control.
         /// </summary>
@@ -207,7 +206,7 @@ namespace ISynergy.Framework.UI
         /// <param name="args">Event data for the event.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-#if NETFX_CORE|| (NET5_0 && WINDOWS)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
                 case "Windows.Desktop":
@@ -355,7 +354,7 @@ namespace ISynergy.Framework.UI
             var deferral = e.SuspendingOperation.GetDeferral();
 
             //TODO: Save application state and stop any background activity
-#if NETFX_CORE|| (NET5_0 && WINDOWS)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
                 task.Value?.Unregister(true);
@@ -396,12 +395,6 @@ namespace ISynergy.Framework.UI
         protected abstract void ConfigureLogger(ILoggerFactory factory);
 
         /// <summary>
-        /// Gets the entry assembly.
-        /// </summary>
-        /// <returns>Assembly.</returns>
-        protected abstract Assembly GetEntryAssembly();
-
-        /// <summary>
         /// Configures the services.
         /// </summary>
         /// <param name="services">The services.</param>
@@ -410,12 +403,10 @@ namespace ISynergy.Framework.UI
             services.AddLogging();
             services.AddOptions();
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
-            services.AddSingleton<IMessenger, Messenger>();
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton((s) => LanguageService);
-            services.AddSingleton<IInfoService>((s) => new InfoService(GetEntryAssembly()));
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IUIVisualizerService, UIVisualizerService>();
             services.AddSingleton((s) => _navigationService);
@@ -597,34 +588,34 @@ namespace ISynergy.Framework.UI
 						 { "Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug },
 
 						// Generic Xaml events
-						// { "Microsoft.UI.Xaml", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.UIElement", LogLevel.Debug },
+						 { "Windows.UI.Xaml", LogLevel.Debug },
+                         { "Windows.UI.Xaml.VisualStateGroup", LogLevel.Debug },
+                         { "Windows.UI.Xaml.StateTriggerBase", LogLevel.Debug },
+                         { "Windows.UI.Xaml.UIElement", LogLevel.Debug },
 
 						// Layouter specific messages
-						// { "Microsoft.UI.Xaml.Controls", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug },
-						// { "Windows.Storage", LogLevel.Debug },
+						 { "Windows.UI.Xaml.Controls", LogLevel.Debug },
+                         { "Windows.UI.Xaml.Controls.Layouter", LogLevel.Debug },
+                         { "Windows.UI.Xaml.Controls.Panel", LogLevel.Debug },
+                         { "Windows.Storage", LogLevel.Debug },
 
 						// Binding related messages
-						// { "Microsoft.UI.Xaml.Data", LogLevel.Debug },
+						 { "Windows.UI.Xaml.Data", LogLevel.Debug },
 
 						// DependencyObject memory references tracking
 						// { "ReferenceHolder", LogLevel.Debug },
 
 						// ListView-related messages
-						// { "Microsoft.UI.Xaml.Controls.ListViewBase", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.Controls.ListView", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.Controls.GridView", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.Controls.VirtualizingPanelLayout", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.Controls.NativeListViewBase", LogLevel.Debug },
-						// { "Microsoft.UI.Xaml.Controls.ListViewBaseSource", LogLevel.Debug }, //iOS
-						// { "Microsoft.UI.Xaml.Controls.ListViewBaseInternalContainer", LogLevel.Debug }, //iOS
-						// { "Microsoft.UI.Xaml.Controls.NativeListViewBaseAdapter", LogLevel.Debug }, //Android
-						// { "Microsoft.UI.Xaml.Controls.BufferViewCache", LogLevel.Debug }, //Android
-						// { "Microsoft.UI.Xaml.Controls.VirtualizingPanelGenerator", LogLevel.Debug }, //WASM
+						// { "Windows.UI.Xaml.Controls.ListViewBase", LogLevel.Debug },
+						// { "Windows.UI.Xaml.Controls.ListView", LogLevel.Debug },
+						// { "Windows.UI.Xaml.Controls.GridView", LogLevel.Debug },
+						// { "Windows.UI.Xaml.Controls.VirtualizingPanelLayout", LogLevel.Debug },
+						// { "Windows.UI.Xaml.Controls.NativeListViewBase", LogLevel.Debug },
+						// { "Windows.UI.Xaml.Controls.ListViewBaseSource", LogLevel.Debug }, //iOS
+						// { "Windows.UI.Xaml.Controls.ListViewBaseInternalContainer", LogLevel.Debug }, //iOS
+						// { "Windows.UI.Xaml.Controls.NativeListViewBaseAdapter", LogLevel.Debug }, //Android
+						// { "Windows.UI.Xaml.Controls.BufferViewCache", LogLevel.Debug }, //Android
+						// { "Windows.UI.Xaml.Controls.VirtualizingPanelGenerator", LogLevel.Debug }, //WASM
 					}
                 )
 #if DEBUG

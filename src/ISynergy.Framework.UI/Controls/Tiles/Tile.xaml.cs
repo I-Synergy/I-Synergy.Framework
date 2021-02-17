@@ -10,11 +10,9 @@ namespace ISynergy.Framework.UI.Controls
     /// Class Tile. This class cannot be inherited.
     /// Implements the <see cref="Button" />
     /// Implements the <see cref="IComponentConnector" />
-    /// Implements the <see cref="IComponentConnector2" />
     /// </summary>
     /// <seealso cref="Button" />
     /// <seealso cref="IComponentConnector" />
-    /// <seealso cref="IComponentConnector2" />
     public sealed partial class Tile : Button
     {
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Messaging;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services
@@ -11,11 +10,6 @@ namespace ISynergy.Framework.UI.Services
     /// <seealso cref="IBaseCommonServices" />
     public abstract class BaseCommonService : IBaseCommonServices
     {
-        /// <summary>
-        /// Gets the messenger.
-        /// </summary>
-        /// <value>The messenger.</value>
-        public IMessenger Messenger { get; }
         /// <summary>
         /// Gets the busy service.
         /// </summary>
@@ -65,7 +59,6 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseCommonService"/> class.
         /// </summary>
-        /// <param name="messenger">The messenger.</param>
         /// <param name="busy">The busy.</param>
         /// <param name="language">The language.</param>
         /// <param name="settings">The settings.</param>
@@ -76,7 +69,6 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="info">The information.</param>
         /// <param name="converter">The converter.</param>
         protected BaseCommonService(
-            IMessenger messenger,
             IBusyService busy,
             ILanguageService language,
             IApplicationSettingsService settings,
@@ -87,7 +79,6 @@ namespace ISynergy.Framework.UI.Services
             IInfoService info,
             IConverterService converter)
         {
-            Messenger = messenger;
             BusyService = busy;
             LanguageService = language;
             ApplicationSettingsService = settings;

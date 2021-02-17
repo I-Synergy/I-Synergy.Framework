@@ -31,7 +31,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
-        public RelayCommand<string> Color_Command { get; set; }
+        public Command<string> Color_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
@@ -45,7 +45,7 @@ namespace ISynergy.Framework.UI.ViewModels
             ILoggerFactory loggerFactory)
             : base(context, commonServices, loggerFactory)
         {
-            Color_Command = new RelayCommand<string>((e) => SelectedItem = SetColor(e));
+            Color_Command = new Command<string>((e) => SelectedItem = SetColor(e));
             SelectedItem = SetColor(BaseCommonServices.ApplicationSettingsService.Color);
         }
 

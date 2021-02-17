@@ -1,14 +1,20 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Events
 {
     /// <summary>
-    /// Stores an Func without causing a hard reference
-    /// to be created to the Func's owner. The owner can be garbage collected at any time.
+    /// Class WeakFunc.
+    /// Implements the <see cref="WeakFunc{TResult}" />
+    /// Implements the <see cref="IExecuteWithObjectAndResult" />
     /// </summary>
-    /// <typeparam name="T">The type of the Func's parameter.</typeparam>
-    /// <typeparam name="TResult">The type of the Func's return value.</typeparam>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TResult">The type of the t result.</typeparam>
+    /// <seealso cref="WeakFunc{TResult}" />
+    /// <seealso cref="IExecuteWithObjectAndResult" />
     public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResult
     {
         /// <summary>
@@ -17,7 +23,7 @@ namespace ISynergy.Framework.Core.Events
         private Func<T, TResult> _staticFunc;
 
         /// <summary>
-        /// Gets or sets the name of the method that this WeakFunc represents.
+        /// Gets the name of the method.
         /// </summary>
         /// <value>The name of the method.</value>
         public override string MethodName
@@ -34,8 +40,7 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Gets a value indicating whether the Func's owner is still alive, or if it was collected
-        /// by the Garbage Collector already.
+        /// Gets a value indicating whether this instance is alive.
         /// </summary>
         /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
         public override bool IsAlive
@@ -63,30 +68,21 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Initializes a new instance of the WeakFunc class.
+        /// Initializes a new instance of the <see cref="WeakFunc{T, TResult}"/> class.
         /// </summary>
-        /// <param name="func">The Func that will be associated to this instance.</param>
-        /// <param name="keepTargetAlive">If true, the target of the Action will
-        /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.</param>
+        /// <param name="func">The function.</param>
+        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
         public WeakFunc(Func<T, TResult> func, bool keepTargetAlive = false)
             : this(func is null ? null : func.Target, func, keepTargetAlive)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the WeakFunc class.
+        /// Initializes a new instance of the <see cref="WeakFunc{T, TResult}"/> class.
         /// </summary>
-        /// <param name="target">The Func's owner.</param>
-        /// <param name="func">The Func that will be associated to this instance.</param>
-        /// <param name="keepTargetAlive">If true, the target of the Action will
-        /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.</param>
-        [SuppressMessage(
-            "Microsoft.Design", 
-            "CA1062:Validate arguments of public methods",
-            MessageId = "1",
-            Justification = "Method should fail with an exception if func is null.")]
+        /// <param name="target">The target.</param>
+        /// <param name="func">The function.</param>
+        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
         public WeakFunc(object target, Func<T, TResult> func, bool keepTargetAlive = false)
         {
             if (func.Method.IsStatic)
@@ -107,40 +103,22 @@ namespace ISynergy.Framework.Core.Events
             FuncReference = new WeakReference(func.Target);
             LiveReference = keepTargetAlive ? func.Target : null;
             Reference = new WeakReference(target);
-
-#if DEBUG
-            if (FuncReference != null
-                && FuncReference.Target != null
-                && !keepTargetAlive)
-            {
-                var type = FuncReference.Target.GetType();
-
-                if (type.Name.StartsWith("<>")
-                    && type.Name.Contains("DisplayClass"))
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        "You are attempting to register a lambda with a closure without using keepTargetAlive. Are you sure? Check http://galasoft.ch/s/mvvmweakaction for more info.");
-                }
-            }
-#endif
         }
 
         /// <summary>
-        /// Executes the Func. This only happens if the Func's owner
-        /// is still alive. The Func's parameter is set to default(T).
+        /// Executes this instance.
         /// </summary>
-        /// <returns>The result of the Func stored as reference.</returns>
+        /// <returns>TResult.</returns>
         public new TResult Execute()
         {
             return Execute(default(T));
         }
 
         /// <summary>
-        /// Executes the Func. This only happens if the Func's owner
-        /// is still alive.
+        /// Executes the specified parameter.
         /// </summary>
-        /// <param name="parameter">A parameter to be passed to the action.</param>
-        /// <returns>The result of the Func stored as reference.</returns>
+        /// <param name="parameter">The parameter.</param>
+        /// <returns>TResult.</returns>
         public TResult Execute(T parameter)
         {
             if (_staticFunc != null)
@@ -149,7 +127,7 @@ namespace ISynergy.Framework.Core.Events
             }
 
             var funcTarget = FuncTarget;
-            
+
             if (IsAlive)
             {
                 if (Method != null
@@ -157,7 +135,7 @@ namespace ISynergy.Framework.Core.Events
                         || FuncReference != null)
                     && funcTarget != null)
                 {
-                    return (TResult) Method.Invoke(
+                    return (TResult)Method.Invoke(
                         funcTarget,
                         new object[]
                         {
@@ -170,14 +148,11 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Executes the Func with a parameter of type object. This parameter
-        /// will be casted to T. This method implements <see cref="IExecuteWithObject.ExecuteWithObject" />
-        /// and can be useful if you store multiple WeakFunc{T} instances but don't know in advance
-        /// what type T represents.
+        /// Executes a Func and returns the result.
         /// </summary>
-        /// <param name="parameter">The parameter that will be passed to the Func after
-        /// being casted to T.</param>
-        /// <returns>The result of the execution as object, to be casted to T.</returns>
+        /// <param name="parameter">A parameter passed as an object,
+        /// to be casted to the appropriate type.</param>
+        /// <returns>The result of the operation.</returns>
         public object ExecuteWithObject(object parameter)
         {
             var parameterCasted = (T)parameter;
@@ -185,9 +160,7 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Sets all the funcs that this WeakFunc contains to null,
-        /// which is a signal for containing objects that this WeakFunc
-        /// should be deleted.
+        /// Marks for deletion.
         /// </summary>
         public new void MarkForDeletion()
         {

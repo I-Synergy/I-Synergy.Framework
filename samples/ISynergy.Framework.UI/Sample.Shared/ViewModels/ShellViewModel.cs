@@ -10,21 +10,12 @@ using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Sample.ViewModels
 {
     public class ShellViewModel : ShellViewModelBase, IShellViewModel
     {
-        /// <summary>
-        /// Gets or sets the NavigationPaneMode property value.
-        /// </summary>
-        public NavigationViewPaneDisplayMode NavigationPaneMode
-        {
-            get { return GetValue<NavigationViewPaneDisplayMode>(); }
-            set { SetValue(value); }
-        }
-
         /// <summary>
         /// Gets or sets the Version property value.
         /// </summary>
@@ -40,10 +31,10 @@ namespace Sample.ViewModels
         /// <value>The common services.</value>
         public ICommonServices CommonServices { get; }
 
-        public RelayCommand Display_Command { get; set; }
-        public RelayCommand Info_Command { get; set; }
-        public RelayCommand Browse_Command { get; set; }
-        public RelayCommand Converter_Command { get; set; }
+        public Command Display_Command { get; set; }
+        public Command Info_Command { get; set; }
+        public Command Browse_Command { get; set; }
+        public Command Converter_Command { get; set; }
 
         public ShellViewModel(
             IContext context,
@@ -56,15 +47,12 @@ namespace Sample.ViewModels
             CommonServices = commonServices;
 
             Version = commonServices.InfoService.ProductVersion;
-
-            NavigationPaneMode = NavigationViewPaneDisplayMode.Auto;
-
             DisplayName = "User";
 
-            Display_Command = new RelayCommand(async () => await OpenDisplayAsync());
-            Info_Command = new RelayCommand(async () => await OpenInfoAsync());
-            Browse_Command = new RelayCommand(async () => await BrowseFileAsync());
-            Converter_Command = new RelayCommand(async () => await OpenConvertersAsync());
+            Display_Command = new Command(async () => await OpenDisplayAsync());
+            Info_Command = new Command(async () => await OpenInfoAsync());
+            Browse_Command = new Command(async () => await BrowseFileAsync());
+            Converter_Command = new Command(async () => await OpenConvertersAsync());
 
             PopulateNavItems();
         }
@@ -103,6 +91,12 @@ namespace Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["tile_info"] as string, ForegroundColor, Info_Command));
             PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["tb_search"] as string, ForegroundColor, Browse_Command));
             PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["tb_products"] as string, ForegroundColor, Converter_Command));
+
+            SecondaryItems.Clear();
+            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["tile_help"] as string, ForegroundColor, Help_Command));
+            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["icon_flag"] as string, ForegroundColor, Language_Command));
+            SecondaryItems.Add(new NavigationItem("Color", Application.Current.Resources["icon_color"] as string, ForegroundColor, Color_Command));
+            SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["icon_user"] as string, ForegroundColor, Login_Command));
         }
 
         protected override Task CreateFeedbackAsync() => ThrowFeatureNotEnabledWarning();

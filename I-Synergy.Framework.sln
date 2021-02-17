@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		azure-pipelines.yml = azure-pipelines.yml
 		codecoverage.runsettings = codecoverage.runsettings
 		global.json = global.json
+		icon.png = icon.png
 		nuget.config = nuget.config
 		project.props = project.props
 		README.md = README.md

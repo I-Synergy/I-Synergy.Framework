@@ -1,23 +1,26 @@
-﻿using System.Reflection;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using ISynergy.Framework.Core.Abstractions.Services;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Services
 {
     /// <summary>
-    /// Class InfoService.
-    /// Implements the <see cref="IInfoService" />
+    /// Class BaseInfoService.
     /// </summary>
-    /// <seealso cref="IInfoService" />
     public class InfoService : IInfoService
     {
         /// <summary>
         /// The assembly
         /// </summary>
-        private readonly Assembly _assembly;
+        private  readonly Assembly _assembly;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InfoService"/> class.
+        /// Initializes a new instance of the <see cref="InfoService" /> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         public InfoService(Assembly assembly)
@@ -57,7 +60,20 @@ namespace ISynergy.Framework.Core.Services
         {
             get
             {
-                return _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+                if(_assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false))
+                {
+                    return _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+                }
+                else if (_assembly.IsDefined(typeof(AssemblyVersionAttribute), false))
+                {
+                    return _assembly.GetCustomAttribute<AssemblyVersionAttribute>().Version;
+                }
+                else if (_assembly.IsDefined(typeof(AssemblyFileVersionAttribute), false))
+                {
+                    return _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+                }
+
+                return "0.0.0";
             }
         }
 

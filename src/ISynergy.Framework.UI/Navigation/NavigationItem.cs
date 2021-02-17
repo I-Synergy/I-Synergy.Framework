@@ -5,9 +5,14 @@ using Windows.UI.Xaml.Media;
 namespace ISynergy.Framework.UI.Navigation
 {
     /// <summary>
+    /// Interface for navigational item.
+    /// </summary>
+    public interface INavigationItem { }
+
+    /// <summary>
     /// Class NavigationBase.
     /// </summary>
-    public abstract class NavigationBase { }
+    public abstract class NavigationBase : INavigationItem { }
 
     /// <summary>
     /// Class NavigationItem.

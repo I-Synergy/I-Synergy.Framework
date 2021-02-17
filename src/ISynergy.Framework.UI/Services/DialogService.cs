@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Input;
 using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -9,6 +10,7 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using ISynergy.Framework.Mvvm.Commands;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -33,13 +35,13 @@ namespace ISynergy.Framework.UI.Services
             _languageService = languageService;
         }
 
-        /// <summary>
-        /// Shows the error asynchronous.
-        /// </summary>
-        /// <param name="error">The error.</param>
-        /// <param name="title">The title.</param>
-        /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-        public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "")
+    /// <summary>
+    /// Shows the error asynchronous.
+    /// </summary>
+    /// <param name="error">The error.</param>
+    /// <param name="title">The title.</param>
+    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
+    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "")
         {
             return ShowAsync(error.Message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -106,95 +108,10 @@ namespace ISynergy.Framework.UI.Services
             }
         }
 
+        
+
         /// <summary>
         /// show an Content Dialog.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="title">The title.</param>
-        /// <param name="buttons">The buttons.</param>
-        /// <param name="image">The image.</param>
-        /// <returns>MessageBoxResult.</returns>
-        public virtual async Task<MessageBoxResult> ShowContentDialogAsync(
-            string message,
-            string title = "",
-            MessageBoxButton buttons = MessageBoxButton.OK,
-            MessageBoxImage image = MessageBoxImage.Information)
-        {
-            var result = MessageBoxResult.Cancel;
-
-            if (!Window.Current.Dispatcher.HasThreadAccess)
-                throw new InvalidOperationException("This method can only be invoked from UI thread.");
-
-            var dialog = new ContentDialog()
-            {
-                Title = title,
-                Content = message
-            };
-
-            switch (buttons)
-            {
-                case MessageBoxButton.OK:
-                    dialog.CloseButtonText = _languageService.GetString("Ok");
-                    break;
-                case MessageBoxButton.OKCancel:
-                    dialog.PrimaryButtonText = _languageService.GetString("Ok");
-                    dialog.CloseButtonText = _languageService.GetString("Cancel");
-                    break;
-                case MessageBoxButton.YesNoCancel:
-                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
-                    dialog.SecondaryButtonText = _languageService.GetString("No");
-                    dialog.CloseButtonText = _languageService.GetString("Cancel");
-                    break;
-                case MessageBoxButton.YesNo:
-                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
-                    dialog.CloseButtonText = _languageService.GetString("No");
-                    break;
-            }
-
-            var dialogResult = await dialog.ShowAsync();
-
-            switch (buttons)
-            {
-                case MessageBoxButton.OK:
-                    return MessageBoxResult.OK;
-                case MessageBoxButton.OKCancel:
-                    if(dialogResult == ContentDialogResult.Primary)
-                    {
-                        return MessageBoxResult.OK;
-                    }
-                    else
-                    {
-                        return MessageBoxResult.Cancel;
-                    }
-                case MessageBoxButton.YesNoCancel:
-                    if (dialogResult == ContentDialogResult.Primary)
-                    {
-                        return MessageBoxResult.Yes;
-                    }
-                    else if (dialogResult == ContentDialogResult.Secondary)
-                    {
-                        return MessageBoxResult.No;
-                    }
-                    else
-                    {
-                        return MessageBoxResult.Cancel;
-                    }
-                case MessageBoxButton.YesNo:
-                    if (dialogResult == ContentDialogResult.Primary)
-                    {
-                        return MessageBoxResult.Yes;
-                    }
-                    else
-                    {
-                        return MessageBoxResult.No;
-                    }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// show an asynchronous message dialog.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="title">The title.</param>
@@ -209,10 +126,87 @@ namespace ISynergy.Framework.UI.Services
         {
             var result = MessageBoxResult.Cancel;
 
-            var yesCommand = new UICommand(_languageService.GetString("Yes"), cmd => { result = MessageBoxResult.Yes; }, "yesCommand");
-            var noCommand = new UICommand(_languageService.GetString("No"), cmd => { result = MessageBoxResult.No; }, "noCommand");
-            var okCommand = new UICommand(_languageService.GetString("Ok"), cmd => { result = MessageBoxResult.OK; }, "okCommand");
-            var cancelCommand = new UICommand(_languageService.GetString("Cancel"), cmd => { result = MessageBoxResult.Cancel; }, "cancelCommand");
+            //if (!Window.Current.Dispatcher.HasThreadAccess)
+            //    throw new InvalidOperationException("This method can only be invoked from UI thread.");
+
+            var _yesCommand = new Command(() => result = MessageBoxResult.Yes);
+            var _noCommand = new Command(() => result = MessageBoxResult.No);
+            var _okCommand = new Command(() => result = MessageBoxResult.OK);
+            var _cancelCommand = new Command(() => result = MessageBoxResult.Cancel);
+
+            var dialog = new ContentDialog()
+            {
+                Title = title,
+                Content = message
+            };
+
+            switch (buttons)
+            {
+                case MessageBoxButton.OK:
+                    dialog.CloseButtonText = _languageService.GetString("Ok");
+                    dialog.CloseButtonCommand = _okCommand; 
+                    break;
+                case MessageBoxButton.OKCancel:
+                    dialog.PrimaryButtonText = _languageService.GetString("Ok");
+                    dialog.PrimaryButtonCommand = _okCommand;
+
+                    dialog.CloseButtonText = _languageService.GetString("Cancel");
+                    dialog.CloseButtonCommand = _cancelCommand;
+                    break;
+                case MessageBoxButton.YesNoCancel:
+                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                    dialog.PrimaryButtonCommand = _yesCommand;
+
+                    dialog.SecondaryButtonText = _languageService.GetString("No");
+                    dialog.SecondaryButtonCommand = _noCommand;
+                    
+                    dialog.CloseButtonText = _languageService.GetString("Cancel");
+                    dialog.CloseButtonCommand = _cancelCommand;
+                    break;
+                case MessageBoxButton.YesNo:
+                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                    dialog.PrimaryButtonCommand = _yesCommand;
+
+                    dialog.CloseButtonText = _languageService.GetString("No");
+                    dialog.CloseButtonCommand = _noCommand;
+                    break;
+            }
+
+#if NETFX_CORE || NET5_0
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+#else
+            await CoreDispatcher.Main.RunAsync(
+                CoreDispatcherPriority.Normal,
+#endif
+                async () =>
+                {
+                    await dialog.ShowAsync();
+                });
+
+            return result;
+        }
+
+        /// <summary>
+        /// show an asynchronous message dialog.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="buttons">The buttons.</param>
+        /// <param name="image">The image.</param>
+        /// <returns>MessageBoxResult.</returns>
+        public virtual async Task<MessageBoxResult> ShowMessageAsync(
+            string message,
+            string title = "",
+            MessageBoxButton buttons = MessageBoxButton.OK,
+            MessageBoxImage image = MessageBoxImage.Information)
+        {
+            var result = MessageBoxResult.Cancel;
+
+            var _yesCommand = new Windows.UI.Popups.UICommand(_languageService.GetString("Yes"), cmd => { result = MessageBoxResult.Yes; }, "yesCommand");
+            var _noCommand = new Windows.UI.Popups.UICommand(_languageService.GetString("No"), cmd => { result = MessageBoxResult.No; }, "noCommand");
+            var _okCommand = new Windows.UI.Popups.UICommand(_languageService.GetString("Ok"), cmd => { result = MessageBoxResult.OK; }, "okCommand");
+            var _cancelCommand = new Windows.UI.Popups.UICommand(_languageService.GetString("Cancel"), cmd => { result = MessageBoxResult.Cancel; }, "cancelCommand");
 
             var messageDialog = new MessageDialog(message, title)
             {
@@ -224,27 +218,27 @@ namespace ISynergy.Framework.UI.Services
             switch (buttons)
             {
                 case MessageBoxButton.OK:
-                    messageDialog.Commands.Add(okCommand);
+                    messageDialog.Commands.Add(_okCommand);
                     messageDialog.DefaultCommandIndex = 0;
                     break;
                 case MessageBoxButton.OKCancel:
-                    messageDialog.Commands.Add(okCommand);
-                    messageDialog.Commands.Add(cancelCommand);
+                    messageDialog.Commands.Add(_okCommand);
+                    messageDialog.Commands.Add(_cancelCommand);
 
                     messageDialog.DefaultCommandIndex = 0;
                     messageDialog.CancelCommandIndex = 1;
                     break;
                 case MessageBoxButton.YesNoCancel:
-                    messageDialog.Commands.Add(yesCommand);
-                    messageDialog.Commands.Add(noCommand);
-                    messageDialog.Commands.Add(cancelCommand);
+                    messageDialog.Commands.Add(_yesCommand);
+                    messageDialog.Commands.Add(_noCommand);
+                    messageDialog.Commands.Add(_cancelCommand);
 
                     messageDialog.DefaultCommandIndex = 0;
                     messageDialog.CancelCommandIndex = 2;
                     break;
                 case MessageBoxButton.YesNo:
-                    messageDialog.Commands.Add(yesCommand);
-                    messageDialog.Commands.Add(noCommand);
+                    messageDialog.Commands.Add(_yesCommand);
+                    messageDialog.Commands.Add(_noCommand);
 
                     messageDialog.DefaultCommandIndex = 0;
                     messageDialog.CancelCommandIndex = 1;

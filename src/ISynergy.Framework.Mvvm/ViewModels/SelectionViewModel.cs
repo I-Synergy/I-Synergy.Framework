@@ -71,7 +71,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public RelayCommand Search_Command { get; set; }
+        public Command Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.

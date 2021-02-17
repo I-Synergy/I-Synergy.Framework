@@ -72,12 +72,12 @@ namespace ISynergy.Framework.Mvvm
         /// Gets the back command.
         /// </summary>
         /// <value>The back command.</value>
-        public RelayCommand Back_Command { get; }
+        public Command Back_Command { get; }
         /// <summary>
         /// Gets the next command.
         /// </summary>
         /// <value>The next command.</value>
-        public RelayCommand Next_Command { get; }
+        public Command Next_Command { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelDialogWizard{TEntity}"/> class.
@@ -91,8 +91,8 @@ namespace ISynergy.Framework.Mvvm
             ILoggerFactory loggerFactory) 
             : base(context, commonServices, loggerFactory)
         {
-            Back_Command = new RelayCommand(() => PerformBackAction());
-            Next_Command = new RelayCommand(() => PerformNextAction());
+            Back_Command = new Command(PerformBackAction);
+            Next_Command = new Command(PerformNextAction);
 
             Page = 1;
         }

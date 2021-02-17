@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Events
 {
@@ -30,7 +32,7 @@ namespace ISynergy.Framework.Core.Events
         /// Raises the specified sender.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see name="TEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="TEventArgs"/> instance containing the event data.</param>
         public void Raise(object sender, TEventArgs e)
         {
             lock (_handlers)
@@ -80,10 +82,9 @@ namespace ISynergy.Framework.Core.Events
             /// </summary>
             /// <param name="target">The target.</param>
             /// <param name="sender">The sender.</param>
-            /// <param name="e">The <see name="TEventArgs"/> instance containing the event data.</param>
+            /// <param name="e">The <see cref="TEventArgs"/> instance containing the event data.</param>
             private delegate void OpenEventHandler(object target, object sender, TEventArgs e);
 
-            // ReSharper disable once StaticMemberInGenericType (by design)
             /// <summary>
             /// The open handler cache
             /// </summary>
@@ -126,10 +127,12 @@ namespace ISynergy.Framework.Core.Events
             /// The weak target
             /// </summary>
             private readonly WeakReference _weakTarget;
+
             /// <summary>
             /// The method
             /// </summary>
             private readonly MethodInfo _method;
+
             /// <summary>
             /// The open handler
             /// </summary>
@@ -150,7 +153,7 @@ namespace ISynergy.Framework.Core.Events
             /// Invokes the specified sender.
             /// </summary>
             /// <param name="sender">The sender.</param>
-            /// <param name="e">The <see name="TEventArgs"/> instance containing the event data.</param>
+            /// <param name="e">The <see cref="TEventArgs"/> instance containing the event data.</param>
             /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
             public bool Invoke(object sender, TEventArgs e)
             {

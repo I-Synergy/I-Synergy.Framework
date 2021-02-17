@@ -1,14 +1,19 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Events
 {
     /// <summary>
-    /// Stores an Action without causing a hard reference
-    /// to be created to the Action's owner. The owner can be garbage collected at any time.
+    /// Class WeakAction.
+    /// Implements the <see cref="WeakAction" />
+    /// Implements the <see cref="IExecuteWithObject" />
     /// </summary>
-    /// <typeparam name="T">The type of the Action's parameter.</typeparam>
-    ////[ClassInfo(typeof(WeakAction))]
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="WeakAction" />
+    /// <seealso cref="IExecuteWithObject" />
     public class WeakAction<T> : WeakAction, IExecuteWithObject
     {
         /// <summary>
@@ -17,7 +22,7 @@ namespace ISynergy.Framework.Core.Events
         private Action<T> _staticAction;
 
         /// <summary>
-        /// Gets the name of the method that this WeakAction represents.
+        /// Gets the name of the method.
         /// </summary>
         /// <value>The name of the method.</value>
         public override string MethodName
@@ -34,8 +39,7 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Gets a value indicating whether the Action's owner is still alive, or if it was collected
-        /// by the Garbage Collector already.
+        /// Gets a value indicating whether this instance is alive.
         /// </summary>
         /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
         public override bool IsAlive
@@ -63,30 +67,21 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Initializes a new instance of the WeakAction class.
+        /// Initializes a new instance of the <see cref="WeakAction{T}"/> class.
         /// </summary>
-        /// <param name="action">The action that will be associated to this instance.</param>
-        /// <param name="keepTargetAlive">If true, the target of the Action will
-        /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
         public WeakAction(Action<T> action, bool keepTargetAlive = false)
             : this(action is null ? null : action.Target, action, keepTargetAlive)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the WeakAction class.
+        /// Initializes a new instance of the <see cref="WeakAction{T}"/> class.
         /// </summary>
-        /// <param name="target">The action's owner.</param>
-        /// <param name="action">The action that will be associated to this instance.</param>
-        /// <param name="keepTargetAlive">If true, the target of the Action will
-        /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.</param>
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1062:Validate arguments of public methods",
-            MessageId = "1",
-            Justification = "Method should fail with an exception if action is null.")]
+        /// <param name="target">The target.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
         public WeakAction(object target, Action<T> action, bool keepTargetAlive = false)
         {
             if (action.Method.IsStatic)
@@ -107,27 +102,10 @@ namespace ISynergy.Framework.Core.Events
             ActionReference = new WeakReference(action.Target);
             LiveReference = keepTargetAlive ? action.Target : null;
             Reference = new WeakReference(target);
-
-#if DEBUG
-            if (ActionReference != null
-                && ActionReference.Target != null
-                && !keepTargetAlive)
-            {
-                var type = ActionReference.Target.GetType();
-
-                if (type.Name.StartsWith("<>")
-                    && type.Name.Contains("DisplayClass"))
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        "You are attempting to register a lambda with a closure without using keepTargetAlive. Are you sure? Check http://galasoft.ch/s/mvvmweakaction for more info.");
-                }
-            }
-#endif
         }
 
         /// <summary>
-        /// Executes the action. This only happens if the action's owner
-        /// is still alive. The action's parameter is set to default(T).
+        /// Executes this instance.
         /// </summary>
         public new void Execute()
         {
@@ -135,10 +113,9 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Executes the action. This only happens if the action's owner
-        /// is still alive.
+        /// Executes the specified parameter.
         /// </summary>
-        /// <param name="parameter">A parameter to be passed to the action.</param>
+        /// <param name="parameter">The parameter.</param>
         public void Execute(T parameter)
         {
             if (_staticAction != null)
@@ -167,13 +144,10 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Executes the action with a parameter of type object. This parameter
-        /// will be casted to T. This method implements <see cref="IExecuteWithObject.ExecuteWithObject" />
-        /// and can be useful if you store multiple WeakAction{T} instances but don't know in advance
-        /// what type T represents.
+        /// Executes an action.
         /// </summary>
-        /// <param name="parameter">The parameter that will be passed to the action after
-        /// being casted to T.</param>
+        /// <param name="parameter">A parameter passed as an object,
+        /// to be casted to the appropriate type.</param>
         public void ExecuteWithObject(object parameter)
         {
             var parameterCasted = (T)parameter;
@@ -181,9 +155,7 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Sets all the actions that this WeakAction contains to null,
-        /// which is a signal for containing objects that this WeakAction
-        /// should be deleted.
+        /// Marks for deletion.
         /// </summary>
         public new void MarkForDeletion()
         {

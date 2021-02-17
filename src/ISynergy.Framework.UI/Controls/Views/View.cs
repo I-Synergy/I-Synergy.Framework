@@ -90,6 +90,10 @@ namespace ISynergy.Framework.UI.Controls
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            
+            if(e.Content is IView view && e.Parameter is IViewModel viewModel)
+                view.DataContext = viewModel;
+
             await DataContext?.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);
         }
 

@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Events
 {
     /// <summary>
-    /// Stores an <see cref="Action" /> without causing a hard reference
-    /// to be created to the Action's owner. The owner can be garbage collected at any time.
+    /// Class WeakAction.
     /// </summary>
     public class WeakAction
     {
@@ -16,18 +18,13 @@ namespace ISynergy.Framework.Core.Events
         private Action _staticAction;
 
         /// <summary>
-        /// Gets or sets the <see cref="MethodInfo" /> corresponding to this WeakAction's
-        /// method passed in the constructor.
+        /// Gets or sets the method.
         /// </summary>
         /// <value>The method.</value>
-        protected MethodInfo Method
-        {
-            get;
-            set;
-        }
+        protected MethodInfo Method { get; set; }
 
         /// <summary>
-        /// Gets the name of the method that this WeakAction represents.
+        /// Gets the name of the method.
         /// </summary>
         /// <value>The name of the method.</value>
         public virtual string MethodName
@@ -44,45 +41,25 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Gets or sets a WeakReference to this WeakAction's action's target.
-        /// This is not necessarily the same as
-        /// <see cref="Reference" />, for example if the
-        /// method is anonymous.
+        /// Gets or sets the action reference.
         /// </summary>
         /// <value>The action reference.</value>
-        protected WeakReference ActionReference
-        {
-            get;
-            set;
-        }
+        protected WeakReference ActionReference { get; set; }
 
         /// <summary>
-        /// Saves the <see cref="ActionReference" /> as a hard reference. This is
-        /// used in relation with this instance's constructor and only if
-        /// the constructor's keepTargetAlive parameter is true.
+        /// Gets or sets the live reference.
         /// </summary>
         /// <value>The live reference.</value>
-        protected object LiveReference
-        {
-            get;
-            set;
-        }
+        protected object LiveReference { get; set; }
 
         /// <summary>
-        /// Gets or sets a WeakReference to the target passed when constructing
-        /// the WeakAction. This is not necessarily the same as
-        /// <see cref="ActionReference" />, for example if the
-        /// method is anonymous.
+        /// Gets or sets the reference.
         /// </summary>
         /// <value>The reference.</value>
-        protected WeakReference Reference
-        {
-            get;
-            set;
-        }
+        protected WeakReference Reference { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the WeakAction is static or not.
+        /// Gets a value indicating whether this instance is static.
         /// </summary>
         /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
         public bool IsStatic
@@ -94,37 +71,28 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Initializes an empty instance of the <see cref="WeakAction" /> class.
+        /// Initializes a new instance of the <see cref="WeakAction"/> class.
         /// </summary>
         protected WeakAction()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WeakAction" /> class.
+        /// Initializes a new instance of the <see cref="WeakAction"/> class.
         /// </summary>
-        /// <param name="action">The action that will be associated to this instance.</param>
-        /// <param name="keepTargetAlive">If true, the target of the Action will
-        /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
         public WeakAction(Action action, bool keepTargetAlive = false)
             : this(action?.Target, action, keepTargetAlive)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WeakAction" /> class.
+        /// Initializes a new instance of the <see cref="WeakAction"/> class.
         /// </summary>
-        /// <param name="target">The action's owner.</param>
-        /// <param name="action">The action that will be associated to this instance.</param>
-        /// <param name="keepTargetAlive">If true, the target of the Action will
-        /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is using closures.</param>
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1062:Validate arguments of public methods",
-            MessageId = "1",
-            Justification = "Method should fail with an exception if action is null.")]
+        /// <param name="target">The target.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
         public WeakAction(object target, Action action, bool keepTargetAlive = false)
         {
             if (action.Method.IsStatic)
@@ -145,27 +113,10 @@ namespace ISynergy.Framework.Core.Events
             ActionReference = new WeakReference(action.Target);
             LiveReference = keepTargetAlive ? action.Target : null;
             Reference = new WeakReference(target);
-
-#if DEBUG
-            if (ActionReference != null
-                && ActionReference.Target != null
-                && !keepTargetAlive)
-            {
-                var type = ActionReference.Target.GetType();
-
-                if (type.Name.StartsWith("<>")
-                    && type.Name.Contains("DisplayClass"))
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        "You are attempting to register a lambda with a closure without using keepTargetAlive. Are you sure? Check http://galasoft.ch/s/mvvmweakaction for more info.");
-                }
-            }
-#endif
         }
 
         /// <summary>
-        /// Gets a value indicating whether the Action's owner is still alive, or if it was collected
-        /// by the Garbage Collector already.
+        /// Gets a value indicating whether this instance is alive.
         /// </summary>
         /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
         public virtual bool IsAlive
@@ -206,8 +157,7 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Gets the Action's owner. This object is stored as a
-        /// <see cref="WeakReference" />.
+        /// Gets the target.
         /// </summary>
         /// <value>The target.</value>
         public object Target
@@ -224,7 +174,7 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// The target of the weak reference.
+        /// Gets the action target.
         /// </summary>
         /// <value>The action target.</value>
         protected object ActionTarget
@@ -246,8 +196,7 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Executes the action. This only happens if the action's owner
-        /// is still alive.
+        /// Executes this instance.
         /// </summary>
         public void Execute()
         {
@@ -265,7 +214,7 @@ namespace ISynergy.Framework.Core.Events
         }
 
         /// <summary>
-        /// Sets the reference that this instance stores to null.
+        /// Marks for deletion.
         /// </summary>
         public void MarkForDeletion()
         {

@@ -1,17 +1,21 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Validation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using ISynergy.Framework.Core.Events;
 
 namespace ISynergy.Framework.Mvvm.Commands
 {
     /// <summary>
-    /// A generic command whose sole purpose is to relay its functionality to other
-    /// objects by invoking delegates. The default return value for the CanExecute
-    /// method is 'true'. This class allows you to accept command parameters in the
-    /// Execute and CanExecute callback methods.
+    /// Class RelayCommand.
+    /// Implements the <see cref="ICommand" />
     /// </summary>
-    /// <typeparam name="T">The type of the command parameter.</typeparam>
-    public class RelayCommand<T> : ICommand
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="ICommand" />
+    public class Command<T> : ICommand
     {
         /// <summary>
         /// The execute
@@ -24,37 +28,25 @@ namespace ISynergy.Framework.Mvvm.Commands
         private readonly WeakFunc<T, bool> _canExecute;
 
         /// <summary>
-        /// Initializes a new instance of the RelayCommand class that
-        /// can always execute.
+        /// Initializes a new instance of the <see cref="Command{T}"/> class.
         /// </summary>
-        /// <param name="execute">The execution logic. IMPORTANT: If the action causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects.</param>
-        /// <param name="keepTargetAlive">If true, the target of the Action will
-        /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is causing a closure.</param>
-        /// <exception cref="ArgumentNullException">If the execute argument is null.</exception>
-        public RelayCommand(Action<T> execute, bool keepTargetAlive = false)
+        /// <param name="execute">The execute.</param>
+        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
+        public Command(Action<T> execute, bool keepTargetAlive = false)
             : this(execute, null, keepTargetAlive)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the RelayCommand class.
+        /// Initializes a new instance of the <see cref="Command{T}"/> class.
         /// </summary>
-        /// <param name="execute">The execution logic. IMPORTANT: If the action causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects.</param>
-        /// <param name="canExecute">The execution status logic.  IMPORTANT: If the func causes a closure,
-        /// you must set keepTargetAlive to true to avoid side effects.</param>
-        /// <param name="keepTargetAlive">If true, the target of the Action will
-        /// be kept as a hard reference, which might cause a memory leak. You should only set this
-        /// parameter to true if the action is causing a closure.</param>
+        /// <param name="execute">The execute.</param>
+        /// <param name="canExecute">The can execute.</param>
+        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
         /// <exception cref="ArgumentNullException">execute</exception>
-        public RelayCommand(Action<T> execute, Func<T, bool> canExecute, bool keepTargetAlive = false)
+        public Command(Action<T> execute, Func<T, bool> canExecute, bool keepTargetAlive = false)
         {
-            if (execute is null)
-            {
-                throw new ArgumentNullException("execute");
-            }
+            Argument.IsNotNull(nameof(execute), execute);
 
             _execute = new WeakAction<T>(execute, keepTargetAlive);
 
@@ -65,13 +57,12 @@ namespace ISynergy.Framework.Mvvm.Commands
         }
 
         /// <summary>
-        /// Occurs when changes occur that affect whether the command should execute.
+        /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
-        /// <returns></returns>
         public event EventHandler CanExecuteChanged;
 
         /// <summary>
-        /// Raises the <see cref="CanExecuteChanged" /> event.
+        /// Raises the can execute changed.
         /// </summary>
         public void RaiseCanExecuteChanged()
         {
@@ -81,9 +72,8 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <summary>
         /// Defines the method that determines whether the command can execute in its current state.
         /// </summary>
-        /// <param name="parameter">Data used by the command. If the command does not require data
-        /// to be passed, this object can be set to a null reference</param>
-        /// <returns>true if this command can be executed; otherwise, false.</returns>
+        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
+        /// <returns><see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.</returns>
         public bool CanExecute(object parameter)
         {
             if (_canExecute is null)
@@ -111,8 +101,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <summary>
         /// Defines the method to be called when the command is invoked.
         /// </summary>
-        /// <param name="parameter">Data used by the command. If the command does not require data
-        /// to be passed, this object can be set to a null reference</param>
+        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
         public virtual void Execute(object parameter)
         {
             var val = parameter;
