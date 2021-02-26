@@ -32,7 +32,7 @@ namespace ISynergy.Framework.Core.Events
         /// Raises the specified sender.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="TEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The instance containing the event data.</param>
         public void Raise(object sender, TEventArgs e)
         {
             lock (_handlers)
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.Core.Events
             /// </summary>
             /// <param name="target">The target.</param>
             /// <param name="sender">The sender.</param>
-            /// <param name="e">The <see cref="TEventArgs"/> instance containing the event data.</param>
+            /// <param name="e">The instance containing the event data.</param>
             private delegate void OpenEventHandler(object target, object sender, TEventArgs e);
 
             /// <summary>
@@ -153,7 +153,7 @@ namespace ISynergy.Framework.Core.Events
             /// Invokes the specified sender.
             /// </summary>
             /// <param name="sender">The sender.</param>
-            /// <param name="e">The <see cref="TEventArgs"/> instance containing the event data.</param>
+            /// <param name="e">The instance containing the event data.</param>
             /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
             public bool Invoke(object sender, TEventArgs e)
             {

@@ -237,6 +237,18 @@ namespace ISynergy.Framework.UI
                     //TODO: Load state from previously suspended application
                 }
 
+                // Add custom resourcedictionaries from code.
+                var dictionary = this.Resources?.MergedDictionaries;
+                
+                if(dictionary is not null)
+                {
+                    foreach (var item in GetAdditionalResourceDictionaries())
+                    {
+                        if(!dictionary.Any(t => t.Source == item.Source))
+                            this.Resources.MergedDictionaries.Add(item);
+                    }
+                }
+
                 // Register a handler for BackRequested events and set the
                 // visibility of the Back button
                 SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
@@ -266,6 +278,13 @@ namespace ISynergy.Framework.UI
                 Windows.UI.Xaml.Window.Current.Activate();
             }
         }
+
+        /// <summary>
+        /// Get a new list of additional resource dictionaries which can be merged.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+            new List<ResourceDictionary>();
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails

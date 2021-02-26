@@ -31,6 +31,7 @@ using System.Net.WebSockets;
 using ISynergy.Framework.UI;
 using Windows.ApplicationModel;
 using ISynergy.Framework.Core.Services;
+using System.Linq;
 
 namespace Sample
 {
@@ -57,6 +58,14 @@ namespace Sample
         {
             InitializeComponent();
         }
+
+#if NETFX_CORE
+        protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+            new List<ResourceDictionary>()
+            {
+                new Microsoft.UI.Xaml.Controls.XamlControlsResources()
+            };
+#endif
 
         protected override void ConfigureLogger(ILoggerFactory factory)
         {
