@@ -25,10 +25,10 @@
     </ItemGroup>
 
     <ItemGroup>
-		<PackageReference Include="Uno.Material" Version="1.0.0-dev.625" />
-		<PackageReference Include="Uno.UI.Lottie" Version="3.6.0-dev.178" />
-        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.6.0-dev.178" />
-        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.178" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.Material" Version="1.0.0-dev.637" />
+		<PackageReference Include="Uno.UI.Lottie" Version="3.6.0-dev.186" />
+        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.6.0-dev.186" />
+        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.186" Condition="'$(Configuration)'=='Debug'" />
     </ItemGroup>
     
     <ItemGroup>
