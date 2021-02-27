@@ -52,52 +52,6 @@
                             PaneDisplayMode="Left"
                             AlwaysShowHeader="False">
 
-                <!--<muxc:NavigationView.FooterMenuItems>
-                    <muxc:NavigationViewItem Content="Help">
-                        <muxc:NavigationViewItem.Icon>
-                            <PathIcon Data="{StaticResource tile_help}"/>
-                        </muxc:NavigationViewItem.Icon>
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{Binding Help_Command}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem Content="Language" >
-                        <muxc:NavigationViewItem.Icon>
-                            <PathIcon Data="{StaticResource icon_flag}"/>
-                        </muxc:NavigationViewItem.Icon>
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{Binding Language_Command}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
-                    <muxc:NavigationViewItem Content="Colors" >
-                        <muxc:NavigationViewItem.Icon>
-                            <PathIcon Data="{StaticResource icon_color}"/>
-                        </muxc:NavigationViewItem.Icon>
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{Binding Color_Command}" />
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
-
-                    <muxc:NavigationViewItemSeparator />
-
-                    <muxc:NavigationViewItem Content="{Binding Context.IsAuthenticated, Converter={StaticResource BooleanToStringConverter}}">
-                        <muxc:NavigationViewItem.Icon>
-                            <PathIcon Data="{StaticResource icon_user}"/>
-                        </muxc:NavigationViewItem.Icon>
-                        <i:Interaction.Behaviors>
-                            <ic:EventTriggerBehavior EventName="Tapped">
-                                <ic:InvokeCommandAction Command="{Binding Login_Command}"/>
-                            </ic:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </muxc:NavigationViewItem>
-                </muxc:NavigationView.FooterMenuItems>-->
-
 				<Frame x:Name="ContentRootFrame"
 						   Margin="10"
 						   Navigated="ContentRootFrameNavigated" 
