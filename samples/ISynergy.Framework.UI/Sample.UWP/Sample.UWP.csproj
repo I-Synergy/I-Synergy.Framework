@@ -15,13 +15,13 @@
       <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.6.0-prerelease.210217002</Version>
+      <Version>2.6.0-prerelease.210227001</Version>
     </PackageReference>
     <PackageReference Include="Uno.Core" Version="2.3.0-dev.3" />
     <PackageReference Include="Uno.Material">
-      <Version>1.0.0-dev.637</Version>
+      <Version>1.0.0-dev.674</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI" Version="3.6.0-dev.209" />
+    <PackageReference Include="Uno.UI" Version="3.6.0-dev.336" />
   </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
