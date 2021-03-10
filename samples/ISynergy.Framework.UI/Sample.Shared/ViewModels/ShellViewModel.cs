@@ -35,6 +35,7 @@ namespace Sample.ViewModels
         public Command Info_Command { get; set; }
         public Command Browse_Command { get; set; }
         public Command Converter_Command { get; set; }
+        public Command SelectionTest_Command { get; set; }
 
         public ShellViewModel(
             IContext context,
@@ -53,6 +54,7 @@ namespace Sample.ViewModels
             Info_Command = new Command(async () => await OpenInfoAsync());
             Browse_Command = new Command(async () => await BrowseFileAsync());
             Converter_Command = new Command(async () => await OpenConvertersAsync());
+            SelectionTest_Command = new Command(async () => await OpenSelectionTestAsync());
 
             PopulateNavItems();
         }
@@ -76,6 +78,9 @@ namespace Sample.ViewModels
         private Task OpenDisplayAsync() =>
             CommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
 
+        private Task OpenSelectionTestAsync() =>
+           CommonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
+
         /// <summary>
         /// initialize as an asynchronous operation.
         /// </summary>
@@ -91,6 +96,7 @@ namespace Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["tile_info"] as string, ForegroundColor, Info_Command));
             PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["tb_search"] as string, ForegroundColor, Browse_Command));
             PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["tb_products"] as string, ForegroundColor, Converter_Command));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["tb_products"] as string, ForegroundColor, SelectionTest_Command));
 
             SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["tile_help"] as string, ForegroundColor, Help_Command));

@@ -26,9 +26,9 @@
 
     <ItemGroup>
 		<PackageReference Include="Uno.Material" Version="1.0.0-dev.674" />
-		<PackageReference Include="Uno.UI.Lottie" Version="3.6.0-dev.336" />
-        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.6.0-dev.336" />
-        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.336" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.Lottie" Version="3.6.0-dev.378" />
+        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.6.0-dev.378" />
+        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.378" Condition="'$(Configuration)'=='Debug'" />
     </ItemGroup>
     
     <ItemGroup>

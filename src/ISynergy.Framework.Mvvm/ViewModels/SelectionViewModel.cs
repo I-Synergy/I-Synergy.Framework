@@ -14,12 +14,13 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class SelectionViewModel.
-    /// Implements the <see name="ViewModelBlade{ObservableCollection{object}}" />
+    /// Implements the <see name="ViewModelBlade{ObservableCollection{TEntity}}" />
     /// Implements the <see cref="IViewModelBlade" />
     /// </summary>
-    /// <seealso name="ViewModelBlade{ObservableCollection{object}}" />
+    /// <seealso name="ViewModelBlade{ObservableCollection{TEntity}}" />
     /// <seealso cref="IViewModelBlade" />
-    public class SelectionViewModel : ViewModelBlade<ObservableCollection<object>>, IViewModelBlade
+    public class SelectionViewModel<TEntity> : ViewModelBlade<ObservableCollection<TEntity>>, IViewModelBlade
+        where TEntity : class, IModelBase, new()
     {
         /// <summary>
         /// Gets the title.
@@ -31,7 +32,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the raw items.
         /// </summary>
         /// <value>The raw items.</value>
-        private IEnumerable<object> RawItems { get; set; }
+        private IEnumerable<TEntity> RawItems { get; set; }
 
         /// <summary>
         /// Gets or sets the SelectionMode property value.
@@ -47,9 +48,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Item property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableCollection<object> Items
+        public ObservableCollection<TEntity> Items
         {
-            get { return GetValue<ObservableCollection<object>>(); }
+            get { return GetValue<ObservableCollection<TEntity>>(); }
             set { SetValue(value); }
         }
 
@@ -74,7 +75,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         public Command Search_Command { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
+        /// Initializes a new instance of the <see cref="SelectionViewModel{TEntity}"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
@@ -86,8 +87,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             IContext context,
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory,
-            IEnumerable<IModelBase> items,
-            IEnumerable<IModelBase> selectedItems,
+            IEnumerable<TEntity> items,
+            IEnumerable<TEntity> selectedItems,
             SelectionModes selectionMode = SelectionModes.Single)
             : base(context, commonServices, loggerFactory)
         {
@@ -108,8 +109,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             Query = string.Empty;
             RawItems = items;
-            Items = new ObservableCollection<object>(items);
-            SelectedItem = new ObservableCollection<object>(selectedItems);
+            Items = new ObservableCollection<TEntity>(items);
+            SelectedItem = new ObservableCollection<TEntity>(selectedItems);
         }
 
         /// <summary>
@@ -121,11 +122,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             {
                 if (string.IsNullOrEmpty(Query) || Query.Trim() == "*")
                 {
-                    Items = new ObservableCollection<object>(RawItems);
+                    Items = new ObservableCollection<TEntity>(RawItems);
                 }
                 else
                 {
-                    var filteredList = new List<object>();
+                    var filteredList = new List<TEntity>();
 
                     foreach (var item in RawItems)
                     {
@@ -139,7 +140,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                         }
                     }
 
-                    Items = new ObservableCollection<object>(filteredList);
+                    Items = new ObservableCollection<TEntity>(filteredList);
                 }
             }
         }
