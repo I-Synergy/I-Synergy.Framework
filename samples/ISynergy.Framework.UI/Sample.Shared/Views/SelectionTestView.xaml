@@ -9,9 +9,28 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid>
-        <StackPanel Orientation="Vertical">
+    <RelativePanel>
+        <StackPanel Orientation="Vertical" 
+                    RelativePanel.AlignRightWithPanel="True" 
+                    RelativePanel.AlignLeftWithPanel="True" 
+                    RelativePanel.AlignTopWithPanel="True">
             <Button Command="{Binding Select_Command}" Content="Select..." />
         </StackPanel>
-    </Grid>
+
+        <Grid x:Name="DisabledLayout"
+              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+              Visibility="{Binding IsPaneEnabled, Converter={StaticResource IsEditableToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+              RelativePanel.AlignLeftWithPanel="True"
+              RelativePanel.AlignTopWithPanel="True"
+              RelativePanel.AlignBottomWithPanel="True"
+              RelativePanel.AlignRightWithPanel="True"
+              Opacity="0.75"/>
+
+        <c:BladeView x:Name="BladeDetails"
+                     AutoCollapseCountThreshold="3" 
+                     ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     RelativePanel.AlignBottomWithPanel="True" 
+                     RelativePanel.AlignTopWithPanel="True"
+                     RelativePanel.AlignRightWithPanel="True" />
+    </RelativePanel>
 </c:View>

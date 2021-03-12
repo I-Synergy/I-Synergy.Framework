@@ -32,7 +32,7 @@
                            RelativePanel.AlignBottomWithPanel="True"
                            RelativePanel.Below="TextBlockTitle">
                 <AutoSuggestBox x:Name="TopLayout"
-                                PlaceholderText="{m:LanguageResource Key=Operation_Search}" 
+                                PlaceholderText="{m:LanguageResource Key=Search}" 
                                 RelativePanel.AlignLeftWithPanel="True" 
                                 RelativePanel.AlignRightWithPanel="True" 
                                 RelativePanel.AlignTopWithPanel="True"
@@ -66,8 +66,23 @@
                 </ListView>
 
                 <StackPanel Orientation="Horizontal" x:Name="BottomLayout" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
-                    <Button x:Name="Select_Button" Content="{m:LanguageResource Key=Operation_Select}" HorizontalAlignment="Right" Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}" />
-                    <Button x:Name="Cancel_Button" Content="{m:LanguageResource Key=Cancel}" HorizontalAlignment="Right" Command="{Binding Close_Command}" />
+                    <Button x:Name="Select_Button" 
+                            Content="{m:LanguageResource Key=Select}" 
+                            HorizontalAlignment="Right" 
+                            Command="{Binding Submit_Command}" 
+                            CommandParameter="{Binding SelectedItem}"
+                            Margin="{ThemeResource ContentDialogButton1HostMargin}"
+                            MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
+                            MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
+                            MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" />
+                    <Button x:Name="Cancel_Button" 
+                            Content="{m:LanguageResource Key=Cancel}" 
+                            HorizontalAlignment="Right" 
+                            Command="{Binding Close_Command}"
+                            Margin="{ThemeResource ContentDialogButton1HostMargin}"
+                            MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
+                            MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
+                            MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}"/>
                 </StackPanel>
             </RelativePanel>
         </RelativePanel>
