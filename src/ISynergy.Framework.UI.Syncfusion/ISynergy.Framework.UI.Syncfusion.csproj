@@ -27,7 +27,7 @@
         <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UAP;SyncfusionFramework4_6;UNIVERSALWINDOWS;Uno;</DefineConstants>
     </PropertyGroup>
     <ItemGroup Condition="'$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0'">
-        <PackageReference Include="Uno.UI" Version="3.6.0-dev.378" />
+        <PackageReference Include="Uno.UI" Version="3.6.0-dev.429" />
     </ItemGroup>
     <PropertyGroup Condition="'$(TargetFramework)'=='monoandroid10.0'">
         <DesignTimeBuild>false</DesignTimeBuild>
