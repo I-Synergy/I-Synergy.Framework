@@ -38,6 +38,8 @@ using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 using System.Globalization;
 using Windows.ApplicationModel.Background;
 using Window = ISynergy.Framework.UI.Controls.Window;
+using System.Text.RegularExpressions;
+using ISynergy.Framework.Mvvm.Extensions;
 
 namespace ISynergy.Framework.UI
 {
@@ -472,7 +474,7 @@ namespace ISynergy.Framework.UI
                     .Where(q =>
                         q.GetInterface(nameof(IViewModel), false) != null
                         && !q.Name.Equals(GenericConstants.ShellViewModel)
-                        && q.Name.EndsWith(GenericConstants.ViewModel)
+                        && (q.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(q.Name, GenericConstants.ViewModelTRegex))
                         && q.Name != GenericConstants.ViewModel
                         && !q.IsAbstract
                         && !q.IsInterface)
@@ -532,11 +534,15 @@ namespace ISynergy.Framework.UI
                     _services.AddSingleton(view);
                 }
 
-                var viewmodel = ViewModelTypes.Find(q => q.Name == view.Name.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel));
+                var viewmodel = ViewModelTypes.Find(q =>
+                {
+                    var name = view.Name.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
+                    return q.GetViewModelName().Equals(name) || q.Name.Equals(name);
+                });
 
                 if (viewmodel != null)
                 {
-                    _navigationService.Configure(viewmodel.FullName, view);
+                    _navigationService.Configure(viewmodel.GetViewModelFullName(), view);
                 }
             }
 

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -92,6 +93,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             SelectionModes selectionMode = SelectionModes.Single)
             : base(context, commonServices, loggerFactory)
         {
+            if (items is null) 
+                items = items.EnsureNotNull();
+
+            if (selectedItems is null) 
+                selectedItems = selectedItems.EnsureNotNull();
+
             SelectionMode = selectionMode;
 
             Validator = new Action<IObservableClass>(arg =>

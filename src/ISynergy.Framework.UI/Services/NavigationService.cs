@@ -19,6 +19,7 @@ using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Core.Locators;
 using Windows.ApplicationModel.Core;
+using ISynergy.Framework.Mvvm.Extensions;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -112,12 +113,14 @@ namespace ISynergy.Framework.UI.Services
                     viewmodel = ServiceLocator.Default.GetInstance<TViewModel>();
                 }
 
-                if (!_pages.ContainsKey(viewmodel.GetType().FullName))
+                var viewModelKey = viewmodel.GetViewModelFullName();
+
+                if (!_pages.ContainsKey(viewModelKey))
                 {
-                    throw new ArgumentException($"Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?", viewmodel.GetType().FullName);
+                    throw new ArgumentException($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?", viewModelKey);
                 }
 
-                var page = _pages[viewmodel.GetType().FullName];
+                var page = _pages[viewModelKey];
 
                 if (_frame is Frame frame)
                 {
@@ -276,7 +279,7 @@ namespace ISynergy.Framework.UI.Services
 
             try
             {
-                var viewModelKey = viewModel.GetType().FullName;
+                var viewModelKey = viewModel.GetViewModelFullName();
 
                 if (!_pages.ContainsKey(viewModelKey))
                 {
