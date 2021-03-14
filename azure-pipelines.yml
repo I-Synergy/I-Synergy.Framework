@@ -85,9 +85,7 @@ stages:
              src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
              src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
              src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
-             src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
              src\ISynergy.Framework.UI\ISynergy.Framework.UI.Windows.csproj
-             src\ISynergy.Framework.UI.Syncfusion\ISynergy.Framework.UI.Syncfusion.csproj
             InsertAttributes: true
             WriteBOM: true
             GeneratePackageOnBuild: true
@@ -369,37 +367,91 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: MSBuild@1
-          displayName: 'Framework UI - Nuget Restore'
+          displayName: 'Framework UI for Uwp - Nuget Restore x86'
           inputs:
-            solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.Windows.csproj'
-            platform: AnyCpu
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
+            platform: x86
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-
+      
         - task: MSBuild@1
-          displayName: 'Framework UI - Build and Pack'
+          displayName: 'Framework UI for Uwp - Build x86'
           inputs:
-            solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.Windows.csproj'
-            platform: AnyCpu
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
+            platform: x86
             configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
+      
+        - task: MSBuild@1
+          displayName: 'Framework UI for Uwp - Nuget Restore x64'
+          inputs:
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
+            platform: x64
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/t:restore'
+      
+        - task: MSBuild@1
+          displayName: 'Framework UI for Uwp - Build x64'
+          inputs:
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
+            platform: x64
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
+      
+        - task: MSBuild@1
+          displayName: 'Framework UI for Uwp - Nuget Restore ARM'
+          inputs:
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
+            platform: ARM
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/t:restore'
+      
+        - task: MSBuild@1
+          displayName: 'Framework UI for Uwp - Build ARM'
+          inputs:
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
+            platform: ARM
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
+      
+        - task: MSBuild@1
+          displayName: 'Framework UI for Uwp - Nuget Restore ARM64'
+          inputs:
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
+            platform: ARM64
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/t:restore'
+      
+        - task: MSBuild@1
+          displayName: 'Framework UI for Uwp - Build ARM64'
+          inputs:
+            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
+            platform: ARM64
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
 
-        #- task: MSBuild@1
-        #  displayName: 'Syncfusion SfChart for Uno - Nuget Restore'
-        #  inputs:
-        #    solution: 'src\ISynergy.Framework.UI.Syncfusion\ISynergy.Framework.UI.Syncfusion.csproj'
-        #    platform: AnyCpu
-        #    configuration: '$(BuildConfiguration)'
-        #    msbuildArguments: '/t:restore'
+        - task: CopyFiles@2
+          displayName: 'Copy Multi Platform File to Reference folder'
+          inputs:
+            SourceFolder: 'src\ISynergy.Framework.UI.Windows\bin\$(BuildConfiguration)\x86'
+            Contents: |
+              ISynergy.Framework.UI.dll
+              ISynergy.Framework.UI.pri
+            TargetFolder: 'src\ISynergy.Framework.UI.Windows\bin\$(BuildConfiguration)'
+           
+        - task: PowerShell@2
+          displayName: 'Create Multi Platform Reference file'
+          inputs:
+            targetType: filePath
+            filePath: ./build/createplatformdll.ps1
+            arguments: '-file "src\ISynergy.Framework.UI.Windows\bin\$(BuildConfiguration)\ISynergy.Framework.UI.dll"'
 
-        #- task: MSBuild@1
-        #  displayName: 'Syncfusion SfChart for Uno - Build and Pack'
-        #  inputs:
-        #    solution: 'src\ISynergy.Framework.UI.Syncfusion\ISynergy.Framework.UI.Syncfusion.csproj'
-        #    platform: AnyCpu
-        #    configuration: '$(BuildConfiguration)'
-        #    msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
-        
+        - task: NuGetCommand@2
+          displayName: 'NuGet pack - Framework UI for Uwp'
+          inputs:
+            command: custom
+            arguments: 'pack nuget/ISynergy.Framework.UI.Windows.nuspec -OutputDirectory $(Build.ArtifactStagingDirectory) -Properties Version=$(VersionPackage);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);BuildConfiguration=$(BuildConfiguration) -Symbols -SymbolPackageFormat snupkg'
+
         - task: NuGetCommand@2
           displayName: 'Sign Nuget packages'
           inputs:

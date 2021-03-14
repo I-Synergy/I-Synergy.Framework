@@ -112,6 +112,16 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ISynergy.Framework.UI.Share
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.UI.Windows", "src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj", "{19299D2E-C242-4DEB-BD2B-E0A5E7CBAA40}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{FB439825-D5A6-4E76-BCCF-A505302AAFA7}"
+	ProjectSection(SolutionItems) = preProject
+		build\createplatformdll.ps1 = build\createplatformdll.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{6C31ECBA-F9C4-4DE0-81E7-A6FC076CB0C6}"
+	ProjectSection(SolutionItems) = preProject
+		nuget\ISynergy.Framework.UI.Windows.nuspec = nuget\ISynergy.Framework.UI.Windows.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems*{19299d2e-c242-4deb-bd2b-e0a5e7cbaa40}*SharedItemsImports = 4
