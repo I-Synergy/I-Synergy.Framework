@@ -3,10 +3,19 @@ using Xunit;
 
 namespace ISynergy.Framework.Geography.Common.Tests
 {
+    /// <summary>
+    /// Class EuclidianCoordinateTests.
+    /// </summary>
     public class EuclidianCoordinateTests
     {
+        /// <summary>
+        /// The projection
+        /// </summary>
         private readonly GlobalMercatorProjection projection = new SphericalMercatorProjection();
 
+        /// <summary>
+        /// Defines the test method TestConstructor1.
+        /// </summary>
         [Fact]
         public void TestConstructor1()
         {
@@ -15,6 +24,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(e.Y, -2);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor2.
+        /// </summary>
         [Fact]
         public void TestConstructor2()
         {
@@ -23,12 +35,18 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(e.Y, -4);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor3.
+        /// </summary>
         [Fact]
         public void TestConstructor3()
         {
             Assert.Throws<IndexOutOfRangeException>(() => new EuclidianCoordinate(projection, new double[] { -3, -4, -5 }));
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals1.
+        /// </summary>
         [Fact]
         public void TestEquals1()
         {
@@ -37,6 +55,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(e1, e2);
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals2.
+        /// </summary>
         [Fact]
         public void TestEquals2()
         {
@@ -45,6 +66,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.NotSame(e1, e2);
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals3.
+        /// </summary>
         [Fact]
         public void TestEquals3()
         {
@@ -53,6 +77,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.NotEqual(e1, e2);
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals4.
+        /// </summary>
         [Fact]
         public void TestEquals4()
         {
@@ -61,6 +88,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(e1, e2);
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals5.
+        /// </summary>
         [Fact]
         public void TestEquals5()
         {
@@ -69,6 +99,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(e1, e2);
         }
 
+        /// <summary>
+        /// Defines the test method TestHash.
+        /// </summary>
         [Fact]
         public void TestHash()
         {
@@ -77,6 +110,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.NotEqual(e1.GetHashCode(), e2.GetHashCode());
         }
 
+        /// <summary>
+        /// Defines the test method TestNotSameProjection.
+        /// </summary>
         [Fact]
         public void TestNotSameProjection()
         {

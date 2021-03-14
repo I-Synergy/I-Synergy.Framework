@@ -4,9 +4,15 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
+    /// <summary>
+    /// Class ObservableClassTests.
+    /// </summary>
     public class ObservableClassTests
     {
         // Check when object is initialized that it's clean.
+        /// <summary>
+        /// Defines the test method CheckIfObjectAfterInitializationIsClean_1.
+        /// </summary>
         [Fact]
         public void CheckIfObjectAfterInitializationIsClean_1()
         {
@@ -19,6 +25,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.False(product.IsDirty);
         }
 
+        /// <summary>
+        /// Defines the test method CheckIfObjectAfterInitializationIsClean_2.
+        /// </summary>
         [Fact]
         public void CheckIfObjectAfterInitializationIsClean_2()
         {
@@ -31,6 +40,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.False(product.IsDirty);
         }
 
+        /// <summary>
+        /// Defines the test method CheckIfObjectAfterInitializationIsClean_3.
+        /// </summary>
         [Fact]
         public void CheckIfObjectAfterInitializationIsClean_3()
         {
@@ -44,6 +56,9 @@ namespace ISynergy.Framework.Core.Data.Tests
         }
 
         // Check when object is initialized that it's not dirty
+        /// <summary>
+        /// Defines the test method CheckIfObjectAfterInitializationIsDirty_1.
+        /// </summary>
         [Fact]
         public void CheckIfObjectAfterInitializationIsDirty_1()
         {
@@ -55,6 +70,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(product.IsDirty);
         }
 
+        /// <summary>
+        /// Defines the test method CheckIfObjectAfterInitializationIsDirty_2.
+        /// </summary>
         [Fact]
         public void CheckIfObjectAfterInitializationIsDirty_2()
         {
@@ -64,6 +82,9 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(product.IsDirty);
         }
 
+        /// <summary>
+        /// Defines the test method CheckIfObjectAfterInitializationIsDirty_3.
+        /// </summary>
         [Fact]
         public void CheckIfObjectAfterInitializationIsDirty_3()
         {

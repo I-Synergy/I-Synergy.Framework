@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Core.Validation
             if (!paramValue.HasValue || paramValue.Value == Guid.Empty)
             {
                 var error = string.Format("Argument '{0}' cannot be null or Guid.Empty", paramName.ToString());
-                throw new ArgumentException(error, paramName);
+                throw new ArgumentNullException(error, paramName);
             }
         }
 
@@ -93,7 +93,7 @@ namespace ISynergy.Framework.Core.Validation
             if (string.IsNullOrEmpty(paramValue) || (string.CompareOrdinal(paramValue.Trim(), string.Empty) == 0))
             {
                 var error = string.Format("Argument '{0}' cannot be null or whitespace", paramName.ToString());
-                throw new ArgumentException(error, paramName);
+                throw new ArgumentNullException(error, paramName);
             }
         }
 
@@ -110,7 +110,7 @@ namespace ISynergy.Framework.Core.Validation
             if ((paramValue is null) || (paramValue.Length == 0))
             {
                 var error = string.Format("Argument '{0}' cannot be null or an empty array", paramName.ToString());
-                throw new ArgumentException(error, paramName);
+                throw new ArgumentNullException(error, paramName);
             }
         }
 
@@ -128,6 +128,23 @@ namespace ISynergy.Framework.Core.Validation
             if ((paramValue is null) || (paramValue.Count == 0))
             {
                 var error = string.Format("Argument '{0}' cannot be null or an empty list", paramName.ToString());
+                throw new ArgumentNullException(error, paramName);
+            }
+        }
+
+        /// <summary>
+        /// Determines whether [is not enum] [the specified parameter name].
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="paramName">Name of the parameter.</param>
+        /// <param name="paramValue">The parameter value.</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        [DebuggerNonUserCode, DebuggerStepThrough]
+        public static void IsNotEnum<T>(string paramName, T paramValue)
+        {
+            if (!typeof(T).IsEnum)
+            {
+                var error = string.Format("Argument '{0}' can only be an Enum", paramName.ToString());
                 throw new ArgumentException(error, paramName);
             }
         }

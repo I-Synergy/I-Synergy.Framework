@@ -5,8 +5,16 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
+    /// <summary>
+    /// Class ExpressionParserTests.
+    /// </summary>
     public class ExpressionParserTests
     {
+        /// <summary>
+        /// Defines the test method Parse_ParseComparisonOperator.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData("it == 1", "(x == 1)")]
         [InlineData("it eq 1", "(x == 1)")]
@@ -36,6 +44,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(parsedExpression).Equals(result);
         }
 
+        /// <summary>
+        /// Defines the test method Parse_ParseOrOperator.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData("it || true", "(x OrElse True)")]
         [InlineData("it or true", "(x OrElse True)")]
@@ -53,6 +66,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(parsedExpression).Equals(result);
         }
 
+        /// <summary>
+        /// Defines the test method Parse_ParseAndOperator.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData("it && true", "(x AndAlso True)")]
         [InlineData("it and true", "(x AndAlso True)")]

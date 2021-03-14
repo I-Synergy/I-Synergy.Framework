@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
+    /// <summary>
+    /// Class DateTimeOffsetExtensionsTests.
+    /// </summary>
     public class DateTimeOffsetExtensionsTests
     {
+        /// <summary>
+        /// Defines the test method IsInRangeOfDateSameOffsetTest.
+        /// </summary>
         [Fact]
         public void IsInRangeOfDateSameOffsetTest()
         {
@@ -16,6 +22,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.True(self.IsInRangeOfDate(comparer));
         }
 
+        /// <summary>
+        /// Defines the test method IsInRangeOfDateDifferentOffsetTest.
+        /// </summary>
         [Fact]
         public void IsInRangeOfDateDifferentOffsetTest()
         {
@@ -25,6 +34,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.True(self.IsInRangeOfDate(comparer));
         }
 
+        /// <summary>
+        /// Defines the test method IsInRangeOfDatesSameOffsetTest.
+        /// </summary>
         [Fact]
         public void IsInRangeOfDatesSameOffsetTest()
         {
@@ -35,6 +47,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.True(self.IsInRangeOfDate(start, end));
         }
 
+        /// <summary>
+        /// Defines the test method IsInRangeOfDatesDifferentOffsetTest.
+        /// </summary>
         [Fact]
         public void IsInRangeOfDatesDifferentOffsetTest()
         {
@@ -45,6 +60,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.True(self.IsInRangeOfDate(start, end));
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfDayLocalTest.
+        /// </summary>
         [Fact]
         public void ToStartOfDayLocalTest()
         {
@@ -53,6 +71,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(test, result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfDayLocalTest.
+        /// </summary>
         [Fact]
         public void ToEndOfDayLocalTest()
         {
@@ -60,6 +81,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 10, 29, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddDays(1).AddTicks(-1).ToUniversalTime(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfMonthLocalTest.
+        /// </summary>
         [Fact]
         public void ToStartOfMonthLocalTest()
         {
@@ -67,6 +91,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 10, 1, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfMonthLocalTest.
+        /// </summary>
         [Fact]
         public void ToEndOfMonthLocalTest()
         {
@@ -74,6 +101,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 10, 31, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddDays(1).AddTicks(-1).ToUniversalTime(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfYearLocalTest.
+        /// </summary>
         [Fact]
         public void ToStartOfYearLocalTest()
         {
@@ -81,6 +111,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 1, 1, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfYearLocalTest.
+        /// </summary>
         [Fact]
         public void ToEndOfYearLocalTest()
         {
@@ -88,6 +121,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 1, 1, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddYears(1).AddTicks(-1).ToUniversalTime(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfWeekOnMondayTest.
+        /// </summary>
         [Fact]
         public void ToStartOfWeekOnMondayTest()
         {
@@ -95,6 +131,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 9, 29, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfWeekOnMondayTest.
+        /// </summary>
         [Fact]
         public void ToEndOfWeekOnMondayTest()
         {
@@ -102,6 +141,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 10, 5, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfWeekOnSundayTest.
+        /// </summary>
         [Fact]
         public void ToStartOfWeekOnSundayTest()
         {
@@ -109,6 +151,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 9, 28, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfWeekOnSundayTest.
+        /// </summary>
         [Fact]
         public void ToEndOfWeekOnSundayTest()
         {
@@ -116,6 +161,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 10, 4, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToStartOfWorkWeekTest.
+        /// </summary>
         [Fact]
         public void ToStartOfWorkWeekTest()
         {
@@ -123,6 +171,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 9, 29, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToEndOfWorkWeekTest.
+        /// </summary>
         [Fact]
         public void ToEndOfWorkWeekTest()
         {
@@ -130,6 +181,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(new DateTimeOffset(1975, 10, 3, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay(), result);
         }
 
+        /// <summary>
+        /// Defines the test method ToUniversalTimeStringTest.
+        /// </summary>
         [Fact]
         public void ToUniversalTimeStringTest()
         {
@@ -139,6 +193,12 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method ToLocalDateStringTest.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="expected">The expected.</param>
+        /// <param name="culture">The culture.</param>
         [Theory]
         [InlineData("d", "6/15/2009", "en-US")]
         [InlineData("D", "Monday, June 15, 2009", "en-US")]
@@ -157,6 +217,12 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         }
 
 
+        /// <summary>
+        /// Defines the test method ToLocalDateTimeOffsetTest.
+        /// </summary>
+        /// <param name="datetime">The datetime.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="hour">The hour.</param>
         [Theory]
         [InlineData("2021-01-29 19:56:18.3907747 +00:00", 1, 20)]
         [InlineData("2021-01-29 20:44:55.0977507 +00:00", 1, 21)]

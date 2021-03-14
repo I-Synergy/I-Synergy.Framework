@@ -7,10 +7,19 @@ using ISynergy.Framework.Core.Linq.Tokenizer;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
 {
+    /// <summary>
+    /// Class TextParserTests.
+    /// </summary>
     public class TextParserTests
     {
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly ParsingConfig _config = new ParsingConfig();
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_Bar.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_Bar()
         {
@@ -23,6 +32,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("|");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_Colon.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_Colon()
         {
@@ -35,6 +47,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals(":");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_Exclamation.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_Exclamation()
         {
@@ -47,6 +62,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("!");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_ExclamationEqual.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_ExclamationEqual()
         {
@@ -59,6 +77,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("!=");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_GreaterThanEqual.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_GreaterThanEqual()
         {
@@ -71,6 +92,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals(">=");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_HexadecimalIntegerLiteral.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_HexadecimalIntegerLiteral()
         {
@@ -85,6 +109,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.ThatCode(() => new TextParser(_config, "0xz1234")).Throws<ParseException>();
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_LessGreater.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_LessGreater()
         {
@@ -97,6 +124,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("<>");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_NullPropagation.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_NullPropagation()
         {
@@ -109,6 +139,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("?.");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_RealLiteral.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_RealLiteral()
         {
@@ -123,6 +156,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.ThatCode(() => new TextParser(_config, "1.e25")).Throws<ParseException>();
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_RealLiteralDecimalQualifier.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_RealLiteralDecimalQualifier()
         {
@@ -135,6 +171,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("12.5m");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_RealLiteralDecimalQualifier_Other_NumberDecimalSeparator.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_RealLiteralDecimalQualifier_Other_NumberDecimalSeparator()
         {
@@ -153,6 +192,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("12,5m");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_RealLiteralFloatQualifier.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_RealLiteralFloatQualifier()
         {
@@ -165,6 +207,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("12.5f");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_RealLiteralMinus.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_RealLiteralMinus()
         {
@@ -177,6 +222,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("1.0E-25");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_RealLiteralPlus.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_RealLiteralPlus()
         {
@@ -189,6 +237,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("1.0E+25");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_Percent.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_Percent()
         {
@@ -201,6 +252,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("%");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_Slash.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_Slash()
         {
@@ -213,6 +267,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text).Equals("/");
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_StringLiteral_WithSingleQuotes_Backslash.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_StringLiteral_WithSingleQuotes_Backslash()
         {
@@ -225,6 +282,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text[1]).Equals('\\');
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_StringLiteral_WithSingleQuotes_DoubleQuote.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_StringLiteral_WithSingleQuotes_DoubleQuote()
         {
@@ -237,6 +297,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text[1]).Equals('"');
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_StringLiteral_WithSingleQuotes_SingleQuote.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_StringLiteral_WithSingleQuotes_SingleQuote()
         {
@@ -249,6 +312,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Text[1]).Equals('\'');
         }
 
+        /// <summary>
+        /// Defines the test method TextParser_Parse_ThrowsException.
+        /// </summary>
         [Fact]
         public void TextParser_Parse_ThrowsException()
         {

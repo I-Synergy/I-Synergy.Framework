@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method SkipWhile_Predicate.
+        /// </summary>
         [Fact]
         public void SkipWhile_Predicate()
         {
@@ -21,6 +27,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected.ToArray(), result.Cast<User>().ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method SkipWhile_Predicate_Args.
+        /// </summary>
         [Fact]
         public void SkipWhile_Predicate_Args()
         {

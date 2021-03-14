@@ -6,8 +6,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method SelectMany_Dynamic.
+        /// </summary>
         [Fact]
         public void SelectMany_Dynamic()
         {
@@ -54,6 +60,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult, result);
         }
 
+        /// <summary>
+        /// Defines the test method SelectMany_TResult.
+        /// </summary>
         [Fact]
         public void SelectMany_TResult()
         {
@@ -79,6 +88,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(queryNormal, queryDynamic);
         }
 
+        /// <summary>
+        /// Defines the test method SelectMany_Dynamic_IntoType.
+        /// </summary>
         [Fact]
         public void SelectMany_Dynamic_IntoType()
         {
@@ -104,6 +116,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(queryNormal, queryDynamic);
         }
 
+        /// <summary>
+        /// Defines the test method SelectMany_Dynamic_OverArray_TResult.
+        /// </summary>
         [Fact]
         public void SelectMany_Dynamic_OverArray_TResult()
         {
@@ -120,6 +135,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult, result);
         }
 
+        /// <summary>
+        /// Defines the test method SelectMany_Dynamic_OverArray_IntoType.
+        /// </summary>
         [Fact]
         public void SelectMany_Dynamic_OverArray_IntoType()
         {
@@ -136,6 +154,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedResult, result);
         }
 
+        /// <summary>
+        /// Defines the test method SelectMany_Dynamic_WithResultProjection.
+        /// </summary>
         [Fact]
         public void SelectMany_Dynamic_WithResultProjection()
         {
@@ -153,6 +174,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method SelectMany_Dynamic_WithResultProjection_CustomParameterNames.
+        /// </summary>
         [Fact]
         public void SelectMany_Dynamic_WithResultProjection_CustomParameterNames()
         {

@@ -3,12 +3,27 @@ using ISynergy.Framework.Core.Attributes;
 
 namespace ISynergy.Framework.Core.Data.Tests.TestClasses
 {
+    /// <summary>
+    /// Class Product.
+    /// Implements the <see cref="ISynergy.Framework.Core.Data.ObservableClass" />
+    /// </summary>
+    /// <seealso cref="ISynergy.Framework.Core.Data.ObservableClass" />
     public class Product : ObservableClass
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Product"/> class.
+        /// </summary>
         public Product()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Product"/> class.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="quantity">The quantity.</param>
+        /// <param name="price">The price.</param>
         public Product(Guid id, string name, int quantity, decimal price)
             : this()
         {
@@ -23,6 +38,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// <summary>
         /// Gets or sets the ProductId property value.
         /// </summary>
+        /// <value>The product identifier.</value>
         [Identity]
         public Guid ProductId
         {
@@ -33,6 +49,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// <summary>
         /// Gets or sets the Name property value.
         /// </summary>
+        /// <value>The name.</value>
         public string Name
         {
             get { return GetValue<string>(); }
@@ -42,6 +59,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// <summary>
         /// Gets or sets the Quantity property value.
         /// </summary>
+        /// <value>The quantity.</value>
         public int Quantity
         {
             get { return GetValue<int>(); }
@@ -51,6 +69,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// <summary>
         /// Gets or sets the Price property value.
         /// </summary>
+        /// <value>The price.</value>
         public decimal Price
         {
             get { return GetValue<decimal>(); }
@@ -60,6 +79,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// <summary>
         /// Gets or sets the Date property value.
         /// </summary>
+        /// <value>The date.</value>
         public DateTimeOffset? Date
         {
             get { return GetValue<DateTimeOffset?>(); }
@@ -69,6 +89,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// <summary>
         /// Gets or sets the ProductGroup property value.
         /// </summary>
+        /// <value>The product group.</value>
         public ProductGroup ProductGroup
         {
             get { return GetValue<ProductGroup>(); }

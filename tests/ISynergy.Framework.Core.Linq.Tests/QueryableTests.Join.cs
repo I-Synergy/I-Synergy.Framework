@@ -7,8 +7,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Join.
+        /// </summary>
         [Fact]
         public void Join()
         {
@@ -54,6 +60,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method JoinOnNullableType_RightNullable.
+        /// </summary>
         [Fact]
         public void JoinOnNullableType_RightNullable()
         {
@@ -97,6 +106,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method JoinOnNullableType_LeftNullable.
+        /// </summary>
         [Fact]
         public void JoinOnNullableType_LeftNullable()
         {
@@ -140,6 +152,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method JoinOnNullableType_NotSameTypesThrowsException.
+        /// </summary>
         [Fact]
         public void JoinOnNullableType_NotSameTypesThrowsException()
         {

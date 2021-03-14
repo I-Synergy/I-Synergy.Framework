@@ -8,8 +8,16 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.TypeConvertors
 {
+    /// <summary>
+    /// Class TypeConverterFactoryTests.
+    /// </summary>
     public class TypeConverterFactoryTests
     {
+        /// <summary>
+        /// Defines the test method GetConverter_WithDefaultParsingConfig_ReturnsCorrectTypeConverter.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="expected">The expected.</param>
         [Theory]
         [InlineData(typeof(DateTimeOffset), typeof(DateTimeOffsetConverter))]
         [InlineData(typeof(DateTime), typeof(DateTimeConverter))]
@@ -27,6 +35,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.TypeConvertors
             typeConverter.Should().BeOfType(expected);
         }
 
+        /// <summary>
+        /// Defines the test method GetConverter_WithDateTimeIsParsedAsUTCIsTrue_ReturnsCorrectTypeConverter.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="expected">The expected.</param>
         [Theory]
         [InlineData(typeof(DateTimeOffset), typeof(DateTimeOffsetConverter))]
         [InlineData(typeof(DateTime), typeof(CustomDateTimeConverter))]

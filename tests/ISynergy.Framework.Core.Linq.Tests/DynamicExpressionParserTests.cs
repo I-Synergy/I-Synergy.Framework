@@ -15,142 +15,298 @@ using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class DynamicExpressionParserTests.
+    /// </summary>
     public class DynamicExpressionParserTests
     {
+        /// <summary>
+        /// Class MyClass.
+        /// </summary>
         private class MyClass
         {
+            /// <summary>
+            /// Fooes this instance.
+            /// </summary>
+            /// <returns>System.Int32.</returns>
             public int Foo()
             {
                 return 42;
             }
         }
 
+        /// <summary>
+        /// Class ComplexParseLambda1Result.
+        /// </summary>
         private class ComplexParseLambda1Result
         {
+            /// <summary>
+            /// The age
+            /// </summary>
             public int? Age;
+            /// <summary>
+            /// The total income
+            /// </summary>
             public int TotalIncome;
+            /// <summary>
+            /// The name
+            /// </summary>
             public string Name = string.Empty;
         }
 
+        /// <summary>
+        /// Class ComplexParseLambda3Result.
+        /// </summary>
         [DynamicLinqType]
         public class ComplexParseLambda3Result
         {
+            /// <summary>
+            /// Gets or sets the age.
+            /// </summary>
+            /// <value>The age.</value>
             public int? Age { get; set; }
+            /// <summary>
+            /// Gets or sets the total income.
+            /// </summary>
+            /// <value>The total income.</value>
             public int TotalIncome { get; set; }
         }
 
+        /// <summary>
+        /// Class CustomClassWithStaticMethod.
+        /// </summary>
         public class CustomClassWithStaticMethod
         {
+            /// <summary>
+            /// Gets the age.
+            /// </summary>
+            /// <param name="x">The x.</param>
+            /// <returns>System.Int32.</returns>
             public static int GetAge(int x) => x;
         }
 
+        /// <summary>
+        /// Class CustomTextClass.
+        /// </summary>
         public class CustomTextClass
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CustomTextClass"/> class.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
             public CustomTextClass(string origin)
             {
                 Origin = origin;
             }
 
+            /// <summary>
+            /// Gets the origin.
+            /// </summary>
+            /// <value>The origin.</value>
             public string Origin { get; }
 
+            /// <summary>
+            /// Performs an implicit conversion from <see cref="CustomTextClass"/> to <see cref="System.String"/>.
+            /// </summary>
+            /// <param name="customTextValue">The custom text value.</param>
+            /// <returns>The result of the conversion.</returns>
             public static implicit operator string(CustomTextClass customTextValue)
             {
                 return customTextValue?.Origin;
             }
 
+            /// <summary>
+            /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="CustomTextClass"/>.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
+            /// <returns>The result of the conversion.</returns>
             public static implicit operator CustomTextClass(string origin)
             {
                 return new CustomTextClass(origin);
             }
 
+            /// <summary>
+            /// Returns a <see cref="System.String" /> that represents this instance.
+            /// </summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return Origin;
             }
         }
 
+        /// <summary>
+        /// Class CustomClassWithOneWayImplicitConversion.
+        /// </summary>
         public class CustomClassWithOneWayImplicitConversion
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CustomClassWithOneWayImplicitConversion"/> class.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
             public CustomClassWithOneWayImplicitConversion(string origin)
             {
                 Origin = origin;
             }
 
+            /// <summary>
+            /// Gets the origin.
+            /// </summary>
+            /// <value>The origin.</value>
             public string Origin { get; }
 
+            /// <summary>
+            /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="CustomClassWithOneWayImplicitConversion"/>.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
+            /// <returns>The result of the conversion.</returns>
             public static implicit operator CustomClassWithOneWayImplicitConversion(string origin)
             {
                 return new CustomClassWithOneWayImplicitConversion(origin);
             }
 
+            /// <summary>
+            /// Returns a <see cref="System.String" /> that represents this instance.
+            /// </summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return Origin;
             }
         }
 
+        /// <summary>
+        /// Class CustomClassWithReversedImplicitConversion.
+        /// </summary>
         public class CustomClassWithReversedImplicitConversion
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CustomClassWithReversedImplicitConversion"/> class.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
             public CustomClassWithReversedImplicitConversion(string origin)
             {
                 Origin = origin;
             }
 
+            /// <summary>
+            /// Gets the origin.
+            /// </summary>
+            /// <value>The origin.</value>
             public string Origin { get; }
 
+            /// <summary>
+            /// Performs an implicit conversion from <see cref="CustomClassWithReversedImplicitConversion"/> to <see cref="System.String"/>.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
+            /// <returns>The result of the conversion.</returns>
             public static implicit operator string(CustomClassWithReversedImplicitConversion origin)
             {
                 return origin.ToString();
             }
 
+            /// <summary>
+            /// Returns a <see cref="System.String" /> that represents this instance.
+            /// </summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return Origin;
             }
         }
 
+        /// <summary>
+        /// Class CustomClassWithValueTypeImplicitConversion.
+        /// </summary>
         public class CustomClassWithValueTypeImplicitConversion
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CustomClassWithValueTypeImplicitConversion"/> class.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
             public CustomClassWithValueTypeImplicitConversion(int origin)
             {
                 Origin = origin;
             }
 
+            /// <summary>
+            /// Gets the origin.
+            /// </summary>
+            /// <value>The origin.</value>
             public int Origin { get; }
 
+            /// <summary>
+            /// Performs an implicit conversion from <see cref="System.Int32"/> to <see cref="CustomClassWithValueTypeImplicitConversion"/>.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
+            /// <returns>The result of the conversion.</returns>
             public static implicit operator CustomClassWithValueTypeImplicitConversion(int origin)
             {
                 return new CustomClassWithValueTypeImplicitConversion(origin);
             }
 
+            /// <summary>
+            /// Returns a <see cref="System.String" /> that represents this instance.
+            /// </summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return Origin.ToString();
             }
         }
 
+        /// <summary>
+        /// Class CustomClassWithReversedValueTypeImplicitConversion.
+        /// </summary>
         public class CustomClassWithReversedValueTypeImplicitConversion
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CustomClassWithReversedValueTypeImplicitConversion"/> class.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
             public CustomClassWithReversedValueTypeImplicitConversion(int origin)
             {
                 Origin = origin;
             }
 
+            /// <summary>
+            /// Gets the origin.
+            /// </summary>
+            /// <value>The origin.</value>
             public int Origin { get; }
 
+            /// <summary>
+            /// Performs an implicit conversion from <see cref="CustomClassWithReversedValueTypeImplicitConversion"/> to <see cref="System.Int32"/>.
+            /// </summary>
+            /// <param name="origin">The origin.</param>
+            /// <returns>The result of the conversion.</returns>
             public static implicit operator int(CustomClassWithReversedValueTypeImplicitConversion origin)
             {
                 return origin.Origin;
             }
 
+            /// <summary>
+            /// Returns a <see cref="System.String" /> that represents this instance.
+            /// </summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return Origin.ToString();
             }
         }
 
+        /// <summary>
+        /// Class TestImplicitConversionContainer.
+        /// </summary>
         public class TestImplicitConversionContainer
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TestImplicitConversionContainer"/> class.
+            /// </summary>
+            /// <param name="oneWay">The one way.</param>
+            /// <param name="reversed">The reversed.</param>
+            /// <param name="valueType">Type of the value.</param>
+            /// <param name="reversedValueType">Type of the reversed value.</param>
             public TestImplicitConversionContainer(
                 CustomClassWithOneWayImplicitConversion oneWay,
                 CustomClassWithReversedImplicitConversion reversed,
@@ -163,45 +319,103 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 ReversedValueType = reversedValueType;
             }
 
+            /// <summary>
+            /// Gets the one way.
+            /// </summary>
+            /// <value>The one way.</value>
             public CustomClassWithOneWayImplicitConversion OneWay { get; }
 
+            /// <summary>
+            /// Gets the reversed.
+            /// </summary>
+            /// <value>The reversed.</value>
             public CustomClassWithReversedImplicitConversion Reversed { get; }
 
+            /// <summary>
+            /// Gets the type of the value.
+            /// </summary>
+            /// <value>The type of the value.</value>
             public CustomClassWithValueTypeImplicitConversion ValueType { get; }
 
+            /// <summary>
+            /// Gets the type of the reversed value.
+            /// </summary>
+            /// <value>The type of the reversed value.</value>
             public CustomClassWithReversedValueTypeImplicitConversion ReversedValueType { get; }
         }
 
+        /// <summary>
+        /// Class TextHolder.
+        /// </summary>
         public class TextHolder
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TextHolder"/> class.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="note">The note.</param>
             public TextHolder(string name, CustomTextClass note)
             {
                 Name = name;
                 Note = note;
             }
 
+            /// <summary>
+            /// Gets the name.
+            /// </summary>
+            /// <value>The name.</value>
             public string Name { get; }
 
+            /// <summary>
+            /// Gets the note.
+            /// </summary>
+            /// <value>The note.</value>
             public CustomTextClass Note { get; }
 
+            /// <summary>
+            /// Returns a <see cref="System.String" /> that represents this instance.
+            /// </summary>
+            /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
             public override string ToString()
             {
                 return Name + " (" + Note + ")";
             }
         }
 
+        /// <summary>
+        /// Class StaticHelper.
+        /// </summary>
         public static class StaticHelper
         {
+            /// <summary>
+            /// Gets the unique identifier.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <returns>System.Nullable&lt;Guid&gt;.</returns>
             public static Guid? GetGuid(string name)
             {
                 return Guid.NewGuid();
             }
         }
 
+        /// <summary>
+        /// Class TestCustomTypeProvider.
+        /// Implements the <see cref="ISynergy.Framework.Core.Linq.Providers.AbstractDynamicLinqCustomTypeProvider" />
+        /// Implements the <see cref="ISynergy.Framework.Core.Linq.Abstractions.IDynamicLinkCustomTypeProvider" />
+        /// </summary>
+        /// <seealso cref="ISynergy.Framework.Core.Linq.Providers.AbstractDynamicLinqCustomTypeProvider" />
+        /// <seealso cref="ISynergy.Framework.Core.Linq.Abstractions.IDynamicLinkCustomTypeProvider" />
         public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
+            /// <summary>
+            /// The custom types
+            /// </summary>
             private HashSet<Type> _customTypes;
 
+            /// <summary>
+            /// Returns a list of custom types that System.Linq.Dynamic.Core will understand.
+            /// </summary>
+            /// <returns>A <see cref="T:System.Collections.Generic.HashSet`1" /> list of custom types.</returns>
             public virtual HashSet<Type> GetCustomTypes()
             {
                 if (_customTypes != null)
@@ -219,11 +433,21 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 return _customTypes;
             }
 
+            /// <summary>
+            /// Resolve any type by fullname which is registered in the current application domain.
+            /// </summary>
+            /// <param name="typeName">The typename to resolve.</param>
+            /// <returns>A resolved <see cref="T:System.Type" /> or null when not found.</returns>
             public Type ResolveType(string typeName)
             {
                 return Type.GetType(typeName);
             }
 
+            /// <summary>
+            /// Resolves the name of the type by simple.
+            /// </summary>
+            /// <param name="typeName">Name of the type.</param>
+            /// <returns>Type.</returns>
             public Type ResolveTypeBySimpleName(string typeName)
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -231,6 +455,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true()
         {
@@ -253,6 +480,10 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(value).IsEqualTo("x");
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_WithStructWithEquality.
+        /// </summary>
+        /// <param name="query">The query.</param>
         [Theory]
         [InlineData("Where(x => x.SnowflakeId == {0})")]
         [InlineData("Where(x => x.SnowflakeId = {0})")]
@@ -278,6 +509,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result.ToArray()[0]).Equals(expected[0]);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false()
         {
@@ -297,6 +531,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(value).IsEqualTo("x");
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_ToList.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_ToList()
         {
@@ -318,6 +555,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result.ToArray()[0]).Equals(expected[0]);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_Complex_1.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_Complex_1()
         {
@@ -348,6 +588,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result.ToArray()[0]).Equals(expected[0]);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_Complex_2.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_Complex_2()
         {
@@ -373,6 +616,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result.ToArray()[0]).Equals(expected[0]);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_Complex_3.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_Complex_3()
         {
@@ -408,6 +654,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result.ToArray()[0]).Equals(expected[0]);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_Select_1.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_Select_1()
         {
@@ -430,6 +679,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_Select_2.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_Select_2()
         {
@@ -453,6 +705,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/58
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_4_Issue58.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_4_Issue58()
         {
@@ -472,6 +727,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).Equals(42);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_DuplicateParameterNames_ThrowsException.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_DuplicateParameterNames_ThrowsException()
         {
@@ -488,6 +746,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 .WithMessage("The identifier 'x' was defined more than once");
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_EmptyParameterList.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_EmptyParameterList()
         {
@@ -502,6 +763,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).Equals(3);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_ParameterName.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_ParameterName()
         {
@@ -520,6 +784,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(typeof(bool), expressionIT.Body.Type);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_ParameterName_Empty.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_ParameterName_Empty()
         {
@@ -536,6 +803,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_ParameterName_Null.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_ParameterName_Null()
         {
@@ -552,6 +822,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression()
         {
@@ -562,6 +835,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(typeof(int), expression.Body.Type);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_RealNumbers.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_RealNumbers()
         {
@@ -579,6 +855,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(0.10m, result4.Compile().DynamicInvoke());
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression()
         {
@@ -587,6 +866,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
@@ -595,6 +877,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
@@ -604,6 +889,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
@@ -656,6 +944,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(res2, JsonConvert.SerializeObject(query));
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
@@ -672,6 +963,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedRightValue, rightValue);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteral_MissingClosingQuote.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteral_MissingClosingQuote()
         {
@@ -683,6 +977,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 string.Format("Property1 == {0}", expectedRightValue)));
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
         {
@@ -700,6 +997,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedRightValue, rightValue);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteral_Backslash.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteral_Backslash()
         {
@@ -717,6 +1017,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedRightValue, rightValue);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteral_QuotationMark.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteral_QuotationMark()
         {
@@ -734,6 +1037,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expectedRightValue, rightValue);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
         {
@@ -744,6 +1050,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(typeof(string), expression.ReturnType);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_IllegalMethodCall_ThrowsException.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_IllegalMethodCall_ThrowsException()
         {
@@ -751,6 +1060,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 .Throws<ParseException>().WithMessage("Methods on type 'Stream' are not accessible");
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_CustomMethod.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_CustomMethod()
         {
@@ -773,6 +1085,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
         //[Fact]
+        /// <summary>
+        /// Dynamics the expression parser parse lambda with inner string literal.
+        /// </summary>
         public void DynamicExpressionParser_ParseLambda_With_InnerStringLiteral()
         {
             // Assign
@@ -789,6 +1104,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).IsEqualTo(originalTrueValue);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_With_Guid_Equals_Null.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_With_Guid_Equals_Null()
         {
@@ -809,6 +1127,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.True(result);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_With_Null_Equals_Guid.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_With_Null_Equals_Guid()
         {
@@ -829,6 +1150,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.True(result);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_With_Guid_Equals_String.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_With_Guid_Equals_String()
         {
@@ -857,6 +1181,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(guidEmpty, result);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_With_Concat_String_CustomType.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_With_Concat_String_CustomType()
         {
@@ -881,6 +1208,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal("name1 (note1)", result);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_With_Concat_CustomType_String.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_With_Concat_CustomType_String()
         {
@@ -905,6 +1235,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal("note1 (name1)", result);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_With_One_Way_Implicit_Conversions.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_With_One_Way_Implicit_Conversions()
         {
@@ -972,6 +1305,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.NotNull(lambda);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_Operator_Less_Greater_With_Guids.
+        /// </summary>
         [Fact]
         public void DynamicExpressionParser_ParseLambda_Operator_Less_Greater_With_Guids()
         {
@@ -1005,6 +1341,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(anotherId, result);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_RenameParameterExpression.
+        /// </summary>
+        /// <param name="expressionAsString">The expression as string.</param>
+        /// <param name="expected">The expected.</param>
         [Theory]
         [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]
         [InlineData("c => c.Name == \"test\"", "c => (c.Name == \"test\")")]
@@ -1024,6 +1365,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).IsEqualTo(expected);
         }
 
+        /// <summary>
+        /// Defines the test method DynamicExpressionParser_ParseLambda_SupportEnumerationStringComparison.
+        /// </summary>
+        /// <param name="expressionAsString">The expression as string.</param>
+        /// <param name="testValue">The test value.</param>
+        /// <param name="expectedResult">if set to <c>true</c> [expected result].</param>
         [Theory]
         [InlineData(@"p0.Equals(""Testing"", 3)", "testinG", true)]
         [InlineData(@"p0.Equals(""Testing"", StringComparison.InvariantCultureIgnoreCase)", "testinG", true)]

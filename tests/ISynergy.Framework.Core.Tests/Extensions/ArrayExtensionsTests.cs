@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
+    /// <summary>
+    /// Class ArrayExtensionsTests.
+    /// </summary>
     public class ArrayExtensionsTests
     {
+        /// <summary>
+        /// Defines the test method NullArrayNonFailableTest.
+        /// </summary>
         [Fact]
         public void NullArrayNonFailableTest()
         {
@@ -21,6 +27,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.True(result);
         }
 
+        /// <summary>
+        /// Defines the test method NullArrayFailableTest.
+        /// </summary>
         [Fact]
         public void NullArrayFailableTest()
         {

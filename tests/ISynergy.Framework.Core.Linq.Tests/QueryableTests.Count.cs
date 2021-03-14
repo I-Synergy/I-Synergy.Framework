@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Count.
+        /// </summary>
         [Fact]
         public void Count()
         {
@@ -25,6 +31,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(0, resultNone);
         }
 
+        /// <summary>
+        /// Defines the test method Count_Predicate.
+        /// </summary>
         [Fact]
         public void Count_Predicate()
         {
@@ -39,6 +48,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method Count_Predicate_WithArgs.
+        /// </summary>
         [Fact]
         public void Count_Predicate_WithArgs()
         {
@@ -55,6 +67,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method Count_Dynamic_Select.
+        /// </summary>
         [Fact]
         public void Count_Dynamic_Select()
         {
@@ -69,6 +84,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method Count_Dynamic_Where.
+        /// </summary>
         [Fact]
         public void Count_Dynamic_Where()
         {

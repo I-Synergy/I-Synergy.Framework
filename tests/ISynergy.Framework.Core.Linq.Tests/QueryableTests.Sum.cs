@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Sum.
+        /// </summary>
         [Fact]
         public void Sum()
         {
@@ -20,6 +26,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, actual);
         }
 
+        /// <summary>
+        /// Defines the test method Sum_Selector.
+        /// </summary>
         [Fact]
         public void Sum_Selector()
         {

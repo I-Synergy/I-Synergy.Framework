@@ -10,13 +10,12 @@
         <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
         <Description>I-Synergy Framework Azure MessageBus for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.1.1" />
+        <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.1.2" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     </ItemGroup>
     <ItemGroup>

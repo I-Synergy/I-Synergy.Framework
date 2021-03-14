@@ -4,13 +4,25 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
+    /// <summary>
+    /// Class TypeHelperTests.
+    /// </summary>
     public class TypeHelperTests
     {
+        /// <summary>
+        /// Enum TestEnum
+        /// </summary>
         enum TestEnum
         {
+            /// <summary>
+            /// The x
+            /// </summary>
             x = 1
         }
 
+        /// <summary>
+        /// Defines the test method TypeHelper_ParseEnum_Valid.
+        /// </summary>
         [Fact]
         public void TypeHelper_ParseEnum_Valid()
         {
@@ -21,6 +33,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(result).Equals(TestEnum.x);
         }
 
+        /// <summary>
+        /// Defines the test method TypeHelper_ParseEnum_Invalid.
+        /// </summary>
         [Fact]
         public void TypeHelper_ParseEnum_Invalid()
         {
@@ -31,6 +46,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(result).IsNull();
         }
 
+        /// <summary>
+        /// Defines the test method TypeHelper_IsCompatibleWith_SameTypes_True.
+        /// </summary>
         [Fact]
         public void TypeHelper_IsCompatibleWith_SameTypes_True()
         {
@@ -41,6 +59,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(result).IsTrue();
         }
 
+        /// <summary>
+        /// Defines the test method TypeHelper_IsCompatibleWith_True.
+        /// </summary>
         [Fact]
         public void TypeHelper_IsCompatibleWith_True()
         {
@@ -51,6 +72,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(result).IsTrue();
         }
 
+        /// <summary>
+        /// Defines the test method TypeHelper_IsCompatibleWith_False.
+        /// </summary>
         [Fact]
         public void TypeHelper_IsCompatibleWith_False()
         {

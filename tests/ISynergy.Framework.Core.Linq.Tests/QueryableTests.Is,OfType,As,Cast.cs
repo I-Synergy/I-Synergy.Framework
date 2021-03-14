@@ -8,8 +8,14 @@ using System.Linq;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method OfType_WithType.
+        /// </summary>
         [Fact]
         public void OfType_WithType()
         {
@@ -27,6 +33,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
         }
 
+        /// <summary>
+        /// Defines the test method OfType_WithString.
+        /// </summary>
         [Fact]
         public void OfType_WithString()
         {
@@ -44,6 +53,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
         }
 
+        /// <summary>
+        /// Defines the test method OfType_Dynamic.
+        /// </summary>
         [Fact]
         public void OfType_Dynamic()
         {
@@ -67,6 +79,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
         }
 
+        /// <summary>
+        /// Defines the test method Is_Dynamic_ActingOnIt.
+        /// </summary>
         [Fact]
         public void Is_Dynamic_ActingOnIt()
         {
@@ -84,6 +99,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(countOfTypeDynamic).Equals(countOfType);
         }
 
+        /// <summary>
+        /// Defines the test method Is_Dynamic_ActingOnIt_WithSimpleName.
+        /// </summary>
         [Fact]
         public void Is_Dynamic_ActingOnIt_WithSimpleName()
         {
@@ -106,6 +124,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(countOfTypeDynamic).Equals(countOfType);
         }
 
+        /// <summary>
+        /// Defines the test method As_Dynamic_ActingOnIt.
+        /// </summary>
         [Fact]
         public void As_Dynamic_ActingOnIt()
         {
@@ -122,6 +143,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(countAsDynamic).Equals(1);
         }
 
+        /// <summary>
+        /// Defines the test method CastToType_WithType.
+        /// </summary>
         [Fact]
         public void CastToType_WithType()
         {
@@ -139,6 +163,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(castDynamic.Length).Equals(cast.Length);
         }
 
+        /// <summary>
+        /// Defines the test method CastToType_WithString.
+        /// </summary>
         [Fact]
         public void CastToType_WithString()
         {
@@ -156,6 +183,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(castDynamic.Length).Equals(cast.Length);
         }
 
+        /// <summary>
+        /// Defines the test method CastToType_Dynamic.
+        /// </summary>
         [Fact]
         public void CastToType_Dynamic()
         {
@@ -179,6 +209,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(cast.Length).Equals(castDynamic.Length);
         }
 
+        /// <summary>
+        /// Defines the test method CastToType_Dynamic_ActingOnIt.
+        /// </summary>
         [Fact]
         public void CastToType_Dynamic_ActingOnIt()
         {
@@ -196,6 +229,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(cast.Length).Equals(castDynamic.Length);
         }
 
+        /// <summary>
+        /// Defines the test method CastToType_Dynamic_ActingOnIt_Throws.
+        /// </summary>
         [Fact]
         public void CastToType_Dynamic_ActingOnIt_Throws()
         {
@@ -212,6 +248,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.ThatCode(castDynamic).Throws<Exception>();
         }
 
+        /// <summary>
+        /// Defines the test method OfType_Dynamic_Exceptions.
+        /// </summary>
         [Fact]
         public void OfType_Dynamic_Exceptions()
         {
@@ -233,6 +272,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Throws<ParseException>(() => qry.Select("Employees.OfType(\"not-found\").Where(Name == \"e\")"));
         }
 
+        /// <summary>
+        /// Defines the test method OfType_Dynamic_ActingOnIt_Exceptions.
+        /// </summary>
         [Fact]
         public void OfType_Dynamic_ActingOnIt_Exceptions()
         {
@@ -248,6 +290,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Throws<ParseException>(() => qry.Count("OfType(\"not-found\")"));
         }
 
+        /// <summary>
+        /// Defines the test method CastToType_Dynamic_Exceptions.
+        /// </summary>
         [Fact]
         public void CastToType_Dynamic_Exceptions()
         {

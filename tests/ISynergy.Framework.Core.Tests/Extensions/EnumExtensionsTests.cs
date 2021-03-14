@@ -3,8 +3,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
+    /// <summary>
+    /// Class EnumExtensionsTests.
+    /// </summary>
     public class EnumExtensionsTests
     {
+        /// <summary>
+        /// Defines the test method GetDescriptionTest.
+        /// </summary>
         [Fact]
         public void GetDescriptionTest()
         {

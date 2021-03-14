@@ -3,8 +3,16 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.IO.Tests
 {
+    /// <summary>
+    /// Class DriveInformationTests.
+    /// </summary>
     public class DriveInformationTests
     {
+        /// <summary>
+        /// Defines the test method IsNetworkDriveTest.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData(@"C:\Temp", 0)]
         [InlineData(@"\\localhost\c$\temp", 1)]
@@ -28,6 +36,11 @@ namespace ISynergy.Framework.Core.IO.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method GetDriveNameTest.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData(@"Z:\Temp\Sub-Folder", @"Z:\")]
         [InlineData(@"C:\Temp", @"C:\")]
@@ -52,6 +65,11 @@ namespace ISynergy.Framework.Core.IO.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method ResolveToRootUNCTest.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData(@"Z:\Temp\Sub-Folder", @"Z:\")]
         [InlineData(@"C:\Temp", @"C:\")]
@@ -76,6 +94,11 @@ namespace ISynergy.Framework.Core.IO.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method ResolveToUNCTest.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         [InlineData(@"Z:\Temp\Sub-Folder", @"Z:\Temp\Sub-Folder")]
         [InlineData(@"C:\Temp", @"C:\Temp")]
@@ -100,6 +123,11 @@ namespace ISynergy.Framework.Core.IO.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method IsFreeSpaceAvailableTest.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="result">The result.</param>
         [Theory]
         //[InlineData(@"Z:\Temp\Sub-Folder", true)]
         [InlineData(@"C:\Temp", true)]

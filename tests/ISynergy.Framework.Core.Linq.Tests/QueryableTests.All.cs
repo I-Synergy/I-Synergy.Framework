@@ -4,8 +4,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method All_Predicate.
+        /// </summary>
         [Fact]
         public void All_Predicate()
         {
@@ -20,6 +26,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method All_Predicate_WithArgs.
+        /// </summary>
         [Fact]
         public void All_Predicate_WithArgs()
         {
@@ -36,6 +45,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method All_Dynamic_Select.
+        /// </summary>
         [Fact]
         public void All_Dynamic_Select()
         {
@@ -50,6 +62,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result);
         }
 
+        /// <summary>
+        /// Defines the test method All_Dynamic_Where.
+        /// </summary>
         [Fact]
         public void All_Dynamic_Where()
         {

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>Define a property for a view model class</Title>
+            <Shortcut>vmprop</Shortcut>
+            <Description>Code snippet for a property for a view model class</Description>
+            <Author>Ismail Hassani</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>name</ID>
+                    <ToolTip>Name of the property</ToolTip>
+                    <Default>name</Default>
+                </Literal>
+                <Literal>
+                    <ID>type</ID>
+                    <ToolTip>Type of the property</ToolTip>
+                    <Default>type</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[/// <summary>
+/// Gets or sets the $name$ property value.
+/// </summary>
+public $type$ $name$
+{
+	get { return GetValue<$type$>(); }
+	set { SetValue(value); }
+}
+]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

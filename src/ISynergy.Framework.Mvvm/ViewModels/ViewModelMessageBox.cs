@@ -118,22 +118,22 @@ namespace ISynergy.Framework.Mvvm
         /// Gets or sets the ok command.
         /// </summary>
         /// <value>The ok command.</value>
-        public RelayCommand Ok_Command { get; set; }
+        public Command Ok_Command { get; set; }
         /// <summary>
         /// Gets or sets the cancel command.
         /// </summary>
         /// <value>The cancel command.</value>
-        public RelayCommand Cancel_Command { get; set; }
+        public Command Cancel_Command { get; set; }
         /// <summary>
         /// Gets or sets the yes command.
         /// </summary>
         /// <value>The yes command.</value>
-        public RelayCommand Yes_Command { get; set; }
+        public Command Yes_Command { get; set; }
         /// <summary>
         /// Gets or sets the no command.
         /// </summary>
         /// <value>The no command.</value>
-        public RelayCommand No_Command { get; set; }
+        public Command No_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelMessageBox"/> class.
@@ -160,10 +160,10 @@ namespace ISynergy.Framework.Mvvm
             ButtonOptions = button;
             ButtonImages = image;
 
-            Ok_Command = new RelayCommand(() => OnSubmitted(new SubmitEventArgs<MessageBoxResult>(MessageBoxResult.OK)));
-            Cancel_Command = new RelayCommand(() => OnSubmitted(new SubmitEventArgs<MessageBoxResult>(MessageBoxResult.Cancel)));
-            Yes_Command = new RelayCommand(() => OnSubmitted(new SubmitEventArgs<MessageBoxResult>(MessageBoxResult.Yes)));
-            No_Command = new RelayCommand(() => OnSubmitted(new SubmitEventArgs<MessageBoxResult>(MessageBoxResult.No)));
+            Ok_Command = new Command(() => OnSubmitted(new SubmitEventArgs<MessageBoxResult>(MessageBoxResult.OK)));
+            Cancel_Command = new Command(() => OnSubmitted(new SubmitEventArgs<MessageBoxResult>(MessageBoxResult.Cancel)));
+            Yes_Command = new Command(() => OnSubmitted(new SubmitEventArgs<MessageBoxResult>(MessageBoxResult.Yes)));
+            No_Command = new Command(() => OnSubmitted(new SubmitEventArgs<MessageBoxResult>(MessageBoxResult.No)));
         }
 
         /// <summary>

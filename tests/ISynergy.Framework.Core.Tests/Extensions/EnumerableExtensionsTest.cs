@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
+    /// <summary>
+    /// Class EnumerableExtensionsTest.
+    /// </summary>
     public class EnumerableExtensionsTest
     {
+        /// <summary>
+        /// Defines the test method NullEnumerableNonFailableTest.
+        /// </summary>
         [Fact]
         public void NullEnumerableNonFailableTest()
         {
@@ -22,6 +28,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             Assert.True(result);
         }
 
+        /// <summary>
+        /// Defines the test method NullEnumerableFailableTest.
+        /// </summary>
         [Fact]
         public void NullEnumerableFailableTest()
         {

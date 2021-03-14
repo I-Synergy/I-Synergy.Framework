@@ -3,8 +3,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Aggregate_Average.
+        /// </summary>
         [Fact]
         public void Aggregate_Average()
         {
@@ -32,6 +38,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(30.0, resultNullableInt);
         }
 
+        /// <summary>
+        /// Defines the test method Aggregate_Min.
+        /// </summary>
         [Fact]
         public void Aggregate_Min()
         {
@@ -59,18 +68,45 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(60, resultNullableInt);
         }
 
+        /// <summary>
+        /// Class AggregateTest.
+        /// </summary>
         public class AggregateTest
         {
+            /// <summary>
+            /// Gets or sets the double.
+            /// </summary>
+            /// <value>The double.</value>
             public double Double { get; set; }
 
+            /// <summary>
+            /// Gets or sets the nullable double.
+            /// </summary>
+            /// <value>The nullable double.</value>
             public double? NullableDouble { get; set; }
 
+            /// <summary>
+            /// Gets or sets the float.
+            /// </summary>
+            /// <value>The float.</value>
             public float Float { get; set; }
 
+            /// <summary>
+            /// Gets or sets the nullable float.
+            /// </summary>
+            /// <value>The nullable float.</value>
             public float? NullableFloat { get; set; }
 
+            /// <summary>
+            /// Gets or sets the int.
+            /// </summary>
+            /// <value>The int.</value>
             public int Int { get; set; }
 
+            /// <summary>
+            /// Gets or sets the nullable int.
+            /// </summary>
+            /// <value>The nullable int.</value>
             public int? NullableInt { get; set; }
         }
     }

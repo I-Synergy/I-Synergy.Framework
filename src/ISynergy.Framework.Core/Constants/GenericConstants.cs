@@ -120,6 +120,10 @@
         /// </summary>
         public const string ViewModel = "ViewModel";
         /// <summary>
+        /// The viewmodel with generic parameter
+        /// </summary>
+        public const string ViewModelTRegex = ".*ViewModel`.*";
+        /// <summary>
         /// The shell view model
         /// </summary>
         public const string ShellViewModel = "ShellViewModel";

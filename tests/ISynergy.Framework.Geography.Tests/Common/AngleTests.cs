@@ -3,8 +3,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Geography.Common.Tests
 {
+    /// <summary>
+    /// Class AngleTests.
+    /// </summary>
     public class AngleTests
     {
+        /// <summary>
+        /// Defines the test method TestConstructor1.
+        /// </summary>
         [Fact]
         public void TestConstructor1()
         {
@@ -12,6 +18,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(90, a.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor2.
+        /// </summary>
         [Fact]
         public void TestConstructor2()
         {
@@ -19,6 +28,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(45.5, a.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor3.
+        /// </summary>
         [Fact]
         public void TestConstructor3()
         {
@@ -26,12 +38,18 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(-45.5, a.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor4.
+        /// </summary>
         [Fact]
         public void TestConstructor4()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 60));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor5.
+        /// </summary>
         [Fact]
         public void TestConstructor5()
         {
@@ -39,18 +57,27 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(a.Degrees, 45.5 + (1.0 / 120.0));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor6.
+        /// </summary>
         [Fact]
         public void TestConstructor6()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 30, 60));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor7.
+        /// </summary>
         [Fact]
         public void TestConstructor7()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 60, 30));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor8.
+        /// </summary>
         [Fact]
         public void TestConstructor8()
         {
@@ -58,12 +85,18 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(a.Degrees, -45.5 - (1.0 / 120.0));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor9.
+        /// </summary>
         [Fact]
         public void TestConstructor9()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, -1, 30));
         }
 
+        /// <summary>
+        /// Defines the test method TestDegreeSetter.
+        /// </summary>
         [Fact]
         public void TestDegreeSetter()
         {
@@ -73,6 +106,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(90, a.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestRadiansGetter.
+        /// </summary>
         [Fact]
         public void TestRadiansGetter()
         {
@@ -80,6 +116,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(a.Radians, Math.PI);
         }
 
+        /// <summary>
+        /// Defines the test method TestRadiansSetter.
+        /// </summary>
         [Fact]
         public void TestRadiansSetter()
         {
@@ -89,6 +128,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(180, a.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestAbs.
+        /// </summary>
         [Fact]
         public void TestAbs()
         {
@@ -98,6 +140,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(180, b.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestCompareTo1.
+        /// </summary>
         [Fact]
         public void TestCompareTo1()
         {
@@ -110,6 +155,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(1, b.CompareTo(a));
         }
 
+        /// <summary>
+        /// Defines the test method TestCompareTo2.
+        /// </summary>
         [Fact]
         public void TestCompareTo2()
         {
@@ -122,6 +170,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(0, b.CompareTo(a));
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals1.
+        /// </summary>
         [Fact]
         public void TestEquals1()
         {
@@ -134,6 +185,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.True(a.Equals(b));
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals2.
+        /// </summary>
         [Fact]
         public void TestEquals2()
         {
@@ -143,6 +197,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.False(a.Equals(s));
         }
 
+        /// <summary>
+        /// Defines the test method TestToString.
+        /// </summary>
         [Fact]
         public void TestToString()
         {
@@ -151,6 +208,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal("45", s);
         }
 
+        /// <summary>
+        /// Defines the test method TestLessEqual1.
+        /// </summary>
         [Fact]
         public void TestLessEqual1()
         {
@@ -161,6 +221,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.True(a <= b);
         }
 
+        /// <summary>
+        /// Defines the test method TestLessEqual2.
+        /// </summary>
         [Fact]
         public void TestLessEqual2()
         {
@@ -171,6 +234,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.True(a <= b);
         }
 
+        /// <summary>
+        /// Defines the test method TestGreaterEqual1.
+        /// </summary>
         [Fact]
         public void TestGreaterEqual1()
         {
@@ -181,6 +247,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.True(b >= a);
         }
 
+        /// <summary>
+        /// Defines the test method TestGreaterEqual2.
+        /// </summary>
         [Fact]
         public void TestGreaterEqual2()
         {
@@ -191,6 +260,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.True(b >= a);
         }
 
+        /// <summary>
+        /// Defines the test method TestOperatorAdd.
+        /// </summary>
         [Fact]
         public void TestOperatorAdd()
         {
@@ -200,6 +272,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(105, c.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestOperatorSub.
+        /// </summary>
         [Fact]
         public void TestOperatorSub()
         {
@@ -209,6 +284,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(c.Degrees, -15);
         }
 
+        /// <summary>
+        /// Defines the test method TestOperatorMul.
+        /// </summary>
         [Fact]
         public void TestOperatorMul()
         {
@@ -219,6 +297,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(135, c.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestGreaterThan1.
+        /// </summary>
         [Fact]
         public void TestGreaterThan1()
         {
@@ -229,6 +310,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.True(a > b);
         }
 
+        /// <summary>
+        /// Defines the test method TestGreaterThan2.
+        /// </summary>
         [Fact]
         public void TestGreaterThan2()
         {
@@ -239,6 +323,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.False(a > b);
         }
 
+        /// <summary>
+        /// Defines the test method TestNotEqual1.
+        /// </summary>
         [Fact]
         public void TestNotEqual1()
         {
@@ -249,6 +336,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.True(a != b);
         }
 
+        /// <summary>
+        /// Defines the test method TestNotEqual2.
+        /// </summary>
         [Fact]
         public void TestNotEqual2()
         {
@@ -259,6 +349,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.False(a != b);
         }
 
+        /// <summary>
+        /// Defines the test method TestNegate.
+        /// </summary>
         [Fact]
         public void TestNegate()
         {
@@ -267,6 +360,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(b.Degrees, -180);
         }
 
+        /// <summary>
+        /// Defines the test method TestImplicitConversion.
+        /// </summary>
         [Fact]
         public void TestImplicitConversion()
         {
@@ -274,6 +370,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(44, a.Degrees);
         }
 
+        /// <summary>
+        /// Defines the test method TestDeg2Rad.
+        /// </summary>
         [Fact]
         public void TestDeg2Rad()
         {
@@ -281,6 +380,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(a, Math.PI / 2.0);
         }
 
+        /// <summary>
+        /// Defines the test method TestRadToDeg.
+        /// </summary>
         [Fact]
         public void TestRadToDeg()
         {
@@ -288,6 +390,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
             Assert.Equal(180, a);
         }
 
+        /// <summary>
+        /// Defines the test method TestHashCode.
+        /// </summary>
         [Fact]
         public void TestHashCode()
         {

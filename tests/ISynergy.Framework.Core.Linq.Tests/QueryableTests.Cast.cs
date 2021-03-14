@@ -3,6 +3,9 @@ using NFluent;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
         // [Fact] -->ISynergy.Framework.Core.Linq.Exceptions.ParseException : No property or field 'Id' exists in type 'JObject'

@@ -10,15 +10,25 @@ namespace ISynergy.Framework.Storage.Azure.Tests
 {
     /// <summary>
     /// Class AzureBlobTests.
-    /// Implements the <see cref="TestFixture" />
     /// </summary>
-    /// <seealso cref="TestFixture" />
     public class StorageServiceTests
     {
+        /// <summary>
+        /// The tenant service
+        /// </summary>
         private readonly ITenantService _tenantService;
+        /// <summary>
+        /// The storage BLOB options
+        /// </summary>
         private readonly AzureBlobOptions _storageBlobOptions;
+        /// <summary>
+        /// The storage service
+        /// </summary>
         private readonly IStorageService<AzureBlobOptions> _storageService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StorageServiceTests"/> class.
+        /// </summary>
         public StorageServiceTests()
         {
             var tenantMock = new Mock<ITenantService>();
@@ -62,13 +72,19 @@ namespace ISynergy.Framework.Storage.Azure.Tests
             _storageService = storageMock.Object;
         }
 
+        /// <summary>
+        /// Defines the test method UploadBlobAsyncTest.
+        /// </summary>
         [Fact]
         public async Task UploadBlobAsyncTest()
         {
             var uri = await _storageService.UploadFileAsync(Array.Empty<byte>(), "contentType", "filename", "folder");
             Assert.NotNull(uri);
         }
-     
+
+        /// <summary>
+        /// Defines the test method DownloadFileAsyncTest.
+        /// </summary>
         [Fact]
         public async Task DownloadFileAsyncTest()
         {
@@ -76,6 +92,9 @@ namespace ISynergy.Framework.Storage.Azure.Tests
             Assert.NotNull(bytes);
         }
 
+        /// <summary>
+        /// Defines the test method UpdateBlobAsyncTest.
+        /// </summary>
         [Fact]
         public async Task UpdateBlobAsyncTest()
         {
@@ -83,6 +102,9 @@ namespace ISynergy.Framework.Storage.Azure.Tests
             Assert.NotNull(uri);
         }
 
+        /// <summary>
+        /// Defines the test method RemoveFileAsyncTest.
+        /// </summary>
         [Fact]
         public async Task RemoveFileAsyncTest()
         {

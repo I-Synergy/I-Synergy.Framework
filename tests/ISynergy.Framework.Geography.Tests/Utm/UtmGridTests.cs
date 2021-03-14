@@ -4,10 +4,20 @@ using Xunit;
 
 namespace ISynergy.Framework.Geography.Utm.Tests
 {
+    /// <summary>
+    /// Class UtmGridTests.
+    /// </summary>
     public class UtmGridTests
     {
+        /// <summary>
+        /// The utm
+        /// </summary>
         readonly UtmProjection utm = new UtmProjection();
 
+        /// <summary>
+        /// Validates the corners.
+        /// </summary>
+        /// <param name="g">The g.</param>
         private void ValidateCorners(UtmGrid g)
         {
             Assert.Equal(g.ToString(), new UtmGrid(utm, g.LowerRightCorner).ToString());
@@ -15,6 +25,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Equal(g.ToString(), new UtmGrid(utm, g.UpperRightCorner).ToString());
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor1.
+        /// </summary>
         [Fact]
         public void TestConstructor1()
         {
@@ -25,6 +38,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor2.
+        /// </summary>
         [Fact]
         public void TestConstructor2()
         {
@@ -36,6 +52,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor3.
+        /// </summary>
         [Fact]
         public void TestConstructor3()
         {
@@ -43,6 +62,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, loc));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor4.
+        /// </summary>
         [Fact]
         public void TestConstructor4()
         {
@@ -52,42 +74,63 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor5.
+        /// </summary>
         [Fact]
         public void TestConstructor5()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 0, 'C'));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor6.
+        /// </summary>
         [Fact]
         public void TestConstructor6()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 1, 'A'));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor7.
+        /// </summary>
         [Fact]
         public void TestConstructor7()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, UtmGrid.NumberOfGrids + 1));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_32X.
+        /// </summary>
         [Fact]
         public void TestConstructor_32X()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 32, 'X'));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_34X.
+        /// </summary>
         [Fact]
         public void TestConstructor_34X()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 34, 'X'));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_36X.
+        /// </summary>
         [Fact]
         public void TestConstructor_36X()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 36, 'X'));
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_32V.
+        /// </summary>
         [Fact]
         public void TestConstructor_32V()
         {
@@ -96,6 +139,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_31V.
+        /// </summary>
         [Fact]
         public void TestConstructor_31V()
         {
@@ -111,6 +157,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g2);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_31X.
+        /// </summary>
         [Fact]
         public void TestConstructor_31X()
         {
@@ -126,6 +175,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g2);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_37X.
+        /// </summary>
         [Fact]
         public void TestConstructor_37X()
         {
@@ -134,6 +186,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_33X.
+        /// </summary>
         [Fact]
         public void TestConstructor_33X()
         {
@@ -147,6 +202,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g2);
         }
 
+        /// <summary>
+        /// Defines the test method TestConstructor_35X.
+        /// </summary>
         [Fact]
         public void TestConstructor_35X()
         {
@@ -160,6 +218,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g2);
         }
 
+        /// <summary>
+        /// Defines the test method TestCorners.
+        /// </summary>
         [Fact]
         public void TestCorners()
         {
@@ -173,6 +234,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method TestOrdinal.
+        /// </summary>
         [Fact]
         public void TestOrdinal()
         {
@@ -184,6 +248,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g2);
         }
 
+        /// <summary>
+        /// Defines the test method TestOrdinal2.
+        /// </summary>
         [Fact]
         public void TestOrdinal2()
         {
@@ -197,6 +264,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method TestBandSetter.
+        /// </summary>
         [Fact]
         public void TestBandSetter()
         {
@@ -210,6 +280,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method TestZoneSetter.
+        /// </summary>
         [Fact]
         public void TestZoneSetter()
         {
@@ -223,6 +296,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method TestOriginCompute.
+        /// </summary>
         [Fact]
         public void TestOriginCompute()
         {
@@ -238,6 +314,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             ValidateCorners(g);
         }
 
+        /// <summary>
+        /// Defines the test method ValidateAllGridsCorners.
+        /// </summary>
         [Fact]
         public void ValidateAllGridsCorners()
         {
@@ -272,6 +351,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.True(maxWidth >= minWidth && minWidth > 0.0);
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals1.
+        /// </summary>
         [Fact]
         public void TestEquals1()
         {
@@ -280,6 +362,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.False(g.Equals(s));
         }
 
+        /// <summary>
+        /// Defines the test method TestEquals2.
+        /// </summary>
         [Fact]
         public void TestEquals2()
         {
@@ -291,6 +376,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.True(g1.Equals(g2));
         }
 
+        /// <summary>
+        /// Defines the test method TestEquality.
+        /// </summary>
         [Fact]
         public void TestEquality()
         {
@@ -302,6 +390,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.True(g1 == g2);
         }
 
+        /// <summary>
+        /// Defines the test method TestInEquality.
+        /// </summary>
         [Fact]
         public void TestInEquality()
         {
@@ -310,6 +401,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.True(g1 != g2);
         }
 
+        /// <summary>
+        /// Defines the test method TestNeighbors.
+        /// </summary>
         [Fact]
         public void TestNeighbors()
         {
@@ -325,6 +419,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.True(e.Band == 'U' && e.Zone == 33);
         }
 
+        /// <summary>
+        /// Defines the test method TestNorth1.
+        /// </summary>
         [Fact]
         public void TestNorth1()
         {
@@ -332,6 +429,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.North);
         }
 
+        /// <summary>
+        /// Defines the test method TestNorth2.
+        /// </summary>
         [Fact]
         public void TestNorth2()
         {
@@ -339,6 +439,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.North);
         }
 
+        /// <summary>
+        /// Defines the test method TestNorth3.
+        /// </summary>
         [Fact]
         public void TestNorth3()
         {
@@ -346,6 +449,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.North);
         }
 
+        /// <summary>
+        /// Defines the test method TestNorth4.
+        /// </summary>
         [Fact]
         public void TestNorth4()
         {
@@ -353,6 +459,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.North);
         }
 
+        /// <summary>
+        /// Defines the test method TestNorth5.
+        /// </summary>
         [Fact]
         public void TestNorth5()
         {
@@ -360,6 +469,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.North);
         }
 
+        /// <summary>
+        /// Defines the test method TestSouth1.
+        /// </summary>
         [Fact]
         public void TestSouth1()
         {
@@ -367,6 +479,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.South);
         }
 
+        /// <summary>
+        /// Defines the test method TestSouth2.
+        /// </summary>
         [Fact]
         public void TestSouth2()
         {
@@ -374,6 +489,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.South);
         }
 
+        /// <summary>
+        /// Defines the test method TestSouth3.
+        /// </summary>
         [Fact]
         public void TestSouth3()
         {
@@ -381,6 +499,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.South);
         }
 
+        /// <summary>
+        /// Defines the test method TestSouth4.
+        /// </summary>
         [Fact]
         public void TestSouth4()
         {
@@ -388,6 +509,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.South);
         }
 
+        /// <summary>
+        /// Defines the test method TestSouth5.
+        /// </summary>
         [Fact]
         public void TestSouth5()
         {
@@ -395,6 +519,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             Assert.Throws<Exception>(() => g.South);
         }
 
+        /// <summary>
+        /// Defines the test method TestSouth6.
+        /// </summary>
         [Fact]
         public void TestSouth6()
         {

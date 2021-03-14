@@ -10,7 +10,6 @@
         <PackageId>I-Synergy.Framework.AspNetCore.Authentication</PackageId>
         <Description>I-Synergy Framework Authentication for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>

@@ -8,8 +8,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Contains_Dynamic_ListWithStrings.
+        /// </summary>
         [Fact]
         public void Contains_Dynamic_ListWithStrings()
         {
@@ -25,6 +31,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
         }
 
+        /// <summary>
+        /// Defines the test method Contains_Dynamic_ListWithDynamicObjects.
+        /// </summary>
         [Fact]
         [Trait("Issue", "130")]
         public void Contains_Dynamic_ListWithDynamicObjects()
@@ -48,6 +57,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
         }
 
+        /// <summary>
+        /// Creates the generic instance.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="types">The types.</param>
+        /// <param name="ctorParams">The ctor parameters.</param>
+        /// <returns>System.Object.</returns>
         private object CreateGenericInstance(Type type, Type[] types, params dynamic[] ctorParams)
         {
             Type genType = type.MakeGenericType(types);

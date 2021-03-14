@@ -3,8 +3,16 @@ using System.Reflection;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers
 {
+    /// <summary>
+    /// Class ExpressionExtensions.
+    /// </summary>
     public static class ExpressionExtensions
     {
+        /// <summary>
+        /// Converts to debugview.
+        /// </summary>
+        /// <param name="exp">The exp.</param>
+        /// <returns>System.String.</returns>
         public static string ToDebugView(this Expression exp)
         {
             if (exp == null)

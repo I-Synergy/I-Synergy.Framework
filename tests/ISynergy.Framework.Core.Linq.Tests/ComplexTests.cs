@@ -6,14 +6,31 @@ using ISynergy.Framework.Core.Linq.Extensions.Tests.Entities;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class ComplexTests.
+    /// </summary>
     public class ComplexTests
     {
+        /// <summary>
+        /// Class Claim.
+        /// </summary>
         public class Claim
         {
+            /// <summary>
+            /// Gets or sets the balance.
+            /// </summary>
+            /// <value>The balance.</value>
             public decimal? Balance { get; set; }
+            /// <summary>
+            /// Gets or sets the tags.
+            /// </summary>
+            /// <value>The tags.</value>
             public List<string> Tags { get; set; }
         }
 
+        /// <summary>
+        /// Defines the test method OuterIt_StackOverFlow_Question_43272152.
+        /// </summary>
         [Fact]
         // http://stackoverflow.com/questions/43272152/generate-dynamic-linq-query-using-outerit
         public void OuterIt_StackOverFlow_Question_43272152()

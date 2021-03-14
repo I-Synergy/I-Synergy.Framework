@@ -5,8 +5,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method ToList_Dynamic.
+        /// </summary>
         [Fact]
         public void ToList_Dynamic()
         {

@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Mvvm
         /// Gets or sets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public RelayCommand<TEntity> Submit_Command { get; set; }
+        public Command<TEntity> Submit_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelNavigation{TEntity}"/> class.
@@ -83,7 +83,7 @@ namespace ISynergy.Framework.Mvvm
                 }
             });
 
-            Submit_Command = new RelayCommand<TEntity>(async (e) => await SubmitAsync(e));
+            Submit_Command = new Command<TEntity>(async (e) => await SubmitAsync(e));
         }
 
         /// <summary>

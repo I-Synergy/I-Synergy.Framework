@@ -8,8 +8,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method GroupJoin_1.
+        /// </summary>
         [Fact]
         public void GroupJoin_1()
         {
@@ -56,6 +62,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method GroupJoin_2.
+        /// </summary>
         [Fact]
         public void GroupJoin_2()
         {
@@ -102,30 +111,83 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Class Employee.
+        /// </summary>
         public class Employee
         {
             // [Key]
+            /// <summary>
+            /// Gets or sets the employee identifier.
+            /// </summary>
+            /// <value>The employee identifier.</value>
             public int EmployeeId { get; set; }
+            /// <summary>
+            /// Gets or sets the first name.
+            /// </summary>
+            /// <value>The first name.</value>
             public string FirstName { get; set; }
+            /// <summary>
+            /// Gets or sets the last name.
+            /// </summary>
+            /// <value>The last name.</value>
             public string LastName { get; set; }
+            /// <summary>
+            /// Gets or sets the age.
+            /// </summary>
+            /// <value>The age.</value>
             public int Age { get; set; }
 
+            /// <summary>
+            /// Gets or sets the paychecks.
+            /// </summary>
+            /// <value>The paychecks.</value>
             public ICollection<Paycheck> Paychecks { get; set; } = new List<Paycheck>();
         }
 
+        /// <summary>
+        /// Class Paycheck.
+        /// </summary>
         public class Paycheck
         {
             // [Key]
+            /// <summary>
+            /// Gets or sets the paycheck identifier.
+            /// </summary>
+            /// <value>The paycheck identifier.</value>
             public int PaycheckId { get; set; }
+            /// <summary>
+            /// Gets or sets the hourly wage.
+            /// </summary>
+            /// <value>The hourly wage.</value>
             public decimal HourlyWage { get; set; }
+            /// <summary>
+            /// Gets or sets the hours worked.
+            /// </summary>
+            /// <value>The hours worked.</value>
             public int HoursWorked { get; set; }
+            /// <summary>
+            /// Gets or sets the date created.
+            /// </summary>
+            /// <value>The date created.</value>
             public DateTimeOffset DateCreated { get; set; }
 
             // [ForeignKey("EmployeeId")]
+            /// <summary>
+            /// Gets or sets the employee.
+            /// </summary>
+            /// <value>The employee.</value>
             public Employee Employee { get; set; }
+            /// <summary>
+            /// Gets or sets the employee identifier.
+            /// </summary>
+            /// <value>The employee identifier.</value>
             public int EmployeeId { get; set; }
         }
 
+        /// <summary>
+        /// Defines the test method GroupJoin_3.
+        /// </summary>
         [Fact]
         public void GroupJoin_3()
         {
@@ -154,6 +216,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(dynamicResult).IsNotNull();
         }
 
+        /// <summary>
+        /// Defines the test method GroupJoinOnNullableType_RightNullable.
+        /// </summary>
         [Fact]
         public void GroupJoinOnNullableType_RightNullable()
         {
@@ -198,6 +263,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method GroupJoinOnNullableType_LeftNullable.
+        /// </summary>
         [Fact]
         public void GroupJoinOnNullableType_LeftNullable()
         {
@@ -242,6 +310,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// Defines the test method GroupJoinOnNullableType_NotSameTypesThrowsException.
+        /// </summary>
         [Fact]
         public void GroupJoinOnNullableType_NotSameTypesThrowsException()
         {

@@ -1,0 +1,57 @@
+﻿<c:Window xmlns:c="using:ISynergy.Framework.UI.Controls"
+    x:Class="ISynergy.Framework.UI.MapsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:maps="using:Windows.UI.Xaml.Controls.Maps"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d" 
+    Width="1024" 
+    Height="{StaticResource ContentDialogMaxHeight}"
+    Title="{Binding Title}"
+    IsEnabled="{Binding CommonServices.BusyService.IsEnabled}"
+    Template="{StaticResource WindowTemplate}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <maps:MapControl x:Name="BingMaps" ZoomLevel="15"
+                         ZoomInteractionMode="GestureAndControl"
+                         TiltInteractionMode="GestureAndControl"
+                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+
+        <Grid Grid.Row="1" Margin="0,10,0,0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock FontSize="{StaticResource MediumFontSize}">
+                    <TextBlock.Inlines>
+                        <Run Text="Total estimated time (minutes): "/>
+                        <Run Text="{Binding TimeToArrival, Mode=OneWay}"/>
+                    </TextBlock.Inlines>
+                </TextBlock>
+                <TextBlock FontSize="{StaticResource MediumFontSize}">
+                    <TextBlock.Inlines>
+                        <Run Text="Total length (kilometers): "/>
+                        <Run Text="{Binding DistcanceToArrival, Mode=OneWay}"/>
+                    </TextBlock.Inlines>
+                </TextBlock>
+            </StackPanel>
+
+            <Button x:Name="Button_Close" Grid.Column="1" Content="{m:LanguageResource Key=Close}" Command="{Binding Close_Command}" Style="{ThemeResource DefaultButtonStyle}" />
+        </Grid>
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy}" Height="36" Width="36" />
+            <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy}" />
+        </StackPanel>
+    </Grid>
+</c:Window>

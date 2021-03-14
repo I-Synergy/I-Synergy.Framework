@@ -8,12 +8,29 @@ using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Core.Tests.Fixtures
 {
+    /// <summary>
+    /// Class FileWatcherExFixture.
+    /// </summary>
     public class FileWatcherExFixture
     {
+        /// <summary>
+        /// The file watcher
+        /// </summary>
         public WatcherEx FileWatcher = null;
-        
+
+        /// <summary>
+        /// Gets the observed files.
+        /// </summary>
+        /// <value>The observed files.</value>
         public List<ObservedFile> ObservedFiles { get; private set; }
 
+        /// <summary>
+        /// Initializes the watcher.
+        /// </summary>
+        /// <param name="fileOrFolderToWatch">The file or folder to watch.</param>
+        /// <param name="includeSubFolder">if set to <c>true</c> [include sub folder].</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        /// <exception cref="FileNotFoundException">The folder (or file) specified does not exist.</exception>
         public bool InitializeWatcher(string fileOrFolderToWatch, bool includeSubFolder)
         {
             if (Directory.Exists(fileOrFolderToWatch) || File.Exists(fileOrFolderToWatch))
@@ -50,6 +67,9 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             }
         }
 
+        /// <summary>
+        /// Adds the event handlers.
+        /// </summary>
         private void AddEventHandlers()
         {
             Argument.IsNotNull(nameof(FileWatcher), FileWatcher);
@@ -70,6 +90,9 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             FileWatcher.EventPathAvailability += new WatcherExEventHandler(fileWatcher_EventPathAvailability);
         }
 
+        /// <summary>
+        /// Removes the event handlers.
+        /// </summary>
         public void RemoveEventHandlers()
         {
             if(FileWatcher != null)
@@ -91,6 +114,11 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             }
         }
 
+        /// <summary>
+        /// Handles the EventRenamed event of the fileWatcher control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
         private void fileWatcher_EventRenamed(object sender, WatcherExEventArgs e)
         {
             lock (ObservedFiles)
@@ -99,6 +127,11 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             }
         }
 
+        /// <summary>
+        /// Handles the EventError event of the fileWatcher control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
         private void fileWatcher_EventError(object sender, WatcherExEventArgs e)
         {
             lock (ObservedFiles)
@@ -107,6 +140,11 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             }
         }
 
+        /// <summary>
+        /// Handles the EventDisposed event of the fileWatcher control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
         private void fileWatcher_EventDisposed(object sender, WatcherExEventArgs e)
         {
             lock (ObservedFiles)
@@ -115,6 +153,11 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             }
         }
 
+        /// <summary>
+        /// Handles the EventDeleted event of the fileWatcher control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
         private void fileWatcher_EventDeleted(object sender, WatcherExEventArgs e)
         {
             lock (ObservedFiles)
@@ -123,6 +166,11 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             }
         }
 
+        /// <summary>
+        /// Handles the EventCreated event of the fileWatcher control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
         private void fileWatcher_EventCreated(object sender, WatcherExEventArgs e)
         {
             lock (ObservedFiles)
@@ -131,6 +179,11 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             }
         }
 
+        /// <summary>
+        /// Handles the EventChanged event of the fileWatcher control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
         private void fileWatcher_EventChanged(object sender, WatcherExEventArgs e)
         {
             lock (ObservedFiles)
@@ -139,6 +192,11 @@ namespace ISynergy.Framework.Core.Tests.Fixtures
             }
         }
 
+        /// <summary>
+        /// Handles the EventPathAvailability event of the fileWatcher control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
         private void fileWatcher_EventPathAvailability(object sender, WatcherExEventArgs e)
         {
             var eventName = "Availability";

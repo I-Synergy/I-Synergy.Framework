@@ -7,8 +7,15 @@ using ISynergy.Framework.Core.Linq.Exceptions;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class LinqExtensionsTest.
+    /// </summary>
     public class LinqExtensionsTest
     {
+        /// <summary>
+        /// Creates the test set.
+        /// </summary>
+        /// <returns>List&lt;Product&gt;.</returns>
         private List<Product> CreateTestSet()
         {
             var list = new List<Product>
@@ -24,6 +31,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         }
 
 
+        /// <summary>
+        /// Defines the test method StringArrayToOrderByTest.
+        /// </summary>
         [Fact]
         public void StringArrayToOrderByTest()
         {
@@ -36,6 +46,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.True(data_sorted[3].Name == "Test3" && data_sorted[3].ProductId == 3);
         }
 
+        /// <summary>
+        /// Defines the test method StringArrayToOrderDescendingByTest.
+        /// </summary>
         [Fact]
         public void StringArrayToOrderDescendingByTest()
         {
@@ -50,6 +63,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.True(data_sorted[2].Name == "Test3" && data_sorted[2].ProductId == 3);
         }
 
+        /// <summary>
+        /// Defines the test method StringArrayWithInvalidPropertiesToOrderByTest.
+        /// </summary>
         [Fact]
         public void StringArrayWithInvalidPropertiesToOrderByTest()
         {

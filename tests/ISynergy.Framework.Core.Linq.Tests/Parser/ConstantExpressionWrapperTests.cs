@@ -7,15 +7,29 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
+    /// <summary>
+    /// Class ConstantExpressionWrapperTests.
+    /// </summary>
     public class ConstantExpressionWrapperTests
     {
+        /// <summary>
+        /// The constant expression wrapper
+        /// </summary>
         private readonly IConstantExpressionWrapper _constantExpressionWrapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConstantExpressionWrapperTests"/> class.
+        /// </summary>
         public ConstantExpressionWrapperTests()
         {
             _constantExpressionWrapper = new ConstantExpressionWrapper();
         }
 
+        /// <summary>
+        /// Defines the test method ConstantExpressionWrapper_Wrap_ConstantExpression_PrimitiveTypes.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="test">The test.</param>
         [Theory]
         [InlineData(true)]
         [InlineData((int)1)]
@@ -48,6 +62,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(value).IsEqualTo(test);
         }
 
+        /// <summary>
+        /// Defines the test method ConstantExpressionWrapper_Wrap_ConstantExpression_String.
+        /// </summary>
         [Fact]
         public void ConstantExpressionWrapper_Wrap_ConstantExpression_String()
         {
@@ -69,6 +86,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             Check.That(value).IsEqualTo(test);
         }
 
+        /// <summary>
+        /// Defines the test method ConstantExpressionWrapper_Wrap_ConstantExpression_ComplexTypes.
+        /// </summary>
         [Fact]
         public void ConstantExpressionWrapper_Wrap_ConstantExpression_ComplexTypes()
         {

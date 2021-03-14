@@ -9,8 +9,14 @@ using Xunit;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
+    /// <summary>
+    /// Class QueryableTests.
+    /// </summary>
     public partial class QueryableTests
     {
+        /// <summary>
+        /// Defines the test method Where_Dynamic.
+        /// </summary>
         [Fact]
         public void Where_Dynamic()
         {
@@ -31,6 +37,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(testList[1], userByFirstName.Single());
         }
 
+        /// <summary>
+        /// Defines the test method Where_Dynamic_CheckCastToObject.
+        /// </summary>
         [Fact]
         public void Where_Dynamic_CheckCastToObject()
         {
@@ -46,6 +55,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             NFluent.Check.That(dynamicExpression).Equals(expresion);
         }
 
+        /// <summary>
+        /// Defines the test method Where_Dynamic_DateTimeIsParsedAsUTC.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="hours">The hours.</param>
         [Theory]
         [InlineData("Fri, 10 May 2019 11:03:17 GMT", 11)]
         [InlineData("Fri, 10 May 2019 11:03:17 -07:00", 18)]
@@ -89,6 +103,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result2);
         }
 
+        /// <summary>
+        /// Defines the test method Where_Dynamic_DateTime_Equals_Null.
+        /// </summary>
         [Fact]
         public void Where_Dynamic_DateTime_Equals_Null()
         {
@@ -105,6 +122,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result2);
         }
 
+        /// <summary>
+        /// Defines the test method Where_Dynamic_Exceptions.
+        /// </summary>
         [Fact]
         public void Where_Dynamic_Exceptions()
         {
@@ -123,6 +143,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Throws<ParseException>(() => qry.Where(" "));
         }
 
+        /// <summary>
+        /// Defines the test method Where_Dynamic_StringQuoted.
+        /// </summary>
         [Fact]
         public void Where_Dynamic_StringQuoted()
         {
@@ -144,6 +167,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Assert.Equal(expected, result2);
         }
 
+        /// <summary>
+        /// Defines the test method Where_Dynamic_SelectNewObjects.
+        /// </summary>
         [Fact]
         public void Where_Dynamic_SelectNewObjects()
         {
