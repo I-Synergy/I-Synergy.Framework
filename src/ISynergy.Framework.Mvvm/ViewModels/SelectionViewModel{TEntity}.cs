@@ -5,23 +5,24 @@ using System.Linq;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class SelectionViewModel.
-    /// Implements the <see name="ViewModelBlade{ObservableCollection{TEntity}}" />
+    /// Implements the <see name="ViewModelBlade{IList{TEntity}}" />
     /// Implements the <see cref="IViewModelBlade" />
     /// </summary>
-    /// <seealso name="ViewModelBlade{ObservableCollection{TEntity}}" />
+    /// <seealso name="ViewModelBlade{IList{TEntity}}" />
     /// <seealso cref="IViewModelBlade" />
-    public class SelectionViewModel<TEntity> : ViewModelBlade<ObservableCollection<TEntity>>, IViewModelBlade
-        where TEntity : class, IModelBase, new()
+    public class SelectionViewModel<TEntity> : ViewModelBlade<List<object>>, IViewModelBlade, ISelectionViewModel
     {
         /// <summary>
         /// Gets the title.
@@ -89,14 +90,14 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory,
             IEnumerable<TEntity> items,
-            IEnumerable<TEntity> selectedItems,
+            IEnumerable<object> selectedItems,
             SelectionModes selectionMode = SelectionModes.Single)
             : base(context, commonServices, loggerFactory)
         {
-            if (items is null) 
+            if (items is null)
                 items = items.EnsureNotNull();
 
-            if (selectedItems is null) 
+            if (selectedItems is null)
                 selectedItems = selectedItems.EnsureNotNull();
 
             SelectionMode = selectionMode;
@@ -117,7 +118,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             Query = string.Empty;
             RawItems = items;
             Items = new ObservableCollection<TEntity>(items);
-            SelectedItem = new ObservableCollection<TEntity>(selectedItems);
+            SelectedItem = new List<object>(selectedItems);
         }
 
         /// <summary>
