@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
@@ -24,7 +25,8 @@ namespace Sample.ViewModels
         /// <value>The title.</value>
         public override string Title { get { return BaseCommonServices.LanguageService.GetString("Converters"); } }
 
-        public Command Select_Command { get; set; }
+        public Command SelectSingle_Command { get; set; }
+        public Command SelectMultiple_Command { get; set; }
 
         public ObservableCollection<TestItem> SelectedTestItems { get; set; }
 
@@ -34,22 +36,40 @@ namespace Sample.ViewModels
             ILoggerFactory loggerFactory)
             : base(context, commonServices, loggerFactory)
         {
-            Select_Command = new Command(async () => await SelectAsync());
+            SelectSingle_Command = new Command(async () => await SelectSingleAsync());
+            SelectMultiple_Command = new Command(async () => await SelectMultipleAsync());
         }
 
-        private Task SelectAsync()
+        private Task SelectMultipleAsync()
         {
-            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, _loggerFactory, Items, SelectedTestItems, SelectionModes.Single);
-            selectionVm.Submitted += SelectionVm_Submitted;
+            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, _loggerFactory, Items, SelectedTestItems, SelectionModes.Multiple);
+            selectionVm.Submitted += SelectionVm_MultipleSubmitted;
             return BaseCommonServices.NavigationService.OpenBladeAsync(this, selectionVm);
         }
 
-        private void SelectionVm_Submitted(object sender, ISynergy.Framework.Mvvm.Events.SubmitEventArgs<ObservableCollection<TestItem>> e)
+        private Task SelectSingleAsync()
+        {
+            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, _loggerFactory, Items, SelectedTestItems, SelectionModes.Single);
+            selectionVm.Submitted += SelectionVm_SingleSubmitted;
+            return BaseCommonServices.NavigationService.OpenBladeAsync(this, selectionVm);
+        }
+
+        private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<object>> e)
         {
             if (sender is SelectionViewModel<TestItem> vm)
-                vm.Submitted -= SelectionVm_Submitted;
+                vm.Submitted -= SelectionVm_MultipleSubmitted;
 
             SelectedTestItems = new ObservableCollection<TestItem>(e.Result.Cast<TestItem>());
+
+            await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Cast<TestItem>().Select(s => s.Description))} selected.");
+        }
+
+        private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<object>> e)
+        {
+            if (sender is SelectionViewModel<TestItem> vm)
+                vm.Submitted -= SelectionVm_SingleSubmitted;
+
+            await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result.Cast<TestItem>().Single().Description} selected.");
         }
 
         public override Task AddAsync()

@@ -6,6 +6,11 @@ using System.ComponentModel;
 
 namespace Sample.ViewModels
 {
+    /// <summary>
+    /// Class InfoViewModel.
+    /// Implements the <see cref="ViewModelNavigation{Object}" />
+    /// </summary>
+    /// <seealso cref="ViewModelNavigation{Object}" />
     public class InfoViewModel : ViewModelNavigation<object>
     {
         /// <summary>
@@ -17,6 +22,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the CompanyName property value.
         /// </summary>
+        /// <value>The name of the company.</value>
         public string CompanyName
         {
             get { return GetValue<string>(); }
@@ -26,6 +32,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the ProductName property value.
         /// </summary>
+        /// <value>The name of the product.</value>
         public string ProductName
         {
             get { return GetValue<string>(); }
@@ -35,6 +42,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the Version property value.
         /// </summary>
+        /// <value>The version.</value>
         public string Version
         {
             get { return GetValue<string>(); }
@@ -44,6 +52,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the Copyrights property value.
         /// </summary>
+        /// <value>The copyrights.</value>
         public string Copyrights
         {
             get { return GetValue<string>(); }
@@ -51,6 +60,12 @@ namespace Sample.ViewModels
         }
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="commonServices">The common services.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         public InfoViewModel(
             IContext context,
             IBaseCommonServices commonServices,

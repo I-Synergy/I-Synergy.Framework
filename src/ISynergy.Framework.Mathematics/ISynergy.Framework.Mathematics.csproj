@@ -2,7 +2,7 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{7D4AFE36-1589-4AAB-9D15-85DEBE74DDF6}</ProjectGuid>

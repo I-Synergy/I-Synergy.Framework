@@ -14,7 +14,16 @@
                     RelativePanel.AlignRightWithPanel="True" 
                     RelativePanel.AlignLeftWithPanel="True" 
                     RelativePanel.AlignTopWithPanel="True">
-            <Button Command="{Binding Select_Command}" Content="Select..." />
+            <Button Command="{Binding SelectSingle_Command}" 
+                    Content="Select single item..." 
+                    Width="150"
+                    Height="35"
+                    Margin="1"/>
+            <Button Command="{Binding SelectMultiple_Command}" 
+                    Content="Select multiple items..."
+                    Width="150"
+                    Height="35"
+                    Margin="1"/>
         </StackPanel>
 
         <Grid x:Name="DisabledLayout"

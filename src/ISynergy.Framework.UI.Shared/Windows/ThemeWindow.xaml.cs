@@ -1,11 +1,11 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.ViewModels;
 using Windows.UI.Xaml;
-using ISynergy.Framework.Mvvm.Enumerations;
 
-namespace Sample.Views.Library
+namespace ISynergy.Framework.UI
 {
     /// <summary>
     /// Class ThemeWindow. This class cannot be inherited.
@@ -36,29 +36,29 @@ namespace Sample.Views.Library
             SetColorButton();
         }
 #endif
-        
+
         private void SetColorButton()
         {
             if (DataContext is ThemeViewModel themeViewModel)
             {
                 switch (themeViewModel.SelectedItem)
                 {
-                    case ApplicationColors.RoyalBlue:
+                    case Mvvm.Enumerations.ApplicationColors.RoyalBlue:
                         Button_Color_RoyalBlue.IsChecked = true;
                         break;
-                    case ApplicationColors.Lime:
+                    case Mvvm.Enumerations.ApplicationColors.Lime:
                         Button_Color_Lime.IsChecked = true;
                         break;
-                    case ApplicationColors.Maroon:
+                    case Mvvm.Enumerations.ApplicationColors.Maroon:
                         Button_Color_Maroon.IsChecked = true;
                         break;
-                    case ApplicationColors.OrangeRed:
+                    case Mvvm.Enumerations.ApplicationColors.OrangeRed:
                         Button_Color_OrangeRed.IsChecked = true;
                         break;
-                    case ApplicationColors.Gold:
+                    case Mvvm.Enumerations.ApplicationColors.Gold:
                         Button_Color_Gold.IsChecked = true;
                         break;
-                    case ApplicationColors.Magenta:
+                    case Mvvm.Enumerations.ApplicationColors.Magenta:
                         Button_Color_Magenta.IsChecked = true;
                         break;
                     default:

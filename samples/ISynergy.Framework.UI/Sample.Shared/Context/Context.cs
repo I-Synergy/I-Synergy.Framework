@@ -9,7 +9,6 @@ using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Enumerations;
 using Sample.Options;
 using Sample.Shared.Models;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 
 namespace Sample
 {

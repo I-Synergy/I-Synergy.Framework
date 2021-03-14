@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 using System.Linq;
 using ISynergy.Framework.UI.Collections;
+using Windows.UI.Xaml;
 
 namespace ISynergy.Framework.UI.Behaviors
 {
@@ -27,15 +28,15 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <summary>
         /// Identifier for the <see cref="Value" /> dependency property.
         /// </summary>
-        internal static readonly Windows.UI.Xaml.DependencyProperty ValueProperty =
-            Windows.UI.Xaml.DependencyProperty.Register(nameof(Value), typeof(object[]), typeof(MultiBindingItemCollection), new Windows.UI.Xaml.PropertyMetadata(null, OnValueChanged));
+        internal static readonly DependencyProperty ValueProperty =
+            DependencyProperty.Register(nameof(Value), typeof(object[]), typeof(MultiBindingItemCollection), new PropertyMetadata(null, OnValueChanged));
 
         /// <summary>
         /// Handles the <see cref="E:ValueChanged" /> event.
         /// </summary>
         /// <param name="d">The d.</param>
-        /// <param name="e">The <see cref="Windows.UI.Xaml.DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-        private static void OnValueChanged(Windows.UI.Xaml.DependencyObject d, Windows.UI.Xaml.DependencyPropertyChangedEventArgs e)
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+        private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var multiBindingItemCollection = (MultiBindingItemCollection)d;
 

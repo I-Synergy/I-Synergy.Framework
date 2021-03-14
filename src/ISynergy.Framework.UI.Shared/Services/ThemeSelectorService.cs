@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Enumerations;
 using System;
-using Uno.Material;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.ApplicationModel.Core;
@@ -116,16 +115,16 @@ namespace ISynergy.Framework.UI.Services
 
             if(Material)
             {
-                // Set a default palette to make sure all colors used by MaterialResources exist
-                Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
+                //// Set a default palette to make sure all colors used by MaterialResources exist
+                //Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
 
-                // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
-                Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
+                //// Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
+                //Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
 
 
-                Application.Current.Resources["MaterialPrimaryColor"] = accentColor;
-                Application.Current.Resources["MaterialPrimaryVariantLightColor"] = lightColor;
-                Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = darkColor;
+                //Application.Current.Resources["MaterialPrimaryColor"] = accentColor;
+                //Application.Current.Resources["MaterialPrimaryVariantLightColor"] = lightColor;
+                //Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = darkColor;
             }
 
             Application.Current.Resources["SystemAccentColor"] = accentColor;

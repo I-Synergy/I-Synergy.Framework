@@ -3,8 +3,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Uno.Extensions;
 using Windows.Storage;
+using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.UI.Extensions
 {
@@ -24,11 +24,9 @@ namespace ISynergy.Framework.UI.Extensions
 
             var file = await StorageFile.GetFileFromApplicationUriAsync(_self);
 
-            using (var inputStream = await file.OpenStreamForReadAsync())
+            using (var inputStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
             {
-                result = inputStream.
-                    ToMemoryStream().
-                    ToArray();
+                result = await inputStream.ToByteArrayAsync().ConfigureAwait(false);
             }
 
             return result;

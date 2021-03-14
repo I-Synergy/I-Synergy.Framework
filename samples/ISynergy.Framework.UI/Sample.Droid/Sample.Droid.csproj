@@ -108,10 +108,6 @@
       <Project>{3828a883-b771-4e6b-b004-e521b6d7ad52}</Project>
       <Name>ISynergy.Framework.Mvvm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj">
-      <Project>{fe7a8e6e-10a1-4c31-90d5-73ebb068e570}</Project>
-      <Name>ISynergy.Framework.UI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sample.Core\Sample.Core.csproj">
       <Project>{6b0dfcdf-7038-43bc-a033-2f80b9d9d3be}</Project>
       <Name>Sample.Core</Name>
