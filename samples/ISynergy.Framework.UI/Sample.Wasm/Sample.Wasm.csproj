@@ -38,16 +38,16 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-		<PackageReference Include="Uno.Material" Version="1.0.0-dev.674" />
-		<PackageReference Include="Uno.UI.Lottie" Version="3.6.0-dev.429" />
-        <PackageReference Include="Uno.UI.WebAssembly" Version="3.6.0-dev.429" />
-        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.429" Condition="'$(Configuration)'=='Debug'" />
-        <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.180" />
-        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.180" />
+		<PackageReference Include="Uno.UI.Lottie" Version="3.6.0-dev.529" />
+        <PackageReference Include="Uno.UI.WebAssembly" Version="3.6.0-dev.529" />
+        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.529" Condition="'$(Configuration)'=='Debug'" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.198" />
+        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.198" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
         <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+        <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
         <ProjectReference Include="..\Sample.Core\Sample.Core.csproj" />
     </ItemGroup>
     <Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.Shared\Sample.Shared.projitems')" />

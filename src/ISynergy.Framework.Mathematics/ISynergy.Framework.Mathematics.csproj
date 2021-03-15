@@ -2,13 +2,13 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
 
         <!-- SonarQube needs this -->
         <ProjectGuid>{7D4AFE36-1589-4AAB-9D15-85DEBE74DDF6}</ProjectGuid>
 
         <PackageId>I-Synergy.Framework.Mathematics</PackageId>
-        <Description>I-Synergy Framework Mathematics for .Net Standard 2.0</Description>
+        <Description>I-Synergy Framework Mathematics for .Net Standard 2.0 and .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Mathematics</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>

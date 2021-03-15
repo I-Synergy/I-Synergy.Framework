@@ -2,18 +2,18 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
         <!-- SonarQube needs this -->
         <ProjectGuid>{3D70F4CE-2E91-43DE-B278-D75B06C4B38E}</ProjectGuid>
 
         <PackageId>I-Synergy.Framework.Models</PackageId>
-        <Description>I-Synergy Framework Models for .Net Standard 2.0</Description>
+        <Description>I-Synergy Framework Models for .Net Standard 2.0 and .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Models</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.9.0" />
     </ItemGroup>
 
     <ItemGroup>

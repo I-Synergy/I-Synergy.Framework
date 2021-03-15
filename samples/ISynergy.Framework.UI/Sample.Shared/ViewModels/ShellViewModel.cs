@@ -36,6 +36,7 @@ namespace Sample.ViewModels
         public Command Browse_Command { get; set; }
         public Command Converter_Command { get; set; }
         public Command SelectionTest_Command { get; set; }
+        public Command ListViewTest_Command { get; set; }
 
         public ShellViewModel(
             IContext context,
@@ -55,9 +56,13 @@ namespace Sample.ViewModels
             Browse_Command = new Command(async () => await BrowseFileAsync());
             Converter_Command = new Command(async () => await OpenConvertersAsync());
             SelectionTest_Command = new Command(async () => await OpenSelectionTestAsync());
+            ListViewTest_Command = new Command(async () => await OpenListViewTestAsync());
 
             PopulateNavItems();
         }
+
+        private Task OpenListViewTestAsync() =>
+            CommonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
 
         private Task OpenConvertersAsync() =>
             CommonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
@@ -97,6 +102,7 @@ namespace Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["tb_search"] as string, ForegroundColor, Browse_Command));
             PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["tb_products"] as string, ForegroundColor, Converter_Command));
             PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["tb_products"] as string, ForegroundColor, SelectionTest_Command));
+            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["tb_products"] as string, ForegroundColor, ListViewTest_Command));
 
             SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["tile_help"] as string, ForegroundColor, Help_Command));
