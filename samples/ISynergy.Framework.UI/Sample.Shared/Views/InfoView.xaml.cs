@@ -2,9 +2,15 @@
 
 namespace Sample.Shared.Views
 {
-  public sealed partial class InfoView : IView
+    /// <summary>
+    /// Class InfoView. This class cannot be inherited.
+    /// </summary>
+    public sealed partial class InfoView : IView
     {
-    public InfoView()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InfoView"/> class.
+        /// </summary>
+        public InfoView()
     {
       this.InitializeComponent();
     }

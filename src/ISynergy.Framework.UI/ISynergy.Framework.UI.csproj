@@ -3,7 +3,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net5.0;netstandard2.0;uap10.0.18362;uap10.0.19041</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;netstandard2.0;net5.0;MonoAndroid11.0</TargetFrameworks>
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 
@@ -23,16 +23,16 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
 	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.18362' or '$(TargetFramework)' == 'uap10.0.19041'">
+	
+	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.18362'">
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
-		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.0.1" />
+		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.1" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.18362' and '$(TargetFramework)' != 'uap10.0.19041'">
+	<ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.18362'">
 		<PackageReference Include="Uno.UI" Version="3.6.6" />
 		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.83" />
-		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.0-build.2.g0e224f133a" />
+		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.207.gcac670e618" />
 	</ItemGroup>
 	
 	<ItemGroup>

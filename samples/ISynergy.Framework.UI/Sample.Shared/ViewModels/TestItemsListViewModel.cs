@@ -17,6 +17,9 @@ using System.Threading.Tasks;
 
 namespace Sample.ViewModels
 {
+    /// <summary>
+    /// Class TestItemsListViewModel.
+    /// </summary>
     public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBladeView
     {
         /// <summary>
@@ -44,6 +47,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the SelectedItems property value.
         /// </summary>
+        /// <value>The selected items.</value>
         public List<object> SelectedItems
         {
             get { return GetValue<List<object>>(); }
@@ -67,13 +71,11 @@ namespace Sample.ViewModels
         protected readonly ICommonServices CommonServices;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseRelationListViewModel{TEntity}"/> class.
+        /// Initializes a new instance of the <see cref="BaseRelationListViewModel{TEntity}" /> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonService">The common service.</param>
         /// <param name="loggerFactory">The logger factory.</param>
-        /// <param name="isDelivery">if set to <c>true</c> [is delivery].</param>
-        /// <param name="isExportVisible">if set to <c>true</c> [is export visible].</param>
         public TestItemsListViewModel(IContext context, ICommonServices commonService, ILoggerFactory loggerFactory)
             : base(context, commonService, loggerFactory)
         {
@@ -164,6 +166,10 @@ namespace Sample.ViewModels
             Items.Clear();
         }
 
+        /// <summary>
+        /// Adds the asynchronous.
+        /// </summary>
+        /// <returns>Task.</returns>
         public override Task AddAsync()
         {
             var selectionVM = new SelectionViewModel<TestItem>(Context, CommonServices, _loggerFactory, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
@@ -171,6 +177,11 @@ namespace Sample.ViewModels
             return CommonServices.NavigationService.OpenBladeAsync(this, selectionVM);
         }
 
+        /// <summary>
+        /// Selections the vm submitted.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<object>> e)
         {
             SelectedItems = e.Result;

@@ -2,11 +2,15 @@
 
 namespace Sample.Models
 {
+    /// <summary>
+    /// Class MediaItem.
+    /// </summary>
     public class MediaItem : ModelBase
     {
         /// <summary>
         /// Gets or sets the Index property value.
         /// </summary>
+        /// <value>The index.</value>
         public int Index
         {
             get { return GetValue<int>(); }
@@ -16,6 +20,7 @@ namespace Sample.Models
         /// <summary>
         /// Gets or sets the ImageUri property value.
         /// </summary>
+        /// <value>The image URI.</value>
         public string ImageUri
         {
             get { return GetValue<string>(); }

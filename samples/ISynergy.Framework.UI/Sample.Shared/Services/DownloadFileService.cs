@@ -18,7 +18,7 @@ namespace Sample.Services
         protected readonly IFileService FileService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DownloadFileService"/> class.
+        /// Initializes a new instance of the <see cref="DownloadFileService" /> class.
         /// </summary>
         /// <param name="fileservice">The fileservice.</param>
         public DownloadFileService(IFileService fileservice)
@@ -29,9 +29,9 @@ namespace Sample.Services
         /// <summary>
         /// download file as an asynchronous operation.
         /// </summary>
-        /// <param name="file">The file.</param>
         /// <param name="filename">The filename.</param>
-        /// <param name="filefilter">The filefilter.</param>
+        /// <param name="file">The file.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         public async Task DownloadFileAsync(string filename, byte[] file)
         {
             if(await FileService.SaveFileAsync(filename, file) is FileResult result)
