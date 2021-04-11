@@ -147,6 +147,11 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if(!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is Type type && type.IsEnum)
+            {
+                return GetDescription(Enum.Parse(type, value.ToString()) as Enum);
+            }
+
             return GetDescription(Enum.Parse(value.GetType(), value.ToString()) as Enum);
         }
 

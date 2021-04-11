@@ -16,6 +16,7 @@
     <Converters:CurrencyConverter x:Key="CurrencyConverter" />
     <Converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter"/>
     <Converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
+    <Converters:EnumToStringConverter x:Key="EnumToStringConverter" />
     <Converters:StringFormatConverter x:Key="StringFormatConverter" />
     <Converters:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
     <Converters:StringToIntegerConverter x:Key="StringToIntegerConverter"/>

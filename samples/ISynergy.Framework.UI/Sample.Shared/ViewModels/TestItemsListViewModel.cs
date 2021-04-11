@@ -71,7 +71,7 @@ namespace Sample.ViewModels
         protected readonly ICommonServices CommonServices;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseRelationListViewModel{TEntity}" /> class.
+        /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}" /> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonService">The common service.</param>
