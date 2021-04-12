@@ -13,7 +13,7 @@
                 <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}"/>
             </CommandBar.Content>
             <CommandBar.PrimaryCommands>
-                <AppBarButton x:Name="Button_Add" Style="{StaticResource IconAppBarButtonStyle}" Content="{StaticResource tb_plus}" Command="{Binding Add_Command}" Label="{m:LanguageResource Key=Add}" ToolTipService.ToolTip="{m:LanguageResource Key=Add}"/>
+                <AppBarButton x:Name="Button_Add" Style="{StaticResource IconAppBarButtonStyle}" Content="{StaticResource plus}" Command="{Binding Add_Command}" Label="{m:LanguageResource Key=Add}" ToolTipService.ToolTip="{m:LanguageResource Key=Add}"/>
             </CommandBar.PrimaryCommands>
         </CommandBar>
 

@@ -163,10 +163,10 @@ namespace Sample.ViewModels
             PrimaryItems.Clear();
             PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["icon_kiosk"] as string, ForegroundColor, Display_Command));
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["tile_info"] as string, ForegroundColor, Info_Command));
-            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["tb_search"] as string, ForegroundColor, Browse_Command));
-            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["tb_products"] as string, ForegroundColor, Converter_Command));
-            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["tb_products"] as string, ForegroundColor, SelectionTest_Command));
-            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["tb_products"] as string, ForegroundColor, ListViewTest_Command));
+            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, ForegroundColor, Browse_Command));
+            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, ForegroundColor, Converter_Command));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["products"] as string, ForegroundColor, SelectionTest_Command));
+            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, ForegroundColor, ListViewTest_Command));
 
             SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["tile_help"] as string, ForegroundColor, Help_Command));
