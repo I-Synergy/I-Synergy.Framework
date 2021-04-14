@@ -71,6 +71,7 @@ stages:
             FileNames: |
              src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj
              src\ISynergy.Framework.Core.Linq\ISynergy.Framework.Core.Linq.csproj
+             src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj
              src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj
              src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj
              src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
@@ -118,10 +119,27 @@ stages:
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Core'
+          displayName: 'Dotnet pack: I-Synergy.Framework.Core.Linq'
           inputs:
             command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj'
+            packagesToPack: 'src\ISynergy.Framework.Core.Linq\ISynergy.Framework.Core.Linq.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Core.IO'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Core.IO'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
@@ -391,6 +409,13 @@ stages:
             projects: 'tests\ISynergy.Framework.Core.Linq.Tests\ISynergy.Framework.Core.Linq.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Core.IO'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Core.IO.Tests\ISynergy.Framework.Core.Linq.IO.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
           inputs:
