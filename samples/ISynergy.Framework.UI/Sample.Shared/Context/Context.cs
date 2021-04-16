@@ -21,11 +21,15 @@ namespace Sample
     /// <seealso cref="IContext" />
     public sealed class Context : ObservableClass, IContext
     {
+        /// <summary>
+        /// The configuration options
+        /// </summary>
         private readonly ConfigurationOptions _configurationOptions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Context"/> class.
+        /// Initializes a new instance of the <see cref="Context" /> class.
         /// </summary>
+        /// <param name="configurationOptions">The configuration options.</param>
         public Context(ConfigurationOptions configurationOptions)
         {
             _configurationOptions = configurationOptions;
@@ -116,6 +120,10 @@ namespace Sample
             }
         }
 
+        /// <summary>
+        /// Applies the environment.
+        /// </summary>
+        /// <param name="value">The value.</param>
         private void ApplyEnvironment(SoftwareEnvironments value)
         {
             switch (value)

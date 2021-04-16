@@ -9,7 +9,9 @@ namespace Sample.Abstractions.Services
     /// <seealso cref="IBaseCommonServices" />
     public interface ICommonServices : IBaseCommonServices
     {
-        /// <summary>Gets the authentication service.</summary>
+        /// <summary>
+        /// Gets the authentication service.
+        /// </summary>
         /// <value>The authentication service.</value>
         IAuthenticationService AuthenticationService { get; }
         /// <summary>
@@ -52,7 +54,9 @@ namespace Sample.Abstractions.Services
         /// </summary>
         /// <value>The clipboard service.</value>
         IClipboardService ClipboardService { get; }
-        /// <summary>Gets the client monitor service.</summary>
+        /// <summary>
+        /// Gets the client monitor service.
+        /// </summary>
         /// <value>The client monitor service.</value>
         IClientMonitorService ClientMonitorService { get; }
     }

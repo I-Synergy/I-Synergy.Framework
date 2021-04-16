@@ -71,11 +71,11 @@ stages:
             FileNames: |
              src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj
              src\ISynergy.Framework.Core.Linq\ISynergy.Framework.Core.Linq.csproj
+             src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj
              src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj
              src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj
              src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
              src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj
-             src\ISynergy.Framework.Models\ISynergy.Framework.Models.csproj
              src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj
              src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj
              src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj
@@ -85,7 +85,7 @@ stages:
              src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
              src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
              src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
-             src\ISynergy.Framework.UI\ISynergy.Framework.UI.Windows.csproj
+             src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
             InsertAttributes: true
             WriteBOM: true
             GeneratePackageOnBuild: true
@@ -119,10 +119,27 @@ stages:
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Core'
+          displayName: 'Dotnet pack: I-Synergy.Framework.Core.Linq'
           inputs:
             command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj'
+            packagesToPack: 'src\ISynergy.Framework.Core.Linq\ISynergy.Framework.Core.Linq.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Core.IO'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Core.IO'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
@@ -191,23 +208,6 @@ stages:
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj'
-            nobuild: true
-            includesymbols: true
-            versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Models'
-          inputs:
-            command: build
-            projects: 'src\ISynergy.Framework.Models\ISynergy.Framework.Models.csproj'
-            arguments: '-c $(BuildConfiguration)'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Models'
-          inputs:
-            command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.Models\ISynergy.Framework.Models.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
@@ -367,91 +367,21 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: MSBuild@1
-          displayName: 'Framework UI for Uwp - Nuget Restore x86'
+          displayName: 'Framework UI - Nuget Restore'
           inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: x86
+            solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+            platform: AnyCpu
             configuration: '$(BuildConfiguration)'
             msbuildArguments: '/t:restore'
-      
-        - task: MSBuild@1
-          displayName: 'Framework UI for Uwp - Build x86'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: x86
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-      
-        - task: MSBuild@1
-          displayName: 'Framework UI for Uwp - Nuget Restore x64'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: x64
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
-      
-        - task: MSBuild@1
-          displayName: 'Framework UI for Uwp - Build x64'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: x64
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-      
-        - task: MSBuild@1
-          displayName: 'Framework UI for Uwp - Nuget Restore ARM'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: ARM
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
-      
-        - task: MSBuild@1
-          displayName: 'Framework UI for Uwp - Build ARM'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: ARM
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
-      
-        - task: MSBuild@1
-          displayName: 'Framework UI for Uwp - Nuget Restore ARM64'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: ARM64
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
-      
-        - task: MSBuild@1
-          displayName: 'Framework UI for Uwp - Build ARM64'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI.Windows\ISynergy.Framework.UI.Windows.csproj'
-            platform: ARM64
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:VersionAssembly=$(build.buildNumber)'
 
-        - task: CopyFiles@2
-          displayName: 'Copy Multi Platform File to Reference folder'
+        - task: MSBuild@1
+          displayName: 'Framework UI - Build and Pack'
           inputs:
-            SourceFolder: 'src\ISynergy.Framework.UI.Windows\bin\$(BuildConfiguration)\x86'
-            Contents: |
-              ISynergy.Framework.UI.dll
-              ISynergy.Framework.UI.pri
-            TargetFolder: 'src\ISynergy.Framework.UI.Windows\bin\$(BuildConfiguration)'
-           
-        - task: PowerShell@2
-          displayName: 'Create Multi Platform Reference file'
-          inputs:
-            targetType: filePath
-            filePath: ./build/createplatformdll.ps1
-            arguments: '-file "src\ISynergy.Framework.UI.Windows\bin\$(BuildConfiguration)\ISynergy.Framework.UI.dll"'
-
-        - task: NuGetCommand@2
-          displayName: 'NuGet pack - Framework UI for Uwp'
-          inputs:
-            command: custom
-            arguments: 'pack nuget/ISynergy.Framework.UI.Windows.nuspec -OutputDirectory $(Build.ArtifactStagingDirectory) -Properties Version=$(VersionPackage);Branch=$(build.sourceBranch);CommitId=$(build.sourceVersion);BuildConfiguration=$(BuildConfiguration) -Symbols -SymbolPackageFormat snupkg'
-
+            solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+            platform: AnyCpu
+            configuration: '$(BuildConfiguration)'
+            msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+        
         - task: NuGetCommand@2
           displayName: 'Sign Nuget packages'
           inputs:
@@ -479,6 +409,13 @@ stages:
             projects: 'tests\ISynergy.Framework.Core.Linq.Tests\ISynergy.Framework.Core.Linq.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Core.IO'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Core.IO.Tests\ISynergy.Framework.Core.Linq.IO.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
           inputs:

@@ -10,6 +10,12 @@ namespace Sample.Services
     /// </summary>
     public class CameraService : ICameraService
     {
+        /// <summary>
+        /// Takes the picture asynchronous.
+        /// </summary>
+        /// <param name="maxfilesize">The maxfilesize.</param>
+        /// <returns>Task&lt;FileResult&gt;.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public Task<FileResult> TakePictureAsync(ulong maxfilesize)
         {
             throw new NotImplementedException();

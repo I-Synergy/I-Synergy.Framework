@@ -16,6 +16,7 @@
     <Converters:CurrencyConverter x:Key="CurrencyConverter" />
     <Converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter"/>
     <Converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
+    <Converters:EnumToStringConverter x:Key="EnumToStringConverter" />
     <Converters:StringFormatConverter x:Key="StringFormatConverter" />
     <Converters:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
     <Converters:StringToIntegerConverter x:Key="StringToIntegerConverter"/>
@@ -453,7 +454,7 @@
                                     </ControlTemplate>
                                 </ContentControl.Template>
                             </ContentControl>
-                            <Button x:Name="Button_Close" Content="{StaticResource tb_close}" Style="{StaticResource IconButtonStyle}" Command="{Binding Close_Command}" ToolTipService.ToolTip="Close" HorizontalAlignment="Right" Margin="10" Height="26" Width="26"/>
+                            <Button x:Name="Button_Close" Content="{StaticResource close}" Style="{StaticResource IconButtonStyle}" Command="{Binding Close_Command}" ToolTipService.ToolTip="Close" HorizontalAlignment="Right" Margin="10" Height="26" Width="26"/>
                         </Grid>
                         <ScrollViewer Grid.Row="1" x:Name="ContentScrollViewer"
                             HorizontalScrollBarVisibility="Disabled"

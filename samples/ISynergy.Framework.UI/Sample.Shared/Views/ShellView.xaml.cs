@@ -32,7 +32,7 @@ namespace Sample.Views
         private readonly WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs> WeakRootNavigationViewBackRequestedEvent = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShellView"/> class.
+        /// Initializes a new instance of the <see cref="ShellView" /> class.
         /// </summary>
         public ShellView()
         {
@@ -60,7 +60,7 @@ namespace Sample.Views
         /// <summary>
         /// Handles the <see cref="E:NavigatedTo" /> event.
         /// </summary>
-        /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -71,7 +71,7 @@ namespace Sample.Views
         /// Navigations the item invoked.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="NavigationViewItemInvokedEventArgs"/> instance containing the event data.</param>
+        /// <param name="args">The <see cref="NavigationViewItemInvokedEventArgs" /> instance containing the event data.</param>
         private async void NavigationItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             if (args.IsSettingsInvoked && ViewModel != null)
@@ -92,7 +92,7 @@ namespace Sample.Views
         /// Handles the Loaded event of the RootNavigationView control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void RootNavigationViewLoaded(object sender, RoutedEventArgs e)
         {
 #if NETFX_CORE
@@ -137,7 +137,7 @@ namespace Sample.Views
         /// Roots the navigation view back requested.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="NavigationViewBackRequestedEventArgs"/> instance containing the event data.</param>
+        /// <param name="args">The <see cref="NavigationViewBackRequestedEventArgs" /> instance containing the event data.</param>
         private void RootNavigationViewBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             OnBackRequested();
@@ -147,7 +147,7 @@ namespace Sample.Views
         /// Handles the Navigated event of the ContentRootFrame control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
         private void ContentRootFrameNavigated(object sender, NavigationEventArgs e)
         {
             RootNavigationView.IsBackEnabled = ViewModel.BaseCommonServices.NavigationService.CanGoBack;

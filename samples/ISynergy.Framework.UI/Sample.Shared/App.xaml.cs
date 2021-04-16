@@ -67,10 +67,18 @@ namespace Sample
             };
 #endif
 
+        /// <summary>
+        /// Configures the logger.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
         protected override void ConfigureLogger(ILoggerFactory factory)
         {
         }
 
+        /// <summary>
+        /// Configures the services.
+        /// </summary>
+        /// <param name="services">The services.</param>
         protected override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
@@ -118,6 +126,11 @@ namespace Sample
                 });
         }
 
+        /// <summary>
+        /// Handles the exception.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="message">The message.</param>
         public override async Task HandleException(Exception exception, string message)
         {
             try

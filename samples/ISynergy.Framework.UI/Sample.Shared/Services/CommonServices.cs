@@ -10,7 +10,9 @@ namespace Sample.Services
     /// </summary>
     public class CommonServices : BaseCommonService, ICommonServices
     {
-        /// <summary>Gets the authentication service.</summary>
+        /// <summary>
+        /// Gets the authentication service.
+        /// </summary>
         /// <value>The authentication service.</value>
         public IAuthenticationService AuthenticationService { get; }
         /// <summary>
@@ -56,10 +58,11 @@ namespace Sample.Services
         /// <summary>
         /// The client monitor service
         /// </summary>
+        /// <value>The client monitor service.</value>
         public IClientMonitorService ClientMonitorService { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommonServices"/> class.
+        /// Initializes a new instance of the <see cref="CommonServices" /> class.
         /// </summary>
         /// <param name="busyService">The busy service.</param>
         /// <param name="languageService">The language service.</param>
@@ -73,11 +76,13 @@ namespace Sample.Services
         /// <param name="cameraService">The camera service.</param>
         /// <param name="infoService">The information service.</param>
         /// <param name="converterService">The converter service.</param>
+        /// <param name="authenticationService">The authentication service.</param>
         /// <param name="masterDataService">The master data service.</param>
         /// <param name="downloadFileService">The download file service.</param>
         /// <param name="reportingService">The reporting service.</param>
         /// <param name="printingService">The printing service.</param>
         /// <param name="clipboardService">The clipboard service.</param>
+        /// <param name="clientMonitorService">The client monitor service.</param>
         public CommonServices(
             IBusyService busyService,
             ILanguageService languageService,

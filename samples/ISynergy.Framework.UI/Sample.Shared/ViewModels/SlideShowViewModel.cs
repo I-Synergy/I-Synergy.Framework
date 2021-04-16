@@ -13,6 +13,9 @@ using Windows.UI.Core;
 
 namespace Sample.ViewModels
 {
+    /// <summary>
+    /// Class SlideShowViewModel.
+    /// </summary>
     public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     {
         /// <summary>
@@ -24,6 +27,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the Items property value.
         /// </summary>
+        /// <value>The items.</value>
         public ObservableCollection<MediaItem> Items
         {
             get { return GetValue<ObservableCollection<MediaItem>>(); }
@@ -33,6 +37,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the Timer property value.
         /// </summary>
+        /// <value>The slideshow timer.</value>
         public ThreadPoolTimer SlideshowTimer
         {
             get { return GetValue<ThreadPoolTimer>(); }
@@ -42,12 +47,19 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the UpdateSourceTimer property value.
         /// </summary>
+        /// <value>The update source timer.</value>
         public ThreadPoolTimer UpdateSourceTimer
         {
             get { return GetValue<ThreadPoolTimer>(); }
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SlideShowViewModel"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="commonServices">The common services.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         public SlideShowViewModel(
             IContext context,
             IBaseCommonServices commonServices,
@@ -72,6 +84,11 @@ namespace Sample.ViewModels
             }
         }
 
+        /// <summary>
+        /// Updates the source time out timer tick asynchronous.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>Task.</returns>
         private Task UpdateSourceTimeOutTimerTickAsync(ThreadPoolTimer e)
         {
             Items = new ObservableCollection<MediaItem>()
@@ -85,6 +102,11 @@ namespace Sample.ViewModels
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// slideshow time out timer tick as an asynchronous operation.
+        /// </summary>
+        /// <param name="timer">The timer.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         private async Task SlideshowTimeOutTimerTickAsync(ThreadPoolTimer timer)
         {
             timer.Cancel();
