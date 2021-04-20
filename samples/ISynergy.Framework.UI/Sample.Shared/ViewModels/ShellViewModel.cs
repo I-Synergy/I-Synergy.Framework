@@ -161,18 +161,18 @@ namespace Sample.ViewModels
         protected override void PopulateNavItems()
         {
             PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["icon_kiosk"] as string, ForegroundColor, Display_Command));
-            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["tile_info"] as string, ForegroundColor, Info_Command));
+            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"] as string, ForegroundColor, Display_Command));
+            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, ForegroundColor, Info_Command));
             PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, ForegroundColor, Browse_Command));
             PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, ForegroundColor, Converter_Command));
             PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["products"] as string, ForegroundColor, SelectionTest_Command));
             PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, ForegroundColor, ListViewTest_Command));
 
             SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["tile_help"] as string, ForegroundColor, Help_Command));
-            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["icon_flag"] as string, ForegroundColor, Language_Command));
-            SecondaryItems.Add(new NavigationItem("Color", Application.Current.Resources["icon_color"] as string, ForegroundColor, Color_Command));
-            SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["icon_user"] as string, ForegroundColor, Login_Command));
+            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, ForegroundColor, Help_Command));
+            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, ForegroundColor, Language_Command));
+            SecondaryItems.Add(new NavigationItem("Color", Application.Current.Resources["color"] as string, ForegroundColor, Color_Command));
+            SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, ForegroundColor, Login_Command));
         }
 
         /// <summary>
