@@ -39,6 +39,11 @@ namespace Sample.ViewModels
         /// <value>The select multiple command.</value>
         public Command SelectMultiple_Command { get; set; }
 
+        public Command ShowDialogYesNo { get; set; }
+        public Command ShowDialogYesNoCancel { get; set; }
+        public Command ShowDialogOk { get; set; }
+        public Command ShowDialogOkCancel { get; set; }
+
         /// <summary>
         /// Gets or sets the selected test items.
         /// </summary>
@@ -59,6 +64,22 @@ namespace Sample.ViewModels
         {
             SelectSingle_Command = new Command(async () => await SelectSingleAsync());
             SelectMultiple_Command = new Command(async () => await SelectMultipleAsync());
+
+            ShowDialogYesNo = new Command(async () => await ShowDialogAsync(MessageBoxButton.YesNo));
+            ShowDialogYesNoCancel = new Command(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
+            ShowDialogOk = new Command(async () => await ShowDialogAsync(MessageBoxButton.OK));
+            ShowDialogOkCancel = new Command(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
+        }
+
+        private async Task ShowDialogAsync(MessageBoxButton buttons)
+        {
+            if (await BaseCommonServices.DialogService.ShowAsync(
+                                $"Testing {buttons.ToString()} Dialog",
+                                "Test",
+                                buttons, MessageBoxImage.Question) is MessageBoxResult result)
+            {
+                await BaseCommonServices.DialogService.ShowInformationAsync($"{result.ToString()} selected.", "Result...");
+            };
         }
 
         /// <summary>
