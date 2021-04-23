@@ -10,8 +10,8 @@
     x:Name="ControlRoot">
 
     <Grid>
-        <Image x:Name="Staging" Visibility="Collapsed"/>
-        <Image x:Name="Image" Source="{Binding ElementName=ControlRoot, Path=PlaceHolder}" Stretch="UniformToFill" />
+        <Image x:Name="Staging" Visibility="Collapsed" Stretch="{Binding ElementName=ControlRoot, Path=Stretch}"/>
+        <Image x:Name="Image" Source="{Binding ElementName=ControlRoot, Path=PlaceHolder}" Stretch="{Binding ElementName=ControlRoot, Path=Stretch}" />
         <Grid.Resources>
             <Storyboard x:Name="ImageFadeOut">
                 <FadeOutThemeAnimation Storyboard.TargetName="Image" />

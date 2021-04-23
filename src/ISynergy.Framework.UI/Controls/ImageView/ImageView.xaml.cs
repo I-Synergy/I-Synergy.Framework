@@ -25,6 +25,12 @@ namespace ISynergy.Framework.UI.Controls
             DependencyProperty.Register(nameof(PlaceHolder), typeof(ImageSource), typeof(ImageView), new PropertyMetadata(default(ImageSource)));
 
         /// <summary>
+        /// The stretch property
+        /// </summary>
+        public static readonly DependencyProperty StretchProperty =
+            DependencyProperty.Register(nameof(Stretch), typeof(Stretch), typeof(ImageView), new PropertyMetadata(default(Stretch)));
+
+        /// <summary>
         /// Gets or sets the source.
         /// </summary>
         /// <value>The source.</value>
@@ -45,7 +51,17 @@ namespace ISynergy.Framework.UI.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageView"/> class.
+        /// Gets or sets the stretch.
+        /// </summary>
+        /// <value>The stretch.</value>
+        public Stretch Stretch
+        {
+            get { return (Stretch)GetValue(StretchProperty); }
+            set { SetValue(StretchProperty, value); }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageView" /> class.
         /// </summary>
         public ImageView()
         {
@@ -75,7 +91,7 @@ namespace ISynergy.Framework.UI.Controls
         /// Sources the changed.
         /// </summary>
         /// <param name="dependencyObject">The dependency object.</param>
-        /// <param name="dependencyPropertyChangedEventArgs">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="dependencyPropertyChangedEventArgs">The <see cref="DependencyPropertyChangedEventArgs" /> instance containing the event data.</param>
         private static void SourceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = (ImageView)dependencyObject;
