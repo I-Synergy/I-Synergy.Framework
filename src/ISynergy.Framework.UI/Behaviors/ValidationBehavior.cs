@@ -129,16 +129,16 @@ namespace ISynergy.Framework.UI.Behaviors
                 return _property;
             var context = (AssociatedObject as FrameworkElement)?.DataContext;
             if (context is null)
-                if (throwException) throw new NullReferenceException("AssociatedObject is not valid");
+                if (throwException) throw new NullReferenceException("DataContext is null or invalid");
                 else return null;
             if (string.IsNullOrEmpty(PropertyName))
-                if (throwException) throw new NullReferenceException("PropertyName is not set");
+                if (throwException) throw new NullReferenceException($"PropertyName '{PropertyName}' is not set");
                 else return null;
             if (!(context is IObservableClass model))
-                if (throwException) throw new NullReferenceException("DataContext is not IModel");
+                if (throwException) throw new NullReferenceException("DataContext is not of type IObservableClass");
                 else return null;
             if (!model.Properties.ContainsKey(PropertyName))
-                if (throwException) throw new KeyNotFoundException("PropertyName is not found");
+                if (throwException) throw new KeyNotFoundException($"PropertyName '{PropertyName}' is not found");
                 else return null;
             try
             {
@@ -180,7 +180,7 @@ namespace ISynergy.Framework.UI.Behaviors
             {
                 if (!string.IsNullOrEmpty(e.OldValue?.ToString() ?? string.Empty))
                 {
-                    throw new InvalidOperationException("PropertyName cannot be changed once set.");
+                    throw new InvalidOperationException($"PropertyName '{e.Property.ToString()}' cannot be changed once set.");
                 }
             }
         }
