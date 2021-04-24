@@ -15,6 +15,6 @@
     </c:View.Resources>
 
     <Grid>
-        <Controls:ImageView x:Name="image" Source="{Binding SelectedItem.ImageUri, Mode=OneWay, Converter={StaticResource UriToImageSourceConverter}}" />
+        <Controls:ImageView x:Name="image" Source="{Binding SelectedItem.ImageUri, Mode=OneWay, Converter={StaticResource UriToImageSourceConverter}}" Stretch="UniformToFill" />
     </Grid>
 </c:View>
