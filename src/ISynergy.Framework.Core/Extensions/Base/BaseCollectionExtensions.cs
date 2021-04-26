@@ -1,7 +1,11 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,45 +21,65 @@ namespace ISynergy.Framework.Core.Extensions.Base
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="collection">The collection.</param>
+        /// <param name="name">The name.</param>
         /// <returns>DataTable.</returns>
-        public static DataTable ToDataTable<T>(this IEnumerable<T> collection)
-        {
-            var dt = new DataTable();
-            var t = typeof(T);
-            var pia = t.GetProperties();
-            object temp;
-            DataRow dr;
+        public static DataTable ToDataTableBase<T>(this IEnumerable<T> collection, string name) =>
+            collection.ToDataTableBase(name, typeof(T));
 
-            for (var i = 0; i < pia.Length; i++)
+        /// <summary>
+        /// Converts to datatable.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>DataTable.</returns>
+        public static DataTable ToDataTableBase(this IEnumerable collection, string name, Type type)
+        {
+            var dataTable = new DataTable()
             {
-                dt.Columns.Add(pia[i].Name, Nullable.GetUnderlyingType(pia[i].PropertyType) ?? pia[i].PropertyType);
-                dt.Columns[i].AllowDBNull = true;
-            }
+                TableName = name
+            };
 
             //Populate the table
-            foreach (var item in collection.EnsureNotNull())
+            if(collection is not null)
             {
-                dr = dt.NewRow();
-                dr.BeginEdit();
+                // Exclude all properties that are have the JsonIgnoreAttribute or are an Enumarable.
+                var typeProperties = type.GetProperties()
+                    .Where(q => !q.IsDefined(typeof(DataTableIgnoreAttribute)) &&
+                        (q.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(q.PropertyType)))
+                    .ToArray();
 
-                for (var i = 0; i < pia.Length; i++)
+                for (var i = 0; i < typeProperties.Length; i++)
                 {
-                    temp = pia[i].GetValue(item) ?? DBNull.Value;
-
-                    if (temp is null || (temp.GetType().Name == "Char" && ((char)temp).Equals('\0')))
-                    {
-                        dr[pia[i].Name] = DBNull.Value;
-                    }
-                    else
-                    {
-                        dr[pia[i].Name] = temp;
-                    }
+                    dataTable.Columns.Add(typeProperties[i].Name, Nullable.GetUnderlyingType(typeProperties[i].PropertyType) ?? typeProperties[i].PropertyType);
+                    dataTable.Columns[i].AllowDBNull = true;
                 }
 
-                dr.EndEdit();
-                dt.Rows.Add(dr);
+                foreach (var item in collection)
+                {
+                    var dataRow = dataTable.NewRow();
+                    dataRow.BeginEdit();
+
+                    for (var i = 0; i < typeProperties.Length; i++)
+                    {
+                        var temp = typeProperties[i].GetValue(item) ?? DBNull.Value;
+
+                        if (temp is null || (temp.GetType().Name == "Char" && ((char)temp).Equals('\0')))
+                        {
+                            dataRow[typeProperties[i].Name] = DBNull.Value;
+                        }
+                        else
+                        {
+                            dataRow[typeProperties[i].Name] = temp;
+                        }
+                    }
+
+                    dataRow.EndEdit();
+                    dataTable.Rows.Add(dataRow);
+                }
             }
-            return dt;
+            
+            return dataTable;
         }
     }
 }

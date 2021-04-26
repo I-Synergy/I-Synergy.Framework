@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -157,11 +158,17 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="collection">The collection.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <returns>DataTable.</returns>
-        public static DataTable ToDataTable<T>(this IEnumerable<T> collection, string tableName)
-        {
-            var tbl = collection.ToDataTable();
-            tbl.TableName = tableName;
-            return tbl;
-        }
+        public static DataTable ToDataTable<T>(this IEnumerable<T> collection, string tableName) =>
+            collection.ToDataTableBase(tableName);
+
+        /// <summary>
+        /// Converts to datatable.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns>DataTable.</returns>
+        public static DataTable ToDataTable(this IEnumerable collection, Type type, string tableName) =>
+            collection.ToDataTableBase(tableName, type);
     }
 }

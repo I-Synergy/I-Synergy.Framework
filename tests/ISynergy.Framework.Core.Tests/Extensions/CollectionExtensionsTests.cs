@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xunit;
@@ -40,6 +43,68 @@ namespace ISynergy.Framework.Core.Extensions.Tests
 
                 return Task.CompletedTask;
             });
+        }
+
+        [Fact]
+        public void ICollectionTToDataTableTest()
+        {
+            var collection = new List<Product>()
+            {
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
+            };
+
+            if(collection is ICollection<Product> data)
+            {
+                var dataTable = data.ToDataTable<Product>("Test");
+
+                Assert.NotNull(dataTable);
+                Assert.Equal(5, dataTable.Rows.Count);
+                Assert.False(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.Properties)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.Errors)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.Validator)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.IsValid)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.IsDirty)));
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
+        [Fact]
+        public void ICollectionToDataTableTest()
+        {
+            var collection = new List<Product>()
+            {
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test3" },
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test4" },
+                new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
+            };
+
+            if (collection is ICollection data)
+            {
+                var dataTable = data.ToDataTable(typeof(Product), "Test");
+
+                Assert.NotNull(dataTable);
+                Assert.Equal(5, dataTable.Rows.Count);
+                Assert.False(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.Properties)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.Errors)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.Validator)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.IsValid)));
+                Assert.False(dataTable.Columns.Contains(nameof(Product.IsDirty)));
+            }
+            else
+            {
+                throw new Exception();
+            }
         }
     }
 }
