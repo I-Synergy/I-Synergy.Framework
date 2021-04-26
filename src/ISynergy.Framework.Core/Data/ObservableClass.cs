@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using ISynergy.Framework.Core.Attributes;
 
 namespace ISynergy.Framework.Core.Data
 {
@@ -22,6 +23,7 @@ namespace ISynergy.Framework.Core.Data
         /// </summary>
         /// <value>The validation trigger.</value>
         [JsonIgnore]
+        [DataTableIgnore]
         private ValidationTriggers ValidationTrigger { get; }
 
         /// <summary>
@@ -29,6 +31,7 @@ namespace ISynergy.Framework.Core.Data
         /// </summary>
         /// <value>The properties.</value>
         [JsonIgnore]
+        [DataTableIgnore]
         public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
             = new ObservableConcurrentDictionary<string, IProperty>();
 
@@ -37,6 +40,7 @@ namespace ISynergy.Framework.Core.Data
         /// </summary>
         /// <value>The errors.</value>
         [JsonIgnore]
+        [DataTableIgnore]
         public ObservableCollection<string> Errors { get; }
             = new ObservableCollection<string>();
 
@@ -45,6 +49,7 @@ namespace ISynergy.Framework.Core.Data
         /// </summary>
         /// <value>The validator.</value>
         [JsonIgnore]
+        [DataTableIgnore]
         public Action<IObservableClass> Validator { set; get; }
 
         /// <summary>
@@ -52,6 +57,7 @@ namespace ISynergy.Framework.Core.Data
         /// </summary>
         /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
         [JsonIgnore]
+        [DataTableIgnore]
         public bool IsValid => !Errors.Any();
 
         /// <summary>
@@ -59,6 +65,7 @@ namespace ISynergy.Framework.Core.Data
         /// </summary>
         /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
         [JsonIgnore]
+        [DataTableIgnore]
         public bool IsDirty
         {
             get { return Properties.Any(x => x.Value.IsDirty); }

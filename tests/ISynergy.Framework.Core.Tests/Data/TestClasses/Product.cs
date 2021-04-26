@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ISynergy.Framework.Core.Attributes;
 
 namespace ISynergy.Framework.Core.Data.Tests.TestClasses
@@ -87,12 +88,11 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         }
 
         /// <summary>
-        /// Gets or sets the ProductGroup property value.
+        /// Gets or sets the ProductTypes property value.
         /// </summary>
-        /// <value>The product group.</value>
-        public ProductGroup ProductGroup
+        public List<ProductGroup> ProductGroups
         {
-            get { return GetValue<ProductGroup>(); }
+            get { return GetValue<List<ProductGroup>>(); }
             set { SetValue(value); }
         }
     }
