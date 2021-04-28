@@ -38,9 +38,9 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-		<PackageReference Include="Uno.UI.Lottie" Version="3.6.6" />
-        <PackageReference Include="Uno.UI.WebAssembly" Version="3.6.6" />
-        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.6" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.Lottie" Version="3.7.3" />
+        <PackageReference Include="Uno.UI.WebAssembly" Version="3.7.3" />
+        <PackageReference Include="Uno.UI.RemoteControl" Version="3.7.3" Condition="'$(Configuration)'=='Debug'" />
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.2" />
         <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.2" />
     </ItemGroup>
