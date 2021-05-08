@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
 using Windows.Foundation;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {

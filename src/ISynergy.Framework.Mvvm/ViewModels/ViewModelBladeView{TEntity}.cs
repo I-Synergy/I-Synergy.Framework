@@ -266,7 +266,7 @@ namespace ISynergy.Framework.Mvvm
 
             try
             {
-                await BaseCommonServices.BusyService.StartBusyAsync();
+                BaseCommonServices.BusyService.StartBusy();
 
                 Items.AddNewRange(await RetrieveItemsAsync(GetItemsCancellationToken.Token));
                 result = true;
@@ -277,7 +277,7 @@ namespace ISynergy.Framework.Mvvm
             catch (OperationCanceledException) { }
             finally
             {
-                await BaseCommonServices.BusyService.EndBusyAsync();
+                BaseCommonServices.BusyService.EndBusy();
             }
 
             return result;

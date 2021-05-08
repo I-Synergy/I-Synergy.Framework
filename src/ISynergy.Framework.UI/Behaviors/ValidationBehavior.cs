@@ -3,16 +3,21 @@ using Microsoft.Xaml.Interactivity;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Behaviors
 {
     /// <summary>
     /// Class ValidationBehavior.
-    /// Implements the <see cref="DependencyObject" />
+    /// Implements the <see cref="FrameworkElement" />
     /// Implements the <see cref="IBehavior" />
     /// </summary>
-    /// <seealso cref="DependencyObject" />
+    /// <seealso cref="FrameworkElement" />
     /// <seealso cref="IBehavior" />
     [TypeConstraint(typeof(FrameworkElement))]
     public partial class ValidationBehavior : DependencyObject, IBehavior
@@ -53,7 +58,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="DataContextChangedEventArgs"/> instance containing the event data.</param>
-#if NETFX_CORE
+#if __UWP__
         private void Control_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args) => Setup();
 #else
         private void Control_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args) => Setup();

@@ -1,11 +1,17 @@
 ﻿using ISynergy.Framework.UI.Behaviors.Base;
 using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.ApplicationModel;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using Microsoft.Xaml.Interactivity;
 using ISynergy.Framework.Core.Locators;
+
+#if (__UWP__ || HAS_UNO)
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+#endif
 
 namespace ISynergy.Framework.UI.Behaviors
 {

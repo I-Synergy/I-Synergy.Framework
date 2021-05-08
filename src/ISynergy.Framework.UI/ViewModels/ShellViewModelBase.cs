@@ -2,10 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using ISynergy.Framework.Mvvm.Commands;
-using Windows.UI.Xaml.Controls;
 using ISynergy.Framework.UI.Navigation;
 using Windows.System;
 using ISynergy.Framework.Mvvm;
@@ -20,6 +17,16 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.Mvvm.Events;
+
+#if (__UWP__ || HAS_UNO)
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Controls;
+#endif
 
 namespace ISynergy.Framework.UI.ViewModels
 {

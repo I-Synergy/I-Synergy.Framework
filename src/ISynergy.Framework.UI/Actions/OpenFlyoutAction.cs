@@ -1,8 +1,15 @@
 ﻿using Microsoft.Xaml.Interactivity;
 using System.Windows.Input;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Actions
 {

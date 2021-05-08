@@ -1,4 +1,4 @@
-﻿#if NETFX_CORE
+﻿#if __UWP__ || (__WINUI__)
 
 using System;
 using System.IO;
@@ -33,5 +33,4 @@ namespace ISynergy.Framework.UI.Extensions
         }
     }
 }
-
 #endif

@@ -1,9 +1,16 @@
 ﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.UI.Extensions;
 using System;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Data;
+#elif (__WINUI__)
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {
@@ -122,7 +129,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             Argument.IsNotNull(nameof(value), value);
 
-            if(value is Color color)
+            if(value is Windows.UI.Color color)
             {
                 return color.ConvertColor2Integer();
             }

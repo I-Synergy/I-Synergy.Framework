@@ -1,8 +1,12 @@
-﻿using Windows.UI.Xaml;
+﻿#if (__UWP__ || HAS_UNO)
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
-
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {

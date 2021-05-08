@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Core.Helpers
                     _isInDesignMode = IsInDesignModePortable();
 #elif SILVERLIGHT
                     _isInDesignMode = System.ComponentModel.DesignerProperties.IsInDesignTool;
-#elif NETFX_CORE
+#elif __UWP__
                     _isInDesignMode = DesignMode.DesignModeEnabled;
 #elif XAMARIN
                     _isInDesignMode = false;

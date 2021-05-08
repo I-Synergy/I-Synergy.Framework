@@ -1,5 +1,10 @@
 ﻿using System;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml.Resources;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml.Resources;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {

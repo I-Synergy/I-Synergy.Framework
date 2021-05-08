@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Assembly\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>

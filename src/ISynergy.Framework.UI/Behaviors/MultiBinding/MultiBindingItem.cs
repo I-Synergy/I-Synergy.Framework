@@ -1,4 +1,8 @@
-﻿using Windows.UI.Xaml;
+﻿#if (__UWP__ || HAS_UNO)
+using Windows.UI.Xaml;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Behaviors
 {

@@ -3,7 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ISynergy.Framework.Core.Models.Accounts;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml.Data;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {

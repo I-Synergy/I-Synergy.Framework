@@ -31,6 +31,7 @@ using System.Net.WebSockets;
 using ISynergy.Framework.UI;
 using Windows.ApplicationModel;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Extensions;
 using System.Linq;
 
 namespace Sample
@@ -59,7 +60,7 @@ namespace Sample
             InitializeComponent();
         }
 
-#if NETFX_CORE
+#if __UWP__
         protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>()
             {
@@ -73,6 +74,55 @@ namespace Sample
         /// <param name="factory">The factory.</param>
         protected override void ConfigureLogger(ILoggerFactory factory)
         {
+            factory = LoggerFactory.Create(builder =>
+            {
+#if __WASM__
+                builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
+#elif __IOS__
+                builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
+#elif __UWP__
+                builder.AddDebug();
+#else
+                builder.AddConsole();
+#endif
+
+                // Exclude logs below this level
+                builder.SetMinimumLevel(LogLevel.Information);
+
+                // Default filters for Uno Platform namespaces
+                builder.AddFilter("Uno", LogLevel.Warning);
+                builder.AddFilter("Windows", LogLevel.Warning);
+                builder.AddFilter("Microsoft", LogLevel.Warning);
+
+                // Generic Xaml events
+                builder.AddFilter("Microsoft.UI.Xaml", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.UIElement", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace);
+
+                // Layouter specific messages
+                builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug);
+
+                builder.AddFilter("Windows.Storage", LogLevel.Debug);
+
+                // Binding related messages
+                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
+
+                // Binder memory references tracking
+                builder.AddFilter("Uno.UI.DataBinding.BinderReferenceHolder", LogLevel.Debug);
+
+                // RemoteControl and HotReload related
+                builder.AddFilter("Uno.UI.RemoteControl", LogLevel.Information);
+
+                // Debug JS interop
+                builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug);
+            });
+
+            global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
         }
 
         /// <summary>
@@ -89,13 +139,13 @@ namespace Sample
                 .AddJsonStream(assembly.GetManifestResourceStream("appsettings.json"))
                 .Build();
 
-            services.AddSingleton((s) => ConfigurationRoot.GetSection(nameof(ConfigurationOptions)).Get<ConfigurationOptions>());
+            services.Configure<ConfigurationOptions>(ConfigurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
-#if NETFX_CORE
+#if __UWP__
             services.AddSingleton<IUpdateService, UpdateService>();
 #endif
 
@@ -120,10 +170,9 @@ namespace Sample
 
             //Load assemblies
             RegisterAssemblies(new List<Assembly>
-                {
-                    assembly,
-                    Assembly.GetAssembly(typeof(Sample.Core.Assembly.CoreIdentifier)),
-                });
+            {
+                assembly
+            });
         }
 
         /// <summary>
@@ -131,7 +180,7 @@ namespace Sample
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The message.</param>
-        public override async Task HandleException(Exception exception, string message)
+        public override void HandleException(Exception exception, string message)
         {
             try
             {
@@ -141,35 +190,35 @@ namespace Sample
                     return;
 
                 // Set busyIndicator to false if it's true.
-                await ServiceLocator.Default.GetInstance<IBusyService>().EndBusyAsync();
+                ServiceLocator.Default.GetInstance<IBusyService>().EndBusy();
 
                 if (exception is UnauthorizedAccessException accessException)
                 {
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(accessException.Message);
+                    ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(accessException.Message).Await();
                 }
                 else if (exception is IOException iOException)
                 {
                     if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
                     {
-                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
-                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_FILEINUSE"));
+                        ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(
+                            ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_FILEINUSE")).Await();
                     }
                     else
                     {
-                        await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(iOException.Message);
+                        ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(iOException.Message).Await();
                     }
                 }
                 else if (exception is ArgumentException argumentException)
                 {
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowWarningAsync(
+                    ServiceLocator.Default.GetInstance<IDialogService>().ShowWarningAsync(
                         string.Format(
                             ServiceLocator.Default.GetInstance<ILanguageService>().GetString("EX_ARGUMENTNULL"),
                             argumentException.ParamName)
-                        );
+                        ).Await();
                 }
                 else
                 {
-                    await ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(exception.Message);
+                    ServiceLocator.Default.GetInstance<IDialogService>().ShowErrorAsync(exception.Message).Await();
                 }
             }
             catch (Exception ex)

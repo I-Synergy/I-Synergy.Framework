@@ -1,9 +1,16 @@
 ﻿using System;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
+#endif
 
 namespace ISynergy.Framework.UI.Extensions
 {

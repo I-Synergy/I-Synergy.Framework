@@ -67,7 +67,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
-        public Task StartBusyAsync(string message = null)
+        public void StartBusy(string message = null)
         {
             if (message != null)
             {
@@ -79,26 +79,19 @@ namespace ISynergy.Framework.UI.Services
             }
 
             IsBusy = true;
-            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Starts the busy asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        public Task StartBusyAsync()
-        {
-            return StartBusyAsync(LanguageService.GetString("PleaseWait"));
-        }
+        public void StartBusy() =>
+            StartBusy(LanguageService.GetString("PleaseWait"));
 
         /// <summary>
         /// Ends the busy asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        public Task EndBusyAsync()
-        {
-            IsBusy = false;
-            return Task.CompletedTask;
-        }
+        public void EndBusy() => IsBusy = false;
     }
 }

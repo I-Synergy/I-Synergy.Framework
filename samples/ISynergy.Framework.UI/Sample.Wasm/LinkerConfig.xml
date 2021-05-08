@@ -5,6 +5,9 @@
 	<assembly fullname="ISynergy.Framework.Mvvm" />
 	<assembly fullname="ISynergy.Framework.Core" />
     <assembly fullname="Uno.UI" />
+	<assembly fullname="Uno.Extensions.Logging.WebAssembly.Console"/>
+	<assembly fullname="Microsoft.Extensions.Logging"/>
+	<assembly fullname="Microsoft.Extensions.Options"/>
 	
     <assembly fullname="System.Core">
         <!-- This is required by JSon.NET and any expression.Compile caller -->

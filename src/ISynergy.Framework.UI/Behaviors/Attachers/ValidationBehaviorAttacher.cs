@@ -1,9 +1,17 @@
 ﻿using Microsoft.Xaml.Interactions.Core;
 using Microsoft.Xaml.Interactivity;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+#elif (__WINUI__)
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+#endif
 
 namespace ISynergy.Framework.UI.Behaviors
 {
@@ -26,11 +34,8 @@ namespace ISynergy.Framework.UI.Behaviors
         private static void PropertyNameChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs arg)
         {
             var control = (Control)dependencyObject;
-
             var collection = new BehaviorCollection();
-
             var validationBehavior = new ValidationBehavior() { PropertyName = arg.NewValue.ToString() };
-
             var changePropertyIsValidAction = new ChangePropertyAction
             {
                 PropertyName = new PropertyPath(nameof(Control.Style)),

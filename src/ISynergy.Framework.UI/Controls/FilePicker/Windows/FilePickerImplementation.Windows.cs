@@ -1,4 +1,4 @@
-﻿#if NETFX_CORE
+﻿#if __UWP__ || (__WINUI__)
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Controls.Abstractions;
 using System;

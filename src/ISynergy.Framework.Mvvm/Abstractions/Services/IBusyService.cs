@@ -8,21 +8,18 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     public interface IBusyService
     {
         /// <summary>
-        /// Starts the busy asynchronous.
+        /// Starts the busy.
         /// </summary>
-        /// <returns>Task.</returns>
-        Task StartBusyAsync();
+        void StartBusy();
         /// <summary>
-        /// Starts the busy asynchronous.
+        /// Starts the busy.
         /// </summary>
         /// <param name="message">The message.</param>
-        /// <returns>Task.</returns>
-        Task StartBusyAsync(string message);
+        void StartBusy(string message);
         /// <summary>
-        /// Ends the busy asynchronous.
+        /// Ends the busy.
         /// </summary>
-        /// <returns>Task.</returns>
-        Task EndBusyAsync();
+        void EndBusy();
         /// <summary>
         /// Gets or sets the busy message.
         /// </summary>

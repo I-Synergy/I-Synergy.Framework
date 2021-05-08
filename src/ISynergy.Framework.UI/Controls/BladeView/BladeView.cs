@@ -1,14 +1,33 @@
-﻿using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using ISynergy.Framework.UI.Extensions;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+#endif
+
+#if __WINUI__
+using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.UI.Controls;
+#endif
+
+#if __UWP__
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
+#endif
+
+#if HAS_UNO
+using Microsoft.Toolkit.Uwp.UI;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {

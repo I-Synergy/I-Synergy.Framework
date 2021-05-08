@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
-#if NETFX_CORE
+#if __UWP__ || (__WINUI__)
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
 #endif
@@ -42,7 +42,7 @@ namespace ISynergy.Framework.UI.Functions
         {
             SettingsService.Culture = isoLanguage;
 
-#if NETFX_CORE
+#if __UWP__ || (__WINUI__)
             ApplicationLanguages.PrimaryLanguageOverride = isoLanguage;
 
             // After setting PrimaryLanguageOverride ResourceContext should be reset

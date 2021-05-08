@@ -13,18 +13,13 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
-using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
-using Windows.UI.Xaml;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Core;
-using Windows.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
 using ISynergy.Framework.UI.Properties;
 using System.Resources;
@@ -34,12 +29,26 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
-using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 using System.Globalization;
 using Windows.ApplicationModel.Background;
 using System.Text.RegularExpressions;
 using ISynergy.Framework.Mvvm.Extensions;
-using Window = ISynergy.Framework.UI.Controls.Window;
+
+#if (__UWP__ || HAS_UNO)
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media;
+using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
+using LaunchActivatedEventArgs = Windows.ApplicationModel.Activation.LaunchActivatedEventArgs;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Media;
+using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
+using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
+#endif
 
 namespace ISynergy.Framework.UI
 {
@@ -111,7 +120,7 @@ namespace ISynergy.Framework.UI
 
             SetContext();
 
-#if NETFX_CORE|| (NET5_0 && WINDOWS)
+#if __UWP__|| (__WINUI__)
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 #endif
 
@@ -127,22 +136,25 @@ namespace ISynergy.Framework.UI
                 RequestedTheme = ApplicationTheme.Light;
             }
 
-#if NETFX_CORE || (NET5_0 && WINDOWS)
-            switch (AnalyticsInfo.VersionInfo.DeviceFamily)
-            {
-                case "Windows.Desktop":
-                    break;
-                case "Windows.IoT":
-                    break;
-                case "Windows.Xbox":
-                    RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-                    var result = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
-                    break;
-            }
+//#if __UWP__
+//            switch (AnalyticsInfo.VersionInfo.DeviceFamily)
+//            {
+//                case "Windows.Desktop":
+//                    break;
+//                case "Windows.IoT":
+//                    break;
+//                case "Windows.Xbox":
+//                    RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+//                    var result = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
+//                    break;
+//            }
 
-            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-#endif
-            Suspending += OnSuspending;
+//            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+//#endif
+
+//#if HAS_UNO || __UWP__
+//            Suspending += OnSuspending;
+//#endif
 
             //Gets or sets a value that indicates whether to engage the text performance visualization feature of Microsoft Visual Studio when the app runs.
             //this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
@@ -156,34 +168,34 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs" /> instance containing the event data.</param>
-        private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            await HandleException(e.Exception, e.Exception.Message);
+            HandleException(e.Exception, e.Exception.Message);
             e.SetObserved();
         }
 
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if __UWP__ || (__WINUI__)
         /// <summary>
         /// Handles the UnhandledException event of the Current control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
-        private async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-            await HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
+            HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
         }
 #else
         /// <summary>
         /// Handles the UnhandledException event of the Current control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="Windows.UI.Xaml.UnhandledExceptionEventArgs"/> instance containing the event data.</param>
-        private async void Current_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        private void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
             var ex = e.Exception;
-            await HandleException(ex, $"{ex.Message}{Environment.NewLine}{e.Message}");
+            HandleException(ex, $"{ex.Message}{Environment.NewLine}{e.Message}");
         }
 #endif
 
@@ -192,11 +204,11 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs" /> instance containing the event data.</param>
-        private async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
             {
-                await HandleException(exception, exception.Message);
+                HandleException(exception, exception.Message);
             }
         }
 
@@ -206,7 +218,7 @@ namespace ISynergy.Framework.UI
         /// <param name="args">Event data for the event.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if __UWP__ || (__WINUI__)
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
                 case "Windows.Desktop":
@@ -224,7 +236,7 @@ namespace ISynergy.Framework.UI
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (!(Windows.UI.Xaml.Window.Current.Content is Frame rootFrame))
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
@@ -232,7 +244,11 @@ namespace ISynergy.Framework.UI
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
 
+#if (__UWP__ || HAS_UNO)
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+#elif (__WINUI__)
+                if (args.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
+#endif
                 {
                     //TODO: Load state from previously suspended application
                 }
@@ -259,10 +275,14 @@ namespace ISynergy.Framework.UI
                     AppViewBackButtonVisibility.Collapsed;
 
                 // Place the frame in the current Window
-                Windows.UI.Xaml.Window.Current.Content = rootFrame;
+                Window.Current.Content = rootFrame;
             }
 
+#if (__UWP__ || HAS_UNO)
             if (!args.PrelaunchActivated)
+#elif (__WINUI__)
+            if (!args.UWPLaunchActivatedEventArgs.PrelaunchActivated)
+#endif
             {
                 if (rootFrame.Content is null)
                 {
@@ -275,7 +295,7 @@ namespace ISynergy.Framework.UI
                 }
 
                 // Ensure the current window is active
-                Windows.UI.Xaml.Window.Current.Activate();
+                Window.Current.Activate();
             }
         }
 
@@ -317,9 +337,9 @@ namespace ISynergy.Framework.UI
         /// <param name="e">The <see cref="BackRequestedEventArgs" /> instance containing the event data.</param>
         private static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            var rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
+            var rootFrame = Window.Current.Content as Frame;
 
-            if (GetDescendantFromName(Windows.UI.Xaml.Window.Current.Content, "ContentRootFrame") is Frame _frame)
+            if (GetDescendantFromName(Window.Current.Content, "ContentRootFrame") is Frame _frame)
             {
                 rootFrame = _frame;
             }
@@ -373,7 +393,7 @@ namespace ISynergy.Framework.UI
             var deferral = e.SuspendingOperation.GetDeferral();
 
             //TODO: Save application state and stop any background activity
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if __UWP__ || (__WINUI__)
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
                 task.Value?.Unregister(true);
@@ -484,7 +504,7 @@ namespace ISynergy.Framework.UI
                         q.Name.EndsWith(GenericConstants.View)
                         || q.Name.EndsWith(GenericConstants.Page))
                         && q.Name != GenericConstants.View
-                        && q.Name != nameof(View)
+                        && q.Name != nameof(ISynergy.Framework.UI.Controls.View)
                         && q.Name != GenericConstants.Page
                         && !q.IsAbstract
                         && !q.IsInterface)
@@ -495,7 +515,7 @@ namespace ISynergy.Framework.UI
                         q.GetInterface(nameof(IWindow), false) != null
                         && q.Name.EndsWith(GenericConstants.Window)
                         && q.Name != GenericConstants.Window
-                        && q.Name != nameof(Window)
+                        && q.Name != nameof(ISynergy.Framework.UI.Controls.Window)
                         && !q.IsAbstract
                         && !q.IsInterface)
                     .ToList());
@@ -571,7 +591,7 @@ namespace ISynergy.Framework.UI
             Context = _serviceProvider.GetRequiredService<IContext>();
             Context.ViewModels = ViewModelTypes;
 
-#if NETFX_CORE || (NET5_0 && WINDOWS) || __WASM__
+#if __UWP__ || (__WINUI__) || __WASM__
             //Only in Windows i can set the culture.
             var culture = CultureInfo.CurrentCulture;
 
@@ -591,6 +611,6 @@ namespace ISynergy.Framework.UI
         /// <param name="ex">The ex.</param>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
-        public abstract Task HandleException(Exception ex, string message);
+        public abstract void HandleException(Exception ex, string message);
     }
 }

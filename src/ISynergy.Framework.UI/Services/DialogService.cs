@@ -1,16 +1,17 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Input;
-using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
+using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
-using Windows.UI.Xaml;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml.Controls;
-using ISynergy.Framework.Mvvm.Commands;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml.Controls;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -186,79 +187,6 @@ namespace ISynergy.Framework.UI.Services
             }
 
             return MessageBoxResult.Cancel;
-        }
-
-        /// <summary>
-        /// show an asynchronous message dialog.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="title">The title.</param>
-        /// <param name="buttons">The buttons.</param>
-        /// <param name="image">The image.</param>
-        /// <returns>MessageBoxResult.</returns>
-        public virtual async Task<MessageBoxResult> ShowMessageAsync(
-            string message,
-            string title = "",
-            MessageBoxButton buttons = MessageBoxButton.OK,
-            MessageBoxImage image = MessageBoxImage.Information)
-        {
-            var result = MessageBoxResult.Cancel;
-
-            var _yesCommand = new Windows.UI.Popups.UICommand(_languageService.GetString("Yes"), cmd => { result = MessageBoxResult.Yes; }, "yesCommand");
-            var _noCommand = new Windows.UI.Popups.UICommand(_languageService.GetString("No"), cmd => { result = MessageBoxResult.No; }, "noCommand");
-            var _okCommand = new Windows.UI.Popups.UICommand(_languageService.GetString("Ok"), cmd => { result = MessageBoxResult.OK; }, "okCommand");
-            var _cancelCommand = new Windows.UI.Popups.UICommand(_languageService.GetString("Cancel"), cmd => { result = MessageBoxResult.Cancel; }, "cancelCommand");
-
-            var messageDialog = new MessageDialog(message, title)
-            {
-                Options = MessageDialogOptions.None,
-                DefaultCommandIndex = 0,
-                CancelCommandIndex = 0
-            };
-
-            switch (buttons)
-            {
-                case MessageBoxButton.OK:
-                    messageDialog.Commands.Add(_okCommand);
-                    messageDialog.DefaultCommandIndex = 0;
-                    break;
-                case MessageBoxButton.OKCancel:
-                    messageDialog.Commands.Add(_okCommand);
-                    messageDialog.Commands.Add(_cancelCommand);
-
-                    messageDialog.DefaultCommandIndex = 0;
-                    messageDialog.CancelCommandIndex = 1;
-                    break;
-                case MessageBoxButton.YesNoCancel:
-                    messageDialog.Commands.Add(_yesCommand);
-                    messageDialog.Commands.Add(_noCommand);
-                    messageDialog.Commands.Add(_cancelCommand);
-
-                    messageDialog.DefaultCommandIndex = 0;
-                    messageDialog.CancelCommandIndex = 2;
-                    break;
-                case MessageBoxButton.YesNo:
-                    messageDialog.Commands.Add(_yesCommand);
-                    messageDialog.Commands.Add(_noCommand);
-
-                    messageDialog.DefaultCommandIndex = 0;
-                    messageDialog.CancelCommandIndex = 1;
-                    break;
-            }
-
-#if NETFX_CORE || NET5_0
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
-#else
-            await CoreDispatcher.Main.RunAsync(
-                CoreDispatcherPriority.Normal,
-#endif
-                async () =>
-                {
-                    await messageDialog.ShowAsync();
-                });
-
-            return result;
         }
     }
 }

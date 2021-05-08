@@ -1,5 +1,10 @@
 ﻿using System;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml.Data;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {

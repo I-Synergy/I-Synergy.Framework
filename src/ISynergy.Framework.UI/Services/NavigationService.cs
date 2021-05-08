@@ -1,25 +1,32 @@
-﻿using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Core;
-using System.Collections.Generic;
-using System.Linq;
-using Windows.UI.Xaml.Media.Animation;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Data;
-using ISynergy.Framework.UI.Controls;
-using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using System.Threading;
-using ISynergy.Framework.Core.Extensions;
-using System.Reflection;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Core.Locators;
-using Windows.ApplicationModel.Core;
+using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using ISynergy.Framework.UI.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+
+#if (__UWP__ || HAS_UNO)
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media.Animation;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media.Animation;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -50,7 +57,7 @@ namespace ISynergy.Framework.UI.Services
         /// <value>The frame.</value>
         public object Frame
         {
-            get => _frame ??= (Frame)global::Windows.UI.Xaml.Window.Current.Content;
+            get => _frame ??= (Frame)Window.Current.Content;
             set
             {
                 _frame = (Frame)value;
@@ -291,7 +298,7 @@ namespace ISynergy.Framework.UI.Services
                     await viewModel.InitializeAsync();
                 }
 
-                if (TypeActivator.CreateInstance(_pages[viewModelKey]) is View view)
+                if (TypeActivator.CreateInstance(_pages[viewModelKey]) is ISynergy.Framework.UI.Controls.View view)
                 {
                     var datacontextBinding = new Binding
                     {
@@ -375,7 +382,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public async Task CleanBackStackAsync()
         {
-#if NETFX_CORE || NET5_0
+#if __UWP__ || __WINUI__
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal, 
                 () => ((Frame)Frame).BackStack.Clear());

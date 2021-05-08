@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using ISynergy.Framework.Core.Validation;
 
-#if NETFX_CORE
+#if __UWP__ || (__WINUI__)
 using Windows.Storage.Streams;
 #endif
 
@@ -21,7 +21,7 @@ namespace ISynergy.Framework.UI.Extensions
         /// </summary>
         private const string _jsonExtension = ".json";
 
-#if NETFX_CORE
+#if __UWP__ || (__WINUI__)
         /// <summary>
         /// Determines whether [is roaming storage available] [the specified application data].
         /// </summary>
@@ -127,7 +127,7 @@ namespace ISynergy.Framework.UI.Extensions
             return storageFile;
         }
 
-#if NETFX_CORE
+#if __UWP__ || (__WINUI__)
         /// <summary>
         /// read file as an asynchronous operation.
         /// </summary>
@@ -149,7 +149,7 @@ namespace ISynergy.Framework.UI.Extensions
         }
 #endif
 
-#if NETFX_CORE
+#if __UWP__ || (__WINUI__)
         /// <summary>
         /// read bytes as an asynchronous operation.
         /// </summary>

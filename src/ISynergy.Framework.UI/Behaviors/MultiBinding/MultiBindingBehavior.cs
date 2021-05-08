@@ -2,9 +2,16 @@
 using System.Reflection;
 using ISynergy.Framework.UI.Behaviors.Base;
 using Microsoft.Xaml.Interactivity;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Markup;
+#endif
 
 namespace ISynergy.Framework.UI.Behaviors
 {

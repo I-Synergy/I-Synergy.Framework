@@ -95,7 +95,7 @@ namespace Sample.Views
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void RootNavigationViewLoaded(object sender, RoutedEventArgs e)
         {
-#if NETFX_CORE
+#if __UWP__
             // add keyboard accelerators for backwards navigation
             var GoBack = new KeyboardAccelerator
             {
@@ -120,7 +120,7 @@ namespace Sample.Views
         }
 
 
-#if NETFX_CORE
+#if __UWP__
         /// <summary>
         /// Backs the invoked.
         /// </summary>

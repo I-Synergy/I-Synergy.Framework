@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+#endif
 
 namespace ISynergy.Framework.UI.Common
 {

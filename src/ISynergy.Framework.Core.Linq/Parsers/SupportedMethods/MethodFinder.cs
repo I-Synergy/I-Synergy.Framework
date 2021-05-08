@@ -119,7 +119,7 @@ namespace ISynergy.Framework.Core.Linq.Parsers.SupportedMethods
                 if (members.Length != 0)
                 {
                     var methods = members.OfType<PropertyInfo>().
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(__UWP__ || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                         Select(p => (MethodBase)p.GetGetMethod()).
                         Where(m => m != null);
 #else

@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Windows.Foundation.Collections;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Collections
 {

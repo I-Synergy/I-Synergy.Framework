@@ -2,16 +2,33 @@
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Controls;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
+using Microsoft.UI.Xaml.Controls;
+#endif
+
+#if __WINUI__
+using CommunityToolkit.WinUI.UI.Controls;
+#endif
+
+#if (__UWP__ || HAS_UNO)
 using Microsoft.Toolkit.Uwp.UI.Controls;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {
     /// <summary>
-    /// The Blade is used as a child in the BladeView
+    /// Class BladeItem.
+    /// Implements the <see cref="Expander" />
     /// </summary>
+    /// <seealso cref="Expander" />
     [TemplatePart(Name = "CloseButton", Type = typeof(Button))]
     [TemplatePart(Name = "EnlargeButton", Type = typeof(Button))]
     public partial class BladeItem : Expander
@@ -31,16 +48,58 @@ namespace ISynergy.Framework.UI.Controls
         /// <summary>
         /// The loaded
         /// </summary>
-        private bool _loaded = false;
+        private bool _loaded;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BladeItem" /> class.
         /// </summary>
         public BladeItem()
         {
+            _loaded = false;
+
             DefaultStyleKey = typeof(BladeItem);
             SizeChanged += OnSizeChanged;
         }
+
+#if __UWP__ || (__WINUI__)
+        /// <summary>
+        /// On expanded method.
+        /// </summary>
+        /// <param name="args"></param>
+        protected override void OnExpanded(EventArgs args)
+        {
+            base.OnExpanded(args);
+            if (_loaded)
+            {
+                Width = _normalModeWidth;
+                VisualStateManager.GoToState(this, "Expanded", true);
+                var name = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Expanded");
+                if (_enlargeButton != null)
+                {
+                    AutomationProperties.SetName(_enlargeButton, name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// On collapsed method.
+        /// </summary>
+        /// <param name="args"></param>
+        protected override void OnCollapsed(EventArgs args)
+        {
+            base.OnCollapsed(args);
+            if (_loaded)
+            {
+                Width = double.NaN;
+                VisualStateManager.GoToState(this, "Collapsed", true);
+                var name = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Collapsed");
+                if (_enlargeButton != null)
+                {
+                    AutomationProperties.SetName(_enlargeButton, name);
+                }
+            }
+        }
+#endif
 
         /// <summary>
         /// Override default OnApplyTemplate to capture child controls
@@ -71,43 +130,11 @@ namespace ISynergy.Framework.UI.Controls
             _enlargeButton.Click += EnlargeButton_Click;
         }
 
-        /// <inheritdoc/>
-        protected override void OnExpanded(EventArgs args)
-        {
-            base.OnExpanded(args);
-            if (_loaded)
-            {
-                Width = _normalModeWidth;
-                VisualStateManager.GoToState(this, "Expanded", true);
-                var name = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Expanded");
-                if (_enlargeButton != null)
-                {
-                    AutomationProperties.SetName(_enlargeButton, name);
-                }
-            }
-        }
-
-        /// <inheritdoc/>
-        protected override void OnCollapsed(EventArgs args)
-        {
-            base.OnCollapsed(args);
-            if (_loaded)
-            {
-                Width = double.NaN;
-                VisualStateManager.GoToState(this, "Collapsed", true);
-                var name = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Collapsed");
-                if (_enlargeButton != null)
-                {
-                    AutomationProperties.SetName(_enlargeButton, name);
-                }
-            }
-        }
-
         /// <summary>
         /// Handles the <see cref="E:SizeChanged" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="sizeChangedEventArgs">The <see cref="SizeChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="sizeChangedEventArgs">The <see cref="SizeChangedEventArgs" /> instance containing the event data.</param>
         private void OnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
         {
             if (IsExpanded)
@@ -120,7 +147,7 @@ namespace ISynergy.Framework.UI.Controls
         /// Handles the Click event of the CloseButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             IsOpen = false;
@@ -130,7 +157,7 @@ namespace ISynergy.Framework.UI.Controls
         /// Handles the Click event of the EnlargeButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void EnlargeButton_Click(object sender, RoutedEventArgs e)
         {
             IsExpanded = !IsExpanded;

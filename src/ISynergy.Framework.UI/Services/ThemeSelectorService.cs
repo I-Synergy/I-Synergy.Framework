@@ -1,12 +1,18 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Enumerations;
 using System;
-using Windows.Storage;
-using Windows.UI.Xaml;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
-using Windows.UI;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
+
+#if (__UWP__ || HAS_UNO)
+using Windows.UI;
+using Windows.UI.Xaml;
+#elif (__WINUI__)
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -149,14 +155,14 @@ namespace ISynergy.Framework.UI.Services
                 frameworkElement.RequestedTheme = (ElementTheme)Theme;
             }
 
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if __UWP__ || (__WINUI__)
             SetupTitlebar();
 #endif
 
             OnThemeChanged(null, (ElementTheme)Theme);
         }
 
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if __UWP__ || (__WINUI__)
         /// <summary>
         /// Setups the titlebar.
         /// </summary>

@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+
+#if (__UWP__ || HAS_UNO)
 using Windows.UI.Xaml.Controls;
+#elif (__WINUI__)
+using Microsoft.UI.Xaml.Controls;
+#endif
 
 namespace ISynergy.Framework.UI.Common
 {
@@ -14,10 +19,8 @@ namespace ISynergy.Framework.UI.Common
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="ok">The ok.</param>
-        public static async Task ShowAsync(Result result, string ok = "Ok")
-        {
-            await ShowAsync(result.Message, result.Description, ok);
-        }
+        public static Task ShowAsync(Result result, string ok = "Ok") =>
+            ShowAsync(result.Message, result.Description, ok);
 
         /// <summary>
         /// show as an asynchronous operation.

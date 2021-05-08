@@ -1,6 +1,12 @@
-﻿using Windows.UI;
+﻿#if (__UWP__ || HAS_UNO)
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+#elif (__WINUI__)
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {
