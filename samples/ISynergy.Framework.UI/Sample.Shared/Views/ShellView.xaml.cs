@@ -5,7 +5,6 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.UI.Xaml.Navigation;
 using ISynergy.Framework.Core.Events;
 

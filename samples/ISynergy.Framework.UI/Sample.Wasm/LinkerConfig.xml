@@ -1,6 +1,5 @@
 ﻿<linker>
     <assembly fullname="Sample" />
-	<assembly fullname="Sample.Core" />
 	<assembly fullname="ISynergy.Framework.UI" />
 	<assembly fullname="ISynergy.Framework.Mvvm" />
 	<assembly fullname="ISynergy.Framework.Core" />
