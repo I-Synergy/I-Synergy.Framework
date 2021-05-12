@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 #endif

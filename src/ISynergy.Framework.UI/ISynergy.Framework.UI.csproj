@@ -2,10 +2,7 @@
 	<Import Project="..\..\project.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.17134;net5.0-windows10.0.18362.0;net5.0;netstandard2.0;MonoAndroid11.0</TargetFrameworks>
-		<IsWinUI>false</IsWinUI>
-		<IsUAP>false</IsUAP>
-		<IsAndroid>false</IsAndroid>
+		<TargetFrameworks>uap10.0.18362;net5.0-windows10.0.18362.0;netstandard2.0;MonoAndroid11.0</TargetFrameworks>
 		
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -23,70 +20,50 @@
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(TargetFramework.StartsWith('net5.0-windows'))">
-		<IsWinUI>true</IsWinUI>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
-		<IsUAP>true</IsUAP>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
-		<IsAndroid>true</IsAndroid>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="$(IsWinUI)">
-		<DefineConstants>__WINUI__</DefineConstants>
-		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="$(IsUAP)">
-		<DefineConstants>__UWP__</DefineConstants>
-		<TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-		<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
-		<TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="$(IsAndroid)">
-		<DefineConstants>__ANDROID__</DefineConstants>
-	</PropertyGroup>
-
 	<ItemGroup>
-		<PackageReference Include="Uno.Core" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
 	</ItemGroup>
 
-	<ItemGroup Condition="$(IsWinUI)">
-		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.1" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.3" />
-		<PackageReference Include="Microsoft.ProjectReunion" Version="0.5.6" />
-		<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.5.6" />
-		<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.5.6" />
-
-		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.18362.16" />
-		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.18362.16" />
-	</ItemGroup>
-
-	<ItemGroup Condition="$(IsUAP)">
-		<PackageReference Include="Microsoft.UI.Xaml" Version="2.5.0" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
-		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.1" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net5.0'">
-		<PackageReference Include="Uno.UI" Version="3.7.3" />
-		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.0.0" />
-		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.3-uno.95" />
-	</ItemGroup>
-
-	<ItemGroup Condition="$(IsAndroid)">
-		<PackageReference Include="Uno.UI" Version="3.7.3" />
-		<PackageReference Include="Uno.UniversalImageLoader" Version="1.9.33" />
-		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.0.0" />
-		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.3-uno.95" />
-	</ItemGroup>
+	<Choose>
+		<When Condition="$(TargetFramework.StartsWith('net5.0-windows'))">
+			<PropertyGroup>
+				<DefineConstants>NET5_0;WINDOWS</DefineConstants>
+				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+				<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.2" />
+				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.3" />
+				<PackageReference Include="Microsoft.ProjectReunion" Version="0.5.7" />
+				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.5.7" />
+				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.5.7" />
+				
+				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.18362.16" />
+				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.18362.16" />
+			</ItemGroup>
+		</When>
+		<When Condition="$(TargetFramework.StartsWith('uap10.0'))">
+			<PropertyGroup>
+				<DefineConstants>NETFX_CORE</DefineConstants>
+				<TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+				<TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
+				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.UI.Xaml" Version="2.5.0" />
+				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
+				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.0.2" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="Uno.UI" Version="3.8.0-dev.165" />
+				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.0-build.2.g0e224f133a" />
+				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.3-uno.95" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
 
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
@@ -107,5 +84,10 @@
 	</ItemGroup>
 	<ItemGroup>
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	  </Compile>
 	</ItemGroup>
 </Project>

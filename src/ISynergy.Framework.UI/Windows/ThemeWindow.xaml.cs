@@ -4,9 +4,9 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.ViewModels;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 #endif
 
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.UI
             SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
         }
 
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         private void ThemeWindow_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             SetColorButton();

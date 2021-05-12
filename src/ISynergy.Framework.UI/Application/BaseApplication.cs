@@ -34,14 +34,14 @@ using Windows.ApplicationModel.Background;
 using System.Text.RegularExpressions;
 using ISynergy.Framework.Mvvm.Extensions;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
 using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 using LaunchActivatedEventArgs = Windows.ApplicationModel.Activation.LaunchActivatedEventArgs;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -74,7 +74,6 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <value>The theme selector.</value>
         public IThemeSelectorService ThemeSelector { get; private set; }
-
         /// <summary>
         /// Gets the language service.
         /// </summary>
@@ -102,8 +101,7 @@ namespace ISynergy.Framework.UI
         {
             _services = new ServiceCollection();
             _navigationService = new NavigationService();
-
-            LanguageService = new LanguageService(new ResourceManager(typeof(Resources)));
+            LanguageService = new LanguageService();
 
             ConfigureServices(_services);
             
@@ -120,7 +118,7 @@ namespace ISynergy.Framework.UI
 
             SetContext();
 
-#if __UWP__|| (__WINUI__)
+#if NETFX_CORE|| (NET5_0 && WINDOWS)
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 #endif
 
@@ -136,31 +134,25 @@ namespace ISynergy.Framework.UI
                 RequestedTheme = ApplicationTheme.Light;
             }
 
-//#if __UWP__
-//            switch (AnalyticsInfo.VersionInfo.DeviceFamily)
-//            {
-//                case "Windows.Desktop":
-//                    break;
-//                case "Windows.IoT":
-//                    break;
-//                case "Windows.Xbox":
-//                    RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-//                    var result = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
-//                    break;
-//            }
+#if NETFX_CORE
+            switch (AnalyticsInfo.VersionInfo.DeviceFamily)
+            {
+                case "Windows.Desktop":
+                    break;
+                case "Windows.IoT":
+                    break;
+                case "Windows.Xbox":
+                    RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+                    var result = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
+                    break;
+            }
 
-//            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-//#endif
+            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+#endif
 
-//#if HAS_UNO || __UWP__
-//            Suspending += OnSuspending;
-//#endif
-
-            //Gets or sets a value that indicates whether to engage the text performance visualization feature of Microsoft Visual Studio when the app runs.
-            //this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
-
-            //Gets or sets a value that indicates whether to display frame-rate and per-frame CPU usage info. These display as an overlay of counters in the window chrome while the app runs.
-            //this.EnableFrameRateCounter = true;
+#if HAS_UNO || NETFX_CORE
+            Suspending += OnSuspending;
+#endif
         }
 
         /// <summary>
@@ -174,7 +166,7 @@ namespace ISynergy.Framework.UI
             e.SetObserved();
         }
 
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         /// <summary>
         /// Handles the UnhandledException event of the Current control.
         /// </summary>
@@ -218,7 +210,7 @@ namespace ISynergy.Framework.UI
         /// <param name="args">Event data for the event.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
                 case "Windows.Desktop":
@@ -244,9 +236,9 @@ namespace ISynergy.Framework.UI
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
                 if (args.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
 #endif
                 {
@@ -278,9 +270,9 @@ namespace ISynergy.Framework.UI
                 Window.Current.Content = rootFrame;
             }
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
             if (!args.PrelaunchActivated)
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
             if (!args.UWPLaunchActivatedEventArgs.PrelaunchActivated)
 #endif
             {
@@ -393,7 +385,7 @@ namespace ISynergy.Framework.UI
             var deferral = e.SuspendingOperation.GetDeferral();
 
             //TODO: Save application state and stop any background activity
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
                 task.Value?.Unregister(true);
@@ -591,7 +583,7 @@ namespace ISynergy.Framework.UI
             Context = _serviceProvider.GetRequiredService<IContext>();
             Context.ViewModels = ViewModelTypes;
 
-#if __UWP__ || (__WINUI__) || __WASM__
+#if NETFX_CORE || (NET5_0 && WINDOWS) || __WASM__
             //Only in Windows i can set the culture.
             var culture = CultureInfo.CurrentCulture;
 

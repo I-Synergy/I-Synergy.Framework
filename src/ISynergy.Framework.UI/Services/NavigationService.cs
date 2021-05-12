@@ -16,12 +16,12 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Animation;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -382,7 +382,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public async Task CleanBackStackAsync()
         {
-#if __UWP__ || __WINUI__
+#if NETFX_CORE || NET5_0 && WINDOWS
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal, 
                 () => ((Frame)Frame).BackStack.Clear());

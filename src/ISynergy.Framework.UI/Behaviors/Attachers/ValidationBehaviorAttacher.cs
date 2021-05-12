@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xaml.Interactions.Core;
 using Microsoft.Xaml.Interactivity;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
-#if __UWP__
+#if NETFX_CORE
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
@@ -18,7 +18,7 @@ namespace ISynergy.Framework.UI.Services
     /// </summary>
     public class ClipboardService : IClipboardService
     {
-#if __UWP__
+#if NETFX_CORE
         /// <summary>
         /// Gets the bitmap source from clipboard asynchronous.
         /// </summary>

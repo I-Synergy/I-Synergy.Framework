@@ -45,6 +45,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             });
         }
 
+        /// <summary>
+        /// ICollectionTToDataTable Test
+        /// </summary>
         [Fact]
         public void ICollectionTToDataTableTest()
         {
@@ -76,6 +79,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             }
         }
 
+        /// <summary>
+        /// ICollectionToDataTable Test
+        /// </summary>
         [Fact]
         public void ICollectionToDataTableTest()
         {

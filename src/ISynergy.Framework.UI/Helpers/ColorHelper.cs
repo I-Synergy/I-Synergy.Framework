@@ -2,10 +2,10 @@
 using System.Globalization;
 using ISynergy.Framework.Core.Extensions;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI;
 using Windows.UI.Xaml.Media;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 #endif

@@ -4,22 +4,16 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
-#elif (__WINUI__)
+using Microsoft.Toolkit.Uwp.UI.Controls;
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
-#endif
-
-#if __WINUI__
 using CommunityToolkit.WinUI.UI.Controls;
-#endif
-
-#if (__UWP__ || HAS_UNO)
-using Microsoft.Toolkit.Uwp.UI.Controls;
 #endif
 
 namespace ISynergy.Framework.UI.Controls
@@ -48,20 +42,18 @@ namespace ISynergy.Framework.UI.Controls
         /// <summary>
         /// The loaded
         /// </summary>
-        private bool _loaded;
+        private bool _loaded = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BladeItem" /> class.
         /// </summary>
         public BladeItem()
         {
-            _loaded = false;
-
             DefaultStyleKey = typeof(BladeItem);
             SizeChanged += OnSizeChanged;
         }
 
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         /// <summary>
         /// On expanded method.
         /// </summary>

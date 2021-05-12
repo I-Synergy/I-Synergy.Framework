@@ -6,10 +6,10 @@ using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI;
 using Windows.UI.Xaml;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 #endif
@@ -155,14 +155,14 @@ namespace ISynergy.Framework.UI.Services
                 frameworkElement.RequestedTheme = (ElementTheme)Theme;
             }
 
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
             SetupTitlebar();
 #endif
 
             OnThemeChanged(null, (ElementTheme)Theme);
         }
 
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         /// <summary>
         /// Setups the titlebar.
         /// </summary>

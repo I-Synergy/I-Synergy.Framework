@@ -60,14 +60,6 @@ namespace Sample
             InitializeComponent();
         }
 
-#if __UWP__
-        protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
-            new List<ResourceDictionary>()
-            {
-                new Microsoft.UI.Xaml.Controls.XamlControlsResources()
-            };
-#endif
-
         /// <summary>
         /// Configures the logger.
         /// </summary>
@@ -122,7 +114,9 @@ namespace Sample
                 builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug);
             });
 
+#if HAS_UNO
             global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
+#endif
         }
 
         /// <summary>

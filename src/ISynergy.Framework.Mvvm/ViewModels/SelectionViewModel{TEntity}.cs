@@ -106,12 +106,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             {
                 if (SelectionMode == SelectionModes.Single && SelectedItem.Count != 1)
                 {
-                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("Warning_Select_Item"));
+                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
                 }
 
                 if (SelectionMode == SelectionModes.Multiple && SelectedItem.Count < 1)
                 {
-                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("Warning_Select_Item"));
+                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
                 }
             });
 

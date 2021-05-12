@@ -49,10 +49,9 @@ namespace ISynergy.Framework.Core.Extensions.Base
                         (q.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(q.PropertyType)))
                     .ToArray();
 
-                for (var i = 0; i < typeProperties.Length; i++)
+                foreach (var typeProperty in typeProperties)
                 {
-                    dataTable.Columns.Add(typeProperties[i].Name, Nullable.GetUnderlyingType(typeProperties[i].PropertyType) ?? typeProperties[i].PropertyType);
-                    dataTable.Columns[i].AllowDBNull = true;
+                    dataTable.Columns.Add(typeProperty.Name, Nullable.GetUnderlyingType(typeProperty.PropertyType) ?? typeProperty.PropertyType).AllowDBNull = true;
                 }
 
                 foreach (var item in collection)
@@ -60,17 +59,17 @@ namespace ISynergy.Framework.Core.Extensions.Base
                     var dataRow = dataTable.NewRow();
                     dataRow.BeginEdit();
 
-                    for (var i = 0; i < typeProperties.Length; i++)
+                    foreach (var typeProperty in typeProperties)
                     {
-                        var temp = typeProperties[i].GetValue(item) ?? DBNull.Value;
+                        var temp = typeProperty.GetValue(item) ?? DBNull.Value;
 
                         if (temp is null || (temp.GetType().Name == "Char" && ((char)temp).Equals('\0')))
                         {
-                            dataRow[typeProperties[i].Name] = DBNull.Value;
+                            dataRow[typeProperty.Name] = DBNull.Value;
                         }
                         else
                         {
-                            dataRow[typeProperties[i].Name] = temp;
+                            dataRow[typeProperty.Name] = temp;
                         }
                     }
 

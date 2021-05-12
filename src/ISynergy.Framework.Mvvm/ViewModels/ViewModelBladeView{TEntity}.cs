@@ -216,11 +216,11 @@ namespace ISynergy.Framework.Mvvm
             }
             else
             {
-                item = BaseCommonServices.LanguageService.GetString("This_Item");
+                item = BaseCommonServices.LanguageService.GetString("ThisItem");
             }
 
             if (await BaseCommonServices.DialogService.ShowAsync(
-                                string.Format(BaseCommonServices.LanguageService.GetString("Warning_Item_Remove"), item),
+                                string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
                                 BaseCommonServices.LanguageService.GetString("Delete"),
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {

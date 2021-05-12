@@ -136,7 +136,7 @@ namespace ISynergy.Framework.UI.Services
                 }
                 else
                 {
-                    await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("Warning_Document_SizeTooBig"), $"{maxfilesize / (1024 * 1024)}MB"));
+                    await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("WarningDocumentSizeTooBig"), $"{maxfilesize / (1024 * 1024)}MB"));
                 }
             }
 

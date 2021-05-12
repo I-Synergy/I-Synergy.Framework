@@ -1,4 +1,4 @@
-﻿#if __UWP__ || (__WINUI__)
+﻿#if NETFX_CORE || (NET5_0 && WINDOWS)
 
 using System;
 using System.IO;

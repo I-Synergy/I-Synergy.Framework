@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 #endif
 
@@ -58,7 +58,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="DataContextChangedEventArgs"/> instance containing the event data.</param>
-#if __UWP__
+#if NETFX_CORE
         private void Control_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args) => Setup();
 #else
         private void Control_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args) => Setup();

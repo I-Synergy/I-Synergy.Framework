@@ -56,8 +56,8 @@ namespace ISynergy.Framework.Core.IO.Abtractions
         /// Determines if the file contents are of a specified type.
         /// </summary>
         /// <param name="fileContent">The file contents to examine.</param>
-        /// <param name="fileType">The file type to validate.</param>
+        /// <param name="extensionAliasOrMimeType">The mime- of file type to validate.</param>
         /// <returns><c>true</c> if the specified file content is type; otherwise, <c>false</c>.</returns>
-        bool IsType(byte[] fileContent, string fileType);
+        bool IsType(byte[] fileContent, string extensionAliasOrMimeType);
     }
 }

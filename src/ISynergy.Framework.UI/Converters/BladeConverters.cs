@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using ISynergy.Framework.Mvvm.Abstractions;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Data;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml.Data;
 #endif
 

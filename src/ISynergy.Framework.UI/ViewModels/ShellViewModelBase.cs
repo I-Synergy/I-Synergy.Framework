@@ -18,11 +18,11 @@ using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.Mvvm.Events;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Controls;
@@ -431,9 +431,9 @@ namespace ISynergy.Framework.UI.ViewModels
                 vm.Submitted -= LanguageVM_Submitted;
 
             if (await BaseCommonServices.DialogService.ShowAsync(
-                        BaseCommonServices.LanguageService.GetString("Warning_Language_Change") +
+                        BaseCommonServices.LanguageService.GetString("WarningLanguageChange") +
                         Environment.NewLine +
-                        BaseCommonServices.LanguageService.GetString("Do_you_want_to_do_it_now"),
+                        BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
                         BaseCommonServices.LanguageService.GetString("TitleQuestion"),
                         MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -463,9 +463,9 @@ namespace ISynergy.Framework.UI.ViewModels
                 vm.Submitted -= ThemeVM_Submitted;
 
             if (await BaseCommonServices.DialogService.ShowAsync(
-                        BaseCommonServices.LanguageService.GetString("Warning_Color_Change") +
+                        BaseCommonServices.LanguageService.GetString("WarningColorChange") +
                         Environment.NewLine +
-                        BaseCommonServices.LanguageService.GetString("Do_you_want_to_do_it_now"),
+                        BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
                         BaseCommonServices.LanguageService.GetString("TitleQuestion"),
                         MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {

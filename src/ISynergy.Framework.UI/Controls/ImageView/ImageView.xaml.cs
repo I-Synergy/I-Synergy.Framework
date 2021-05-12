@@ -1,9 +1,9 @@
-﻿#if (__UWP__ || HAS_UNO)
+﻿#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-#elif (__WINUI__)
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -75,7 +75,7 @@ namespace ISynergy.Framework.UI.Controls
             InitializeComponent();
         }
 
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         /// <summary>
         /// Loads the image.
         /// </summary>
@@ -107,7 +107,7 @@ namespace ISynergy.Framework.UI.Controls
             {
                 var image = (BitmapImage)newSource;
 
-#if __UWP__ || (__WINUI__)
+#if NETFX_CORE || (NET5_0 && WINDOWS)
                 // If the image is not a local resource or it was not cached
                 if (image.UriSource.Scheme != "ms-appx" && image.UriSource.Scheme != "ms-resource" && (image.PixelHeight * image.PixelWidth == 0))
                 {

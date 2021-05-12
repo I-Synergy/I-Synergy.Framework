@@ -236,7 +236,7 @@ namespace ISynergy.Framework.Mvvm
         /// </summary>
         /// <returns></returns>
         protected Task ThrowFeatureNotEnabledWarning() => BaseCommonServices.DialogService.ShowInformationAsync(
-            BaseCommonServices.LanguageService.GetString("EX_FUTURE_MODULE"),
+            BaseCommonServices.LanguageService.GetString("WarningFutureModule"),
             "Features");
     }
 }

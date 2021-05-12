@@ -7,26 +7,16 @@ using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using ISynergy.Framework.UI.Extensions;
 
-#if (__UWP__ || HAS_UNO)
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-#elif (__WINUI__)
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.UI;
+#elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-#endif
-
-#if __WINUI__
 using CommunityToolkit.WinUI.UI;
 using CommunityToolkit.WinUI.UI.Controls;
-#endif
-
-#if __UWP__
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
-#endif
-
-#if HAS_UNO
-using Microsoft.Toolkit.Uwp.UI;
 #endif
 
 namespace ISynergy.Framework.UI.Controls
