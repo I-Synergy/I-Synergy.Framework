@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:base_controls="using:Sample.Views.Controls"
+        xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
         xmlns:m="using:ISynergy.Framework.UI.Markup"
         mc:Ignorable="d">
 
@@ -30,6 +31,11 @@
               RelativePanel.AlignRightWithPanel="True"
               Opacity="0.75"/>
 
-        <c:BladeView x:Name="BladeDetails" AutoCollapseCountThreshold="3" ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" RelativePanel.AlignBottomWithPanel="True" RelativePanel.Below="MenuLayout" RelativePanel.AlignRightWithPanel="True" />
+        <toolkit:BladeView x:Name="BladeDetails" 
+                           AutoCollapseCountThreshold="3" 
+                           ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                           RelativePanel.AlignBottomWithPanel="True" 
+                           RelativePanel.Below="MenuLayout" 
+                           RelativePanel.AlignRightWithPanel="True" />
     </RelativePanel>
 </c:View>

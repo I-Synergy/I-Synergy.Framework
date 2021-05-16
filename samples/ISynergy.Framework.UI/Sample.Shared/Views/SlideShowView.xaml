@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
-    xmlns:Controls="using:ISynergy.Framework.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -15,6 +14,14 @@
     </c:View.Resources>
 
     <Grid>
-        <Controls:ImageView x:Name="image" Source="{Binding SelectedItem.ImageUri, Mode=OneWay, Converter={StaticResource UriToImageSourceConverter}}" Stretch="UniformToFill" />
+        <FlipView x:Name="SlideShow"
+                  ItemsSource="{Binding Items, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <FlipView.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding ImageUri, Converter={StaticResource UriToImageSourceConverter}}" Stretch="UniformToFill"/>
+                </DataTemplate>
+            </FlipView.ItemTemplate>
+        </FlipView>
     </Grid>
 </c:View>

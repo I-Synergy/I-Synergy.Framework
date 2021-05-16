@@ -5,6 +5,7 @@
     xmlns:local="using:Sample.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -59,7 +60,7 @@
               RelativePanel.AlignRightWithPanel="True"
               Opacity="0.75"/>
 
-        <c:BladeView x:Name="BladeDetails"
+        <toolkit:BladeView x:Name="BladeDetails"
                      AutoCollapseCountThreshold="3" 
                      ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                      RelativePanel.AlignBottomWithPanel="True" 
