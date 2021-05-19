@@ -134,15 +134,6 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete.
-        /// </summary>
-        public static string Delete {
-            get {
-                return ResourceManager.GetString("Delete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string Edit {
@@ -287,15 +278,6 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Note.
-        /// </summary>
-        public static string Note {
-            get {
-                return ResourceManager.GetString("Note", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
         public static string Ok {
@@ -346,15 +328,6 @@ namespace ISynergy.Framework.UI.Properties {
         public static string Search {
             get {
                 return ResourceManager.GetString("Search", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Selection.
-        /// </summary>
-        public static string Selection {
-            get {
-                return ResourceManager.GetString("Selection", resourceCulture);
             }
         }
         
@@ -504,38 +477,11 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This feature is not available at this moment in this version..
-        /// </summary>
-        public static string WarningFutureModule {
-            get {
-                return ResourceManager.GetString("WarningFutureModule", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to delete {0}?.
-        /// </summary>
-        public static string WarningItemRemove {
-            get {
-                return ResourceManager.GetString("WarningItemRemove", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You need to restart the application to apply the language changes..
         /// </summary>
         public static string WarningLanguageChange {
             get {
                 return ResourceManager.GetString("WarningLanguageChange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You have to select an item..
-        /// </summary>
-        public static string WarningSelectItem {
-            get {
-                return ResourceManager.GetString("WarningSelectItem", resourceCulture);
             }
         }
         

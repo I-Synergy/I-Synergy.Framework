@@ -35,15 +35,6 @@ namespace Sample.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the SelectedIndex property value.
-        /// </summary>
-        public int SelectedIndex
-        {
-            get { return GetValue<int>(); }
-            set { SetValue(value); }
-        }
-
-        /// <summary>
         /// Gets or sets the Timer property value.
         /// </summary>
         /// <value>The slideshow timer.</value>
@@ -80,10 +71,10 @@ namespace Sample.ViewModels
             // Get initial images from source.
             Items = new ObservableCollection<MediaItem>()
                 {
-                    new MediaItem { ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
-                    new MediaItem { ImageUri = "http://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
-                    new MediaItem { ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
-                    new MediaItem { ImageUri = "http://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
+                    new MediaItem { Index = 0, ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
+                    new MediaItem { Index = 1, ImageUri = "http://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
+                    new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
+                    new MediaItem { Index = 3, ImageUri = "http://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
                 };
 
             // Set timer if images count is at least 1.
@@ -102,10 +93,10 @@ namespace Sample.ViewModels
         {
             Items = new ObservableCollection<MediaItem>()
             {
-                new MediaItem { ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
-                new MediaItem { ImageUri = "http://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
-                new MediaItem { ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
-                new MediaItem { ImageUri = "http://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
+                new MediaItem { Index = 0, ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
+                new MediaItem { Index = 1, ImageUri = "http://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
+                new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
+                new MediaItem { Index = 3, ImageUri = "http://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
             };
 
             return Task.CompletedTask;
@@ -124,13 +115,13 @@ namespace Sample.ViewModels
                 CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    if (SelectedIndex == Items.Count - 1)
+                    if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
                     {
-                        SelectedIndex = 0;
+                        SelectedItem = Items.First();
                     }
-                    else if (SelectedIndex < Items.Count - 1)
+                    else if (SelectedItem.Index < Items.Count - 1)
                     {
-                        SelectedIndex += 1;
+                        SelectedItem = Items.Where(q => q.Index == SelectedItem.Index + 1).Single();
                     }
                 });
 

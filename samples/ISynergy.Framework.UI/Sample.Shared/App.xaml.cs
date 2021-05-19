@@ -33,6 +33,11 @@ using Windows.ApplicationModel;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Extensions;
 using System.Linq;
+using Windows.ApplicationModel.Activation;
+
+#if HAS_UNO
+using Uno.Material;
+#endif
 
 namespace Sample
 {
@@ -59,6 +64,24 @@ namespace Sample
         {
             InitializeComponent();
         }
+
+#if HAS_UNO
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+
+            // Set a default palette to make sure all colors used by MaterialResources exist
+            Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
+
+            // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
+            Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
+
+            Application.Current.Resources["MaterialPrimaryColor"] = ThemeSelector.AccentColor;
+            Application.Current.Resources["MaterialPrimaryVariantLightColor"] = ThemeSelector.LightAccentColor;
+            Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = ThemeSelector.DarkAccentColor;
+
+            base.OnLaunched(args);
+        }
+#endif
 
         /// <summary>
         /// Configures the logger.

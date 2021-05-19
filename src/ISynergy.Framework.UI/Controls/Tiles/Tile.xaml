@@ -6,8 +6,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Converters="using:ISynergy.Framework.UI.Converters"
         mc:Ignorable="d"
-        d:DesignHeight="120"
-        d:DesignWidth="120">
+        IsDoubleTapEnabled="False"
+        Foreground="White"
+        Background="{StaticResource SystemAccentBrush}"
+        Margin="5"
+        Height="100"
+        Width="100"
+        FocusVisualPrimaryBrush="Transparent"
+        FocusVisualSecondaryBrush="Transparent">
     
     <Button.Resources>
         <Converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />

@@ -58,7 +58,7 @@
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.UI" Version="3.8.0-dev.165" />
+				<PackageReference Include="Uno.UI" Version="3.8.0-dev.195" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.0-build.2.g0e224f133a" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.3-uno.95" />
 			</ItemGroup>
@@ -86,8 +86,19 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="Controls\ImageView\ImageView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Controls\ImageView\ImageView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Compile Update="Properties\Resources.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Controls\ImageView\ImageView.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
 	</ItemGroup>
 </Project>

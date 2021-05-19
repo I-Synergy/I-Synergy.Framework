@@ -134,6 +134,8 @@ namespace ISynergy.Framework.UI
                 RequestedTheme = ApplicationTheme.Light;
             }
 
+            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Color.ToEnum(ThemeColors.Default));
+
 #if NETFX_CORE
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
@@ -223,8 +225,7 @@ namespace ISynergy.Framework.UI
             }
 #endif
 
-            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Color.ToEnum(ThemeColors.Default));
-
+            Application.Current.Resources["SystemAccentColor"] = ThemeSelector.AccentColor;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -246,14 +247,14 @@ namespace ISynergy.Framework.UI
                 }
 
                 // Add custom resourcedictionaries from code.
-                var dictionary = this.Resources?.MergedDictionaries;
+                var dictionary = Application.Current.Resources?.MergedDictionaries;
                 
                 if(dictionary is not null)
                 {
                     foreach (var item in GetAdditionalResourceDictionaries())
                     {
                         if(!dictionary.Any(t => t.Source == item.Source))
-                            this.Resources.MergedDictionaries.Add(item);
+                            Application.Current.Resources.MergedDictionaries.Add(item);
                     }
                 }
 

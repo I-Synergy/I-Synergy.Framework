@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Interface IApplicationSettingsService
+    /// https://stackoverflow.com/questions/41653688/asp-net-core-appsettings-json-update-in-code
     /// </summary>
     public interface IApplicationSettingsService
     {
