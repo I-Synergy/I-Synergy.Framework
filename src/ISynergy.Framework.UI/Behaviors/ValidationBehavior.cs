@@ -1,5 +1,7 @@
-﻿using ISynergy.Framework.Core.Data;
-using Microsoft.Xaml.Interactivity;
+﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Actions;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel;
@@ -23,7 +25,7 @@ namespace ISynergy.Framework.UI.Behaviors
     public partial class ValidationBehavior : DependencyObject, IBehavior
     {
         /// <summary>
-        /// Gets the <see cref="T:Windows.UI.Xaml.DependencyObject" /> to which the <seealso cref="T:Microsoft.Xaml.Interactivity.IBehavior" /> is attached.
+        /// Gets the <see cref="T:Windows.UI.Xaml.DependencyObject" /> to which the <seealso cref="T:IBehavior" /> is attached.
         /// </summary>
         /// <value>The associated object.</value>
         public DependencyObject AssociatedObject { get; private set; }
@@ -36,7 +38,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <summary>
         /// Attaches to the specified object.
         /// </summary>
-        /// <param name="associatedObject">The <see cref="T:Windows.UI.Xaml.DependencyObject" /> to which the <seealso cref="T:Microsoft.Xaml.Interactivity.IBehavior" /> will be attached.</param>
+        /// <param name="associatedObject">The <see cref="T:Windows.UI.Xaml.DependencyObject" /> to which the <seealso cref="T:IBehavior" /> will be attached.</param>
         public void Attach(DependencyObject associatedObject)
         {
             AssociatedObject = associatedObject;

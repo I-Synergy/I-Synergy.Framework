@@ -1,6 +1,4 @@
-﻿using Microsoft.Xaml.Interactivity;
-
-#if (NETFX_CORE || HAS_UNO)
+﻿#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 #elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
@@ -38,9 +36,9 @@ namespace ISynergy.Framework.UI.Behaviors.Base
         }
 
         /// <summary>
-        /// Called after the behavior is attached to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" />.
+        /// Called after the behavior is attached to the <see cref="P:Behavior.AssociatedObject" />.
         /// </summary>
-        /// <remarks>Override this to hook up functionality to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" /></remarks>
+        /// <remarks>Override this to hook up functionality to the <see cref="P:Behavior.AssociatedObject" /></remarks>
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -56,9 +54,9 @@ namespace ISynergy.Framework.UI.Behaviors.Base
         }
 
         /// <summary>
-        /// Called when the behavior is being detached from its <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" />.
+        /// Called when the behavior is being detached from its <see cref="P:Behavior.AssociatedObject" />.
         /// </summary>
-        /// <remarks>Override this to unhook functionality from the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" /></remarks>
+        /// <remarks>Override this to unhook functionality from the <see cref="P:Behavior.AssociatedObject" /></remarks>
         protected override void OnDetaching()
         {
             base.OnDetaching();

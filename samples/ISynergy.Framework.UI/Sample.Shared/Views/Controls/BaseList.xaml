@@ -2,11 +2,10 @@
     x:Class="Sample.Views.Controls.BaseList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
+    xmlns:Controls="using:ISynergy.Framework.UI.Controls"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:model="using:Sample.Models"
     mc:Ignorable="d"
@@ -26,15 +25,10 @@
                             RelativePanel.AlignRightWithPanel="True" 
                             RelativePanel.AlignBottomWithPanel="True" 
                             Header="{m:LanguageResource Key=SearchValue}" 
-                            Text="{Binding Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                             QueryIcon="Find" 
-                            IsTabStop="True">
-                <i:Interaction.Behaviors>
-                    <ic:EventTriggerBehavior EventName="QuerySubmitted">
-                        <ic:InvokeCommandAction Command="{Binding Search_Command}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
-                    </ic:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
-            </AutoSuggestBox>
+                            IsTabStop="True"
+                            Controls:AutoSuggestBoxAttached.QuerySubmittedCommand="{Binding Search_Command}"
+                            Controls:AutoSuggestBoxAttached.QuerySubmittedCommandParameter="{Binding Text, ElementName=SearchQuery}"/>
         </RelativePanel>
 
         <ListView RelativePanel.AlignLeftWithPanel="True" 
@@ -46,12 +40,9 @@
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectionMode="Single"
                   Margin="1,4" 
-                  Style="{StaticResource ListViewMetroUI}">
-            <i:Interaction.Behaviors>
-                <ic:EventTriggerBehavior EventName="DoubleTapped">
-                    <ic:InvokeCommandAction Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}" />
-                </ic:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
+                  Style="{StaticResource ListViewMetroUI}"
+                  Controls:ListViewAttached.DoubleTappedCommand="{Binding Submit_Command}"
+                  Controls:ListViewAttached.DoubleTappedCommandParameter="{Binding SelectedItem}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:TestItem">
                     <Grid Margin="4">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Extensions;
@@ -57,24 +58,10 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the Query property value.
-        /// </summary>
-        /// <value>The query.</value>
-        public string Query
-        {
-            get { return GetValue<string>(); }
-            set
-            {
-                SetValue(value);
-                QueryItems();
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public Command Search_Command { get; set; }
+        public Command<string> Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionViewModel{TEntity}"/> class.
@@ -115,20 +102,22 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Query = string.Empty;
+            Search_Command = new Command<string>(async (e) => await QueryItemsAsync(e));
             RawItems = items;
             Items = new ObservableCollection<TEntity>(items);
             SelectedItem = new List<object>(selectedItems);
+            IsInitialized = true;
         }
 
         /// <summary>
         /// Queries the items.
         /// </summary>
-        private void QueryItems()
+        /// <param name="query">Query parameter.</param>
+        protected virtual Task QueryItemsAsync(string query)
         {
             if (IsInitialized && RawItems != null)
             {
-                if (string.IsNullOrEmpty(Query) || Query.Trim() == "*")
+                if (string.IsNullOrEmpty(query) || query.Trim() == "*")
                 {
                     Items = new ObservableCollection<TEntity>(RawItems);
                 }
@@ -140,7 +129,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                     {
                         foreach (var prop in item.GetType().GetProperties().Select(s => s.GetValue(item)).ToList())
                         {
-                            if (prop is string value && !string.IsNullOrEmpty(value) && value.IndexOf(Query, StringComparison.OrdinalIgnoreCase) != -1)
+                            if (prop is string value && !string.IsNullOrEmpty(value) && value.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
                             {
                                 filteredList.Add(item);
                                 break;
@@ -151,6 +140,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                     Items = new ObservableCollection<TEntity>(filteredList);
                 }
             }
+
+            return Task.CompletedTask;
         }
     }
 }

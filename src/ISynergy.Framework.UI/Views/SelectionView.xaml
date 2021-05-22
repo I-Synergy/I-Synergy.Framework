@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
     xmlns:Behaviors="using:ISynergy.Framework.UI.Behaviors"
@@ -29,30 +27,27 @@
                            RelativePanel.AlignRightWithPanel="True"
                            RelativePanel.AlignBottomWithPanel="True"
                            RelativePanel.Below="TextBlockTitle">
-                <AutoSuggestBox x:Name="TopLayout"
+                <AutoSuggestBox x:Name="SearchQuery"
                                 PlaceholderText="{m:LanguageResource Key=Search}" 
                                 RelativePanel.AlignLeftWithPanel="True" 
                                 RelativePanel.AlignRightWithPanel="True" 
                                 RelativePanel.AlignTopWithPanel="True"
-                                Text="{Binding Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                 QueryIcon="Find" 
-                                IsTabStop="True">
-                    <i:Interaction.Behaviors>
-                        <ic:EventTriggerBehavior EventName="QuerySubmitted">
-                            <ic:InvokeCommandAction Command="{Binding Search_Command}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
-                        </ic:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </AutoSuggestBox>
+                                IsTabStop="True"
+                                c:AutoSuggestBoxAttached.QuerySubmittedCommand="{Binding Search_Command}"
+                                c:AutoSuggestBoxAttached.QuerySubmittedCommandParameter="{Binding Text, ElementName=SearchQuery}"/>
 
                 <ListView RelativePanel.AlignLeftWithPanel="True" 
                           RelativePanel.AlignRightWithPanel="True" 
-                          RelativePanel.Below="TopLayout" 
+                          RelativePanel.Below="SearchQuery" 
                           RelativePanel.Above="BottomLayout" 
                           x:Name="DataSummary" 
                           ItemsSource="{Binding Items}"
                           SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
                           Margin="1,4" 
-                          Style="{StaticResource ListViewMetroUI}">
+                          Style="{StaticResource ListViewMetroUI}"
+                          c:ListViewAttached.DoubleTappedCommand="{Binding Submit_Command}"
+                          c:ListViewAttached.DoubleTappedCommandParameter="{Binding SelectedItem}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock>

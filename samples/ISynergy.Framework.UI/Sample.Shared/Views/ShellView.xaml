@@ -5,8 +5,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:i="using:Microsoft.Xaml.Interactivity"
-	xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:Converters="using:ISynergy.Framework.UI.Converters"
 	xmlns:FrameworkNavigation="using:ISynergy.Framework.UI.Navigation"
 	xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -20,15 +18,13 @@
 		<FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
 			<FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
 				<DataTemplate x:DataType="FrameworkNavigation:NavigationItem">
-                    <muxc:NavigationViewItem Content="{x:Bind Name}">
+                    <muxc:NavigationViewItem
+                        Content="{x:Bind Name}"
+                        c:NavigationViewItemAttached.TappedCommand="{x:Bind Command}"
+                        c:NavigationViewItemAttached.TappedCommandParameter="{x:Bind CommandParameter}">
                         <muxc:NavigationViewItem.Icon>
 							<PathIcon Data="{x:Bind Symbol}" />
 						</muxc:NavigationViewItem.Icon>
-						<i:Interaction.Behaviors>
-							<ic:EventTriggerBehavior EventName="Tapped">
-								<ic:InvokeCommandAction Command="{x:Bind Command}" CommandParameter="{x:Bind CommandParameter}" />
-							</ic:EventTriggerBehavior>
-						</i:Interaction.Behaviors>
 					</muxc:NavigationViewItem>
 				</DataTemplate>
             </FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>

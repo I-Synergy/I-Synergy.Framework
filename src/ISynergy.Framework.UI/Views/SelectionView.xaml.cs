@@ -40,8 +40,6 @@ namespace ISynergy.Framework.UI
             DataSummary.SelectionChanged += DataSummary_SelectionChanged;
         }
 
-
-
         /// <summary>
         /// Datas the summary selection changed.
         /// </summary>
@@ -67,12 +65,12 @@ namespace ISynergy.Framework.UI
             }
         }
 
-#if NETFX_CORE || (NET5_0 && WINDOWS)
         /// <summary>
         /// Selections the view data context changed.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="DataContextChangedEventArgs"/> instance containing the event data.</param>
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         private void SelectionView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else
         private void SelectionView_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
@@ -90,11 +88,6 @@ namespace ISynergy.Framework.UI
                     {
                         var index = DataSummary.Items.IndexOf(item);
                     }
-
-                    //foreach (ItemIndexRange item in viewModel.SelectedItems.EnsureNotNull())
-                    //{
-                    //    DataSummary.SelectRange(item);
-                    //};
                 }
             }
         }
