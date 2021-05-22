@@ -2,7 +2,6 @@
 using System;
 using Windows.ApplicationModel;
 using ISynergy.Framework.UI.Abstractions.Providers;
-using Microsoft.Xaml.Interactivity;
 using ISynergy.Framework.Core.Locators;
 
 #if (NETFX_CORE || HAS_UNO)

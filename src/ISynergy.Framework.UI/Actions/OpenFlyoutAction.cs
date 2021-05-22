@@ -1,4 +1,4 @@
-﻿using Microsoft.Xaml.Interactivity;
+﻿using ISynergy.Framework.UI.Abstractions;
 using System.Windows.Input;
 
 #if (NETFX_CORE || HAS_UNO)

@@ -98,6 +98,15 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An instance of a behavior cannot be attached to more than one object at a time..
+        /// </summary>
+        public static string CannotAttachBehaviorMultipleTimesExceptionMessage {
+            get {
+                return ResourceManager.GetString("CannotAttachBehaviorMultipleTimesExceptionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {
@@ -130,6 +139,15 @@ namespace ISynergy.Framework.UI.Properties {
         public static string Day_s {
             get {
                 return ResourceManager.GetString("Day_s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot add an instance of a behavior to a BehaviorCollection more than once..
+        /// </summary>
+        public static string DuplicateBehaviorInCollectionExceptionMessage {
+            get {
+                return ResourceManager.GetString("DuplicateBehaviorInCollectionExceptionMessage", resourceCulture);
             }
         }
         
@@ -215,6 +233,15 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AssociatedObject is of type {0} but should be of type {1}..
+        /// </summary>
+        public static string InvalidAssociatedObjectExceptionMessage {
+            get {
+                return ResourceManager.GetString("InvalidAssociatedObjectExceptionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set language....
         /// </summary>
         public static string Language {
@@ -274,6 +301,24 @@ namespace ISynergy.Framework.UI.Properties {
         public static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only IAction types are supported in an ActionCollection..
+        /// </summary>
+        public static string NonActionAddedToActionCollectionExceptionMessage {
+            get {
+                return ResourceManager.GetString("NonActionAddedToActionCollectionExceptionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only IBehavior types are supported in a BehaviorCollection..
+        /// </summary>
+        public static string NonBehaviorAddedToBehaviorCollectionExceptionMessage {
+            get {
+                return ResourceManager.GetString("NonBehaviorAddedToBehaviorCollectionExceptionMessage", resourceCulture);
             }
         }
         

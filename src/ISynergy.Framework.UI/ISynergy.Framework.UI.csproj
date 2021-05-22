@@ -34,7 +34,6 @@
 			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.2" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.3" />
 				<PackageReference Include="Microsoft.ProjectReunion" Version="0.5.7" />
 				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.5.7" />
 				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.5.7" />
@@ -52,15 +51,13 @@
 			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="Microsoft.UI.Xaml" Version="2.5.0" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
 				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.0.2" />
 			</ItemGroup>
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.UI" Version="3.8.0-dev.195" />
-				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.0-build.2.g0e224f133a" />
-				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.3-uno.95" />
+				<PackageReference Include="Uno.UI" Version="3.7.4" />
+				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.0.0" />
 			</ItemGroup>
 		</Otherwise>
 	</Choose>

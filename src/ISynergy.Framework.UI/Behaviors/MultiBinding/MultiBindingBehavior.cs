@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.UI.Behaviors.Base;
-using Microsoft.Xaml.Interactivity;
 
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
@@ -127,7 +127,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <summary>
         /// Called after the behavior is attached to an AssociatedObject.
         /// </summary>
-        /// <remarks>Override this to hook up functionality to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" /></remarks>
+        /// <remarks>Override this to hook up functionality to the <see cref="P:Behavior.AssociatedObject" /></remarks>
         protected override void OnAttached()
         {
             base.OnAttached();

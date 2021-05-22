@@ -20,9 +20,9 @@ namespace ISynergy.Framework.UI.Behaviors
     public class MultiSelectionBehavior : BehaviorBase<ListView>
     {
         /// <summary>
-        /// Called after the behavior is attached to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" />.
+        /// Called after the behavior is attached to the <see cref="P:Behavior.AssociatedObject" />.
         /// </summary>
-        /// <remarks>Override this to hook up functionality to the <see cref="P:Microsoft.Xaml.Interactivity.Behavior.AssociatedObject" /></remarks>
+        /// <remarks>Override this to hook up functionality to the <see cref="P:Behavior.AssociatedObject" /></remarks>
         protected override void OnAttached()
         {
             base.OnAttached();
