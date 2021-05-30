@@ -5,22 +5,21 @@
         {
           "files": [
             "src/ISynergy.Framework.Core/ISynergy.Framework.Core.csproj",
+            "src/ISynergy.Framework.Core.IO/ISynergy.Framework.Core.IO.csproj",
+            "src/ISynergy.Framework.Core.Linq/ISynergy.Framework.Core.Linq.csproj",
             "src/ISynergy.Framework.AspNetCore/ISynergy.Framework.AspNetCore.csproj",
             "src/ISynergy.Framework.AspNetCore.Authentication/ISynergy.Framework.AspNetCore.Authentication.csproj",
             "src/ISynergy.Framework.EntityFramework/ISynergy.Framework.EntityFramework.csproj",
             "src/ISynergy.Framework.Financial/ISynergy.Framework.Financial.csproj",
-            "src/ISynergy.Framework.Models/ISynergy.Framework.Models.csproj",
-            "src/ISynergy.Framework.Entities/ISynergy.Framework.Entities.csproj",
             "src/ISynergy.Framework.Geography/ISynergy.Framework.Geography.csproj",
             "src/ISynergy.Framework.Mathematics/ISynergy.Framework.Mathematics.csproj",
             "src/ISynergy.Framework.MessageBus/ISynergy.Framework.MessageBus.csproj",
             "src/ISynergy.Framework.MessageBus.Azure/ISynergy.Framework.MessageBus.Azure.csproj",
             "src/ISynergy.Framework.Mvvm/ISynergy.Framework.Mvvm.csproj",
             "src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj",
-            "src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj",
-            "src/ISynergy.Framework.UI.Windows/ISynergy.Framework.UI.Windows.csproj" 
+            "src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj"
           ],
-          "src": "..",
+          "src": "../..",
           "exclude": [
             "**/bin/**",
             "**/obj/**",
@@ -29,7 +28,6 @@
         }
       ],
       "dest": "api",
-      "filter": "filterConfig.yml",
       "disableGitFeatures": false,
       "disableDefaultFilter": false
     }
@@ -54,8 +52,9 @@
     "resource": [
       {
         "files": [
-          "images/**"
-        ]
+          "assets/**"
+        ],
+        "src": "../.."
       }
     ],
     "overwrite": [
@@ -65,15 +64,23 @@
         ],
         "exclude": [
           "obj/**",
-          "docs/**"
+          "_site/**"
         ]
       }
     ],
-    "dest": "../docs",
+    "dest": "_site",
+    "filter": "filter.yml",
     "globalMetadataFiles": [],
+    "globalMetadata": {
+      "_appTitle": "I-Synergy Framework Documentation",
+      "_appFooter": "",
+      "_appLogoPath": "assets/images/logo.svg",
+      "_appFaviconPath": "assets/favicon.ico"
+    },
     "fileMetadataFiles": [],
     "template": [
-      "default"
+      "default",
+      "templates/discordfx"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",
@@ -82,4 +89,66 @@
     "cleanupCacheHistory": false,
     "disableGitFeatures": false
   }
+  //"pdf": {
+  //  "content": [
+  //    {
+  //      "files": [
+  //        "api/**.yml",
+  //        "api-vb/**.yml"
+  //      ],
+  //      "exclude": [
+  //        "**/toc.yml",
+  //        "**/toc.md"
+  //      ]
+  //    },
+  //    {
+  //      "files": [
+  //        "articles/**.md",
+  //        "articles/**/toc.yml",
+  //        "toc.yml",
+  //        "*.md",
+  //        "pdf/*"
+  //      ],
+  //      "exclude": [
+  //        "**/bin/**",
+  //        "**/obj/**",
+  //        "_site_pdf/**",
+  //        "**/toc.yml",
+  //        "**/toc.md"
+  //      ]
+  //    },
+  //    {
+  //      "files": "pdf/toc.yml"
+  //    }
+  //  ],
+  //  "resource": [
+  //    {
+  //      "files": [
+  //        "assets/**"
+  //      ],
+  //      "src": "..",
+  //      "exclude": [
+  //        "**/bin/**",
+  //        "**/obj/**",
+  //        "_site_pdf/**"
+  //      ]
+  //    }
+  //  ],
+  //  "overwrite": [
+  //    {
+  //      "files": [
+  //        "apidoc/**.md"
+  //      ],
+  //      "exclude": [
+  //        "**/bin/**",
+  //        "**/obj/**",
+  //        "_site_pdf/**"
+  //      ]
+  //    }
+  //  ],
+  //  "wkhtmltopdf": {
+  //    "additionalArguments": "--enable-local-file-access"
+  //  },
+  //  "dest": "_site_pdf"
+  //}
 }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ISynergy.Framework.Mvvm.Properties {
+namespace ISynergy.Framework.Core.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ISynergy.Framework.Mvvm.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ISynergy.Framework.Mvvm.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ISynergy.Framework.Core.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,65 +61,11 @@ namespace ISynergy.Framework.Mvvm.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete.
+        ///   Looks up a localized string similar to Property {0} is mandatory..
         /// </summary>
-        public static string Delete {
+        public static string WarningMandatoryProperty {
             get {
-                return ResourceManager.GetString("Delete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Note.
-        /// </summary>
-        public static string Note {
-            get {
-                return ResourceManager.GetString("Note", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Selection.
-        /// </summary>
-        public static string Selection {
-            get {
-                return ResourceManager.GetString("Selection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to this item.
-        /// </summary>
-        public static string ThisItem {
-            get {
-                return ResourceManager.GetString("ThisItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This feature is not available at this moment in this version..
-        /// </summary>
-        public static string WarningFutureModule {
-            get {
-                return ResourceManager.GetString("WarningFutureModule", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to delete {0}?.
-        /// </summary>
-        public static string WarningItemRemove {
-            get {
-                return ResourceManager.GetString("WarningItemRemove", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You have to select an item..
-        /// </summary>
-        public static string WarningSelectItem {
-            get {
-                return ResourceManager.GetString("WarningSelectItem", resourceCulture);
+                return ResourceManager.GetString("WarningMandatoryProperty", resourceCulture);
             }
         }
     }

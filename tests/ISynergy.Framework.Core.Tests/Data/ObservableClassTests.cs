@@ -100,6 +100,27 @@ namespace ISynergy.Framework.Core.Data.Tests
             Assert.True(product.IsDirty);
         }
 
-        // Check when object is initialized that all properties are added to Property dictionary
+        /// <summary>
+        /// Test to check if property with Required or Identity attributes and has a null value generates an validation error.
+        /// </summary>
+        [Fact]
+        public void TestIfNullValueGeneratesValidationError()
+        {
+            var product = new Product();
+            product.Validate();
+            Assert.NotEmpty(product.Errors);
+        }
+
+        /// <summary>
+        /// Test to check if property with Required or Identity attributes and has a non-null value generates an validation error.
+        /// </summary>
+        [Fact]
+        public void TestIfNonNullValueGeneratesNoValidationError()
+        {
+            var product = new Product();
+            product.Name = "Test";
+            product.Validate();
+            Assert.Empty(product.Errors);
+        }
     }
 }

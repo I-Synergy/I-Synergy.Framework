@@ -25,7 +25,9 @@ namespace ISynergy.Framework.UI.Services
         {
             _managers = new List<ResourceManager>
             {
-                new ResourceManager(typeof(Resources))
+                new ResourceManager(typeof(ISynergy.Framework.Core.Properties.Resources)),
+                new ResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources)),
+                new ResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources))
             };
         }
 

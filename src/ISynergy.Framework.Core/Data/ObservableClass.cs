@@ -8,6 +8,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using ISynergy.Framework.Core.Attributes;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Data
 {
@@ -99,6 +101,21 @@ namespace ISynergy.Framework.Core.Data
         protected ObservableClass(ValidationTriggers validation = ValidationTriggers.Manual)
         {
             ValidationTrigger = validation;
+            Validator = new Action<IObservableClass>(_ =>
+            {
+                foreach (var item in this.GetType().GetProperties())
+                {
+                    var value = item.GetValue(this);
+
+                    if (Attribute.IsDefined(item, typeof(RequiredAttribute)) && value is null)
+                    {
+                        if (!Properties.ContainsKey(item.Name))
+                            Properties.Add(item.Name, new Property<object>(value));
+
+                        Properties[item.Name].Errors.Add(string.Format(ISynergy.Framework.Core.Properties.Resources.WarningMandatoryProperty, $"[{item.Name}]"));
+                    }
+                }
+            });
         }
 
         /// <summary>

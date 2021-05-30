@@ -35,7 +35,10 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Initializers
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes properties of the specified Microsoft.ApplicationInsights.Channel.ITelemetry object.
+        /// </summary>
+        /// <param name="telemetry"></param>
         public void Initialize(ITelemetry telemetry)
         {
             var httpContext = _httpContextAccessor.HttpContext;
