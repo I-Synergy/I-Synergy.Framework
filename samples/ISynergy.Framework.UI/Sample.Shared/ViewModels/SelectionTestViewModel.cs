@@ -73,7 +73,7 @@ namespace Sample.ViewModels
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)
         {
-            if (await BaseCommonServices.DialogService.ShowAsync(
+            if (await BaseCommonServices.DialogService.ShowMessageAsync(
                                 $"Testing {buttons.ToString()} Dialog",
                                 "Test",
                                 buttons, MessageBoxImage.Question) is MessageBoxResult result)

@@ -48,22 +48,22 @@ namespace ISynergy.Framework.UI
             {
                 switch (themeViewModel.SelectedItem)
                 {
-                    case Mvvm.Enumerations.ApplicationColors.RoyalBlue:
+                    case Mvvm.Enumerations.ThemeColors.RoyalBlue:
                         Button_Color_RoyalBlue.IsChecked = true;
                         break;
-                    case Mvvm.Enumerations.ApplicationColors.Lime:
+                    case Mvvm.Enumerations.ThemeColors.Lime:
                         Button_Color_Lime.IsChecked = true;
                         break;
-                    case Mvvm.Enumerations.ApplicationColors.Maroon:
+                    case Mvvm.Enumerations.ThemeColors.Maroon:
                         Button_Color_Maroon.IsChecked = true;
                         break;
-                    case Mvvm.Enumerations.ApplicationColors.OrangeRed:
+                    case Mvvm.Enumerations.ThemeColors.OrangeRed:
                         Button_Color_OrangeRed.IsChecked = true;
                         break;
-                    case Mvvm.Enumerations.ApplicationColors.Gold:
+                    case Mvvm.Enumerations.ThemeColors.Gold:
                         Button_Color_Gold.IsChecked = true;
                         break;
-                    case Mvvm.Enumerations.ApplicationColors.Magenta:
+                    case Mvvm.Enumerations.ThemeColors.Magenta:
                         Button_Color_Magenta.IsChecked = true;
                         break;
                     default:

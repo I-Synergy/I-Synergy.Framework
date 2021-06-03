@@ -55,7 +55,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             _localizationFunctions = localizationFunctions;
             SetLanguage_Command = new Command<string>((e) => SelectedItem = e);
-            SelectedItem = BaseCommonServices.ApplicationSettingsService.Culture;
+            SelectedItem = BaseCommonServices.SettingsService.Culture;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         public override Task SubmitAsync(string e)
         {
-            BaseCommonServices.ApplicationSettingsService.Culture = e;
+            BaseCommonServices.SettingsService.Culture = e;
             _localizationFunctions.SetLocalizationLanguage(e);
             return base.SubmitAsync(e);
         }

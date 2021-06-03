@@ -277,4 +277,7 @@ Save your work and restart the application.</value>
   <data name="NonBehaviorAddedToBehaviorCollectionExceptionMessage" xml:space="preserve">
     <value>Only IBehavior types are supported in a BehaviorCollection.</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
 </root>

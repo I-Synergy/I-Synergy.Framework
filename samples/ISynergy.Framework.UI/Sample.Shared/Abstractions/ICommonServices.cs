@@ -20,11 +20,6 @@ namespace Sample.Abstractions.Services
         /// <value>The master data service.</value>
         IMasterDataService MasterDataService { get; }
         /// <summary>
-        /// Gets the settings service.
-        /// </summary>
-        /// <value>The settings service.</value>
-        ISettingsService SettingsService { get; }
-        /// <summary>
         /// Gets the download file service.
         /// </summary>
         /// <value>The download file service.</value>

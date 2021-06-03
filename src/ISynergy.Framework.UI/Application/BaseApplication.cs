@@ -23,7 +23,6 @@ using Windows.UI.Core;
 using Microsoft.Extensions.DependencyInjection;
 using ISynergy.Framework.UI.Properties;
 using System.Resources;
-using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
@@ -33,6 +32,7 @@ using System.Globalization;
 using Windows.ApplicationModel.Background;
 using System.Text.RegularExpressions;
 using ISynergy.Framework.Mvvm.Extensions;
+using Microsoft.Extensions.Configuration;
 
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
@@ -89,6 +89,7 @@ namespace ISynergy.Framework.UI
         /// The services
         /// </summary>
         private readonly IServiceCollection _services;
+
         /// <summary>
         /// The navigation service
         /// </summary>
@@ -100,7 +101,9 @@ namespace ISynergy.Framework.UI
         protected BaseApplication()
         {
             _services = new ServiceCollection();
+           
             _navigationService = new NavigationService();
+
             LanguageService = new LanguageService();
 
             ConfigureServices(_services);
@@ -134,7 +137,7 @@ namespace ISynergy.Framework.UI
                 RequestedTheme = ApplicationTheme.Light;
             }
 
-            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Color.ToEnum(ThemeColors.Default));
+            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<ISettingsService>().Color.ToEnum(Mvvm.Enumerations.ThemeColors.Default));
 
 #if NETFX_CORE
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
@@ -434,17 +437,18 @@ namespace ISynergy.Framework.UI
         {
             services.AddLogging();
             services.AddOptions();
+
+            services.AddSingleton((s) => LanguageService);
+            services.AddSingleton((s) => _navigationService);
+
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton((s) => LanguageService);
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
-            services.AddSingleton<IUIVisualizerService, UIVisualizerService>();
-            services.AddSingleton((s) => _navigationService);
             services.AddSingleton<IConverterService, ConverterService>();
-            services.AddSingleton<IApplicationSettingsService, ApplicationSettingsService>();
             services.AddSingleton<IFileService, FileService>();
+
 
             //Register functions
             services.AddSingleton<LocalizationFunctions>();
@@ -595,7 +599,7 @@ namespace ISynergy.Framework.UI
 #endif
 
             var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
-            localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IApplicationSettingsService>().Culture);
+            localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<ISettingsService>().Culture);
         }
 
         /// <summary>

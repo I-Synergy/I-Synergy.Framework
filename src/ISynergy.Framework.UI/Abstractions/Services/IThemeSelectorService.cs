@@ -1,5 +1,5 @@
 ﻿using System;
-using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.Mvvm.Enumerations;
 
 namespace ISynergy.Framework.UI.Abstractions.Services
 {

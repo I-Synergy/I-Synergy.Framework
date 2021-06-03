@@ -1,19 +1,17 @@
-﻿using System;
-using System.Globalization;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI.Abstractions.Services;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Windows.Storage;
 
-namespace ISynergy.Framework.UI.Services
+namespace ISynergy.Framework.UI.Services.Base
 {
     /// <summary>
-    /// Class ApplicationSettingsService. This class cannot be inherited.
-    /// Implements the <see cref="IApplicationSettingsService" />
+    /// Abstract class BaseSettingsService.
     /// </summary>
-    /// <seealso cref="IApplicationSettingsService" />
-    public sealed class ApplicationSettingsService : IApplicationSettingsService
+    public abstract class BaseSettingsService : IBaseSettingsService
     {
         /// <summary>
         /// The local settings
@@ -21,9 +19,9 @@ namespace ISynergy.Framework.UI.Services
         private readonly ApplicationDataContainer localSettings;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationSettingsService"/> class.
+        /// Initializes a new instance of the <see cref="BaseSettingsService"/> class.
         /// </summary>
-        public ApplicationSettingsService()
+        public BaseSettingsService()
         {
             localSettings = ApplicationData.Current.LocalSettings;
         }
@@ -40,7 +38,7 @@ namespace ISynergy.Framework.UI.Services
 
                 if (setting is null)
                 {
-                    setting = ApplicationColors.Default.ToString();
+                    setting = ThemeColors.Default.ToString();
                     localSettings.Values[nameof(Color)] = setting;
                 }
 
@@ -132,7 +130,7 @@ namespace ISynergy.Framework.UI.Services
         /// Gets or sets the users.
         /// </summary>
         /// <value>The users.</value>
-        public string Users
+        public List<string> Users
         {
             get
             {
@@ -140,11 +138,11 @@ namespace ISynergy.Framework.UI.Services
 
                 if (setting is null)
                 {
-                    setting = string.Empty;
+                    setting = new List<string>();
                     localSettings.Values[nameof(Users)] = setting;
                 }
 
-                return (string)setting;
+                return (List<string>)setting;
             }
 
             set
@@ -230,7 +228,7 @@ namespace ISynergy.Framework.UI.Services
         /// Gets or sets a value indicating whether this instance is update.
         /// </summary>
         /// <value><c>true</c> if this instance is update; otherwise, <c>false</c>.</value>
-        public bool IsUpdate 
+        public bool IsUpdate
         {
             get
             {

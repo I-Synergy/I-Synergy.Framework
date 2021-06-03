@@ -405,7 +405,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (sender != null && sender is byte[])
             {
-                BaseCommonServices.ApplicationSettingsService.Wallpaper = sender as byte[];
+                //BaseCommonServices.SettingsService.Wallpaper = sender as byte[];
             }
         }
 
@@ -417,7 +417,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             var languageVM = new LanguageViewModel(Context, BaseCommonServices, _localizationFunctions, _loggerFactory);
             languageVM.Submitted += LanguageVM_Submitted;
-            return BaseCommonServices.UIVisualizerService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, string>(languageVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, string>(languageVM);
         }
 
         /// <summary>
@@ -430,7 +430,7 @@ namespace ISynergy.Framework.UI.ViewModels
             if (sender is LanguageViewModel vm)
                 vm.Submitted -= LanguageVM_Submitted;
 
-            if (await BaseCommonServices.DialogService.ShowAsync(
+            if (await BaseCommonServices.DialogService.ShowMessageAsync(
                         BaseCommonServices.LanguageService.GetString("WarningLanguageChange") +
                         Environment.NewLine +
                         BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
@@ -449,7 +449,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             var themeVM = new ThemeViewModel(Context, BaseCommonServices, _loggerFactory);
             themeVM.Submitted += ThemeVM_Submitted;
-            return BaseCommonServices.UIVisualizerService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ApplicationColors>(themeVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ThemeColors>(themeVM);
         }
 
         /// <summary>
@@ -457,12 +457,12 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private async void ThemeVM_Submitted(object sender, SubmitEventArgs<ApplicationColors> e)
+        private async void ThemeVM_Submitted(object sender, SubmitEventArgs<ThemeColors> e)
         {
             if (sender is ThemeViewModel vm)
                 vm.Submitted -= ThemeVM_Submitted;
 
-            if (await BaseCommonServices.DialogService.ShowAsync(
+            if (await BaseCommonServices.DialogService.ShowMessageAsync(
                         BaseCommonServices.LanguageService.GetString("WarningColorChange") +
                         Environment.NewLine +
                         BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),

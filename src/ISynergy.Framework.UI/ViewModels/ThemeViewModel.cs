@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -13,7 +14,7 @@ namespace ISynergy.Framework.UI.ViewModels
     /// <summary>
     /// Class ThemeViewModel.
     /// </summary>
-    public class ThemeViewModel : ViewModelDialog<ApplicationColors>
+    public class ThemeViewModel : ViewModelDialog<ThemeColors>
     {
         /// <summary>
         /// Gets the title.
@@ -46,22 +47,22 @@ namespace ISynergy.Framework.UI.ViewModels
             : base(context, commonServices, loggerFactory)
         {
             Color_Command = new Command<string>((e) => SelectedItem = SetColor(e));
-            SelectedItem = SetColor(BaseCommonServices.ApplicationSettingsService.Color);
+            SelectedItem = BaseCommonServices.SettingsService.Color.ToEnum(ThemeColors.Default);
         }
 
         /// <summary>
         /// Sets the color.
         /// </summary>
         /// <param name="e">The e.</param>
-        private ApplicationColors SetColor(string e)
+        private ThemeColors SetColor(string e)
         {
-            if (Enum.TryParse(e, out ApplicationColors color))
+            if (Enum.TryParse(e, out ThemeColors color))
             {
                 return color;
             }
             else
             {
-                return ApplicationColors.Default;
+                return ThemeColors.Default;
             }
         }
 
@@ -70,9 +71,9 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="e">if set to <c>true</c> [e].</param>
         /// <returns>Task.</returns>
-        public override Task SubmitAsync(ApplicationColors e)
+        public override Task SubmitAsync(ThemeColors e)
         {
-            BaseCommonServices.ApplicationSettingsService.Color = e.ToString();
+            BaseCommonServices.SettingsService.Color = e.ToString();
             return base.SubmitAsync(e);
         }
     }

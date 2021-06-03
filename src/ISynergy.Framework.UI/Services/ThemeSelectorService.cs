@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.Mvvm.Enumerations;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;

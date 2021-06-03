@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Framework.Mvvm.Enumerations
 {
     /// <summary>
-    /// Enum ApplicationColors
+    /// Enum ThemeColors
     /// </summary>
-    public enum ApplicationColors
+    public enum ThemeColors
     {
         /// <summary>
         /// The default

@@ -21,11 +21,13 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.System;
 #elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.System;
 #endif
 
 namespace ISynergy.Framework.UI.Services
@@ -68,20 +70,20 @@ namespace ISynergy.Framework.UI.Services
         /// Gets a value indicating whether this instance can go back.
         /// </summary>
         /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-        public bool CanGoBack => _frame.CanGoBack;
+        public bool CanGoBack => ((Frame)Frame).CanGoBack;
         /// <summary>
         /// Gets a value indicating whether this instance can go forward.
         /// </summary>
         /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
-        public bool CanGoForward => _frame.CanGoForward;
+        public bool CanGoForward => ((Frame)Frame).CanGoForward;
 
         /// <summary>
         /// Goes the back.
         /// </summary>
         public void GoBack()
         {
-            if (_frame.CanGoBack)
-                _frame.GoBack();
+            if (((Frame)Frame).CanGoBack)
+                ((Frame)Frame).GoBack();
         }
 
         /// <summary>
@@ -89,8 +91,8 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public void GoForward()
         {
-            if (_frame.CanGoForward)
-                _frame.GoForward();
+            if (((Frame)Frame).CanGoForward)
+                ((Frame)Frame).GoForward();
         }
 
         /// <summary>
@@ -129,56 +131,53 @@ namespace ISynergy.Framework.UI.Services
 
                 var page = _pages[viewModelKey];
 
-                if (_frame is Frame frame)
+                // Check if actual page is the same as destination page.
+                if (((Frame)Frame).Content != null && ((Frame)Frame).Content.GetType().Equals(page))
                 {
-                    // Check if actual page is the same as destination page.
-                    if (frame.Content != null && frame.Content.GetType().Equals(page))
-                    {
-                        return frame.Content as IView;
-                    }
+                    return ((Frame)Frame).Content as IView;
+                }
 
-                    if (parameter is IViewModel)
+                if (parameter is IViewModel)
+                {
+                    viewmodel.IsInitialized = false;
+                    await InitializeViewModelAsync(viewmodel);
+                    view = ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
+                }
+                else
+                {
+                    if (page.GetInterfaces(true).Any(q => q == typeof(IView)))
                     {
-                        viewmodel.IsInitialized = false;
-                        await InitializeViewModelAsync(viewmodel);
-                        view = frame.NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
-                    }
-                    else
-                    {
-                        if (page.GetInterfaces(true).Any(q => q == typeof(IView)))
+                        if (parameter != null && !string.IsNullOrEmpty(parameter.ToString()))
                         {
-                            if (parameter != null && !string.IsNullOrEmpty(parameter.ToString()))
+                            Type genericPropertyType = null;
+
+                            // Has class GenericTypeArguments?
+                            if (viewmodel.GetType().GenericTypeArguments.Any())
                             {
-                                Type genericPropertyType = null;
+                                genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
+                            }
 
-                                // Has class GenericTypeArguments?
-                                if (viewmodel.GetType().GenericTypeArguments.Any())
+                            // Has BaseType GenericTypeArguments?
+                            else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
+                            {
+                                genericPropertyType = baseType.GetGenericArguments().First();
+                            }
+
+                            if (genericPropertyType != null && parameter.GetType() == genericPropertyType)
+                            {
+                                var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
+
+                                // Check if instanceVM implements genericInterfaceType.
+                                if (genericInterfaceType.IsAssignableFrom(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
                                 {
-                                    genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
-                                }
-
-                                // Has BaseType GenericTypeArguments?
-                                else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
-                                {
-                                    genericPropertyType = baseType.GetGenericArguments().First();
-                                }
-
-                                if (genericPropertyType != null && parameter.GetType() == genericPropertyType)
-                                {
-                                    var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
-
-                                    // Check if instanceVM implements genericInterfaceType.
-                                    if (genericInterfaceType.IsAssignableFrom(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
-                                    {
-                                        method.Invoke(viewmodel, new[] { parameter });
-                                    }
+                                    method.Invoke(viewmodel, new[] { parameter });
                                 }
                             }
                         }
-
-                        await InitializeViewModelAsync(viewmodel);
-                        view = frame.NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
                     }
+
+                    await InitializeViewModelAsync(viewmodel);
+                    view = ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
                 }
 
                 return view;
@@ -380,17 +379,14 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// clean back stack as an asynchronous operation.
         /// </summary>
-        public async Task CleanBackStackAsync()
+        public Task CleanBackStackAsync()
         {
-#if NETFX_CORE || NET5_0 && WINDOWS
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, 
-                () => ((Frame)Frame).BackStack.Clear());
-#else
-            await CoreDispatcher.Main.RunAsync(
-                CoreDispatcherPriority.Normal, 
-                () => ((Frame)Frame).BackStack.Clear());
-#endif
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>
+            {
+                (((Frame)Frame)).BackStack.Clear();
+            });
+
+            return Task.CompletedTask;
         }
     }
 }
