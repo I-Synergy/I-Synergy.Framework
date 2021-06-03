@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using ISynergy.Framework.Core.IO.Tests.Fixtures;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.IO.Tests
 {
@@ -10,8 +10,7 @@ namespace ISynergy.Framework.Core.IO.Tests
     /// Class FileWatcherExTests.
     /// Implements the <see cref="IClassFixture{FileWatcherExFixture}" />
     /// </summary>
-    /// <seealso cref="IClassFixture{FileWatcherExFixture}" />
-    public class FileWatcherExTests : IClassFixture<FileWatcherExFixture>
+    public class FileWatcherExTests
     {
         /// <summary>
         /// The fixture
@@ -21,10 +20,9 @@ namespace ISynergy.Framework.Core.IO.Tests
         /// <summary>
         /// Initializes a new instance of the <see cref="FileWatcherExTests"/> class.
         /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        public FileWatcherExTests(FileWatcherExFixture fixture)
+        public FileWatcherExTests()
         {
-            _fixture = fixture;
+            _fixture = new FileWatcherExFixture();
         }
 
         /// <summary>
@@ -52,8 +50,8 @@ namespace ISynergy.Framework.Core.IO.Tests
                 Directory.GetFiles(folder).ToList().ForEach(File.Delete);
             }
 
-            Assert.NotEmpty(_fixture.ObservedFiles);
-            Assert.Equal(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created").Count());
+            Assert.IsTrue(_fixture.ObservedFiles.Any());
+            Assert.AreEqual(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created").Count());
         }
 
         /// <summary>
@@ -81,8 +79,8 @@ namespace ISynergy.Framework.Core.IO.Tests
                 _fixture.RemoveEventHandlers();
             }
 
-            Assert.NotEmpty(_fixture.ObservedFiles);
-            Assert.Equal(count, _fixture.ObservedFiles.Where(q => q.EventName == "Deleted").Count());
+            Assert.IsTrue(_fixture.ObservedFiles.Any());
+            Assert.AreEqual(count, _fixture.ObservedFiles.Where(q => q.EventName == "Deleted").Count());
         }
     }
 }

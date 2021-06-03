@@ -2,13 +2,14 @@
 using ISynergy.Framework.Core.Linq.Abstractions;
 using ISynergy.Framework.Core.Linq.Parsers;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
     /// <summary>
     /// Class ParsingConfigTests.
     /// </summary>
+    [TestClass]
     public class ParsingConfigTests
     {
         /// <summary>
@@ -33,7 +34,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ParsingConfig_QueryableAnalyzer_Set_Null.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ParsingConfig_QueryableAnalyzer_Set_Null()
         {
             // Assign
@@ -49,7 +50,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ParsingConfig_QueryableAnalyzer_Set_Custom.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ParsingConfig_QueryableAnalyzer_Set_Custom()
         {
             // Assign

@@ -4,7 +4,7 @@ using System.Linq;
 using ISynergy.Framework.Core.Linq.Exceptions;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupJoin_1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupJoin_1()
         {
             //Arrange
@@ -50,14 +50,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
-            Assert.Equal(realResult.Length, dynamicResult.Length);
+            Assert.AreEqual(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
-                Assert.Equal(realResult[i].NumberOfPets, dynamicResult[i].GetDynamicPropertyValue<int>("NumberOfPets"));
+                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.AreEqual(realResult[i].NumberOfPets, dynamicResult[i].GetDynamicPropertyValue<int>("NumberOfPets"));
                 for (int j = 0; j < realResult[i].Pets.Count(); j++)
                 {
-                    Assert.Equal(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
+                    Assert.AreEqual(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupJoin_2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupJoin_2()
         {
             //Arrange
@@ -99,14 +99,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
-            Assert.Equal(realResult.Length, dynamicResult.Length);
+            Assert.AreEqual(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
-                Assert.Equal(realResult[i].NumberOfPets, dynamicResult[i].GetDynamicPropertyValue<int>("NumberOfPets"));
+                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.AreEqual(realResult[i].NumberOfPets, dynamicResult[i].GetDynamicPropertyValue<int>("NumberOfPets"));
                 for (int j = 0; j < realResult[i].Pets.Count(); j++)
                 {
-                    Assert.Equal(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
+                    Assert.AreEqual(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupJoin_3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupJoin_3()
         {
             // Arrange
@@ -219,7 +219,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupJoinOnNullableType_RightNullable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupJoinOnNullableType_RightNullable()
         {
             //Arrange
@@ -252,13 +252,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var realResult = realQuery.ToArray();
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
-            Assert.Equal(realResult.Length, dynamicResult.Length);
+            Assert.AreEqual(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
                 for (int j = 0; j < realResult[i].Pets.Count(); j++)
                 {
-                    Assert.Equal(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
+                    Assert.AreEqual(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupJoinOnNullableType_LeftNullable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupJoinOnNullableType_LeftNullable()
         {
             //Arrange
@@ -299,13 +299,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var realResult = realQuery.ToArray();
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
-            Assert.Equal(realResult.Length, dynamicResult.Length);
+            Assert.AreEqual(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
                 for (int j = 0; j < realResult[i].Pets.Count(); j++)
                 {
-                    Assert.Equal(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
+                    Assert.AreEqual(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
                 }
             }
         }
@@ -313,7 +313,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupJoinOnNullableType_NotSameTypesThrowsException.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupJoinOnNullableType_NotSameTypesThrowsException()
         {
             var person = new Person { Id = 1, Name = "Hedlund, Magnus" };

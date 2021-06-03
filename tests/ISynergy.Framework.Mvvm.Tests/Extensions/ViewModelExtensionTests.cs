@@ -6,30 +6,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mvvm.Extensions.Tests
 {
+    [TestClass]
     public class ViewModelExtensionTests
     {
-        [Theory]
-        [InlineData(typeof(ISynergy.Framework.Mvvm.ViewModels.MapsViewModel), "MapsViewModel")]
-        [InlineData(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "NoteViewModel")]
-        [InlineData(typeof(ISynergy.Framework.Mvvm.ViewModels.SelectionViewModel<TestClass>), "SelectionViewModel")]
+        [DataTestMethod]
+        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.MapsViewModel), "MapsViewModel")]
+        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "NoteViewModel")]
+        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.SelectionViewModel<TestClass>), "SelectionViewModel")]
         public void GetNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
         {
             var result = viewModelType.GetViewModelName();
-            Assert.Equal(expectedName, result);
+            Assert.AreEqual(expectedName, result);
         }
 
-        [Theory]
-        [InlineData(typeof(ISynergy.Framework.Mvvm.ViewModels.MapsViewModel), "ISynergy.Framework.Mvvm.ViewModels.MapsViewModel")]
-        [InlineData(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "ISynergy.Framework.Mvvm.ViewModels.NoteViewModel")]
-        [InlineData(typeof(ISynergy.Framework.Mvvm.ViewModels.SelectionViewModel<TestClass>), "ISynergy.Framework.Mvvm.ViewModels.SelectionViewModel")]
+        [DataTestMethod]
+        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.MapsViewModel), "ISynergy.Framework.Mvvm.ViewModels.MapsViewModel")]
+        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "ISynergy.Framework.Mvvm.ViewModels.NoteViewModel")]
+        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.SelectionViewModel<TestClass>), "ISynergy.Framework.Mvvm.ViewModels.SelectionViewModel")]
         public void GetFullNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
         {
             var result = viewModelType.GetViewModelFullName();
-            Assert.Equal(expectedName, result);
+            Assert.AreEqual(expectedName, result);
         }
     }
 }

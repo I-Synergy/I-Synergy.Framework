@@ -1,11 +1,12 @@
 ﻿using ISynergy.Framework.Geography.Tests;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Geography.Utm.Tests
 {
     /// <summary>
     /// Class UtmProjectionTests.
     /// </summary>
+    [TestClass]
     public class UtmProjectionTests
     {
         /// <summary>
@@ -16,39 +17,39 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// Defines the test method TestMyHome.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestMyHome()
         {
             var e = (UtmCoordinate)utm.ToEuclidian(Constants.MyHome);
             // Reference Computation from http://www.earthpoint.us/Convert.aspx
-            Assert.Equal("32U 485577 5521521", e.ToString());
+            Assert.AreEqual("32U 485577 5521521", e.ToString());
         }
 
         /// <summary>
         /// Defines the test method TestInversion.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestInversion()
         {
             var e = (UtmCoordinate)utm.ToEuclidian(Constants.MyHome);
             var c = utm.FromEuclidian(e);
-            Assert.True(c.IsApproximatelyEqual(Constants.MyHome, 0.000000001));
+            Assert.IsTrue(c.IsApproximatelyEqual(Constants.MyHome, 0.000000001));
         }
 
         /// <summary>
         /// Defines the test method TestEquals1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEquals1()
         {
             var s = "123";
-            Assert.False(utm.Equals(s));
+            Assert.IsFalse(utm.Equals(s));
         }
 
         /// <summary>
         /// Defines the test method TestEquals2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEquals2()
         {
             var utm2 = new UtmProjection();

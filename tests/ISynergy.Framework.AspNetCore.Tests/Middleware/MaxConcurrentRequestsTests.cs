@@ -12,13 +12,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 {
     /// <summary>
     /// Class MaxConcurrentRequestsTests.
     /// </summary>
+    [TestClass]
     public class MaxConcurrentRequestsTests
     {
         /// <summary>
@@ -99,20 +100,20 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         /// <summary>
         /// Defines the test method SingleRequest_ReturnsSuccessfulResponse.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public async Task SingleRequest_ReturnsSuccessfulResponse()
         {
             using var server = PrepareTestServer();
             using var client = server.CreateClient();
             var response = await client.GetAsync("/");
 
-            Assert.True(response.IsSuccessStatusCode);
+            Assert.IsTrue(response.IsSuccessStatusCode);
         }
 
         /// <summary>
         /// Defines the test method SingleRequest_ReturnsDefaultResponse.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public async Task SingleRequest_ReturnsDefaultResponse()
         {
             using var server = PrepareTestServer();
@@ -120,13 +121,13 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
             var response = await client.GetAsync("/");
             var responseText = await response.Content.ReadAsStringAsync();
 
-            Assert.Equal(DEFAULT_RESPONSE, responseText);
+            Assert.AreEqual(DEFAULT_RESPONSE, responseText);
         }
 
         /// <summary>
         /// Defines the test method SomeMaxConcurrentRequestsLimit_Drop_SomeConcurrentRequestsCount_CountMinusLimitRequestsReturnServiceUnavailable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SomeMaxConcurrentRequestsLimit_Drop_SomeConcurrentRequestsCount_CountMinusLimitRequestsReturnServiceUnavailable()
         {
             var configuration = new Dictionary<string, string>
@@ -137,13 +138,13 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 
             var responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
-            Assert.Equal(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
+            Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
         }
 
         /// <summary>
         /// Defines the test method SomeMaxConcurrentRequestsLimit_FifoQueueDropTail_SomeMaxQueueLength_SomeConcurrentRequestsCount_CountMinusLimitRequestsAndMaxQueueLengthReturnServiceUnavailable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SomeMaxConcurrentRequestsLimit_FifoQueueDropTail_SomeMaxQueueLength_SomeConcurrentRequestsCount_CountMinusLimitRequestsAndMaxQueueLengthReturnServiceUnavailable()
         {
             var configuration = new Dictionary<string, string>
@@ -155,13 +156,13 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 
             var responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
-            Assert.Equal(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
+            Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
         }
 
         /// <summary>
         /// Defines the test method SomeMaxConcurrentRequestsLimit_FifoQueueDropHead_SomeMaxQueueLength_SomeConcurrentRequestsCount_CountMinusLimitRequestsAndMaxQueueLengthReturnServiceUnavailable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SomeMaxConcurrentRequestsLimit_FifoQueueDropHead_SomeMaxQueueLength_SomeConcurrentRequestsCount_CountMinusLimitRequestsAndMaxQueueLengthReturnServiceUnavailable()
         {
             var configuration = new Dictionary<string, string>
@@ -173,13 +174,13 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 
             var responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
-            Assert.Equal(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
+            Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
         }
 
         /// <summary>
         /// Defines the test method SomeMaxConcurrentRequestsLimit_Queue_SomeMaxQueueLength_MaxTimeInQueueShorterThanProcessing_SomeConcurrentRequestsCount_CountMinusLimitRequestsReturnServiceUnavailable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SomeMaxConcurrentRequestsLimit_Queue_SomeMaxQueueLength_MaxTimeInQueueShorterThanProcessing_SomeConcurrentRequestsCount_CountMinusLimitRequestsReturnServiceUnavailable()
         {
             var configuration = new Dictionary<string, string>
@@ -192,7 +193,7 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 
             var responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
-            Assert.Equal(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
+            Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
         }
 
         /// <summary>

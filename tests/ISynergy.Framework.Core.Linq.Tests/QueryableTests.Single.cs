@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Single.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Single()
         {
             //Arrange
@@ -24,13 +24,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.Take(1).Single();
 
             //Assert
-            Assert.Equal(testList[0].Id, result.Id);
+            Assert.AreEqual(testList[0].Id, result.Id);
         }
 
         /// <summary>
         /// Defines the test method Single_Predicate.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Single_Predicate()
         {
             //Arrange
@@ -42,13 +42,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.Single("UserName == \"User4\"");
 
             //Assert
-            Assert.Equal(expected as object, result);
+            Assert.AreEqual(expected as object, result);
         }
 
         /// <summary>
         /// Defines the test method SingleOrDefault.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SingleOrDefault()
         {
             //Arrange
@@ -60,14 +60,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var defaultResult = ((IQueryable)Enumerable.Empty<User>().AsQueryable()).SingleOrDefault();
 
             //Assert
-            Assert.Equal(testList[0].Id, singleResult.Id);
-            Assert.Null(defaultResult);
+            Assert.AreEqual(testList[0].Id, singleResult.Id);
+            Assert.IsNull(defaultResult);
         }
 
         /// <summary>
         /// Defines the test method SingleOrDefault_Predicate.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SingleOrDefault_Predicate()
         {
             //Arrange
@@ -79,13 +79,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.SingleOrDefault("UserName == \"User4\"");
 
             //Assert
-            Assert.Equal(expected as object, result);
+            Assert.AreEqual(expected as object, result);
         }
 
         /// <summary>
         /// Defines the test method Single_Dynamic.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Single_Dynamic()
         {
             //Arrange
@@ -98,7 +98,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var testResult = testListQry.OrderBy("Roles.Single().Name").Select("Id");
 
             //Assert
-            Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
+            Assert.AreEqual(realResult, testResult.Cast<Guid>().ToArray());
         }
     }
 }

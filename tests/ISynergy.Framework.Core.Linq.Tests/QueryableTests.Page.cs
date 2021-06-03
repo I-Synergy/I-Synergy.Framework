@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Page.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Page()
         {
             //Arrange
@@ -26,13 +26,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.Page(page, pageSize);
 
             //Assert
-            Assert.Equal(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.ToDynamicArray<User>());
+            Assert.AreEqual(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.ToDynamicArray<User>());
         }
 
         /// <summary>
         /// Defines the test method Page_TSource.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Page_TSource()
         {
             //Arrange
@@ -46,13 +46,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.Page(page, pageSize);
 
             //Assert
-            Assert.Equal(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.ToDynamicArray<User>());
+            Assert.AreEqual(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.ToDynamicArray<User>());
         }
 
         /// <summary>
         /// Defines the test method PageResult.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void PageResult()
         {
             //Arrange
@@ -66,17 +66,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.PageResult(page, pageSize);
 
             //Assert
-            Assert.Equal(page, result.CurrentPage);
-            Assert.Equal(pageSize, result.PageSize);
-            Assert.Equal(total, result.RowCount);
-            Assert.Equal(5, result.PageCount);
-            Assert.Equal(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.Queryable.ToDynamicArray<User>());
+            Assert.AreEqual(page, result.CurrentPage);
+            Assert.AreEqual(pageSize, result.PageSize);
+            Assert.AreEqual(total, result.RowCount);
+            Assert.AreEqual(5, result.PageCount);
+            Assert.AreEqual(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.Queryable.ToDynamicArray<User>());
         }
 
         /// <summary>
         /// Defines the test method PageResult_TSource.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void PageResult_TSource()
         {
             //Arrange
@@ -90,11 +90,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.PageResult(page, pageSize);
 
             //Assert
-            Assert.Equal(page, result.CurrentPage);
-            Assert.Equal(pageSize, result.PageSize);
-            Assert.Equal(total, result.RowCount);
-            Assert.Equal(5, result.PageCount);
-            Assert.Equal(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.Queryable.ToDynamicArray<User>());
+            Assert.AreEqual(page, result.CurrentPage);
+            Assert.AreEqual(pageSize, result.PageSize);
+            Assert.AreEqual(total, result.RowCount);
+            Assert.AreEqual(5, result.PageCount);
+            Assert.AreEqual(testList.Skip((page - 1) * pageSize).Take(pageSize).ToArray(), result.Queryable.ToDynamicArray<User>());
         }
     }
 }

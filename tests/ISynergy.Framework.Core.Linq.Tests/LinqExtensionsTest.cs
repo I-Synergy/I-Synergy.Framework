@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Data.Tests.TestClasses;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Exceptions;
 
@@ -10,6 +10,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
     /// <summary>
     /// Class LinqExtensionsTest.
     /// </summary>
+    [TestClass]
     public class LinqExtensionsTest
     {
         /// <summary>
@@ -34,22 +35,22 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method StringArrayToOrderByTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void StringArrayToOrderByTest()
         {
             var array = new List<string> { "Name", "ProductId" };
             var data_sorted = CreateTestSet().AsQueryable().OrderBy(string.Join(", ", array)).ToList();
 
-            Assert.True(data_sorted.First().Name == "Test1");
-            Assert.True(data_sorted.Last().Name == "Test4");
-            Assert.True(data_sorted[2].Name == "Test3" && data_sorted[2].ProductId == 2);
-            Assert.True(data_sorted[3].Name == "Test3" && data_sorted[3].ProductId == 3);
+            Assert.IsTrue(data_sorted.First().Name == "Test1");
+            Assert.IsTrue(data_sorted.Last().Name == "Test4");
+            Assert.IsTrue(data_sorted[2].Name == "Test3" && data_sorted[2].ProductId == 2);
+            Assert.IsTrue(data_sorted[3].Name == "Test3" && data_sorted[3].ProductId == 3);
         }
 
         /// <summary>
         /// Defines the test method StringArrayToOrderDescendingByTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void StringArrayToOrderDescendingByTest()
         {
             var array = new List<string> { "Name", "ProductId" };
@@ -57,20 +58,20 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             //Debug.WriteLine(JsonSerializer.Serialize(data_sorted));
 
-            Assert.True(data_sorted.First().Name == "Test4");
-            Assert.True(data_sorted.Last().Name == "Test1");
-            Assert.True(data_sorted[1].Name == "Test3" && data_sorted[1].ProductId == 2);
-            Assert.True(data_sorted[2].Name == "Test3" && data_sorted[2].ProductId == 3);
+            Assert.IsTrue(data_sorted.First().Name == "Test4");
+            Assert.IsTrue(data_sorted.Last().Name == "Test1");
+            Assert.IsTrue(data_sorted[1].Name == "Test3" && data_sorted[1].ProductId == 2);
+            Assert.IsTrue(data_sorted[2].Name == "Test3" && data_sorted[2].ProductId == 3);
         }
 
         /// <summary>
         /// Defines the test method StringArrayWithInvalidPropertiesToOrderByTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void StringArrayWithInvalidPropertiesToOrderByTest()
         {
             var array = new List<string> { "Name", "AAA", "ProductId", "Test" };
-            Assert.Throws<ParseException>(() => CreateTestSet().AsQueryable().OrderBy(string.Join(", ", array)).ToList());
+            Assert.ThrowsException<ParseException>(() => CreateTestSet().AsQueryable().OrderBy(string.Join(", ", array)).ToList());
         }
     }
 }

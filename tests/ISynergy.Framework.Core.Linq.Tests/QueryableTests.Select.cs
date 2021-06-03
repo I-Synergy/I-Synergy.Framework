@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ISynergy.Framework.Core.Linq.Exceptions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NFluent;
 using System;
 using System.Linq;
@@ -131,7 +131,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Cannot work with property which in base class. https://github.com/StefH/System.Linq.Dynamic.Core/issues/23
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Select_Dynamic_PropertyInBaseClass()
         {
             var queryable = new[] { new IdentityUser("a"), new IdentityUser("b") }.AsQueryable();
@@ -139,13 +139,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expected = queryable.Select(i => i.Id);
             var dynamic = queryable.Select<string>("Id");
 
-            Assert.Equal(expected.ToArray(), dynamic.ToArray());
+            Assert.AreEqual(expected.ToArray(), dynamic.ToArray());
         }
 
         /// <summary>
         /// Defines the test method Select_Dynamic1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic1()
         {
             // Assign
@@ -163,7 +163,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic2()
         {
             // Assign
@@ -179,7 +179,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic3.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Select_Dynamic3()
         {
             //Arrange
@@ -194,27 +194,27 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var userRoles = qry.Select("new (UserName, Roles.Select(Id) AS RoleIds)");
 
             //Assert
-            Assert.Equal(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
+            Assert.AreEqual(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
 
 #if NET35
-            Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.AsEnumerable().Cast<string>().ToArray());
-            Assert.Equal(
+            Assert.AreEqual(testList.Select(x => x.UserName).ToArray(), userNames.AsEnumerable().Cast<string>().ToArray());
+            Assert.AreEqual(
                 testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.Cast<object>().Select(x => x.ToString()).ToArray());
-            Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().GetDynamicProperty<IEnumerable<Guid>>("RoleIds")));
+            Assert.AreEqual(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().GetDynamicProperty<IEnumerable<Guid>>("RoleIds")));
 #else
-            Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.Cast<string>().ToArray());
-            Assert.Equal(
+            Assert.AreEqual(testList.Select(x => x.UserName).ToArray(), userNames.Cast<string>().ToArray());
+            Assert.AreEqual(
                 testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.AsEnumerable().Select(x => x.ToString()).Cast<string>().ToArray());
-            Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().RoleIds));
+            Assert.AreEqual(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().RoleIds));
 #endif
         }
 
         /// <summary>
         /// Defines the test method Select_Dynamic_Add_Integers.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Select_Dynamic_Add_Integers()
         {
             // Arrange
@@ -224,13 +224,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             IEnumerable rangeResult = range.AsQueryable().Select("it + 1");
 
             // Assert
-            Assert.Equal(range.Select(x => x + 1).ToArray(), rangeResult.Cast<int>().ToArray());
+            Assert.AreEqual(range.Select(x => x + 1).ToArray(), rangeResult.Cast<int>().ToArray());
         }
 
         /// <summary>
         /// Defines the test method Select_Dynamic_Add_Strings.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Select_Dynamic_Add_Strings()
         {
             // Arrange
@@ -240,13 +240,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             IEnumerable rangeResult = range.AsQueryable().Select("it + \"c\"");
 
             // Assert
-            Assert.Equal(range.Select(x => x + "c").ToArray(), rangeResult.Cast<string>().ToArray());
+            Assert.AreEqual(range.Select(x => x + "c").ToArray(), rangeResult.Cast<string>().ToArray());
         }
 
         /// <summary>
         /// Defines the test method Select_Dynamic_WithIncludes.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_WithIncludes()
         {
             // Arrange
@@ -260,13 +260,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var userNames = qry.Select(select).ToDynamicList();
 
             // Assert
-            Assert.NotNull(userNames);
+            Assert.IsNotNull(userNames);
         }
 
         /// <summary>
         /// Defines the test method Select_Dynamic_WithPropertyVisitorAndQueryInterceptor.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_WithPropertyVisitorAndQueryInterceptor()
         {
             var testList = new List<Entities.Employee>
@@ -276,19 +276,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var qry = testList.AsEnumerable().AsQueryable().InterceptWith(new PropertyVisitor());
 
             var dynamicSelect = qry.Select("new (FirstName, LastName, FullName)").ToDynamicList();
-            Assert.NotNull(dynamicSelect);
-            Assert.Single(dynamicSelect);
+            Assert.IsNotNull(dynamicSelect);
+            Assert.IsTrue(dynamicSelect.Count == 1);
 
             var firstEmployee = dynamicSelect.FirstOrDefault();
-            Assert.NotNull(firstEmployee);
+            Assert.IsNotNull(firstEmployee);
 
-            Assert.Equal("first last", firstEmployee.FullName);
+            Assert.AreEqual("first last", firstEmployee.FullName);
         }
 
         /// <summary>
         /// Defines the test method Select_Dynamic_TResult.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Select_Dynamic_TResult()
         {
             //Arrange
@@ -302,15 +302,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var userProfiles = qry.Select<UserProfile>("Profile").ToList();
 
             //Assert
-            Assert.Equal(range.Select(x => x * x).ToList(), rangeResult);
-            Assert.Equal(testList.Select(x => x.UserName).ToList(), userNames);
-            Assert.Equal(testList.Select(x => x.Profile).ToList(), userProfiles);
+            Assert.AreEqual(range.Select(x => x * x).ToList(), rangeResult);
+            Assert.AreEqual(testList.Select(x => x.UserName).ToList(), userNames);
+            Assert.AreEqual(testList.Select(x => x.Profile).ToList(), userProfiles);
         }
 
         /// <summary>
         /// Defines the test method Select_Dynamic_IntoType.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Select_Dynamic_IntoType()
         {
             //Arrange
@@ -324,15 +324,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var userProfiles = qry.Select(typeof(UserProfile), "Profile");
 
             //Assert
-            Assert.Equal(range.Select(x => x * x).Cast<object>().ToList(), rangeResult.ToDynamicList());
-            Assert.Equal(testList.Select(x => x.UserName).Cast<object>().ToList(), userNames.ToDynamicList());
-            Assert.Equal(testList.Select(x => x.Profile).Cast<object>().ToList(), userProfiles.ToDynamicList());
+            Assert.AreEqual(range.Select(x => x * x).Cast<object>().ToList(), rangeResult.ToDynamicList());
+            Assert.AreEqual(testList.Select(x => x.UserName).Cast<object>().ToList(), userNames.ToDynamicList());
+            Assert.AreEqual(testList.Select(x => x.Profile).Cast<object>().ToList(), userProfiles.ToDynamicList());
         }
 
         /// <summary>
         /// Defines the test method Select_Dynamic_IntoTypeWithNullableProperties1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_IntoTypeWithNullableProperties1()
         {
             // Arrange
@@ -355,7 +355,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic_IntoTypeWithNullableProperties2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_IntoTypeWithNullableProperties2()
         {
             // Arrange
@@ -378,7 +378,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic_IntoKnownNestedType.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_IntoKnownNestedType()
         {
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
@@ -399,7 +399,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic_IntoKnownNestedTypeSecondLevel.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
         {
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
@@ -421,7 +421,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic_RenameParameterExpression_Is_False.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_RenameParameterExpression_Is_False()
         {
             // Arrange
@@ -441,7 +441,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic_RenameParameterExpression_Is_True.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_RenameParameterExpression_Is_True()
         {
             // Arrange
@@ -461,7 +461,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic_ReservedKeyword.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_ReservedKeyword()
         {
             // Arrange
@@ -477,7 +477,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Select_Dynamic_Exceptions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Select_Dynamic_Exceptions()
         {
             //Arrange
@@ -485,16 +485,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Assert.Throws<ParseException>(() => qry.Select("Bad"));
-            Assert.Throws<ParseException>(() => qry.Select("Id, UserName"));
-            Assert.Throws<ParseException>(() => qry.Select("new Id, UserName"));
-            Assert.Throws<ParseException>(() => qry.Select("new (Id, UserName"));
-            Assert.Throws<ParseException>(() => qry.Select("new (Id, UserName, Bad)"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("Bad"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("Id, UserName"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("new Id, UserName"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("new (Id, UserName"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("new (Id, UserName, Bad)"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryExtensions.Select(null, "Id"));
-            Assert.Throws<ArgumentNullException>(() => qry.Select(null));
-            Assert.Throws<ArgumentNullException>(() => qry.Select(""));
-            Assert.Throws<ParseException>(() => qry.Select(" "));
+            Assert.ThrowsException<ArgumentNullException>(() => DynamicQueryExtensions.Select(null, "Id"));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.Select(null));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.Select(""));
+            Assert.ThrowsException<ParseException>(() => qry.Select(" "));
         }
     }
 }

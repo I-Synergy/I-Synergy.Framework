@@ -1,18 +1,19 @@
 ﻿using System;
 using ISynergy.Framework.Geography.Tests;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Geography.Projection.Tests
 {
     /// <summary>
     /// Class MercatorProjectionTests.
     /// </summary>
+    [TestClass]
     public class MercatorProjectionTests
     {
         /// <summary>
         /// Defines the test method TestLoxodromeToOffice.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestLoxodromeToOffice()
         {
             var proj = new EllipticalMercatorProjection();
@@ -25,8 +26,8 @@ namespace ISynergy.Framework.Geography.Projection.Tests
             // The reference values are computed with 
             // http://onboardintelligence.com/RL_Lat1Long1Lat2Long2.aspx
             // (Set the high precision options in the dialog!)
-            Assert.Equal(43233, Math.Round(mercatorRhumDistance));
-            Assert.Equal(342.2, Math.Round(bearing.Degrees * 10) / 10);
+            Assert.AreEqual(43233, Math.Round(mercatorRhumDistance));
+            Assert.AreEqual(342.2, Math.Round(bearing.Degrees * 10) / 10);
         }
     }
 }

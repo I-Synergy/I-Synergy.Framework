@@ -2,7 +2,7 @@
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method FirstOrDefault.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void FirstOrDefault()
         {
             // Arrange
@@ -30,14 +30,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             // Assert
             Check.That(result).Equals(expected);
-            Assert.Null(expectedDefault);
-            Assert.Null(resultDefault);
+            Assert.IsNull(expectedDefault);
+            Assert.IsNull(resultDefault);
         }
 
         /// <summary>
         /// Defines the test method FirstOrDefault_Predicate.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void FirstOrDefault_Predicate()
         {
             //Arrange
@@ -55,7 +55,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method FirstOrDefault_Predicate_WithArgs.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void FirstOrDefault_Predicate_WithArgs()
         {
             const int value = 1000;
@@ -75,7 +75,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method FirstOrDefault_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void FirstOrDefault_Dynamic()
         {
             // Arrange

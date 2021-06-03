@@ -3,7 +3,7 @@ using System.Linq;
 using ISynergy.Framework.Core.Linq.Exceptions;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Join.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Join()
         {
             //Arrange
@@ -51,19 +51,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
-            Assert.Equal(realResult.Length, dynamicResult.Length);
+            Assert.AreEqual(realResult.Length, dynamicResult.Length);
 
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
-                Assert.Equal(realResult[i].Pet, dynamicResult[i].GetDynamicPropertyValue<string>("Pet"));
+                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.AreEqual(realResult[i].Pet, dynamicResult[i].GetDynamicPropertyValue<string>("Pet"));
             }
         }
 
         /// <summary>
         /// Defines the test method JoinOnNullableType_RightNullable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void JoinOnNullableType_RightNullable()
         {
             //Arrange
@@ -98,18 +98,18 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var realResult = realQuery.ToArray();
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
-            Assert.Equal(realResult.Length, dynamicResult.Length);
+            Assert.AreEqual(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
-                Assert.Equal(realResult[i].Pet, dynamicResult[i].GetDynamicPropertyValue<string>("Pet"));
+                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.AreEqual(realResult[i].Pet, dynamicResult[i].GetDynamicPropertyValue<string>("Pet"));
             }
         }
 
         /// <summary>
         /// Defines the test method JoinOnNullableType_LeftNullable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void JoinOnNullableType_LeftNullable()
         {
             //Arrange
@@ -144,18 +144,18 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var realResult = realQuery.ToArray();
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
-            Assert.Equal(realResult.Length, dynamicResult.Length);
+            Assert.AreEqual(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
-                Assert.Equal(realResult[i].Pet, dynamicResult[i].GetDynamicPropertyValue<string>("Pet"));
+                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.AreEqual(realResult[i].Pet, dynamicResult[i].GetDynamicPropertyValue<string>("Pet"));
             }
         }
 
         /// <summary>
         /// Defines the test method JoinOnNullableType_NotSameTypesThrowsException.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void JoinOnNullableType_NotSameTypesThrowsException()
         {
             var person = new Person { Id = 1, Name = "Hedlund, Magnus" };

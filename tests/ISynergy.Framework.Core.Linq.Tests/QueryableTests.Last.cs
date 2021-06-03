@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Last.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Last()
         {
             //Arrange
@@ -25,13 +25,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.Last();
 
             //Assert
-            Assert.Equal(realResult.Id, result.Id);
+            Assert.AreEqual(realResult.Id, result.Id);
         }
 
         /// <summary>
         /// Defines the test method Last_Predicate.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Last_Predicate()
         {
             //Arrange
@@ -43,13 +43,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = queryable.Last("Income > 1000");
 
             //Assert
-            Assert.Equal(expected as object, result);
+            Assert.AreEqual(expected as object, result);
         }
 
         /// <summary>
         /// Defines the test method LastOrDefault.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void LastOrDefault()
         {
             //Arrange
@@ -62,14 +62,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var defaultResult = Enumerable.Empty<User>().AsQueryable().FirstOrDefault();
 
             //Assert
-            Assert.Equal(realResult.Id, singleResult.Id);
-            Assert.Null(defaultResult);
+            Assert.AreEqual(realResult.Id, singleResult.Id);
+            Assert.IsNull(defaultResult);
         }
 
         /// <summary>
         /// Defines the test method LastOrDefault_Predicate.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void LastOrDefault_Predicate()
         {
             //Arrange
@@ -81,13 +81,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = queryable.LastOrDefault("Income > 1000");
 
             //Assert
-            Assert.Equal(expected as object, result);
+            Assert.AreEqual(expected as object, result);
         }
 
         /// <summary>
         /// Defines the test method Last_Dynamic.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Last_Dynamic()
         {
             //Arrange
@@ -99,7 +99,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var testResult = testListQry.OrderBy("Roles.Last().Name").Select("Id");
 
             //Assert
-            Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
+            Assert.AreEqual(realResult, testResult.Cast<Guid>().ToArray());
         }
     }
 }

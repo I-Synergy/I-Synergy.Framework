@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ISynergy.Framework.Core.Linq.Exceptions;
 using System.Linq.Expressions;
 using System.Reflection;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ISynergy.Framework.Core.Linq.Attributes;
 using System;
 using ISynergy.Framework.Core.Linq.Providers;
@@ -18,6 +18,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
     /// <summary>
     /// Class DynamicExpressionParserTests.
     /// </summary>
+    [TestClass]
     public class DynamicExpressionParserTests
     {
         /// <summary>
@@ -458,7 +459,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true()
         {
             // Assign
@@ -484,9 +485,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// Defines the test method DynamicExpressionParser_ParseLambda_WithStructWithEquality.
         /// </summary>
         /// <param name="query">The query.</param>
-        [Theory]
-        [InlineData("Where(x => x.SnowflakeId == {0})")]
-        [InlineData("Where(x => x.SnowflakeId = {0})")]
+        [DataTestMethod]
+        [DataRow("Where(x => x.SnowflakeId == {0})")]
+        [DataRow("Where(x => x.SnowflakeId = {0})")]
         public void DynamicExpressionParser_ParseLambda_WithStructWithEquality(string query)
         {
             // Assign
@@ -512,7 +513,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false()
         {
             // Assign
@@ -534,7 +535,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_ToList.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_ToList()
         {
             // Arrange
@@ -558,7 +559,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_Complex_1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_Complex_1()
         {
             // Arrange
@@ -591,7 +592,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_Complex_2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_Complex_2()
         {
             // Arrange
@@ -619,7 +620,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_Complex_3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_Complex_3()
         {
             var config = new ParsingConfig
@@ -657,7 +658,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_Select_1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_Select_1()
         {
             // Arrange
@@ -676,13 +677,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             object result = del.DynamicInvoke();
 
             // Assert
-            Assert.NotNull(result);
+            Assert.IsNotNull(result);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_Select_2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_Select_2()
         {
             // Arrange
@@ -701,14 +702,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             object result = del.DynamicInvoke();
 
             // Assert
-            Assert.NotNull(result);
+            Assert.IsNotNull(result);
         }
 
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/58
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_4_Issue58.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_4_Issue58()
         {
             var expressionParams = new[]
@@ -730,7 +731,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_DuplicateParameterNames_ThrowsException.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_DuplicateParameterNames_ThrowsException()
         {
             // Arrange
@@ -749,7 +750,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_EmptyParameterList.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_EmptyParameterList()
         {
             // Arrange
@@ -766,7 +767,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_ParameterName.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_ParameterName()
         {
             // Arrange
@@ -780,14 +781,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expressionIT = DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42");
 
             // Assert
-            Assert.Equal(typeof(bool), expressionX.Body.Type);
-            Assert.Equal(typeof(bool), expressionIT.Body.Type);
+            Assert.AreEqual(typeof(bool), expressionX.Body.Type);
+            Assert.AreEqual(typeof(bool), expressionIT.Body.Type);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_ParameterName_Empty.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_ParameterName_Empty()
         {
             // Arrange
@@ -800,13 +801,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expression = DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42");
 
             // Assert
-            Assert.Equal(typeof(bool), expression.Body.Type);
+            Assert.AreEqual(typeof(bool), expression.Body.Type);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_ParameterName_Null.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_ParameterName_Null()
         {
             // Arrange
@@ -819,26 +820,26 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expression = DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42");
 
             // Assert
-            Assert.Equal(typeof(bool), expression.Body.Type);
+            Assert.AreEqual(typeof(bool), expression.Body.Type);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(true,
                 new[] { Expression.Parameter(typeof(int), "x") },
                 typeof(int),
                 "x + 1");
-            Assert.Equal(typeof(int), expression.Body.Type);
+            Assert.AreEqual(typeof(int), expression.Body.Type);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_RealNumbers.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_RealNumbers()
         {
             var parameters = new ParameterExpression[0];
@@ -849,50 +850,50 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result4 = DynamicExpressionParser.ParseLambda(parameters, typeof(decimal), "0.10m");
 
             // Assert
-            Assert.Equal(0.10d, result1.Compile().DynamicInvoke());
-            Assert.Equal(0.10d, result2.Compile().DynamicInvoke());
-            Assert.Equal(0.10f, result3.Compile().DynamicInvoke());
-            Assert.Equal(0.10m, result4.Compile().DynamicInvoke());
+            Assert.AreEqual(0.10d, result1.Compile().DynamicInvoke());
+            Assert.AreEqual(0.10d, result2.Compile().DynamicInvoke());
+            Assert.AreEqual(0.10f, result3.Compile().DynamicInvoke());
+            Assert.AreEqual(0.10m, result4.Compile().DynamicInvoke());
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"test\"");
-            Assert.Equal(typeof(bool), expression.Body.Type);
+            Assert.AreEqual(typeof(bool), expression.Body.Type);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
-            Assert.Equal(typeof(bool), expression.Body.Type);
+            Assert.AreEqual(typeof(bool), expression.Body.Type);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
             var config = new ParsingConfig();
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
-            Assert.Equal(typeof(bool), expression.Body.Type);
+            Assert.AreEqual(typeof(bool), expression.Body.Type);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
             string expectedRightValue = "\"test \\\"string\"";
@@ -904,14 +905,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 string.Format("Property1 == {0}", expectedRightValue));
 
             string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
-            Assert.Equal(typeof(bool), expression.Body.Type);
-            Assert.Equal(expectedRightValue, rightValue);
+            Assert.AreEqual(typeof(bool), expression.Body.Type);
+            Assert.AreEqual(expectedRightValue, rightValue);
         }
 
         /// <summary>
         /// @see https://github.com/StefH/System.Linq.Dynamic.Core/issues/294
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_MultipleLambdas()
         {
             var users = new[]
@@ -932,7 +933,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             query = users.AsQueryable();
             query = query.GroupBy("new(name as name)", "it");
             query = query.Select("new (it.Key as Key, new(it.Sum(x => x.age) as ageSum) as nativeAggregates, it as Grouping)");
-            Assert.Equal(res1, JsonConvert.SerializeObject(query));
+            Assert.AreEqual(res1, JsonConvert.SerializeObject(query));
 
             // Multiple lambdas
             string res2 = "[{\"Key\":{\"name\":\"Juan\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":104},\"Grouping\":[{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":4},{\"name\":\"Juan\",\"age\":25}]},{\"Key\":{\"name\":\"David\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":12},\"Grouping\":[{\"name\":\"David\",\"age\":12}]},{\"Key\":{\"name\":\"Pedro\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":2},\"Grouping\":[{\"name\":\"Pedro\",\"age\":2}]}]";
@@ -941,13 +942,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             query = query.GroupBy("new(name as name)", "it");
             query = query.Select("new (it.Key as Key, new(it.Sum(x => x.age > 25 ? 1 : 0) as ageSum, it.Sum(x => x.age) as ageSum2) as nativeAggregates, it as Grouping)");
             
-            Assert.Equal(res2, JsonConvert.SerializeObject(query));
+            Assert.AreEqual(res2, JsonConvert.SerializeObject(query));
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
             // Assign
@@ -959,19 +960,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 string.Format("Property1 == {0}", expectedRightValue));
 
             string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
-            Assert.Equal(typeof(bool), expression.Body.Type);
-            Assert.Equal(expectedRightValue, rightValue);
+            Assert.AreEqual(typeof(bool), expression.Body.Type);
+            Assert.AreEqual(expectedRightValue, rightValue);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteral_MissingClosingQuote.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_StringLiteral_MissingClosingQuote()
         {
             string expectedRightValue = "\"test\\\"";
 
-            Assert.Throws<ParseException>(() => DynamicExpressionParser.ParseLambda(
+            Assert.ThrowsException<ParseException>(() => DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
                 typeof(bool),
                 string.Format("Property1 == {0}", expectedRightValue)));
@@ -980,7 +981,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
         {
             // Assign
@@ -993,14 +994,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 string.Format("Property1 == {0}", expectedRightValue));
 
             string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
-            Assert.Equal(expectedRightValue, rightValue);
+            Assert.AreEqual(typeof(Boolean), expression.Body.Type);
+            Assert.AreEqual(expectedRightValue, rightValue);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteral_Backslash.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_StringLiteral_Backslash()
         {
             string expectedLeftValue = "Property1.IndexOf(\"\\\\\")";
@@ -1012,15 +1013,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             string leftValue = ((BinaryExpression)expression.Body).Left.ToString();
             string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
-            Assert.Equal(expectedLeftValue, leftValue);
-            Assert.Equal(expectedRightValue, rightValue);
+            Assert.AreEqual(typeof(Boolean), expression.Body.Type);
+            Assert.AreEqual(expectedLeftValue, leftValue);
+            Assert.AreEqual(expectedRightValue, rightValue);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_StringLiteral_QuotationMark.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_StringLiteral_QuotationMark()
         {
             string expectedLeftValue = "Property1.IndexOf(\"\\\"\")";
@@ -1032,28 +1033,28 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             string leftValue = ((BinaryExpression)expression.Body).Left.ToString();
             string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
-            Assert.Equal(expectedLeftValue, leftValue);
-            Assert.Equal(expectedRightValue, rightValue);
+            Assert.AreEqual(typeof(Boolean), expression.Body.Type);
+            Assert.AreEqual(expectedLeftValue, leftValue);
+            Assert.AreEqual(expectedRightValue, rightValue);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(
                 typeof(Tuple<int>),
                 typeof(string),
                 "it.ToString()");
-            Assert.Equal(typeof(string), expression.ReturnType);
+            Assert.AreEqual(typeof(string), expression.ReturnType);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_IllegalMethodCall_ThrowsException.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_IllegalMethodCall_ThrowsException()
         {
             Check.ThatCode(() => { DynamicExpressionParser.ParseLambda(typeof(System.IO.FileStream), null, "it.Close()"); })
@@ -1063,7 +1064,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_CustomMethod.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_CustomMethod()
         {
             // Assign
@@ -1084,7 +1085,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(result).IsEqualTo(10);
         }
 
-        //[Fact]
+        //[TestMethod]
         /// <summary>
         /// Dynamics the expression parser parse lambda with inner string literal.
         /// </summary>
@@ -1107,7 +1108,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_With_Guid_Equals_Null.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_With_Guid_Equals_Null()
         {
             // Arrange
@@ -1118,19 +1119,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             // Act
             var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
             var boolLambda = lambda as Expression<Func<User, bool>>;
-            Assert.NotNull(boolLambda);
+            Assert.IsNotNull(boolLambda);
 
             var del = lambda.Compile();
             bool result = (bool)del.DynamicInvoke(user);
 
             // Assert
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_With_Null_Equals_Guid.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_With_Null_Equals_Guid()
         {
             // Arrange
@@ -1141,19 +1142,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             // Act
             var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
             var boolLambda = lambda as Expression<Func<User, bool>>;
-            Assert.NotNull(boolLambda);
+            Assert.IsNotNull(boolLambda);
 
             var del = lambda.Compile();
             bool result = (bool)del.DynamicInvoke(user);
 
             // Assert
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_With_Guid_Equals_String.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_With_Guid_Equals_String()
         {
             // Arrange
@@ -1172,19 +1173,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             // Act
             var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
             var guidLambda = lambda as Expression<Func<User, Guid>>;
-            Assert.NotNull(guidLambda);
+            Assert.IsNotNull(guidLambda);
 
             var del = lambda.Compile();
             Guid result = (Guid)del.DynamicInvoke(user);
 
             // Assert
-            Assert.Equal(guidEmpty, result);
+            Assert.AreEqual(guidEmpty, result);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_With_Concat_String_CustomType.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_With_Concat_String_CustomType()
         {
             // Arrange
@@ -1198,20 +1199,20 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var stringLambda = lambda as Expression<Func<TextHolder, string>>;
 
             // Assert 1
-            Assert.NotNull(stringLambda);
+            Assert.IsNotNull(stringLambda);
 
             // Act 2
             var del = lambda.Compile();
             string result = (string)del.DynamicInvoke(textHolder);
 
             // Assert 2
-            Assert.Equal("name1 (note1)", result);
+            Assert.AreEqual("name1 (note1)", result);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_With_Concat_CustomType_String.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_With_Concat_CustomType_String()
         {
             // Arrange
@@ -1225,20 +1226,20 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var stringLambda = lambda as Expression<Func<TextHolder, string>>;
 
             // Assert 1
-            Assert.NotNull(stringLambda);
+            Assert.IsNotNull(stringLambda);
 
             // Act 2
             var del = lambda.Compile();
             string result = (string)del.DynamicInvoke(textHolder);
 
             // Assert 2
-            Assert.Equal("note1 (name1)", result);
+            Assert.AreEqual("note1 (name1)", result);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_With_One_Way_Implicit_Conversions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_With_One_Way_Implicit_Conversions()
         {
             // Arrange
@@ -1260,55 +1261,55 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextString);
 
             // Assert 1
-            Assert.NotNull(lambda);
+            Assert.IsNotNull(lambda);
 
             // Act 2
             lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextReversed);
 
             // Assert 2
-            Assert.NotNull(lambda);
+            Assert.IsNotNull(lambda);
 
             // Act 3
             lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextValueType);
 
             // Assert 3
-            Assert.NotNull(lambda);
+            Assert.IsNotNull(lambda);
 
             // Act 4
             lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextReversedValueType);
 
             // Assert 4
-            Assert.NotNull(lambda);
+            Assert.IsNotNull(lambda);
 
             // Act 5
             lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextString);
 
             // Assert 5
-            Assert.NotNull(lambda);
+            Assert.IsNotNull(lambda);
 
             // Act 6
             lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextReversed);
 
             // Assert 6
-            Assert.NotNull(lambda);
+            Assert.IsNotNull(lambda);
 
             // Act 7
             lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextValueType);
 
             // Assert 7
-            Assert.NotNull(lambda);
+            Assert.IsNotNull(lambda);
 
             // Act 8
             lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextReversedValueType);
 
             // Assert 8
-            Assert.NotNull(lambda);
+            Assert.IsNotNull(lambda);
         }
 
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_Operator_Less_Greater_With_Guids.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_Operator_Less_Greater_With_Guids()
         {
             var config = new ParsingConfig
@@ -1332,13 +1333,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             // Act
             var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
             var guidLambda = lambda as Expression<Func<User, Guid>>;
-            Assert.NotNull(guidLambda);
+            Assert.IsNotNull(guidLambda);
 
             var del = lambda.Compile();
             Guid result = (Guid)del.DynamicInvoke(user);
 
             // Assert
-            Assert.Equal(anotherId, result);
+            Assert.AreEqual(anotherId, result);
         }
 
         /// <summary>
@@ -1346,9 +1347,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// </summary>
         /// <param name="expressionAsString">The expression as string.</param>
         /// <param name="expected">The expected.</param>
-        [Theory]
-        [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]
-        [InlineData("c => c.Name == \"test\"", "c => (c.Name == \"test\")")]
+        [DataTestMethod]
+        [DataRow("c => c.Age == 8", "c => (c.Age == 8)")]
+        [DataRow("c => c.Name == \"test\"", "c => (c.Name == \"test\")")]
         public void DynamicExpressionParser_ParseLambda_RenameParameterExpression(string expressionAsString, string expected)
         {
             // Arrange
@@ -1371,9 +1372,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <param name="expressionAsString">The expression as string.</param>
         /// <param name="testValue">The test value.</param>
         /// <param name="expectedResult">if set to <c>true</c> [expected result].</param>
-        [Theory]
-        [InlineData(@"p0.Equals(""Testing"", 3)", "testinG", true)]
-        [InlineData(@"p0.Equals(""Testing"", StringComparison.InvariantCultureIgnoreCase)", "testinG", true)]
+        [DataTestMethod]
+        [DataRow(@"p0.Equals(""Testing"", 3)", "testinG", true)]
+        [DataRow(@"p0.Equals(""Testing"", StringComparison.InvariantCultureIgnoreCase)", "testinG", true)]
         public void DynamicExpressionParser_ParseLambda_SupportEnumerationStringComparison(string expressionAsString, string testValue, bool expectedResult)
         {
             // Arrange

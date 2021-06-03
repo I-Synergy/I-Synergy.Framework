@@ -2,7 +2,7 @@
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Exceptions;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method OrderBy_Dynamic.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void OrderBy_Dynamic()
         {
             //Arrange
@@ -27,15 +27,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var orderByComplex1 = qry.OrderBy("Profile.Age, Id");
 
             //Assert
-            Assert.Equal(testList.OrderBy(x => x.Id).ToArray(), orderById.ToArray());
-            Assert.Equal(testList.OrderBy(x => x.Profile.Age).ToArray(), orderByAge.ToArray());
-            Assert.Equal(testList.OrderBy(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex1.ToArray());
+            Assert.AreEqual(testList.OrderBy(x => x.Id).ToArray(), orderById.ToArray());
+            Assert.AreEqual(testList.OrderBy(x => x.Profile.Age).ToArray(), orderByAge.ToArray());
+            Assert.AreEqual(testList.OrderBy(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex1.ToArray());
         }
 
         /// <summary>
         /// Defines the test method OrderBy_Dynamic_AsStringExpression.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void OrderBy_Dynamic_AsStringExpression()
         {
             //Arrange
@@ -47,13 +47,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var orderById = qry.SelectMany("Roles.OrderBy(Name)").Select("Name");
 
             //Assert
-            Assert.Equal(expected.ToArray(), orderById.Cast<string>().ToArray());
+            Assert.AreEqual(expected.ToArray(), orderById.Cast<string>().ToArray());
         }
 
         /// <summary>
         /// Defines the test method OrderBy_Dynamic_Exceptions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void OrderBy_Dynamic_Exceptions()
         {
             //Arrange
@@ -61,13 +61,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Assert.Throws<ParseException>(() => qry.OrderBy("Bad=3"));
-            Assert.Throws<ParseException>(() => qry.Where("Id=123"));
+            Assert.ThrowsException<ParseException>(() => qry.OrderBy("Bad=3"));
+            Assert.ThrowsException<ParseException>(() => qry.Where("Id=123"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryExtensions.OrderBy(null, "Id"));
-            Assert.Throws<ArgumentNullException>(() => qry.OrderBy(null));
-            Assert.Throws<ArgumentNullException>(() => qry.OrderBy(""));
-            Assert.Throws<ParseException>(() => qry.OrderBy(" "));
+            Assert.ThrowsException<ArgumentNullException>(() => DynamicQueryExtensions.OrderBy(null, "Id"));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.OrderBy(null));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.OrderBy(""));
+            Assert.ThrowsException<ParseException>(() => qry.OrderBy(" "));
         }
     }
 }

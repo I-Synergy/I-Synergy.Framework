@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Aggregate_Average.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Aggregate_Average()
         {
             // Arrange
@@ -30,18 +30,18 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultNullableInt = queryable.Aggregate("Average", "NullableInt");
 
             // Assert
-            Assert.Equal(50f, resultNullableFloat);
-            Assert.Equal(200.0, resultNullableDouble);
-            Assert.Equal(25.0, resultDouble);
-            Assert.Equal(0.5f, resultFloat);
-            Assert.Equal(21.0, resultInt);
-            Assert.Equal(30.0, resultNullableInt);
+            Assert.AreEqual(50f, resultNullableFloat);
+            Assert.AreEqual(200.0, resultNullableDouble);
+            Assert.AreEqual(25.0, resultDouble);
+            Assert.AreEqual(0.5f, resultFloat);
+            Assert.AreEqual(21.0, resultInt);
+            Assert.AreEqual(30.0, resultNullableInt);
         }
 
         /// <summary>
         /// Defines the test method Aggregate_Min.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Aggregate_Min()
         {
             // Arrange
@@ -60,12 +60,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultNullableInt = queryable.Aggregate("Min", "NullableInt");
 
             // Assert
-            Assert.Equal(50.0, resultDouble);
-            Assert.Equal(1.0f, resultFloat);
-            Assert.Equal(42, resultInt);
-            Assert.Equal(400.0, resultNullableDouble);
-            Assert.Equal(100f, resultNullableFloat);
-            Assert.Equal(60, resultNullableInt);
+            Assert.AreEqual(50.0, resultDouble);
+            Assert.AreEqual(1.0f, resultFloat);
+            Assert.AreEqual(42, resultInt);
+            Assert.AreEqual(400.0, resultNullableDouble);
+            Assert.AreEqual(100f, resultNullableFloat);
+            Assert.AreEqual(60, resultNullableInt);
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method OrderByDescending_Dynamic.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void OrderByDescending_Dynamic()
         {
             //Arrange
@@ -25,15 +25,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var orderByComplex2 = qry.OrderBy("Profile.Age DESC, Id");
 
             //Assert
-            Assert.Equal(testList.OrderByDescending(x => x.Id).ToArray(), orderByIdDesc.ToArray());
-            Assert.Equal(testList.OrderByDescending(x => x.Profile.Age).ToArray(), orderByAgeDesc.ToArray());
-            Assert.Equal(testList.OrderByDescending(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex2.ToArray());
+            Assert.AreEqual(testList.OrderByDescending(x => x.Id).ToArray(), orderByIdDesc.ToArray());
+            Assert.AreEqual(testList.OrderByDescending(x => x.Profile.Age).ToArray(), orderByAgeDesc.ToArray());
+            Assert.AreEqual(testList.OrderByDescending(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex2.ToArray());
         }
 
         /// <summary>
         /// Defines the test method OrderByDescending_Dynamic_AsStringExpression.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void OrderByDescending_Dynamic_AsStringExpression()
         {
             //Arrange
@@ -45,7 +45,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var orderByIdDesc = qry.SelectMany("Roles.OrderByDescending(Name)").Select("Name");
 
             //Assert
-            Assert.Equal(expectedDesc.ToArray(), orderByIdDesc.Cast<string>().ToArray());
+            Assert.AreEqual(expectedDesc.ToArray(), orderByIdDesc.Cast<string>().ToArray());
         }
     }
 }

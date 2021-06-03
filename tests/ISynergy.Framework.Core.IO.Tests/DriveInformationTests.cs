@@ -1,11 +1,12 @@
 ﻿using System;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.IO.Tests
 {
     /// <summary>
     /// Class DriveInformationTests.
     /// </summary>
+    [TestClass]
     public class DriveInformationTests
     {
         /// <summary>
@@ -13,26 +14,26 @@ namespace ISynergy.Framework.Core.IO.Tests
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="result">The result.</param>
-        [Theory]
-        [InlineData(@"C:\Temp", 0)]
-        [InlineData(@"\\localhost\c$\temp", 1)]
-        [InlineData(@"\\SERVER\Temp", 1)]
-        //[InlineData(@"Z:", 1)] // Mapped drive pointing to \\workstation\Temp
-        [InlineData(@"C:\", 0)]
-        [InlineData(@"Temp", -1)]
-        [InlineData(@".\Temp", -1)]
-        [InlineData(@"..\Temp", -1)]
+        [DataTestMethod]
+        [DataRow(@"C:\Temp", 0)]
+        [DataRow(@"\\localhost\c$\temp", 1)]
+        [DataRow(@"\\SERVER\Temp", 1)]
+        //[DataRow(@"Z:", 1)] // Mapped drive pointing to \\workstation\Temp
+        [DataRow(@"C:\", 0)]
+        [DataRow(@"Temp", -1)]
+        [DataRow(@".\Temp", -1)]
+        [DataRow(@"..\Temp", -1)]
         public void IsNetworkDriveTest(string path, int result)
         {
             // If result = -1, the expected outcome is an exception.
             // otherwise its a boolean value.
             if(result == -1)
             {
-                Assert.Throws<ArgumentException>(() => DriveInformation.IsNetworkDrive(path));
+                Assert.ThrowsException<ArgumentException>(() => DriveInformation.IsNetworkDrive(path));
             }
             else
             {
-                Assert.Equal(Convert.ToBoolean(result), DriveInformation.IsNetworkDrive(path));
+                Assert.AreEqual(Convert.ToBoolean(result), DriveInformation.IsNetworkDrive(path));
             }
         }
 
@@ -41,27 +42,27 @@ namespace ISynergy.Framework.Core.IO.Tests
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="result">The result.</param>
-        [Theory]
-        [InlineData(@"Z:\Temp\Sub-Folder", @"Z:\")]
-        [InlineData(@"C:\Temp", @"C:\")]
-        [InlineData(@"\\localhost\c$\temp", null)]
-        [InlineData(@"\\SERVER\Temp", null)]
-        [InlineData(@"Z:", @"Z:\")] // Mapped drive pointing to \\workstation\Temp
-        [InlineData(@"C:\", @"C:\")]
-        [InlineData(@"Temp", null)]
-        [InlineData(@".\Temp", null)]
-        [InlineData(@"..\Temp", null)]
+        [DataTestMethod]
+        [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\")]
+        [DataRow(@"C:\Temp", @"C:\")]
+        [DataRow(@"\\localhost\c$\temp", null)]
+        [DataRow(@"\\SERVER\Temp", null)]
+        [DataRow(@"Z:", @"Z:\")] // Mapped drive pointing to \\workstation\Temp
+        [DataRow(@"C:\", @"C:\")]
+        [DataRow(@"Temp", null)]
+        [DataRow(@".\Temp", null)]
+        [DataRow(@"..\Temp", null)]
         public void GetDriveNameTest(string path, object result)
         {
             // If result is null, the expected outcome is an exception.
             // otherwise its a string value with the drive name.
             if (result is null)
             {
-                Assert.Throws<ArgumentException>(() => DriveInformation.GetDriveName(path));
+                Assert.ThrowsException<ArgumentException>(() => DriveInformation.GetDriveName(path));
             }
             else
             {
-                Assert.Equal(result, DriveInformation.GetDriveName(path));
+                Assert.AreEqual(result, DriveInformation.GetDriveName(path));
             }
         }
 
@@ -70,27 +71,27 @@ namespace ISynergy.Framework.Core.IO.Tests
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="result">The result.</param>
-        [Theory]
-        [InlineData(@"Z:\Temp\Sub-Folder", @"Z:\")]
-        [InlineData(@"C:\Temp", @"C:\")]
-        [InlineData(@"\\localhost\c$\temp", @"\\localhost\c$")]
-        [InlineData(@"\\SERVER\Temp", @"\\SERVER\Temp")]
-        [InlineData(@"Z:", @"Z:\")] // Mapped drive pointing to \\workstation\Temp
-        [InlineData(@"C:\", @"C:\")]
-        [InlineData(@"Temp", null)]
-        [InlineData(@".\Temp", null)]
-        [InlineData(@"..\Temp", null)]
+        [DataTestMethod]
+        [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\")]
+        [DataRow(@"C:\Temp", @"C:\")]
+        [DataRow(@"\\localhost\c$\temp", @"\\localhost\c$")]
+        [DataRow(@"\\SERVER\Temp", @"\\SERVER\Temp")]
+        [DataRow(@"Z:", @"Z:\")] // Mapped drive pointing to \\workstation\Temp
+        [DataRow(@"C:\", @"C:\")]
+        [DataRow(@"Temp", null)]
+        [DataRow(@".\Temp", null)]
+        [DataRow(@"..\Temp", null)]
         public void ResolveToRootUNCTest(string path, object result)
         {
             // If result is null, the expected outcome is an exception.
             // otherwise its a string value with the drive name.
             if (result is null)
             {
-                Assert.Throws<ArgumentException>(() => DriveInformation.ResolveToRootUNC(path));
+                Assert.ThrowsException<ArgumentException>(() => DriveInformation.ResolveToRootUNC(path));
             }
             else
             {
-                Assert.Equal(result, DriveInformation.ResolveToRootUNC(path));
+                Assert.AreEqual(result, DriveInformation.ResolveToRootUNC(path));
             }
         }
 
@@ -99,27 +100,27 @@ namespace ISynergy.Framework.Core.IO.Tests
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="result">The result.</param>
-        [Theory]
-        [InlineData(@"Z:\Temp\Sub-Folder", @"Z:\Temp\Sub-Folder")]
-        [InlineData(@"C:\Temp", @"C:\Temp")]
-        [InlineData(@"\\localhost\c$\temp", @"\\localhost\c$\temp")]
-        [InlineData(@"\\SERVER\Temp", @"\\SERVER\Temp")]
-        [InlineData(@"Z:", @"Z:")] // Mapped drive pointing to \\workstation\Temp
-        [InlineData(@"C:\", @"C:\")]
-        [InlineData(@"Temp", null)]
-        [InlineData(@".\Temp", null)]
-        [InlineData(@"..\Temp", null)]
+        [DataTestMethod]
+        [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\Temp\Sub-Folder")]
+        [DataRow(@"C:\Temp", @"C:\Temp")]
+        [DataRow(@"\\localhost\c$\temp", @"\\localhost\c$\temp")]
+        [DataRow(@"\\SERVER\Temp", @"\\SERVER\Temp")]
+        [DataRow(@"Z:", @"Z:")] // Mapped drive pointing to \\workstation\Temp
+        [DataRow(@"C:\", @"C:\")]
+        [DataRow(@"Temp", null)]
+        [DataRow(@".\Temp", null)]
+        [DataRow(@"..\Temp", null)]
         public void ResolveToUNCTest(string path, object result)
         {
             // If result is null, the expected outcome is an exception.
             // otherwise its a string value with the drive name.
             if (result is null)
             {
-                Assert.Throws<ArgumentException>(() => DriveInformation.ResolveToUNC(path));
+                Assert.ThrowsException<ArgumentException>(() => DriveInformation.ResolveToUNC(path));
             }
             else
             {
-                Assert.Equal(result, DriveInformation.ResolveToUNC(path));
+                Assert.AreEqual(result, DriveInformation.ResolveToUNC(path));
             }
         }
 
@@ -128,16 +129,16 @@ namespace ISynergy.Framework.Core.IO.Tests
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="result">The result.</param>
-        [Theory]
-        //[InlineData(@"Z:\Temp\Sub-Folder", true)]
-        [InlineData(@"C:\Temp", true)]
-        [InlineData(@"\\localhost\c$\temp", true)]
-        [InlineData(@"\\SERVER\Temp", true)]
-        //[InlineData(@"Z:", true)] // Mapped drive pointing to \\workstation\Temp
-        [InlineData(@"C:\", true)]
-        [InlineData(@"Temp", null)]
-        [InlineData(@".\Temp", null)]
-        [InlineData(@"..\Temp", null)]
+        [DataTestMethod]
+        //[DataRow(@"Z:\Temp\Sub-Folder", true)]
+        [DataRow(@"C:\Temp", true)]
+        [DataRow(@"\\localhost\c$\temp", true)]
+        [DataRow(@"\\SERVER\Temp", true)]
+        //[DataRow(@"Z:", true)] // Mapped drive pointing to \\workstation\Temp
+        [DataRow(@"C:\", true)]
+        [DataRow(@"Temp", null)]
+        [DataRow(@".\Temp", null)]
+        [DataRow(@"..\Temp", null)]
         public void IsFreeSpaceAvailableTest(string path, object result)
         {
             var fileSize = 1L;
@@ -146,11 +147,11 @@ namespace ISynergy.Framework.Core.IO.Tests
             // otherwise its a string value with the drive name.
             if (result is null)
             {
-                Assert.Throws<ArgumentException>(() => DriveInformation.IsFreeSpaceAvailable(path, fileSize));
+                Assert.ThrowsException<ArgumentException>(() => DriveInformation.IsFreeSpaceAvailable(path, fileSize));
             }
             else
             {
-                Assert.Equal(Convert.ToBoolean(result), DriveInformation.IsFreeSpaceAvailable(path, fileSize));
+                Assert.AreEqual(Convert.ToBoolean(result), DriveInformation.IsFreeSpaceAvailable(path, fileSize));
             }
         }
     }

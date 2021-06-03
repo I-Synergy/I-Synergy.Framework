@@ -1,12 +1,13 @@
 ﻿using System;
 using ISynergy.Framework.Geography.Tests;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Geography.Geodetic.Tests
 {
     /// <summary>
     /// Class GeodeticCalculatorTests.
     /// </summary>
+    [TestClass]
     public class GeodeticCalculatorTests
     {
         /// <summary>
@@ -17,62 +18,62 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
         /// <summary>
         /// Defines the test method TestCurve.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestCurve()
         {
             var curve = calc.CalculateGeodeticCurve(Constants.MyHome, Constants.MyOffice);
             // Reference values computed with 
             // http://williams.best.vwh.net/gccalc.htm
-            Assert.Equal(43232.317, Math.Round(1000 * curve.EllipsoidalDistance) / 1000);
-            Assert.Equal(342.302315, Math.Round(1000000 * curve.Azimuth.Degrees) / 1000000);
-            Assert.Equal(curve.Calculator, calc);
+            Assert.AreEqual(43232.317, Math.Round(1000 * curve.EllipsoidalDistance) / 1000);
+            Assert.AreEqual(342.302315, Math.Round(1000000 * curve.Azimuth.Degrees) / 1000000);
+            Assert.AreEqual(curve.Calculator, calc);
         }
 
         /// <summary>
         /// Defines the test method TestCurve2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestCurve2()
         {
             var target = new GlobalCoordinates(Constants.MyHome.Latitude, Constants.MyHome.Longitude - 1.0);
             var curve = calc.CalculateGeodeticCurve(Constants.MyHome, target);
             // Reference values computed with 
             // http://williams.best.vwh.net/gccalc.htm
-            Assert.Equal(270.382160, Math.Round(100000 * curve.Azimuth.Degrees) / 100000);
-            Assert.Equal(curve.Calculator, calc);
+            Assert.AreEqual(270.382160, Math.Round(100000 * curve.Azimuth.Degrees) / 100000);
+            Assert.AreEqual(curve.Calculator, calc);
         }
 
         /// <summary>
         /// Defines the test method TestMeasurement.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestMeasurement()
         {
             var start = new GlobalPosition(Constants.MyHome, 200);
             var end = new GlobalPosition(Constants.MyOffice, 240);
             var m = calc.CalculateGeodeticMeasurement(start, end);
             var c = calc.CalculateGeodeticCurve(Constants.MyHome, Constants.MyOffice);
-            Assert.True(m.EllipsoidalDistance > c.EllipsoidalDistance);
+            Assert.IsTrue(m.EllipsoidalDistance > c.EllipsoidalDistance);
         }
 
         /// <summary>
         /// Defines the test method TestNearAntipodicCurve.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNearAntipodicCurve()
         {
             var loc = new GlobalCoordinates(0, 10); // on the equator
             var aloc = loc.Antipode;
             aloc.Latitude *= 0.99999998;
             var curve = calc.CalculateGeodeticCurve(loc, aloc);
-            Assert.True(double.IsNaN(curve.Azimuth.Degrees));
-            Assert.Equal(curve.Calculator, calc);
+            Assert.IsTrue(double.IsNaN(curve.Azimuth.Degrees));
+            Assert.AreEqual(curve.Calculator, calc);
         }
 
         /// <summary>
         /// Defines the test method TestEnding.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEnding()
         {
             var curve = calc.CalculateGeodeticCurve(Constants.MyHome, Constants.MyOffice);
@@ -80,17 +81,17 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
                 Constants.MyHome,
                 curve.Azimuth,
                 curve.EllipsoidalDistance);
-            Assert.Equal(final, Constants.MyOffice);
-            Assert.Equal(curve.Calculator, calc);
+            Assert.AreEqual(final, Constants.MyOffice);
+            Assert.AreEqual(curve.Calculator, calc);
         }
 
         /// <summary>
         /// Defines the test method TestEndingNegDist.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEndingNegDist()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => calc.CalculateEndingGlobalCoordinates(
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => calc.CalculateEndingGlobalCoordinates(
                 Constants.MyHome,
                 0.0,
                 -1.0));
@@ -99,7 +100,7 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
         /// <summary>
         /// Defines the test method TestEndingZeroDist.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEndingZeroDist()
         {
             var curve = calc.CalculateGeodeticCurve(Constants.MyHome, Constants.MyOffice);
@@ -107,53 +108,53 @@ namespace ISynergy.Framework.Geography.Geodetic.Tests
                 Constants.MyHome,
                 curve.Azimuth,
                 0.0);
-            Assert.Equal(final, Constants.MyHome);
-            Assert.Equal(curve.Calculator, calc);
+            Assert.AreEqual(final, Constants.MyHome);
+            Assert.AreEqual(curve.Calculator, calc);
         }
 
         /// <summary>
         /// Defines the test method TestPath1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestPath1()
         {
             var path = calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice, 2);
-            Assert.Equal(path[0], Constants.MyHome);
-            Assert.Equal(path[1], Constants.MyOffice);
-            Assert.Equal(calc.ReferenceGlobe, Ellipsoid.WGS84);
+            Assert.AreEqual(path[0], Constants.MyHome);
+            Assert.AreEqual(path[1], Constants.MyOffice);
+            Assert.AreEqual(calc.ReferenceGlobe, Ellipsoid.WGS84);
         }
 
         /// <summary>
         /// Defines the test method TestPath2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestPath2()
         {
             var path = calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice);
-            Assert.Equal(path[0], Constants.MyHome);
-            Assert.Equal(path[path.Length - 1], Constants.MyOffice);
-            Assert.Equal(calc.ReferenceGlobe, Ellipsoid.WGS84);
+            Assert.AreEqual(path[0], Constants.MyHome);
+            Assert.AreEqual(path[path.Length - 1], Constants.MyOffice);
+            Assert.AreEqual(calc.ReferenceGlobe, Ellipsoid.WGS84);
         }
 
         /// <summary>
         /// Defines the test method TestPath3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestPath3()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice, 1));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice, 1));
         }
 
         /// <summary>
         /// Defines the test method TestPath4.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestPath4()
         {
             var path = calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyHome, 10);
-            Assert.Equal(2, path.Length);
-            Assert.Equal(path[0], Constants.MyHome);
-            Assert.Equal(path[1], Constants.MyHome);
+            Assert.AreEqual(2, path.Length);
+            Assert.AreEqual(path[0], Constants.MyHome);
+            Assert.AreEqual(path[1], Constants.MyHome);
         }
     }
 }

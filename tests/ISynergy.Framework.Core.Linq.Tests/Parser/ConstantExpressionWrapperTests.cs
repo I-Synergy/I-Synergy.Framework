@@ -3,13 +3,14 @@ using ISynergy.Framework.Core.Linq.Parsers;
 using NFluent;
 using System;
 using System.Linq.Expressions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
     /// <summary>
     /// Class ConstantExpressionWrapperTests.
     /// </summary>
+    [TestClass]
     public class ConstantExpressionWrapperTests
     {
         /// <summary>
@@ -30,19 +31,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="test">The test.</param>
-        [Theory]
-        [InlineData(true)]
-        [InlineData((int)1)]
-        [InlineData((uint)2)]
-        [InlineData((short)3)]
-        [InlineData((ushort)4)]
-        [InlineData(5L)]
-        [InlineData(6UL)]
-        [InlineData(7.1f)]
-        [InlineData(8.1d)]
-        [InlineData('c')]
-        [InlineData((byte)10)]
-        [InlineData((sbyte)11)]
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow((int)1)]
+        [DataRow((uint)2)]
+        [DataRow((short)3)]
+        [DataRow((ushort)4)]
+        [DataRow(5L)]
+        [DataRow(6UL)]
+        [DataRow(7.1f)]
+        [DataRow(8.1d)]
+        [DataRow('c')]
+        [DataRow((byte)10)]
+        [DataRow((sbyte)11)]
         public void ConstantExpressionWrapper_Wrap_ConstantExpression_PrimitiveTypes<T>(T test)
         {
             // Assign
@@ -65,7 +66,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ConstantExpressionWrapper_Wrap_ConstantExpression_String.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ConstantExpressionWrapper_Wrap_ConstantExpression_String()
         {
             // Assign
@@ -89,7 +90,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ConstantExpressionWrapper_Wrap_ConstantExpression_ComplexTypes.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ConstantExpressionWrapper_Wrap_ConstantExpression_ComplexTypes()
         {
             // Assign

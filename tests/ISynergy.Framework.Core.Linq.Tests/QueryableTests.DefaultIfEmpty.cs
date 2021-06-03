@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DefaultIfEmpty.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DefaultIfEmpty()
         {
             // Arrange
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DefaultIfEmpty_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DefaultIfEmpty_Dynamic()
         {
             // Arrange
@@ -47,7 +47,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DefaultIfEmpty_Empty.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DefaultIfEmpty_Empty()
         {
             // Arrange
@@ -65,7 +65,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DefaultIfEmpty_Empty_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DefaultIfEmpty_Empty_Dynamic()
         {
             // Arrange
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DefaultIfEmpty_WithDefaultValue.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DefaultIfEmpty_WithDefaultValue()
         {
             // Arrange
@@ -100,7 +100,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DefaultIfEmpty_WithDefaultValue_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DefaultIfEmpty_WithDefaultValue_Dynamic()
         {
             // Arrange
@@ -118,7 +118,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DefaultIfEmpty_Empty_WithDefaultValue.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DefaultIfEmpty_Empty_WithDefaultValue()
         {
             // Arrange
@@ -136,7 +136,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DefaultIfEmpty_Empty_WithDefaultValue_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DefaultIfEmpty_Empty_WithDefaultValue_Dynamic()
         {
             // Arrange

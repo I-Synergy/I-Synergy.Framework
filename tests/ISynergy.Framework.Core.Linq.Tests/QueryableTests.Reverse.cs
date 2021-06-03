@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Reverse.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Reverse()
         {
             var testList = User.GenerateSampleModels(100);
@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.Reverse();
 
             //Assert
-            Assert.Equal(testList.Reverse().ToArray(), result.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Reverse().ToArray(), result.Cast<User>().ToArray());
         }
     }
 }

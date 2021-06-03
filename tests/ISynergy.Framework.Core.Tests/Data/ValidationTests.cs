@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Linq;
 using ISynergy.Framework.Core.Fixtures;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
     /// <summary>
     /// Class ValidationTests.
     /// </summary>
+    [TestClass]
     public class ValidationTests
     {
         /// <summary>
         /// Defines the test method ValidateIsNullTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ValidateIsNullTest()
         {
             var model = new ModelFixture<string>
@@ -31,13 +32,13 @@ namespace ISynergy.Framework.Core.Data.Tests
                 }
             });
 
-            Assert.False(model.Validate());
+            Assert.IsFalse(model.Validate());
         }
 
         /// <summary>
         /// Defines the test method ValidateIsNotNullTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ValidateIsNotNullTest()
         {
             var model = new ModelFixture<string>
@@ -55,13 +56,13 @@ namespace ISynergy.Framework.Core.Data.Tests
                 }
             });
 
-            Assert.True(model.Validate());
+            Assert.IsTrue(model.Validate());
         }
 
         /// <summary>
         /// Defines the test method ValidateIsNotInRangeTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ValidateIsNotInRangeTest()
         {
             var model = new ModelFixture<int>
@@ -79,13 +80,13 @@ namespace ISynergy.Framework.Core.Data.Tests
                 }
             });
 
-            Assert.False(model.Validate());
+            Assert.IsFalse(model.Validate());
         }
 
         /// <summary>
         /// Defines the test method ValidateIsInRangeTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ValidateIsInRangeTest()
         {
             var model = new ModelFixture<int>
@@ -103,13 +104,13 @@ namespace ISynergy.Framework.Core.Data.Tests
                 }
             });
 
-            Assert.True(model.Validate());
+            Assert.IsTrue(model.Validate());
         }
 
         /// <summary>
         /// Defines the test method ValidateStringLengthIsNotInRangeTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ValidateStringLengthIsNotInRangeTest()
         {
             var model = new ModelFixture<string>
@@ -127,13 +128,13 @@ namespace ISynergy.Framework.Core.Data.Tests
                 }
             });
 
-            Assert.False(model.Validate());
+            Assert.IsFalse(model.Validate());
         }
 
         /// <summary>
         /// Defines the test method ValidateStringLengthIsInRangeTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ValidateStringLengthIsInRangeTest()
         {
             var model = new ModelFixture<string>
@@ -151,7 +152,7 @@ namespace ISynergy.Framework.Core.Data.Tests
                 }
             });
 
-            Assert.True(model.Validate());
+            Assert.IsTrue(model.Validate());
         }
     }
 }

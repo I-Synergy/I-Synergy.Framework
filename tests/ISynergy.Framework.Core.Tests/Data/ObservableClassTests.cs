@@ -1,19 +1,20 @@
 ﻿using System;
 using ISynergy.Framework.Core.Data.Tests.TestClasses;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
     /// <summary>
     /// Class ObservableClassTests.
     /// </summary>
+    [TestClass]
     public class ObservableClassTests
     {
         // Check when object is initialized that it's clean.
         /// <summary>
         /// Defines the test method CheckIfObjectAfterInitializationIsClean_1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckIfObjectAfterInitializationIsClean_1()
         {
             var product = new Product
@@ -22,13 +23,13 @@ namespace ISynergy.Framework.Core.Data.Tests
             };
             product.MarkAsClean();
 
-            Assert.False(product.IsDirty);
+            Assert.IsFalse(product.IsDirty);
         }
 
         /// <summary>
         /// Defines the test method CheckIfObjectAfterInitializationIsClean_2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckIfObjectAfterInitializationIsClean_2()
         {
             var product = new Product
@@ -37,13 +38,13 @@ namespace ISynergy.Framework.Core.Data.Tests
             };
             product.MarkAsClean();
 
-            Assert.False(product.IsDirty);
+            Assert.IsFalse(product.IsDirty);
         }
 
         /// <summary>
         /// Defines the test method CheckIfObjectAfterInitializationIsClean_3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckIfObjectAfterInitializationIsClean_3()
         {
             var product = new Product(
@@ -52,14 +53,14 @@ namespace ISynergy.Framework.Core.Data.Tests
                 1,
                 100);
 
-            Assert.False(product.IsDirty);
+            Assert.IsFalse(product.IsDirty);
         }
 
         // Check when object is initialized that it's not dirty
         /// <summary>
         /// Defines the test method CheckIfObjectAfterInitializationIsDirty_1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckIfObjectAfterInitializationIsDirty_1()
         {
             var product = new Product
@@ -67,25 +68,25 @@ namespace ISynergy.Framework.Core.Data.Tests
                 Name = "Test1"
             };
 
-            Assert.True(product.IsDirty);
+            Assert.IsTrue(product.IsDirty);
         }
 
         /// <summary>
         /// Defines the test method CheckIfObjectAfterInitializationIsDirty_2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckIfObjectAfterInitializationIsDirty_2()
         {
             var product = new Product { Name = "Test2" };
             product.Date = DateTimeOffset.Now;
 
-            Assert.True(product.IsDirty);
+            Assert.IsTrue(product.IsDirty);
         }
 
         /// <summary>
         /// Defines the test method CheckIfObjectAfterInitializationIsDirty_3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckIfObjectAfterInitializationIsDirty_3()
         {
             var product = new Product(
@@ -97,30 +98,30 @@ namespace ISynergy.Framework.Core.Data.Tests
                 Date = null
             };
 
-            Assert.True(product.IsDirty);
+            Assert.IsTrue(product.IsDirty);
         }
 
         /// <summary>
         /// Test to check if property with Required or Identity attributes and has a null value generates an validation error.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestIfNullValueGeneratesValidationError()
         {
             var product = new Product();
             product.Validate();
-            Assert.NotEmpty(product.Errors);
+            Assert.IsTrue(product.Errors.Count > 0);
         }
 
         /// <summary>
         /// Test to check if property with Required or Identity attributes and has a non-null value generates an validation error.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestIfNonNullValueGeneratesNoValidationError()
         {
             var product = new Product();
             product.Name = "Test";
             product.Validate();
-            Assert.Empty(product.Errors);
+            Assert.IsTrue(product.Errors.Count == 0);
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using ISynergy.Framework.Core.Linq.Helpers;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
     /// <summary>
     /// Class TypeHelperTests.
     /// </summary>
+    [TestClass]
     public class TypeHelperTests
     {
         /// <summary>
@@ -23,7 +24,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method TypeHelper_ParseEnum_Valid.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TypeHelper_ParseEnum_Valid()
         {
             // Assign + Act
@@ -36,7 +37,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method TypeHelper_ParseEnum_Invalid.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TypeHelper_ParseEnum_Invalid()
         {
             // Assign + Act
@@ -49,7 +50,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method TypeHelper_IsCompatibleWith_SameTypes_True.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TypeHelper_IsCompatibleWith_SameTypes_True()
         {
             // Assign + Act
@@ -62,7 +63,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method TypeHelper_IsCompatibleWith_True.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TypeHelper_IsCompatibleWith_True()
         {
             // Assign + Act
@@ -75,7 +76,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method TypeHelper_IsCompatibleWith_False.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TypeHelper_IsCompatibleWith_False()
         {
             // Assign + Act

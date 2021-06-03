@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Skip.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Skip()
         {
             //Arrange
@@ -27,16 +27,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultNone = testListQry.Skip(100);
 
             //Assert
-            Assert.Equal(testList.Skip(0).ToArray(), resultFull.Cast<User>().ToArray());
-            Assert.Equal(testList.Skip(1).ToArray(), resultMinus1.Cast<User>().ToArray());
-            Assert.Equal(testList.Skip(50).ToArray(), resultHalf.Cast<User>().ToArray());
-            Assert.Equal(testList.Skip(100).ToArray(), resultNone.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Skip(0).ToArray(), resultFull.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Skip(1).ToArray(), resultMinus1.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Skip(50).ToArray(), resultHalf.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Skip(100).ToArray(), resultNone.Cast<User>().ToArray());
         }
 
         /// <summary>
         /// Defines the test method SkipTestForEqualType.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SkipTestForEqualType()
         {
             // Arrange
@@ -47,18 +47,18 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = results.FirstOrDefault();
             Type resultType = result.GetType();
 
-            Assert.Equal("ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models.User", resultType.FullName);
+            Assert.AreEqual("ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models.User", resultType.FullName);
 
             var skipResult = results.Skip(1).Take(5).FirstOrDefault();
             Type skipResultType = skipResult.GetType();
 
-            Assert.Equal("ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models.User", skipResultType.FullName);
+            Assert.AreEqual("ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models.User", skipResultType.FullName);
         }
 
         /// <summary>
         /// Defines the test method SkipTestForEqualElementType.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SkipTestForEqualElementType()
         {
             // Arrange
@@ -69,7 +69,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var skipResult = results.Skip(1).Take(5);
 
             // Assert
-            Assert.Equal(results.ElementType, skipResult.ElementType);
+            Assert.AreEqual(results.ElementType, skipResult.ElementType);
         }
     }
 }

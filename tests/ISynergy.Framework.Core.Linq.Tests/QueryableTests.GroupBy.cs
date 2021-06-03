@@ -1,7 +1,7 @@
 ﻿using NFluent;
 using ISynergy.Framework.Core.Linq.Exceptions;
 using System.Reflection;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupBy_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupBy_Dynamic()
         {
             //Arrange
@@ -28,15 +28,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var byAgeReturnAll = qry.GroupBy("Profile.Age");
 
             //Assert
-            Assert.Equal(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnUserName.Count());
-            Assert.Equal(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnAll.Count());
+            Assert.AreEqual(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnUserName.Count());
+            Assert.AreEqual(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnAll.Count());
         }
 
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/75
         /// <summary>
         /// Defines the test method GroupBy_Dynamic_Issue75.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupBy_Dynamic_Issue75()
         {
             var testList = User.GenerateSampleModels(100);
@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupBy_Dynamic_Exceptions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupBy_Dynamic_Exceptions()
         {
             //Arrange
@@ -62,20 +62,20 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Assert.Throws<ParseException>(() => qry.GroupBy("Bad"));
-            Assert.Throws<ParseException>(() => qry.GroupBy("Id, UserName"));
-            Assert.Throws<ParseException>(() => qry.GroupBy("new Id, UserName"));
-            Assert.Throws<ParseException>(() => qry.GroupBy("new (Id, UserName"));
-            Assert.Throws<ParseException>(() => qry.GroupBy("new (Id, UserName, Bad)"));
+            Assert.ThrowsException<ParseException>(() => qry.GroupBy("Bad"));
+            Assert.ThrowsException<ParseException>(() => qry.GroupBy("Id, UserName"));
+            Assert.ThrowsException<ParseException>(() => qry.GroupBy("new Id, UserName"));
+            Assert.ThrowsException<ParseException>(() => qry.GroupBy("new (Id, UserName"));
+            Assert.ThrowsException<ParseException>(() => qry.GroupBy("new (Id, UserName, Bad)"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryExtensions.GroupBy((IQueryable<string>)null, "Id"));
-            Assert.Throws<ArgumentNullException>(() => qry.GroupBy(null));
-            Assert.Throws<ArgumentNullException>(() => qry.GroupBy(""));
-            Assert.Throws<ParseException>(() => qry.GroupBy(" "));
+            Assert.ThrowsException<ArgumentNullException>(() => DynamicQueryExtensions.GroupBy((IQueryable<string>)null, "Id"));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.GroupBy(null));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.GroupBy(""));
+            Assert.ThrowsException<ParseException>(() => qry.GroupBy(" "));
 
-            Assert.Throws<ArgumentNullException>(() => qry.GroupBy("Id", (string)null));
-            Assert.Throws<ArgumentNullException>(() => qry.GroupBy("Id", ""));
-            Assert.Throws<ParseException>(() => qry.GroupBy("Id", " "));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.GroupBy("Id", (string)null));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.GroupBy("Id", ""));
+            Assert.ThrowsException<ParseException>(() => qry.GroupBy("Id", " "));
         }
     }
 }

@@ -4,13 +4,14 @@ using FluentAssertions;
 using ISynergy.Framework.Core.Linq.Converters;
 using ISynergy.Framework.Core.Linq.Factories;
 using ISynergy.Framework.Core.Linq.Parsers;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.TypeConvertors
 {
     /// <summary>
     /// Class TypeConverterFactoryTests.
     /// </summary>
+    [TestClass]
     public class TypeConverterFactoryTests
     {
         /// <summary>
@@ -18,11 +19,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.TypeConvertors
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="expected">The expected.</param>
-        [Theory]
-        [InlineData(typeof(DateTimeOffset), typeof(DateTimeOffsetConverter))]
-        [InlineData(typeof(DateTime), typeof(DateTimeConverter))]
-        [InlineData(typeof(DateTime?), typeof(NullableConverter))]
-        [InlineData(typeof(int), typeof(Int32Converter))]
+        [DataTestMethod]
+        [DataRow(typeof(DateTimeOffset), typeof(DateTimeOffsetConverter))]
+        [DataRow(typeof(DateTime), typeof(DateTimeConverter))]
+        [DataRow(typeof(DateTime?), typeof(NullableConverter))]
+        [DataRow(typeof(int), typeof(Int32Converter))]
         public void GetConverter_WithDefaultParsingConfig_ReturnsCorrectTypeConverter(Type type, Type expected)
         {
             // Arrange
@@ -40,11 +41,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.TypeConvertors
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="expected">The expected.</param>
-        [Theory]
-        [InlineData(typeof(DateTimeOffset), typeof(DateTimeOffsetConverter))]
-        [InlineData(typeof(DateTime), typeof(CustomDateTimeConverter))]
-        [InlineData(typeof(DateTime?), typeof(CustomDateTimeConverter))]
-        [InlineData(typeof(int), typeof(Int32Converter))]
+        [DataTestMethod]
+        [DataRow(typeof(DateTimeOffset), typeof(DateTimeOffsetConverter))]
+        [DataRow(typeof(DateTime), typeof(CustomDateTimeConverter))]
+        [DataRow(typeof(DateTime?), typeof(CustomDateTimeConverter))]
+        [DataRow(typeof(int), typeof(Int32Converter))]
         public void GetConverter_WithDateTimeIsParsedAsUTCIsTrue_ReturnsCorrectTypeConverter(Type type, Type expected)
         {
             // Arrange

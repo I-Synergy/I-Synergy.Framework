@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Take.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Take()
         {
             //Arrange
@@ -26,10 +26,10 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultOne = testListQry.Take(1);
 
             //Assert
-            Assert.Equal(testList.Take(100).ToArray(), resultFull.Cast<User>().ToArray());
-            Assert.Equal(testList.Take(99).ToArray(), resultMinus1.Cast<User>().ToArray());
-            Assert.Equal(testList.Take(50).ToArray(), resultHalf.Cast<User>().ToArray());
-            Assert.Equal(testList.Take(1).ToArray(), resultOne.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Take(100).ToArray(), resultFull.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Take(99).ToArray(), resultMinus1.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Take(50).ToArray(), resultHalf.Cast<User>().ToArray());
+            Assert.AreEqual(testList.Take(1).ToArray(), resultOne.Cast<User>().ToArray());
         }
     }
 }

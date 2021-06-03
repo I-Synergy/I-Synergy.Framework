@@ -1,19 +1,20 @@
-﻿using Xunit;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Storage.Tests
 {
     /// <summary>
     /// Class UnitTest.
     /// </summary>
+    [TestClass]
     public class UnitTest
     {
         /// <summary>
         /// Defines the test method Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Test()
         {
-            Assert.True(true);
+            Assert.IsTrue(true);
         }
     }
 }

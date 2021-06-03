@@ -3,13 +3,14 @@ using ISynergy.Framework.Core.Linq.Parsers;
 using NFluent;
 using System;
 using System.Linq.Expressions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
     /// <summary>
     /// Class ExpressionHelperTests.
     /// </summary>
+    [TestClass]
     public class ExpressionHelperTests
     {
         /// <summary>
@@ -28,7 +29,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ExpressionHelper_WrapConstantExpression_false.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionHelper_WrapConstantExpression_false()
         {
             // Assign
@@ -52,7 +53,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ExpressionHelper_WrapConstantExpression_true.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionHelper_WrapConstantExpression_true()
         {
             // Assign
@@ -77,7 +78,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid()
         {
             // Assign
@@ -94,7 +95,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid_Invalid.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid_Invalid()
         {
             // Assign
@@ -110,7 +111,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNonNullable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNonNullable()
         {
             // Assign
@@ -127,7 +128,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfFalse.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfFalse()
         {
             // Assign
@@ -144,7 +145,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfTrue.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfTrue()
         {
             // Assign
@@ -161,7 +162,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NonNullable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NonNullable()
         {
             // Assign
