@@ -13,6 +13,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Mvvm
 {
@@ -131,12 +132,14 @@ namespace ISynergy.Framework.Mvvm
         /// <param name="commonServices">The common services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
+        /// <param name="automaticValidation"></param>
         protected ViewModelBladeView(
             IContext context,
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory,
-            bool refreshOnInitialization = true) 
-            : base(context, commonServices, loggerFactory)
+            bool refreshOnInitialization = true,
+            bool automaticValidation = false) 
+            : base(context, commonServices, loggerFactory, automaticValidation)
         {
             RefreshOnInitialization = refreshOnInitialization;
 

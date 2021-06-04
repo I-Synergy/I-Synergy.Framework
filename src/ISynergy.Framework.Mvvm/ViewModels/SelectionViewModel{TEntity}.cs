@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -72,14 +73,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <param name="items">The items.</param>
         /// <param name="selectedItems">The selected items.</param>
         /// <param name="selectionMode">The selection mode.</param>
+        /// <param name="automaticValidation"></param>
         public SelectionViewModel(
             IContext context,
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory,
             IEnumerable<TEntity> items,
             IEnumerable<object> selectedItems,
-            SelectionModes selectionMode = SelectionModes.Single)
-            : base(context, commonServices, loggerFactory)
+            SelectionModes selectionMode = SelectionModes.Single,
+            bool automaticValidation = false)
+            : base(context, commonServices, loggerFactory, automaticValidation)
         {
             if (items is null)
                 items = items.EnsureNotNull();

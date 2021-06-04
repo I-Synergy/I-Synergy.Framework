@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
+using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Mvvm
 {
@@ -81,11 +82,13 @@ namespace ISynergy.Framework.Mvvm
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="automaticValidation"></param>
         protected ViewModelBladeWizard(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory)
-            : base(context, commonServices, loggerFactory)
+            ILoggerFactory loggerFactory,
+            bool automaticValidation = false)
+            : base(context, commonServices, loggerFactory, automaticValidation)
         {
             Back_Command = new Command(PerformBackAction);
             Next_Command = new Command(PerformNextAction);

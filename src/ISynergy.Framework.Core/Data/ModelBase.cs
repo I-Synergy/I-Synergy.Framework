@@ -15,9 +15,9 @@ namespace ISynergy.Framework.Core.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelBase"/> class.
         /// </summary>
-        /// <param name="validation">The validation.</param>
-        protected ModelBase(ValidationTriggers validation = ValidationTriggers.Manual)
-            : base(validation)
+        /// <param name="automaticValidation">The validation.</param>
+        protected ModelBase(bool automaticValidation = false)
+            : base(automaticValidation)
         {
         }
 

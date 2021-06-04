@@ -26,7 +26,11 @@ namespace ISynergy.Framework.Core.Data
         /// <value>The validation trigger.</value>
         [JsonIgnore]
         [DataTableIgnore]
-        private ValidationTriggers ValidationTrigger { get; }
+        public bool AutomaticValidationTrigger
+        {
+            get { return GetValue<bool>(); }
+            set { SetValue(value); }
+        }
 
         /// <summary>
         /// Gets the properties.
@@ -94,17 +98,17 @@ namespace ISynergy.Framework.Core.Data
         public override int GetHashCode()
         {
             if (this.GetIdentityValue() is not null)
-                    this.GetIdentityValue().GetHashCode();
+                    return this.GetIdentityValue().GetHashCode();
             return base.GetHashCode();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableClass" /> class.
         /// </summary>
-        /// <param name="validation">The validation.</param>
-        protected ObservableClass(ValidationTriggers validation = ValidationTriggers.Manual)
+        /// <param name="automaticValidation">The validation.</param>
+        protected ObservableClass(bool automaticValidation = false)
         {
-            ValidationTrigger = validation;
+            AutomaticValidationTrigger = automaticValidation;
             Validator = new Action<IObservableClass>(_ =>
             {
                 foreach (var item in this.GetType().GetProperties())
@@ -165,10 +169,8 @@ namespace ISynergy.Framework.Core.Data
                     property.Value = value;
                     OnPropertyChanged(propertyName);
 
-                    if (ValidationTrigger == ValidationTriggers.ChangedProperty)
-                    {
+                    if (AutomaticValidationTrigger)
                         Validate();
-                    }
                 }
             }
         }
@@ -196,10 +198,8 @@ namespace ISynergy.Framework.Core.Data
                     field = value;
                     OnPropertyChanged(propertyName);
 
-                    if (ValidationTrigger == ValidationTriggers.ChangedProperty)
-                    {
+                    if (AutomaticValidationTrigger)
                         Validate();
-                    }
                 }
             }
         }
@@ -261,10 +261,8 @@ namespace ISynergy.Framework.Core.Data
                 property.Value.ResetChanges();
             }
 
-            if (ValidationTrigger == ValidationTriggers.ChangedProperty)
-            {
+            if (AutomaticValidationTrigger)
                 Validate();
-            }
         }
 
         /// <summary>
@@ -277,10 +275,8 @@ namespace ISynergy.Framework.Core.Data
                 property.Value.MarkAsClean();
             }
 
-            if (ValidationTrigger == ValidationTriggers.ChangedProperty)
-            {
+            if (AutomaticValidationTrigger)
                 Validate();
-            }
         }
 
         #region INotifyPropertyChanged
