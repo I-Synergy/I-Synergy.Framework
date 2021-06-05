@@ -3,7 +3,12 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System;
 using System.Text;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Data;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {

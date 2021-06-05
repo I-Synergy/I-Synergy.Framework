@@ -1,5 +1,10 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿#if (NETFX_CORE || HAS_UNO)
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -7,11 +12,9 @@ namespace ISynergy.Framework.UI.Controls
     /// Class ErrorPresenter. This class cannot be inherited.
     /// Implements the <see cref="UserControl" />
     /// Implements the <see cref="IComponentConnector" />
-    /// Implements the <see cref="IComponentConnector2" />
     /// </summary>
     /// <seealso cref="UserControl" />
     /// <seealso cref="IComponentConnector" />
-    /// <seealso cref="IComponentConnector2" />
     public sealed partial class ErrorPresenter : UserControl
     {
         /// <summary>

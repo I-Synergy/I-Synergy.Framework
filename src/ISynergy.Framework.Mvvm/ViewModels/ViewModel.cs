@@ -95,13 +95,13 @@ namespace ISynergy.Framework.Mvvm
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
-        /// <param name="validation">The validation.</param>
+        /// <param name="automaticValidation">The validation.</param>
         protected ViewModel(
             IContext context,
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory,
-            ValidationTriggers validation = ValidationTriggers.Manual)
-            : base(validation)
+            bool automaticValidation = false)
+            : base(automaticValidation)
         {
             _loggerFactory = loggerFactory;
 
@@ -236,7 +236,7 @@ namespace ISynergy.Framework.Mvvm
         /// </summary>
         /// <returns></returns>
         protected Task ThrowFeatureNotEnabledWarning() => BaseCommonServices.DialogService.ShowInformationAsync(
-            BaseCommonServices.LanguageService.GetString("EX_FUTURE_MODULE"),
+            BaseCommonServices.LanguageService.GetString("WarningFutureModule"),
             "Features");
     }
 }

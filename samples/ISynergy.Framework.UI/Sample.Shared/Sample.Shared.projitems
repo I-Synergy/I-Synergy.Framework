@@ -43,10 +43,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\TelemetryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InfoViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SelectionTestViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TestItemsListViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ValidationViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Controls\BaseList.xaml.cs">
       <DependentUpon>BaseList.xaml</DependentUpon>
     </Compile>
@@ -67,6 +69,9 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\TestItemsListView.xaml.cs">
       <DependentUpon>TestItemsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ValidationView.xaml.cs">
+      <DependentUpon>ValidationView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +112,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\TestItemsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Views\ValidationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

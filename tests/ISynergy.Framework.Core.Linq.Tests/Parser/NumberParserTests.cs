@@ -1,13 +1,14 @@
 ﻿using System.Globalization;
 using ISynergy.Framework.Core.Linq.Parsers;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
     /// <summary>
     /// Class NumberParserTests.
     /// </summary>
+    [TestClass]
     public class NumberParserTests
     {
         /// <summary>
@@ -31,7 +32,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method NumberParser_ParseNumber_Decimal_With_DefaultCulture.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void NumberParser_ParseNumber_Decimal_With_DefaultCulture()
         {
             // Act
@@ -44,7 +45,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method NumberParser_ParseNumber_Decimal_With_GermanCulture.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void NumberParser_ParseNumber_Decimal_With_GermanCulture()
         {
             // Assign

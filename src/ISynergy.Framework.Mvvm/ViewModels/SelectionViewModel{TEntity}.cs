@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -57,24 +59,10 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the Query property value.
-        /// </summary>
-        /// <value>The query.</value>
-        public string Query
-        {
-            get { return GetValue<string>(); }
-            set
-            {
-                SetValue(value);
-                QueryItems();
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public Command Search_Command { get; set; }
+        public Command<string> Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionViewModel{TEntity}"/> class.
@@ -85,14 +73,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <param name="items">The items.</param>
         /// <param name="selectedItems">The selected items.</param>
         /// <param name="selectionMode">The selection mode.</param>
+        /// <param name="automaticValidation"></param>
         public SelectionViewModel(
             IContext context,
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory,
             IEnumerable<TEntity> items,
             IEnumerable<object> selectedItems,
-            SelectionModes selectionMode = SelectionModes.Single)
-            : base(context, commonServices, loggerFactory)
+            SelectionModes selectionMode = SelectionModes.Single,
+            bool automaticValidation = false)
+            : base(context, commonServices, loggerFactory, automaticValidation)
         {
             if (items is null)
                 items = items.EnsureNotNull();
@@ -106,29 +96,31 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             {
                 if (SelectionMode == SelectionModes.Single && SelectedItem.Count != 1)
                 {
-                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("Warning_Select_Item"));
+                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
                 }
 
                 if (SelectionMode == SelectionModes.Multiple && SelectedItem.Count < 1)
                 {
-                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("Warning_Select_Item"));
+                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
                 }
             });
 
-            Query = string.Empty;
+            Search_Command = new Command<string>(async (e) => await QueryItemsAsync(e));
             RawItems = items;
             Items = new ObservableCollection<TEntity>(items);
             SelectedItem = new List<object>(selectedItems);
+            IsInitialized = true;
         }
 
         /// <summary>
         /// Queries the items.
         /// </summary>
-        private void QueryItems()
+        /// <param name="query">Query parameter.</param>
+        protected virtual Task QueryItemsAsync(string query)
         {
             if (IsInitialized && RawItems != null)
             {
-                if (string.IsNullOrEmpty(Query) || Query.Trim() == "*")
+                if (string.IsNullOrEmpty(query) || query.Trim() == "*")
                 {
                     Items = new ObservableCollection<TEntity>(RawItems);
                 }
@@ -140,7 +132,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                     {
                         foreach (var prop in item.GetType().GetProperties().Select(s => s.GetValue(item)).ToList())
                         {
-                            if (prop is string value && !string.IsNullOrEmpty(value) && value.IndexOf(Query, StringComparison.OrdinalIgnoreCase) != -1)
+                            if (prop is string value && !string.IsNullOrEmpty(value) && value.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
                             {
                                 filteredList.Add(item);
                                 break;
@@ -151,6 +143,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                     Items = new ObservableCollection<TEntity>(filteredList);
                 }
             }
+
+            return Task.CompletedTask;
         }
     }
 }

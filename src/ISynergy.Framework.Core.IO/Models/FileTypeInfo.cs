@@ -86,7 +86,7 @@ namespace ISynergy.Framework.Core.IO.Models
         private static byte[] HexStringToByteArray(string hexString)
         {
             if (string.IsNullOrEmpty(hexString))
-                return null;
+                return Array.Empty<byte>();
 
             int numberOfCharacters = hexString.Length;
             byte[] byteArray = new byte[numberOfCharacters / 2];

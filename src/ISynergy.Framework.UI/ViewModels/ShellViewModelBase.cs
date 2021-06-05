@@ -2,10 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using ISynergy.Framework.Mvvm.Commands;
-using Windows.UI.Xaml.Controls;
 using ISynergy.Framework.UI.Navigation;
 using Windows.System;
 using ISynergy.Framework.Mvvm;
@@ -20,6 +17,16 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.Mvvm.Events;
+
+#if (NETFX_CORE || HAS_UNO)
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Controls;
+#endif
 
 namespace ISynergy.Framework.UI.ViewModels
 {
@@ -139,6 +146,10 @@ namespace ISynergy.Framework.UI.ViewModels
         public Command<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
 
         /// <summary>
+        /// The settings service.
+        /// </summary>
+        private readonly IBaseSettingsService _settingsService;
+        /// <summary>
         /// The theme selector
         /// </summary>
         private readonly IThemeSelectorService _themeSelector;
@@ -152,19 +163,20 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
+        /// <param name="settingsService">The settings services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="themeSelectorService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
-        /// <param name="validation">The validation.</param>
         protected ShellViewModelBase(
             IContext context,
             IBaseCommonServices commonServices,
+            IBaseSettingsService settingsService,
             ILoggerFactory loggerFactory,
             IThemeSelectorService themeSelectorService,
-            LocalizationFunctions localizationFunctions,
-            ValidationTriggers validation = ValidationTriggers.Manual)
+            LocalizationFunctions localizationFunctions)
             : base(context, commonServices, loggerFactory)
         {
+            _settingsService = settingsService;
             _themeSelector = themeSelectorService;
             _themeSelector.OnThemeChanged += ThemeSelector_OnThemeChanged;
             _localizationFunctions = localizationFunctions;
@@ -398,7 +410,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (sender != null && sender is byte[])
             {
-                BaseCommonServices.ApplicationSettingsService.Wallpaper = sender as byte[];
+                _settingsService.Wallpaper = sender as byte[];
             }
         }
 
@@ -408,9 +420,9 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenLanguageAsync()
         {
-            var languageVM = new LanguageViewModel(Context, BaseCommonServices, _localizationFunctions, _loggerFactory);
+            var languageVM = new LanguageViewModel(Context, BaseCommonServices, _settingsService, _localizationFunctions, _loggerFactory);
             languageVM.Submitted += LanguageVM_Submitted;
-            return BaseCommonServices.UIVisualizerService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, string>(languageVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, string>(languageVM);
         }
 
         /// <summary>
@@ -423,10 +435,10 @@ namespace ISynergy.Framework.UI.ViewModels
             if (sender is LanguageViewModel vm)
                 vm.Submitted -= LanguageVM_Submitted;
 
-            if (await BaseCommonServices.DialogService.ShowAsync(
-                        BaseCommonServices.LanguageService.GetString("Warning_Language_Change") +
+            if (await BaseCommonServices.DialogService.ShowMessageAsync(
+                        BaseCommonServices.LanguageService.GetString("WarningLanguageChange") +
                         Environment.NewLine +
-                        BaseCommonServices.LanguageService.GetString("Do_you_want_to_do_it_now"),
+                        BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
                         BaseCommonServices.LanguageService.GetString("TitleQuestion"),
                         MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -440,9 +452,9 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenColorsAsync()
         {
-            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _loggerFactory);
+            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _settingsService, _loggerFactory);
             themeVM.Submitted += ThemeVM_Submitted;
-            return BaseCommonServices.UIVisualizerService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ApplicationColors>(themeVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ThemeColors>(themeVM);
         }
 
         /// <summary>
@@ -450,15 +462,15 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private async void ThemeVM_Submitted(object sender, SubmitEventArgs<ApplicationColors> e)
+        private async void ThemeVM_Submitted(object sender, SubmitEventArgs<ThemeColors> e)
         {
             if (sender is ThemeViewModel vm)
                 vm.Submitted -= ThemeVM_Submitted;
 
-            if (await BaseCommonServices.DialogService.ShowAsync(
-                        BaseCommonServices.LanguageService.GetString("Warning_Color_Change") +
+            if (await BaseCommonServices.DialogService.ShowMessageAsync(
+                        BaseCommonServices.LanguageService.GetString("WarningColorChange") +
                         Environment.NewLine +
-                        BaseCommonServices.LanguageService.GetString("Do_you_want_to_do_it_now"),
+                        BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
                         BaseCommonServices.LanguageService.GetString("TitleQuestion"),
                         MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {

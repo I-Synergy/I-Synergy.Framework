@@ -5,7 +5,7 @@ using ISynergy.Framework.Core.Linq.Exceptions;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using ISynergy.Framework.Core.Linq.Parsers;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Where_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Where_Dynamic()
         {
             // Arrange
@@ -31,16 +31,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var userByFirstName = qry.Where("Profile!=null && Profile.FirstName=@0", testList[1].Profile.FirstName);
 
             // Assert
-            Assert.Equal(testList[10], userById.Single());
-            Assert.Equal(testList[5], userByUserName.Single());
-            Assert.Equal(testList.Count(x => x.Profile == null), nullProfileCount.Count());
-            Assert.Equal(testList[1], userByFirstName.Single());
+            Assert.AreEqual(testList[10], userById.Single());
+            Assert.AreEqual(testList[5], userByUserName.Single());
+            Assert.AreEqual(testList.Count(x => x.Profile == null), nullProfileCount.Count());
+            Assert.AreEqual(testList[1], userByFirstName.Single());
         }
 
         /// <summary>
         /// Defines the test method Where_Dynamic_CheckCastToObject.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Where_Dynamic_CheckCastToObject()
         {
             // Arrange
@@ -60,9 +60,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// </summary>
         /// <param name="time">The time.</param>
         /// <param name="hours">The hours.</param>
-        [Theory]
-        [InlineData("Fri, 10 May 2019 11:03:17 GMT", 11)]
-        [InlineData("Fri, 10 May 2019 11:03:17 -07:00", 18)]
+        [TestMethod]
+        [DataRow("Fri, 10 May 2019 11:03:17 GMT", 11)]
+        [DataRow("Fri, 10 May 2019 11:03:17 -07:00", 18)]
         public void Where_Dynamic_DateTimeIsParsedAsUTC(string time, int hours)
         {
             // Arrange
@@ -81,13 +81,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = queryable.Where(parsingConfig, $"it.TimeNull >= \"{time}\"");
 
             // Assert
-            Assert.Equal(1, result.Count());
+            Assert.AreEqual(1, result.Count());
         }
 
         /// <summary>
         /// https://github.com/StefH/System.Linq.Dynamic.Core/issues/19
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Where_Dynamic_DateTime_NotEquals_Null()
         {
             //Arrange
@@ -99,14 +99,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = queryable.Where("null != PostDate").ToArray();
 
             //Assert
-            Assert.Equal(expected, result1);
-            Assert.Equal(expected, result2);
+            Assert.AreEqual(expected, result1);
+            Assert.AreEqual(expected, result2);
         }
 
         /// <summary>
         /// Defines the test method Where_Dynamic_DateTime_Equals_Null.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Where_Dynamic_DateTime_Equals_Null()
         {
             //Arrange
@@ -118,14 +118,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = queryable.Where("null == PostDate").ToArray();
 
             //Assert
-            Assert.Equal(expected, result1);
-            Assert.Equal(expected, result2);
+            Assert.AreEqual(expected, result1);
+            Assert.AreEqual(expected, result2);
         }
 
         /// <summary>
         /// Defines the test method Where_Dynamic_Exceptions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Where_Dynamic_Exceptions()
         {
             //Arrange
@@ -133,20 +133,20 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Assert.Throws<InvalidOperationException>(() => qry.Where("Id"));
-            Assert.Throws<ParseException>(() => qry.Where("Bad=3"));
-            Assert.Throws<ParseException>(() => qry.Where("Id=123"));
+            Assert.ThrowsException<InvalidOperationException>(() => qry.Where("Id"));
+            Assert.ThrowsException<ParseException>(() => qry.Where("Bad=3"));
+            Assert.ThrowsException<ParseException>(() => qry.Where("Id=123"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryExtensions.Where(null, "Id=1"));
-            Assert.Throws<ArgumentNullException>(() => qry.Where(null));
-            Assert.Throws<ArgumentNullException>(() => qry.Where(""));
-            Assert.Throws<ParseException>(() => qry.Where(" "));
+            Assert.ThrowsException<ArgumentNullException>(() => DynamicQueryExtensions.Where(null, "Id=1"));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.Where(null));
+            Assert.ThrowsException<ArgumentNullException>(() => qry.Where(""));
+            Assert.ThrowsException<ParseException>(() => qry.Where(" "));
         }
 
         /// <summary>
         /// Defines the test method Where_Dynamic_StringQuoted.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Where_Dynamic_StringQuoted()
         {
             //Arrange
@@ -161,16 +161,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expected = qry.Where(x => x.UserName == @"This \""is\"" a test.").ToArray();
 
             //Assert
-            Assert.Single(expected);
-            Assert.Equal(expected, result1a);
-            Assert.Equal(expected, result1b);
-            Assert.Equal(expected, result2);
+            Assert.IsTrue(expected.Count() == 1);
+            Assert.AreEqual(expected, result1a);
+            Assert.AreEqual(expected, result1b);
+            Assert.AreEqual(expected, result2);
         }
 
         /// <summary>
         /// Defines the test method Where_Dynamic_SelectNewObjects.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Where_Dynamic_SelectNewObjects()
         {
             //Arrange
@@ -182,7 +182,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var dynamicList = qry.Where("Income > @0", 4000).ToDynamicList();
 
             var newUsers = dynamicList.Select(x => new { Id = x.Id, Income = x.Income + 1111 });
-            Assert.Equal(newUsers.Cast<object>().ToList(), expectedResult);
+            Assert.AreEqual(newUsers.Cast<object>().ToList(), expectedResult);
         }
     }
 }

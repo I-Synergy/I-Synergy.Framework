@@ -1,404 +1,405 @@
 ﻿using System;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Geography.Common.Tests
 {
     /// <summary>
     /// Class AngleTests.
     /// </summary>
+    [TestClass]
     public class AngleTests
     {
         /// <summary>
         /// Defines the test method TestConstructor1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor1()
         {
             var a = new Angle(90);
-            Assert.Equal(90, a.Degrees);
+            Assert.AreEqual(90, a.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestConstructor2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor2()
         {
             var a = new Angle(45, 30);
-            Assert.Equal(45.5, a.Degrees);
+            Assert.AreEqual(45.5, a.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestConstructor3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor3()
         {
             var a = new Angle(-45, 30);
-            Assert.Equal(-45.5, a.Degrees);
+            Assert.AreEqual(-45.5, a.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestConstructor4.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor4()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 60));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 60));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor5.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor5()
         {
             var a = new Angle(45, 30, 30);
-            Assert.Equal(a.Degrees, 45.5 + (1.0 / 120.0));
+            Assert.AreEqual(a.Degrees, 45.5 + (1.0 / 120.0));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor6.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor6()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 30, 60));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 30, 60));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor7.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor7()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 60, 30));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 60, 30));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor8.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor8()
         {
             var a = new Angle(-45, 30, 30);
-            Assert.Equal(a.Degrees, -45.5 - (1.0 / 120.0));
+            Assert.AreEqual(a.Degrees, -45.5 - (1.0 / 120.0));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor9.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor9()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, -1, 30));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, -1, 30));
         }
 
         /// <summary>
         /// Defines the test method TestDegreeSetter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestDegreeSetter()
         {
             var a = new Angle(0);
-            Assert.Equal(0, a.Degrees);
+            Assert.AreEqual(0, a.Degrees);
             a.Degrees = 90.0;
-            Assert.Equal(90, a.Degrees);
+            Assert.AreEqual(90, a.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestRadiansGetter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestRadiansGetter()
         {
             var a = new Angle(180);
-            Assert.Equal(a.Radians, Math.PI);
+            Assert.AreEqual(a.Radians, Math.PI);
         }
 
         /// <summary>
         /// Defines the test method TestRadiansSetter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestRadiansSetter()
         {
             var a = new Angle(0);
-            Assert.Equal(0, a.Degrees);
+            Assert.AreEqual(0, a.Degrees);
             a.Radians = Math.PI;
-            Assert.Equal(180, a.Degrees);
+            Assert.AreEqual(180, a.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestAbs.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestAbs()
         {
             var a = new Angle(-180);
-            Assert.Equal(a.Degrees, -180);
+            Assert.AreEqual(a.Degrees, -180);
             var b = a.Abs();
-            Assert.Equal(180, b.Degrees);
+            Assert.AreEqual(180, b.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestCompareTo1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestCompareTo1()
         {
             var x = 180.0;
             var y = 180.00000001;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.Equal(0, a.CompareTo(a));
-            Assert.Equal(a.CompareTo(b), -1);
-            Assert.Equal(1, b.CompareTo(a));
+            Assert.AreEqual(0, a.CompareTo(a));
+            Assert.AreEqual(a.CompareTo(b), -1);
+            Assert.AreEqual(1, b.CompareTo(a));
         }
 
         /// <summary>
         /// Defines the test method TestCompareTo2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestCompareTo2()
         {
             var x = 180.0;
             var y = x + 1e-13;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.Equal(0, a.CompareTo(a));
-            Assert.Equal(0, a.CompareTo(b));
-            Assert.Equal(0, b.CompareTo(a));
+            Assert.AreEqual(0, a.CompareTo(a));
+            Assert.AreEqual(0, a.CompareTo(b));
+            Assert.AreEqual(0, b.CompareTo(a));
         }
 
         /// <summary>
         /// Defines the test method TestEquals1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEquals1()
         {
             var x = 180.0;
             var y = 180.00000001;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.False(a.Equals(b));
+            Assert.IsFalse(a.Equals(b));
             b = new Angle(x);
-            Assert.True(a.Equals(b));
+            Assert.IsTrue(a.Equals(b));
         }
 
         /// <summary>
         /// Defines the test method TestEquals2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEquals2()
         {
             var a = new Angle(180);
             object s = "180";
-            Assert.False(a.Equals(null));
-            Assert.False(a.Equals(s));
+            Assert.IsFalse(a.Equals(null));
+            Assert.IsFalse(a.Equals(s));
         }
 
         /// <summary>
         /// Defines the test method TestToString.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestToString()
         {
             var a = new Angle(45);
             var s = a.ToString();
-            Assert.Equal("45", s);
+            Assert.AreEqual("45", s);
         }
 
         /// <summary>
         /// Defines the test method TestLessEqual1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestLessEqual1()
         {
             var x = 180.0;
             var y = 180.00000001;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.True(a <= b);
+            Assert.IsTrue(a <= b);
         }
 
         /// <summary>
         /// Defines the test method TestLessEqual2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestLessEqual2()
         {
             var x = 180.0;
             var y = 180.0 + 1e-13;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.True(a <= b);
+            Assert.IsTrue(a <= b);
         }
 
         /// <summary>
         /// Defines the test method TestGreaterEqual1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestGreaterEqual1()
         {
             var x = 180.0;
             var y = 180.00000001;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.True(b >= a);
+            Assert.IsTrue(b >= a);
         }
 
         /// <summary>
         /// Defines the test method TestGreaterEqual2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestGreaterEqual2()
         {
             var x = 180.0;
             var y = 180.0 + 1e-13;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.True(b >= a);
+            Assert.IsTrue(b >= a);
         }
 
         /// <summary>
         /// Defines the test method TestOperatorAdd.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestOperatorAdd()
         {
             var a = new Angle(45);
             var b = new Angle(60);
             var c = a + b;
-            Assert.Equal(105, c.Degrees);
+            Assert.AreEqual(105, c.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestOperatorSub.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestOperatorSub()
         {
             var a = new Angle(45);
             var b = new Angle(60);
             var c = a - b;
-            Assert.Equal(c.Degrees, -15);
+            Assert.AreEqual(c.Degrees, -15);
         }
 
         /// <summary>
         /// Defines the test method TestOperatorMul.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestOperatorMul()
         {
             var a = new Angle(45);
             var b = 2 * a;
             var c = a * 3;
-            Assert.Equal(90, b.Degrees);
-            Assert.Equal(135, c.Degrees);
+            Assert.AreEqual(90, b.Degrees);
+            Assert.AreEqual(135, c.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestGreaterThan1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestGreaterThan1()
         {
             var x = 180.00000001;
             var y = 180.0;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.True(a > b);
+            Assert.IsTrue(a > b);
         }
 
         /// <summary>
         /// Defines the test method TestGreaterThan2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestGreaterThan2()
         {
             var x = 180.0 + 1e-12;
             var y = 180.0;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.False(a > b);
+            Assert.IsFalse(a > b);
         }
 
         /// <summary>
         /// Defines the test method TestNotEqual1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNotEqual1()
         {
             var x = 180.00000001;
             var y = 180.0;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.True(a != b);
+            Assert.IsTrue(a != b);
         }
 
         /// <summary>
         /// Defines the test method TestNotEqual2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNotEqual2()
         {
             var x = 180.0 + 1e-12;
             var y = 180.0;
             var a = new Angle(x);
             var b = new Angle(y);
-            Assert.False(a != b);
+            Assert.IsFalse(a != b);
         }
 
         /// <summary>
         /// Defines the test method TestNegate.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNegate()
         {
             var a = new Angle(180);
             var b = -a;
-            Assert.Equal(b.Degrees, -180);
+            Assert.AreEqual(b.Degrees, -180);
         }
 
         /// <summary>
         /// Defines the test method TestImplicitConversion.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestImplicitConversion()
         {
             Angle a = 44.0;
-            Assert.Equal(44, a.Degrees);
+            Assert.AreEqual(44, a.Degrees);
         }
 
         /// <summary>
         /// Defines the test method TestDeg2Rad.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestDeg2Rad()
         {
             var a = Angle.DegToRad(90);
-            Assert.Equal(a, Math.PI / 2.0);
+            Assert.AreEqual(a, Math.PI / 2.0);
         }
 
         /// <summary>
         /// Defines the test method TestRadToDeg.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestRadToDeg()
         {
             var a = Angle.RadToDeg(Math.PI);
-            Assert.Equal(180, a);
+            Assert.AreEqual(180, a);
         }
 
         /// <summary>
         /// Defines the test method TestHashCode.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestHashCode()
         {
             var a = new Angle(0);
             var b = new Angle(0.000000001);
-            Assert.True(a.GetHashCode() != b.GetHashCode());
+            Assert.IsTrue(a.GetHashCode() != b.GetHashCode());
         }
     }
 }

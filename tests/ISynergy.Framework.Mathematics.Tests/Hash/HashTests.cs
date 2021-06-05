@@ -1,11 +1,12 @@
 ﻿using System;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {
     /// <summary>
     /// Class HashTests.
     /// </summary>
+    [TestClass]
     public class HashTests
     {
         /// <summary>
@@ -20,7 +21,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         /// <summary>
         /// Defines the test method TestHashGetSet.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestHashGetSet()
         {
             var i = 0;
@@ -38,18 +39,18 @@ namespace ISynergy.Framework.Mathematics.Tests
                 X[j] = Math.Round(hash.GetValue(j), 2);
             }
 
-            Assert.Equal(testArray[0], X[0]);
-            Assert.Equal(testArray[1], X[1]);
-            Assert.Equal(testArray[2], X[2]);
-            Assert.Equal(testArray[3], X[3]);
-            Assert.Equal(testArray[4], X[4]);
-            Assert.Equal(testArray[5], X[5]);
+            Assert.AreEqual(testArray[0], X[0]);
+            Assert.AreEqual(testArray[1], X[1]);
+            Assert.AreEqual(testArray[2], X[2]);
+            Assert.AreEqual(testArray[3], X[3]);
+            Assert.AreEqual(testArray[4], X[4]);
+            Assert.AreEqual(testArray[5], X[5]);
         }
 
         /// <summary>
         /// Defines the test method TestHashAdd.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestHashAdd()
         {
             var testNewArray = new double[] { 9.32, 6.10, 6.00, 13.89, 6.00, 6.00 };
@@ -68,12 +69,12 @@ namespace ISynergy.Framework.Mathematics.Tests
                 X[j] = Math.Round(hash.GetValue(j), 2) + 6;
             }
 
-            Assert.Equal(testNewArray[0], X[0]);
-            Assert.Equal(testNewArray[1], X[1]);
-            Assert.Equal(testNewArray[2], X[2]);
-            Assert.Equal(testNewArray[3], X[3]);
-            Assert.Equal(testNewArray[4], X[4]);
-            Assert.Equal(testNewArray[5], X[5]);
+            Assert.AreEqual(testNewArray[0], X[0]);
+            Assert.AreEqual(testNewArray[1], X[1]);
+            Assert.AreEqual(testNewArray[2], X[2]);
+            Assert.AreEqual(testNewArray[3], X[3]);
+            Assert.AreEqual(testNewArray[4], X[4]);
+            Assert.AreEqual(testNewArray[5], X[5]);
         }
     }
 }

@@ -1,17 +1,18 @@
 ﻿using ISynergy.Framework.Mathematics.Generator;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {
     /// <summary>
     /// Class MatrixMultiplicationTests.
     /// </summary>
+    [TestClass]
     public class MatrixMultiplicationTests
     {
         /// <summary>
         /// Defines the test method NormalMultiplyWithMatrix.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void NormalMultiplyWithMatrix()
         {
             var a = new Matrix(new double[,]
@@ -37,13 +38,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             var actual = Matrix.NormalMultiply(a, b);
 
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
         /// Defines the test method NormalMultiplyWithIdentityMatrix.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void NormalMultiplyWithIdentityMatrix()
         {
             var a = new Matrix(new double[,]
@@ -64,13 +65,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             var actual = Matrix.NormalMultiply(a, b);
 
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
         /// Defines the test method StrassenMultiplyWithMatrix1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void StrassenMultiplyWithMatrix1()
         {
             var a = new Matrix(new double[,]
@@ -93,13 +94,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             var actual = Matrix.StrassenMultiply(a, b);
 
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
         /// Defines the test method StrassenMultiplyWithMatrix2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void StrassenMultiplyWithMatrix2()
         {
             var a = new Matrix(new double[,]
@@ -128,7 +129,7 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             var actual = Matrix.StrassenMultiply(a, b);
 
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
     }
 }

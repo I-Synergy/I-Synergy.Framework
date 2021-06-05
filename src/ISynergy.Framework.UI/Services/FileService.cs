@@ -6,6 +6,10 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Controls;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
+using System.IO;
+using Windows.System;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -115,8 +119,19 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>FileResult.</returns>
         /// <remarks>If this method returns <c>true</c>, the <see cref="FileName" /> property will be filled with the filename. Otherwise,
         /// no changes will occur to the data of this object.</remarks>
-        public Task<FileResult> SaveFileAsync(string filename, byte[] file) =>
-            FilePicker.Current.SaveFileAsync(filename, file);
+        public async Task<FileResult> SaveFileAsync(string filename, byte[] file)
+        {
+            var createdFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(
+                    filename,
+                    CreationCollisionOption.ReplaceExisting);
+
+            await FileIO.WriteBytesAsync(createdFile, file);
+
+            return new FileResult(
+                    createdFile.Path,
+                    createdFile.Name,
+                    () => createdFile.OpenStreamForReadAsync().GetAwaiter().GetResult());
+        }
 
         /// <summary>
         /// browse file as an asynchronous operation.
@@ -128,7 +143,7 @@ namespace ISynergy.Framework.UI.Services
         {
             var filters = GetFilters(filefilter);
 
-            if (await FilePicker.Current.PickFileAsync(filters.ToArray()) is FileResult file)
+            if (await PickFileAsync(filters.ToArray()) is FileResult file)
             {
                 if (file.File.Length <= maxfilesize || maxfilesize == 0)
                 {
@@ -136,7 +151,7 @@ namespace ISynergy.Framework.UI.Services
                 }
                 else
                 {
-                    await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("Warning_Document_SizeTooBig"), $"{maxfilesize / (1024 * 1024)}MB"));
+                    await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("WarningDocumentSizeTooBig"), $"{maxfilesize / (1024 * 1024)}MB"));
                 }
             }
 
@@ -192,6 +207,88 @@ namespace ISynergy.Framework.UI.Services
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Implementation for picking a file on UWP platform.
+        /// </summary>
+        /// <param name="allowedTypes">
+        /// Specifies one or multiple allowed types. When null, all file types
+        /// can be selected while picking.
+        /// On UWP, specify a list of extensions, like this: ".jpg", ".png".
+        /// </param>
+        /// <returns>
+        /// File data object, or null when user cancelled picking file
+        /// </returns>
+        private async Task<FileResult> PickFileAsync(string[] allowedTypes = null)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker
+            {
+                ViewMode = Windows.Storage.Pickers.PickerViewMode.List,
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
+            };
+
+            if (allowedTypes != null)
+            {
+                var hasAtleastOneType = false;
+
+                foreach (var type in allowedTypes)
+                {
+                    if (type.StartsWith("."))
+                    {
+                        picker.FileTypeFilter.Add(type);
+                        hasAtleastOneType = true;
+                    }
+                }
+
+                if (!hasAtleastOneType)
+                {
+                    picker.FileTypeFilter.Add("*");
+                }
+            }
+            else
+            {
+                picker.FileTypeFilter.Add("*");
+            }
+
+            if (await picker.PickSingleFileAsync() is StorageFile file)
+            {
+                StorageApplicationPermissions.FutureAccessList.Add(file);
+
+                return new FileResult(
+                    file.Path,
+                    file.Name,
+                    () => file.OpenStreamForReadAsync().GetAwaiter().GetResult());
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// UWP implementation of OpenFile(), opening a file already stored in the app's local
+        /// folder directory.
+        /// storage.
+        /// </summary>
+        /// <param name="fileToOpen">relative filename of file to open</param>
+        public async Task OpenFileAsync(string fileToOpen)
+        {
+            try
+            {
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileToOpen);
+
+                if (file != null)
+                {
+                    await Launcher.LaunchFileAsync(file);
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                // ignore exceptions
+            }
+            catch (Exception)
+            {
+                // ignore exceptions
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Sum.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Sum()
         {
             // Arrange
@@ -23,13 +23,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var actual = incomes.AsQueryable().Sum();
 
             // Assert
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
         /// Defines the test method Sum_Selector.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Sum_Selector()
         {
             // Arrange
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = users.AsQueryable().Sum("Income");
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
     }
 }

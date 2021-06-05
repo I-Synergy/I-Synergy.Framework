@@ -1,4 +1,8 @@
-﻿using Windows.UI.Xaml.Resources;
+﻿#if (NETFX_CORE || HAS_UNO)
+using Windows.UI.Xaml.Resources;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml.Resources;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {

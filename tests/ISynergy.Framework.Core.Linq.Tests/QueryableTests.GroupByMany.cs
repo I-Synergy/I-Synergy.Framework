@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method GroupByMany_Dynamic_LambdaExpressions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupByMany_Dynamic_LambdaExpressions()
         {
             var lst = new List<Tuple<int, int, int>>
@@ -30,15 +30,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             var sel = lst.AsQueryable().GroupByMany(x => x.Item1, x => x.Item2);
 
-            Assert.Equal(2, sel.Count());
-            Assert.Single(sel.First().Subgroups);
-            Assert.Equal(2, sel.Skip(1).First().Subgroups.Count());
+            Assert.AreEqual(2, sel.Count());
+            Assert.IsTrue(sel.First().Subgroups.Count() == 1);
+            Assert.AreEqual(2, sel.Skip(1).First().Subgroups.Count());
         }
 
         /// <summary>
         /// Defines the test method GroupByMany_Dynamic_StringExpressions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GroupByMany_Dynamic_StringExpressions()
         {
             var lst = new List<Tuple<int, int, int>>

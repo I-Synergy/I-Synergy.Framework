@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Any.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Any()
         {
             //Arrange
@@ -27,15 +27,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultNone = testListNone.Any();
 
             //Assert
-            Assert.True(resultFull);
-            Assert.True(resultOne);
-            Assert.False(resultNone);
+            Assert.IsTrue(resultFull);
+            Assert.IsTrue(resultOne);
+            Assert.IsFalse(resultNone);
         }
 
         /// <summary>
         /// Defines the test method Any_Predicate.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Any_Predicate()
         {
             //Arrange
@@ -46,13 +46,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             bool result = queryable.Any("Income > 50");
 
             //Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         /// <summary>
         /// Defines the test method Any_Predicate_WithArgs.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Any_Predicate_WithArgs()
         {
             const int value = 50;
@@ -65,13 +65,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             bool result = queryable.Any("Income > @0", value);
 
             //Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         /// <summary>
         /// Defines the test method Any_Dynamic_Select.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Any_Dynamic_Select()
         {
             // Arrange
@@ -82,13 +82,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = queryable.Select("Roles.Any()").ToDynamicArray<bool>();
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         /// <summary>
         /// Defines the test method Any_Dynamic_Where.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Any_Dynamic_Where()
         {
             const string search = "e";
@@ -101,14 +101,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expected = queryable.Where(u => u.Roles.Any(r => r.Name.Contains(search))).ToArray();
             var result = queryable.Where("Roles.Any(Name.Contains(@0))", search).ToArray();
 
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         // https://dynamiclinq.codeplex.com/discussions/654313
         /// <summary>
         /// Defines the test method Any_Dynamic_Where_Nested.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Any_Dynamic_Where_Nested()
         {
             const string search = "a";
@@ -121,14 +121,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expected = queryable.Where(u => u.Roles.Any(r => r.Permissions.Any(p => p.Name.Contains(search)))).ToArray();
             var result = queryable.Where("Roles.Any(Permissions.Any(Name.Contains(@0)))", search).ToArray();
 
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         // http://stackoverflow.com/questions/30846189/nested-any-in-is-not-working-in-dynamic-linq
         /// <summary>
         /// Defines the test method Any_Dynamic_Where_Nested2.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Any_Dynamic_Where_Nested2()
         {
             // arrange
@@ -141,12 +141,12 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             // act : 1
             var result1 = queryable.Where("(Name = \"\") && (Bs.Any(Cs.Any()))").ToList();
             var expected1 = queryable.Where(a => a.Name == "" && a.Bs.Any(b => b.Cs.Any()));
-            Assert.Equal(expected1, result1);
+            Assert.AreEqual(expected1, result1);
 
             // act : 2
             var result2 = queryable.Where("(Bs.Any(Cs.Any())) && (Name = \"\")").ToList();
             var expected2 = queryable.Where(a => a.Bs.Any(b => b.Cs.Any() && a.Name == ""));
-            Assert.Equal(expected2, result2);
+            Assert.AreEqual(expected2, result2);
         }
 
         /// <summary>

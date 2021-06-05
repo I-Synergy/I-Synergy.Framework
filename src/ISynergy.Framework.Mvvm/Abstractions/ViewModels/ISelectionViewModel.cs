@@ -26,10 +26,5 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// </summary>
         /// <value>The selection mode.</value>
         SelectionModes SelectionMode { get; set; }
-        /// <summary>
-        /// Gets or sets the query.
-        /// </summary>
-        /// <value>The query.</value>
-        string Query { get; set; }
     }
 }

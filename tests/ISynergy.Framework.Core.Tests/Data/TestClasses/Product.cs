@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Core.Attributes;
 
 namespace ISynergy.Framework.Core.Data.Tests.TestClasses
@@ -51,6 +52,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// Gets or sets the Name property value.
         /// </summary>
         /// <value>The name.</value>
+        [Required]
         public string Name
         {
             get { return GetValue<string>(); }

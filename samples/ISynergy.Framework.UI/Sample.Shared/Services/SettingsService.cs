@@ -1,12 +1,16 @@
 ﻿using System;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Services.Base;
+using Microsoft.Extensions.Options;
 using Sample.Abstractions.Services;
+using Sample.Options;
 
 namespace Sample.Services
 {
     /// <summary>
     /// Class SettingsService.
     /// </summary>
-    public class SettingsService : ISettingsService
+    public class SettingsService : BaseSettingsService, ISettingsService
     {
         /// <summary>
         /// Gets a value indicating whether this instance is first run.

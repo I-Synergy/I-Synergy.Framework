@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Distinct.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Distinct()
         {
             //Arrange
@@ -24,13 +24,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = queryable.Distinct();
 
             //Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         /// <summary>
         /// Defines the test method Distinct_Dynamic_1.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Distinct_Dynamic_1()
         {
             //Arrange
@@ -46,13 +46,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = queryable.Select("list.Distinct()").ToDynamicArray();
 
             //Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         /// <summary>
         /// Defines the test method Distinct_Dynamic_2.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Distinct_Dynamic_2()
         {
             //Arrange
@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = queryable.Select("UserName").Distinct().ToDynamicArray<string>();
 
             //Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
     }
 }

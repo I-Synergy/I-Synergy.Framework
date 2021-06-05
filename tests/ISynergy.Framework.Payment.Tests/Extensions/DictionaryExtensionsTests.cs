@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ISynergy.Framework.Payment.Extensions;
 
 namespace ISynergy.Framework.Payment.Tests.Extensions
@@ -8,13 +8,14 @@ namespace ISynergy.Framework.Payment.Tests.Extensions
     /// <summary>
     /// Class DictionaryExtensionsTests.
     /// </summary>
+    [TestClass]
     public class DictionaryExtensionsTests
     {
 
         /// <summary>
         /// Defines the test method CanCreateUrlQueryFromDictionary.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CanCreateUrlQueryFromDictionary()
         {
             // Arrange
@@ -29,13 +30,13 @@ namespace ISynergy.Framework.Payment.Tests.Extensions
             var result = parameters.ToQueryString();
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         /// <summary>
         /// Defines the test method CanCreateUrlQueryFromEmptyDictionary.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CanCreateUrlQueryFromEmptyDictionary()
         {
             // Arrange
@@ -46,13 +47,13 @@ namespace ISynergy.Framework.Payment.Tests.Extensions
             var result = parameters.ToQueryString();
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         /// <summary>
         /// Defines the test method CanAddParameterToDictionaryIfNotEmptyDictionary.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CanAddParameterToDictionaryIfNotEmptyDictionary()
         {
             // Arrange
@@ -64,14 +65,14 @@ namespace ISynergy.Framework.Payment.Tests.Extensions
             parameters.AddValueIfNotNullOrEmpty(parameterName, parameterValue);
 
             // Assert
-            Assert.True(parameters.Any());
-            Assert.Equal(parameterValue, parameters[parameterName]);
+            Assert.IsTrue(parameters.Any());
+            Assert.AreEqual(parameterValue, parameters[parameterName]);
         }
 
         /// <summary>
         /// Defines the test method CannotAddParameterToDictionaryIfEmptyDictionary.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CannotAddParameterToDictionaryIfEmptyDictionary()
         {
             // Arrange
@@ -81,7 +82,7 @@ namespace ISynergy.Framework.Payment.Tests.Extensions
             parameters.AddValueIfNotNullOrEmpty("include", "");
 
             // Assert
-            Assert.False(parameters.Any());
+            Assert.IsFalse(parameters.Any());
         }
     }
 }

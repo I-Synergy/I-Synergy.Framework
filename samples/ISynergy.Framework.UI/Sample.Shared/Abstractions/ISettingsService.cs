@@ -1,9 +1,11 @@
-﻿namespace Sample.Abstractions.Services
-{
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+
+namespace Sample.Abstractions.Services
+{ 
     /// <summary>
     /// Interface ISettingsService
     /// </summary>
-    public interface ISettingsService
+    public interface ISettingsService : IBaseSettingsService
     {
         /// <summary>
         /// Gets a value indicating whether this instance is first run.

@@ -13,6 +13,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Mvvm
 {
@@ -131,12 +132,14 @@ namespace ISynergy.Framework.Mvvm
         /// <param name="commonServices">The common services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
+        /// <param name="automaticValidation"></param>
         protected ViewModelBladeView(
             IContext context,
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory,
-            bool refreshOnInitialization = true) 
-            : base(context, commonServices, loggerFactory)
+            bool refreshOnInitialization = true,
+            bool automaticValidation = false) 
+            : base(context, commonServices, loggerFactory, automaticValidation)
         {
             RefreshOnInitialization = refreshOnInitialization;
 
@@ -216,11 +219,11 @@ namespace ISynergy.Framework.Mvvm
             }
             else
             {
-                item = BaseCommonServices.LanguageService.GetString("This_Item");
+                item = BaseCommonServices.LanguageService.GetString("ThisItem");
             }
 
-            if (await BaseCommonServices.DialogService.ShowAsync(
-                                string.Format(BaseCommonServices.LanguageService.GetString("Warning_Item_Remove"), item),
+            if (await BaseCommonServices.DialogService.ShowMessageAsync(
+                                string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
                                 BaseCommonServices.LanguageService.GetString("Delete"),
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -266,7 +269,7 @@ namespace ISynergy.Framework.Mvvm
 
             try
             {
-                await BaseCommonServices.BusyService.StartBusyAsync();
+                BaseCommonServices.BusyService.StartBusy();
 
                 Items.AddNewRange(await RetrieveItemsAsync(GetItemsCancellationToken.Token));
                 result = true;
@@ -277,7 +280,7 @@ namespace ISynergy.Framework.Mvvm
             catch (OperationCanceledException) { }
             finally
             {
-                await BaseCommonServices.BusyService.EndBusyAsync();
+                BaseCommonServices.BusyService.EndBusy();
             }
 
             return result;
@@ -297,7 +300,9 @@ namespace ISynergy.Framework.Mvvm
         /// <returns>Task.</returns>
         public virtual Task SubmitAsync(TEntity e)
         {
-            OnSubmitted(new SubmitEventArgs<TEntity>(e));
+            if (Validate())
+                OnSubmitted(new SubmitEventArgs<TEntity>(e));
+
             return Task.CompletedTask;
         }
     }

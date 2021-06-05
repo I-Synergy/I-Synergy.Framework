@@ -1,19 +1,25 @@
 ﻿using Windows.Storage.Streams;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Markup;
-
-#if NETFX_CORE
+using Windows.UI;
+using Windows.UI.Core;
 using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.System;
-using Windows.UI;
-using Windows.UI.Core;
+
+#if (NETFX_CORE || HAS_UNO)
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Media;
 #endif
 
 namespace ISynergy.Framework.UI.Controls
@@ -22,11 +28,9 @@ namespace ISynergy.Framework.UI.Controls
     /// Class Console. This class cannot be inherited.
     /// Implements the <see cref="UserControl" />
     /// Implements the <see cref="IComponentConnector" />
-    /// Implements the <see cref="IComponentConnector2" />
     /// </summary>
     /// <seealso cref="UserControl" />
     /// <seealso cref="IComponentConnector" />
-    /// <seealso cref="IComponentConnector2" />
     public sealed partial class Console : UserControl
     {
         /// <summary>

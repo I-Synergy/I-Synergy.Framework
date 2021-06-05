@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.IO.Tests
 {
@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Core.IO.Tests
             _fileTypeAnalyzer = new FileTypeAnalyzer();
         }
 
-        [Fact]
+        [TestMethod]
         public void CanDetectAlias_Jpg()
         {
             var filePath = GetFileByType("JPG");
@@ -26,10 +26,10 @@ namespace ISynergy.Framework.Core.IO.Tests
 
             var result = _fileTypeAnalyzer.IsType(fileContents, "jpg");
 
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
-        [Fact]
+        [TestMethod]
         public void CanDetectAlias_Jpeg()
         {
             var filePath = GetFileByType("JPG");
@@ -37,10 +37,10 @@ namespace ISynergy.Framework.Core.IO.Tests
 
             var result = _fileTypeAnalyzer.IsType(fileContents, "jpeg");
 
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
-        [Fact]
+        [TestMethod]
         public void CanDetectJpg_By_MimeType()
         {
             var filePath = GetFileByType("JPG");
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Core.IO.Tests
 
             var result = _fileTypeAnalyzer.IsType(fileContents, "image/jpeg");
 
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
     }

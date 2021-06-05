@@ -1,6 +1,12 @@
 ﻿using System.Windows.Input;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+#endif
 
 namespace ISynergy.Framework.UI.Navigation
 {

@@ -1,9 +1,16 @@
 ﻿using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.UI.Extensions;
 using System;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Utilities.Tests
 {
     /// <summary>
     /// Class CompareUtilityTest.
     /// </summary>
+    [TestClass]
     public class CompareUtilityTest
     {
         /// <summary>
@@ -29,7 +30,7 @@ namespace ISynergy.Framework.Core.Utilities.Tests
         /// <summary>
         /// Defines the test method CompareObject.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CompareObject()
         {
             var oOldRecord = new EmployeeRecord
@@ -50,7 +51,7 @@ namespace ISynergy.Framework.Core.Utilities.Tests
                 "Property CompanyNumber was: 0; is: 3"
             };
             
-            Assert.True(assert.All(result.Contains) && assert.Count == result.Count);
+            Assert.IsTrue(assert.All(result.Contains) && assert.Count == result.Count);
         }
 
         /// <summary>
@@ -60,17 +61,17 @@ namespace ISynergy.Framework.Core.Utilities.Tests
         /// <param name="operation">The operation.</param>
         /// <param name="value1">The value1.</param>
         /// <param name="value2">The value2.</param>
-        [Theory]
-        [InlineData(true, "==", 50.99, 50.99)]
-        [InlineData(true, "!=", 50.99, 50)]
-        [InlineData(true, ">", 1, 0)]
-        [InlineData(true, ">=", 50.01, 50)]
-        [InlineData(true, "<", 0, 1)]
-        [InlineData(true, "<=", 49, 49.99)]
+        [DataTestMethod]
+        [DataRow(true, "==", 50.99, 50.99)]
+        [DataRow(true, "!=", 50.99, 50)]
+        [DataRow(true, ">", 1, 0)]
+        [DataRow(true, ">=", 50.01, 50)]
+        [DataRow(true, "<", 0, 1)]
+        [DataRow(true, "<=", 49, 49.99)]
         public void CompareDecimalValues(bool result, string operation, double value1, double value2)
         {
             var assert = CompareUtility.Compare(operation, value1, value2);
-            Assert.Equal(result, assert);
+            Assert.AreEqual(result, assert);
         }
     }
 }

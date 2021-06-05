@@ -11,11 +11,9 @@ namespace ISynergy.Framework.Core.IO
     /// <summary>
     /// Class FileTypeAnalyzer.
     /// Implements the <see cref="ISynergy.Framework.Core.IO.Base.BaseFileTypeAnalyzer" />
-    /// Implements the <see cref="ISynergy.Framework.Core.IO.Abtractions.IFileTypeAnalyzer" />
     /// </summary>
     /// <seealso cref="ISynergy.Framework.Core.IO.Base.BaseFileTypeAnalyzer" />
-    /// <seealso cref="ISynergy.Framework.Core.IO.Abtractions.IFileTypeAnalyzer" />
-    public class FileTypeAnalyzer: BaseFileTypeAnalyzer, IFileTypeAnalyzer
+    public class FileTypeAnalyzer: BaseFileTypeAnalyzer
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FileTypeAnalyzer" /> class.

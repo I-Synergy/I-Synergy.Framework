@@ -1,9 +1,16 @@
-﻿using Microsoft.Xaml.Interactions.Core;
-using Microsoft.Xaml.Interactivity;
+﻿using ISynergy.Framework.UI.Actions;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+#endif
 
 namespace ISynergy.Framework.UI.Behaviors
 {
@@ -16,7 +23,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// The property name property
         /// </summary>
         public static readonly DependencyProperty PropertyNameProperty = DependencyProperty.RegisterAttached(
-        "PropertyName", typeof(string), typeof(ValidationBehaviorAttacher), new PropertyMetadata(default(string), PropertyNameChanged));
+            "PropertyName", typeof(string), typeof(ValidationBehaviorAttacher), new PropertyMetadata(default(string), PropertyNameChanged));
 
         /// <summary>
         /// Properties the name changed.
@@ -26,11 +33,8 @@ namespace ISynergy.Framework.UI.Behaviors
         private static void PropertyNameChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs arg)
         {
             var control = (Control)dependencyObject;
-
             var collection = new BehaviorCollection();
-
             var validationBehavior = new ValidationBehavior() { PropertyName = arg.NewValue.ToString() };
-
             var changePropertyIsValidAction = new ChangePropertyAction
             {
                 PropertyName = new PropertyPath(nameof(Control.Style)),
@@ -62,19 +66,15 @@ namespace ISynergy.Framework.UI.Behaviors
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="value">The value.</param>
-        public static void SetPropertyName(DependencyObject element, string value)
-        {
+        public static void SetPropertyName(DependencyObject element, string value) =>
             element.SetValue(PropertyNameProperty, value);
-        }
 
         /// <summary>
         /// Gets the name of the property.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns>System.String.</returns>
-        public static string GetPropertyName(DependencyObject element)
-        {
-            return element.GetValue(PropertyNameProperty).ToString();
-        }
+        public static string GetPropertyName(DependencyObject element) =>
+            element.GetValue(PropertyNameProperty).ToString();
     }
 }

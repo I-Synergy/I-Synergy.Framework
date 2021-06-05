@@ -1,4 +1,4 @@
-﻿#if NETFX_CORE
+﻿#if NETFX_CORE || (NET5_0 && WINDOWS)
 
 using System;
 using System.IO;
@@ -33,5 +33,4 @@ namespace ISynergy.Framework.UI.Extensions
         }
     }
 }
-
 #endif

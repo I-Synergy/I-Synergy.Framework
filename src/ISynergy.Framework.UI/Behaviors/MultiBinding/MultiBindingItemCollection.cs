@@ -2,12 +2,18 @@
 using System.Linq;
 using ISynergy.Framework.UI.Collections;
 
+#if (NETFX_CORE || HAS_UNO)
+using Windows.UI.Xaml;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+#endif
+
 namespace ISynergy.Framework.UI.Behaviors
 {
     /// <summary>
     /// Represents a collection of <see cref="MultiBindingBehavior" />.
     /// </summary>
-    public partial class MultiBindingItemCollection : DependencyObjectCollection<MultiBindingItem>
+    public partial class MultiBindingItemCollection : Collections.DependencyObjectCollection<MultiBindingItem>
     {
         /// <summary>
         /// The updating
@@ -27,15 +33,15 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <summary>
         /// Identifier for the <see cref="Value" /> dependency property.
         /// </summary>
-        internal static readonly Windows.UI.Xaml.DependencyProperty ValueProperty =
-            Windows.UI.Xaml.DependencyProperty.Register(nameof(Value), typeof(object[]), typeof(MultiBindingItemCollection), new Windows.UI.Xaml.PropertyMetadata(null, OnValueChanged));
+        internal static readonly DependencyProperty ValueProperty =
+            DependencyProperty.Register(nameof(Value), typeof(object[]), typeof(MultiBindingItemCollection), new PropertyMetadata(null, OnValueChanged));
 
         /// <summary>
         /// Handles the <see cref="E:ValueChanged" /> event.
         /// </summary>
         /// <param name="d">The d.</param>
-        /// <param name="e">The <see cref="Windows.UI.Xaml.DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-        private static void OnValueChanged(Windows.UI.Xaml.DependencyObject d, Windows.UI.Xaml.DependencyPropertyChangedEventArgs e)
+        /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+        private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var multiBindingItemCollection = (MultiBindingItemCollection)d;
 

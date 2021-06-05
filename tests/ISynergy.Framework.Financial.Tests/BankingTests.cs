@@ -1,60 +1,61 @@
-﻿using Xunit;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Financial.Tests
 {
     /// <summary>
     /// Class BankingTests.
     /// </summary>
+    [TestClass]
     public class BankingTests
     {
         /// <summary>
         /// Defines the test method CheckAccountBankTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckAccountBankTest()
         {
             var result = Banking.ElevenTest("150483341");
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         /// <summary>
         /// Defines the test method CheckAccountGiroTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckAccountGiroTest()
         {
             var result = Banking.ElevenTest("8318140");
-            Assert.False(result);
+            Assert.IsFalse(result);
         }
 
         /// <summary>
         /// Defines the test method CheckSofinummerTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckSofinummerTest()
         {
             var result = Banking.ElevenTest("169649167");
-            Assert.False(result);
+            Assert.IsFalse(result);
         }
 
         /// <summary>
         /// Defines the test method CheckAccountStringTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckAccountStringTest()
         {
             var result = Banking.ElevenTest("abcdefghijklmnopqrstuvwxyz");
-            Assert.False(result);
+            Assert.IsFalse(result);
         }
 
         /// <summary>
         /// Defines the test method CheckAccountNumbersTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CheckAccountNumbersTest()
         {
             var result = Banking.ElevenTest("123456789");
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
     }
 }

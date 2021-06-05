@@ -67,20 +67,27 @@ namespace Sample.ViewModels
         public Command ListViewTest_Command { get; set; }
 
         /// <summary>
+        /// Gets or sets the Validation test command.
+        /// </summary>
+        public Command ValidationTest_Command { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
+        /// <param name="settingsService">The settings services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="themeSelectorService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         public ShellViewModel(
             IContext context,
             ICommonServices commonServices,
+            ISettingsService settingsService,
             ILoggerFactory loggerFactory,
             IThemeSelectorService themeSelectorService,
             LocalizationFunctions localizationFunctions)
-            : base(context, commonServices, loggerFactory, themeSelectorService, localizationFunctions)
+            : base(context, commonServices, settingsService, loggerFactory, themeSelectorService, localizationFunctions)
         {
             CommonServices = commonServices;
 
@@ -93,9 +100,17 @@ namespace Sample.ViewModels
             Converter_Command = new Command(async () => await OpenConvertersAsync());
             SelectionTest_Command = new Command(async () => await OpenSelectionTestAsync());
             ListViewTest_Command = new Command(async () => await OpenListViewTestAsync());
+            ValidationTest_Command = new Command(async () => await OpenValidationTestAsync());
 
             PopulateNavItems();
         }
+
+        /// <summary>
+        /// Opens the validation test asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        private Task OpenValidationTestAsync() =>
+            CommonServices.NavigationService.NavigateAsync<ValidationViewModel>();
 
         /// <summary>
         /// Opens the ListView test asynchronous.
@@ -120,9 +135,7 @@ namespace Sample.ViewModels
             var imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
             if (await CommonServices.FileService.BrowseFileAsync(imageFilter, 0) is FileResult file)
-            {
                 await CommonServices.DialogService.ShowInformationAsync($"File '{file.FileName}' is selected.");
-            }
         }
 
         /// <summary>
@@ -165,8 +178,9 @@ namespace Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"] as string, ForegroundColor, Info_Command));
             PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"] as string, ForegroundColor, Browse_Command));
             PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"] as string, ForegroundColor, Converter_Command));
-            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["products"] as string, ForegroundColor, SelectionTest_Command));
+            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"] as string, ForegroundColor, SelectionTest_Command));
             PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, ForegroundColor, ListViewTest_Command));
+            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, ForegroundColor, ValidationTest_Command));
 
             SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, ForegroundColor, Help_Command));

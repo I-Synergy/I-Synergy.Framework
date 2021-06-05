@@ -1,24 +1,31 @@
-﻿using ISynergy.Framework.Core.Data;
-using Microsoft.Xaml.Interactivity;
+﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Actions;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Behaviors
 {
     /// <summary>
     /// Class ValidationBehavior.
-    /// Implements the <see cref="DependencyObject" />
+    /// Implements the <see cref="FrameworkElement" />
     /// Implements the <see cref="IBehavior" />
     /// </summary>
-    /// <seealso cref="DependencyObject" />
+    /// <seealso cref="FrameworkElement" />
     /// <seealso cref="IBehavior" />
     [TypeConstraint(typeof(FrameworkElement))]
     public partial class ValidationBehavior : DependencyObject, IBehavior
     {
         /// <summary>
-        /// Gets the <see cref="T:Windows.UI.Xaml.DependencyObject" /> to which the <seealso cref="T:Microsoft.Xaml.Interactivity.IBehavior" /> is attached.
+        /// Gets the <see cref="T:Windows.UI.Xaml.DependencyObject" /> to which the <seealso cref="T:IBehavior" /> is attached.
         /// </summary>
         /// <value>The associated object.</value>
         public DependencyObject AssociatedObject { get; private set; }
@@ -31,7 +38,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <summary>
         /// Attaches to the specified object.
         /// </summary>
-        /// <param name="associatedObject">The <see cref="T:Windows.UI.Xaml.DependencyObject" /> to which the <seealso cref="T:Microsoft.Xaml.Interactivity.IBehavior" /> will be attached.</param>
+        /// <param name="associatedObject">The <see cref="T:Windows.UI.Xaml.DependencyObject" /> to which the <seealso cref="T:IBehavior" /> will be attached.</param>
         public void Attach(DependencyObject associatedObject)
         {
             AssociatedObject = associatedObject;

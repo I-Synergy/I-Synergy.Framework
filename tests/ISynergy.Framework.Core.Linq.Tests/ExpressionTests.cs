@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using ISynergy.Framework.Core.Linq.Exceptions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers;
 using System;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
     /// <summary>
     /// Class ExpressionTests.
     /// </summary>
+    [TestClass]
     public class ExpressionTests
     {
         /// <summary>
@@ -122,7 +123,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Add_Number.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Add_Number()
         {
             // Arrange
@@ -139,7 +140,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Add_String.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Add_String()
         {
             // Arrange
@@ -157,7 +158,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_AndAlso.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_AndAlso()
         {
             // Arrange
@@ -174,7 +175,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_ArrayInitializer.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_ArrayInitializer()
         {
             // Arrange
@@ -187,19 +188,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result4 = list.AsQueryable().SelectMany("new[] { new[] { it + 1, it + 2 }, new[] { it + 3, it + 4 } }");
 
             // Assert
-            Assert.Equal(0, result1.Count());
-            Assert.Equal(result2.Cast<int>(), list.SelectMany(item => new[] { item + 1, item + 2 }));
-            Assert.Equal(result3.Cast<long>(), list.SelectMany(item => new long[] { item + 1, (byte)(item + 2), (short)(item + 3) }));
-            Assert.Equal(result4.SelectMany("it").Cast<int>(), list.SelectMany(item => new[] { new[] { item + 1, item + 2 }, new[] { item + 3, item + 4 } }).SelectMany(item => item));
+            Assert.AreEqual(0, result1.Count());
+            Assert.AreEqual(result2.Cast<int>(), list.SelectMany(item => new[] { item + 1, item + 2 }));
+            Assert.AreEqual(result3.Cast<long>(), list.SelectMany(item => new long[] { item + 1, (byte)(item + 2), (short)(item + 3) }));
+            Assert.AreEqual(result4.SelectMany("it").Cast<int>(), list.SelectMany(item => new[] { new[] { item + 1, item + 2 }, new[] { item + 3, item + 4 } }).SelectMany(item => item));
 
-            Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new[ {}"));
-            Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new] {}"));
+            Assert.ThrowsException<ParseException>(() => list.AsQueryable().SelectMany("new[ {}"));
+            Assert.ThrowsException<ParseException>(() => list.AsQueryable().SelectMany("new] {}"));
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_BinaryAndNumericConvert.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_BinaryAndNumericConvert()
         {
             // Arrange
@@ -231,29 +232,29 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result17 = qry.FirstOrDefault("(it.B & @0) == 1", (short)1);
 
             // Assert
-            Assert.Equal(3, result0.Id);
-            Assert.Equal(3, result1.Id);
-            Assert.Equal(3, result2.Id);
-            Assert.Equal(3, result3.Id);
-            Assert.Equal(3, result4.Id);
-            Assert.Equal(3, result5.Id);
-            Assert.Equal(3, result6.Id);
-            Assert.Equal(3, result7.Id);
+            Assert.AreEqual(3, result0.Id);
+            Assert.AreEqual(3, result1.Id);
+            Assert.AreEqual(3, result2.Id);
+            Assert.AreEqual(3, result3.Id);
+            Assert.AreEqual(3, result4.Id);
+            Assert.AreEqual(3, result5.Id);
+            Assert.AreEqual(3, result6.Id);
+            Assert.AreEqual(3, result7.Id);
 
-            Assert.Equal(3, result10.Id);
-            Assert.Equal(3, result11.Id);
-            Assert.Equal(3, result12.Id);
-            Assert.Equal(3, result13.Id);
-            Assert.Equal(3, result14.Id);
-            Assert.Equal(3, result15.Id);
-            Assert.Equal(3, result16.Id);
-            Assert.Equal(3, result17.Id);
+            Assert.AreEqual(3, result10.Id);
+            Assert.AreEqual(3, result11.Id);
+            Assert.AreEqual(3, result12.Id);
+            Assert.AreEqual(3, result13.Id);
+            Assert.AreEqual(3, result14.Id);
+            Assert.AreEqual(3, result15.Id);
+            Assert.AreEqual(3, result16.Id);
+            Assert.AreEqual(3, result17.Id);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_BinaryOrNumericConvert.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_BinaryOrNumericConvert()
         {
             // Arrange
@@ -285,29 +286,29 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result17 = qry.FirstOrDefault("(it.B | @0) == 1", (short)1);
 
             // Assert
-            Assert.Equal(3, result0.Id);
-            Assert.Equal(3, result1.Id);
-            Assert.Equal(3, result2.Id);
-            Assert.Equal(3, result3.Id);
-            Assert.Equal(3, result4.Id);
-            Assert.Equal(3, result5.Id);
-            Assert.Equal(3, result6.Id);
-            Assert.Equal(3, result7.Id);
+            Assert.AreEqual(3, result0.Id);
+            Assert.AreEqual(3, result1.Id);
+            Assert.AreEqual(3, result2.Id);
+            Assert.AreEqual(3, result3.Id);
+            Assert.AreEqual(3, result4.Id);
+            Assert.AreEqual(3, result5.Id);
+            Assert.AreEqual(3, result6.Id);
+            Assert.AreEqual(3, result7.Id);
 
-            Assert.Equal(3, result10.Id);
-            Assert.Equal(3, result11.Id);
-            Assert.Equal(3, result12.Id);
-            Assert.Equal(3, result13.Id);
-            Assert.Equal(3, result14.Id);
-            Assert.Equal(3, result15.Id);
-            Assert.Equal(3, result16.Id);
-            Assert.Equal(3, result17.Id);
+            Assert.AreEqual(3, result10.Id);
+            Assert.AreEqual(3, result11.Id);
+            Assert.AreEqual(3, result12.Id);
+            Assert.AreEqual(3, result13.Id);
+            Assert.AreEqual(3, result14.Id);
+            Assert.AreEqual(3, result15.Id);
+            Assert.AreEqual(3, result16.Id);
+            Assert.AreEqual(3, result17.Id);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Cast_To_nullableint.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Cast_To_nullableint()
         {
             // Arrange
@@ -321,13 +322,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = list.AsQueryable().Select("int?(IntValue)");
 
             // Assert
-            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<int?>());
+            Assert.AreEqual(expectedResult.ToArray<int?>(), result.ToDynamicArray<int?>());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Cast_Automatic_To_nullablelong.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Cast_Automatic_To_nullablelong()
         {
             // Arrange
@@ -338,13 +339,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = q.Select("it != null && it.UserProfileDetails != null ? it.UserProfileDetails.Id : null");
 
             // Assert
-            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<long?>());
+            Assert.AreEqual(expectedResult.ToArray(), result.ToDynamicArray<long?>());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Cast_To_newnullableint.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Cast_To_newnullableint()
         {
             // Arrange
@@ -358,13 +359,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = list.AsQueryable().Select("new (int?(IntValue) as i)");
 
             // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
+            Assert.AreEqual(expectedResult.Count(), result.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Conditional_With_Automatic_Cast_NullableInt.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Conditional_With_Automatic_Cast_NullableInt()
         {
             // Arrange
@@ -384,7 +385,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Conditional_With_No_Automatic_Cast.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Conditional_With_No_Automatic_Cast()
         {
             // Arrange
@@ -404,7 +405,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Conditional.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Conditional()
         {
             // Arrange
@@ -422,7 +423,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_ConditionalOr1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_ConditionalOr1()
         {
             // Arrange
@@ -440,7 +441,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_ConditionalOr2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_ConditionalOr2()
         {
             // Arrange
@@ -458,7 +459,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_ConditionalAnd1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_ConditionalAnd1()
         {
             // Arrange
@@ -476,7 +477,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_ConditionalAnd2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_ConditionalAnd2()
         {
             // Arrange
@@ -494,7 +495,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_ContainsGuid.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_ContainsGuid()
         {
             // Arrange
@@ -517,16 +518,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var notFound2 = userQry.Where("@0.Contains(Id)", failValues);
 
             // Assert
-            Assert.Equal(userList[0].Id, found1.Single().Id);
-            Assert.Equal(userList[0].Id, found2.Single().Id);
-            Assert.False(notFound1.Any());
-            Assert.False(notFound2.Any());
+            Assert.AreEqual(userList[0].Id, found1.Single().Id);
+            Assert.AreEqual(userList[0].Id, found2.Single().Id);
+            Assert.IsFalse(notFound1.Any());
+            Assert.IsFalse(notFound2.Any());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_DateTimeString.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_DateTimeString()
         {
             // Arrange
@@ -539,14 +540,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = qry.Where("@0 = it", testValue);
 
             // Assert
-            Assert.Equal(lst[0], result1.Single());
-            Assert.Equal(lst[0], result2.Single());
+            Assert.AreEqual(lst[0], result1.Single());
+            Assert.AreEqual(lst[0], result2.Single());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_DecimalQualifiers.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_DecimalQualifiers()
         {
             // Arrange
@@ -558,14 +559,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = values.Where("it == 2.0M or it == 3.00m");
 
             // Assert
-            Assert.Equal(resultValues.ToArray(), result1.ToArray());
-            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_DecimalQualifiers_Negative.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_DecimalQualifiers_Negative()
         {
             // Arrange
@@ -577,15 +578,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = values.Where("it == -2.0M or it == -3.0m");
 
             // Assert
-            Assert.Equal(resultValues.ToArray(), result1.ToArray());
-            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
         }
 
 
         /// <summary>
         /// Defines the test method ExpressionTests_DistinctBy.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_DistinctBy()
         {
             // Arrange
@@ -611,15 +612,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var qry3 = p.Where("@0.Any($ == ~.Item3)", qry);
 
             // Assert
-            Assert.Equal(2, qry1.Count());
-            Assert.Equal(2, qry2.Count());
-            Assert.Equal(2, qry3.Count());
+            Assert.AreEqual(2, qry1.Count());
+            Assert.AreEqual(2, qry2.Count());
+            Assert.AreEqual(2, qry3.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Divide_Number.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Divide_Number()
         {
             // Arrange
@@ -636,7 +637,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Double.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Double()
         {
             // Arrange
@@ -648,14 +649,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = values.Where("it > 1.99");
 
             // Assert
-            Assert.Equal(resultValues.ToArray(), result1.ToArray());
-            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Double_Negative.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Double_Negative()
         {
             // Arrange
@@ -667,11 +668,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = values.Where("it == -2.00 or it == -3.0");
 
             // Assert
-            Assert.Equal(resultValues.ToArray(), result1.ToArray());
-            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
         }
 
-        //[Fact]
+        //[TestMethod]
         //public void ExpressionTests_Double2()
         //{
         //    GlobalConfig.NumberDecimalSeparator = ',';
@@ -685,8 +686,8 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         //    var result2 = values.Where("it > 1,99");
 
         //    // Assert
-        //    Assert.Equal(resultValues.ToArray(), result1.ToArray());
-        //    Assert.Equal(resultValues.ToArray(), result2.ToArray());
+        //    Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+        //    Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
 
         //    GlobalConfig.NumberDecimalSeparator = default(char);
         //}
@@ -694,7 +695,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_DoubleQualifiers.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_DoubleQualifiers()
         {
             // Arrange
@@ -706,14 +707,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = values.Where("it == 2.00d or it == 3.0D");
 
             // Assert
-            Assert.Equal(resultValues.ToArray(), result1.ToArray());
-            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_DoubleQualifiers_Negative.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_DoubleQualifiers_Negative()
         {
             // Arrange
@@ -725,14 +726,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = values.Where("it == -2.00d or it == -3.0D");
 
             // Assert
-            Assert.Equal(resultValues.ToArray(), result1.ToArray());
-            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Enum.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Enum()
         {
             var config = new ParsingConfig();
@@ -789,7 +790,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Enum_Property.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Enum_Property()
         {
             // Arrange
@@ -813,7 +814,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Enum_NullableProperty.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Enum_NullableProperty()
         {
             // Arrange
@@ -837,7 +838,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Enum_MoreTests.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Enum_MoreTests()
         {
             var config = new ParsingConfig();
@@ -862,7 +863,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Enum_Nullable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Enum_Nullable()
         {
             // Act
@@ -879,23 +880,23 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result11b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("@0 = it", "Var1");
 
             // Assert
-            Assert.Equal(TestEnum.Var1, result1a.Single());
-            Assert.Equal(TestEnum.Var1, result1b.Single());
-            Assert.Equal(TestEnum.Var1, result2a.Single());
-            Assert.Equal(TestEnum.Var1, result2b.Single());
-            Assert.Equal((TestEnum?)TestEnum.Var1, result3a.Single());
-            Assert.Equal((TestEnum?)TestEnum.Var1, result3b.Single());
+            Assert.AreEqual(TestEnum.Var1, result1a.Single());
+            Assert.AreEqual(TestEnum.Var1, result1b.Single());
+            Assert.AreEqual(TestEnum.Var1, result2a.Single());
+            Assert.AreEqual(TestEnum.Var1, result2b.Single());
+            Assert.AreEqual((TestEnum?)TestEnum.Var1, result3a.Single());
+            Assert.AreEqual((TestEnum?)TestEnum.Var1, result3b.Single());
 
-            Assert.Equal(TestEnum.Var1, result10a.Single());
-            Assert.Equal(TestEnum.Var1, result10b.Single());
-            Assert.Equal((TestEnum?)TestEnum.Var1, result11a.Single());
-            Assert.Equal((TestEnum?)TestEnum.Var1, result11b.Single());
+            Assert.AreEqual(TestEnum.Var1, result10a.Single());
+            Assert.AreEqual(TestEnum.Var1, result10b.Single());
+            Assert.AreEqual((TestEnum?)TestEnum.Var1, result11a.Single());
+            Assert.AreEqual((TestEnum?)TestEnum.Var1, result11b.Single());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_FirstOrDefault.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_FirstOrDefault()
         {
             // Arrange
@@ -913,14 +914,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var testSingleFailResult = testListQry.Where("Roles.FirstOrDefault(Name = \"Admin\") != null").FirstOrDefault();
 
             // Assert
-            Assert.Equal(realSingleResult, testSingleResult);
-            Assert.Equal(realSingleFailResult, (User)testSingleFailResult);
+            Assert.AreEqual(realSingleResult, testSingleResult);
+            Assert.AreEqual(realSingleFailResult, (User)testSingleFailResult);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_FloatQualifiers.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_FloatQualifiers()
         {
             // Arrange
@@ -932,14 +933,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = values.Where("it == 2.0F or it == 3.00f");
 
             // Assert
-            Assert.Equal(resultValues.ToArray(), result1.ToArray());
-            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_FloatQualifiers_Negative.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_FloatQualifiers_Negative()
         {
             // Arrange
@@ -951,14 +952,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = values.Where("it == -2.0F or it == -3.0f");
 
             // Assert
-            Assert.Equal(resultValues.ToArray(), result1.ToArray());
-            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result1.ToArray());
+            Assert.AreEqual(resultValues.ToArray(), result2.ToArray());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Guid_CompareTo_String.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Guid_CompareTo_String()
         {
             var config = new ParsingConfig();
@@ -979,16 +980,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2b = qry.Where(config, "@0 = it", testValue);
 
             // Assert
-            Assert.Equal(lst[0], result1a.Single());
-            Assert.Equal(lst[0], result1b.Single());
-            Assert.Equal(lst[0], result2a.Single());
-            Assert.Equal(lst[0], result2b.Single());
+            Assert.AreEqual(lst[0], result1a.Single());
+            Assert.AreEqual(lst[0], result1b.Single());
+            Assert.AreEqual(lst[0], result2a.Single());
+            Assert.AreEqual(lst[0], result2b.Single());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Guid_CompareTo_Guid.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Guid_CompareTo_Guid()
         {
             // Arrange
@@ -1001,14 +1002,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultb = qry.Where("@0 = it", testValue);
 
             // Assert
-            Assert.Equal(testValue, resulta.Single());
-            Assert.Equal(testValue, resultb.Single());
+            Assert.AreEqual(testValue, resulta.Single());
+            Assert.AreEqual(testValue, resultb.Single());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_GuidNullable_CompareTo_Guid.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_GuidNullable_CompareTo_Guid()
         {
             // Arrange
@@ -1021,14 +1022,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultb = qry.Where("@0 = it", testValue);
 
             // Assert
-            Assert.Equal(testValue, resulta.Single());
-            Assert.Equal(testValue, resultb.Single());
+            Assert.AreEqual(testValue, resulta.Single());
+            Assert.AreEqual(testValue, resultb.Single());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_GuidNullable_CompareTo_GuidNullable.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_GuidNullable_CompareTo_GuidNullable()
         {
             // Arrange
@@ -1041,14 +1042,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultb = qry.Where("@0 = it", testValue);
 
             // Assert
-            Assert.Equal(testValue, resulta.Single());
-            Assert.Equal(testValue, resultb.Single());
+            Assert.AreEqual(testValue, resulta.Single());
+            Assert.AreEqual(testValue, resultb.Single());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Guid_CompareTo_Null.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Guid_CompareTo_Null()
         {
             // Arrange
@@ -1062,16 +1063,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result1b = qry.FirstOrDefault("@0 = it.GuidNull", new object[] { null });
 
             // Assert
-            Assert.Equal(1, result1a.Id);
-            Assert.Equal(1, result1b.Id);
-            Assert.Equal(1, result2a.Id);
-            Assert.Equal(1, result2b.Id);
+            Assert.AreEqual(1, result1a.Id);
+            Assert.AreEqual(1, result1b.Id);
+            Assert.AreEqual(1, result2a.Id);
+            Assert.AreEqual(1, result2b.Id);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_HexadecimalInteger.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_HexadecimalInteger()
         {
             // Arrange
@@ -1086,21 +1087,21 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultUL = values.AsQueryable().Select("ulong(it) * 0x1000abEFUL").Cast<ulong>();
 
             // Assert
-            Assert.Equal(values.Select(it => it * 0x1000abEF), result);
-            Assert.Equal(values.Select(it => it * -0xaBcDeF), resultNeg);
-            Assert.Equal(values.Select(it => (uint)it * 0x12345678U), resultU);
-            Assert.Equal(values.Select(it => it * 0x1234567890abcdefL), resultL);
-            Assert.Equal(values.Select(it => it * -0x0ABCDEF987654321L), resultLNeg);
-            Assert.Equal(values.Select(it => (ulong)it * 0x1000abEFUL), resultUL);
+            Assert.AreEqual(values.Select(it => it * 0x1000abEF), result);
+            Assert.AreEqual(values.Select(it => it * -0xaBcDeF), resultNeg);
+            Assert.AreEqual(values.Select(it => (uint)it * 0x12345678U), resultU);
+            Assert.AreEqual(values.Select(it => it * 0x1234567890abcdefL), resultL);
+            Assert.AreEqual(values.Select(it => it * -0x0ABCDEF987654321L), resultLNeg);
+            Assert.AreEqual(values.Select(it => (ulong)it * 0x1000abEFUL), resultUL);
 
-            Assert.Throws<ParseException>(() => values.AsQueryable().Where("it < 0x 11a"));
-            Assert.Throws<ParseException>(() => values.AsQueryable().Where("it < 11a"));
+            Assert.ThrowsException<ParseException>(() => values.AsQueryable().Where("it < 0x 11a"));
+            Assert.ThrowsException<ParseException>(() => values.AsQueryable().Where("it < 11a"));
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_In_Enum.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_In_Enum()
         {
             var config = new ParsingConfig();
@@ -1123,7 +1124,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_In_Short.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_In_Short()
         {
             // Arrange
@@ -1140,7 +1141,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_In_String.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_In_String()
         {
             // Arrange
@@ -1161,17 +1162,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result4 = testRange.AsQueryable().Where("it in @0", testInExpression).ToArray();
 
             // Assert
-            Assert.Equal(new[] { 2, 4, 6, 8 }, result1a);
-            Assert.Equal(new[] { 2, 4, 6, 8 }, result1b);
-            Assert.Equal(testModels.Take(3).ToArray(), result2);
-            Assert.Equal(testModels.Take(3).ToArray(), result3);
-            Assert.Equal(new[] { 2, 4, 6, 8 }, result4);
+            Assert.AreEqual(new[] { 2, 4, 6, 8 }, result1a);
+            Assert.AreEqual(new[] { 2, 4, 6, 8 }, result1b);
+            Assert.AreEqual(testModels.Take(3).ToArray(), result2);
+            Assert.AreEqual(testModels.Take(3).ToArray(), result3);
+            Assert.AreEqual(new[] { 2, 4, 6, 8 }, result4);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_IsNull_Simple.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_IsNull_Simple()
         {
             // Arrange
@@ -1182,13 +1183,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result1 = baseQuery.Select("isnull(it, 0)");
 
             // Assert
-            Assert.Equal(expectedResult, result1.ToDynamicArray<int>());
+            Assert.AreEqual(expectedResult, result1.ToDynamicArray<int>());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_IsNull_Complex.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_IsNull_Complex()
         {
             // Arrange
@@ -1208,16 +1209,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result3b = testModels.AsQueryable().Select<int>("isnull(NullableInt, @0)", 10);
 
             // Assert
-            Assert.Equal(expectedResult1.ToString(), result1.ToDynamicArray().ToString());
-            Assert.Equal(expectedResult2, result2.ToArray());
-            Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
-            Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
+            Assert.AreEqual(expectedResult1.ToString(), result1.ToDynamicArray().ToString());
+            Assert.AreEqual(expectedResult2, result2.ToArray());
+            Assert.AreEqual(expectedResult3, result3a.ToDynamicArray<int>());
+            Assert.AreEqual(expectedResult3, result3b.ToDynamicArray<int>());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_IsNull_ThrowsException.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_IsNull_ThrowsException()
         {
             // Arrange
@@ -1227,7 +1228,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.ThatCode(() => baseQuery.Select("isnull(it, 0, 4)")).Throws<ParseException>();
         }
 
-        //[Fact]
+        //[TestMethod]
         //public void ExpressionTests_Indexer_Issue57()
         //{
         //    var rows = new List<JObject>
@@ -1241,10 +1242,10 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         //    var expected = rows.OrderBy(x => x["Column1"]).ToList();
         //    var result = rows.AsQueryable().OrderBy(@"it[""Column1""]").ToList();
 
-        //    Assert.Equal(expected, result);
+        //    Assert.AreEqual(expected, result);
         //}
 
-        // [Fact]
+        // [TestMethod]
         // public void ExpressionTests_IComparable_GreaterThan()
         // {
         //     // Assign
@@ -1259,7 +1260,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         //     Check.That(dynamicResult).ContainsExactly(result);
         // }
 
-        // [Fact]
+        // [TestMethod]
         // public void ExpressionTests_IEquatable_Equal()
         // {
         //     // Assign
@@ -1274,7 +1275,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         //     Check.That(dynamicResult.Id).Equals(result.Id);
         // }
 
-        // [Fact]
+        // [TestMethod]
         // public void ExpressionTests_IEquatable_NotEqual()
         // {
         //     // Assign
@@ -1292,7 +1293,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_LogicalAndOr.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_LogicalAndOr()
         {
             // Arrange
@@ -1304,14 +1305,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = qry.Where("(it & 32) > 0");
 
             // Assert
-            Assert.Equal(new[] { 0x21, 0x31, 0x41 }, result1.ToArray());
-            Assert.Equal(qry.Where(x => (x & 32) > 0).ToArray(), result2.ToArray());
+            Assert.AreEqual(new[] { 0x21, 0x31, 0x41 }, result1.ToArray());
+            Assert.AreEqual(qry.Where(x => (x & 32) > 0).ToArray(), result2.ToArray());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Method_NoParams.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Method_NoParams()
         {
             // Arrange
@@ -1322,13 +1323,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = users.AsQueryable().Where("TestMethod1()");
 
             // Assert
-            Assert.Equal(expected.Count(), result.Count());
+            Assert.AreEqual(expected.Count(), result.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Method_OneParam_With_it.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Method_OneParam_With_it()
         {
             // Arrange
@@ -1339,14 +1340,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = users.AsQueryable().Where("TestMethod2(it)");
 
             // Assert
-            Assert.Equal(expected.Count(), result.Count());
+            Assert.AreEqual(expected.Count(), result.Count());
         }
 
 
         /// <summary>
         /// Defines the test method ExpressionTests_MethodCall_ValueTypeToValueTypeParameter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_MethodCall_ValueTypeToValueTypeParameter()
         {
             // Arrange
@@ -1358,13 +1359,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = list.AsQueryable().Where("@0.Method1(it)", methods);
 
             // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
+            Assert.AreEqual(expectedResult.Count(), result.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast()
         {
             // Arrange
@@ -1376,13 +1377,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = list.AsQueryable().Where("@0.Method2(object(it))", methods);
 
             // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
+            Assert.AreEqual(expectedResult.Count(), result.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast()
         {
             // Arrange
@@ -1394,13 +1395,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = list.AsQueryable().Where("@0.Method2(it)", methods);
 
             // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
+            Assert.AreEqual(expectedResult.Count(), result.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_MethodCall_NullableValueTypeToObjectParameter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_MethodCall_NullableValueTypeToObjectParameter()
         {
             // Arrange
@@ -1412,13 +1413,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = list.AsQueryable().Where("@0.Method2(it)", methods);
 
             // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
+            Assert.AreEqual(expectedResult.Count(), result.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_MethodCall_ReferenceTypeToObjectParameter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_MethodCall_ReferenceTypeToObjectParameter()
         {
             // Arrange
@@ -1430,13 +1431,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = list.AsQueryable().Where("@0.Method3(it)", methods);
 
             // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
+            Assert.AreEqual(expectedResult.Count(), result.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_NewAnonymousType_Paren.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NewAnonymousType_Paren()
         {
             // Arrange
@@ -1453,7 +1454,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NewAnonymousType_CurlyParen.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NewAnonymousType_CurlyParen()
         {
             // Arrange
@@ -1470,7 +1471,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Method_OneParam_With_user.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Method_OneParam_With_user()
         {
             // Arrange
@@ -1482,13 +1483,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = users.AsQueryable().Where("TestMethod3(@0)", testUser);
 
             // Assert
-            Assert.Equal(expected.Count(), result.Count());
+            Assert.AreEqual(expected.Count(), result.Count());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Modulo_Number.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Modulo_Number()
         {
             // Arrange
@@ -1505,7 +1506,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Multiply_Number.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Multiply_Number()
         {
             // Arrange
@@ -1522,7 +1523,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NullCoalescing.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_NullCoalescing()
         {
             // Arrange
@@ -1542,10 +1543,10 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result3b = testModels.AsQueryable().Select<int>("NullableInt ?? @0", 10);
 
             // Assert
-            Assert.Equal(expectedResult1.ToString(), result1.ToDynamicArray().ToString());
-            Assert.Equal(expectedResult2, result2.ToDynamicArray<User>());
-            Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
-            Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
+            Assert.AreEqual(expectedResult1.ToString(), result1.ToDynamicArray().ToString());
+            Assert.AreEqual(expectedResult2, result2.ToDynamicArray<User>());
+            Assert.AreEqual(expectedResult3, result3a.ToDynamicArray<int>());
+            Assert.AreEqual(expectedResult3, result3b.ToDynamicArray<int>());
         }
 
         /// <summary>
@@ -1553,43 +1554,43 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// </summary>
         /// <param name="test">The test.</param>
         /// <param name="query">The query.</param>
-        [Theory]
-        [InlineData("np(str)", "Select(Param_0 => Param_0.str)")]
-        [InlineData("np(strNull)", "Select(Param_0 => Param_0.strNull)")]
-        [InlineData("np(str, \"x\")", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.str != null)), Param_0.str, \"x\"))")]
-        [InlineData("np(g)", "Select(Param_0 => Param_0.g)")]
-        [InlineData("np(gnullable)", "Select(Param_0 => Param_0.gnullable)")]
-        [InlineData("np(dt)", "Select(Param_0 => Param_0.dt)")]
-        [InlineData("np(dtnullable)", "Select(Param_0 => Param_0.dtnullable)")]
-        [InlineData("np(number)", "Select(Param_0 => Param_0.number)")]
-        [InlineData("np(nullablenumber)", "Select(Param_0 => Param_0.nullablenumber)")]
-        [InlineData("np(_enum)", "Select(Param_0 => Param_0._enum)")]
-        [InlineData("np(_enumnullable)", "Select(Param_0 => Param_0._enumnullable)")]
+        [DataTestMethod]
+        [DataRow("np(str)", "Select(Param_0 => Param_0.str)")]
+        [DataRow("np(strNull)", "Select(Param_0 => Param_0.strNull)")]
+        [DataRow("np(str, \"x\")", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.str != null)), Param_0.str, \"x\"))")]
+        [DataRow("np(g)", "Select(Param_0 => Param_0.g)")]
+        [DataRow("np(gnullable)", "Select(Param_0 => Param_0.gnullable)")]
+        [DataRow("np(dt)", "Select(Param_0 => Param_0.dt)")]
+        [DataRow("np(dtnullable)", "Select(Param_0 => Param_0.dtnullable)")]
+        [DataRow("np(number)", "Select(Param_0 => Param_0.number)")]
+        [DataRow("np(nullablenumber)", "Select(Param_0 => Param_0.nullablenumber)")]
+        [DataRow("np(_enum)", "Select(Param_0 => Param_0._enum)")]
+        [DataRow("np(_enumnullable)", "Select(Param_0 => Param_0._enumnullable)")]
 
 #if NET452
-        [InlineData("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g), null))")]
-        [InlineData("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt), null))")]
-        [InlineData("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.number), null))")]
-        [InlineData("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum), null))")]
-        [InlineData("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id), null))")]
-        [InlineData("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal), null))")]
+        [DataRow("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g), null))")]
+        [DataRow("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt), null))")]
+        [DataRow("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.number), null))")]
+        [DataRow("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum), null))")]
+        [DataRow("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id), null))")]
+        [DataRow("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal), null))")]
 #else
-        [InlineData("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g, Nullable`1), null))")]
-        [InlineData("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt, Nullable`1), null))")]
-        [InlineData("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.number, Nullable`1), null))")]
-        [InlineData("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum, Nullable`1), null))")]
-        [InlineData("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id, Nullable`1), null))")]
-        [InlineData("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal, Nullable`1), null))")]
+        [DataRow("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g, Nullable`1), null))")]
+        [DataRow("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt, Nullable`1), null))")]
+        [DataRow("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.number, Nullable`1), null))")]
+        [DataRow("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum, Nullable`1), null))")]
+        [DataRow("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id, Nullable`1), null))")]
+        [DataRow("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal, Nullable`1), null))")]
 #endif
 
-        [InlineData("np(nested.strNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.strNull, null))")]
-        [InlineData("np(nested.strNull, \"x\")", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.strNull != null)), Param_0.nested.strNull, \"x\"))")]
-        [InlineData("np(nested.gnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.gnullable, null))")]
-        [InlineData("np(nested.dtnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.dtnullable, null))")]
-        [InlineData("np(nested.nullablenumber)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.nullablenumber, null))")]
-        [InlineData("np(nested.nullablenumber, 42)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.nullablenumber != null)), Param_0.nested.nullablenumber, 42))")]
-        [InlineData("np(nested._enumnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested._enumnullable, null))")]
-        [InlineData("np(item.GuidNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Param_0.item.GuidNull, null))")]
+        [DataRow("np(nested.strNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.strNull, null))")]
+        [DataRow("np(nested.strNull, \"x\")", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.strNull != null)), Param_0.nested.strNull, \"x\"))")]
+        [DataRow("np(nested.gnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.gnullable, null))")]
+        [DataRow("np(nested.dtnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.dtnullable, null))")]
+        [DataRow("np(nested.nullablenumber)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.nullablenumber, null))")]
+        [DataRow("np(nested.nullablenumber, 42)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.nullablenumber != null)), Param_0.nested.nullablenumber, 42))")]
+        [DataRow("np(nested._enumnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested._enumnullable, null))")]
+        [DataRow("np(item.GuidNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Param_0.item.GuidNull, null))")]
         public void ExpressionTests_NullPropagating(string test, string query)
         {
             // Arrange
@@ -1641,7 +1642,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagation_Method.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagation_Method()
         {
             // Arrange
@@ -1651,13 +1652,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultDynamic = users.Select("np(Roles.FirstOrDefault(false).Name)").ToDynamicArray();
 
             // Assert
-            Assert.True(resultDynamic[0] == null);
+            Assert.IsTrue(resultDynamic[0] == null);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagation_Method_WithDefaultValue.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagation_Method_WithDefaultValue()
         {
             // Arrange
@@ -1668,13 +1669,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultDynamic = users.Select("np(Roles.FirstOrDefault(false).Name, @0)", defaultRoleName).ToDynamicArray();
 
             // Assert
-            Assert.True(resultDynamic[0] == "x");
+            Assert.IsTrue(resultDynamic[0] == "x");
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagating_DateTime.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagating_DateTime()
         {
             // Arrange
@@ -1694,7 +1695,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagation_NullableDateTime.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagation_NullableDateTime()
         {
             // Arrange
@@ -1714,7 +1715,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagating_NestedInteger_WithoutDefaultValue.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagating_NestedInteger_WithoutDefaultValue()
         {
             // Arrange
@@ -1733,7 +1734,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagating_NullableInteger_WithDefaultValue.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagating_NullableInteger_WithDefaultValue()
         {
             // Arrange
@@ -1750,7 +1751,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagating_String_WithDefaultValue.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagating_String_WithDefaultValue()
         {
             // Arrange
@@ -1767,7 +1768,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagatingNested_WithDefaultValue.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagatingNested_WithDefaultValue()
         {
             // Arrange
@@ -1786,7 +1787,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_NullPropagation_ThrowsException.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_NullPropagation_ThrowsException()
         {
             // Arrange
@@ -1801,7 +1802,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_OrElse.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_OrElse()
         {
             // Arrange
@@ -1818,7 +1819,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_OrderBy.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_OrderBy()
         {
             // Arrange
@@ -1831,7 +1832,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             Check.That(qry.OrderBy(x => x.Id).ThenByDescending(x => x.Profile.Age).ToArray()).ContainsExactly(orderBy.ToArray());
         }
 
-        //[Fact]
+        //[TestMethod]
         /// <summary>
         /// Expressions the tests select dynamic objects.
         /// </summary>
@@ -1847,11 +1848,11 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = result1.Select("x.BlogId");
 
             // Assert
-            Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
+            Assert.AreEqual(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
 #if !NETCOREAPP
-        [Fact]
+        [TestMethod]
         [Trait("Issue", "136")]
         public void ExpressionTests_Select_ExpandoObjects()
         {
@@ -1869,13 +1870,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = qry.Select("it").Select("BlogId");
 
             // Assert
-            Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
+            Assert.AreEqual(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 #endif
         /// <summary>
         /// Defines the test method ExpressionTests_Shift.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Shift()
         {
             ExpressionTests_ShiftInternal<sbyte, int>();
@@ -1891,7 +1892,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Shift_Exception.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Shift_Exception()
         {
             // Assign
@@ -1920,16 +1921,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result4 = qry.Where("it << @0 = 80", nullableShift);
 
             // Assert
-            Assert.Equal(new[] { 20, 40, 60 }.Select(item => Convert.ChangeType(item, typeof(TResult))).ToArray(), result1.Cast<object>().ToArray());
-            Assert.Equal(new[] { 5, 10, 15 }.Select(item => Convert.ChangeType(item, typeof(TResult))).ToArray(), result2.Cast<object>().ToArray());
-            Assert.Equal(Convert.ChangeType(20, typeof(TItemType)), result3.Single());
-            Assert.Equal(Convert.ChangeType(20, typeof(TItemType)), result4.Single());
+            Assert.AreEqual(new[] { 20, 40, 60 }.Select(item => Convert.ChangeType(item, typeof(TResult))).ToArray(), result1.Cast<object>().ToArray());
+            Assert.AreEqual(new[] { 5, 10, 15 }.Select(item => Convert.ChangeType(item, typeof(TResult))).ToArray(), result2.Cast<object>().ToArray());
+            Assert.AreEqual(Convert.ChangeType(20, typeof(TItemType)), result3.Single());
+            Assert.AreEqual(Convert.ChangeType(20, typeof(TItemType)), result4.Single());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_SkipAndTake.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_SkipAndTake()
         {
             // Arrange
@@ -1951,16 +1952,16 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 var expectedEntry = expectedResult[i];
                 var entry = resultArray[i];
                 if (expectedEntry.SecondRole == null)
-                    Assert.Null(entry.SecondRole);
+                    Assert.IsNull(entry.SecondRole);
                 else
-                    Assert.Equal(expectedEntry.SecondRole.ToString(), entry.SecondRole.ToString());
+                    Assert.AreEqual(expectedEntry.SecondRole.ToString(), entry.SecondRole.ToString());
             }
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_ImplicitCast.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_ImplicitCast()
         {
             // Arrange
@@ -1979,19 +1980,19 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             IList<User> result2 = samples.AsQueryable().Where(queryString2, code1).ToList();
 
             // Assert
-            Assert.Equal(1, result.Count);
-            Assert.Equal(code1, result[0].State.StatusCode);
-            Assert.Equal("alive", result[0].State.Description);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(code1, result[0].State.StatusCode);
+            Assert.AreEqual("alive", result[0].State.Description);
 
-            Assert.Equal(1, result2.Count);
-            Assert.Equal(code1, result2[0].State.StatusCode);
-            Assert.Equal("alive", result2[0].State.Description);
+            Assert.AreEqual(1, result2.Count);
+            Assert.AreEqual(code1, result2[0].State.StatusCode);
+            Assert.AreEqual("alive", result2[0].State.Description);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_StringCompare.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_StringCompare()
         {
             // Arrange
@@ -2015,7 +2016,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_StringConcatenation.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_StringConcatenation()
         {
             // Arrange
@@ -2029,17 +2030,17 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultAddWithAmpAndParams = baseQuery.Select<string>("it.First & @0 & \" \" & @1", "x", "y");
 
             // Assert
-            Assert.Equal("FirstName LastName", resultAddWithPlus.First());
-            Assert.Equal("FirstName LastName", resultAddWithAmp.First());
+            Assert.AreEqual("FirstName LastName", resultAddWithPlus.First());
+            Assert.AreEqual("FirstName LastName", resultAddWithAmp.First());
 
-            Assert.Equal("FirstNamex y", resultAddWithPlusAndParams.First());
-            Assert.Equal("FirstNamex y", resultAddWithAmpAndParams.First());
+            Assert.AreEqual("FirstNamex y", resultAddWithPlusAndParams.First());
+            Assert.AreEqual("FirstNamex y", resultAddWithAmpAndParams.First());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_BinaryAnd.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_BinaryAnd()
         {
             // Arrange
@@ -2051,15 +2052,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultAddWithAmp3 = baseQuery.Select<int>("@0 & it.Int", "4");
 
             // Assert
-            Assert.Equal(4, resultAddWithAmp.First());
-            Assert.Equal(0, resultAddWithAmp2.First());
-            Assert.Equal(4, resultAddWithAmp3.First());
+            Assert.AreEqual(4, resultAddWithAmp.First());
+            Assert.AreEqual(0, resultAddWithAmp2.First());
+            Assert.AreEqual(4, resultAddWithAmp3.First());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Subtract_Number.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Subtract_Number()
         {
             // Arrange
@@ -2076,7 +2077,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Sum.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Sum()
         {
             // Arrange
@@ -2087,13 +2088,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = qry.Select("Sum(intValue)").AsEnumerable().ToArray()[0];
 
             // Assert
-            Assert.Equal(15, result);
+            Assert.AreEqual(15, result);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Sum_LowerCase.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Sum_LowerCase()
         {
             // Arrange
@@ -2104,13 +2105,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = qry.Select("sum(intValue)").AsEnumerable().ToArray()[0];
 
             // Assert
-            Assert.Equal(15, result);
+            Assert.AreEqual(15, result);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Sum2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Sum2()
         {
             // Arrange
@@ -2128,15 +2129,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result2 = ((IQueryable<float>)qry.Select("FloatValue")).Sum();
 
             // Assert
-            Assert.Equal(6.0f, result);
-            Assert.Equal(6.0f, result2);
+            Assert.AreEqual(6.0f, result);
+            Assert.AreEqual(6.0f, result2);
         }
 
 
         /// <summary>
         /// Defines the test method ExpressionTests_Type_Integer.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Type_Integer()
         {
             // Arrange
@@ -2171,7 +2172,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionTests_Type_Integer_Qualifiers.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Type_Integer_Qualifiers()
         {
             // Arrange
@@ -2190,15 +2191,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultUL = valuesUL.Where("it in (2UL, 3UL)");
 
             // Assert
-            Assert.Equal(resultValuesL.ToArray(), resultL.ToArray());
-            Assert.Equal(resultValuesU.ToArray(), resultU.ToArray());
-            Assert.Equal(resultValuesUL.ToArray(), resultUL.ToArray());
+            Assert.AreEqual(resultValuesL.ToArray(), resultL.ToArray());
+            Assert.AreEqual(resultValuesU.ToArray(), resultU.ToArray());
+            Assert.AreEqual(resultValuesUL.ToArray(), resultUL.ToArray());
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Type_StructWithIntegerEquality.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Type_StructWithIntegerEquality()
         {
             // Arrange
@@ -2214,18 +2215,18 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultIn = valuesL.Where("it in (100)");
 
             // Assert
-            Assert.Equal(resultValuesL.ToArray(), resultL);
-            Assert.Equal(resultValuesL.ToArray(), resultLs);
-            Assert.Equal(resultValuesL.ToArray(), resultNL);
-            Assert.Equal(resultValuesL.ToArray(), resultArg);
-            Assert.Equal(resultValuesL.ToArray(), resultArgs);
-            Assert.Equal(resultValuesL.ToArray(), resultIn);
+            Assert.AreEqual(resultValuesL.ToArray(), resultL);
+            Assert.AreEqual(resultValuesL.ToArray(), resultLs);
+            Assert.AreEqual(resultValuesL.ToArray(), resultNL);
+            Assert.AreEqual(resultValuesL.ToArray(), resultArg);
+            Assert.AreEqual(resultValuesL.ToArray(), resultArgs);
+            Assert.AreEqual(resultValuesL.ToArray(), resultIn);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Type_StructWithIntegerEquality_BothVariablesInStruct.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Type_StructWithIntegerEquality_BothVariablesInStruct()
         {
             // Arrange
@@ -2260,14 +2261,14 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultLs = valuesL.Where("it.Id = it.Var");
 
             // Assert
-            Assert.Equal(resultValuesL.ToArray(), resultL);
-            Assert.Equal(resultValuesL.ToArray(), resultLs);
+            Assert.AreEqual(resultValuesL.ToArray(), resultL);
+            Assert.AreEqual(resultValuesL.ToArray(), resultLs);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Type_Integer_Qualifiers_Negative.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Type_Integer_Qualifiers_Negative()
         {
             // Arrange
@@ -2279,36 +2280,36 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var resultIn = valuesL.Where("it in (-2L, -3L)");
 
             // Assert
-            Assert.Equal(resultValuesL.ToArray(), resultL);
-            Assert.Equal(resultValuesL.ToArray(), resultIn);
+            Assert.AreEqual(resultValuesL.ToArray(), resultL);
+            Assert.AreEqual(resultValuesL.ToArray(), resultIn);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Type_Integer_Qualifiers_Exceptions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Type_Integer_Qualifiers_Exceptions()
         {
             // Arrange
             var values = new[] { 1L, 2L, 3L }.AsQueryable();
 
             // Assert
-            Assert.Throws<ParseException>(() => values.Where("it in (2LL)"));
-            Assert.Throws<ParseException>(() => values.Where("it in (2UU)"));
-            Assert.Throws<ParseException>(() => values.Where("it in (2LU)"));
-            Assert.Throws<ParseException>(() => values.Where("it in (2B)"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it in (2LL)"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it in (2UU)"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it in (2LU)"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it in (2B)"));
 
-            Assert.Throws<ParseException>(() => values.Where("it < -2LL"));
-            Assert.Throws<ParseException>(() => values.Where("it < -2UL"));
-            Assert.Throws<ParseException>(() => values.Where("it < -2UU"));
-            Assert.Throws<ParseException>(() => values.Where("it < -2LU"));
-            Assert.Throws<ParseException>(() => values.Where("it < -2B"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it < -2LL"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it < -2UL"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it < -2UU"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it < -2LU"));
+            Assert.ThrowsException<ParseException>(() => values.Where("it < -2B"));
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Uri.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Uri()
         {
             // Arrange
@@ -2325,13 +2326,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result1 = qry.AsQueryable().Where("it = @0", new Uri("http://127.0.0.1"));
 
             // Assert
-            Assert.Equal(2, result1.Count());
+            Assert.AreEqual(2, result1.Count());
         }
 
         /// <summary>
         /// https://github.com/kahanu/System.Linq.Dynamic/issues/56
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ExpressionTests_Where_DoubleDecimalCompare()
         {
             double d = 1000.0;
@@ -2348,13 +2349,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expected = list.Where(x => (double)x.DecimalValue > d).ToList();
             var result = list.AsQueryable().Where("double(DecimalValue) > @0", d).ToList();
 
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
         /// <summary>
         /// Defines the test method ExpressionTests_Where_WithCachedLambda.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionTests_Where_WithCachedLambda()
         {
             var list = new List<SimpleValuesModel>
@@ -2367,31 +2368,31 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 
             var lambda = DynamicExpressionParser.ParseLambda(typeof(SimpleValuesModel), typeof(bool), "IntValue == 3");
             var res = DynamicQueryExtensions.Where(list.AsQueryable(), lambda);
-            Assert.Equal(2, res.Count());
+            Assert.AreEqual(2, res.Count());
 
             var res2 = DynamicQueryExtensions.Any(list.AsQueryable(), lambda);
-            Assert.True(res2);
+            Assert.IsTrue(res2);
 
             var res3 = DynamicQueryExtensions.Count(list.AsQueryable(), lambda);
-            Assert.Equal(2, res3);
+            Assert.AreEqual(2, res3);
 
             var res4 = DynamicQueryExtensions.First(list.AsQueryable(), lambda);
-            Assert.Equal(res4, list[1]);
+            Assert.AreEqual(res4, list[1]);
 
             var res5 = DynamicQueryExtensions.FirstOrDefault(list.AsQueryable(), lambda);
-            Assert.Equal(res5, list[1]);
+            Assert.AreEqual(res5, list[1]);
 
             var res6 = DynamicQueryExtensions.Last(list.AsQueryable(), lambda);
-            Assert.Equal(res6, list[3]);
+            Assert.AreEqual(res6, list[3]);
 
             var res7 = DynamicQueryExtensions.LastOrDefault(list.AsQueryable(), lambda);
-            Assert.Equal(res7, list[3]);
+            Assert.AreEqual(res7, list[3]);
 
             var res8 = DynamicQueryExtensions.Single(list.AsQueryable().Take(2), lambda);
-            Assert.Equal(res8, list[1]);
+            Assert.AreEqual(res8, list[1]);
 
             var res9 = DynamicQueryExtensions.SingleOrDefault(list.AsQueryable().Take(2), lambda);
-            Assert.Equal(res9, list[1]);
+            Assert.AreEqual(res9, list[1]);
         }
     }
 }

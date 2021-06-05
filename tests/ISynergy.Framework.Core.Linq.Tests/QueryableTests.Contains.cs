@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using ISynergy.Framework.Core.Utilities;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Contains_Dynamic_ListWithStrings.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void Contains_Dynamic_ListWithStrings()
         {
             // Arrange
@@ -28,14 +28,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var testQuery = baseQuery.Where("@0.Contains(UserName)", list).Select("Id");
 
             // Assert
-            Assert.Equal(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
+            Assert.AreEqual(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
         }
 
         /// <summary>
         /// Defines the test method Contains_Dynamic_ListWithDynamicObjects.
         /// </summary>
-        [Fact]
-        [Trait("Issue", "130")]
+        //[TestMethod]
         public void Contains_Dynamic_ListWithDynamicObjects()
         {
             // Arrange
@@ -54,7 +53,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var testQuery = baseQuery.Where("@0.Contains(new(it.UserName as UserName))", keyVals).Select("Id");
 
             // Assert
-            Assert.Equal(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
+            Assert.AreEqual(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
         }
 
         /// <summary>

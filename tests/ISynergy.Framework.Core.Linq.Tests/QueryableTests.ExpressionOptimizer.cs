@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ExpressionOptimizerIsNull.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ExpressionOptimizerIsNull()
         {
             ExtensibilityPoint.QueryOptimizer = null;

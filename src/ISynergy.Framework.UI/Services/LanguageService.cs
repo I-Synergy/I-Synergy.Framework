@@ -4,6 +4,7 @@ using System.Resources;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.UI.Properties;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -20,14 +21,13 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="LanguageService"/> class.
         /// </summary>
-        /// <param name="defaultResourceManager">The default resource manager.</param>
-        public LanguageService(ResourceManager defaultResourceManager)
+        public LanguageService()
         {
-            Argument.IsNotNull(nameof(defaultResourceManager), defaultResourceManager);
-
             _managers = new List<ResourceManager>
             {
-                defaultResourceManager
+                new ResourceManager(typeof(ISynergy.Framework.Core.Properties.Resources)),
+                new ResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources)),
+                new ResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources))
             };
         }
 
@@ -48,10 +48,6 @@ namespace ISynergy.Framework.UI.Services
             foreach (var manager in _managers)
             {
                 string result = manager.GetString(key, CultureInfo.CurrentCulture);
-
-                if(string.IsNullOrEmpty(result))
-                    result = manager.GetString(key);
-
                 if (!string.IsNullOrEmpty(result))
                     return result;
             }

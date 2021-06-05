@@ -1,60 +1,61 @@
-﻿using Xunit;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Base.Tests
 {
     /// <summary>
     /// Class MetricTests.
     /// </summary>
+    [TestClass]
     public class MetricTests
     {
         /// <summary>
         /// Defines the test method Surface100Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Surface100Test()
         {
             var result = Metric.Surface(10, 10);
-            Assert.Equal(100, result);
+            Assert.AreEqual(100, result);
         }
 
         /// <summary>
         /// Defines the test method SurfaceDecimalTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void SurfaceDecimalTest()
         {
             var result = Metric.Surface(2.5m, 7.3m);
-            Assert.Equal(18.25m, result);
+            Assert.AreEqual(18.25m, result);
         }
 
         /// <summary>
         /// Defines the test method Volume1000Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Volume1000Test()
         {
             var result = Metric.Volume(10, 10, 10);
-            Assert.Equal(1000, result);
+            Assert.AreEqual(1000, result);
         }
 
         /// <summary>
         /// Defines the test method VolumeDecimalTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void VolumeDecimalTest()
         {
             var result = Metric.Volume(2.5m, 7.3m, 5.7m);
-            Assert.Equal(104.025m, result);
+            Assert.AreEqual(104.025m, result);
         }
 
         /// <summary>
         /// Defines the test method DensityTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DensityTest()
         {
             var result = Metric.Density(1000m, 100m);
-            Assert.Equal(0.1m, result);
+            Assert.AreEqual(0.1m, result);
         }
     }
 }

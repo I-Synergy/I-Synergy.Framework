@@ -1,13 +1,14 @@
 ﻿using System;
 using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using ISynergy.Framework.Core.Extensions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
     /// <summary>
     /// Class ReflectionExtensionsTests.
     /// </summary>
+    [TestClass]
     public class ReflectionExtensionsTests
     {
         /// <summary>
@@ -36,57 +37,57 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         /// <summary>
         /// Defines the test method GetIdentityPropertyTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GetIdentityPropertyTest()
         {
-            Assert.NotNull(_product.GetIdentityProperty());
-            Assert.Equal(nameof(Product.ProductId), _product.GetIdentityProperty().Name);
+            Assert.IsNotNull(_product.GetIdentityProperty());
+            Assert.AreEqual(nameof(Product.ProductId), _product.GetIdentityProperty().Name);
         }
 
         /// <summary>
         /// Defines the test method GetNoIdentityPropertyTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GetNoIdentityPropertyTest()
         {
-            Assert.Null(_productGroup.GetIdentityProperty());
+            Assert.IsNull(_productGroup.GetIdentityProperty());
         }
 
         /// <summary>
         /// Defines the test method GetIdentityValueTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GetIdentityValueTest()
         {
-            Assert.NotNull(_product.GetIdentityValue());
-            Assert.Equal(_productId, _product.GetIdentityValue());
+            Assert.IsNotNull(_product.GetIdentityValue());
+            Assert.AreEqual(_productId, _product.GetIdentityValue());
         }
 
         /// <summary>
         /// Defines the test method GetNoIdentityValueTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GetNoIdentityValueTest()
         {
-            Assert.Null(_productGroup.GetIdentityValue());
+            Assert.IsNull(_productGroup.GetIdentityValue());
         }
 
         /// <summary>
         /// Defines the test method HasIdentityPropertyTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void HasIdentityPropertyTest()
         {
-            Assert.True(_product.HasIdentityProperty());
+            Assert.IsTrue(_product.HasIdentityProperty());
         }
 
         /// <summary>
         /// Defines the test method HasNoIdentityPropertyTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void HasNoIdentityPropertyTest()
         {
-            Assert.False(_productGroup.HasIdentityProperty());
+            Assert.IsFalse(_productGroup.HasIdentityProperty());
         }
     }
 }

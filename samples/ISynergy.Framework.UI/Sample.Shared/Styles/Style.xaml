@@ -1,9 +1,10 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:media="using:Windows.UI.Xaml.Media"
     xmlns:c="using:ISynergy.Framework.UI.Controls"
-    xmlns:Converters="using:ISynergy.Framework.UI.Converters">
+    xmlns:Converters="using:ISynergy.Framework.UI.Converters"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
 
     <Color x:Key="SystemAccentColor_Green">#ff45e63d</Color>
     <Color x:Key="SystemAccentColor_Red">#ffe63d3d</Color>
@@ -286,18 +287,6 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     </Style>
 
-    <Style TargetType="c:Tile" BasedOn="{StaticResource DefaultTileStyle}" />
-
-    <Style TargetType="c:Tile" x:Key="DefaultTileStyle" BasedOn="{StaticResource ButtonRevealStyle}">
-        <Setter Property="IsDoubleTapEnabled" Value="False"/>
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="Background" Value="{StaticResource SystemAccentBrush}"/>
-        <Setter Property="Margin" Value="5" />
-        <Setter Property="Height" Value="100" />
-        <Setter Property="Width" Value="100" />
-        <Setter Property="FocusVisualPrimaryBrush" Value="Transparent"/>
-        <Setter Property="FocusVisualSecondaryBrush" Value="Transparent"/>
-    </Style>
     
     <Style TargetType="Button" x:Key="ToolButtonStyle" BasedOn="{StaticResource ButtonRevealStyle}">
         <Setter Property="IsDoubleTapEnabled" Value="False"/>
@@ -587,78 +576,6 @@
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled" />
         <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
-    </Style>
-
-    <!-- Default style for Windows.UI.Xaml.Controls.Button -->
-    <Style TargetType="Button">
-        <Setter Property="IsDoubleTapEnabled" Value="False"/>
-        <Setter Property="MinWidth" Value="{StaticResource ContentDialogButtonMinWidth}"/>
-        <Setter Property="MinHeight" Value="{StaticResource ContentDialogButtonMinHeight}"/>
-        <Setter Property="Margin" Value="2" />
-        <Setter Property="Background" Value="{ThemeResource ButtonRevealBackground}" />
-        <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}" />
-        <Setter Property="BorderThickness" Value="{ThemeResource ButtonRevealBorderThemeThickness}" />
-        <Setter Property="Padding" Value="{StaticResource ButtonPadding}" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
-        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
-        <Setter Property="FocusVisualMargin" Value="-3" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal">
-                                    <Storyboard>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="PointerOver">
-                                    <VisualState.Setters>
-                                        <Setter Target="RootGrid.(RevealBrush.State)" Value="PointerOver" />
-                                        <Setter Target="RootGrid.Background" Value="{ThemeResource ButtonRevealBackgroundPointerOver}" />
-                                        <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrushPointerOver}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPointerOver}" />
-                                    </VisualState.Setters>
-                                    <Storyboard>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <VisualState.Setters>
-                                        <Setter Target="RootGrid.(RevealBrush.State)" Value="Pressed" />
-                                        <Setter Target="RootGrid.Background" Value="{ThemeResource ButtonRevealBackgroundPressed}" />
-                                        <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrushPressed}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPressed}" />
-                                    </VisualState.Setters>
-                                    <Storyboard>
-                                        <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
-                                    </Storyboard>
-                                </VisualState>
-
-                                <VisualState x:Name="Disabled">
-                                    <VisualState.Setters>
-                                        <Setter Target="RootGrid.Background" Value="{ThemeResource ButtonRevealBackgroundDisabled}" />
-                                        <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrushDisabled}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundDisabled}" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                            </VisualStateGroup>
-
-                        </VisualStateManager.VisualStateGroups>
-                        <ContentPresenter x:Name="ContentPresenter" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" Content="{TemplateBinding Content}" ContentTransitions="{TemplateBinding ContentTransitions}" ContentTemplate="{TemplateBinding ContentTemplate}" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" AutomationProperties.AccessibilityView="Raw" />
-
-                    </Grid>
-
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
     <!-- Default style for Windows.UI.Xaml.Controls.TextBox -->
@@ -4475,5 +4392,10 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style TargetType="controls:BladeItem">
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="TitleBarVisibility" Value="Collapsed"/>
     </Style>
 </ResourceDictionary>

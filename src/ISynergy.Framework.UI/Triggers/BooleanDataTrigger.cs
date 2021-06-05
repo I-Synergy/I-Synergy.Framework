@@ -1,5 +1,10 @@
 ﻿using ISynergy.Framework.Core.Validation;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Triggers
 {

@@ -3,19 +3,20 @@ using System.Linq;
 using ISynergy.Framework.Core.Linq.Exceptions;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
     /// <summary>
     /// Class OperatorTests.
     /// </summary>
+    [TestClass]
     public class OperatorTests
     {
         /// <summary>
         /// Defines the test method Operator_NullPropagation.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Operator_NullPropagation()
         {
             // Arrange
@@ -33,20 +34,20 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Operator_Multiplication_Single_Float_ParseException.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Operator_Multiplication_Single_Float_ParseException()
         {
             //Arrange
             var models = new[] { new SimpleValuesModel() }.AsQueryable();
 
             //Act + Assert
-            Assert.Throws<ParseException>(() => models.Select("FloatValue * DecimalValue"));
+            Assert.ThrowsException<ParseException>(() => models.Select("FloatValue * DecimalValue"));
         }
 
         /// <summary>
         /// Defines the test method Operator_Multiplication_Single_Float_Cast.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Operator_Multiplication_Single_Float_Cast()
         {
             //Arrange
@@ -56,7 +57,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = models.Select("Decimal(FloatValue) * DecimalValue").First();
 
             //Assert
-            Assert.Equal(6.0m, result);
+            Assert.AreEqual(6.0m, result);
         }
     }
 }

@@ -1,18 +1,19 @@
 ﻿using System;
 using ISynergy.Framework.Geography.Tests;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Geography.Utm.Tests
 {
     /// <summary>
     /// Class GlobalMeshTests.
     /// </summary>
+    [TestClass]
     public class GlobalMeshTests
     {
         /// <summary>
         /// Defines the test method TestAllCenters.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestAllCenters()
         {
             var theMesh = new GlobalMesh(25000);
@@ -20,14 +21,14 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             {
                 var center = theMesh.CenterOf(mesh);
                 var verify = theMesh.MeshNumber(center);
-                Assert.Equal(mesh, verify);
+                Assert.AreEqual(mesh, verify);
             }
         }
 
         /// <summary>
         /// Defines the test method TestBoundingBox.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestBoundingBox()
         {
             var theMesh = new GlobalMesh(1000);
@@ -36,35 +37,35 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             var lr = theMesh.LowerRight(nr);
             var ul = theMesh.UpperLeft(nr);
             var ur = theMesh.UpperRight(nr);
-            Assert.Equal(ll.X, ul.X);
-            Assert.Equal(lr.X, ur.X);
-            Assert.Equal(ll.Y, lr.Y);
-            Assert.Equal(ul.Y, ur.Y);
+            Assert.AreEqual(ll.X, ul.X);
+            Assert.AreEqual(lr.X, ur.X);
+            Assert.AreEqual(ll.Y, lr.Y);
+            Assert.AreEqual(ul.Y, ur.Y);
         }
 
         /// <summary>
         /// Defines the test method TestNeighborHood.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNeighborHood()
         {
             var theMesh = new GlobalMesh(1000);
             var nr = theMesh.MeshNumber(Constants.MyHome);
             var n0 = theMesh.Neighborhood(nr, 0);
-            Assert.Single(n0);
-            Assert.Equal(nr, n0[0]);
+            Assert.IsTrue(n0.Count == 1);
+            Assert.AreEqual(nr, n0[0]);
             var n1 = theMesh.Neighborhood(nr, 1);
-            Assert.Equal(8, n1.Count);
+            Assert.AreEqual(8, n1.Count);
             var n2 = theMesh.Neighborhood(nr, 2);
-            Assert.Equal(16, n2.Count);
+            Assert.AreEqual(16, n2.Count);
             var n3 = theMesh.Neighborhood(nr, 3);
-            Assert.Equal(24, n3.Count);
+            Assert.AreEqual(24, n3.Count);
         }
 
         /// <summary>
         /// Defines the test method TestMeshSizeInMetersValidation.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestMeshSizeInMetersValidation()
         {
             try
@@ -80,7 +81,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             }
             catch (ArgumentOutOfRangeException)
             {
-                Assert.True(false);
+                Assert.IsTrue(false);
             }
 
             try
@@ -89,7 +90,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             }
             catch (ArgumentOutOfRangeException)
             {
-                Assert.True(false);
+                Assert.IsTrue(false);
             }
         }
     }

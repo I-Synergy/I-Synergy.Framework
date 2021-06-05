@@ -1,9 +1,12 @@
 ﻿using ISynergy.Framework.Core.Extensions;
+using System.IO;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-
-#if NETFX_CORE
-using System.IO;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 #endif
 
 namespace ISynergy.Framework.UI.Extensions
@@ -22,11 +25,7 @@ namespace ISynergy.Framework.UI.Extensions
         public static ImageSource ToImageSource(this byte[] _self)
         {
             var bitmap = new BitmapImage();
-#if NETFX_CORE
             bitmap.SetSource(_self.ToMemoryStream().AsRandomAccessStream());
-#else
-            bitmap.SetSource(_self.ToMemoryStream());
-#endif
             return bitmap;
         }
     }

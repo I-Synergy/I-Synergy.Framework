@@ -140,7 +140,7 @@ namespace ISynergy.Framework.Core.IO.Base
         /// Determines if the file contents are of a specified type.
         /// </summary>
         /// <param name="fileContent">The file contents to examine.</param>
-        /// <param name="extensionAliasOrMimeType">The file type to validate.</param>
+        /// <param name="extensionAliasOrMimeType">The mime- or file type to validate.</param>
         /// <returns><c>true</c> if the specified file content is type; otherwise, <c>false</c>.</returns>
         public bool IsType(byte[] fileContent, string extensionAliasOrMimeType)
         {
@@ -259,7 +259,7 @@ namespace ISynergy.Framework.Core.IO.Base
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns><c>true</c> if the specified input is ASCII; otherwise, <c>false</c>.</returns>
-        private bool IsAscii(byte[] input)
+        private static bool IsAscii(byte[] input)
         {
             const byte maxAscii = 0x7F;
             foreach (var b in input)
@@ -276,7 +276,7 @@ namespace ISynergy.Framework.Core.IO.Base
         /// <param name="input">The input.</param>
         /// <param name="hasBOM">if set to <c>true</c> [has bom].</param>
         /// <returns><c>true</c> if [is ut f8] [the specified input]; otherwise, <c>false</c>.</returns>
-        private bool IsUTF8(byte[] input, out bool hasBOM)
+        private static bool IsUTF8(byte[] input, out bool hasBOM)
         {
             var utf8WithBOM = new UTF8Encoding(true, true);
             bool isUTF8 = true;

@@ -1,13 +1,14 @@
 ﻿using System;
 using FluentAssertions;
 using ISynergy.Framework.Core.Linq.Converters;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.TypeConvertors
 {
     /// <summary>
     /// Class CustomDateTimeConverterTests.
     /// </summary>
+    [TestClass]
     public class CustomDateTimeConverterTests
     {
         /// <summary>
@@ -28,9 +29,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.TypeConvertors
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="hours">The hours.</param>
-        [Theory]
-        [InlineData("Fri, 10 May 2019 11:03:17 GMT", 11)]
-        [InlineData("Fri, 10 May 2019 11:03:17 -07:00", 18)]
+        [DataTestMethod]
+        [DataRow("Fri, 10 May 2019 11:03:17 GMT", 11)]
+        [DataRow("Fri, 10 May 2019 11:03:17 -07:00", 18)]
         public void ConvertFromInvariantString_ReturnsCorrectDateTime(string value, int hours)
         {
             // Act

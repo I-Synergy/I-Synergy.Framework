@@ -1,12 +1,13 @@
 ﻿using System;
 using ISynergy.Framework.Geography.Tests;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Geography.Utm.Tests
 {
     /// <summary>
     /// Class UtmGridTests.
     /// </summary>
+    [TestClass]
     public class UtmGridTests
     {
         /// <summary>
@@ -20,139 +21,139 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <param name="g">The g.</param>
         private void ValidateCorners(UtmGrid g)
         {
-            Assert.Equal(g.ToString(), new UtmGrid(utm, g.LowerRightCorner).ToString());
-            Assert.Equal(g.ToString(), new UtmGrid(utm, g.UpperLeftCorner).ToString());
-            Assert.Equal(g.ToString(), new UtmGrid(utm, g.UpperRightCorner).ToString());
+            Assert.AreEqual(g.ToString(), new UtmGrid(utm, g.LowerRightCorner).ToString());
+            Assert.AreEqual(g.ToString(), new UtmGrid(utm, g.UpperLeftCorner).ToString());
+            Assert.AreEqual(g.ToString(), new UtmGrid(utm, g.UpperRightCorner).ToString());
         }
 
         /// <summary>
         /// Defines the test method TestConstructor1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor1()
         {
             var g = new UtmGrid(utm, 1, 'C');
-            Assert.Equal(g.LowerLeftCorner.Longitude, -180);
-            Assert.Equal(g.LowerLeftCorner.Latitude, utm.MinLatitude);
-            Assert.Equal(6.0, g.Width);
+            Assert.AreEqual(g.LowerLeftCorner.Longitude, -180);
+            Assert.AreEqual(g.LowerLeftCorner.Latitude, utm.MinLatitude);
+            Assert.AreEqual(6.0, g.Width);
             ValidateCorners(g);
         }
 
         /// <summary>
         /// Defines the test method TestConstructor2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor2()
         {
             var g = new UtmGrid(utm, 1, 'X');
-            Assert.Equal(g.LowerLeftCorner.Longitude, -180);
-            Assert.Equal(g.LowerLeftCorner.Latitude, utm.MaxLatitude - g.Height);
-            Assert.Equal(12.0, g.Height);
-            Assert.Equal(6.0, g.Width);
+            Assert.AreEqual(g.LowerLeftCorner.Longitude, -180);
+            Assert.AreEqual(g.LowerLeftCorner.Latitude, utm.MaxLatitude - g.Height);
+            Assert.AreEqual(12.0, g.Height);
+            Assert.AreEqual(6.0, g.Width);
             ValidateCorners(g);
         }
 
         /// <summary>
         /// Defines the test method TestConstructor3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor3()
         {
             var loc = new GlobalCoordinates(utm.MaxLatitude + 1.0, 0);
-            Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, loc));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, loc));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor4.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor4()
         {
             var loc = new GlobalCoordinates(utm.MaxLatitude, 0);
             var g = new UtmGrid(utm, loc);
-            Assert.True(true);
+            Assert.IsTrue(true);
             ValidateCorners(g);
         }
 
         /// <summary>
         /// Defines the test method TestConstructor5.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor5()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 0, 'C'));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 0, 'C'));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor6.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor6()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 1, 'A'));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 1, 'A'));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor7.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor7()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, UtmGrid.NumberOfGrids + 1));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, UtmGrid.NumberOfGrids + 1));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor_32X.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_32X()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 32, 'X'));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 32, 'X'));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor_34X.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_34X()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 34, 'X'));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 34, 'X'));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor_36X.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_36X()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 36, 'X'));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 36, 'X'));
         }
 
         /// <summary>
         /// Defines the test method TestConstructor_32V.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_32V()
         {
             var g = new UtmGrid(utm, 32, 'V');
-            Assert.Equal(9.0, g.Width);
+            Assert.AreEqual(9.0, g.Width);
             ValidateCorners(g);
         }
 
         /// <summary>
         /// Defines the test method TestConstructor_31V.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_31V()
         {
             var g = new UtmGrid(utm, 31, 'V');
-            Assert.Equal(3.0, g.Width);
+            Assert.AreEqual(3.0, g.Width);
             var l = g.LowerLeftCorner;
             // 4 degrees east of lower left is normally in the same grid
             // but not so in 31V
             l.Longitude += 4.0;
             var g2 = new UtmGrid(utm, l);
-            Assert.Equal("32V", g2.ToString());
+            Assert.AreEqual("32V", g2.ToString());
             ValidateCorners(g);
             ValidateCorners(g2);
         }
@@ -160,17 +161,17 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// Defines the test method TestConstructor_31X.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_31X()
         {
             var g = new UtmGrid(utm, 31, 'X');
-            Assert.Equal(9.0, g.Width);
+            Assert.AreEqual(9.0, g.Width);
             var l = g.LowerLeftCorner;
             // Going a little more than width should bring us 
             // into the next zone 32, but not in this band
             l.Longitude += g.Width + 1.0;
             var g2 = new UtmGrid(utm, l);
-            Assert.Equal("33X", g2.ToString());
+            Assert.AreEqual("33X", g2.ToString());
             ValidateCorners(g);
             ValidateCorners(g2);
         }
@@ -178,26 +179,26 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// Defines the test method TestConstructor_37X.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_37X()
         {
             var g = new UtmGrid(utm, 37, 'X');
-            Assert.Equal(9.0, g.Width);
+            Assert.AreEqual(9.0, g.Width);
             ValidateCorners(g);
         }
 
         /// <summary>
         /// Defines the test method TestConstructor_33X.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_33X()
         {
             var g = new UtmGrid(utm, 33, 'X');
-            Assert.Equal(12.0, g.Width);
+            Assert.AreEqual(12.0, g.Width);
             var l = g.LowerRightCorner;
             l.Longitude += 1.0;
             var g2 = new UtmGrid(utm, l);
-            Assert.Equal("35X", g2.ToString());
+            Assert.AreEqual("35X", g2.ToString());
             ValidateCorners(g);
             ValidateCorners(g2);
         }
@@ -205,15 +206,15 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// Defines the test method TestConstructor_35X.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestConstructor_35X()
         {
             var g = new UtmGrid(utm, 35, 'X');
-            Assert.Equal(12.0, g.Width);
+            Assert.AreEqual(12.0, g.Width);
             var l = g.LowerRightCorner;
             l.Longitude += 1.0;
             var g2 = new UtmGrid(utm, l);
-            Assert.Equal("37X", g2.ToString());
+            Assert.AreEqual("37X", g2.ToString());
             ValidateCorners(g);
             ValidateCorners(g2);
         }
@@ -221,29 +222,29 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// Defines the test method TestCorners.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestCorners()
         {
             var g = new UtmGrid(utm, 32, 'U');
             var glrc = new UtmGrid(utm, g.LowerRightCorner);
-            Assert.Equal("32U", glrc.ToString());
+            Assert.AreEqual("32U", glrc.ToString());
             var gulc = new UtmGrid(utm, g.UpperLeftCorner);
-            Assert.Equal("32U", gulc.ToString());
+            Assert.AreEqual("32U", gulc.ToString());
             var gurc = new UtmGrid(utm, g.UpperRightCorner);
-            Assert.Equal("32U", gurc.ToString());
+            Assert.AreEqual("32U", gurc.ToString());
             ValidateCorners(g);
         }
 
         /// <summary>
         /// Defines the test method TestOrdinal.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestOrdinal()
         {
             var g = new UtmGrid(utm, 32, 'U');
             var ord = g.Ordinal;
             var g2 = new UtmGrid(utm, ord);
-            Assert.Equal(g, g2);
+            Assert.AreEqual(g, g2);
             ValidateCorners(g);
             ValidateCorners(g2);
         }
@@ -251,7 +252,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// Defines the test method TestOrdinal2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestOrdinal2()
         {
             for (var ord = 0; ord < 1200; ord++)
@@ -259,7 +260,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
                 if (UtmGrid.IsValidOrdinal(ord))
                 {
                     var g = new UtmGrid(utm, ord);
-                    Assert.Equal(g.Ordinal, ord);
+                    Assert.AreEqual(g.Ordinal, ord);
                 }
             }
         }
@@ -267,7 +268,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// Defines the test method TestBandSetter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestBandSetter()
         {
             var g0 = new UtmGrid(utm, 32, 'U');
@@ -275,15 +276,15 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             {
                 Band = 'V'
             };
-            Assert.Equal("32V", g.ToString());
-            Assert.Equal(g.LowerLeftCorner.Latitude - g0.LowerLeftCorner.Latitude, g0.Height);
+            Assert.AreEqual("32V", g.ToString());
+            Assert.AreEqual(g.LowerLeftCorner.Latitude - g0.LowerLeftCorner.Latitude, g0.Height);
             ValidateCorners(g);
         }
 
         /// <summary>
         /// Defines the test method TestZoneSetter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestZoneSetter()
         {
             var g0 = new UtmGrid(utm, 32, 'U');
@@ -291,24 +292,24 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             {
                 Zone = 33
             };
-            Assert.Equal("33U", g.ToString());
-            Assert.Equal(g.LowerLeftCorner.Longitude - g0.LowerLeftCorner.Longitude, g0.Width);
+            Assert.AreEqual("33U", g.ToString());
+            Assert.AreEqual(g.LowerLeftCorner.Longitude - g0.LowerLeftCorner.Longitude, g0.Width);
             ValidateCorners(g);
         }
 
         /// <summary>
         /// Defines the test method TestOriginCompute.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestOriginCompute()
         {
             var g = new UtmGrid(utm, 32, 'U');
 
             if(g.Origin is UtmCoordinate o)
             {
-                Assert.Equal(o.Projection, utm);
-                Assert.Equal("32U", o.Grid.ToString());
-                Assert.True(Math.Abs(o.ScaleFactor - 1.0) < 0.001);
+                Assert.AreEqual(o.Projection, utm);
+                Assert.AreEqual("32U", o.Grid.ToString());
+                Assert.IsTrue(Math.Abs(o.ScaleFactor - 1.0) < 0.001);
             }
             
             ValidateCorners(g);
@@ -317,7 +318,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// Defines the test method ValidateAllGridsCorners.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ValidateAllGridsCorners()
         {
             var maxHeight = double.MinValue;
@@ -347,25 +348,25 @@ namespace ISynergy.Framework.Geography.Utm.Tests
                     }
                 }
             }
-            Assert.True(maxHeight >= minHeight && minHeight > 0.0);
-            Assert.True(maxWidth >= minWidth && minWidth > 0.0);
+            Assert.IsTrue(maxHeight >= minHeight && minHeight > 0.0);
+            Assert.IsTrue(maxWidth >= minWidth && minWidth > 0.0);
         }
 
         /// <summary>
         /// Defines the test method TestEquals1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEquals1()
         {
             var s = "123";
             var g = new UtmGrid(utm, 1, 'C');
-            Assert.False(g.Equals(s));
+            Assert.IsFalse(g.Equals(s));
         }
 
         /// <summary>
         /// Defines the test method TestEquals2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEquals2()
         {
             var g1 = new UtmGrid(utm, 1, 'C');
@@ -373,13 +374,13 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             {
                 Band = 'C'
             };
-            Assert.True(g1.Equals(g2));
+            Assert.IsTrue(g1.Equals(g2));
         }
 
         /// <summary>
         /// Defines the test method TestEquality.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestEquality()
         {
             var g1 = new UtmGrid(utm, 1, 'C');
@@ -387,146 +388,146 @@ namespace ISynergy.Framework.Geography.Utm.Tests
             {
                 Band = 'C'
             };
-            Assert.True(g1 == g2);
+            Assert.IsTrue(g1 == g2);
         }
 
         /// <summary>
         /// Defines the test method TestInEquality.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestInEquality()
         {
             var g1 = new UtmGrid(utm, 1, 'C');
             var g2 = new UtmGrid(utm, 1, 'D');
-            Assert.True(g1 != g2);
+            Assert.IsTrue(g1 != g2);
         }
 
         /// <summary>
         /// Defines the test method TestNeighbors.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNeighbors()
         {
             var g = new UtmGrid(utm, Constants.MyHome);
-            Assert.True(g.Band == 'U' && g.Zone == 32);
+            Assert.IsTrue(g.Band == 'U' && g.Zone == 32);
             var n = g.North;
-            Assert.True(n.Band == 'V' && n.Zone == 32);
+            Assert.IsTrue(n.Band == 'V' && n.Zone == 32);
             var s = g.South;
-            Assert.True(s.Band == 'T' && s.Zone == 32);
+            Assert.IsTrue(s.Band == 'T' && s.Zone == 32);
             var w = g.West;
-            Assert.True(w.Band == 'U' && w.Zone == 31);
+            Assert.IsTrue(w.Band == 'U' && w.Zone == 31);
             var e = g.East;
-            Assert.True(e.Band == 'U' && e.Zone == 33);
+            Assert.IsTrue(e.Band == 'U' && e.Zone == 33);
         }
 
         /// <summary>
         /// Defines the test method TestNorth1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNorth1()
         {
             var g = new UtmGrid(utm, 31, 'U');
-            Assert.Throws<Exception>(() => g.North);
+            Assert.ThrowsException<Exception>(() => g.North);
         }
 
         /// <summary>
         /// Defines the test method TestNorth2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNorth2()
         {
             var g = new UtmGrid(utm, 32, 'W');
-            Assert.Throws<Exception>(() => g.North);
+            Assert.ThrowsException<Exception>(() => g.North);
         }
 
         /// <summary>
         /// Defines the test method TestNorth3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNorth3()
         {
             var g = new UtmGrid(utm, 34, 'W');
-            Assert.Throws<Exception>(() => g.North);
+            Assert.ThrowsException<Exception>(() => g.North);
         }
 
         /// <summary>
         /// Defines the test method TestNorth4.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNorth4()
         {
             var g = new UtmGrid(utm, 36, 'W');
-            Assert.Throws<Exception>(() => g.North);
+            Assert.ThrowsException<Exception>(() => g.North);
         }
 
         /// <summary>
         /// Defines the test method TestNorth5.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestNorth5()
         {
             var g = new UtmGrid(utm, 1, 'X');
-            Assert.Throws<Exception>(() => g.North);
+            Assert.ThrowsException<Exception>(() => g.North);
         }
 
         /// <summary>
         /// Defines the test method TestSouth1.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestSouth1()
         {
             var g = new UtmGrid(utm, 31, 'W');
-            Assert.Throws<Exception>(() => g.South);
+            Assert.ThrowsException<Exception>(() => g.South);
         }
 
         /// <summary>
         /// Defines the test method TestSouth2.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestSouth2()
         {
             var g = new UtmGrid(utm, 31, 'X');
-            Assert.Throws<Exception>(() => g.South);
+            Assert.ThrowsException<Exception>(() => g.South);
         }
 
         /// <summary>
         /// Defines the test method TestSouth3.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestSouth3()
         {
             var g = new UtmGrid(utm, 33, 'X');
-            Assert.Throws<Exception>(() => g.South);
+            Assert.ThrowsException<Exception>(() => g.South);
         }
 
         /// <summary>
         /// Defines the test method TestSouth4.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestSouth4()
         {
             var g = new UtmGrid(utm, 35, 'X');
-            Assert.Throws<Exception>(() => g.South);
+            Assert.ThrowsException<Exception>(() => g.South);
         }
 
         /// <summary>
         /// Defines the test method TestSouth5.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestSouth5()
         {
             var g = new UtmGrid(utm, 37, 'X');
-            Assert.Throws<Exception>(() => g.South);
+            Assert.ThrowsException<Exception>(() => g.South);
         }
 
         /// <summary>
         /// Defines the test method TestSouth6.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestSouth6()
         {
             var g = new UtmGrid(utm, 37, 'C');
-            Assert.Throws<Exception>(() => g.South);
+            Assert.ThrowsException<Exception>(() => g.South);
         }
     }
 }

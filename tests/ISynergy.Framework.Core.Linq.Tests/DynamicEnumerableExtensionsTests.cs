@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using NFluent;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
     /// <summary>
     /// Class DynamicEnumerableExtensionsTests.
     /// </summary>
+    [TestClass]
     public class DynamicEnumerableExtensionsTests
     {
         /// <summary>
         /// Defines the test method DynamicEnumerableExtensions_ToDynamicArray_int_to_int.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicEnumerableExtensions_ToDynamicArray_int_to_int()
         {
             // Act
@@ -25,7 +26,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicEnumerableExtensions_ToDynamicArray_dynamic_to_int.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicEnumerableExtensions_ToDynamicArray_dynamic_to_int()
         {
             // Act
@@ -38,7 +39,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method DynamicEnumerableExtensions_ToDynamicArray_object_to_int.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicEnumerableExtensions_ToDynamicArray_object_to_int()
         {
             // Act

@@ -3,7 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ISynergy.Framework.Core.Models.Accounts;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Data;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {

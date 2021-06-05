@@ -4,26 +4,36 @@ trigger:
 - master
 
 variables:
-  VersionMajor: ''
-  VersionMinor: ''
-  VersionRevision: ''
+  - name: VersionMajor
+    value: ''
+  - name: VersionMinor
+    value: ''
+  - name: VersionRevision
+    value: ''
+
+  - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+    - group: ACC
+ 
+  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    - group: PROD
 
 pool:
   vmImage: 'windows-latest'
 
 stages:
-  - stage: Build
-    displayName: 'Build and Test'
+  - stage: BuildStage
+    displayName: 'Build'
     jobs:
     - job: BuildJob
-      displayName: 'Build and Test assemblies'
+      displayName: 'Build and pack assemblies'
       steps:
         - task: PowerShell@2
           displayName: Set the Major Version variable value
           inputs:
             targetType: 'inline'
             script: |
-              [string] $version = $((Get-Date).Year)
+              [string] $buildNumber = $Env:BUILD_BUILDNUMBER
+              [string] $version = $buildNumber.Substring(0,4)
               Write-Host "Setting the major version number variable to '$version'."
               Write-Host "##vso[task.setvariable variable=VersionMajor]$version"
         
@@ -32,7 +42,8 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-              [string] $version = "1$("{0:000}" -f (Get-Date).DayOfYear)"
+              [string] $buildNumber = $Env:BUILD_BUILDNUMBER
+              [string] $version = $buildNumber.Substring(5,4)
               Write-Host "Setting the minor version number variable to '$version'."
               Write-Host "##vso[task.setvariable variable=VersionMinor]$version"
 
@@ -395,6 +406,21 @@ stages:
             artifactName: Output
             publishLocation: 'Container'
 
+        - task: SonarCloudAnalyze@1
+
+  - stage: TestStage
+    displayName: 'Test'
+    dependsOn: BuildStage
+    condition: succeeded()
+    jobs:
+    - job: TestJob
+      displayName: 'Run Unit tests'
+      steps:
+        - task: NuGetToolInstaller@1
+          displayName: 'Use NuGet 5.8.1'
+          inputs:
+            versionSpec: 5.8.1
+
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core'
           inputs:
@@ -451,41 +477,86 @@ stages:
             projects: 'tests\ISynergy.Framework.Payment.Tests\ISynergy.Framework.Payment.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
-        - task: SonarCloudAnalyze@1
+  - stage: DocStage
+    displayName: 'Documentation'
+    dependsOn: TestStage
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+    - job: DocJob
+      displayName: 'Create API Documentation'
+      steps:
+        - task: NuGetToolInstaller@1
+          displayName: 'Use NuGet 5.8.1'
+          inputs:
+            versionSpec: 5.8.1
+
+        - task: ChocolateyToolInstaller@0
+          inputs:
+            force: true
+
+        - task: ChocolateyCommand@0
+          inputs:
+            command: 'install'
+            installPackageId: 'wkhtmltopdf'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy Framework Documentation'
+          inputs:
+            command: build
+            projects: 'docs\ISynergy.Framework\ISynergy.Framework.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: AzureCLI@2
+          displayName: 'Delete Existing Files'
+          inputs:
+            azureSubscription: 'Azure'
+            scriptType: 'pscore'
+            scriptLocation: 'inlineScript'
+            inlineScript: az storage blob delete-batch --source '$web' --account-name '$(AzureStorageAccountName)' --account-key '$(AzureStorageAccountKey)'
+            
+        - task: AzureCLI@2
+          displayName: 'Upload new files'
+          inputs:
+            azureSubscription: 'Azure'
+            scriptType: 'ps'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              $sourcePath = "docs\ISynergy.Framework\_site"
+              az storage blob upload-batch --destination '$web' --source $sourcePath --account-name '$(AzureStorageAccountName)' --account-key '$(AzureStorageAccountKey)'
+
+        - task: AzureCLI@2
+          displayName: 'Purge CDN'
+          inputs:
+            azureSubscription: 'Azure'
+            scriptType: 'ps'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              az cdn endpoint purge --resource-group 'I-Synergy' --name framework --profile-name Framework --content-paths '/*'
+          continueOnError: true
 
   - stage: Release
     displayName: 'Release'
-    dependsOn: Build
+    dependsOn: TestStage
     condition: succeeded()
     jobs:
-    - job: PackageJob
-      displayName: 'Publish nuget packages'
+    - job: ArtifactsJob
+      displayName: 'Get Nuget artifacts'
       steps:
-        - task: DownloadBuildArtifacts@0
+        - task: DownloadPipelineArtifact@2
           inputs:
-            buildType: 'current'
-            downloadType: 'single'
-            artifactName: 'Output'
-            downloadPath: '$(System.ArtifactsDirectory)'
+            artifact: 'Output'
 
-        - task: NuGetCommand@2
-          displayName: 'NuGet push - I-Synergy.Framework'
-          inputs:
-            command: 'push'
-            packagesToPush: '$(Build.ArtifactStagingDirectory)\Output\*.nupkg'
-            nuGetFeedType: 'external'
-            publishFeedCredentials: 'Nuget.org'
-
-        - task: DocFxTask@0
-          inputs:
-            solution: 'docfx_project/docfx.json'
-
-        - task: GitHubPagesPublish@1
-          inputs:
-            docPath: '$(System.DefaultWorkingDirectory)\docs\*'
-            githubusername: 'I-Synergy'
-            githubemail: 'ismail.hassani@i-synergy.nl'
-            githubaccesstoken: '$(GithubPages)'
-            repositoryname: 'I-Synergy.Framework'
-            branchname: 'gh-pages'
-            commitmessage: 'Automated Document Release $(build.buildNumber)'
+    - deployment: DeployNuget
+      displayName: 'Deploy to Artifacts'
+      environment: $(Environment)
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - task: NuGetCommand@2
+                displayName: 'NuGet push - ISynergy Framework'
+                inputs:
+                  command: 'push'
+                  packagesToPush: '$(Pipeline.Workspace)/Output/*.nupkg'
+                  nuGetFeedType: 'external'
+                  publishFeedCredentials: 'Nuget.org'

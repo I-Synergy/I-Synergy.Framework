@@ -1,6 +1,6 @@
 ﻿using NFluent;
 using ISynergy.Framework.Core.Linq.Exceptions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Entities;
 using ISynergy.Framework.Core.Linq.Parsers;
@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method OfType_WithType.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void OfType_WithType()
         {
             // Assign
@@ -36,7 +36,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method OfType_WithString.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void OfType_WithString()
         {
             // Assign
@@ -56,7 +56,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method OfType_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void OfType_Dynamic()
         {
             // Assign
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Is_Dynamic_ActingOnIt.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Is_Dynamic_ActingOnIt()
         {
             // Assign
@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Is_Dynamic_ActingOnIt_WithSimpleName.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Is_Dynamic_ActingOnIt_WithSimpleName()
         {
             // Assign
@@ -127,7 +127,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method As_Dynamic_ActingOnIt.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void As_Dynamic_ActingOnIt()
         {
             // Assign
@@ -146,7 +146,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method CastToType_WithType.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CastToType_WithType()
         {
             // Assign
@@ -166,7 +166,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method CastToType_WithString.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CastToType_WithString()
         {
             // Assign
@@ -186,7 +186,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method CastToType_Dynamic.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CastToType_Dynamic()
         {
             // Assign
@@ -212,7 +212,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method CastToType_Dynamic_ActingOnIt.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CastToType_Dynamic_ActingOnIt()
         {
             // Assign
@@ -232,7 +232,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method CastToType_Dynamic_ActingOnIt_Throws.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CastToType_Dynamic_ActingOnIt_Throws()
         {
             // Assign
@@ -251,7 +251,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method OfType_Dynamic_Exceptions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void OfType_Dynamic_Exceptions()
         {
             // Assign
@@ -267,15 +267,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }.AsQueryable();
 
             // Act
-            Assert.Throws<ParseException>(() => qry.Select("Employees.OfType().Where(Name == \"e\")"));
-            Assert.Throws<ParseException>(() => qry.Select("Employees.OfType(true).Where(Name == \"e\")"));
-            Assert.Throws<ParseException>(() => qry.Select("Employees.OfType(\"not-found\").Where(Name == \"e\")"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("Employees.OfType().Where(Name == \"e\")"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("Employees.OfType(true).Where(Name == \"e\")"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("Employees.OfType(\"not-found\").Where(Name == \"e\")"));
         }
 
         /// <summary>
         /// Defines the test method OfType_Dynamic_ActingOnIt_Exceptions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void OfType_Dynamic_ActingOnIt_Exceptions()
         {
             // Assign
@@ -285,15 +285,15 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }.AsQueryable();
 
             // Act
-            Assert.Throws<ParseException>(() => qry.Count("OfType()"));
-            Assert.Throws<ParseException>(() => qry.Count("OfType(true)"));
-            Assert.Throws<ParseException>(() => qry.Count("OfType(\"not-found\")"));
+            Assert.ThrowsException<ParseException>(() => qry.Count("OfType()"));
+            Assert.ThrowsException<ParseException>(() => qry.Count("OfType(true)"));
+            Assert.ThrowsException<ParseException>(() => qry.Count("OfType(\"not-found\")"));
         }
 
         /// <summary>
         /// Defines the test method CastToType_Dynamic_Exceptions.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void CastToType_Dynamic_Exceptions()
         {
             // Assign
@@ -309,9 +309,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             }.AsQueryable();
 
             // Act
-            Assert.Throws<ParseException>(() => qry.Select("Employees.Cast().Where(Name == \"1\")"));
-            Assert.Throws<ParseException>(() => qry.Select("Employees.Cast(true).Where(Name == \"1\")"));
-            Assert.Throws<ParseException>(() => qry.Select("Employees.Cast(\"not-found\").Where(Name == \"1\")"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("Employees.Cast().Where(Name == \"1\")"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("Employees.Cast(true).Where(Name == \"1\")"));
+            Assert.ThrowsException<ParseException>(() => qry.Select("Employees.Cast(\"not-found\").Where(Name == \"1\")"));
         }
     }
 }

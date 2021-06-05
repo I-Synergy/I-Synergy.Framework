@@ -10,11 +10,9 @@ namespace ISynergy.Framework.Core.IO
     /// <summary>
     /// Class CustomFileTypeAnalyzer.
     /// Implements the <see cref="ISynergy.Framework.Core.IO.Base.BaseFileTypeAnalyzer" />
-    /// Implements the <see cref="ISynergy.Framework.Core.IO.Abtractions.IFileTypeAnalyzer" />
     /// </summary>
     /// <seealso cref="ISynergy.Framework.Core.IO.Base.BaseFileTypeAnalyzer" />
-    /// <seealso cref="ISynergy.Framework.Core.IO.Abtractions.IFileTypeAnalyzer" />
-    public class CustomFileTypeAnalyzer : BaseFileTypeAnalyzer, IFileTypeAnalyzer
+    public class CustomFileTypeAnalyzer : BaseFileTypeAnalyzer
     {
         /// <summary>
         /// Initializes a <see cref="CustomFileTypeAnalyzer" /> with the provided definitions file contents.

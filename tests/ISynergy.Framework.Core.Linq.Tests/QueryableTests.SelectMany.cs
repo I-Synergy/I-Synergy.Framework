@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method SelectMany_Dynamic.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void SelectMany_Dynamic()
         {
             // Act
@@ -36,13 +36,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var queryDynamic = query.SelectMany("Roles.SelectMany(Permissions)").Select("Name").ToDynamicList<string>();
 
             // Assert
-            Assert.Equal(queryNormal, queryDynamic);
+            Assert.AreEqual(queryNormal, queryDynamic);
         }
 
         /// <summary>
         /// https://github.com/NArnott/System.Linq.Dynamic/issues/42 and https://github.com/StefH/System.Linq.Dynamic.Core/issues/18
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void SelectMany_Dynamic_OverArray()
         {
             var testList = new[]
@@ -57,13 +57,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expectedResult = testList.SelectMany(it => it).ToList();
             var result = testList.AsQueryable().SelectMany("it").ToDynamicList<int>();
 
-            Assert.Equal(expectedResult, result);
+            Assert.AreEqual(expectedResult, result);
         }
 
         /// <summary>
         /// Defines the test method SelectMany_TResult.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void SelectMany_TResult()
         {
             // Act
@@ -85,13 +85,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var queryDynamic = query.SelectMany<Permission>("Roles.SelectMany(Permissions)").ToDynamicList();
 
             // Assert
-            Assert.Equal(queryNormal, queryDynamic);
+            Assert.AreEqual(queryNormal, queryDynamic);
         }
 
         /// <summary>
         /// Defines the test method SelectMany_Dynamic_IntoType.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void SelectMany_Dynamic_IntoType()
         {
             // Act
@@ -113,13 +113,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var queryDynamic = query.SelectMany(typeof(Permission), "Roles.SelectMany(Permissions)").ToDynamicList();
 
             // Assert
-            Assert.Equal(queryNormal, queryDynamic);
+            Assert.AreEqual(queryNormal, queryDynamic);
         }
 
         /// <summary>
         /// Defines the test method SelectMany_Dynamic_OverArray_TResult.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void SelectMany_Dynamic_OverArray_TResult()
         {
             var testList = new[]
@@ -132,13 +132,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expectedResult = testList.SelectMany(it => it).ToList();
             var result = testList.AsQueryable().SelectMany<Permission>("it").ToList();
 
-            Assert.Equal(expectedResult, result);
+            Assert.AreEqual(expectedResult, result);
         }
 
         /// <summary>
         /// Defines the test method SelectMany_Dynamic_OverArray_IntoType.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void SelectMany_Dynamic_OverArray_IntoType()
         {
             var testList = new[]
@@ -151,13 +151,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var expectedResult = testList.SelectMany(it => it).ToList();
             var result = testList.AsQueryable().SelectMany(typeof(Permission), "it").ToDynamicList<Permission>();
 
-            Assert.Equal(expectedResult, result);
+            Assert.AreEqual(expectedResult, result);
         }
 
         /// <summary>
         /// Defines the test method SelectMany_Dynamic_WithResultProjection.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void SelectMany_Dynamic_WithResultProjection()
         {
             //Arrange
@@ -171,13 +171,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 .Select("it._A * it._B");
 
             //Assert
-            Assert.Equal(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
+            Assert.AreEqual(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
         }
 
         /// <summary>
         /// Defines the test method SelectMany_Dynamic_WithResultProjection_CustomParameterNames.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void SelectMany_Dynamic_WithResultProjection_CustomParameterNames()
         {
             //Arrange
@@ -191,7 +191,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
                 .Select("it._A * it._X");
 
             //Assert
-            Assert.Equal(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
+            Assert.AreEqual(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
         }
     }
 }

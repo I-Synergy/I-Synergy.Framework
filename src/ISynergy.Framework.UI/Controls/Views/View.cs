@@ -1,10 +1,17 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Microsoft.Toolkit.Uwp.Helpers;
 using System.ComponentModel;
+using ISynergy.Framework.Core.Events;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -90,8 +97,8 @@ namespace ISynergy.Framework.UI.Controls
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            
-            if(e.Content is IView view && e.Parameter is IViewModel viewModel)
+
+            if (e.Content is IView view && e.Parameter is IViewModel viewModel)
                 view.DataContext = viewModel;
 
             await DataContext?.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);

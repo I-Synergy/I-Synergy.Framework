@@ -18,7 +18,7 @@
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <AndroidUseIntermediateDesignerFile>True</AndroidUseIntermediateDesignerFile>
     <ResourcesDirectory>..\Sample.Shared\Strings</ResourcesDirectory>
@@ -65,16 +65,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.6.0-dev.429" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.429" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Microsoft.Extensions.Logging">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Uno.Material">
+      <Version>1.0.0-dev.764</Version>
+    </PackageReference>
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.7.6" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.33" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
     <PackageReference Include="Xamarin.AndroidX.AppCompat.AppCompatResources">
       <Version>1.2.0.7</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData">
-      <Version>2.3.0.1</Version>
+      <Version>2.3.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -108,9 +113,9 @@
       <Project>{3828a883-b771-4e6b-b004-e521b6d7ad52}</Project>
       <Name>ISynergy.Framework.Mvvm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sample.Core\Sample.Core.csproj">
-      <Project>{6b0dfcdf-7038-43bc-a033-2f80b9d9d3be}</Project>
-      <Name>Sample.Core</Name>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj">
+      <Project>{19299d2e-c242-4deb-bd2b-e0a5e7cbaa40}</Project>
+      <Name>ISynergy.Framework.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

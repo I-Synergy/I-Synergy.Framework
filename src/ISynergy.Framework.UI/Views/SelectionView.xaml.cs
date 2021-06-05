@@ -8,9 +8,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI
 {
@@ -18,13 +25,9 @@ namespace ISynergy.Framework.UI
     /// Class SelectionView. This class cannot be inherited.
     /// Implements the <see cref="ISynergy.Framework.UI.Controls.View" />
     /// Implements the <see cref="ISynergy.Framework.Mvvm.Abstractions.IView" />
-    /// Implements the <see cref="Windows.UI.Xaml.Markup.IComponentConnector" />
-    /// Implements the <see cref="Windows.UI.Xaml.Markup.IComponentConnector2" />
     /// </summary>
     /// <seealso cref="ISynergy.Framework.UI.Controls.View" />
     /// <seealso cref="ISynergy.Framework.Mvvm.Abstractions.IView" />
-    /// <seealso cref="Windows.UI.Xaml.Markup.IComponentConnector" />
-    /// <seealso cref="Windows.UI.Xaml.Markup.IComponentConnector2" />
     public sealed partial class SelectionView : IView
     {
         /// <summary>
@@ -37,13 +40,11 @@ namespace ISynergy.Framework.UI
             DataSummary.SelectionChanged += DataSummary_SelectionChanged;
         }
 
-
-
         /// <summary>
         /// Datas the summary selection changed.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="Windows.UI.Xaml.Controls.SelectionChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
         private void DataSummary_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DataContext is ISelectionViewModel viewModel)
@@ -64,12 +65,12 @@ namespace ISynergy.Framework.UI
             }
         }
 
-#if NETFX_CORE
         /// <summary>
         /// Selections the view data context changed.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="Windows.UI.Xaml.DataContextChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="args">The <see cref="DataContextChangedEventArgs"/> instance containing the event data.</param>
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         private void SelectionView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else
         private void SelectionView_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
@@ -87,11 +88,6 @@ namespace ISynergy.Framework.UI
                     {
                         var index = DataSummary.Items.IndexOf(item);
                     }
-
-                    //foreach (ItemIndexRange item in viewModel.SelectedItems.EnsureNotNull())
-                    //{
-                    //    DataSummary.SelectRange(item);
-                    //};
                 }
             }
         }

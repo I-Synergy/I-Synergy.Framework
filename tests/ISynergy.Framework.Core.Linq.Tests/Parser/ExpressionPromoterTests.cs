@@ -4,13 +4,14 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
     /// <summary>
     /// Class ExpressionPromoterTests.
     /// </summary>
+    [TestClass]
     public class ExpressionPromoterTests
     {
         /// <summary>
@@ -50,7 +51,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method DynamicExpressionParser_ParseLambda_WithCustomExpressionPromoter.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void DynamicExpressionParser_ParseLambda_WithCustomExpressionPromoter()
         {
             // Assign
@@ -68,7 +69,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
             SampleDto result = (SampleDto)del.DynamicInvoke();
 
             // Assert
-            Assert.NotNull(result);
+            Assert.IsNotNull(result);
 
             // Verify
             _dynamicLinkCustomTypeProviderMock.Verify(d => d.GetCustomTypes(), Times.Once);

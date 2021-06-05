@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Windows.UI.Xaml.Data;
 using ISynergy.Framework.Core.Extensions;
 using System.Globalization;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Abstractions;
+
+#if (NETFX_CORE || HAS_UNO)
+using Windows.UI.Xaml.Data;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {

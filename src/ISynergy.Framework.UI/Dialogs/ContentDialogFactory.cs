@@ -1,7 +1,12 @@
 ﻿using System;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Controls;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml.Controls;
+#endif
 
 namespace ISynergy.Framework.UI.Dialogs
 {

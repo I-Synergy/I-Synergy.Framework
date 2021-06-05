@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method TakeWhile_Predicate.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TakeWhile_Predicate()
         {
             //Arrange
@@ -24,13 +24,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.TakeWhile("Income > 1000");
 
             //Assert
-            Assert.Equal(expected.ToArray(), result.Cast<User>().ToArray());
+            Assert.AreEqual(expected.ToArray(), result.Cast<User>().ToArray());
         }
 
         /// <summary>
         /// Defines the test method TakeWhile_Predicate_Args.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TakeWhile_Predicate_Args()
         {
             const int income = 1000;
@@ -44,7 +44,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = testListQry.TakeWhile("Income > @0", income);
 
             //Assert
-            Assert.Equal(expected.ToArray(), result.Cast<User>().ToArray());
+            Assert.AreEqual(expected.ToArray(), result.Cast<User>().ToArray());
         }
     }
 }

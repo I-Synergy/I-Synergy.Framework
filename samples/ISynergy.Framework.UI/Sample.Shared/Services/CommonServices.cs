@@ -21,11 +21,6 @@ namespace Sample.Services
         /// <value>The master data service.</value>
         public IMasterDataService MasterDataService { get; }
         /// <summary>
-        /// Gets the settings service.
-        /// </summary>
-        /// <value>The settings service.</value>
-        public ISettingsService SettingsService { get; }
-        /// <summary>
         /// Gets the download file service.
         /// </summary>
         /// <value>The download file service.</value>
@@ -66,11 +61,8 @@ namespace Sample.Services
         /// </summary>
         /// <param name="busyService">The busy service.</param>
         /// <param name="languageService">The language service.</param>
-        /// <param name="settingsService">The settings service.</param>
-        /// <param name="applicationSettingsService">The application settings service.</param>
         /// <param name="telemetryService">The telemetry service.</param>
         /// <param name="dialogService">The dialog service.</param>
-        /// <param name="uiVisualizerService">The UI visualizer service.</param>
         /// <param name="navigationService">The navigation service.</param>
         /// <param name="fileService">The file service.</param>
         /// <param name="cameraService">The camera service.</param>
@@ -86,11 +78,8 @@ namespace Sample.Services
         public CommonServices(
             IBusyService busyService,
             ILanguageService languageService,
-            ISettingsService settingsService,
-            IApplicationSettingsService applicationSettingsService,
             ITelemetryService telemetryService,
             IDialogService dialogService,
-            IUIVisualizerService uiVisualizerService,
             INavigationService navigationService,
             IFileService fileService,
             ICameraService cameraService,
@@ -103,11 +92,10 @@ namespace Sample.Services
             IPrintingService printingService,
             IClipboardService clipboardService,
             IClientMonitorService clientMonitorService)
-            :base(busyService, languageService, applicationSettingsService, telemetryService, dialogService, uiVisualizerService, navigationService, infoService, converterService)
+            :base(busyService, languageService, telemetryService, dialogService, navigationService, infoService, converterService)
         {
             AuthenticationService = authenticationService;
             MasterDataService = masterDataService;
-            SettingsService = settingsService;
             DownloadFileService = downloadFileService;
             ReportingService = reportingService;
             PrintingService = printingService;

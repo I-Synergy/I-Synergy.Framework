@@ -3,19 +3,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
     /// <summary>
     /// Class EnumerableExtensionsTest.
     /// </summary>
+    [TestClass]
     public class EnumerableExtensionsTest
     {
         /// <summary>
         /// Defines the test method NullEnumerableNonFailableTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void NullEnumerableNonFailableTest()
         {
             IEnumerable<object> list = null;
@@ -27,16 +28,16 @@ namespace ISynergy.Framework.Core.Extensions.Tests
 
             result = true;
 
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         /// <summary>
         /// Defines the test method NullEnumerableFailableTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void NullEnumerableFailableTest()
         {
-            Assert.ThrowsAsync<NullReferenceException>(() =>
+            Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
             {
                 IEnumerable<object> list = null;
 
@@ -48,7 +49,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             });
         }
 
-        [Fact]
+        [TestMethod]
         public void IEnumerableTToDataTableTest()
         {
             var collection = new List<Product>()
@@ -64,14 +65,14 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             {
                 var dataTable = data.ToDataTable<Product>("Test");
 
-                Assert.NotNull(dataTable);
-                Assert.Equal(5, dataTable.Rows.Count);
-                Assert.False(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.Properties)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.Errors)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.Validator)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.IsValid)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.IsDirty)));
+                Assert.IsNotNull(dataTable);
+                Assert.AreEqual(5, dataTable.Rows.Count);
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsValid)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
             }
             else
             {
@@ -79,7 +80,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             }
         }
 
-        [Fact]
+        [TestMethod]
         public void IEnumerableToDataTableTest()
         {
             var collection = new List<Product>()
@@ -95,14 +96,14 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             {
                 var dataTable = data.ToDataTable(typeof(Product), "Test");
 
-                Assert.NotNull(dataTable);
-                Assert.Equal(5, dataTable.Rows.Count);
-                Assert.False(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.Properties)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.Errors)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.Validator)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.IsValid)));
-                Assert.False(dataTable.Columns.Contains(nameof(Product.IsDirty)));
+                Assert.IsNotNull(dataTable);
+                Assert.AreEqual(5, dataTable.Rows.Count);
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsValid)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
             }
             else
             {

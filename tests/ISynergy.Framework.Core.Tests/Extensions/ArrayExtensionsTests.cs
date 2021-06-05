@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
     /// <summary>
     /// Class ArrayExtensionsTests.
     /// </summary>
+    [TestClass]
     public class ArrayExtensionsTests
     {
         /// <summary>
         /// Defines the test method NullArrayNonFailableTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void NullArrayNonFailableTest()
         {
             object[] list = null;
@@ -24,16 +25,16 @@ namespace ISynergy.Framework.Core.Extensions.Tests
 
             result = true;
 
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
 
         /// <summary>
         /// Defines the test method NullArrayFailableTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void NullArrayFailableTest()
         {
-            Assert.ThrowsAsync<NullReferenceException>(() =>
+            Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
             {
                 object[] list = null;
 

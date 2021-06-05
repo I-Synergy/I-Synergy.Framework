@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method ToList_Dynamic.
         /// </summary>
-        [Fact]
+        //[TestMethod]
         public void ToList_Dynamic()
         {
             // Arrange
@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var testResult = testListQry.OrderBy("Roles.ToList().First().Name").Select("Id");
 
             // Assert
-            Assert.Equal(realResult.ToArray(), testResult.ToDynamicArray().Cast<Guid>());
+            Assert.AreEqual(realResult.ToArray(), testResult.ToDynamicArray().Cast<Guid>());
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System.Security.Cryptography;
 using ISynergy.Framework.Core.Encryption;
 using ISynergy.Framework.Core.Enumerations;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Encryption.Tests
 {
     /// <summary>
     /// Class CryptographyTests.
     /// </summary>
+    [TestClass]
     public class CryptographyTests
     {
         /// <summary>
@@ -55,14 +56,14 @@ namespace ISynergy.Framework.Core.Encryption.Tests
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionDESCryptoServiceProvider64Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionDESCryptoServiceProvider64Test()
         {
             var crypto = new Cryptography(_salt64, _vector64, CryptoKeySizes.Key64);
             var encryptedValue = crypto.Encrypt<DESCryptoServiceProvider>(_secret, _password);
             var result = crypto.Decrypt<DESCryptoServiceProvider>(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         // AESManaged
@@ -70,27 +71,27 @@ namespace ISynergy.Framework.Core.Encryption.Tests
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionAesManaged128Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionAesManaged128Test()
         {
             var crypto = new Cryptography(_salt128, _vector128, keySize: CryptoKeySizes.Key128);
             var encryptedValue = crypto.Encrypt(_secret, _password);
             var result = crypto.Decrypt(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionAesManaged256Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionAesManaged256Test()
         {
             var crypto = new Cryptography(_salt256, _vector128, keySize: CryptoKeySizes.Key256);
             var encryptedValue = crypto.Encrypt(_secret, _password);
             var result = crypto.Decrypt(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         //RIJNDAEL
@@ -98,27 +99,27 @@ namespace ISynergy.Framework.Core.Encryption.Tests
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionRijndaelManaged128Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionRijndaelManaged128Test()
         {
             var crypto = new Cryptography(_salt128, _vector128, keySize: CryptoKeySizes.Key128);
             var encryptedValue = crypto.Encrypt<RijndaelManaged>(_secret, _password);
             var result = crypto.Decrypt<RijndaelManaged>(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionRijndaelManaged256Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionRijndaelManaged256Test()
         {
             var crypto = new Cryptography(_salt128, _vector128, keySize: CryptoKeySizes.Key256);
             var encryptedValue = crypto.Encrypt<RijndaelManaged>(_secret, _password);
             var result = crypto.Decrypt<RijndaelManaged>(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         // RC2
@@ -126,40 +127,40 @@ namespace ISynergy.Framework.Core.Encryption.Tests
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionRC2CryptoServiceProvider40Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionRC2CryptoServiceProvider40Test()
         {
             var crypto = new Cryptography(_salt40, _vector64, keySize: CryptoKeySizes.Key40);
             var encryptedValue = crypto.Encrypt<RC2CryptoServiceProvider>(_secret, _password);
             var result = crypto.Decrypt<RC2CryptoServiceProvider>(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionRC2CryptoServiceProvider64Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionRC2CryptoServiceProvider64Test()
         {
             var crypto = new Cryptography(_salt64, _vector64, keySize: CryptoKeySizes.Key64);
             var encryptedValue = crypto.Encrypt<RC2CryptoServiceProvider>(_secret, _password);
             var result = crypto.Decrypt<RC2CryptoServiceProvider>(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionRC2CryptoServiceProvider128Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionRC2CryptoServiceProvider128Test()
         {
             var crypto = new Cryptography(_salt128, _vector64, keySize: CryptoKeySizes.Key128);
             var encryptedValue = crypto.Encrypt<RC2CryptoServiceProvider>(_secret, _password);
             var result = crypto.Decrypt<RC2CryptoServiceProvider>(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         // TRIPLE DES
@@ -167,27 +168,27 @@ namespace ISynergy.Framework.Core.Encryption.Tests
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionTripleDESCryptoServiceProvider128Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionTripleDESCryptoServiceProvider128Test()
         {
             var crypto = new Cryptography(_salt128, _vector64, keySize: CryptoKeySizes.Key128);
             var encryptedValue = crypto.Encrypt<TripleDESCryptoServiceProvider>(_secret, _password);
             var result = crypto.Decrypt<TripleDESCryptoServiceProvider>(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
 
         /// <summary>
         /// Defines the test method EncryptionAndDecryptionTripleDESCryptoServiceProvider192Test.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void EncryptionAndDecryptionTripleDESCryptoServiceProvider192Test()
         {
             var crypto = new Cryptography(_salt192, _vector64, keySize: CryptoKeySizes.Key192);
             var encryptedValue = crypto.Encrypt<TripleDESCryptoServiceProvider>(_secret, _password);
             var result = crypto.Decrypt<TripleDESCryptoServiceProvider>(encryptedValue, _password);
 
-            Assert.Equal(_secret, result);
+            Assert.AreEqual(_secret, result);
         }
     }
 }

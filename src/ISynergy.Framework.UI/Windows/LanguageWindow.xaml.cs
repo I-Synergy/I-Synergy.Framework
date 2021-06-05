@@ -3,8 +3,14 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.ViewModels;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+#endif
 
 namespace ISynergy.Framework.UI
 {
@@ -26,7 +32,7 @@ namespace ISynergy.Framework.UI
             SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         private void LanguageWindow_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             SetLanguageButton();

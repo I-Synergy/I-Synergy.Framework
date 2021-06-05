@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ISynergy.Framework.Core.Linq.Extensions.Tests.Helpers.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests
 {
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
         /// <summary>
         /// Defines the test method Average.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Average()
         {
             // Arrange
@@ -23,13 +23,13 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var actual = incomes.AsQueryable().Average();
 
             // Assert
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         /// <summary>
         /// Defines the test method Average_Selector.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void Average_Selector()
         {
             // Arrange
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests
             var result = users.AsQueryable().Average("Income");
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
     }
 }

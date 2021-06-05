@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {
     /// <summary>
     /// Class IOHelperTests.
     /// </summary>
+    [TestClass]
     public class IOHelperTests
     {
         /// <summary>
@@ -65,7 +66,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         /// <summary>
         /// Defines the test method TestReadFile_4.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_4()
         {
             sourceMx = @"Assets\Files\Matrix4.txt";
@@ -74,13 +75,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, XX));
+            Assert.IsTrue(CheckValues(X, XX));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_10.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_10()
         {
             sourceMx = @"Assets\Files\Matrix10.txt";
@@ -88,13 +89,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 10)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 10)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_10r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_10r()
         {
             sourceMx = @"Assets\Files\Matrix10r.txt";
@@ -102,13 +103,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 10)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 10)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_15r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_15r()
         {
             sourceMx = @"Assets\Files\Matrix15r.txt";
@@ -116,13 +117,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 15)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 15)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_20r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_20r()
         {
             sourceMx = @"Assets\Files\Matrix20r.txt";
@@ -130,13 +131,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 20)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 20)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_25r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_25r()
         {
             sourceMx = @"Assets\Files\Matrix25r.txt";
@@ -144,13 +145,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 25)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 25)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_30r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_30r()
         {
             sourceMx = @"Assets\Files\Matrix30r.txt";
@@ -158,13 +159,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 30)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 30)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_35r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_35r()
         {
             sourceMx = @"Assets\Files\Matrix35r.txt";
@@ -172,13 +173,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 35)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 35)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_40r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_40r()
         {
             sourceMx = @"Assets\Files\Matrix40r.txt";
@@ -186,13 +187,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 40)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 40)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_45r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_45r()
         {
             sourceMx = @"Assets\Files\Matrix45r.txt";
@@ -200,13 +201,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 45)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 45)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_50r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_50r()
         {
             sourceMx = @"Assets\Files\Matrix50r.txt";
@@ -214,13 +215,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 50)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 50)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_40.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_40()
         {
             sourceMx = @"Assets\Files\Matrix40.txt";
@@ -228,13 +229,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 40)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 40)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_100r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_100r()
         {
             sourceMx = @"Assets\Files\Matrix100r.txt";
@@ -242,13 +243,13 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 100)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 100)));
         }
 
         /// <summary>
         /// Defines the test method TestReadFile_200r.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TestReadFile_200r()
         {
             sourceMx = @"Assets\Files\Matrix200r.txt";
@@ -256,7 +257,7 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             decomposition.Calculate_LUDecomposition(sourceMx, from, out X);
 
-            Assert.True(CheckValues(X, ReadArray(sourceOut, 200)));
+            Assert.IsTrue(CheckValues(X, ReadArray(sourceOut, 200)));
         }
 
         /// <summary>

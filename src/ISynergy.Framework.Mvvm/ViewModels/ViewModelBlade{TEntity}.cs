@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Core.Utilities;
+using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Mvvm
 {
@@ -83,11 +84,13 @@ namespace ISynergy.Framework.Mvvm
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="automaticValidation"></param>
         protected ViewModelBlade(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory) 
-            : base(context, commonServices, loggerFactory)
+            ILoggerFactory loggerFactory,
+            bool automaticValidation = false) 
+            : base(context, commonServices, loggerFactory, automaticValidation)
         {
             Validator = new Action<IObservableClass>(arg =>
             {
@@ -116,8 +119,13 @@ namespace ISynergy.Framework.Mvvm
         /// <returns>Task.</returns>
         public virtual Task SubmitAsync(TEntity e)
         {
-            OnSubmitted(new SubmitEventArgs<TEntity>(e));
-            return CloseAsync();
+            if(Validate())
+            {
+                OnSubmitted(new SubmitEventArgs<TEntity>(e));
+                return CloseAsync();
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

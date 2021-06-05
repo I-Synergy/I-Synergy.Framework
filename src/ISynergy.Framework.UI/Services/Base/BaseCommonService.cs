@@ -21,11 +21,6 @@ namespace ISynergy.Framework.UI.Services
         /// <value>The language service.</value>
         public ILanguageService LanguageService { get; }
         /// <summary>
-        /// Gets the application settings service.
-        /// </summary>
-        /// <value>The application settings service.</value>
-        public IApplicationSettingsService ApplicationSettingsService { get; }
-        /// <summary>
         /// Gets the telemetry service.
         /// </summary>
         /// <value>The telemetry service.</value>
@@ -35,11 +30,6 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The dialog service.</value>
         public IDialogService DialogService { get; }
-        /// <summary>
-        /// Gets the UI visualizer service.
-        /// </summary>
-        /// <value>The UI visualizer service.</value>
-        public IUIVisualizerService UIVisualizerService { get; }
         /// <summary>
         /// Gets the navigation service.
         /// </summary>
@@ -61,30 +51,24 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <param name="busy">The busy.</param>
         /// <param name="language">The language.</param>
-        /// <param name="settings">The settings.</param>
         /// <param name="telemetry">The telemetry.</param>
         /// <param name="dialog">The dialog.</param>
-        /// <param name="uiVisualizer">The UI visualizer.</param>
         /// <param name="navigation">The navigation.</param>
         /// <param name="info">The information.</param>
         /// <param name="converter">The converter.</param>
         protected BaseCommonService(
             IBusyService busy,
             ILanguageService language,
-            IApplicationSettingsService settings,
             ITelemetryService telemetry,
             IDialogService dialog,
-            IUIVisualizerService uiVisualizer,
             INavigationService navigation,
             IInfoService info,
             IConverterService converter)
         {
             BusyService = busy;
             LanguageService = language;
-            ApplicationSettingsService = settings;
             TelemetryService = telemetry;
             DialogService = dialog;
-            UIVisualizerService = uiVisualizer;
             NavigationService = navigation;
             InfoService = info;
             ConverterService = converter;

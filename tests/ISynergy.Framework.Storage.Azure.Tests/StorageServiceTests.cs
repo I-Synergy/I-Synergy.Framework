@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Storage.Abstractions;
 using Moq;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Storage.Azure.Tests
 {
     /// <summary>
     /// Class AzureBlobTests.
     /// </summary>
+    [TestClass]
     public class StorageServiceTests
     {
         /// <summary>
@@ -75,41 +76,41 @@ namespace ISynergy.Framework.Storage.Azure.Tests
         /// <summary>
         /// Defines the test method UploadBlobAsyncTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public async Task UploadBlobAsyncTest()
         {
             var uri = await _storageService.UploadFileAsync(Array.Empty<byte>(), "contentType", "filename", "folder");
-            Assert.NotNull(uri);
+            Assert.IsNotNull(uri);
         }
 
         /// <summary>
         /// Defines the test method DownloadFileAsyncTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public async Task DownloadFileAsyncTest()
         {
             var bytes = await _storageService.DownloadFileAsync("filename", "folder");
-            Assert.NotNull(bytes);
+            Assert.IsNotNull(bytes);
         }
 
         /// <summary>
         /// Defines the test method UpdateBlobAsyncTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public async Task UpdateBlobAsyncTest()
         {
             var uri = await _storageService.UpdateFileAsync(Array.Empty<byte>(), "contentType", "filename", "folder");
-            Assert.NotNull(uri);
+            Assert.IsNotNull(uri);
         }
 
         /// <summary>
         /// Defines the test method RemoveFileAsyncTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public async Task RemoveFileAsyncTest()
         {
             var result = await _storageService.RemoveFileAsync("filename", "folder");
-            Assert.True(result);
+            Assert.IsTrue(result);
         }
     }
 }

@@ -5,13 +5,14 @@ using Moq;
 using NFluent;
 using System;
 using System.Linq.Expressions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
 {
     /// <summary>
     /// Class TypeFinderTests.
     /// </summary>
+    [TestClass]
     public class TypeFinderTests
     {
         /// <summary>
@@ -56,7 +57,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_false.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_false()
         {
             // Assign
@@ -72,7 +73,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_true.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_true()
         {
             // Assign
@@ -88,7 +89,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Parser
         /// <summary>
         /// Defines the test method TypeFinder_FindTypeByName_With_SimpleTypeName_basedon_it.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void TypeFinder_FindTypeByName_With_SimpleTypeName_basedon_it()
         {
             // Assign

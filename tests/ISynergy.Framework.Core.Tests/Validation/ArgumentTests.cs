@@ -4,136 +4,137 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Validation.Tests
 {
     /// <summary>
     /// Class ArgumentTests.
     /// </summary>
+    [TestClass]
     public class ArgumentTests
     {
         /// <summary>
         /// Defines the test method IsNotNullTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsNotNullTest()
         {
             Product test = null;
-            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNull(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNull(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method IsNotNullOrEmptyTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsNotNullOrEmptyTest()
         {
             string test = string.Empty;
-            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method GuidIsNotEmptyTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GuidIsNotEmptyTest()
         {
             Guid test = Guid.Empty;
-            Assert.Throws<ArgumentException>(() => Argument.IsNotEmpty(nameof(test), test));
+            Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEmpty(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method GuidIsNotNullOrEmptyTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void GuidIsNotNullOrEmptyTest()
         {
             Guid test = default;
-            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method IsNotNullOrWhitespaceTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsNotNullOrWhitespaceTest()
         {
             string test = " ";
-            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrWhitespace(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrWhitespace(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method IsNotNullOrEmptyArrayTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsNotNullOrEmptyArrayTest()
         {
             Array test = Array.Empty<object>();
-            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmptyArray(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyArray(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method IsNotNullOrEmptyListTTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsNotNullOrEmptyListTTest()
         {
             var test = new List<object>();
-            Assert.Throws<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method IsNotEnumTTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsNotEnumTTest()
         {
             var test = new object();
-            Assert.Throws<ArgumentException>(() => Argument.IsNotEnum(nameof(test), test));
+            Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEnum(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method HasNoNullsTTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void HasNoNullsTTest()
         {
             var test = new List<Product>();
             test.Add(new Product());
             test.Add(null);
             
-            Assert.Throws<ArgumentNullException>(() => Argument.HasNoNulls(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.HasNoNulls(nameof(test), test));
         }
 
         /// <summary>
         /// Defines the test method IsNotOutOfRangeTTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsNotOutOfRangeTTest()
         {
             var test = 1975;
-            Assert.Throws<ArgumentOutOfRangeException>(() => Argument.IsNotOutOfRange(nameof(test), test, 2000, 2021));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsNotOutOfRange(nameof(test), test, 2000, 2021));
         }
 
         /// <summary>
         /// Defines the test method IsMinimalTTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsMinimalTTest()
         {
             var test = 1975;
-            Assert.Throws<ArgumentOutOfRangeException>(() => Argument.IsMinimal(nameof(test), test, 2000));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMinimal(nameof(test), test, 2000));
         }
 
         /// <summary>
         /// Defines the test method IsMaximumTTest.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void IsMaximumTTest()
         {
             var test = 1975;
-            Assert.Throws<ArgumentOutOfRangeException>(() => Argument.IsMaximum(nameof(test), test, 1970));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMaximum(nameof(test), test, 1970));
         }
     }
 }

@@ -15,10 +15,8 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="action">The action to call.</param>
         /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
-        public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Action action)
-        {
-            return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, action);
-        }
+        public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Action action) =>
+            dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, action);
 
         /// <summary>
         /// Runs the event dispatcher and awaits for it to complete before returning the results for dispatched events asynchronously.
@@ -36,7 +34,6 @@ namespace Windows.UI.Core
                 try
                 {
                     action();
-
                     taskCompletionSource.TrySetResult(true);
                 }
                 catch (Exception ex)
@@ -55,10 +52,8 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="function">The function to call.</param>
         /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
-        public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<T> function)
-        {
-            return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, function);
-        }
+        public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<T> function) =>
+            dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, function);
 
         /// <summary>
         /// Runs the event dispatcher and awaits for it to complete before returning the results for dispatched events asynchronously.
@@ -77,7 +72,6 @@ namespace Windows.UI.Core
                 try
                 {
                     var result = function();
-
                     taskCompletionSource.TrySetResult(result);
                 }
                 catch (Exception ex)
@@ -95,10 +89,8 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="asyncAction">The async action to call.</param>
         /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
-        public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Func<Task> asyncAction)
-        {
-            return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncAction);
-        }
+        public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Func<Task> asyncAction) =>
+            dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncAction);
 
         /// <summary>
         /// Runs the event dispatcher and awaits for it to complete before returning the results for dispatched events asynchronously.
@@ -116,7 +108,6 @@ namespace Windows.UI.Core
                 try
                 {
                     await asyncAction();
-
                     taskCompletionSource.TrySetResult(true);
                 }
                 catch (Exception ex)
@@ -135,10 +126,8 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="asyncFunction">The async function to call.</param>
         /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
-        public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<Task<T>> asyncFunction)
-        {
-            return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncFunction);
-        }
+        public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<Task<T>> asyncFunction) =>
+            dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncFunction);
 
         /// <summary>
         /// Runs the event dispatcher and awaits for it to complete before returning the results for dispatched events asynchronously.
@@ -157,7 +146,6 @@ namespace Windows.UI.Core
                 try
                 {
                     var result = await asyncFunction();
-
                     taskCompletionSource.TrySetResult(result);
                 }
                 catch (Exception ex)
@@ -175,10 +163,8 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="asyncAction">The async action to call.</param>
         /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
-        public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Func<IAsyncAction> asyncAction)
-        {
-            return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncAction);
-        }
+        public static Task RunAndAwaitAsync(this CoreDispatcher dispatcher, Func<IAsyncAction> asyncAction) =>
+            dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncAction);
 
         /// <summary>
         /// Runs the event dispatcher and awaits for it to complete before returning the results for dispatched events asynchronously.
@@ -196,7 +182,6 @@ namespace Windows.UI.Core
                 try
                 {
                     await asyncAction();
-
                     taskCompletionSource.TrySetResult(true);
                 }
                 catch (Exception ex)
@@ -215,10 +200,8 @@ namespace Windows.UI.Core
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="asyncFunction">The async function to call.</param>
         /// <returns>The <see cref="Task" /> object representing the asynchronous operation.</returns>
-        public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<IAsyncOperation<T>> asyncFunction)
-        {
-            return dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncFunction);
-        }
+        public static Task<T> RunAndAwaitAsync<T>(this CoreDispatcher dispatcher, Func<IAsyncOperation<T>> asyncFunction) =>
+            dispatcher.RunAndAwaitAsync(CoreDispatcherPriority.Normal, asyncFunction);
 
         /// <summary>
         /// Runs the event dispatcher and awaits for it to complete before returning the results for dispatched events asynchronously.
@@ -237,7 +220,6 @@ namespace Windows.UI.Core
                 try
                 {
                     var result = await asyncFunction();
-
                     taskCompletionSource.TrySetResult(result);
                 }
                 catch (Exception ex)

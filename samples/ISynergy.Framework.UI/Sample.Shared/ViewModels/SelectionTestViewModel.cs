@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
@@ -73,7 +72,7 @@ namespace Sample.ViewModels
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)
         {
-            if (await BaseCommonServices.DialogService.ShowAsync(
+            if (await BaseCommonServices.DialogService.ShowMessageAsync(
                                 $"Testing {buttons.ToString()} Dialog",
                                 "Test",
                                 buttons, MessageBoxImage.Question) is MessageBoxResult result)

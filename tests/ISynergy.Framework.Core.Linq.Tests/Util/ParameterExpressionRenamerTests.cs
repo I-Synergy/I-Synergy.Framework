@@ -1,12 +1,13 @@
 ﻿using NFluent;
 using System.Linq.Expressions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Util
 {
     /// <summary>
     /// Class ParameterExpressionRenamerTests.
     /// </summary>
+    [TestClass]
     public class ParameterExpressionRenamerTests
     {
         /// <summary>
@@ -14,8 +15,8 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Util
         /// </summary>
         /// <param name="newName">The new name.</param>
         /// <param name="resultString">The result string.</param>
-        [Theory]
-        [InlineData("test", "(test + 42)")]
+        [DataTestMethod]
+        [DataRow("test", "(test + 42)")]
         public void ParameterExpressionRenamer_Rename_ToNewName(string newName, string resultString)
         {
             // Assign
@@ -36,9 +37,9 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Util
         /// <param name="oldName">The old name.</param>
         /// <param name="newName">The new name.</param>
         /// <param name="resultString">The result string.</param>
-        [Theory]
-        [InlineData("", "test", "(test + 42)")]
-        [InlineData("x", "test", "(test + 42)")]
+        [DataTestMethod]
+        [DataRow("", "test", "(test + 42)")]
+        [DataRow("x", "test", "(test + 42)")]
         public void ParameterExpressionRenamer_Rename_OldNameInNewName(string oldName, string newName, string resultString)
         {
             // Assign
@@ -56,7 +57,7 @@ namespace ISynergy.Framework.Core.Linq.Extensions.Tests.Util
         /// <summary>
         /// Defines the test method ParameterExpressionRenamer_Rename_NoParameterExpressionPresent.
         /// </summary>
-        [Fact]
+        [TestMethod]
         public void ParameterExpressionRenamer_Rename_NoParameterExpressionPresent()
         {
             // Assign

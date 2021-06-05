@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using ISynergy.Framework.Mvvm.Abstractions;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Data;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml.Data;
+#endif
 
 namespace ISynergy.Framework.UI.Converters
 {

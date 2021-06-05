@@ -1,15 +1,21 @@
-﻿using Microsoft.Xaml.Interactivity;
+﻿using ISynergy.Framework.UI.Abstractions;
+
+#if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+#endif
 
 namespace ISynergy.Framework.UI.Actions
 {
     /// <summary>
     /// Class CloseFlyoutAction.
-    /// Implements the <see cref="DependencyObject" />
+    /// Implements the <see cref="UIElement" />
     /// Implements the <see cref="IAction" />
     /// </summary>
-    /// <seealso cref="DependencyObject" />
+    /// <seealso cref="UIElement" />
     /// <seealso cref="IAction" />
     public partial class CloseFlyoutAction : DependencyObject, IAction
     {

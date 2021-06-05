@@ -1,7 +1,14 @@
-﻿using Windows.UI.Xaml;
+﻿#if (NETFX_CORE || HAS_UNO)
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+#endif
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -10,7 +17,7 @@ namespace ISynergy.Framework.UI.Controls
     /// Implements the <see cref="UserControl" />
     /// </summary>
     /// <seealso cref="UserControl" />
-    public sealed partial class ImageView : UserControl
+    public sealed partial class ImageView
     {
         /// <summary>
         /// The source property
@@ -68,7 +75,7 @@ namespace ISynergy.Framework.UI.Controls
             InitializeComponent();
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || (NET5_0 && WINDOWS)
         /// <summary>
         /// Loads the image.
         /// </summary>
@@ -100,7 +107,7 @@ namespace ISynergy.Framework.UI.Controls
             {
                 var image = (BitmapImage)newSource;
 
-#if NETFX_CORE
+#if NETFX_CORE || (NET5_0 && WINDOWS)
                 // If the image is not a local resource or it was not cached
                 if (image.UriSource.Scheme != "ms-appx" && image.UriSource.Scheme != "ms-resource" && (image.PixelHeight * image.PixelWidth == 0))
                 {

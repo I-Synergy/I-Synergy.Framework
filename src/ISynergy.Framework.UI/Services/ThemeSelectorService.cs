@@ -1,12 +1,18 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.Mvvm.Enumerations;
 using System;
-using Windows.Storage;
-using Windows.UI.Xaml;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
-using Windows.UI;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
+
+#if (NETFX_CORE || HAS_UNO)
+using Windows.UI;
+using Windows.UI.Xaml;
+#elif (NET5_0 && WINDOWS)
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -27,12 +33,6 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The theme.</value>
         public object Theme { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="IThemeSelectorService" /> is material.
-        /// </summary>
-        /// <value><c>true</c> if material; otherwise, <c>false</c>.</value>
-        public bool Material { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is light theme enabled.
@@ -69,65 +69,65 @@ namespace ISynergy.Framework.UI.Services
         }
 
         /// <summary>
+        /// AccentColor property.
+        /// </summary>
+        public string AccentColor { get; private set; }
+
+        /// <summary>
+        /// Light theme AccentColor property.
+        /// </summary>
+        public string LightAccentColor { get; private set; }
+
+        /// <summary>
+        /// Dark theme AccentColor property.
+        /// </summary>
+        public string DarkAccentColor { get; private set; }
+
+
+        /// <summary>
         /// Sets the requested theme.
         /// </summary>
         /// <param name="color">The color.</param>
         public void SetThemeColor(ThemeColors color)
         {
             // Default I-Synergy color.
-            var accentColor = "#3399ff";
-            var lightColor = "#79c9ff";
-            var darkColor = "#006ccb";
+            AccentColor = "#3399ff";
+            LightAccentColor = "#79c9ff";
+            DarkAccentColor = "#006ccb";
 
             switch (color)
             {
                 case ThemeColors.Gold:
-                    accentColor = "#f3b200";
-                    lightColor = "#ffe44b";
-                    darkColor = "#bb8300";
+                    AccentColor = "#f3b200";
+                    LightAccentColor = "#ffe44b";
+                    DarkAccentColor = "#bb8300";
                     break;
                 case ThemeColors.Lime:
-                    accentColor = "#77b900";
-                    lightColor = "#abec49";
-                    darkColor = "#438900";
+                    AccentColor = "#77b900";
+                    LightAccentColor = "#abec49";
+                    DarkAccentColor = "#438900";
                     break;
                 case ThemeColors.Magenta:
-                    accentColor = "#ff00ff";
-                    lightColor = "#ff63ff";
-                    darkColor = "#c700cb";
+                    AccentColor = "#ff00ff";
+                    LightAccentColor = "#ff63ff";
+                    DarkAccentColor = "#c700cb";
                     break;
                 case ThemeColors.Maroon:
-                    accentColor = "#ac193d";
-                    lightColor = "#e35267";
-                    darkColor = "#760018";
+                    AccentColor = "#ac193d";
+                    LightAccentColor = "#e35267";
+                    DarkAccentColor = "#760018";
                     break;
                 case ThemeColors.OrangeRed:
-                    accentColor = "#d24726";
-                    lightColor = "#ff7851";
-                    darkColor = "#9a0b00";
+                    AccentColor = "#d24726";
+                    LightAccentColor = "#ff7851";
+                    DarkAccentColor = "#9a0b00";
                     break;
                 case ThemeColors.RoyalBlue:
-                    accentColor = "#0073cf";
-                    lightColor = "#5da1ff";
-                    darkColor = "#00489d";
+                    AccentColor = "#0073cf";
+                    LightAccentColor = "#5da1ff";
+                    DarkAccentColor = "#00489d";
                     break;
             }
-
-            if(Material)
-            {
-                //// Set a default palette to make sure all colors used by MaterialResources exist
-                //Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
-
-                //// Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
-                //Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
-
-
-                //Application.Current.Resources["MaterialPrimaryColor"] = accentColor;
-                //Application.Current.Resources["MaterialPrimaryVariantLightColor"] = lightColor;
-                //Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = darkColor;
-            }
-
-            Application.Current.Resources["SystemAccentColor"] = accentColor;
         }
 
         /// <summary>

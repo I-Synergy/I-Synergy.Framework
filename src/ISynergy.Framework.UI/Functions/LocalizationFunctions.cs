@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Services;
 
-#if NETFX_CORE
+#if NETFX_CORE || (NET5_0 && WINDOWS)
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
 #endif
@@ -21,14 +22,14 @@ namespace ISynergy.Framework.UI.Functions
         /// <summary>
         /// The settings service
         /// </summary>
-        public readonly IApplicationSettingsService SettingsService;
+        public readonly IBaseSettingsService SettingsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizationFunctions"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="settingsService">The settings service.</param>
-        public LocalizationFunctions(IContext context, IApplicationSettingsService settingsService)
+        public LocalizationFunctions(IContext context, IBaseSettingsService settingsService)
         {
             Context = context;
             SettingsService = settingsService;
@@ -42,7 +43,7 @@ namespace ISynergy.Framework.UI.Functions
         {
             SettingsService.Culture = isoLanguage;
 
-#if NETFX_CORE
+#if NETFX_CORE || (NET5_0 && WINDOWS)
             ApplicationLanguages.PrimaryLanguageOverride = isoLanguage;
 
             // After setting PrimaryLanguageOverride ResourceContext should be reset
