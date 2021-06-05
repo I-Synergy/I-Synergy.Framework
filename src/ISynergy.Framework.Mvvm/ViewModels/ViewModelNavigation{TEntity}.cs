@@ -106,7 +106,9 @@ namespace ISynergy.Framework.Mvvm
         /// <returns>Task.</returns>
         public virtual Task SubmitAsync(TEntity e)
         {
-            OnSubmitted(new SubmitEventArgs<TEntity>(e));
+            if(Validate())
+                OnSubmitted(new SubmitEventArgs<TEntity>(e));
+            
             return Task.CompletedTask;
         }
 

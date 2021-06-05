@@ -23,7 +23,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// The property name property
         /// </summary>
         public static readonly DependencyProperty PropertyNameProperty = DependencyProperty.RegisterAttached(
-        "PropertyName", typeof(string), typeof(ValidationBehaviorAttacher), new PropertyMetadata(default(string), PropertyNameChanged));
+            "PropertyName", typeof(string), typeof(ValidationBehaviorAttacher), new PropertyMetadata(default(string), PropertyNameChanged));
 
         /// <summary>
         /// Properties the name changed.
@@ -66,19 +66,15 @@ namespace ISynergy.Framework.UI.Behaviors
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="value">The value.</param>
-        public static void SetPropertyName(DependencyObject element, string value)
-        {
+        public static void SetPropertyName(DependencyObject element, string value) =>
             element.SetValue(PropertyNameProperty, value);
-        }
 
         /// <summary>
         /// Gets the name of the property.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns>System.String.</returns>
-        public static string GetPropertyName(DependencyObject element)
-        {
-            return element.GetValue(PropertyNameProperty).ToString();
-        }
+        public static string GetPropertyName(DependencyObject element) =>
+            element.GetValue(PropertyNameProperty).ToString();
     }
 }

@@ -110,8 +110,13 @@ namespace ISynergy.Framework.Mvvm
         /// <returns>Task.</returns>
         public virtual Task SubmitAsync(TEntity e)
         {
-            OnSubmitted(new SubmitEventArgs<TEntity>(e));
-            return CloseAsync();
+            if (Validate())
+            {
+                OnSubmitted(new SubmitEventArgs<TEntity>(e));
+                return CloseAsync();
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

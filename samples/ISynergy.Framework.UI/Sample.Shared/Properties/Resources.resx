@@ -183,4 +183,20 @@
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="Validation" xml:space="preserve">
+    <value>Validation</value>
+  </data>
+  <data name="ValidationDescription" xml:space="preserve">
+    <value>## This example shows multiple ways to validate a view
+
+You can use any desired validation method:
+
+- Regex (Regular expressions)
+- Null checks
+- String lengths
+
+Check the viewmodel to see how the validation is set.
+
+Also the TextBox has an additional behavior attached which changes the border to red if validation on property "Test" has failed.</value>
+  </data>
 </root>

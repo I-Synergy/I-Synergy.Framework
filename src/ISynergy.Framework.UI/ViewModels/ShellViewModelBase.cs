@@ -162,15 +162,13 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="themeSelectorService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
-        /// <param name="automaticValidation">The validation.</param>
         protected ShellViewModelBase(
             IContext context,
             IBaseCommonServices commonServices,
             ILoggerFactory loggerFactory,
             IThemeSelectorService themeSelectorService,
-            LocalizationFunctions localizationFunctions,
-            bool automaticValidation = false)
-            : base(context, commonServices, loggerFactory, automaticValidation)
+            LocalizationFunctions localizationFunctions)
+            : base(context, commonServices, loggerFactory)
         {
             _themeSelector = themeSelectorService;
             _themeSelector.OnThemeChanged += ThemeSelector_OnThemeChanged;
