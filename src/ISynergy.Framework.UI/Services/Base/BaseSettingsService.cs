@@ -16,12 +16,12 @@ namespace ISynergy.Framework.UI.Services.Base
         /// <summary>
         /// The local settings
         /// </summary>
-        private readonly ApplicationDataContainer localSettings;
+        protected readonly ApplicationDataContainer localSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseSettingsService"/> class.
         /// </summary>
-        public BaseSettingsService()
+        protected BaseSettingsService()
         {
             localSettings = ApplicationData.Current.LocalSettings;
         }
@@ -130,7 +130,7 @@ namespace ISynergy.Framework.UI.Services.Base
         /// Gets or sets the users.
         /// </summary>
         /// <value>The users.</value>
-        public List<string> Users
+        public string Users
         {
             get
             {
@@ -138,11 +138,11 @@ namespace ISynergy.Framework.UI.Services.Base
 
                 if (setting is null)
                 {
-                    setting = new List<string>();
+                    setting = string.Empty;
                     localSettings.Values[nameof(Users)] = setting;
                 }
 
-                return (List<string>)setting;
+                return setting.ToString();
             }
 
             set

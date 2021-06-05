@@ -22,14 +22,14 @@ namespace ISynergy.Framework.UI.Functions
         /// <summary>
         /// The settings service
         /// </summary>
-        public readonly ISettingsService SettingsService;
+        public readonly IBaseSettingsService SettingsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizationFunctions"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="settingsService">The settings service.</param>
-        public LocalizationFunctions(IContext context, ISettingsService settingsService)
+        public LocalizationFunctions(IContext context, IBaseSettingsService settingsService)
         {
             Context = context;
             SettingsService = settingsService;

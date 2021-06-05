@@ -160,7 +160,8 @@ namespace Sample
             services.AddSingleton<IUpdateService, UpdateService>();
 #endif
 
-            services.AddSingleton<ISettingsService, SettingsService>();
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseSettingsService, SettingsService>());
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService, SettingsService>());
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());

@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IMasterDataService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPrintingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IReportingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ISettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IUpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

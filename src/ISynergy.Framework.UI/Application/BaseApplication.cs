@@ -137,7 +137,7 @@ namespace ISynergy.Framework.UI
                 RequestedTheme = ApplicationTheme.Light;
             }
 
-            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<ISettingsService>().Color.ToEnum(Mvvm.Enumerations.ThemeColors.Default));
+            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IBaseSettingsService>().Color.ToEnum(Mvvm.Enumerations.ThemeColors.Default));
 
 #if NETFX_CORE
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
@@ -155,7 +155,7 @@ namespace ISynergy.Framework.UI
             RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 #endif
 
-#if HAS_UNO || NETFX_CORE
+#if NETFX_CORE
             Suspending += OnSuspending;
 #endif
         }
@@ -377,6 +377,7 @@ namespace ISynergy.Framework.UI
             return null;
         }
 
+#if NETFX_CORE
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
         /// without knowing whether the application will be terminated or resumed with the contents
@@ -389,15 +390,14 @@ namespace ISynergy.Framework.UI
             var deferral = e.SuspendingOperation.GetDeferral();
 
             //TODO: Save application state and stop any background activity
-#if NETFX_CORE || (NET5_0 && WINDOWS)
             foreach (var task in BackgroundTaskRegistration.AllTasks)
             {
                 task.Value?.Unregister(true);
             }
-#endif
 
             deferral.Complete();
         }
+#endif
 
         /// <summary>
         /// The factory
@@ -448,7 +448,6 @@ namespace ISynergy.Framework.UI
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IConverterService, ConverterService>();
             services.AddSingleton<IFileService, FileService>();
-
 
             //Register functions
             services.AddSingleton<LocalizationFunctions>();
@@ -599,7 +598,7 @@ namespace ISynergy.Framework.UI
 #endif
 
             var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
-            localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<ISettingsService>().Culture);
+            localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IBaseSettingsService>().Culture);
         }
 
         /// <summary>

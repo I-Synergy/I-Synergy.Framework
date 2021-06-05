@@ -16,6 +16,7 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Storage.Blobs" Version="12.8.4" />
+		<PackageReference Include="System.Text.Encodings.Web" Version="5.0.1" />
     </ItemGroup>
 
     <ItemGroup>

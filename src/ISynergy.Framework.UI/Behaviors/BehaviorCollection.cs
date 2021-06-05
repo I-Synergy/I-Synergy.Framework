@@ -185,7 +185,7 @@ namespace ISynergy.Framework.UI.Behaviors
             {
                 for (int i = 0; i < this.Count; i++)
                 {
-                    if (this[i] != this._oldCollection[i])
+                    if (this[i] != this._oldCollection[i] as DependencyObject)
                     {
                         isValid = false;
                         break;

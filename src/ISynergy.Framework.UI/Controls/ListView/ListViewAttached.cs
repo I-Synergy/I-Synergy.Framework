@@ -18,7 +18,7 @@ namespace ISynergy.Framework.UI.Controls
     /// Attached property for ListView to handle the DoubleTapped event.
     /// </summary>
     [Bindable]
-    public class ListViewAttached
+    public static class ListViewAttached
     {
         /// <summary>
         /// Gets the DoubleTapped Command property.

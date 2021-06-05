@@ -480,7 +480,7 @@ stages:
   - stage: DocStage
     displayName: 'Documentation'
     dependsOn: TestStage
-    condition: succeeded()
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
     - job: DocJob
       displayName: 'Create API Documentation'

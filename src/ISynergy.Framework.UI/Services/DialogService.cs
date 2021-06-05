@@ -199,8 +199,13 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task ShowDialogAsync<TWindow, TViewModel, TEntity>(IViewModelDialog<TEntity> viewmodel = null)
             where TWindow : IWindow
-            where TViewModel : IViewModelDialog<TEntity> =>
-            CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel ??= (IViewModelDialog<TEntity>)ServiceLocator.Default.GetInstance(typeof(TViewModel)));
+            where TViewModel : IViewModelDialog<TEntity>
+            {
+                if (viewmodel is null)
+                    viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Default.GetInstance(typeof(TViewModel));
+
+                return CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel);
+            }
 
         /// <summary>
         /// Shows the dialog asynchronous.

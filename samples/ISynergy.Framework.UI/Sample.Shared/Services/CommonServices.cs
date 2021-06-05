@@ -61,7 +61,6 @@ namespace Sample.Services
         /// </summary>
         /// <param name="busyService">The busy service.</param>
         /// <param name="languageService">The language service.</param>
-        /// <param name="settingsService">The settings service.</param>
         /// <param name="telemetryService">The telemetry service.</param>
         /// <param name="dialogService">The dialog service.</param>
         /// <param name="navigationService">The navigation service.</param>
@@ -79,7 +78,6 @@ namespace Sample.Services
         public CommonServices(
             IBusyService busyService,
             ILanguageService languageService,
-            ISettingsService settingsService,
             ITelemetryService telemetryService,
             IDialogService dialogService,
             INavigationService navigationService,
@@ -94,7 +92,7 @@ namespace Sample.Services
             IPrintingService printingService,
             IClipboardService clipboardService,
             IClientMonitorService clientMonitorService)
-            :base(busyService, languageService, settingsService, telemetryService, dialogService, navigationService, infoService, converterService)
+            :base(busyService, languageService, telemetryService, dialogService, navigationService, infoService, converterService)
         {
             AuthenticationService = authenticationService;
             MasterDataService = masterDataService;

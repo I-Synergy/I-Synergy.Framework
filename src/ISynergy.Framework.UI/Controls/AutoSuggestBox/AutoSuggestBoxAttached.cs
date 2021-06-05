@@ -16,7 +16,7 @@ namespace ISynergy.Framework.UI.Controls
     /// Attached property for AutoSuggestBox to handle the QuerySubmitted event.
     /// </summary>
     [Bindable]
-    public class AutoSuggestBoxAttached
+    public static class AutoSuggestBoxAttached
     {
         /// <summary>
         /// Gets the QuerySubmitted Command property.

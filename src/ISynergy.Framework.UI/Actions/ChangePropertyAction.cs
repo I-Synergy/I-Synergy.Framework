@@ -88,7 +88,7 @@ namespace ISynergy.Framework.UI.Actions
         {
             get
             {
-                return (object)this.GetValue(ChangePropertyAction.TargetObjectProperty);
+                return this.GetValue(ChangePropertyAction.TargetObjectProperty);
             }
             set
             {

@@ -16,7 +16,7 @@ namespace ISynergy.Framework.UI.Controls
     /// Attached property for UIElement to handle the LostFocus events.
     /// </summary>
     [Bindable]
-    public class UIElementAttached
+    public static class UIElementAttached
     {
         /// <summary>
         /// Gets the LostFocus Command property.

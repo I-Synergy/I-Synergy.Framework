@@ -146,6 +146,10 @@ namespace ISynergy.Framework.UI.ViewModels
         public Command<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
 
         /// <summary>
+        /// The settings service.
+        /// </summary>
+        private readonly IBaseSettingsService _settingsService;
+        /// <summary>
         /// The theme selector
         /// </summary>
         private readonly IThemeSelectorService _themeSelector;
@@ -159,17 +163,20 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
+        /// <param name="settingsService">The settings services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="themeSelectorService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         protected ShellViewModelBase(
             IContext context,
             IBaseCommonServices commonServices,
+            IBaseSettingsService settingsService,
             ILoggerFactory loggerFactory,
             IThemeSelectorService themeSelectorService,
             LocalizationFunctions localizationFunctions)
             : base(context, commonServices, loggerFactory)
         {
+            _settingsService = settingsService;
             _themeSelector = themeSelectorService;
             _themeSelector.OnThemeChanged += ThemeSelector_OnThemeChanged;
             _localizationFunctions = localizationFunctions;
@@ -403,7 +410,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (sender != null && sender is byte[])
             {
-                //BaseCommonServices.SettingsService.Wallpaper = sender as byte[];
+                _settingsService.Wallpaper = sender as byte[];
             }
         }
 
@@ -413,7 +420,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenLanguageAsync()
         {
-            var languageVM = new LanguageViewModel(Context, BaseCommonServices, _localizationFunctions, _loggerFactory);
+            var languageVM = new LanguageViewModel(Context, BaseCommonServices, _settingsService, _localizationFunctions, _loggerFactory);
             languageVM.Submitted += LanguageVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, string>(languageVM);
         }
@@ -445,7 +452,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenColorsAsync()
         {
-            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _loggerFactory);
+            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _settingsService, _loggerFactory);
             themeVM.Submitted += ThemeVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ThemeColors>(themeVM);
         }

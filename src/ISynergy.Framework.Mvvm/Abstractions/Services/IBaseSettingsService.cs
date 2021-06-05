@@ -23,7 +23,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <summary>
         /// Setting for maintaining all successfull usernames logged in.
         /// </summary>
-        List<string> Users { get; set; }
+        string Users { get; set; }
         /// <summary>
         /// Setting for storing the refresh token received on authentication.
         /// </summary>
@@ -40,5 +40,9 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// Setting for maintaining the advanced mode of the application.
         /// </summary>
         bool IsAdvanced { get; set; }
+        /// <summary>
+        /// Wallpaper of the application.
+        /// </summary>
+        byte[] Wallpaper { get; set; }
     }
 }

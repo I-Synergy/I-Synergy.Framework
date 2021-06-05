@@ -21,11 +21,6 @@ namespace ISynergy.Framework.UI.Services
         /// <value>The language service.</value>
         public ILanguageService LanguageService { get; }
         /// <summary>
-        /// Gets the application settings service.
-        /// </summary>
-        /// <value>The application settings service.</value>
-        public ISettingsService SettingsService { get; }
-        /// <summary>
         /// Gets the telemetry service.
         /// </summary>
         /// <value>The telemetry service.</value>
@@ -56,7 +51,6 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <param name="busy">The busy.</param>
         /// <param name="language">The language.</param>
-        /// <param name="settings">The settings.</param>
         /// <param name="telemetry">The telemetry.</param>
         /// <param name="dialog">The dialog.</param>
         /// <param name="navigation">The navigation.</param>
@@ -65,7 +59,6 @@ namespace ISynergy.Framework.UI.Services
         protected BaseCommonService(
             IBusyService busy,
             ILanguageService language,
-            ISettingsService settings,
             ITelemetryService telemetry,
             IDialogService dialog,
             INavigationService navigation,
@@ -74,7 +67,6 @@ namespace ISynergy.Framework.UI.Services
         {
             BusyService = busy;
             LanguageService = language;
-            SettingsService = settings;
             TelemetryService = telemetry;
             DialogService = dialog;
             NavigationService = navigation;

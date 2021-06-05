@@ -17,7 +17,7 @@ namespace ISynergy.Framework.UI.Controls
     /// Attached property for ListView to handle the Tapped event.
     /// </summary>
     [Bindable]
-    public class NavigationViewItemAttached
+    public static class NavigationViewItemAttached
     {
         /// <summary>
         /// Gets the Tapped Command property.

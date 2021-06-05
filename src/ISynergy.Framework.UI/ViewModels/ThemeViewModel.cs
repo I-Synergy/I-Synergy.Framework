@@ -29,6 +29,11 @@ namespace ISynergy.Framework.UI.ViewModels
         }
 
         /// <summary>
+        /// The settings service.
+        /// </summary>
+        private readonly IBaseSettingsService _settingsService;
+
+        /// <summary>
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
@@ -39,15 +44,19 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
+        /// <param name="settingsService">The settings services.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         public ThemeViewModel(
             IContext context,
             IBaseCommonServices commonServices,
+            IBaseSettingsService settingsService,
             ILoggerFactory loggerFactory)
             : base(context, commonServices, loggerFactory)
         {
+            _settingsService = settingsService;
+
             Color_Command = new Command<string>((e) => SelectedItem = SetColor(e));
-            SelectedItem = BaseCommonServices.SettingsService.Color.ToEnum(ThemeColors.Default);
+            SelectedItem = _settingsService.Color.ToEnum(ThemeColors.Default);
         }
 
         /// <summary>
@@ -73,7 +82,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         public override Task SubmitAsync(ThemeColors e)
         {
-            BaseCommonServices.SettingsService.Color = e.ToString();
+            _settingsService.Color = e.ToString();
             return base.SubmitAsync(e);
         }
     }

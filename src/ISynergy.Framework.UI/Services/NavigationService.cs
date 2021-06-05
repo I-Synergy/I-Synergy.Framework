@@ -111,7 +111,6 @@ namespace ISynergy.Framework.UI.Services
             try
             {
                 IViewModel viewmodel = default;
-                IView view = default;
 
                 if (parameter is IViewModel instanceVM)
                 {
@@ -141,7 +140,7 @@ namespace ISynergy.Framework.UI.Services
                 {
                     viewmodel.IsInitialized = false;
                     await InitializeViewModelAsync(viewmodel);
-                    view = ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
+                    return ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
                 }
                 else
                 {
@@ -177,10 +176,8 @@ namespace ISynergy.Framework.UI.Services
                     }
 
                     await InitializeViewModelAsync(viewmodel);
-                    view = ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
+                    return ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
                 }
-
-                return view;
             }
             finally
             {
@@ -383,7 +380,7 @@ namespace ISynergy.Framework.UI.Services
         {
             DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>
             {
-                (((Frame)Frame)).BackStack.Clear();
+                ((Frame)Frame).BackStack.Clear();
             });
 
             return Task.CompletedTask;

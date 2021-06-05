@@ -34,6 +34,11 @@ namespace ISynergy.Framework.UI.ViewModels
         private readonly LocalizationFunctions _localizationFunctions;
 
         /// <summary>
+        /// The settings service.
+        /// </summary>
+        private readonly IBaseSettingsService _settingsService;
+
+        /// <summary>
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
@@ -44,18 +49,22 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
+        /// <param name="settingsService">The settings services.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         public LanguageViewModel(
             IContext context,
             IBaseCommonServices commonServices,
+            IBaseSettingsService settingsService,
             LocalizationFunctions localizationFunctions,
             ILoggerFactory loggerFactory)
             : base(context, commonServices, loggerFactory)
         {
             _localizationFunctions = localizationFunctions;
+            _settingsService = settingsService;
+
             SetLanguage_Command = new Command<string>((e) => SelectedItem = e);
-            SelectedItem = BaseCommonServices.SettingsService.Culture;
+            SelectedItem = _settingsService.Culture;
         }
 
         /// <summary>
@@ -65,7 +74,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         public override Task SubmitAsync(string e)
         {
-            BaseCommonServices.SettingsService.Culture = e;
+            _settingsService.Culture = e;
             _localizationFunctions.SetLocalizationLanguage(e);
             return base.SubmitAsync(e);
         }
