@@ -54,7 +54,7 @@
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.UI" Version="3.7.7" />
+				<PackageReference Include="Uno.UI" Version="3.8.6" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.207.gcac670e618" />
 			</ItemGroup>
 		</Otherwise>
