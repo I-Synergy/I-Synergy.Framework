@@ -118,30 +118,27 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <param name="query">Query parameter.</param>
         protected virtual Task QueryItemsAsync(string query)
         {
-            if (IsInitialized && RawItems != null)
+            if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
             {
-                if (string.IsNullOrEmpty(query) || query.Trim() == "*")
-                {
-                    Items = new ObservableCollection<TEntity>(RawItems);
-                }
-                else
-                {
-                    var filteredList = new List<TEntity>();
+                Items = new ObservableCollection<TEntity>(RawItems);
+            }
+            else
+            {
+                var filteredList = new List<TEntity>();
 
-                    foreach (var item in RawItems)
+                foreach (var item in RawItems)
+                {
+                    foreach (var prop in item.GetType().GetProperties().Select(s => s.GetValue(item)).ToList())
                     {
-                        foreach (var prop in item.GetType().GetProperties().Select(s => s.GetValue(item)).ToList())
+                        if (prop is string value && !string.IsNullOrEmpty(value) && value.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
                         {
-                            if (prop is string value && !string.IsNullOrEmpty(value) && value.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
-                            {
-                                filteredList.Add(item);
-                                break;
-                            }
+                            filteredList.Add(item);
+                            break;
                         }
                     }
-
-                    Items = new ObservableCollection<TEntity>(filteredList);
                 }
+
+                Items = new ObservableCollection<TEntity>(filteredList);
             }
 
             return Task.CompletedTask;

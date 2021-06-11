@@ -99,7 +99,7 @@ namespace ISynergy.Framework.Core.Data
         {
             if (this.GetIdentityValue() is not null)
                     return this.GetIdentityValue().GetHashCode();
-            return base.GetHashCode();
+            return this.GetHashCode();
         }
 
         /// <summary>

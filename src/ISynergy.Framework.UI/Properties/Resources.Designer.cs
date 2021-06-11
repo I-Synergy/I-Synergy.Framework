@@ -125,15 +125,6 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set theme color....
-        /// </summary>
-        public static string Colors {
-            get {
-                return ResourceManager.GetString("Colors", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Day(s).
         /// </summary>
         public static string Day_s {
@@ -242,7 +233,7 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set language....
+        ///   Looks up a localized string similar to Language.
         /// </summary>
         public static string Language {
             get {
@@ -382,6 +373,15 @@ namespace ISynergy.Framework.UI.Properties {
         public static string Select {
             get {
                 return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Theme.
+        /// </summary>
+        public static string Theme {
+            get {
+                return ResourceManager.GetString("Theme", resourceCulture);
             }
         }
         

@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Core.Utilities
     /// <summary>
     /// Regex utilities.
     /// </summary>
-    public class RegexUtility
+    public static class RegexUtility
     {
         /// <summary>
         /// Converts Mask to Regex.
