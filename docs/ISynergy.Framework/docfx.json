@@ -6,7 +6,6 @@
           "files": [
             "src/ISynergy.Framework.Core/ISynergy.Framework.Core.csproj",
             "src/ISynergy.Framework.Core.IO/ISynergy.Framework.Core.IO.csproj",
-            "src/ISynergy.Framework.Core.Linq/ISynergy.Framework.Core.Linq.csproj",
             "src/ISynergy.Framework.AspNetCore/ISynergy.Framework.AspNetCore.csproj",
             "src/ISynergy.Framework.AspNetCore.Authentication/ISynergy.Framework.AspNetCore.Authentication.csproj",
             "src/ISynergy.Framework.EntityFramework/ISynergy.Framework.EntityFramework.csproj",
