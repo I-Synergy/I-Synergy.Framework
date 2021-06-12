@@ -220,7 +220,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>
         /// File data object, or null when user cancelled picking file
         /// </returns>
-        private async Task<FileResult> PickFileAsync(string[] allowedTypes = null)
+        private static async Task<FileResult> PickFileAsync(string[] allowedTypes = null)
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker
             {

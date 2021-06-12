@@ -185,7 +185,7 @@ namespace Sample.ViewModels
             SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, ForegroundColor, Help_Command));
             SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"] as string, ForegroundColor, Language_Command));
-            SecondaryItems.Add(new NavigationItem("Color", Application.Current.Resources["color"] as string, ForegroundColor, Color_Command));
+            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"] as string, ForegroundColor, Color_Command));
             SecondaryItems.Add(new NavigationItem(Context.IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"] as string, ForegroundColor, Login_Command));
         }
 

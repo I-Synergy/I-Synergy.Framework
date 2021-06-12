@@ -63,7 +63,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Sets the color.
         /// </summary>
         /// <param name="e">The e.</param>
-        private ThemeColors SetColor(string e)
+        private static ThemeColors SetColor(string e)
         {
             if (Enum.TryParse(e, out ThemeColors color))
             {

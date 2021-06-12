@@ -152,7 +152,7 @@ namespace ISynergy.Framework.UI.Actions
                         TypeConverters.Convert(valueAsString, propertyType.FullName);
                 }
 
-                propertyInfo.SetValue(targetObject, result, new object[0]);
+                propertyInfo.SetValue(targetObject, result, Array.Empty<object>());
             }
             catch (FormatException e)
             {
