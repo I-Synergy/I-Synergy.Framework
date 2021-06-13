@@ -29,7 +29,14 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is AutoSuggestBoxQuerySubmittedEventArgs args)
             {
-                return args.QueryText;
+                if (!string.IsNullOrEmpty(args.QueryText))
+                {
+                    return args.QueryText;
+                }
+                else if (args.ChosenSuggestion is not null)
+                {
+                    return args.ChosenSuggestion;
+                }
             }
 
             return string.Empty;
