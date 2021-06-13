@@ -22,6 +22,7 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
+		<EnableTypeInfoReflection>false</EnableTypeInfoReflection>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
