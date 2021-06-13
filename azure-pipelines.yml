@@ -25,7 +25,7 @@ stages:
     displayName: 'Build'
     jobs:
     - job: BuildJob
-      displayName: 'Build and pack assemblies'
+      displayName: 'Build, pack and test assemblies'
       steps:
         - task: PowerShell@2
           displayName: Set the Major Version variable value
@@ -388,21 +388,6 @@ stages:
             artifactName: Output
             publishLocation: 'Container'
 
-        - task: SonarCloudAnalyze@1
-
-  - stage: TestStage
-    displayName: 'Test'
-    dependsOn: BuildStage
-    condition: succeeded()
-    jobs:
-    - job: TestJob
-      displayName: 'Run Unit tests'
-      steps:
-        - task: NuGetToolInstaller@1
-          displayName: 'Use NuGet 5.8.1'
-          inputs:
-            versionSpec: 5.8.1
-
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Core'
           inputs:
@@ -452,9 +437,11 @@ stages:
             projects: 'tests\ISynergy.Framework.Payment.Tests\ISynergy.Framework.Payment.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
+        - task: SonarCloudAnalyze@1
+
   - stage: DocStage
     displayName: 'Documentation'
-    dependsOn: TestStage
+    dependsOn: BuildStage
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
     - job: DocJob
@@ -511,7 +498,7 @@ stages:
 
   - stage: Release
     displayName: 'Release'
-    dependsOn: TestStage
+    dependsOn: BuildStage
     condition: succeeded()
     jobs:
     - job: ArtifactsJob
