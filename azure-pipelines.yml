@@ -87,6 +87,7 @@ stages:
              src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
              src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj
              src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj
+             src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj
              src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj
              src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj
              src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj
@@ -218,6 +219,23 @@ stages:
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Physics'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj'
+            arguments: '-c $(BuildConfiguration)'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Physics'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
@@ -423,6 +441,13 @@ stages:
             projects: 'tests\ISynergy.Framework.Geography.Tests\ISynergy.Framework.Geography.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Physics'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Physics.Tests\ISynergy.Framework.Physics.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
         - task: DotNetCoreCLI@2
           displayName: 'Run Test: I-Synergy.Framework.Mathematics'
           inputs:

@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Attributes
     /// Implements the <see cref="Attribute" />
     /// </summary>
     /// <seealso cref="Attribute" />
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class DescriptionAttribute : Attribute
     {
         /// <summary>

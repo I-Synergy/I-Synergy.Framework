@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+
+		<!-- SonarQube needs this -->
+		<ProjectGuid>{24DB0377-44A6-44F9-856A-DC4D7DB903E0}</ProjectGuid>
+
+		<PackageId>I-Synergy.Framework.Physics</PackageId>
+		<Description>I-Synergy Framework Physics for .Net Standard 2.0 and .Net 5.0</Description>
+		<PackageTags>I-Synergy, Framework, Physics</PackageTags>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+</Project>

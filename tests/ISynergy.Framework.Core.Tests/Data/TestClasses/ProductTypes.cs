@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿
+using ISynergy.Framework.Core.Attributes;
 
 namespace ISynergy.Framework.Core.Tests.Data.TestClasses
 {
