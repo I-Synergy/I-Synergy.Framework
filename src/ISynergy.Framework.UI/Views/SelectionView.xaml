@@ -8,6 +8,8 @@
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
     xmlns:Behaviors="using:ISynergy.Framework.UI.Behaviors"
     xmlns:Extensions="using:ISynergy.Framework.UI.Extensions"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d">
 
     <c:View.Resources>
@@ -33,9 +35,13 @@
                                 RelativePanel.AlignRightWithPanel="True" 
                                 RelativePanel.AlignTopWithPanel="True"
                                 QueryIcon="Find" 
-                                IsTabStop="True"
-                                c:AutoSuggestBoxAttached.QuerySubmittedCommand="{Binding Search_Command}"
-                                c:AutoSuggestBoxAttached.QuerySubmittedCommandParameter="{Binding Text, ElementName=SearchQuery}"/>
+                                IsTabStop="True">
+                    <i:Interaction.Behaviors>
+                        <ic:EventTriggerBehavior EventName="QuerySubmitted">
+                            <ic:InvokeCommandAction Command="{Binding Search_Command}" CommandParameter="{Binding Text, ElementName=SearchQuery}" />
+                        </ic:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </AutoSuggestBox>
 
                 <ListView RelativePanel.AlignLeftWithPanel="True" 
                           RelativePanel.AlignRightWithPanel="True" 
@@ -45,9 +51,12 @@
                           ItemsSource="{Binding Items}"
                           SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
                           Margin="1,4" 
-                          Style="{StaticResource ListViewMetroUI}"
-                          c:ListViewAttached.DoubleTappedCommand="{Binding Submit_Command}"
-                          c:ListViewAttached.DoubleTappedCommandParameter="{Binding SelectedItem}">
+                          Style="{StaticResource ListViewMetroUI}">
+                    <i:Interaction.Behaviors>
+                        <ic:EventTriggerBehavior EventName="DoubleTapped">
+                            <ic:InvokeCommandAction Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}" />
+                        </ic:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock>

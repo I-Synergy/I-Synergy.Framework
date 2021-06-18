@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.UI.Behaviors.Base;
-using System;
+﻿using System;
 using Windows.ApplicationModel;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.Core.Locators;
+using Microsoft.Xaml.Interactivity;
 
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
@@ -32,10 +32,10 @@ namespace ISynergy.Framework.UI.Behaviors
 
     /// <summary>
     /// Class Authorization.
-    /// Implements the <see cref="BehaviorBase{Control}" />
+    /// Implements the <see cref="Behavior{Control}" />
     /// </summary>
-    /// <seealso cref="BehaviorBase{Control}" />
-    public class Authorization : BehaviorBase<Control>
+    /// <seealso cref="Behavior{Control}" />
+    public class Authorization : Behavior<Control>
     {
         /// <summary>
         /// The authentication provider.
@@ -93,11 +93,10 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <summary>
         /// Called when the <see cref="Behavior{T}.AssociatedObject" /> has been loaded.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="InvalidOperationException">No instance of <see cref="IAuthenticationProvider" /> is registered in the <see cref="ServiceLocator" />.</exception>
-        /// <exception cref="InvalidOperationException">The <see cref="Action" /> is set to <see cref="AuthenticationAction.Disable" /> and the <see cref="Behavior{T}.AssociatedObject" /> is not a <see cref="Control" />.</exception>
-        protected override void OnAssociatedObjectLoaded()
+        protected override void OnAttached()
         {
+            base.OnAttached();
+
             if (!AuthenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
             {
                 switch (Action)

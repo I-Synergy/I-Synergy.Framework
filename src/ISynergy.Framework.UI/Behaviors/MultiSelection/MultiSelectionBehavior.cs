@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xaml.Interactivity;
+using System.Collections.Generic;
 using System.Collections.Specialized;
-using ISynergy.Framework.UI.Behaviors.Base;
 
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
@@ -14,10 +14,10 @@ namespace ISynergy.Framework.UI.Behaviors
 {
     /// <summary>
     /// Class MultiSelectionBehavior.
-    /// Implements the <see cref="BehaviorBase{ListView}" />
+    /// Implements the <see cref="Behavior{ListView}" />
     /// </summary>
-    /// <seealso cref="BehaviorBase{ListView}" />
-    public class MultiSelectionBehavior : BehaviorBase<ListView>
+    /// <seealso cref="Behavior{ListView}" />
+    public class MultiSelectionBehavior : Behavior<ListView>
     {
         /// <summary>
         /// Called after the behavior is attached to the <see cref="P:Behavior.AssociatedObject" />.
