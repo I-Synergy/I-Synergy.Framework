@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.UI.Actions;
+﻿using Microsoft.Xaml.Interactions.Core;
+using Microsoft.Xaml.Interactivity;
 
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI;

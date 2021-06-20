@@ -11,6 +11,7 @@
             "src/ISynergy.Framework.EntityFramework/ISynergy.Framework.EntityFramework.csproj",
             "src/ISynergy.Framework.Financial/ISynergy.Framework.Financial.csproj",
             "src/ISynergy.Framework.Geography/ISynergy.Framework.Geography.csproj",
+            "src/ISynergy.Framework.Physics/ISynergy.Framework.Physics.csproj",
             "src/ISynergy.Framework.Mathematics/ISynergy.Framework.Mathematics.csproj",
             "src/ISynergy.Framework.MessageBus/ISynergy.Framework.MessageBus.csproj",
             "src/ISynergy.Framework.MessageBus.Azure/ISynergy.Framework.MessageBus.Azure.csproj",
