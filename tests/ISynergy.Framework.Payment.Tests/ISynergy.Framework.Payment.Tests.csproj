@@ -16,8 +16,8 @@
         </PackageReference>
     </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj" />
+	</ItemGroup>
 
 </Project>
