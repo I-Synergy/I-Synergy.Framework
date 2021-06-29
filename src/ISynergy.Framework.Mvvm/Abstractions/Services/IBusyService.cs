@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
     /// <summary>
     /// Interface IBusyService

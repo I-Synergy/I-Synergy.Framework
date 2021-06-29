@@ -1,7 +1,5 @@
-﻿using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Physics.Enumerations;
+﻿using ISynergy.Framework.Physics.Enumerations;
 using ISynergy.Framework.Physics.Base;
-using System.Linq;
 
 namespace ISynergy.Framework.Physics
 {

@@ -21,19 +21,14 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel;
 using Windows.UI.Core;
 using Microsoft.Extensions.DependencyInjection;
-using ISynergy.Framework.UI.Properties;
-using System.Resources;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Services;
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
 using System.Globalization;
 using Windows.ApplicationModel.Background;
 using System.Text.RegularExpressions;
 using ISynergy.Framework.Mvvm.Extensions;
-using Microsoft.Extensions.Configuration;
-
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

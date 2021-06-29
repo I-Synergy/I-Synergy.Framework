@@ -1,8 +1,6 @@
 ﻿using System.Globalization;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
-
 #if NETFX_CORE || (NET5_0 && WINDOWS)
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;

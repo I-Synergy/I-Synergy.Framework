@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using ISynergy.Framework.Core.IO.Events;
-using ISynergy.Framework.Core.IO;
 using ISynergy.Framework.Core.IO.Models.Tests;
 using ISynergy.Framework.Core.Validation;
 

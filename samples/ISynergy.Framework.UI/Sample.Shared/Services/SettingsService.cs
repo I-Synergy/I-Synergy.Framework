@@ -1,9 +1,6 @@
 ﻿using System;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Services.Base;
-using Microsoft.Extensions.Options;
 using Sample.Abstractions.Services;
-using Sample.Options;
 
 namespace Sample.Services
 {

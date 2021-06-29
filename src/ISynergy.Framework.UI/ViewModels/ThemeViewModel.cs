@@ -7,7 +7,6 @@ using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using ISynergy.Framework.UI.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.ViewModels
 {

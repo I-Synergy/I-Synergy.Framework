@@ -8,7 +8,6 @@ using System;
 using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Core.Utilities;
-using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Mvvm
 {

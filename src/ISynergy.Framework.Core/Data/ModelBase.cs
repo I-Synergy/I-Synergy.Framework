@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
-using System;
+﻿using System;
 
 namespace ISynergy.Framework.Core.Data
 {

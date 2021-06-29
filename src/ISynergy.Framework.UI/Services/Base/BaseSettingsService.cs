@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Windows.Storage;
 

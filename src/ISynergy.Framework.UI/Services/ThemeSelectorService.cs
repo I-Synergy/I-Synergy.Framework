@@ -1,13 +1,8 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
-using Windows.UI.ViewManagement;
-
 #if (NETFX_CORE || HAS_UNO)
-using Windows.UI;
 using Windows.UI.Xaml;
 #elif (NET5_0 && WINDOWS)
 using Microsoft.UI;

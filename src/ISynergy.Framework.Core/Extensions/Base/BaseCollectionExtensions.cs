@@ -1,13 +1,10 @@
 ﻿using ISynergy.Framework.Core.Attributes;
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Extensions.Base
 {

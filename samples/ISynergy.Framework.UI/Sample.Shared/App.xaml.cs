@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using Sample.Abstractions.Services;
 using Sample.Options;
 using Sample.Services;
@@ -25,9 +24,6 @@ using System.IO;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Resources;
-using Windows.ApplicationModel.Activation;
-using Windows.Storage;
-using Windows.UI.Xaml;
 
 #if HAS_UNO
 using Uno.Material;

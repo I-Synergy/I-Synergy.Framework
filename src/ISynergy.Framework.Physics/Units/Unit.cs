@@ -2,7 +2,6 @@
 using ISynergy.Framework.Physics.Enumerations;
 using ISynergy.Framework.Physics.Base;
 using System;
-using System.Linq;
 
 namespace ISynergy.Framework.Physics
 {

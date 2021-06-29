@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.IO.Abtractions;
-using ISynergy.Framework.Core.IO.Base;
-using System;
-using System.Collections.Generic;
+﻿using ISynergy.Framework.Core.IO.Base;
 using System.IO;
 using System.Text;
 

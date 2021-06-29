@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
-using Windows.System;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using ISynergy.Framework.Core.Events;

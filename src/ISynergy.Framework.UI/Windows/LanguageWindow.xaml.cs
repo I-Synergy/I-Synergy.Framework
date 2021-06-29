@@ -1,12 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.ViewModels;
 
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+
 #elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

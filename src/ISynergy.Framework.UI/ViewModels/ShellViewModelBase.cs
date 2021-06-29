@@ -8,7 +8,6 @@ using Windows.System;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.Logging;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;

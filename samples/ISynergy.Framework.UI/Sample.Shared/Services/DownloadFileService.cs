@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
-using Windows.Storage;
 using Windows.System;
 
 namespace Sample.Services

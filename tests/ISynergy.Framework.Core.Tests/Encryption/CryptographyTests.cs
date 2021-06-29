@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using ISynergy.Framework.Core.Encryption;
 using ISynergy.Framework.Core.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

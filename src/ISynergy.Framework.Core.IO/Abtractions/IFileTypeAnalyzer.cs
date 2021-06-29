@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.IO.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace ISynergy.Framework.Core.IO.Abtractions
 {

@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.EntityFramework.Extensions.Tests

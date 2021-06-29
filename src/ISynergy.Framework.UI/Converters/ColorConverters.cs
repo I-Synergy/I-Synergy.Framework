@@ -3,7 +3,6 @@ using ISynergy.Framework.UI.Extensions;
 using System;
 
 #if (NETFX_CORE || HAS_UNO)
-using Windows.UI;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Data;
 #elif (NET5_0 && WINDOWS)

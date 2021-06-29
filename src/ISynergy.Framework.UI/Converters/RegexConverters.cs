@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Utilities;
 using System;
-using System.Globalization;
-
 #if NET5_0 && WINDOWS
 using Microsoft.UI.Xaml.Data;
 #else

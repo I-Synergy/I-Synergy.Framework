@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
-using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Mvvm
 {
