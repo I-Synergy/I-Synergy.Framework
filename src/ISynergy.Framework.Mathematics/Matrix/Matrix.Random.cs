@@ -1,8 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
-    using System;
-    using ISynergy.Framework.Mathematics;
-
     public static partial class Matrix
     {
         /// <summary>

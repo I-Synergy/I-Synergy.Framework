@@ -725,8 +725,8 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
         private void do_shrinking()
         {
-            var Gmax1 = double.NegativeInfinity; // max { -y_i * grad(f)_i | i in I_up(\alpha) }
-            var Gmax2 = double.NegativeInfinity; // max { y_i * grad(f)_i | i in I_low(\alpha) }
+            var Gmax1 = double.NegativeInfinity; // max { -y_i * grad(f)_i || i in I_up(\alpha) }
+            var Gmax2 = double.NegativeInfinity; // max { y_i * grad(f)_i || i in I_low(\alpha) }
 
             // find maximal violating pair first
             for (var i = 0; i < active_size; i++)

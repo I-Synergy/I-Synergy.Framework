@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Mathematics.Environments
+﻿namespace ISynergy.Framework.Mathematics.Environments
 {
     /// <summary>
     ///   GNU R algorithm environment. Work in progress.

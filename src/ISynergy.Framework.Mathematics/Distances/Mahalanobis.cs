@@ -1,18 +1,20 @@
-﻿namespace ISynergy.Framework.Mathematics.Distances
-{
-    using ISynergy.Framework.Mathematics.Decompositions;
-    using System;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
+using ISynergy.Framework.Mathematics.Distances.Base;
+using System;
 
+namespace ISynergy.Framework.Mathematics.Distances
+{
     /// <summary>
     ///   Mahalanobis distance.
     /// </summary>
     /// 
     [Serializable]
-    public struct Mahalanobis : IMetric<double[]>, ICloneable
+    public class Mahalanobis : BaseMahalanobis
     {
-        CholeskyDecomposition chol;
-        SingularValueDecomposition svd;
-        double[,] precision;
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Mahalanobis() : base() { }
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="Mahalanobis"/> class.
@@ -21,11 +23,7 @@
         /// <param name="chol">A Cholesky decomposition of the covariance matrix.</param>
         /// 
         public Mahalanobis(CholeskyDecomposition chol)
-        {
-            this.chol = chol;
-            this.svd = null;
-            this.precision = null;
-        }
+            : base(chol) { }
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="Mahalanobis"/> class.
@@ -34,11 +32,7 @@
         /// <param name="svd">A Singular Value decomposition of the covariance matrix.</param>
         /// 
         public Mahalanobis(SingularValueDecomposition svd)
-        {
-            this.chol = null;
-            this.svd = svd;
-            this.precision = null;
-        }
+            : base(svd) { }
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="Mahalanobis"/> class.
@@ -47,45 +41,7 @@
         /// <param name="precision">The precision matrix (the inverse of the covariance matrix).</param>
         /// 
         public Mahalanobis(double[,] precision)
-        {
-            this.chol = null;
-            this.svd = null;
-            this.precision = precision;
-        }
-
-        /// <summary>
-        ///   Computes the distance <c>d(x,y)</c> between points
-        ///   <paramref name="x"/> and <paramref name="y"/>.
-        /// </summary>
-        /// 
-        /// <param name="x">The first point <c>x</c>.</param>
-        /// <param name="y">The second point <c>y</c>.</param>
-        /// 
-        /// <returns>
-        ///   A double-precision value representing the distance <c>d(x,y)</c>
-        ///   between <paramref name="x"/> and <paramref name="y"/> according 
-        ///   to the distance function implemented by this class.
-        /// </returns>
-        /// 
-        public double Distance(double[] x, double[] y)
-        {
-            double[] d = new double[x.Length];
-            for (var i = 0; i < x.Length; i++)
-                d[i] = x[i] - y[i];
-
-            double[] z;
-            if (svd != null)
-                z = svd.Solve(d);
-            else if (chol != null)
-                z = chol.Solve(d);
-            else
-                z = precision.Dot(d);
-
-            double sum = 0.0;
-            for (var i = 0; i < d.Length; i++)
-                sum += d[i] * z[i];
-            return Math.Sqrt(Math.Abs(sum));
-        }
+            : base(precision) { }
 
         /// <summary>
         ///   Creates a new Mahalanobis distance from a covariance matrix.
@@ -117,13 +73,24 @@
         {
             return new Mahalanobis(precision);
         }
+
         /// <summary>
-        /// Creates a new object that is a copy of the current instance.
+        ///   Computes the distance <c>d(x,y)</c> between points
+        ///   <paramref name="x"/> and <paramref name="y"/>.
         /// </summary>
-        /// <returns>A new object that is a copy of this instance.</returns>
-        public object Clone()
+        /// 
+        /// <param name="x">The first point <c>x</c>.</param>
+        /// <param name="y">The second point <c>y</c>.</param>
+        /// 
+        /// <returns>
+        ///   A double-precision value representing the distance <c>d(x,y)</c>
+        ///   between <paramref name="x"/> and <paramref name="y"/> according 
+        ///   to the distance function implemented by this class.
+        /// </returns>
+        /// 
+        public override double Distance(double[] x, double[] y)
         {
-            return MemberwiseClone();
+            return Math.Sqrt(base.Distance(x, y));
         }
     }
 }

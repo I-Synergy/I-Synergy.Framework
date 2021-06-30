@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ISynergy.Framework.Mathematics.Geometry
 {
@@ -12,8 +10,8 @@ namespace ISynergy.Framework.Mathematics.Geometry
     public class Plane : IEquatable<Plane>, IFormattable
     {
         [NonSerialized]
-        Vector3 normal;
-        float offset;
+        private Vector3 _normal;
+        private float _offset;
 
         /// <summary>
         ///   Creates a new <see cref="Plane"/> object
@@ -26,7 +24,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public Plane(float a, float b, float c)
         {
-            normal = new Vector3(a, b, c);
+            _normal = new Vector3(a, b, c);
         }
 
         /// <summary>
@@ -38,7 +36,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public Plane(Vector3 normal)
         {
-            this.normal = normal;
+            _normal = normal;
         }
 
         /// <summary>
@@ -53,8 +51,8 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public Plane(float a, float b, float c, float offset)
         {
-            this.normal = new Vector3(a, b, c);
-            this.offset = offset;
+            _normal = new Vector3(a, b, c);
+            _offset = offset;
         }
 
         /// <summary>
@@ -66,8 +64,8 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public Plane(Vector3 normal, float offset)
         {
-            this.normal = normal;
-            this.offset = offset;
+            _normal = normal;
+            _offset = offset;
         }
         /// <summary>
         ///   Constructs a new <see cref="Plane"/> object from three points.
@@ -104,7 +102,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public Vector3 Normal
         {
-            get { return normal; }
+            get { return _normal; }
         }
 
         /// <summary>
@@ -114,8 +112,8 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public float A
         {
-            get { return normal.X; }
-            set { normal.X = value; }
+            get { return _normal.X; }
+            set { _normal.X = value; }
         }
 
         /// <summary>
@@ -125,8 +123,8 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public float B
         {
-            get { return normal.Y; }
-            set { normal.Y = value; }
+            get { return _normal.Y; }
+            set { _normal.Y = value; }
         }
 
         /// <summary>
@@ -136,8 +134,8 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public float C
         {
-            get { return normal.Z; }
-            set { normal.Z = value; }
+            get { return _normal.Z; }
+            set { _normal.Z = value; }
         }
 
         /// <summary>
@@ -147,8 +145,8 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public float Offset
         {
-            get { return offset; }
-            set { offset = value; }
+            get { return _offset; }
+            set { _offset = value; }
         }
         /// <summary>
         ///   Computes the distance from point to plane.
@@ -160,11 +158,11 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public double DistanceToPoint(Point3 point)
         {
-            float a = normal.X;
-            float b = normal.Y;
-            float c = normal.Z;
+            float a = _normal.X;
+            float b = _normal.Y;
+            float c = _normal.Z;
 
-            double num = Math.Abs(a * point.X + b * point.Y + c * point.Z + offset);
+            double num = Math.Abs(a * point.X + b * point.Y + c * point.Z + _offset);
             double den = Math.Sqrt(a * a + b * b + c * c);
 
             return num / den;
@@ -177,8 +175,8 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public void Normalize()
         {
-            float norm = normal.Normalize();
-            offset /= norm;
+            float norm = _normal.Normalize();
+            _offset /= norm;
         }
 
         /// <summary>
@@ -192,7 +190,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
             if ((object)a == null || (object)b == null)
                 return false;
 
-            return a.offset == b.offset && a.normal == b.normal;
+            return a._offset == b._offset && a._normal == b._normal;
         }
 
         /// <summary>
@@ -206,7 +204,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
             if ((object)a == null || (object)b == null)
                 return true;
 
-            return a.offset != b.offset || a.normal != b.normal;
+            return a._offset != b._offset || a._normal != b._normal;
         }
 
         /// <summary>
@@ -222,10 +220,10 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public bool Equals(Plane other, double tolerance)
         {
-            return (Math.Abs(offset - other.offset) < tolerance)
-                && (Math.Abs(normal.X - other.normal.X) < tolerance)
-                && (Math.Abs(normal.Y - other.normal.Y) < tolerance)
-                && (Math.Abs(normal.Z - other.normal.Z) < tolerance);
+            return (Math.Abs(_offset - other._offset) < tolerance)
+                && (Math.Abs(_normal.X - other._normal.X) < tolerance)
+                && (Math.Abs(_normal.Y - other._normal.Y) < tolerance)
+                && (Math.Abs(_normal.Z - other._normal.Z) < tolerance);
         }
 
         /// <summary>
@@ -240,7 +238,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public bool Equals(Plane other)
         {
-            return offset == other.offset && normal == other.normal;
+            return _offset == other._offset && _normal == other._normal;
         }
 
         /// <summary>
@@ -273,7 +271,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public override int GetHashCode()
         {
-            return offset.GetHashCode() + 13 * normal.GetHashCode();
+            return _offset.GetHashCode() + 13 * _normal.GetHashCode();
         }
         /// <summary>
         ///   Returns a <see cref="System.String"/> that represents this instance.

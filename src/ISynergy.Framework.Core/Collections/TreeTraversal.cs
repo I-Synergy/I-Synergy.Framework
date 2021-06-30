@@ -48,16 +48,16 @@ namespace ISynergy.Framework.Core.Collections
 
             while (queue.Count != 0)
             {
-                TNode current = queue.Dequeue();
-
-                if (current != null)
+                if(queue.Dequeue() is TNode current)
+                {
                     yield return current;
 
-                if (current.Left != null)
-                    queue.Enqueue(current.Left);
+                    if (current.Left is TNode leftNode)
+                        queue.Enqueue(leftNode);
 
-                if (current.Right != null)
-                    queue.Enqueue(current.Right);
+                    if (current.Right is TNode rightNode)
+                        queue.Enqueue(rightNode);
+                }
             }
         }
 
@@ -187,16 +187,16 @@ namespace ISynergy.Framework.Core.Collections
 
             while (stack.Count != 0)
             {
-                TNode node = stack.Pop();
+                if (stack.Pop() is TNode current)
+                {
+                    yield return current;
 
-                if (node != null)
-                    yield return node;
+                    if (current.Left is TNode leftNode)
+                        stack.Push(leftNode);
 
-                if (node.Left != null)
-                    stack.Push(node.Left);
-
-                if (node.Right != null)
-                    stack.Push(node.Right);
+                    if (current.Right is TNode rightNode)
+                        stack.Push(rightNode);
+                }
             }
         }
 

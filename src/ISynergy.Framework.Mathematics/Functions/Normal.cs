@@ -4,7 +4,7 @@
 // Original license is listed below:
 //
 //   Some software in this archive may be from the book _Methods and
-// Programs for Mathematical Functions_ (Prentice-Hall or Simon & Schuster
+// Programs for Mathematical Functions_ (Prentice-Hall or Simon && Schuster
 // International, 1989) or from the Cephes Mathematical Library, a
 // commercial product. In either event, it is copyrighted by the author.
 // What you see here may be used freely but it comes with no support or

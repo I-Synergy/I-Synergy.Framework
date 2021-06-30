@@ -563,7 +563,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             double norm = 0;
             for (var i = 0; i < nn; i++)
             {
-                if ((i < low) | (i > high))
+                if ((i < low) || (i > high))
                 {
                     RealEigenvalues[i] = H[i, i];
                     ImaginaryEigenvalues[i] = 0;
@@ -931,7 +931,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                                 vr = (RealEigenvalues[i] - p) * (RealEigenvalues[i] - p) +
                                     ImaginaryEigenvalues[i] * ImaginaryEigenvalues[i] - q * q;
                                 vi = (RealEigenvalues[i] - p) * 2 * q;
-                                if ((vr == 0) & (vi == 0))
+                                if ((vr == 0) && (vi == 0))
                                     vr = eps * norm * (Math.Abs(w) + Math.Abs(q) + Math.Abs(x) + Math.Abs(y) +
                                                        Math.Abs(z));
                                 cdiv(x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi, out H[i, n - 1],
@@ -963,7 +963,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             // Vectors of isolated roots
             for (var i = 0; i < nn; i++)
-                if ((i < low) | (i > high))
+                if ((i < low) || (i > high))
                     for (var j = i; j < nn; j++)
                         Eigenvectors[i, j] = H[i, j];
 

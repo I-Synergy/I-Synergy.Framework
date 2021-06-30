@@ -232,7 +232,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
                 for (var j = k + 1; j < n; j++)
                 {
-                    if ((k < nct) & (Diagonal[k] != 0))
+                    if ((k < nct) && (Diagonal[k] != 0))
                     {
                         // Apply the transformation.
                         double t = 0;
@@ -251,7 +251,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                     e[j] = a[k, j];
                 }
 
-                if (wantu & (k < nct))
+                if (wantu && (k < nct))
                     // Place the transformation in U for subsequent back
                     // multiplication.
 
@@ -279,7 +279,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                     }
 
                     e[k] = -e[k];
-                    if ((k + 1 < m) & (e[k] != 0))
+                    if ((k + 1 < m) && (e[k] != 0))
                     {
                         // Apply the transformation.
                         for (var i = k + 1; i < work.Rows(); i++)
@@ -360,7 +360,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             if (wantv)
                 for (var k = n - 1; k >= 0; k--)
                 {
-                    if ((k < nrt) & (e[k] != 0))
+                    if ((k < nrt) && (e[k] != 0))
                         // TODO: The following is a pseudo correction to make SVD
                         //  work on matrices with n > m (less rows than columns).
 

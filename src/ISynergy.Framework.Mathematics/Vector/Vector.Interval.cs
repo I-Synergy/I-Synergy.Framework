@@ -1,8 +1,6 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
     using System;
-    using ISynergy.Framework.Core.Ranges;
-    using ISynergy.Framework.Mathematics;
     using NumericRange = ISynergy.Framework.Core.Ranges.NumericRange;
 
     public static partial class Vector
@@ -118,28 +116,28 @@
         ///
         public static double[] Interval(double a, double b, int steps, bool includeLast = true)
         {
-			if (steps < 0)
-				throw new ArgumentOutOfRangeException("steps", "The number of steps must be positive.");
+            if (steps < 0)
+                throw new ArgumentOutOfRangeException("steps", "The number of steps must be positive.");
 
-			if (steps == 0)
-				return new double[] { };
+            if (steps == 0)
+                return new double[] { };
 
-			if (steps == 1)
-				return new double[] { a };
+            if (steps == 1)
+                return new double[] { a };
 
             if (a == b)
                 return Vector.Create(size: steps, value: a);
-			
+
             double[] r = new double[steps];
-			double length;
-			if (includeLast)
-			{
-				length = ((double)(steps - 1)); 
-			}
-			else
-			{
-				length = ((double)(steps));
-			}
+            double length;
+            if (includeLast)
+            {
+                length = ((double)(steps - 1));
+            }
+            else
+            {
+                length = ((double)(steps));
+            }
 
             if (a > b)
             {
@@ -154,8 +152,8 @@
                     r[i] = (double)(a + i * stepSize);
             }
 
-			if (includeLast)
-				r[r.Length - 1] = b;
+            if (includeLast)
+                r[r.Length - 1] = b;
 
             return r;
         }
