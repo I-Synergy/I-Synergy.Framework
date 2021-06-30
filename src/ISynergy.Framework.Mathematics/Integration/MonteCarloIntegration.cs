@@ -91,7 +91,7 @@ namespace ISynergy.Framework.Mathematics.Integration
                     "Number of parameters must be higher than zero.");
 
             NumberOfParameters = parameters;
-            Range = new DoubleRange[parameters];
+            Range = new NumericRange[parameters];
             Random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next());
 
             for (var i = 0; i < Range.Length; i++)
@@ -129,7 +129,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         ///     Gets or sets the range of each input variable
         ///     under which the integral must be computed.
         /// </summary>
-        public DoubleRange[] Range { get; private set; }
+        public NumericRange[] Range { get; private set; }
 
         /// <summary>
         ///     Gets or sets the multidimensional function
@@ -178,8 +178,6 @@ namespace ISynergy.Framework.Mathematics.Integration
 
             return true;
         }
-
-
         /// <summary>
         ///     Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -191,7 +189,7 @@ namespace ISynergy.Framework.Mathematics.Integration
             var clone = new MonteCarloIntegration(NumberOfParameters, Function);
 
             clone.Iterations = Iterations;
-            clone.Range = (DoubleRange[])Range.Clone();
+            clone.Range = (NumericRange[])Range.Clone();
 
             return clone;
         }
@@ -221,7 +219,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         {
             var mc = new MonteCarloIntegration(a.Length, func);
             for (var i = 0; i < a.Length; i++)
-                mc.Range[i] = new DoubleRange(a[i], b[i]);
+                mc.Range[i] = new NumericRange(a[i], b[i]);
             mc.Iterations = samples;
             mc.Compute();
             return mc.Area;
@@ -238,7 +236,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         {
             var mc = new MonteCarloIntegration(a.Length, func);
             for (var i = 0; i < a.Length; i++)
-                mc.Range[i] = new DoubleRange(a[i], b[i]);
+                mc.Range[i] = new NumericRange(a[i], b[i]);
             mc.Compute();
             return mc.Area;
         }

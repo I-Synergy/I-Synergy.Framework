@@ -17,8 +17,6 @@
 
                  MAT-file data element format (v5)
                  8 bytes header / variable payload
-         
-          
      0   |   1   |   2   |   3   |   4   |   5   |   6   |   7    
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   number of bytes  |   data type   |           data           |

@@ -212,8 +212,6 @@
 
             double value = 0;
             double vi;
-
-
             /*
               Determine appropriate method from t1...t6
             */

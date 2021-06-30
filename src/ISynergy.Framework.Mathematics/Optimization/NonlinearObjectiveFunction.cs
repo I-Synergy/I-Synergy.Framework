@@ -14,11 +14,9 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///         using either symbolic processing or vector-valued functions. The following
     ///         example demonstrates the symbolic processing case:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\AugmentedLagrangianTest.cs" region="doc_lambda" />
     ///     <para>
     ///         And this is the same example as before, but using standard vectors instead.
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\AugmentedLagrangianTest.cs" region="doc_vector" />
     /// </example>
     /// <seealso cref="NelderMead" />
     /// <seealso cref="Cobyla" />
@@ -146,14 +144,10 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     Gets the objective function.
         /// </summary>
         public Func<double[], double> Function { get; protected set; }
-
-
         /// <summary>
         ///     Gets the number of input variables for the function.
         /// </summary>
         public int NumberOfVariables { get; protected set; }
-
-
         internal static void CheckGradient(Func<double[], double[]> value, double[] probe)
         {
             var original = (double[])probe.Clone();

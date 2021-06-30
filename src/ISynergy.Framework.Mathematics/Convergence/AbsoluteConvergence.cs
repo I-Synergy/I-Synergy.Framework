@@ -77,8 +77,6 @@ namespace ISynergy.Framework.Mathematics
         ///     Gets the watched value before the iteration.
         /// </summary>
         public double OldValue { get; private set; }
-
-
         /// <summary>
         ///     Gets or sets the maximum change in the watched value
         ///     after an iteration of the algorithm used to detect
@@ -159,8 +157,6 @@ namespace ISynergy.Framework.Mathematics
                 return false;
             }
         }
-
-
         /// <summary>
         ///     Clears this instance.
         /// </summary>

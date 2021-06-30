@@ -56,8 +56,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             : base(numberOfVariables)
         {
         }
-
-
         /// <summary>
         ///     Gets or sets the maximum possible update step,
         ///     also referred as delta min. Default is 50.
@@ -119,8 +117,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             get => convergence.MaxIterations;
             set => convergence.MaxIterations = value;
         }
-
-
         /// <summary>
         ///     Occurs when the current learning progress has changed.
         /// </summary>
@@ -161,8 +157,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return true;
         }
-
-
         private double runEpoch()
         {
             // Compute the true gradient

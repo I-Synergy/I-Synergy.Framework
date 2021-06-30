@@ -159,8 +159,6 @@ namespace ISynergy.Framework.Mathematics
                 w = Incbcf(aa, bb, xx);
             else
                 w = Incbd(aa, bb, xx) / xc;
-
-
             y = aa * System.Math.Log(xx);
             t = bb * System.Math.Log(xc);
             if ((aa + bb) < Gamma.GammaMax && System.Math.Abs(y) < Constants.LogMax && System.Math.Abs(t) < Constants.LogMax)
@@ -393,8 +391,6 @@ namespace ISynergy.Framework.Mathematics
 
             bool nflg;
             bool rflg;
-
-
             if (yy0 <= 0)
                 return (0.0);
             if (yy0 >= 1.0)
@@ -661,7 +657,7 @@ namespace ISynergy.Framework.Mathematics
             double sum = 0;
             double prd = 1;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 sum += x[i];
                 prd *= Gamma.Function(x[i]);

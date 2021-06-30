@@ -6,6 +6,9 @@ using System.Text;
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// DataColumn collection extensions.
+    /// </summary>
     public static class DataColumnCollectionExtensions
     {
         /// <summary>

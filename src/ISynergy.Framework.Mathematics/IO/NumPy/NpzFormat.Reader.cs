@@ -80,8 +80,6 @@ namespace ISynergy.Framework.Mathematics.IO
                 value = dict.Values.First();
             }
         }
-
-
         /// <summary>
         ///     Gets a lazily-instantiated array that can be used to load
         ///     matrices of the specified type from an array of bytes.
@@ -140,8 +138,6 @@ namespace ISynergy.Framework.Mathematics.IO
         {
             return value = Load<T>(stream);
         }
-
-
         /// <summary>
         ///     Gets a lazily-instantiated array that can be used to load
         ///     matrices of the specified type from a file in the disk.
@@ -175,8 +171,6 @@ namespace ISynergy.Framework.Mathematics.IO
         {
             return new(stream);
         }
-
-
         /// <summary>
         ///     Gets a lazily-instantiated array that can be used to load
         ///     multi-dimensional matrices from an array of bytes.
@@ -209,8 +203,6 @@ namespace ISynergy.Framework.Mathematics.IO
         {
             return new NpzDictionary(stream, false);
         }
-
-
         /// <summary>
         ///     Gets a lazily-instantiated array that can be used to load
         ///     jagged matrices from an array of bytes.

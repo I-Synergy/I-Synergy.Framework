@@ -26,7 +26,6 @@ namespace ISynergy.Framework.Mathematics.MachineLearning
         ///   In the following example, we will be using the <see cref="ParallelOptions"/> property to limit 
         ///   the maximum degree of parallelism of a support vector machine learning algorithm to be 1, meaning
         ///   the algorithm will be running in a single thread:</para>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.MachineLearning\VectorMachines\MulticlassSupportVectorLearningTest.cs" region="doc_learn_ldcd" />
         /// </example>
         /// 
         ParallelOptions ParallelOptions { get; set; }

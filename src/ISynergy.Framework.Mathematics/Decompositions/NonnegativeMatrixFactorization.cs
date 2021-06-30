@@ -38,100 +38,109 @@
     /// </remarks>
     public class NonnegativeMatrixFactorization
     {
-        private readonly int m; // dimension of input vector
+        private double[,] X;  // X is m x n (input data, must be positive)
+        private double[,] W;  // W is m x r (weights)
+        private double[,] H;  // H is r x n (transformed data) (transposed)
 
-        private readonly int n; // number of input data vectors
-        private readonly int r; // dimension of output vector (reduced dimension)
-        private readonly double[,] X; // X is m x n (input data, must be positive)
-
+        private int n;   // number of input data vectors
+        private int m;   // dimension of input vector
+        private int r;   // dimension of output vector (reduced dimension)
         /// <summary>
-        ///     Initializes a new instance of the NMF algorithm
+        ///   Gets the nonnegative factor matrix W.
         /// </summary>
-        /// <param name="value">The input data matrix (must be positive).</param>
-        /// <param name="r">The reduced dimension.</param>
-        public NonnegativeMatrixFactorization(double[,] value, int r)
-            : this(value, r, 100)
+        /// 
+        public double[,] LeftNonnegativeFactors
         {
+            get { return W; }
         }
 
         /// <summary>
-        ///     Initializes a new instance of the NMF algorithm
+        ///   Gets the nonnegative factor matrix H.
         /// </summary>
+        /// 
+        public double[,] RightNonnegativeFactors
+        {
+            get { return H; }
+        }
+
+        /// <summary>
+        ///   Initializes a new instance of the NMF algorithm
+        /// </summary>
+        /// 
+        /// <param name="value">The input data matrix (must be positive).</param>
+        /// <param name="r">The reduced dimension.</param>
+        /// 
+        public NonnegativeMatrixFactorization(double[,] value, int r)
+            : this(value, r, 100) { }
+
+        /// <summary>
+        ///   Initializes a new instance of the NMF algorithm
+        /// </summary>
+        /// 
         /// <param name="value">The input data matrix (must be positive).</param>
         /// <param name="r">The reduced dimension.</param>
         /// <param name="maxiter">The number of iterations to perform.</param>
+        /// 
         public NonnegativeMatrixFactorization(double[,] value, int r, int maxiter)
         {
-            X = value;
-            n = value.GetLength(0);
-            m = value.GetLength(1);
+            this.X = value;
+            this.n = value.GetLength(0);
+            this.m = value.GetLength(1);
             this.r = r;
 
             compute(maxiter);
         }
 
-
         /// <summary>
-        ///     Gets the nonnegative factor matrix W.
+        ///    Performs NMF using the multiplicative method
         /// </summary>
-        public double[,] LeftNonnegativeFactors { get; private set; }
-
-        /// <summary>
-        ///     Gets the nonnegative factor matrix H.
-        /// </summary>
-        public double[,] RightNonnegativeFactors { get; private set; }
-
-        /// <summary>
-        ///     Performs NMF using the multiplicative method
-        /// </summary>
+        /// 
         /// <param name="maxiter">The maximum number of iterations</param>
+        /// 
         /// <remarks>
-        ///     At the end of the computation H contains the projected data
-        ///     and W contains the weights. The multiplicative method is the
-        ///     simplest factorization method.
+        ///   At the end of the computation H contains the projected data
+        ///   and W contains the weights. The multiplicative method is the
+        ///   simplest factorization method.
         /// </remarks>
+        /// 
         private void compute(int maxiter)
         {
             // chose W and H randomly, W with unit norm
-            LeftNonnegativeFactors = Framework.Mathematics.Matrix.Random(m, r);
-            RightNonnegativeFactors = Framework.Mathematics.Matrix.Random(r, n);
+            W = Matrix.Random(m, r);
+            H = Matrix.Random(r, n);
 
             var Z = new double[r, r];
 
             // a small epsilon is added to the
             //  denominator to avoid overflow.
-            var eps = 10e-9;
-
-
+            double eps = 10e-9;
             for (var t = 0; t < maxiter; t++)
             {
                 var newW = new double[m, r];
                 var newH = new double[r, n];
-
-
                 // Update H using the multiplicative
                 // H = H .* (W'*A) ./ (W'*W*H + eps) 
                 for (var i = 0; i < r; i++)
                 {
                     for (var j = i; j < r; j++)
                     {
-                        var s = 0.0;
+                        double s = 0.0;
                         for (var l = 0; l < m; l++)
-                            s += LeftNonnegativeFactors[l, i] * LeftNonnegativeFactors[l, j];
+                            s += W[l, i] * W[l, j];
                         Z[i, j] = Z[j, i] = s;
                     }
 
                     for (var j = 0; j < n; j++)
                     {
-                        var d = 0.0;
+                        double d = 0.0;
                         for (var l = 0; l < r; l++)
-                            d += Z[i, l] * RightNonnegativeFactors[l, j];
+                            d += Z[i, l] * H[l, j];
 
-                        var s = 0.0;
+                        double s = 0.0;
                         for (var l = 0; l < m; l++)
-                            s += LeftNonnegativeFactors[l, i] * X[j, l];
+                            s += W[l, i] * X[j, l];
 
-                        newH[i, j] = RightNonnegativeFactors[i, j] * s / (d + eps);
+                        newH[i, j] = (H[i, j] * s) / (d + eps);
                     }
                 }
 
@@ -141,7 +150,7 @@
                 {
                     for (var i = j; i < r; i++)
                     {
-                        var s = 0.0;
+                        double s = 0.0;
                         for (var l = 0; l < n; l++)
                             s += newH[i, l] * newH[j, l];
                         Z[i, j] = Z[j, i] = s;
@@ -149,20 +158,20 @@
 
                     for (var i = 0; i < m; i++)
                     {
-                        var d = 0.0;
+                        double d = 0.0;
                         for (var l = 0; l < r; l++)
-                            d += LeftNonnegativeFactors[i, l] * Z[j, l];
+                            d += W[i, l] * Z[j, l];
 
-                        var s = 0.0;
+                        double s = 0.0;
                         for (var l = 0; l < n; l++)
                             s += X[l, i] * newH[j, l];
 
-                        newW[i, j] = LeftNonnegativeFactors[i, j] * s / (d + eps);
+                        newW[i, j] = W[i, j] * s / (d + eps);
                     }
                 }
 
-                LeftNonnegativeFactors = newW;
-                RightNonnegativeFactors = newH;
+                W = newW;
+                H = newH;
             }
         }
     }

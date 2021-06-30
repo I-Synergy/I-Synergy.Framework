@@ -15,23 +15,16 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///         method for solving least squares problems, this class is intended to be used as
     ///         a strategy for NonlinearLestSquares, as shown in the example below:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\NonlinearLeastSquaresTest.cs"
-    ///         region="doc_learn_lm" lang="cs" />
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics.VB\Models\Regression\NonlinearLeastSquaresTest.vb"
-    ///         region="doc_learn_lm" lang="vb" />
     ///     <para>
     ///         However, as mentioned above it is also possible to use <see cref="LevenbergMarquardt" />
     ///         as a standalone class, as shown in the example below:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\LevenbergMarquardtTest.cs" region="doc_minimize" />
     /// </example>
     /// <seealso cref="GaussNewton" />
     /// <seealso cref="FiniteDifferences" />
     public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod, IConvergenceLearning
     {
         private const double lambdaMax = 1e25;
-
-
         private JaggedCholeskyDecomposition decomposition;
         private double[] deltas;
 
@@ -41,16 +34,12 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
         // Levenberg-Marquardt variables
         private double[][] jacobian;
-
-
         // Levenberg damping factor
         private readonly int outputCount = 1;
 
         // The amount the damping factor is adjusted
         // when searching the minimum error surface
         private double[] weights;
-
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="LevenbergMarquardt" /> class.
         /// </summary>
@@ -67,8 +56,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         {
             NumberOfParameters = parameters;
         }
-
-
         /// <summary>
         ///     Levenberg's damping factor, also known as lambda.
         /// </summary>
@@ -89,8 +76,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     <para>Default value is <b>10</b>.</para>
         /// </remarks>
         public double Adjustment { get; set; } = 10.0;
-
-
         /// <summary>
         ///     Gets or sets the number of blocks to divide the
         ///     Jacobian matrix in the Hessian calculation to
@@ -128,14 +113,10 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     </para>
         /// </remarks>
         public double[][] Hessian { get; private set; }
-
-
         /// <summary>
         ///     Gets standard error for each parameter in the solution.
         /// </summary>
         public double[] StandardErrors => decomposition.InverseDiagonal().Sqrt();
-
-
         /// <summary>
         ///     Attempts to find the best values for the parameter vector
         ///     minimizing the discrepancy between the generated outputs
@@ -176,8 +157,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             {
                 Convergence.NewValue = iterate(inputs, outputs, blockSize, finalBlock, jacobianSize);
             } while (!Convergence.HasConverged);
-
-
             return Value = Convergence.NewValue;
         }
 
@@ -226,8 +205,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 if (double.IsNaN(sumOfSquaredErrors))
                     throw new ArithmeticException("Error calculation has produced a non-finite number."
                                                   + " Please make sure that there are no constant columns in the input data.");
-
-
                 // Compute error gradient using Jacobian
                 for (var i = 0; i < jacobian.Length; i++)
                 {
@@ -236,8 +213,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         sum += jacobian[i][j] * errors[j];
                     gradient[i] += sum;
                 }
-
-
                 // Compute Quasi-Hessian Matrix approximation
                 //  using the outer product Jacobian (H ~ J'J)
                 //
@@ -263,8 +238,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     }
                 });
             }
-
-
             // Store the Hessian's diagonal for future computations. The
             // diagonal will be destroyed in the decomposition, so it can
             // still be updated on every iteration by restoring this copy.
@@ -275,13 +248,9 @@ namespace ISynergy.Framework.Mathematics.Optimization
             // Create the initial weights vector
             for (var i = 0; i < Solution.Length; i++)
                 weights[i] = Solution[i];
-
-
             // Define the objective function:
             var objective = sumOfSquaredErrors;
             var current = objective + 1.0;
-
-
             // Begin of the main Levenberg-Marquardt method
             LearningRate /= Adjustment;
 
@@ -297,30 +266,20 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 // Update diagonal (Levenberg-Marquardt)
                 for (var i = 0; i < diagonal.Length; i++)
                     Hessian[i][i] = diagonal[i] * (1 + LearningRate);
-
-
                 // Decompose to solve the linear system. The Cholesky decomposition
                 // is done in place, occupying the Hessian's lower-triangular part.
                 decomposition = new JaggedCholeskyDecomposition(Hessian, true, true);
-
-
                 // Check if the decomposition exists
                 if (decomposition.IsUndefined)
                     // The Hessian is singular. Continue to the next
                     // iteration until the diagonal update transforms
                     // it back to non-singular.
                     continue;
-
-
                 // Solve using Cholesky decomposition
                 deltas = decomposition.Solve(gradient);
-
-
                 // Update weights using the calculated deltas
                 for (var i = 0; i < Solution.Length; i++)
                     Solution[i] = weights[i] + deltas[i];
-
-
                 // Calculate the new error
                 sumOfSquaredErrors = ComputeError(inputs, outputs);
 
@@ -337,8 +296,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return sumOfSquaredErrors;
         }
-
-
         private double computeErrors(double[][] input, double[] output, int[] block)
         {
             var sumOfSquaredErrors = 0.0;

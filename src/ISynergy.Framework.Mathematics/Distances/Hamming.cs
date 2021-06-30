@@ -27,7 +27,7 @@
         public double Distance(byte[] x, byte[] y)
         {
             int sum = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 sum += lookup[(byte)(x[i] ^ y[i])];
             return sum;
         }
@@ -49,7 +49,7 @@
         public double Distance(string x, string y)
         {
             int sum = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 sum += lookup[(byte)(x[i] ^ y[i])];
             return sum;
         }
@@ -79,7 +79,7 @@
                     int n = x.Length * sizeof(double);
                     int sum = 0;
 
-                    for (int i = 0; i < n; i++)
+                    for (var i = 0; i < n; i++)
                     {
                         byte xx = (byte)px[i];
                         byte yy = (byte)py[i];
@@ -130,8 +130,6 @@
 
             return sum;
         }
-
-
         private readonly static byte[] lookup =
         {
             0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
@@ -151,10 +149,6 @@
             3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
             4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8,
         };
-
-
-
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>

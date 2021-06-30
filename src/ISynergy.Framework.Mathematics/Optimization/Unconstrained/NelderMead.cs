@@ -125,9 +125,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///         </list>
     ///     </para>
     /// </remarks>
-    /// <example>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\NelderMeadTest.cs" region="doc_min" />
-    /// </example>
     public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMeadStatus>
     {
         // heuristic "strategy" constants:
@@ -139,14 +136,10 @@ namespace ISynergy.Framework.Mathematics.Optimization
         private double[] c; // centroid * n
 
         // bounds
-
-
         private double[][] pts; // simplex points
 
         private double[] val; // vertex values
         private double[] xcur; // current point 
-
-
         /// <summary>
         ///     Creates a new <see cref="NelderMead" /> non-linear optimization algorithm.
         /// </summary>
@@ -156,8 +149,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         {
             init(numberOfVariables);
         }
-
-
         /// <summary>
         ///     Creates a new <see cref="NelderMead" /> non-linear optimization algorithm.
         /// </summary>
@@ -304,8 +295,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             if (Solution == null || numberOfVariables > Solution.Length)
                 base.OnNumberOfVariablesChanged(numberOfVariables);
         }
-
-
         /// <summary>
         ///     Finds the minimum value of a function, using the function output at
         ///     the current value, if already known. This overload can be used when
@@ -348,8 +337,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                    Status == NelderMeadStatus.FunctionToleranceReached ||
                    Status == NelderMeadStatus.SolutionToleranceReached;
         }
-
-
         private NelderMeadStatus minimize()
         {
             /*
@@ -370,8 +357,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
              On output, *fdiff will contain the difference between the high
              and low function values of the last simplex.                   */
-
-
             var x = Solution;
             var n = NumberOfVariables;
 
@@ -594,8 +579,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 t.Resort(high);
             }
         }
-
-
         /// <summary>
         ///     Performs the reflection <c>xnew = c + scale * (c - xold)</c>,
         ///     returning 0 if <c>xnew == c</c> or <c>xnew == xold</c> (coincident
@@ -633,8 +616,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return !(equalc || equalold);
         }
-
-
         internal NelderMeadStatus checkeval(double[] xc, double fc)
         {
             Convergence.Evaluations++;
@@ -659,8 +640,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return NelderMeadStatus.Success;
         }
-
-
         /// <summary>
         ///     Determines whether two numbers are numerically
         ///     close (within current floating-point precision).
@@ -669,8 +648,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         {
             return Math.Abs(a - b) <= 1e-13 * (Math.Abs(a) + Math.Abs(b));
         }
-
-
         internal static bool nlopt_stop_ftol(GeneralConvergence stop, double f, double oldf)
         {
             var ftol_rel = stop.RelativeFunctionTolerance;
@@ -709,8 +686,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             var start = stop.StartTime;
             return maxtime > TimeSpan.Zero && DateTime.Now - start >= maxtime;
         }
-
-
         internal static bool relstop(double old, double n, double reltol, double abstol)
         {
             if (double.IsInfinity(old))

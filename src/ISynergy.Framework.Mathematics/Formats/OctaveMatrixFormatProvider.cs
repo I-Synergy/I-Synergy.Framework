@@ -109,8 +109,6 @@
         {
             get { return invariantCulture; }
         }
-
-
         private static readonly OctaveMatrixFormatProvider invariantCulture =
             new OctaveMatrixFormatProvider(CultureInfo.InvariantCulture);
 

@@ -19,8 +19,6 @@
         {
             return Random(size, size, 0.0, 1.0);
         }
-
-
         /// <summary>
         ///   Creates a matrix with uniformly distributed random data.
         /// </summary>
@@ -32,8 +30,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (int)random.Next((int)min, (int)max);
             return result;
         }
@@ -51,14 +49,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (int)random.Next((int)min, (int)max);
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (int)random.Next((int)min, (int)max);
             }
             return result;
@@ -75,8 +73,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (short)random.Next((int)min, (int)max);
             return result;
         }
@@ -94,14 +92,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (short)random.Next((int)min, (int)max);
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (short)random.Next((int)min, (int)max);
             }
             return result;
@@ -118,8 +116,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (byte)random.Next((int)min, (int)max);
             return result;
         }
@@ -137,14 +135,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (byte)random.Next((int)min, (int)max);
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (byte)random.Next((int)min, (int)max);
             }
             return result;
@@ -161,8 +159,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (sbyte)random.Next((int)min, (int)max);
             return result;
         }
@@ -180,14 +178,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (sbyte)random.Next((int)min, (int)max);
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (sbyte)random.Next((int)min, (int)max);
             }
             return result;
@@ -204,8 +202,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (long)random.Next((int)min, (int)max);
             return result;
         }
@@ -223,14 +221,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (long)random.Next((int)min, (int)max);
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (long)random.Next((int)min, (int)max);
             }
             return result;
@@ -247,8 +245,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (ulong)random.Next((int)min, (int)max);
             return result;
         }
@@ -266,14 +264,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (ulong)random.Next((int)min, (int)max);
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (ulong)random.Next((int)min, (int)max);
             }
             return result;
@@ -290,8 +288,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (ushort)random.Next((int)min, (int)max);
             return result;
         }
@@ -309,14 +307,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (ushort)random.Next((int)min, (int)max);
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (ushort)random.Next((int)min, (int)max);
             }
             return result;
@@ -332,8 +330,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (float)random.NextDouble() * (max - min) + min;
             return result;
         }
@@ -351,14 +349,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (float)random.NextDouble() * (max - min) + min;
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (float)random.NextDouble() * (max - min) + min;
             }
             return result;
@@ -375,8 +373,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (double)random.NextDouble() * (max - min) + min;
             return result;
         }
@@ -394,14 +392,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (double)random.NextDouble() * (max - min) + min;
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (double)random.NextDouble() * (max - min) + min;
             }
             return result;
@@ -418,8 +416,8 @@
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
+            for (var i = 0; i < rows; i++)
+                for (var j = 0; j < columns; j++)
                     result[i][j] = (decimal)random.NextDouble() * (max - min) + min;
             return result;
         }
@@ -437,14 +435,14 @@
 
             if (symmetric)
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = result[j][i] = (decimal)random.NextDouble() * (max - min) + min;
             }
             else
             {
-                for (int i = 0; i < size; i++)
-                    for (int j = i; j < size; j++)
+                for (var i = 0; i < size; i++)
+                    for (var j = i; j < size; j++)
                         result[i][j] = (decimal)random.NextDouble() * (max - min) + min;
             }
             return result;

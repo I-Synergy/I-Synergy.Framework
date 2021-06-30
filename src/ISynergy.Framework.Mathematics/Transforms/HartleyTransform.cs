@@ -58,8 +58,6 @@ namespace ISynergy.Framework.Mathematics
             for (var i = 0; i < result.Length; i++)
                 data[i] = result[i];
         }
-
-
         /// <summary>
         ///     Forward Hartley Transform.
         /// </summary>
@@ -85,8 +83,6 @@ namespace ISynergy.Framework.Mathematics
 
             Array.Copy(result, data, result.Length);
         }
-
-
         private static double cas(double theta)
         {
             // Basis function. The cas can be computed in two ways:

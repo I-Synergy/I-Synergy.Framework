@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Validation;
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ISynergy.Framework.Core.Collections
 {
@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Core.Collections
         : Comparer<KeyValuePair<TKey, TValue>>, IComparer<TKey>
     {
 
-        private readonly IComparer<TKey> keyComparer;
+        private readonly IComparer<TKey> _keyComparer;
 
 
         /// <summary>
@@ -27,10 +27,9 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public KeyValuePairComparer(IComparer<TKey> keyComparer)
         {
-            if (keyComparer == null)
-                throw new ArgumentNullException("keyComparer");
+            Argument.IsNotNull(nameof(keyComparer), keyComparer);
 
-            this.keyComparer = keyComparer;
+            _keyComparer = keyComparer;
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public KeyValuePairComparer()
         {
-            this.keyComparer = Comparer<TKey>.Default;
+            _keyComparer = Comparer<TKey>.Default;
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public override int Compare(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
         {
-            return keyComparer.Compare(x.Key, y.Key);
+            return _keyComparer.Compare(x.Key, y.Key);
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public int Compare(TKey x, TKey y)
         {
-            return keyComparer.Compare(x, y);
+            return _keyComparer.Compare(x, y);
         }
 
         /// <summary>

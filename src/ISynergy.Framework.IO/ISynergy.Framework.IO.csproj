@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Core.IO</PackageId>
+		<Description>I-Synergy IO Framework for .Net Standard 2.0 and .Net 5.0</Description>
+		<PackageTags>I-Synergy, Framework, IO</PackageTags>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="FileTypeDefinitions.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="FileTypeDefinitions.json">
+			<LogicalName>FileTypeDefinitions.json</LogicalName> 
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="FileSystemWatcherEx.cs">
+			<SubType>Component</SubType>
+		</Compile>
+	</ItemGroup>
+
+</Project>

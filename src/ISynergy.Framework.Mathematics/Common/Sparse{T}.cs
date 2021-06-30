@@ -93,7 +93,7 @@ namespace ISynergy.Framework.Mathematics
         public T[] ToDense(int length)
         {
             T[] result = new T[length];
-            for (int i = 0; i < Indices.Length; i++)
+            for (var i = 0; i < Indices.Length; i++)
                 result[Indices[i]] = Values[i];
             return result;
         }
@@ -106,7 +106,7 @@ namespace ISynergy.Framework.Mathematics
         public T[] ToSparse()
         {
             T[] result = new T[Indices.Length * 2];
-            for (int i = 0; i < Indices.Length; i++)
+            for (var i = 0; i < Indices.Length; i++)
             {
                 result[2 * i + 0] = (T)System.Convert.ChangeType(Indices[i], typeof(T));
                 result[2 * i + 1] = Values[i];
@@ -114,8 +114,6 @@ namespace ISynergy.Framework.Mathematics
 
             return result;
         }
-
-
         /// <summary>
         ///   Gets the the value stored at position <paramref name="i"/>.
         /// </summary>
@@ -193,7 +191,7 @@ namespace ISynergy.Framework.Mathematics
             {
                 T zero = default(T);
 
-                for (int i = Indices.Length - 1; i >= 0; i--)
+                for (var i = Indices.Length - 1; i >= 0; i--)
                 {
                     if (!Values[i].Equals(zero))
                         return Indices[i] + 1;
@@ -202,10 +200,6 @@ namespace ISynergy.Framework.Mathematics
                 return 0;
             }
         }
-
-
-
-
 
         int IList<T>.IndexOf(T item)
         {
@@ -250,7 +244,7 @@ namespace ISynergy.Framework.Mathematics
         /// <param name="arrayIndex">The zero-based index in <paramref name="array" /> at which copying begins.</param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            for (int i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indices.Length; i++)
                 array[arrayIndex + indices[i]] = values[i];
         }
 
@@ -334,7 +328,7 @@ namespace ISynergy.Framework.Mathematics
 
         void ICollection.CopyTo(Array array, int index)
         {
-            for (int i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indices.Length; i++)
                 array.SetValue(values[i], index + indices[i]);
         }
 
@@ -375,7 +369,7 @@ namespace ISynergy.Framework.Mathematics
         public string ToString(string format, IFormatProvider formatProvider)
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < Indices.Length; i++)
+            for (var i = 0; i < Indices.Length; i++)
             {
                 sb.Append(Indices[i] + 1); // Note: LibSVM array format is one-based
                 sb.Append(":");
@@ -394,7 +388,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public bool IsFull()
         {
-            for (int i = 0; i < Indices.Length; i++)
+            for (var i = 0; i < Indices.Length; i++)
             {
                 if (Indices[i] != i)
                     return false;

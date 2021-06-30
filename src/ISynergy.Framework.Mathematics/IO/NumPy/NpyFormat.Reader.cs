@@ -151,8 +151,6 @@ namespace ISynergy.Framework.Mathematics.IO
                 return LoadJagged(stream).To<T>();
             return LoadMatrix(stream).To<T>();
         }
-
-
         /// <summary>
         ///     Loads a multi-dimensional array from an array of bytes.
         /// </summary>
@@ -204,8 +202,6 @@ namespace ISynergy.Framework.Mathematics.IO
                 return LoadJagged(stream);
             }
         }
-
-
         /// <summary>
         ///     Loads a multi-dimensional array from a stream.
         /// </summary>
@@ -267,8 +263,6 @@ namespace ISynergy.Framework.Mathematics.IO
                 return readValueJagged(reader, matrix, bytes, type, shape);
             }
         }
-
-
         private static Array readValueMatrix(BinaryReader reader, Array matrix, int bytes, Type type, int[] shape)
         {
             var total = 1;
@@ -353,8 +347,6 @@ namespace ISynergy.Framework.Mathematics.IO
 
             return matrix;
         }
-
-
         private static bool parseReader(BinaryReader reader, out int bytes, out Type t, out int[] shape)
         {
             bytes = 0;

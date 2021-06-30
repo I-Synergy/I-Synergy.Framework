@@ -55,8 +55,6 @@
         /// </summary>
         /// 
         public double Step { get; private set; }
-
-
         /// <summary>
         ///   Gets or sets a value indicating whether the
         ///   optimization process is about to terminate.

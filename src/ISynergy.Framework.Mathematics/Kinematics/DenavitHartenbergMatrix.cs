@@ -19,8 +19,6 @@
         ///     Gets or sets the matrix regarding Z axis transformations.
         /// </summary>
         public Matrix4x4 Z { get; set; }
-
-
         /// <summary>
         ///     Executes the transform calculations (T = Z*X).
         /// </summary>

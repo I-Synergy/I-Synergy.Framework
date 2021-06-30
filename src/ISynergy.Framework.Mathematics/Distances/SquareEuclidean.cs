@@ -33,7 +33,7 @@
         {
             double sum = 0.0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 double u = x[i] - y[i];
                 sum += u * u;
@@ -99,8 +99,6 @@
             return dx * dx + dy * dy;
         }
 
-
-
         /// <summary>
         ///   Gets a similarity measure between two points.
         /// </summary>
@@ -142,14 +140,6 @@
         {
             return 1.0 / (1.0 + Distance(x, y));
         }
-
-
-
-
-
-
-
-
 
         /// <summary>
         ///   Computes the distance <c>d(x,y)</c> between points
@@ -205,8 +195,6 @@
 
             return sum;
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

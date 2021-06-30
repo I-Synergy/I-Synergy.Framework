@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -22,12 +21,9 @@ namespace ISynergy.Framework.Core.Collections
     ///   then you can do so as shown in the following example. First, make sure your custom
     ///   node class inherits from <see cref="BinaryNode{T}"/> and passes itself as the generic 
     ///   argument of <see cref="BinaryNode{T}"/>:</para>
-    /// <code source="tests\ISynergy.Framework.Core.Tests.Core\BinaryTreeTest.cs" region="doc_ctor_1" />
-    /// 
     /// <para>
     ///   Now, once the tree node has been implemented, we can create a new <see cref="BinaryTree{TNode}"/>
     ///   and explore the tree in different ways as shown below:</para>
-    /// <code source="tests\ISynergy.Framework.Core.Tests.Core\BinaryTreeTest.cs" region="doc_ctor_2" />
     /// </example>
     /// 
     /// <typeparam name="TNode">The class type for the nodes of the tree.</typeparam>

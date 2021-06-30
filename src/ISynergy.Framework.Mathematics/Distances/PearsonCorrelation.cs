@@ -31,7 +31,7 @@
             double q2 = 0;
             double sum = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 p += x[i];
                 q += y[i];
@@ -46,8 +46,6 @@
 
             return (den == 0) ? 0 : num / den;
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

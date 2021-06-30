@@ -23,8 +23,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-
 /*
 This library is a C port of the FORTRAN implementation of Limited-memory
 Broyden-Fletcher-Goldfarb-Shanno (L-BFGS) method written by Jorge Nocedal.
@@ -106,8 +104,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             orthantwise_start = 0,
             orthantwise_end = -1
         };
-
-
         internal static int main(double[] start, Func<double[], double> fn, Func<double[], double[]> gn,
             EventHandler<OptimizationProgressEventArgs> progress, lbfgs_parameter_t param)
         {
@@ -115,8 +111,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             var target = NewMethod(fn, gn);
             var prog = ProgressMethod(progress);
-
-
             /*
                 Start the L-BFGS optimization; this will invoke the callback functions
                 evaluate() and progress() when necessary.
@@ -169,8 +163,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             };
             return target;
         }
-
-
         private static bool fsigndiff(double x, double y)
         {
             return x * (y / Math.Abs(y)) < 0.0;
@@ -303,12 +295,8 @@ namespace ISynergy.Framework.Mathematics.Optimization
             cd.instance = instance;
             cd.proc_evaluate = proc_evaluate;
             cd.proc_progress = proc_progress;
-
-
             if (param.max_step < param.min_step) return Code.LBFGSERR_INVALID_MAXSTEP;
             if (param.ftol < 0.0) return Code.LBFGSERR_INVALID_FTOL;
-
-
             if (param.linesearch == LineSearch.RegularWolfe ||
                 param.linesearch == LineSearch.StrongWolfe)
                 if (param.wolfe <= param.ftol || 1.0 <= param.wolfe)
@@ -621,8 +609,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return ret;
         }
-
-
         private static Code line_search_backtracking(
             int n,
             double[] x,
@@ -710,8 +696,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 stp *= width;
             }
         }
-
-
         private static Code line_search_backtracking_owlqn(
             int n,
             double[] x,
@@ -774,8 +758,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 stp *= width;
             }
         }
-
-
         private static Code line_search_morethuente(
             int n,
             double[] x,
@@ -960,8 +942,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 }
             }
         }
-
-
         /**
          * Find a minimizer of an interpolated cubic function.
          * @param  cm      The minimizer of the interpolated cubic.
@@ -1283,8 +1263,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             t = newt;
             return 0;
         }
-
-
         private static double owlqn_x1norm(
             double[] x,
             int start,
@@ -1532,8 +1510,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
              */
             LBFGSERR_INCREASEGRADIENT
         }
-
-
         private delegate Code line_search_proc(
             int n,
             double[] x,
@@ -1547,8 +1523,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             ref callback_data_t cd,
             ref lbfgs_parameter_t param
         );
-
-
         /**
          * Callback interface to provide objective function and gradient evaluations.
          * 

@@ -97,8 +97,6 @@
         {
             get { return invariantCulture; }
         }
-
-
         private static readonly OctaveArrayFormatProvider invariantCulture =
             new OctaveArrayFormatProvider(CultureInfo.InvariantCulture);
 

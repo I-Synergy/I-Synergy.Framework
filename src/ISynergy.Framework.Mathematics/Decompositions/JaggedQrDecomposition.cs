@@ -378,8 +378,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             return Jagged.Create(count, p, X, true);
         }
-
-
         #region ICloneable Members
 
         private JaggedQrDecomposition()

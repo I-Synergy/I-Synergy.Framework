@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Points;
 using ISynergy.Framework.Core.Ranges;
 using System;
-using Range = ISynergy.Framework.Core.Ranges.Range;
+using Range = ISynergy.Framework.Core.Ranges.NumericRange;
 
 namespace ISynergy.Framework.Mathematics
 {
@@ -47,7 +47,7 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     Gets the displacement angle between two points.
         /// </summary>
-        public static double Angle(IntPoint previous, IntPoint next)
+        public static double Angle(Point previous, Point next)
         {
             double dx = next.X - previous.X;
             double dy = next.Y - previous.Y;
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Mathematics
         ///     Gets the displacement angle between two points, coded
         ///     as an integer varying from 0 to 20.
         /// </summary>
-        public static int Direction(IntPoint previous, IntPoint next)
+        public static int Direction(Point previous, Point next)
         {
             double dx = next.X - previous.X;
             double dy = next.Y - previous.Y;
@@ -116,8 +116,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return NextPowerOf2(x + 1) / 2;
         }
-
-
         /// <summary>
         ///     Hypotenuse calculus without overflow/underflow
         /// </summary>
@@ -223,8 +221,6 @@ namespace ISynergy.Framework.Mathematics
 
             return r < 0 ? r + m : r;
         }
-
-
         /// <summary>
         ///     Returns the hyperbolic arc cosine of the specified value.
         /// </summary>
@@ -269,8 +265,6 @@ namespace ISynergy.Framework.Mathematics
                 throw new ArgumentOutOfRangeException("d");
             return 0.5 * Math.Log((1.0 + d) / (1.0 - d));
         }
-
-
         /// <summary>
         ///     Returns the factorial falling power of the specified value.
         /// </summary>
@@ -306,8 +300,6 @@ namespace ISynergy.Framework.Mathematics
                 return f;
             }
         }
-
-
         /// <summary>
         ///     Interpolates data using a piece-wise linear function.
         /// </summary>
@@ -554,6 +546,48 @@ namespace ISynergy.Framework.Mathematics
             } while (Math.Abs(previous - current) > epsilon);
 
             return current;
+        }
+
+        /// <summary>
+        /// Get decimals behind comma.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int GetDecimalCount(double value) => GetDecimalCount<double>(value);
+
+        /// <summary>
+        /// Get decimals behind comma.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int GetDecimalCount(decimal value) => GetDecimalCount<decimal>(value);
+
+        /// <summary>
+        /// Get decimals behind comma.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static int GetDecimalCount<T>(T value)
+            where T : struct
+        {
+            int i = 0;
+
+            if (value is decimal decNumber)
+            {
+                while (Math.Round(decNumber, i) != decNumber)
+                    i++;
+            }
+            else if (value is double dblNumber)
+            {
+                while (Math.Round(dblNumber, i) != dblNumber)
+                    i++;
+            }
+            else
+            {
+                throw new ArgumentException("Value can only be of type decimal or double");
+            }
+
+            return i;
         }
     }
 }

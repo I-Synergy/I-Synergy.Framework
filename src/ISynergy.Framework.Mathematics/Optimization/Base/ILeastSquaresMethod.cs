@@ -34,16 +34,10 @@ namespace ISynergy.Framework.Mathematics.Optimization
     /// <param name="input">An input vector.</param>
     /// <param name="result">The resulting gradient vector (w.r.t to the parameters).</param>
     public delegate void LeastSquaresGradientFunction(double[] parameters, double[] input, double[] result);
-
-
     /// <summary>
     ///     Common interface for Least Squares algorithms, i.e. algorithms
     ///     that can be used to solve Least Squares optimization problems.
     /// </summary>
-    /// <example>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\GaussNewtonTest.cs" region="doc_minimize" />
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\LevenbergMarquardtTest.cs" region="doc_minimize" />
-    /// </example>
     /// <seealso cref="GaussNewton" />
     /// <seealso cref="LevenbergMarquardt" />
     public interface ILeastSquaresMethod
@@ -95,10 +89,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     The values associated with each
         ///     vector in the <paramref name="inputs" /> data.
         /// </param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\GaussNewtonTest.cs" region="doc_minimize" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\LevenbergMarquardtTest.cs" region="doc_minimize" />
-        /// </example>
         double Minimize(double[][] inputs, double[] outputs);
     }
 }

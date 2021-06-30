@@ -39,8 +39,6 @@ namespace ISynergy.Framework.Mathematics.IO
                 return stream.ToArray();
             }
         }
-
-
         /// <summary>
         ///     Saves the specified arrays to a file in the disk.
         /// </summary>
@@ -69,8 +67,6 @@ namespace ISynergy.Framework.Mathematics.IO
                 Save(array, stream, compression);
             }
         }
-
-
         /// <summary>
         ///     Saves the specified arrays to a file in the disk.
         /// </summary>

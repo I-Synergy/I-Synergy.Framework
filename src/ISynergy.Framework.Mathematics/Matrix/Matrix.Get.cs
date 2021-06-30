@@ -154,14 +154,14 @@ namespace ISynergy.Framework.Mathematics
             if (columnIndexes != null)
             {
                 newCols = columnIndexes.Length;
-                for (int j = 0; j < columnIndexes.Length; j++)
+                for (var j = 0; j < columnIndexes.Length; j++)
                     if ((columnIndexes[j] < 0) || (columnIndexes[j] >= cols))
                         throw new ArgumentException("Argument out of range.");
 
                 destination = new T[newRows, newCols];
 
-                for (int i = startRow; i < endRow; i++)
-                    for (int j = 0; j < columnIndexes.Length; j++)
+                for (var i = startRow; i < endRow; i++)
+                    for (var j = 0; j < columnIndexes.Length; j++)
                         destination[i - startRow, j] = source[i, columnIndexes[j]];
             }
             else
@@ -171,8 +171,8 @@ namespace ISynergy.Framework.Mathematics
 
                 destination = new T[newRows, newCols];
 
-                for (int i = startRow; i < endRow; i++)
-                    for (int j = 0; j < newCols; j++)
+                for (var i = startRow; i < endRow; i++)
+                    for (var j = 0; j < newCols; j++)
                         destination[i - startRow, j] = source[i, j];
             }
 
@@ -216,14 +216,14 @@ namespace ISynergy.Framework.Mathematics
             if (rowIndexes != null)
             {
                 newRows = rowIndexes.Length;
-                for (int j = 0; j < rowIndexes.Length; j++)
+                for (var j = 0; j < rowIndexes.Length; j++)
                     if ((rowIndexes[j] < 0) || (rowIndexes[j] >= rows))
                         throw new ArgumentException("Argument out of range.");
 
                 destination = new T[newRows, newCols];
 
-                for (int i = 0; i < rowIndexes.Length; i++)
-                    for (int j = startColumn; j < endColumn; j++)
+                for (var i = 0; i < rowIndexes.Length; i++)
+                    for (var j = startColumn; j < endColumn; j++)
                         destination[i, j - startColumn] = source[rowIndexes[i], j];
             }
             else
@@ -233,8 +233,8 @@ namespace ISynergy.Framework.Mathematics
 
                 destination = new T[newRows, newCols];
 
-                for (int i = 0; i < newRows; i++)
-                    for (int j = startColumn; j < endColumn; j++)
+                for (var i = 0; i < newRows; i++)
+                    for (var j = startColumn; j < endColumn; j++)
                         destination[i, j - startColumn] = source[i, j];
             }
 
@@ -254,10 +254,6 @@ namespace ISynergy.Framework.Mathematics
                 end = length + end;
             return end;
         }
-
-
-
-
 
         /// <summary>
         ///   Returns a sub matrix extracted from the current matrix.
@@ -303,9 +299,9 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T[][] Set<T>(this T[][] values, Func<T, bool> match, T value)
         {
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
-                for (int j = 0; j < values[i].Length; j++)
+                for (var j = 0; j < values[i].Length; j++)
                 {
                     if (match(values[i][j]))
                         values[i][j] = value;
@@ -378,10 +374,10 @@ namespace ISynergy.Framework.Mathematics
             {
                 destination = new T[cols][];
 
-                for (int j = 0; j < destination.Length; j++)
+                for (var j = 0; j < destination.Length; j++)
                 {
                     destination[j] = new T[indexes.Length];
-                    for (int i = 0; i < indexes.Length; i++)
+                    for (var i = 0; i < indexes.Length; i++)
                         destination[j][i] = source[indexes[i]][j];
                 }
             }
@@ -389,14 +385,12 @@ namespace ISynergy.Framework.Mathematics
             {
                 destination = new T[indexes.Length][];
 
-                for (int i = 0; i < indexes.Length; i++)
+                for (var i = 0; i < indexes.Length; i++)
                     destination[i] = source[indexes[i]];
             }
 
             return destination;
         }
-
-
         /// <summary>
         ///   Returns a sub matrix extracted from the current matrix.
         /// </summary>
@@ -443,7 +437,7 @@ namespace ISynergy.Framework.Mathematics
             if (rowIndexes != null)
             {
                 newRows = rowIndexes.Length;
-                for (int j = 0; j < rowIndexes.Length; j++)
+                for (var j = 0; j < rowIndexes.Length; j++)
                     if ((rowIndexes[j] < 0) || (rowIndexes[j] >= rows))
                         throw new ArgumentException("Argument out of range.");
 
@@ -451,15 +445,15 @@ namespace ISynergy.Framework.Mathematics
 
                 if (canReuseMemory && reuseMemory)
                 {
-                    for (int i = 0; i < rowIndexes.Length; i++)
+                    for (var i = 0; i < rowIndexes.Length; i++)
                         destination[i] = source[rowIndexes[i]];
                 }
                 else
                 {
-                    for (int i = 0; i < rowIndexes.Length; i++)
+                    for (var i = 0; i < rowIndexes.Length; i++)
                     {
                         var row = destination[i] = new T[newCols];
-                        for (int j = startColumn; j < endColumn; j++)
+                        for (var j = startColumn; j < endColumn; j++)
                             row[j - startColumn] = source[rowIndexes[i]][j];
                     }
                 }
@@ -471,10 +465,10 @@ namespace ISynergy.Framework.Mathematics
 
                 destination = new T[newRows][];
 
-                for (int i = 0; i < destination.Length; i++)
+                for (var i = 0; i < destination.Length; i++)
                 {
                     var row = destination[i] = new T[newCols];
-                    for (int j = startColumn; j < endColumn; j++)
+                    for (var j = startColumn; j < endColumn; j++)
                         row[j - startColumn] = source[i][j];
                 }
             }
@@ -515,24 +509,22 @@ namespace ISynergy.Framework.Mathematics
             {
                 throw new ArgumentException("Argument out of range");
             }
-
-
             T[][] destination;
 
             if (columnIndexes != null)
             {
                 newCols = columnIndexes.Length;
-                for (int j = 0; j < columnIndexes.Length; j++)
+                for (var j = 0; j < columnIndexes.Length; j++)
                     if ((columnIndexes[j] < 0) || (columnIndexes[j] >= cols))
                         throw new ArgumentException("Argument out of range.");
 
                 destination = new T[newRows][];
-                for (int i = 0; i < destination.Length; i++)
+                for (var i = 0; i < destination.Length; i++)
                     destination[i] = new T[newCols];
 
-                for (int i = startRow; i < endRow; i++)
+                for (var i = startRow; i < endRow; i++)
                 {
-                    for (int j = 0; j < columnIndexes.Length; j++)
+                    for (var j = 0; j < columnIndexes.Length; j++)
                         destination[i - startRow][j] = source[i][columnIndexes[j]];
                 }
             }
@@ -542,20 +534,16 @@ namespace ISynergy.Framework.Mathematics
                     return source;
 
                 destination = new T[newRows][];
-                for (int i = 0; i < destination.Length; i++)
+                for (var i = 0; i < destination.Length; i++)
                     destination[i] = new T[newCols];
 
-                for (int i = startRow; i < endRow; i++)
-                    for (int j = 0; j < newCols; j++)
+                for (var i = startRow; i < endRow; i++)
+                    for (var j = 0; j < newCols; j++)
                         destination[i - startRow][j] = source[i][j];
             }
 
             return destination;
         }
-
-
-
-
         /// <summary>
         ///   Returns a subvector extracted from the current vector.
         /// </summary>
@@ -577,7 +565,7 @@ namespace ISynergy.Framework.Mathematics
                 throw new DimensionMismatchException("Source and indexes arrays must have the same dimension for in-place operations.");
 
             var destination = new T[indexes.Length];
-            for (int i = 0; i < indexes.Length; i++)
+            for (var i = 0; i < indexes.Length; i++)
             {
                 int j = indexes[i];
                 if (j >= 0)
@@ -588,7 +576,7 @@ namespace ISynergy.Framework.Mathematics
 
             if (inPlace)
             {
-                for (int i = 0; i < destination.Length; i++)
+                for (var i = 0; i < destination.Length; i++)
                     source[i] = destination[i];
             }
 
@@ -636,7 +624,7 @@ namespace ISynergy.Framework.Mathematics
             endRow = end(endRow, source.Length);
 
             var destination = new T[endRow - startRow];
-            for (int i = startRow; i < endRow; i++)
+            for (var i = startRow; i < endRow; i++)
                 destination[i - startRow] = source[i];
             return destination;
         }
@@ -674,15 +662,11 @@ namespace ISynergy.Framework.Mathematics
                 throw new ArgumentNullException("indexes");
 
             var destination = new List<T>();
-            for (int i = 0; i < indexes.Length; i++)
+            for (var i = 0; i < indexes.Length; i++)
                 destination.Add(source[indexes[i]]);
 
             return destination;
         }
-
-
-
-
         /// <summary>
         ///   Extracts a selected area from a matrix.
         /// </summary>
@@ -691,7 +675,7 @@ namespace ISynergy.Framework.Mathematics
         ///   Routine adapted from Lutz Roeder's Mapack for .NET, September 2000.
         /// </remarks>
         /// 
-        private static T[,] get<T>(this T[,] source, T[,] destination,
+        internal static T[,] get<T>(this T[,] source, T[,] destination,
             int startRow, int endRow, int startColumn, int endColumn)
         {
             if (source == null)
@@ -717,8 +701,8 @@ namespace ISynergy.Framework.Mathematics
             if (destination == null)
                 destination = new T[endRow - startRow, endColumn - startColumn];
 
-            for (int i = startRow; i < endRow; i++)
-                for (int j = startColumn; j < endColumn; j++)
+            for (var i = startRow; i < endRow; i++)
+                for (var j = startColumn; j < endColumn; j++)
                     destination[i - startRow, j - startColumn] = source[i, j];
 
             return destination;
@@ -751,19 +735,17 @@ namespace ISynergy.Framework.Mathematics
             if (rowIndexes != null)
             {
                 newRows = rowIndexes.Length;
-                for (int i = 0; i < rowIndexes.Length; i++)
+                for (var i = 0; i < rowIndexes.Length; i++)
                     if ((rowIndexes[i] < 0) || (rowIndexes[i] >= rows))
                         throw new ArgumentException("Argument out of range.");
             }
             if (columnIndexes != null)
             {
                 newCols = columnIndexes.Length;
-                for (int i = 0; i < columnIndexes.Length; i++)
+                for (var i = 0; i < columnIndexes.Length; i++)
                     if ((columnIndexes[i] < 0) || (columnIndexes[i] >= cols))
                         throw new ArgumentException("Argument out of range.");
             }
-
-
             if (destination != null)
             {
                 if (destination.GetLength(0) < newRows || destination.GetLength(1) < newCols)
@@ -777,20 +759,20 @@ namespace ISynergy.Framework.Mathematics
 
             if (columnIndexes == null)
             {
-                for (int i = 0; i < rowIndexes.Length; i++)
-                    for (int j = 0; j < cols; j++)
+                for (var i = 0; i < rowIndexes.Length; i++)
+                    for (var j = 0; j < cols; j++)
                         destination[i, j] = source[rowIndexes[i], j];
             }
             else if (rowIndexes == null)
             {
-                for (int i = 0; i < rows; i++)
-                    for (int j = 0; j < columnIndexes.Length; j++)
+                for (var i = 0; i < rows; i++)
+                    for (var j = 0; j < columnIndexes.Length; j++)
                         destination[i, j] = source[i, columnIndexes[j]];
             }
             else
             {
-                for (int i = 0; i < rowIndexes.Length; i++)
-                    for (int j = 0; j < columnIndexes.Length; j++)
+                for (var i = 0; i < rowIndexes.Length; i++)
+                    for (var j = 0; j < columnIndexes.Length; j++)
                         destination[i, j] = source[rowIndexes[i], columnIndexes[j]];
             }
 
@@ -828,7 +810,7 @@ namespace ISynergy.Framework.Mathematics
             if (rowIndexes != null)
             {
                 newRows = rowIndexes.Length;
-                for (int i = 0; i < rowIndexes.Length; i++)
+                for (var i = 0; i < rowIndexes.Length; i++)
                     if ((rowIndexes[i] < 0) || (rowIndexes[i] >= rows))
                         throw new ArgumentException("Argument out of range.");
             }
@@ -836,12 +818,10 @@ namespace ISynergy.Framework.Mathematics
             if (columnIndexes != null)
             {
                 newCols = columnIndexes.Length;
-                for (int i = 0; i < columnIndexes.Length; i++)
+                for (var i = 0; i < columnIndexes.Length; i++)
                     if ((columnIndexes[i] < 0) || (columnIndexes[i] >= cols))
                         throw new ArgumentException("Argument out of range.");
             }
-
-
             if (destination != null)
             {
                 if (destination.Length < newRows)
@@ -853,35 +833,33 @@ namespace ISynergy.Framework.Mathematics
                 destination = new T[newRows][];
                 if (columnIndexes != null && !reuseMemory)
                 {
-                    for (int i = 0; i < destination.Length; i++)
+                    for (var i = 0; i < destination.Length; i++)
                         destination[i] = new T[newCols];
                 }
             }
-
-
             if (columnIndexes == null)
             {
                 if (reuseMemory)
                 {
-                    for (int i = 0; i < rowIndexes.Length; i++)
+                    for (var i = 0; i < rowIndexes.Length; i++)
                         destination[i] = source[rowIndexes[i]];
                 }
                 else
                 {
-                    for (int i = 0; i < rowIndexes.Length; i++)
+                    for (var i = 0; i < rowIndexes.Length; i++)
                         destination[i] = (T[])source[rowIndexes[i]].Clone();
                 }
             }
             else if (rowIndexes == null)
             {
-                for (int i = 0; i < source.Length; i++)
-                    for (int j = 0; j < columnIndexes.Length; j++)
+                for (var i = 0; i < source.Length; i++)
+                    for (var j = 0; j < columnIndexes.Length; j++)
                         destination[i][j] = source[i][columnIndexes[j]];
             }
             else
             {
-                for (int i = 0; i < rowIndexes.Length; i++)
-                    for (int j = 0; j < columnIndexes.Length; j++)
+                for (var i = 0; i < rowIndexes.Length; i++)
+                    for (var j = 0; j < columnIndexes.Length; j++)
                         destination[i][j] = source[rowIndexes[i]][columnIndexes[j]];
             }
 
@@ -926,20 +904,20 @@ namespace ISynergy.Framework.Mathematics
 
                 if (!canAvoidAllocation || !reuseMemory)
                 {
-                    for (int i = 0; i < destination.Length; i++)
+                    for (var i = 0; i < destination.Length; i++)
                         destination[i] = new T[newCols];
                 }
             }
 
             if (reuseMemory && canAvoidAllocation)
             {
-                for (int i = startRow; i < endRow; i++)
+                for (var i = startRow; i < endRow; i++)
                     destination[i - startRow] = source[i];
             }
             else
             {
-                for (int i = startRow; i < endRow; i++)
-                    for (int j = startColumn; j < endColumn; j++)
+                for (var i = startRow; i < endRow; i++)
+                    for (var j = startColumn; j < endColumn; j++)
                         destination[i - startRow][j - startColumn] = source[i][j];
             }
 
@@ -974,8 +952,8 @@ namespace ISynergy.Framework.Mathematics
                 throw new ArgumentException("Argument out of range.");
             }
 
-            for (int i = startRow; i < endRow; i++)
-                for (int j = startColumn; j < endColumn; j++)
+            for (var i = startRow; i < endRow; i++)
+                for (var j = startColumn; j < endColumn; j++)
                     destination[i - startRow][j - startColumn] = source[i][j];
 
             return destination;

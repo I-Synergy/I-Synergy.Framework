@@ -208,8 +208,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return Zeros<double>(rows, columns, depth);
         }
-
-
         /// <summary>
         ///     Creates a zero-valued matrix.
         /// </summary>
@@ -296,8 +294,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return (T[,])values.Clone();
         }
-
-
         /// <summary>
         ///     Creates a matrix of one-hot vectors, where all values at each row are
         ///     zero except for the indicated <paramref name="indices" />, which is set to one.
@@ -393,8 +389,6 @@ namespace ISynergy.Framework.Mathematics
                 result[i, indices[i]] = 1;
             return result;
         }
-
-
         /// <summary>
         ///     Creates a matrix of k-hot vectors, where all values at each row are
         ///     zero except for the indicated <paramref name="indices" />, which are set to one.
@@ -542,8 +536,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Diagonal matrices
 
         /// <summary>
@@ -695,8 +687,6 @@ namespace ISynergy.Framework.Mathematics
                     "The square size must be greater or equal to 3.");
 
             var matrix = new double[size, size];
-
-
             // First algorithm: Odd order
             if (size % 2 == 1)
             {
@@ -828,8 +818,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Vector creation
 
         /// <summary>
@@ -927,8 +915,10 @@ namespace ISynergy.Framework.Mathematics
             }
 
             var vector = new int[array.Rank];
+            
             for (var i = 0; i < vector.Length; i++)
                 vector[i] = array.GetUpperBound(i) + 1;
+
             return vector;
         }
 
@@ -963,8 +953,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return array.GetType().GetArrayRank(deep);
         }
-
-
         /// <summary>
         ///     Trims the specified array, removing zero and empty entries from arrays.
         /// </summary>
@@ -1035,13 +1023,13 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     Creates a bi-dimensional mesh matrix.
         /// </summary>
-        public static int[][] Mesh(
+        public static double[][] Mesh(
             int rowMin, int rowMax,
             int colMin, int colMax)
         {
             var x = Vector.Interval(rowMin, rowMax);
             var y = Vector.Interval(colMin, colMax);
-            int[][] mesh = Matrix.Cartesian(x, y);
+            double[][] mesh = Matrix.Cartesian(x, y);
             return mesh;
         }
 
@@ -1066,7 +1054,6 @@ namespace ISynergy.Framework.Mathematics
         ///     <para>
         ///         The resulting image is shown below.
         ///     </para>
-        ///     <img src="..\images\grid-fixed-steps.png" />
         /// </example>
         public static double[][] Mesh(
             double rowMin, double rowMax, int rowSteps,
@@ -1099,14 +1086,27 @@ namespace ISynergy.Framework.Mathematics
         ///     <para>
         ///         The resulting image is shown below.
         ///     </para>
-        ///     <img src="..\images\grid-fixed-steps.png" />
         /// </example>
         public static double[][] Mesh(
-            DoubleRange rowRange, int rowSteps,
-            DoubleRange colRange, int colSteps)
+            NumericRange rowRange, int rowSteps,
+            NumericRange colRange, int colSteps)
         {
             double[] x = Vector.Interval(rowRange, rowSteps);
             double[] y = Vector.Interval(colRange, colSteps);
+            double[][] mesh = Matrix.Cartesian(x, y);
+            return mesh;
+        }
+
+        /// <summary>
+        ///   Obsolete. Please specify the number of steps instead of the step size for the rows and columns.
+        /// </summary>
+        /// 
+        public static double[][] Mesh(
+            double rowMin, double rowMax, double rowStepSize,
+            double colMin, double colMax, double colStepSize)
+        {
+            double[] x = Vector.Interval(rowMin, rowMax, rowStepSize);
+            double[] y = Vector.Interval(colMin, colMax, colStepSize);
             double[][] mesh = Matrix.Cartesian(x, y);
             return mesh;
         }
@@ -1194,8 +1194,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Combine
 
         /// <summary>
@@ -1222,21 +1220,6 @@ namespace ISynergy.Framework.Mathematics
                 r[i] = vector[i];
 
             r[vector.Length] = element;
-
-            return r;
-        }
-
-        /// <summary>
-        ///     Combines a vector and a element horizontally.
-        /// </summary>
-        public static T[] Concatenate<T>(this T element, T[] vector)
-        {
-            var r = new T[vector.Length + 1];
-
-            r[0] = element;
-
-            for (var i = 0; i < vector.Length; i++)
-                r[i + 1] = vector[i];
 
             return r;
         }
@@ -1281,8 +1264,6 @@ namespace ISynergy.Framework.Mathematics
             }
 
             var r = new T[rows, cols];
-
-
             var c = 0;
             for (var k = 0; k < matrices.Length; k++)
             {
@@ -1317,8 +1298,6 @@ namespace ISynergy.Framework.Mathematics
             var r = new T[rows][];
             for (var i = 0; i < r.Length; i++)
                 r[i] = new T[cols];
-
-
             var c = 0;
             for (var k = 0; k < matrices.Length; k++)
             {
@@ -1576,5 +1555,20 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
+
+        /// <summary>
+        ///   Obsolete. Please specify the number of steps instead of the step size for the rows and columns.
+        /// </summary>
+        [Obsolete("Please specify the number of steps instead of the step size for the rows and columns.")]
+
+        public static double[][] Mesh(
+            NumericRange rowRange, NumericRange colRange,
+            double rowStepSize, double colStepSize)
+        {
+            double[] x = Vector.Interval(rowRange, rowStepSize);
+            double[] y = Vector.Interval(colRange, colStepSize);
+            double[][] mesh = Matrix.Cartesian(x, y);
+            return mesh;
+        }
     }
 }

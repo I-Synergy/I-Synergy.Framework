@@ -31,17 +31,13 @@
     ///   The first example shows how to read a simple .MAT file containing a single matrix of 
     ///   integer numbers. It also shows how to discover the names of the variables stored in
     ///   the file and how to discover their types:</para>
-    /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\IO\MatReaderTest.cs" region="doc_matrix_int32" />
     /// 
     /// <para>
     ///   The second example shows how to read a simple .MAT file containing a single matrix of 
     ///   8-bpp integer values (signed bytes):</para>
-    /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\IO\MatReaderTest.cs" region="doc_matrix_byte" />
-    /// 
     /// <para>
     ///   The third example shows how to read a more complex .MAT file containing a structure. Structures
     ///   can hold complex types such as collections of matrices, lists, and strings in a nested hierarchy:</para>
-    /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\IO\MatReaderTest.cs" region="doc_structure" />
     /// 
     /// <para>
     ///   The <see cref="MatReader"/> class can also read the more complex cell array structures. However, 
@@ -222,8 +218,6 @@
             Description = new String(title, 0, terminator).Trim();
             Version = version;
             BigEndian = endian[0] == 'M';
-
-
             if (BitConverter.IsLittleEndian && BigEndian)
                 throw new NotSupportedException("The file bit ordering differs from the system architecture.");
 
@@ -270,8 +264,6 @@
         {
             return Fields[key].Value;
         }
-
-
         internal static Type Translate(MatDataType type)
         {
             switch (type)
@@ -300,8 +292,6 @@
                     throw new ArgumentOutOfRangeException("type");
             }
         }
-
-
         #region IDisposable members
         /// <summary>
         ///   Performs application-defined tasks associated with

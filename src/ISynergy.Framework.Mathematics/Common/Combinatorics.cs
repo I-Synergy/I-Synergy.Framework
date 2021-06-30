@@ -356,9 +356,6 @@ namespace ISynergy.Framework.Mathematics
         ///     them. If set to false, a new memory block will be allocated for each
         ///     new object in the sequence.
         /// </param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\CombinatoricsTest.cs" region="doc_combinations" />
-        /// </example>
         public static IEnumerable<T[]> Combinations<T>(this T[] values, bool inPlace = false)
         {
             // TODO: Test
@@ -379,9 +376,6 @@ namespace ISynergy.Framework.Mathematics
         ///     them. If set to false, a new memory block will be allocated for each
         ///     new object in the sequence.
         /// </param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\CombinatoricsTest.cs" region="doc_combinations_k" />
-        /// </example>
         public static IEnumerable<T[]> Combinations<T>(this T[] values, int k, bool inPlace = false)
         {
             // Based on the Knuth algorithm implementation by
@@ -441,16 +435,7 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     Generates all possibles subsets of the given set.
         /// </summary>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\CombinatoricsTest.cs" region="doc_subsets" />
-        /// </example>
-        public static IEnumerable<SortedSet<T>> Subsets<T>(this
-#if NET35
-            IEnumerable<T>
-#else
-            ISet<T>
-#endif
-            set, bool inPlace = false)
+        public static IEnumerable<SortedSet<T>> Subsets<T>(this ISet<T> set, bool inPlace = false)
         {
             // TODO: Optimize
             var values = set.ToArray();
@@ -462,16 +447,7 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     Generates all possibles subsets of size k of the given set.
         /// </summary>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\CombinatoricsTest.cs" region="doc_subsets_k" />
-        /// </example>
-        public static IEnumerable<SortedSet<T>> Subsets<T>(this
-#if NET35
-            IEnumerable<T>
-#else
-            ISet<T>
-#endif
-            set, int k, bool inPlace = false)
+        public static IEnumerable<SortedSet<T>> Subsets<T>(this ISet<T> set, int k, bool inPlace = false)
         {
             // TODO: Optimize
             var values = set.ToArray();
@@ -491,9 +467,6 @@ namespace ISynergy.Framework.Mathematics
         ///     them. If set to false, a new memory block will be allocated for each
         ///     new object in the sequence.
         /// </param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\CombinatoricsTest.cs" region="doc_permutation" />
-        /// </example>
         public static IEnumerable<T[]> Permutations<T>(T[] values, bool inPlace = false)
         {
             var current = new T[values.Length];

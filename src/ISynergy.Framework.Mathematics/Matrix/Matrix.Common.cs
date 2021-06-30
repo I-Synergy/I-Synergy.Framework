@@ -134,8 +134,6 @@ namespace ISynergy.Framework.Mathematics
 
             return result;
         }
-
-
         /// <summary>
         ///     Creates a memberwise copy of a multidimensional matrix. Matrix elements
         ///     themselves are copied only in a shallowed manner (i.e. not cloned).
@@ -240,8 +238,6 @@ namespace ISynergy.Framework.Mathematics
                 }
             }
         }
-
-
         /// <summary>
         ///     Copies the content of an array to another array.
         /// </summary>
@@ -289,8 +285,6 @@ namespace ISynergy.Framework.Mathematics
         {
             Array.Copy(matrix, 0, destination, 0, matrix.Length);
         }
-
-
         /// <summary>
         ///     Copies the content of an array to another array.
         /// </summary>
@@ -329,8 +323,6 @@ namespace ISynergy.Framework.Mathematics
                 for (var j = 0; j < destination.GetLength(1); j++)
                     destination[i, j] = value;
         }
-
-
         /// <summary>
         ///     Sets all elements of an array to a given value.
         /// </summary>
@@ -382,8 +374,6 @@ namespace ISynergy.Framework.Mathematics
                     result.SetValue(to, dim);
             return result as T;
         }
-
-
         #region Comparison
 
         /// <summary>
@@ -462,7 +452,6 @@ namespace ISynergy.Framework.Mathematics
             // TODO: Implement this cache mechanism here
             // http://blog.slaks.net/2015-06-26/code-snippets-fast-property-access-reflection/
 
-#if !NETSTANDARD1_4
             // Check if there is already an optimized method to perform this comparison
             var typeA = objA.GetType();
             var typeB = objB.GetType();
@@ -479,7 +468,6 @@ namespace ISynergy.Framework.Mathematics
 
             if (equals != _this)
                 return (bool)equals.Invoke(null, new object[] { objA, objB, atol, rtol });
-#endif
 
             // Base case: arrays contain elements of same nature (both arrays, or both values)
             if (typeA.GetElementType().IsArray == typeB.GetElementType().IsArray)
@@ -628,8 +616,6 @@ namespace ISynergy.Framework.Mathematics
                     return true;
             return false;
         }
-
-
         /// <summary>
         ///     Returns a value indicating whether the specified
         ///     matrix contains a value within a given tolerance.
@@ -698,8 +684,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Transpose
 
         /// <summary>
@@ -758,8 +742,6 @@ namespace ISynergy.Framework.Mathematics
 
             return result;
         }
-
-
         /// <summary>
         ///     Gets the transpose of a row vector.
         /// </summary>
@@ -785,8 +767,6 @@ namespace ISynergy.Framework.Mathematics
                 result[i, 0] = rowVector[i];
             return result;
         }
-
-
         /// <summary>
         ///     Gets the generalized transpose of a tensor.
         /// </summary>
@@ -852,8 +832,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Matrix Characteristics
 
         /// <summary>
@@ -880,7 +858,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static int GetNumberOfElements<T>(this T[,] elements)
         {
-            return elements.GetLength().Product();
+            return elements.GetLength().Sum();
         }
 
         /// <summary>
@@ -888,11 +866,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static int GetSizeInBytes<T>(this T[] elements)
         {
-#if NETSTANDARD1_4
-            return elements.GetNumberOfElements() * Marshal.SizeOf<T>();
-#else
             return elements.GetNumberOfElements() * Marshal.SizeOf(typeof(T));
-#endif
         }
 
         /// <summary>
@@ -900,11 +874,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static int GetSizeInBytes<T>(this T[][] elements)
         {
-#if NETSTANDARD1_4
-            return elements.GetNumberOfElements() * Marshal.SizeOf<T>();
-#else
             return elements.GetNumberOfElements() * Marshal.SizeOf(typeof(T));
-#endif
         }
 
         /// <summary>
@@ -1043,8 +1013,6 @@ namespace ISynergy.Framework.Mathematics
 
             return matrix.Rows() == matrix.Columns();
         }
-
-
         /// <summary>
         ///     Returns true if a matrix is upper triangular.
         /// </summary>
@@ -1493,24 +1461,12 @@ namespace ISynergy.Framework.Mathematics
                 false, false,
                 true, false).LogPseudoDeterminant;
         }
-
-
         /// <summary>
         ///     Gets the rank of a matrix.
         /// </summary>
         public static int Rank(this double[,] matrix)
         {
             return new SingularValueDecomposition(matrix,
-                false, false,
-                true, false).Rank;
-        }
-
-        /// <summary>
-        ///     Gets the rank of a matrix.
-        /// </summary>
-        public static int Rank(this float[,] matrix)
-        {
-            return new SingularValueDecompositionF(matrix,
                 false, false,
                 true, false).Rank;
         }
@@ -1535,7 +1491,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
 
         #region Operation Mapping (Apply)
 
@@ -1576,8 +1531,6 @@ namespace ISynergy.Framework.Mathematics
                 result[i] = func(vector[i], i);
             return result;
         }
-
-
         /// <summary>
         ///     Applies a function to every element of the array.
         /// </summary>
@@ -1639,30 +1592,7 @@ namespace ISynergy.Framework.Mathematics
 
         #endregion
 
-
         #region Rounding and discretization
-
-        // TODO: Rewrite using T4 templates for float and double
-
-        /// <summary>
-        ///     Rounds a double-precision floating-point matrix to a specified number of fractional digits.
-        /// </summary>
-        public static float[,] Round(this float[,] matrix, int decimals = 0)
-        {
-            if (matrix == null)
-                throw new ArgumentNullException("matrix");
-
-            var rows = matrix.GetLength(0);
-            var cols = matrix.GetLength(1);
-
-            var result = new float[rows, cols];
-
-            for (var i = 0; i < rows; i++)
-                for (var j = 0; j < cols; j++)
-                    result[i, j] = (float)Math.Round(matrix[i, j], decimals);
-
-            return result;
-        }
 
         /// <summary>
         ///     Rounds a double-precision floating-point matrix to a specified number of fractional digits.
@@ -1685,48 +1615,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         /// <summary>
-        ///     Returns the largest integer less than or equal than to the specified
-        ///     double-precision floating-point number for each element of the matrix.
-        /// </summary>
-        public static double[,] Floor(this double[,] matrix)
-        {
-            if (matrix == null)
-                throw new ArgumentNullException("matrix");
-
-            var rows = matrix.GetLength(0);
-            var cols = matrix.GetLength(1);
-
-            var result = new double[rows, cols];
-
-            for (var i = 0; i < rows; i++)
-                for (var j = 0; j < cols; j++)
-                    result[i, j] = Math.Floor(matrix[i, j]);
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Returns the largest integer greater than or equal than to the specified
-        ///     double-precision floating-point number for each element of the matrix.
-        /// </summary>
-        public static double[,] Ceiling(this double[,] matrix)
-        {
-            if (matrix == null)
-                throw new ArgumentNullException("matrix");
-
-            var rows = matrix.GetLength(0);
-            var cols = matrix.GetLength(1);
-
-            var result = new double[rows, cols];
-
-            for (var i = 0; i < rows; i++)
-                for (var j = 0; j < cols; j++)
-                    result[i, j] = Math.Ceiling(matrix[i, j]);
-
-            return result;
-        }
-
-        /// <summary>
         ///     Rounds a double-precision floating-point number array to a specified number of fractional digits.
         /// </summary>
         public static double[] Round(double[] vector, int decimals = 0)
@@ -1739,53 +1627,7 @@ namespace ISynergy.Framework.Mathematics
                 result[i] = Math.Round(vector[i], decimals);
             return result;
         }
-
-        /// <summary>
-        ///     Rounds a double-precision floating-point number array to a specified number of fractional digits.
-        /// </summary>
-        public static float[] Round(float[] vector, int decimals = 0)
-        {
-            if (vector == null)
-                throw new ArgumentNullException("vector");
-
-            var result = new float[vector.Length];
-            for (var i = 0; i < result.Length; i++)
-                result[i] = (float)Math.Round(vector[i], decimals);
-            return result;
-        }
-
-        /// <summary>
-        ///     Returns the largest integer less than or equal than to the specified
-        ///     double-precision floating-point number for each element of the array.
-        /// </summary>
-        public static double[] Floor(double[] vector)
-        {
-            if (vector == null)
-                throw new ArgumentNullException("vector");
-
-            var result = new double[vector.Length];
-            for (var i = 0; i < result.Length; i++)
-                result[i] = Math.Floor(vector[i]);
-            return result;
-        }
-
-        /// <summary>
-        ///     Returns the largest integer greater than or equal than to the specified
-        ///     double-precision floating-point number for each element of the array.
-        /// </summary>
-        public static double[] Ceiling(double[] vector)
-        {
-            if (vector == null)
-                throw new ArgumentNullException("vector");
-
-            var result = new double[vector.Length];
-            for (var i = 0; i < result.Length; i++)
-                result[i] = Math.Ceiling(vector[i]);
-            return result;
-        }
-
         #endregion
-
 
         #region Morphological operations
 
@@ -1835,8 +1677,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return Reshape(matrix, result, order);
         }
-
-
         /// <summary>
         ///     Transforms a jagged array matrix into a single vector.
         /// </summary>
@@ -1918,8 +1758,6 @@ namespace ISynergy.Framework.Mathematics
 
             return result;
         }
-
-
         /// <summary>
         ///     Transforms a jagged array matrix into a single vector.
         /// </summary>

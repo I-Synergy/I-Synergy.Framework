@@ -153,8 +153,6 @@ namespace ISynergy.Framework.Mathematics.IO
 
             return writtenBytes;
         }
-
-
         private static int writeHeader(BinaryWriter writer, string dtype, int[] shape)
         {
             // The first 6 bytes are a magic string: exactly "x93NUMPY"

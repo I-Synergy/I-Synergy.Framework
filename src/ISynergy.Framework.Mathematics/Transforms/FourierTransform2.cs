@@ -1,27 +1,3 @@
-// Contains code distributed by Project Nayuki, available under a MIT license 
-// at http://nayuki.eigenstate.org/page/free-small-fft-in-multiple-languages
-//
-// The original license is listed below:
-//
-//    Permission is hereby granted, free of charge, to any person obtaining a copy of
-//    this software and associated documentation files (the "Software"), to deal in
-//    the Software without restriction, including without limitation the rights to
-//    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-//    the Software, and to permit persons to whom the Software is furnished to do so,
-//    subject to the following conditions:
-//
-//     - The above copyright notice and this permission notice shall be included in
-//       all copies or substantial portions of the Software.
-//
-//   The Software is provided "as is", without warranty of any kind, express or
-//   implied, including but not limited to the warranties of merchantability,
-//   fitness for a particular purpose and noninfringement. In no event shall the
-//   authors or copyright holders be liable for any claim, damages or other
-//   liability, whether in an action of contract, tort or otherwise, arising from,
-//   out of or in connection with the Software or the use or other dealings in the
-//   Software.
-//
-
 using System;
 using System.Numerics;
 
@@ -50,14 +26,10 @@ namespace ISynergy.Framework.Mathematics.Transforms
     ///         The following examples show how to compute 1-D Discrete Fourier Transform and
     ///         1-D Fast Fourier Transforms, respectively:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_dft" />
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_fft" />
     ///     <para>
     ///         The next examples show how to compute 2-D Discrete Fourier Transform and
     ///         2-D Fast Fourier Transforms, respectively:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_dft2" />
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_fft2" />
     /// </example>
     /// <seealso cref="FourierTransform" />
     public static class FourierTransform2
@@ -73,9 +45,6 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// </summary>
         /// <param name="data">The data to transform.</param>
         /// <param name="direction">The transformation direction.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_dft" />
-        /// </example>
         public static void DFT(Complex[] data, FourierTransform.Direction direction)
         {
             var n = data.Length;
@@ -119,9 +88,6 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// </summary>
         /// <param name="data">The data to transform.</param>
         /// <param name="direction">The transformation direction.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_dft2" />
-        /// </example>
         public static void DFT2(Complex[][] data, FourierTransform.Direction direction)
         {
             var m = data.Columns();
@@ -179,9 +145,6 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// </summary>
         /// <param name="data">The data to transform..</param>
         /// <param name="direction">The transformation direction.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_fft" />
-        /// </example>
         public static void FFT(Complex[] data, FourierTransform.Direction direction)
         {
             var n = data.Length;
@@ -215,9 +178,6 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// <param name="real">The real part of the complex numbers to transform.</param>
         /// <param name="imag">The imaginary part of the complex numbers to transform.</param>
         /// <param name="direction">The transformation direction.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_fft" />
-        /// </example>
         public static void FFT(double[] real, double[] imag, FourierTransform.Direction direction)
         {
             if (direction == FourierTransform.Direction.Forward)
@@ -238,9 +198,6 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// </summary>
         /// <param name="data">The data to transform.</param>
         /// <param name="direction">The Transformation direction.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\FourierTransformTest.cs" region="doc_fft2" />
-        /// </example>
         public static void FFT2(Complex[][] data, FourierTransform.Direction direction)
         {
             var n = data.Length;
@@ -320,8 +277,6 @@ namespace ISynergy.Framework.Mathematics.Transforms
                 data[i] = new Complex(im, re);
             }
         }
-
-
         /// <summary>
         ///     Computes the inverse discrete Fourier transform (IDFT) of the given complex
         ///     vector, storing the result back into the vector. The vector can have any length.
@@ -370,12 +325,12 @@ namespace ISynergy.Framework.Mathematics.Transforms
             }
 
             // Cooley-Tukey decimation-in-time radix-2 FFT
-            for (var size = 2; size <= n; size *= 2)
+            for (int size = 2; size <= n; size *= 2)
             {
                 var halfsize = size / 2;
                 var tablestep = n / size;
 
-                for (var i = 0; i < n; i += size)
+                for (int i = 0; i < n; i += size)
                     for (int j = i, k = 0; j < i + halfsize; j++, k += tablestep)
                     {
                         var h = j + halfsize;
@@ -429,8 +384,6 @@ namespace ISynergy.Framework.Mathematics.Transforms
                     complex[j] = temp;
                 }
             }
-
-
             // Cooley-Tukey decimation-in-time radix-2 FFT
             for (var size = 2; size <= n; size *= 2)
             {
@@ -459,8 +412,6 @@ namespace ISynergy.Framework.Mathematics.Transforms
                     break;
             }
         }
-
-
         /// <summary>
         ///     Computes the discrete Fourier transform (DFT) of the given complex vector, storing
         ///     the result back into the vector. The vector can have any length. This requires the

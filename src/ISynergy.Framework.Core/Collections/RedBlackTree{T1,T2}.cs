@@ -71,6 +71,5 @@ namespace ISynergy.Framework.Core.Collections
             : base(comparer, allowDuplicates)
         {
         }
-
     }
 }

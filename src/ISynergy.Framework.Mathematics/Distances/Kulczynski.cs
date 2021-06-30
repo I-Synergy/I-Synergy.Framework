@@ -29,7 +29,7 @@
             int ft = 0;
             int tt = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 if (x[i] != 0 && y[i] == 0) tf++;
                 if (x[i] == 0 && y[i] != 0) ft++;
@@ -63,7 +63,7 @@
             int ft = 0;
             int tt = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 if (x[i] != 0 && y[i] == 0) tf++;
                 if (x[i] == 0 && y[i] != 0) ft++;
@@ -74,8 +74,6 @@
             double den = ft + tf + x.Length;
             return num / den;
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

@@ -89,13 +89,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 // for each row
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
                     double[] row = matrix[i];
                     double w = weights[i];
 
                     // for each column
-                    for (int j = 0; j < cols; j++)
+                    for (var j = 0; j < cols; j++)
                         mean[j] += row[j] * w;
                 }
             }
@@ -110,13 +110,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 // for each row
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < rows; j++)
                 {
                     double[] row = matrix[j];
                     double w = weights[j];
 
                     // for each column
-                    for (int i = 0; i < cols; i++)
+                    for (var i = 0; i < cols; i++)
                         mean[j] += row[i] * w;
                 }
             }
@@ -128,7 +128,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double weightSum = weights.Sum();
 
             if (weightSum != 0)
-                for (int i = 0; i < mean.Length; i++)
+                for (var i = 0; i < mean.Length; i++)
                     mean[i] /= weightSum;
 
             return mean;
@@ -179,12 +179,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 // for each row
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
                     double w = weights[i];
 
                     // for each column
-                    for (int j = 0; j < cols; j++)
+                    for (var j = 0; j < cols; j++)
                         mean[j] += matrix[i, j] * w;
                 }
             }
@@ -199,12 +199,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 // for each row
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < rows; j++)
                 {
                     double w = weights[j];
 
                     // for each column
-                    for (int i = 0; i < cols; i++)
+                    for (var i = 0; i < cols; i++)
                         mean[j] += matrix[j, i] * w;
                 }
             }
@@ -212,12 +212,10 @@ namespace ISynergy.Framework.Mathematics.Statistics
             {
                 throw new ArgumentException("Invalid dimension.", "dimension");
             }
-
-
             double weightSum = weights.Sum();
 
             if (weightSum != 0)
-                for (int i = 0; i < mean.Length; i++)
+                for (var i = 0; i < mean.Length; i++)
                     mean[i] /= weightSum;
 
             return mean;
@@ -272,13 +270,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 // for each row
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
                     double[] row = matrix[i];
                     double w = weights[i];
 
                     // for each column
-                    for (int j = 0; j < cols; j++)
+                    for (var j = 0; j < cols; j++)
                         mean[j] += row[j] * w;
                 }
             }
@@ -293,13 +291,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 // for each row
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < rows; j++)
                 {
                     double[] row = matrix[j];
                     double w = weights[j];
 
                     // for each column
-                    for (int i = 0; i < cols; i++)
+                    for (var i = 0; i < cols; i++)
                         mean[j] += row[i] * w;
                 }
             }
@@ -311,7 +309,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double weightSum = weights.Sum();
 
             if (weightSum != 0)
-                for (int i = 0; i < mean.Length; i++)
+                for (var i = 0; i < mean.Length; i++)
                     mean[i] /= weightSum;
 
             return mean;
@@ -362,12 +360,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 // for each row
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
                     double w = weights[i];
 
                     // for each column
-                    for (int j = 0; j < cols; j++)
+                    for (var j = 0; j < cols; j++)
                         mean[j] += matrix[i, j] * w;
                 }
             }
@@ -382,12 +380,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 // for each row
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < rows; j++)
                 {
                     double w = weights[j];
 
                     // for each column
-                    for (int i = 0; i < cols; i++)
+                    for (var i = 0; i < cols; i++)
                         mean[j] += matrix[j, i] * w;
                 }
             }
@@ -395,12 +393,10 @@ namespace ISynergy.Framework.Mathematics.Statistics
             {
                 throw new ArgumentException("Invalid dimension.", "dimension");
             }
-
-
             double weightSum = weights.Sum();
 
             if (weightSum != 0)
-                for (int i = 0; i < mean.Length; i++)
+                for (var i = 0; i < mean.Length; i++)
                     mean[i] /= weightSum;
 
             return mean;
@@ -428,8 +424,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <example>
         /// <para>
         ///   The following example shows how to compute the EW mean.</para>
-        ///   
-        /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\ISynergy.Framework.Mathematics.Statistics\MeasuresTest.cs" region="doc_example1" />
         /// </example>
         public static double[] ExponentialWeightedMean(this double[][] matrix, double alpha = 0)
         {
@@ -462,8 +456,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <example>
         /// <para>
         ///   The following example shows how to compute the EW mean.</para>
-        ///   
-        /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\ISynergy.Framework.Mathematics.Statistics\MeasuresTest.cs" region="doc_example1" />
         /// </example>
         public static double[] ExponentialWeightedMean(this double[][] matrix, int window, double alpha = 0)
         {
@@ -510,8 +502,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <example>
         /// <para>
         ///   The following example shows how to compute the EW covariance matrix.</para>
-        ///   
-        /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\ISynergy.Framework.Mathematics.Statistics\MeasuresTest.cs" region="doc_example2" />
         /// </example>
         public static double[,] ExponentialWeightedCovariance(
             this double[][] matrix, double alpha = 0, bool unbiased = false)
@@ -546,8 +536,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <example>
         /// <para>
         ///   The following example shows how to compute the EW covariance matrix.</para>
-        ///   
-        /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\ISynergy.Framework.Mathematics.Statistics\MeasuresTest.cs" region="doc_example2" />
         /// </example>
         public static double[,] ExponentialWeightedCovariance(
             this double[][] matrix, int window, double alpha = 0, bool unbiased = false)
@@ -869,7 +857,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double[,] WeightedCovariance(this double[][] matrix, double[] weights, double[] means, int dimension)
         {
             double s1 = 0, s2 = 0;
-            for (int i = 0; i < weights.Length; i++)
+            for (var i = 0; i < weights.Length; i++)
             {
                 s1 += weights[i];
                 s2 += weights[i] * weights[i];
@@ -895,7 +883,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double[,] WeightedCovariance(this double[][] matrix, int[] weights, double[] means, int dimension)
         {
             double s1 = 0, s2 = 0;
-            for (int i = 0; i < weights.Length; i++)
+            for (var i = 0; i < weights.Length; i++)
             {
                 s1 += weights[i];
                 s2 += weights[i] * weights[i];
@@ -951,12 +939,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 cov = new double[cols, cols];
-                for (int i = 0; i < cols; i++)
+                for (var i = 0; i < cols; i++)
                 {
-                    for (int j = i; j < cols; j++)
+                    for (var j = i; j < cols; j++)
                     {
                         double s = 0.0;
-                        for (int k = 0; k < rows; k++)
+                        for (var k = 0; k < rows; k++)
                             s += weights[k] * (matrix[k][j] - means[j]) * (matrix[k][i] - means[i]);
                         cov[i, j] = s * factor;
                         cov[j, i] = s * factor;
@@ -978,12 +966,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 cov = new double[rows, rows];
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    for (int j = i; j < rows; j++)
+                    for (var j = i; j < rows; j++)
                     {
                         double s = 0.0;
-                        for (int k = 0; k < cols; k++)
+                        for (var k = 0; k < cols; k++)
                             s += weights[k] * (matrix[j][k] - means[j]) * (matrix[i][k] - means[i]);
                         cov[i, j] = s * factor;
                         cov[j, i] = s * factor;
@@ -1043,12 +1031,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 cov = new double[cols, cols];
-                for (int i = 0; i < cols; i++)
+                for (var i = 0; i < cols; i++)
                 {
-                    for (int j = i; j < cols; j++)
+                    for (var j = i; j < cols; j++)
                     {
                         double s = 0.0;
-                        for (int k = 0; k < rows; k++)
+                        for (var k = 0; k < rows; k++)
                             s += weights[k] * (matrix[k][j] - means[j]) * (matrix[k][i] - means[i]);
                         cov[i, j] = s * factor;
                         cov[j, i] = s * factor;
@@ -1070,12 +1058,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
                 }
 
                 cov = new double[rows, rows];
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    for (int j = i; j < rows; j++)
+                    for (var j = i; j < rows; j++)
                     {
                         double s = 0.0;
-                        for (int k = 0; k < cols; k++)
+                        for (var k = 0; k < cols; k++)
                             s += weights[k] * (matrix[j][k] - means[j]) * (matrix[i][k] - means[i]);
                         cov[i, j] = s * factor;
                         cov[j, i] = s * factor;
@@ -1099,7 +1087,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double[] decayWeights = new double[window];
 
             double decayRow = 1;
-            for (int i = window - 1; i >= 0; i--)
+            for (var i = window - 1; i >= 0; i--)
             {
                 decayWeights[i] = decayRow;
                 decayRow *= decay;

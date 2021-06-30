@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
 
 namespace ISynergy.Framework.Core.Points
 {
     /// <summary>
-    /// Structure for representing a pair of coordinates of float type.
+    /// Structure for representing a pair of coordinates of double, decimal, double or int type.
     /// </summary>
-    /// 
-    /// <remarks><para>The structure is used to store a pair of floating point
-    /// coordinates with single precision.</para>
-    /// 
+    /// <remarks><para>The structure is used to store a pair of numeric point coordinates with single precision.</para>
     /// <para>Sample usage:</para>
     /// <code>
     /// // assigning coordinates in the constructor
@@ -20,24 +16,23 @@ namespace ISynergy.Framework.Core.Points
     /// p2.X = 30;
     /// p2.Y = 40;
     /// // calculating distance between two points
-    /// float distance = p1.DistanceTo( p2 );
+    /// double distance = p1.DistanceTo( p2 );
     /// </code>
     /// </remarks>
-    /// 
     [Serializable]
-    public struct Point
+    public class Point : IComparable<Point>
     {
         /// <summary> 
         /// X coordinate.
         /// </summary> 
         /// 
-        public float X;
+        public double X { get; private set; }
 
         /// <summary> 
         /// Y coordinate.
         /// </summary> 
         /// 
-        public float Y;
+        public double Y { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Point"/> structure.
@@ -45,11 +40,77 @@ namespace ISynergy.Framework.Core.Points
         /// 
         /// <param name="x">X axis coordinate.</param>
         /// <param name="y">Y axis coordinate.</param>
+        /// <param name="round"></param>
+        /// <param name="decimals"></param>
         /// 
-        public Point(float x, float y)
+        public Point(double x, double y, bool round = false, int decimals = 0)
         {
-            this.X = x;
-            this.Y = y;
+            if(round)
+            {
+                X = Math.Round(x, decimals);
+                Y = Math.Round(y, decimals);
+            }
+            else
+            {
+                X = x;
+                Y = y;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Point"/> structure.
+        /// </summary>
+        /// 
+        /// <param name="x">X axis coordinate.</param>
+        /// <param name="y">Y axis coordinate.</param>
+        /// <param name="round"></param>
+        /// <param name="decimals"></param>
+        /// 
+        public Point(int x, int y, bool round = false, int decimals = 0)
+            : this(Convert.ToDouble(x), Convert.ToDouble(y), round, decimals)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Point"/> structure.
+        /// </summary>
+        /// 
+        /// <param name="x">X axis coordinate.</param>
+        /// <param name="y">Y axis coordinate.</param>
+        /// <param name="round"></param>
+        /// <param name="decimals"></param>
+        /// 
+        public Point(long x, long y, bool round = false, int decimals = 0)
+            : this(Convert.ToDouble(x), Convert.ToDouble(y), round, decimals)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Point"/> structure.
+        /// </summary>
+        /// 
+        /// <param name="x">X axis coordinate.</param>
+        /// <param name="y">Y axis coordinate.</param>
+        /// <param name="round"></param>
+        /// <param name="decimals"></param>
+        /// 
+        public Point(decimal x, decimal y, bool round = false, int decimals = 0)
+            : this(Convert.ToDouble(x), Convert.ToDouble(y), round, decimals)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Point"/> structure.
+        /// </summary>
+        /// 
+        /// <param name="x">X axis coordinate.</param>
+        /// <param name="y">Y axis coordinate.</param>
+        /// <param name="round"></param>
+        /// <param name="decimals"></param>
+        /// 
+        public Point(float x, float y, bool round = false, int decimals = 0)
+            : this(Convert.ToDouble(x), Convert.ToDouble(y), round, decimals)
+        {
         }
 
         /// <summary>
@@ -61,12 +122,12 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns Euclidean distance between this point and
         /// <paramref name="anotherPoint"/> points.</returns>
         /// 
-        public float DistanceTo(Point anotherPoint)
+        public double DistanceTo(Point anotherPoint)
         {
-            float dx = X - anotherPoint.X;
-            float dy = Y - anotherPoint.Y;
+            var dx = Convert.ToDouble(X) - Convert.ToDouble(anotherPoint.X);
+            var dy = Convert.ToDouble(Y) - Convert.ToDouble(anotherPoint.Y);
 
-            return (float)System.Math.Sqrt(dx * dx + dy * dy);
+            return Math.Sqrt(dx * dx + dy * dy);
         }
 
         /// <summary>
@@ -78,10 +139,10 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns squared Euclidean distance between this point and
         /// <paramref name="anotherPoint"/> points.</returns>
         /// 
-        public float SquaredDistanceTo(Point anotherPoint)
+        public double SquaredDistanceTo(Point anotherPoint)
         {
-            float dx = X - anotherPoint.X;
-            float dy = Y - anotherPoint.Y;
+            var dx = Convert.ToDouble(X) - Convert.ToDouble(anotherPoint.X);
+            var dy = Convert.ToDouble(Y) - Convert.ToDouble(anotherPoint.Y);
 
             return dx * dx + dy * dy;
         }
@@ -156,7 +217,7 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns new point which coordinates equal to coordinates of
         /// the specified point increased by specified value.</returns>
         /// 
-        public static Point operator +(Point point, float valueToAdd)
+        public static Point operator +(Point point, double valueToAdd)
         {
             return new Point(point.X + valueToAdd, point.Y + valueToAdd);
         }
@@ -171,7 +232,7 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns new point which coordinates equal to coordinates of
         /// the specified point increased by specified value.</returns>
         /// 
-        public static Point Add(Point point, float valueToAdd)
+        public static Point Add(Point point, double valueToAdd)
         {
             return new Point(point.X + valueToAdd, point.Y + valueToAdd);
         }
@@ -186,7 +247,7 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns new point which coordinates equal to coordinates of
         /// the specified point decreased by specified value.</returns>
         /// 
-        public static Point operator -(Point point, float valueToSubtract)
+        public static Point operator -(Point point, double valueToSubtract)
         {
             return new Point(point.X - valueToSubtract, point.Y - valueToSubtract);
         }
@@ -201,7 +262,7 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns new point which coordinates equal to coordinates of
         /// the specified point decreased by specified value.</returns>
         /// 
-        public static Point Subtract(Point point, float valueToSubtract)
+        public static Point Subtract(Point point, double valueToSubtract)
         {
             return new Point(point.X - valueToSubtract, point.Y - valueToSubtract);
         }
@@ -216,7 +277,7 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns new point which coordinates equal to coordinates of
         /// the specified point multiplied by specified value.</returns>
         ///
-        public static Point operator *(Point point, float factor)
+        public static Point operator *(Point point, double factor)
         {
             return new Point(point.X * factor, point.Y * factor);
         }
@@ -231,7 +292,7 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns new point which coordinates equal to coordinates of
         /// the specified point multiplied by specified value.</returns>
         ///
-        public static Point Multiply(Point point, float factor)
+        public static Point Multiply(Point point, double factor)
         {
             return new Point(point.X * factor, point.Y * factor);
         }
@@ -246,7 +307,7 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns new point which coordinates equal to coordinates of
         /// the specified point divided by specified value.</returns>
         /// 
-        public static Point operator /(Point point, float factor)
+        public static Point operator /(Point point, double factor)
         {
             return new Point(point.X / factor, point.Y / factor);
         }
@@ -261,7 +322,7 @@ namespace ISynergy.Framework.Core.Points
         /// <returns>Returns new point which coordinates equal to coordinates of
         /// the specified point divided by specified value.</returns>
         /// 
-        public static Point Divide(Point point, float factor)
+        public static Point Divide(Point point, double factor)
         {
             return new Point(point.X / factor, point.Y / factor);
         }
@@ -321,47 +382,6 @@ namespace ISynergy.Framework.Core.Points
         }
 
         /// <summary>
-        /// Explicit conversion to <see cref="IntPoint"/>.
-        /// </summary>
-        /// 
-        /// <param name="point">Single precision point to convert to integer point.</param>
-        /// 
-        /// <returns>Returns new integer point which coordinates are explicitly converted
-        /// to integers from coordinates of the specified single precision point by
-        /// casting float values to integers value.</returns>
-        /// 
-        public static explicit operator IntPoint(Point point)
-        {
-            return new IntPoint((int)point.X, (int)point.Y);
-        }
-
-        /// <summary>
-        /// Implicit conversion to <see cref="DoublePoint"/>.
-        /// </summary>
-        /// 
-        /// <param name="point">Single precision point to convert to double precision point.</param>
-        /// 
-        /// <returns>Returns new double precision point which coordinates are implicitly converted
-        /// to doubles from coordinates of the specified single precision point.</returns>
-        /// 
-        public static implicit operator DoublePoint(Point point)
-        {
-            return new DoublePoint(point.X, point.Y);
-        }
-
-        /// <summary>
-        /// Rounds the single precision point.
-        /// </summary>
-        /// 
-        /// <returns>Returns new integer point, which coordinates equal to whole numbers
-        /// nearest to the corresponding coordinates of the single precision point.</returns>
-        /// 
-        public IntPoint Round()
-        {
-            return new IntPoint((int)System.Math.Round(X), (int)System.Math.Round(Y));
-        }
-
-        /// <summary>
         /// Get string representation of the class.
         /// </summary>
         /// 
@@ -369,7 +389,7 @@ namespace ISynergy.Framework.Core.Points
         ///
         public override string ToString()
         {
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}, {1}", X, Y);
+            return string.Format(CultureInfo.InvariantCulture, "{0}, {1}", X, Y);
         }
 
         /// <summary>
@@ -379,9 +399,27 @@ namespace ISynergy.Framework.Core.Points
         /// 
         /// <returns>Returns point's distance from (0, 0) point.</returns>
         /// 
-        public float EuclideanNorm()
+        public double EuclideanNorm(bool round = false, int decimals = 0)
         {
-            return (float)System.Math.Sqrt(X * X + Y * Y);
+            var result = Math.Sqrt(X * X + Y * Y);
+
+            if (round)
+                return Math.Round(result, decimals);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+        /// </summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        /// <returns>A value that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance precedes <paramref name="other" /> in the sort order.  Zero This instance occurs in the same position in the sort order as <paramref name="other" />. Greater than zero This instance follows <paramref name="other" /> in the sort order.</returns>
+        public int CompareTo(Point other)
+        {
+            var line = this.Y.CompareTo(other.Y);
+            if (line == 0)
+                return this.X.CompareTo(other.X);
+            return line;
         }
     }
 }

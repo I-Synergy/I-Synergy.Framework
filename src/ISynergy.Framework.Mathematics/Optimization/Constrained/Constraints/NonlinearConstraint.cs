@@ -155,8 +155,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         {
             Create(objective.NumberOfVariables, function, shouldBe, value, gradient, withinTolerance);
         }
-
-
         /// <summary>
         ///     Constructs a new nonlinear constraint.
         /// </summary>
@@ -295,8 +293,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             this.function = function;
             this.gradient = gradient;
         }
-
-
         private static void parse(Expression<Func<double[], bool>> constraint,
             out Func<double[], double> function, out ConstraintType shouldBe, out double value)
         {
@@ -376,8 +372,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             function = functionExpression.Compile() as Func<double[], double>;
         }
-
-
         /// <summary>
         ///     Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>

@@ -88,8 +88,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                 Eigenvectors[i] = new double[n];
             RealEigenvalues = new double[n];
             ImaginaryEigenvalues = new double[n];
-
-
             symmetric = assumeSymmetric;
 
             if (symmetric)
@@ -131,8 +129,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                 Eigenvectors = Eigenvectors.Get(null, idx);
             }
         }
-
-
         /// <summary>
         ///     Returns the effective numerical matrix rank.
         /// </summary>
@@ -154,8 +150,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                 return (int)(rank = r);
             }
         }
-
-
         /// <summary>Returns the real parts of the eigenvalues.</summary>
         public double[] RealEigenvalues { get; private set; }
 
@@ -199,8 +193,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             return Eigenvectors.DotWithDiagonal(RealEigenvalues).Divide(Eigenvectors);
         }
-
-
         #region Private methods
 
         private void tred2()
@@ -992,8 +984,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         }
 
         #endregion
-
-
         #region ICloneable Members
 
         private JaggedEigenvalueDecomposition()

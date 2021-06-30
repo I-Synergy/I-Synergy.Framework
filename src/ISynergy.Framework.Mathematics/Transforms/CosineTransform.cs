@@ -83,8 +83,6 @@ namespace ISynergy.Framework.Mathematics
             for (var i = 0; i < data.Length; i++)
                 data[i] = result[i];
         }
-
-
         /// <summary>
         ///     Forward 2D Discrete Cosine Transform.
         /// </summary>

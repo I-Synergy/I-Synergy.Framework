@@ -6,10 +6,6 @@
     ///   Euclidean distance metric.
     /// </summary>
     /// 
-    /// <example>
-    ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_euclidean_4" />
-    /// </example>
-    /// 
     /// <seealso cref="SquareEuclidean"/>
     /// <seealso cref="WeightedSquareEuclidean"/>
     /// <seealso cref="WeightedEuclidean"/>
@@ -56,22 +52,16 @@
         ///   to the distance function implemented by this class.
         /// </returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_euclidean_4" />
-        /// </example>
-        /// 
         public double Distance(double[] x, double[] y)
         {
             double sum = 0.0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 double u = x[i] - y[i];
                 sum += u * u;
             }
             return Math.Sqrt(sum);
         }
-
-
         /// <summary>
         ///   Gets the Euclidean distance between two points. Note: this function 
         ///   is dangerous as it is too easy to invert its arguments by mistake. 
@@ -84,10 +74,6 @@
         /// <param name="vector2y">The second coordinate of second point in space.</param>
         /// 
         /// <returns>The Euclidean distance between x and y.</returns>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_euclidean_4" />
-        /// </example>
         /// 
         public double Distance(double vector1x, double vector1y, double vector2x, double vector2y)
         {
@@ -158,7 +144,7 @@
         {
             double sum = 0.0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 double u = x[i] - y[i];
                 sum += u * u;
@@ -197,8 +183,6 @@
         {
             return 1.0 / (1.0 + Distance(x, y));
         }
-
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>

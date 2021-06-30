@@ -32,8 +32,6 @@ namespace ISynergy.Framework.Mathematics.Random
         private static int? sourceSeed;
         private static int sourceLastUpdateTicks;
         private static readonly object sourceSeedLock = new();
-
-
         [ThreadStatic] private static int threadLastUpdateTicks;
 
         [ThreadStatic] private static bool threadOverriden;
@@ -41,8 +39,6 @@ namespace ISynergy.Framework.Mathematics.Random
         [ThreadStatic] private static int? threadSeed;
 
         [ThreadStatic] private static System.Random threadRandom;
-
-
         /// <summary>
         ///     Gets a value indicating whether the random number generator has been used
         ///     during the execution of any past code. This can be useful to determine whether
@@ -183,8 +179,6 @@ namespace ISynergy.Framework.Mathematics.Random
                 }
             }
         }
-
-
         private static int GetRandomSeed()
         {
             // We initialize new Random objects using the next value from a global 

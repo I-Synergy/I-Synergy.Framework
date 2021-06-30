@@ -243,7 +243,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///         The following example shows the basic usage of the L-BFGS solver to
     ///         find the minimum of a function given the function and its gradient.
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\BroydenFletcherGoldfarbShannoTest.cs" region="doc_minimize" />
     /// </example>
     /// <seealso cref="ConjugateGradient" />
     /// <seealso cref="ResilientBackpropagation" />
@@ -281,8 +280,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             orthantwise_end = numberOfVariables;
         }
-
-
         /// <summary>
         ///     Implements the actual optimization algorithm. This
         ///     method should try to minimize the objective function.
@@ -325,13 +322,9 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             if (!Enum.IsDefined(typeof(BroydenFletcherGoldfarbShannoStatus), Status))
                 throw new InvalidOperationException("Unhandled return code: " + ret);
-
-
             return Status == BroydenFletcherGoldfarbShannoStatus.Success ||
                    Status == BroydenFletcherGoldfarbShannoStatus.AlreadyMinimized;
         }
-
-
         #region Properties
 
         /// <summary>
@@ -673,8 +666,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 orthantwise_c = value;
             }
         }
-
-
         /// <summary>
         ///     Start index for computing L1 norm of the variables.
         /// </summary>

@@ -43,7 +43,7 @@ namespace ISynergy.Framework.Mathematics
 
             var result = new Sparse<double>(values.Length + offset);
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 string[] element = values[i].Split(':');
                 int oneBasedindex = Int32.Parse(element[0], System.Globalization.CultureInfo.InvariantCulture);
@@ -80,7 +80,7 @@ namespace ISynergy.Framework.Mathematics
             where T : IEquatable<T>
         {
             T[][] dense = new T[vectors.Length][];
-            for (int i = 0; i < dense.Length; i++)
+            for (var i = 0; i < dense.Length; i++)
                 dense[i] = vectors[i].ToDense(length);
             return dense;
         }
@@ -97,7 +97,7 @@ namespace ISynergy.Framework.Mathematics
                 T zero = default(T);
 
                 int nonZeros = 0;
-                for (int i = 0; i < dense.Length; i++)
+                for (var i = 0; i < dense.Length; i++)
                     if (!zero.Equals(dense[i]))
                         nonZeros++;
 
@@ -118,7 +118,7 @@ namespace ISynergy.Framework.Mathematics
             else
             {
                 int[] idx = new int[dense.Length];
-                for (int i = 0; i < idx.Length; i++)
+                for (var i = 0; i < idx.Length; i++)
                     idx[i] = i;
                 return new Sparse<T>(idx, dense);
             }
@@ -132,7 +132,7 @@ namespace ISynergy.Framework.Mathematics
             where T : IEquatable<T>
         {
             var result = new Sparse<T>[dense.Length];
-            for (int i = 0; i < result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
                 result[i] = FromDense(dense[i], removeZeros);
             return result;
         }
@@ -146,7 +146,7 @@ namespace ISynergy.Framework.Mathematics
             where T : IEquatable<T>
         {
             int max = 0;
-            for (int i = 0; i < inputs.Length; i++)
+            for (var i = 0; i < inputs.Length; i++)
             {
                 int c = inputs[i].Length;
                 if (c > max)
@@ -167,7 +167,7 @@ namespace ISynergy.Framework.Mathematics
             Array.Sort(indices);
 
             var values = new double[indices.Length];
-            for (int i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indices.Length; i++)
                 values[i] = dictionary[indices[i]];
 
             return new Sparse<double>(indices, values);

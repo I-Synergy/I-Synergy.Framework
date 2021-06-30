@@ -65,10 +65,10 @@
                 double N = rows;
 
                 // for each column
-                for (int j = 0; j < cols; j++)
+                for (var j = 0; j < cols; j++)
                 {
                     // for each row
-                    for (int i = 0; i < rows; i++)
+                    for (var i = 0; i < rows; i++)
                         mean[j] += matrix[i, j];
 
                     mean[j] /= N;
@@ -80,10 +80,10 @@
                 double N = cols;
 
                 // for each row
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < rows; j++)
                 {
                     // for each column
-                    for (int i = 0; i < cols; i++)
+                    for (var i = 0; i < cols; i++)
                         mean[j] += matrix[j, i];
 
                     mean[j] /= N;
@@ -141,10 +141,10 @@
                 double N = rows;
 
                 // for each column
-                for (int j = 0; j < cols; j++)
+                for (var j = 0; j < cols; j++)
                 {
                     // for each row
-                    for (int i = 0; i < rows; i++)
+                    for (var i = 0; i < rows; i++)
                         mean[j] += matrix[i][j];
 
                     mean[j] = mean[j] / N;
@@ -155,10 +155,10 @@
                 mean = new double[rows];
 
                 // for each row
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < rows; j++)
                 {
                     // for each column
-                    for (int i = 0; i < matrix[j].Length; i++)
+                    for (var i = 0; i < matrix[j].Length; i++)
                         mean[j] += matrix[j][i];
 
                     mean[j] = mean[j] / (double)matrix[j].Length;
@@ -189,7 +189,7 @@
             double[] mean = new double[cols];
             double N = rows;
 
-            for (int j = 0; j < cols; j++)
+            for (var j = 0; j < cols; j++)
                 mean[j] = sums[j] / N;
 
             return mean;
@@ -212,7 +212,7 @@
             double[] mean = new double[cols];
             double N = rows;
 
-            for (int j = 0; j < sums.Length; j++)
+            for (var j = 0; j < sums.Length; j++)
                 mean[j] = sums[j] / N;
 
             return mean;
@@ -321,8 +321,6 @@
         {
             return StandardDeviation(matrix, Mean(matrix, dimension: 0), unbiased);
         }
-
-
         /// <summary>
         ///   Calculates the matrix Variance vector.
         /// </summary>
@@ -355,14 +353,14 @@
             double[] variance = new double[cols];
 
             // for each column (for each variable)
-            for (int j = 0; j < cols; j++)
+            for (var j = 0; j < cols; j++)
             {
                 double sum1 = 0.0;
                 double sum2 = 0.0;
                 double x = 0.0;
 
                 // for each row (observation of the variable)
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
                     x = matrix[i, j] - means[j];
                     sum1 += x;
@@ -432,14 +430,14 @@
             double[] variance = new double[cols];
 
             // for each column (for each variable)
-            for (int j = 0; j < cols; j++)
+            for (var j = 0; j < cols; j++)
             {
                 double sum1 = 0.0;
                 double sum2 = 0.0;
                 double x = 0.0;
 
                 // for each row (observation of the variable)
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
                     x = matrix[i][j] - means[j];
                     sum1 += x;
@@ -460,8 +458,6 @@
 
             return variance;
         }
-
-
         /// <summary>
         ///   Calculates the matrix Medians vector.
         /// </summary>
@@ -479,7 +475,7 @@
             double[] medians = new double[cols];
             double[] data = new double[rows];
 
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
                 medians[i] = matrix.GetColumn(i, result: data).Median(type: type, inPlace: true);
 
             return medians;
@@ -502,7 +498,7 @@
             double[] medians = new double[cols];
             double[] data = new double[rows];
 
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
                 medians[i] = matrix.GetColumn(i, result: data).Median(type: type, inPlace: true);
 
             return medians;
@@ -519,14 +515,14 @@
         /// 
         /// <returns>The second quartile, the median of the given data.</returns>
         /// 
-        public static double[] Quartiles(this double[,] matrix, out DoubleRange[] range, QuantileMethod type = QuantileMethod.Default)
+        public static double[] Quartiles(this double[,] matrix, out NumericRange[] range, QuantileMethod type = QuantileMethod.Default)
         {
             double[] q1, q3;
             double[] median = Quartiles(matrix, out q1, out q3, type: type);
 
-            range = new DoubleRange[median.Length];
-            for (int i = 0; i < range.Length; i++)
-                range[i] = new DoubleRange(q1[i], q3[i]);
+            range = new NumericRange[median.Length];
+            for (var i = 0; i < range.Length; i++)
+                range[i] = new NumericRange(q1[i], q3[i]);
 
             return median;
         }
@@ -541,14 +537,14 @@
         /// 
         /// <returns>The second quartile, the median of the given data.</returns>
         /// 
-        public static double[] Quartiles(this double[][] matrix, out DoubleRange[] range, QuantileMethod type = QuantileMethod.Default)
+        public static double[] Quartiles(this double[][] matrix, out NumericRange[] range, QuantileMethod type = QuantileMethod.Default)
         {
             double[] q1, q3;
             double[] median = Quartiles(matrix, out q1, out q3, type: type);
 
-            range = new DoubleRange[median.Length];
-            for (int i = 0; i < range.Length; i++)
-                range[i] = new DoubleRange(q1[i], q3[i]);
+            range = new NumericRange[median.Length];
+            for (var i = 0; i < range.Length; i++)
+                range[i] = new NumericRange(q1[i], q3[i]);
 
             return median;
         }
@@ -578,7 +574,7 @@
             q3 = new double[cols];
 
             double[] data = new double[rows];
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
                 medians[i] = matrix.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
 
             return medians;
@@ -608,13 +604,11 @@
             q3 = new double[cols];
 
             double[] data = new double[rows];
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
                 medians[i] = matrix.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
 
             return medians;
         }
-
-
         /// <summary>
         ///   Calculates the matrix Modes vector.
         /// </summary>
@@ -631,7 +625,7 @@
 
             int bestCount;
 
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
             {
                 var col = matrix.GetColumn(i);
 
@@ -640,8 +634,6 @@
 
             return mode;
         }
-
-
 
         /// <summary>
         ///   Calculates the matrix Modes vector.
@@ -658,7 +650,7 @@
             T[] mode = new T[cols];
 
             int bestCount;
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
             {
                 var col = matrix.GetColumn(i);
 
@@ -667,8 +659,6 @@
 
             return mode;
         }
-
-
         /// <summary>
         ///   Computes the Skewness for the given values.
         /// </summary>
@@ -721,12 +711,12 @@
             int n = matrix.GetLength(0);
             double[] skewness = new double[means.Length];
 
-            for (int j = 0; j < means.Length; j++)
+            for (var j = 0; j < means.Length; j++)
             {
                 double s2 = 0;
                 double s3 = 0;
 
-                for (int i = 0; i < n; i++)
+                for (var i = 0; i < n; i++)
                 {
                     double dev = matrix[i, j] - means[j];
 
@@ -806,12 +796,12 @@
             int n = matrix.Length;
             double[] skewness = new double[means.Length];
 
-            for (int j = 0; j < means.Length; j++)
+            for (var j = 0; j < means.Length; j++)
             {
                 double s2 = 0;
                 double s3 = 0;
 
-                for (int i = 0; i < matrix.Length; i++)
+                for (var i = 0; i < matrix.Length; i++)
                 {
                     double dev = matrix[i][j] - means[j];
 
@@ -838,8 +828,6 @@
 
             return skewness;
         }
-
-
         /// <summary>
         ///   Computes the Kurtosis vector for the given matrix.
         /// </summary>
@@ -886,12 +874,12 @@
 
             double[] kurtosis = new double[m];
 
-            for (int j = 0; j < kurtosis.Length; j++)
+            for (var j = 0; j < kurtosis.Length; j++)
             {
                 double s2 = 0;
                 double s4 = 0;
 
-                for (int i = 0; i < n; i++)
+                for (var i = 0; i < n; i++)
                 {
                     double dev = matrix[i, j] - means[j];
 
@@ -906,8 +894,6 @@
                 if (unbiased)
                 {
                     double v = s2 / (dn - 1);
-
-
                     double a = (dn * (dn + 1)) / ((dn - 1) * (dn - 2) * (dn - 3));
                     double b = s4 / (v * v);
                     double c = ((dn - 1) * (dn - 1)) / ((dn - 2) * (dn - 3));
@@ -970,12 +956,12 @@
 
             double[] kurtosis = new double[m];
 
-            for (int j = 0; j < kurtosis.Length; j++)
+            for (var j = 0; j < kurtosis.Length; j++)
             {
                 double s2 = 0;
                 double s4 = 0;
 
-                for (int i = 0; i < matrix.Length; i++)
+                for (var i = 0; i < matrix.Length; i++)
                 {
                     double dev = matrix[i][j] - means[j];
 
@@ -1006,8 +992,6 @@
 
             return kurtosis;
         }
-
-
         /// <summary>
         ///   Computes the Standard Error vector for a given matrix.
         /// </summary>
@@ -1034,13 +1018,11 @@
             double[] standardErrors = new double[standardDeviations.Length];
 
             double sqrtN = System.Math.Sqrt(samples);
-            for (int i = 0; i < standardDeviations.Length; i++)
+            for (var i = 0; i < standardDeviations.Length; i++)
                 standardErrors[i] = standardDeviations[i] / sqrtN;
 
             return standardErrors;
         }
-
-
         /// <summary>
         ///   Calculates the covariance matrix of a sample matrix.
         /// </summary>
@@ -1105,8 +1087,6 @@
         {
             return Scatter(matrix, means, matrix.GetLength(0) - 1, 0);
         }
-
-
         /// <summary>
         ///   Calculates the scatter matrix of a sample matrix.
         /// </summary>
@@ -1203,12 +1183,12 @@
                     throw new ArgumentException("Length of the mean vector should equal the number of columns", "means");
 
                 cov = new double[cols, cols];
-                for (int i = 0; i < cols; i++)
+                for (var i = 0; i < cols; i++)
                 {
-                    for (int j = i; j < cols; j++)
+                    for (var j = i; j < cols; j++)
                     {
                         double s = 0.0;
-                        for (int k = 0; k < rows; k++)
+                        for (var k = 0; k < rows; k++)
                             s += (matrix[k, j] - means[j]) * (matrix[k, i] - means[i]);
                         s /= divisor;
                         cov[i, j] = s;
@@ -1222,12 +1202,12 @@
                     "Length of the mean vector should equal the number of rows", "means");
 
                 cov = new double[rows, rows];
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    for (int j = i; j < rows; j++)
+                    for (var j = i; j < rows; j++)
                     {
                         double s = 0.0;
-                        for (int k = 0; k < cols; k++)
+                        for (var k = 0; k < cols; k++)
                             s += (matrix[j, k] - means[j]) * (matrix[i, k] - means[i]);
                         s /= divisor;
                         cov[i, j] = s;
@@ -1307,8 +1287,6 @@
         {
             return Scatter(matrix, means, matrix.Length - 1, 0);
         }
-
-
         /// <summary>
         ///   Calculates the scatter matrix of a sample matrix.
         /// </summary>
@@ -1422,12 +1400,12 @@
                     throw new ArgumentException("Length of the mean vector should equal the number of columns", "means");
 
                 cov = Jagged.Zeros(cols, cols);
-                for (int i = 0; i < cols; i++)
+                for (var i = 0; i < cols; i++)
                 {
-                    for (int j = i; j < cols; j++)
+                    for (var j = i; j < cols; j++)
                     {
                         double s = 0.0;
-                        for (int k = 0; k < rows; k++)
+                        for (var k = 0; k < rows; k++)
                             s += (matrix[k][j] - means[j]) * (matrix[k][i] - means[i]);
                         s /= divisor;
                         cov[i][j] = s;
@@ -1441,12 +1419,12 @@
                     throw new ArgumentException("Length of the mean vector should equal the number of rows", "means");
 
                 cov = Jagged.Zeros(rows, rows);
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    for (int j = i; j < rows; j++)
+                    for (var j = i; j < rows; j++)
                     {
                         double s = 0.0;
-                        for (int k = 0; k < cols; k++)
+                        for (var k = 0; k < cols; k++)
                             s += (matrix[j][k] - means[j]) * (matrix[i][k] - means[i]);
                         s /= divisor;
                         cov[i][j] = s;
@@ -1472,7 +1450,7 @@
 
             double weightSum = weights.Sum();
 
-            for (int k = 0; k < covariances.Length; k++)
+            for (var k = 0; k < covariances.Length; k++)
             {
                 double w = weights[k];
                 if (weightSum != 0)
@@ -1494,14 +1472,6 @@
         /// <param name="matrix">A multi-dimensional array containing the matrix values.</param>
         /// <returns>The correlation matrix.</returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ToolsTest.cs" region="doc_correlation" />
-        /// </example>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ToolsTest.cs" region="doc_correlation" />
-        /// </example>
-        /// 
         public static double[,] Correlation(this double[,] matrix)
         {
             double[] means = Mean(matrix, dimension: 0);
@@ -1517,10 +1487,6 @@
         /// </remarks>
         /// <param name="matrix">A multi-dimensional array containing the matrix values.</param>
         /// <returns>The correlation matrix.</returns>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ToolsTest.cs" region="doc_correlation" />
-        /// </example>
         /// 
         public static double[][] Correlation(this double[][] matrix)
         {
@@ -1543,10 +1509,6 @@
         /// 
         /// <returns>The correlation matrix.</returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ToolsTest.cs" region="doc_correlation" />
-        /// </example>
-        /// 
         public static double[,] Correlation(this double[,] matrix, double[] means, double[] standardDeviations)
         {
             int rows = matrix.Rows();
@@ -1554,12 +1516,12 @@
 
             double N = rows;
             double[,] cor = new double[cols, cols];
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
             {
-                for (int j = i; j < cols; j++)
+                for (var j = i; j < cols; j++)
                 {
                     double c = 0.0;
-                    for (int k = 0; k < rows; k++)
+                    for (var k = 0; k < rows; k++)
                     {
                         double a = z(matrix[k, j], means[j], standardDeviations[j]);
                         double b = z(matrix[k, i], means[i], standardDeviations[i]);
@@ -1589,10 +1551,6 @@
         /// 
         /// <returns>The correlation matrix.</returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ToolsTest.cs" region="doc_correlation" />
-        /// </example>
-        /// 
         public static double[][] Correlation(this double[][] matrix, double[] means, double[] standardDeviations)
         {
             int rows = matrix.Rows();
@@ -1600,12 +1558,12 @@
 
             double N = rows;
             double[][] cor = Jagged.Zeros(cols, cols);
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
             {
-                for (int j = i; j < cols; j++)
+                for (var j = i; j < cols; j++)
                 {
                     double c = 0.0;
-                    for (int k = 0; k < matrix.Length; k++)
+                    for (var k = 0; k < matrix.Length; k++)
                     {
                         double a = z(matrix[k][j], means[j], standardDeviations[j]);
                         double b = z(matrix[k][i], means[i], standardDeviations[i]);

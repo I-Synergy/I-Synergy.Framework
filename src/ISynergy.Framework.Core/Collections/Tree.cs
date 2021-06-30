@@ -69,23 +69,23 @@ namespace ISynergy.Framework.Core.Collections
 
         private class InnerTreeTraversal : IEnumerable<TNode>
         {
-            private Tree<TNode> tree;
-            private TraversalMethod<TNode> method;
+            private Tree<TNode> _tree;
+            private TraversalMethod<TNode> _method;
 
             public InnerTreeTraversal(Tree<TNode> tree, TraversalMethod<TNode> method)
             {
-                this.tree = tree;
-                this.method = method;
+                _tree = tree;
+                _method = method;
             }
 
             public IEnumerator<TNode> GetEnumerator()
             {
-                return method(tree);
+                return _method(_tree);
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return method(tree);
+                return _method(_tree);
             }
         }
     }

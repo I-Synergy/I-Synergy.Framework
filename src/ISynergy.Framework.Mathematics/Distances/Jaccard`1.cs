@@ -47,7 +47,7 @@
             int inter = 0;
             int union = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 if (!x[i].Equals(default(T)) || !y[i].Equals(default(T)))
                 {
@@ -74,7 +74,7 @@
             int inter = 0;
             int union = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 if (!x[i].Equals(default(T)) || !y[i].Equals(default(T)))
                 {
@@ -86,8 +86,6 @@
 
             return (inter == 0) ? 0 : inter / (double)union;
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

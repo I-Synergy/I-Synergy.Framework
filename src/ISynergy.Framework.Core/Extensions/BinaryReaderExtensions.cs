@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// Binary reader extensions.
+    /// </summary>
     public static class BinaryReaderExtensions
     {
         /// <summary>

@@ -64,7 +64,7 @@
             int factS = 5;
             double result = x - mult / fact;
 
-            for (int i = 3; i <= nTerms; i++)
+            for (var i = 3; i <= nTerms; i++)
             {
                 mult *= x * x;
                 fact *= factS * (factS - 1);
@@ -99,7 +99,7 @@
             int factS = 4;
             double result = 1 - mult / fact;
 
-            for (int i = 3; i <= nTerms; i++)
+            for (var i = 3; i <= nTerms; i++)
             {
                 mult *= x * x;
                 fact *= factS * (factS - 1);
@@ -133,7 +133,7 @@
             int factS = 5;
             double result = x + mult / fact;
 
-            for (int i = 3; i <= nTerms; i++)
+            for (var i = 3; i <= nTerms; i++)
             {
                 mult *= x * x;
                 fact *= factS * (factS - 1);
@@ -166,7 +166,7 @@
             int factS = 4;
             double result = 1 + mult / fact;
 
-            for (int i = 3; i <= nTerms; i++)
+            for (var i = 3; i <= nTerms; i++)
             {
                 mult *= x * x;
                 fact *= factS * (factS - 1);
@@ -198,7 +198,7 @@
             double fact = 2;
             double result = 1 + d + mult / fact;
 
-            for (int i = 3; i <= nTerms; i++)
+            for (var i = 3; i <= nTerms; i++)
             {
                 mult *= d;
                 fact *= i;

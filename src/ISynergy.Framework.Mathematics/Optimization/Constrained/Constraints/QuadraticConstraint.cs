@@ -69,8 +69,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     for the constraint <c>x'Ax + x'b</c>.
         /// </summary>
         public double[] LinearTerms { get; }
-
-
         private double function(double[] x)
         {
             return x.DotAndDot(QuadraticTerms, x) + LinearTerms.Dot(x);

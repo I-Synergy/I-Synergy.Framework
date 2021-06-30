@@ -62,13 +62,8 @@
     ///   In this framework, it is possible to state a non-linear programming problem
     ///   using either symbolic processing or vector-valued functions. The following 
     ///   example demonstrates the symbolic processing case:</para>
-    ///   
-    /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\AugmentedLagrangianTest.cs" region="doc_lambda"/>
-    /// 
     /// <para>
     ///   And this is the same example as before, but using standard vectors instead.</para>
-    ///   
-    /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\AugmentedLagrangianTest.cs" region="doc_vector"/>
     /// </example>
     /// 
     /// <seealso cref="GoldfarbIdnani"/>
@@ -81,8 +76,6 @@
         IConstraint[] lesserThanConstraints;
         IConstraint[] greaterThanConstraints;
         IConstraint[] equalityConstraints;
-
-
         private double rho;
         private double rhoMax = 1e+1;
         private double rhoMin = 1e-6;
@@ -228,8 +221,6 @@
         {
             init(null, constraints, innerSolver);
         }
-
-
         private void init(NonlinearObjectiveFunction function,
             IEnumerable<IConstraint> constraints, IGradientOptimizationMethod innerSolver)
         {
@@ -294,8 +285,6 @@
             dualSolver.Gradient = objectiveGradient;
         }
 
-
-
         // Augmented Lagrangian objective
         double objectiveFunction(double[] x)
         {
@@ -308,7 +297,7 @@
             double rho2 = rho / 2.0;
 
             // For each equality constraint
-            for (int i = 0; i < equalityConstraints.Length; i++)
+            for (var i = 0; i < equalityConstraints.Length; i++)
             {
                 double actual = equalityConstraints[i].Function(x);
                 double c = actual - equalityConstraints[i].Value;
@@ -317,7 +306,7 @@
             }
 
             // For each "lesser than" inequality constraint
-            for (int i = 0; i < lesserThanConstraints.Length; i++)
+            for (var i = 0; i < lesserThanConstraints.Length; i++)
             {
                 double actual = lesserThanConstraints[i].Function(x);
                 double c = actual - lesserThanConstraints[i].Value;
@@ -327,7 +316,7 @@
             }
 
             // For each "greater than" inequality constraint
-            for (int i = 0; i < greaterThanConstraints.Length; i++)
+            for (var i = 0; i < greaterThanConstraints.Length; i++)
             {
                 double actual = greaterThanConstraints[i].Function(x);
                 double c = greaterThanConstraints[i].Value - actual;
@@ -348,22 +337,22 @@
             //
 
             double[] orig = Gradient(x);
-            for (int i = 0; i < g.Length; i++)
+            for (var i = 0; i < g.Length; i++)
                 g[i] = orig[i];
 
             // For each equality constraint
-            for (int i = 0; i < equalityConstraints.Length; i++)
+            for (var i = 0; i < equalityConstraints.Length; i++)
             {
                 double actual = equalityConstraints[i].Function(x);
                 double c = actual - equalityConstraints[i].Value;
                 double[] cg = equalityConstraints[i].Gradient(x);
 
-                for (int j = 0; j < cg.Length; j++)
+                for (var j = 0; j < cg.Length; j++)
                     g[j] += rho * c * cg[j]; // - lambda[i] * cg[j];
             }
 
             // For each "lesser than" inequality constraint
-            for (int i = 0; i < lesserThanConstraints.Length; i++)
+            for (var i = 0; i < lesserThanConstraints.Length; i++)
             {
                 double actual = lesserThanConstraints[i].Function(x);
                 double c = actual - lesserThanConstraints[i].Value;
@@ -372,13 +361,13 @@
                 if (c > 0)
                 {
                     // Constraint is being violated
-                    for (int j = 0; j < cg.Length; j++)
+                    for (var j = 0; j < cg.Length; j++)
                         g[j] += rho * c * cg[j]; //- mu[i] * cg[j];
                 }
             }
 
             // For each "greater-than" inequality constraint
-            for (int i = 0; i < greaterThanConstraints.Length; i++)
+            for (var i = 0; i < greaterThanConstraints.Length; i++)
             {
                 double actual = greaterThanConstraints[i].Function(x);
                 double c = greaterThanConstraints[i].Value - actual;
@@ -387,7 +376,7 @@
                 if (c > 0)
                 {
                     // Constraint is being violated
-                    for (int j = 0; j < cg.Length; j++)
+                    for (var j = 0; j < cg.Length; j++)
                         g[j] += rho * c * -cg[j]; //- nu[i] * -cg[j];
                 }
             }
@@ -429,16 +418,12 @@
             const double lam_max = 1e20;
             const double mu_max = 1e20;
             const double nu_max = 1e20;
-
-
             double[] currentSolution = Solution.Copy();
 
             Array.Clear(lambda, 0, lambda.Length);
             Array.Clear(mu, 0, mu.Length);
             Array.Clear(nu, 0, nu.Length);
             rho = 1;
-
-
             // Starting rho suggested by B & M 
             if (lambda.Length > 0 || mu.Length > 0 || nu.Length > 0)
             {
@@ -452,7 +437,7 @@
                 bool feasible = true;
 
                 // For each equality constraint
-                for (int i = 0; i < equalityConstraints.Length; i++)
+                for (var i = 0; i < equalityConstraints.Length; i++)
                 {
                     double actual = equalityConstraints[i].Function(currentSolution);
                     double c = actual - equalityConstraints[i].Value;
@@ -464,7 +449,7 @@
                 }
 
                 // For each "lesser than" inequality constraint
-                for (int i = 0; i < lesserThanConstraints.Length; i++)
+                for (var i = 0; i < lesserThanConstraints.Length; i++)
                 {
                     double actual = lesserThanConstraints[i].Function(currentSolution);
                     double c = actual - lesserThanConstraints[i].Value;
@@ -479,7 +464,7 @@
                 }
 
                 // For each "greater than" inequality constraint
-                for (int i = 0; i < greaterThanConstraints.Length; i++)
+                for (var i = 0; i < greaterThanConstraints.Length; i++)
                 {
                     double actual = greaterThanConstraints[i].Function(currentSolution);
                     double c = greaterThanConstraints[i].Value - actual;
@@ -495,8 +480,6 @@
                 minValue = currentValue;
                 minPenalty = penalty;
                 minFeasible = feasible;
-
-
                 double num = 2.0 * Math.Abs(minValue);
 
                 if (num < 1e-300)
@@ -518,8 +501,6 @@
 
                 Debug.Assert(!Double.IsNaN(rho));
             }
-
-
             while (true)
             {
                 if (Token.IsCancellationRequested)
@@ -528,13 +509,13 @@
                 double prevICM = ICM;
 
                 // Minimize the dual problem using current solution
-                for (int i = 0; i < dualSolver.Solution.Length; i++)
+                for (var i = 0; i < dualSolver.Solution.Length; i++)
                     dualSolver.Solution[i] = currentSolution[i];
 
                 dualSolver.Minimize();
 
                 // Retrieve the solution found
-                for (int i = 0; i < currentSolution.Length; i++)
+                for (var i = 0; i < currentSolution.Length; i++)
                 {
                     if (!Double.IsNaN(dualSolver.Solution[i]))
                         currentSolution[i] = dualSolver.Solution[i];
@@ -549,7 +530,7 @@
                 bool feasible = true;
 
                 // Update lambdas
-                for (int i = 0; i < equalityConstraints.Length; i++)
+                for (var i = 0; i < equalityConstraints.Length; i++)
                 {
                     double actual = equalityConstraints[i].Function(currentSolution);
                     double c = actual - equalityConstraints[i].Value;
@@ -562,7 +543,7 @@
                 }
 
                 // Update mus
-                for (int i = 0; i < lesserThanConstraints.Length; i++)
+                for (var i = 0; i < lesserThanConstraints.Length; i++)
                 {
                     double actual = lesserThanConstraints[i].Function(currentSolution);
                     double c = actual - lesserThanConstraints[i].Value;
@@ -575,7 +556,7 @@
                 }
 
                 // Update nus
-                for (int i = 0; i < greaterThanConstraints.Length; i++)
+                for (var i = 0; i < greaterThanConstraints.Length; i++)
                 {
                     double actual = greaterThanConstraints[i].Function(currentSolution);
                     double c = greaterThanConstraints[i].Value - actual;
@@ -592,8 +573,6 @@
                 {
                     rho *= gam;
                 }
-
-
                 // Check if we should stop
                 bool a = !minFeasible || penalty < minPenalty || currentValue < minValue;
                 bool b = !minFeasible && penalty < minPenalty;
@@ -615,7 +594,7 @@
                     minFeasible = feasible;
 
                     // Save the current solution 
-                    for (int i = 0; i < Solution.Length; i++)
+                    for (var i = 0; i < Solution.Length; i++)
                         Solution[i] = currentSolution[i];
 
                     if (r.HasValue)
@@ -633,8 +612,6 @@
                     if (noProgressCounter > maxCount)
                         return AugmentedLagrangianStatus.NoProgress;
                 }
-
-
                 // Go to next iteration
                 iterations++;
 
@@ -643,11 +620,9 @@
             }
         }
 
-
-
         private bool xtolreach(double[] currentSolution, double reltol, double abstol)
         {
-            for (int i = 0; i < currentSolution.Length; i++)
+            for (var i = 0; i < currentSolution.Length; i++)
                 if (!relstop(Solution[i], currentSolution[i], reltol, abstol))
                     return false;
             return true;

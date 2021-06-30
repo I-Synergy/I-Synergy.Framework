@@ -4,15 +4,12 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <IsPackable>false</IsPackable>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{581E99A0-CDD6-4E74-BA71-8C3C4BA909F5}</ProjectGuid>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-        <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
-		<PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
         <PackageReference Include="coverlet.collector" Version="3.0.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

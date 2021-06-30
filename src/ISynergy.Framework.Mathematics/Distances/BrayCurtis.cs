@@ -28,7 +28,7 @@
             double sumP = 0;
             double sumN = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 sumN += Math.Abs(x[i] - y[i]);
                 sumP += Math.Abs(x[i] + y[i]);
@@ -36,8 +36,6 @@
 
             return sumN / sumP;
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

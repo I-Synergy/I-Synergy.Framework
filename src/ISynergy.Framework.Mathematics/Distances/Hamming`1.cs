@@ -29,13 +29,11 @@
         public double Distance(T[] x, T[] y)
         {
             int sum = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 if (!x[i].Equals(y[i]))
                     sum++;
             return sum;
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

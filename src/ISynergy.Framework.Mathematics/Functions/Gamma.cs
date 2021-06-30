@@ -244,8 +244,6 @@ namespace ISynergy.Framework.Mathematics
 
             if (p == 1)
                 return Function(x);
-
-
             var prod = Math.Pow(Math.PI, 1 / 4.0 * p * (p - 1));
 
             for (var i = 0; i < p; i++)
@@ -365,8 +363,6 @@ namespace ISynergy.Framework.Mathematics
                 var v = Math.PI / Math.Sin(-Math.PI * x);
                 return -Trigamma(1 - x) + v * v;
             }
-
-
             var a = 0.0001;
             var b = 5.0;
             var b2 = 0.1666666667;

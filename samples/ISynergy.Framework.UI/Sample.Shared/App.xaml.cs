@@ -27,6 +27,8 @@ using System.Resources;
 
 #if HAS_UNO
 using Uno.Material;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Xaml;
 #endif
 
 namespace Sample
@@ -56,6 +58,10 @@ namespace Sample
         }
 
 #if HAS_UNO
+        /// <summary>
+        /// On loanched event handler.
+        /// </summary>
+        /// <param name="args"></param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
 
@@ -85,7 +91,7 @@ namespace Sample
                 builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
 #elif __IOS__
                 builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
-#elif __UWP__
+#elif NETFX_CORE
                 builder.AddDebug();
 #else
                 builder.AddConsole();
@@ -152,7 +158,7 @@ namespace Sample
             services.AddSingleton<IContext, Context>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
-#if __UWP__
+#if NETFX_CORE
             services.AddSingleton<IUpdateService, UpdateService>();
 #endif
 

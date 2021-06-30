@@ -57,7 +57,7 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     2-D Gabor function.
         /// </summary>
-        public static Complex Function2D(int x, int y, double lambda, double theta,
+        public static Complex Function2D(double x, double y, double lambda, double theta,
             double psi, double sigma, double gamma)
         {
             var X = +x * Math.Cos(theta) + y * Math.Sin(theta);
@@ -73,7 +73,7 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     Real part of the 2-D Gabor function.
         /// </summary>
-        public static double RealFunction2D(int x, int y, double lambda, double theta,
+        public static double RealFunction2D(double x, double y, double lambda, double theta,
             double psi, double sigma, double gamma)
         {
             var X = +x * Math.Cos(theta) + y * Math.Sin(theta);
@@ -88,7 +88,7 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     Imaginary part of the 2-D Gabor function.
         /// </summary>
-        public static double ImaginaryFunction2D(int x, int y, double lambda, double theta,
+        public static double ImaginaryFunction2D(double x, double y, double lambda, double theta,
             double psi, double sigma, double gamma)
         {
             var X = +x * Math.Cos(theta) + y * Math.Sin(theta);
@@ -127,8 +127,6 @@ namespace ISynergy.Framework.Mathematics
             return Kernel2D(size, lambda, theta, psi, sigma,
                 gamma, normalized, GaborKernelKind.Imaginary);
         }
-
-
         /// <summary>
         ///     Computes the 2-D Gabor kernel.
         /// </summary>

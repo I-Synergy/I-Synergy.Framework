@@ -27,9 +27,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
     ///         <see cref="JaggedLuDecompositionF" />, and <see cref="JaggedLuDecompositionD" />.
     ///     </para>
     /// </remarks>
-    /// <example>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Decompositions\LuDecompositionTest.cs" region="doc_ctor" />
-    /// </example>
     /// <seealso cref="CholeskyDecomposition" />
     /// <seealso cref="EigenvalueDecomposition" />
     /// <seealso cref="SingularValueDecomposition" />
@@ -38,8 +35,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
     public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<double>
     {
         private int cols;
-
-
         // cache for lazy evaluation
         private double? determinant;
         private double? lndeterminant;
@@ -49,8 +44,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         private int pivotSign;
         private int rows;
         private double[,] upperTriangularFactor;
-
-
         /// <summary>
         ///     Constructs a new LU decomposition.
         /// </summary>
@@ -104,8 +97,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                 PivotPermutationVector[i] = i;
 
             var LUcolj = new double[rows];
-
-
             unsafe
             {
                 fixed (double* LU = lu)
@@ -303,8 +294,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             if (!Nonsingular)
                 throw new SingularMatrixException("Matrix is singular.");
-
-
             var count = rows;
 
             // Copy right hand side with pivoting
@@ -351,13 +340,9 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             if (!Nonsingular)
                 throw new InvalidOperationException("Matrix is singular.");
-
-
             // Copy right hand side with pivoting
             var count = value.GetLength(1);
             var X = value.Get(PivotPermutationVector, null);
-
-
             // Solve L*Y = B(piv,:)
             for (var k = 0; k < cols; k++)
                 for (var i = k + 1; i < cols; i++)
@@ -394,15 +379,11 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             if (!Nonsingular)
                 throw new InvalidOperationException("Matrix is singular.");
-
-
             // Copy right hand side with pivoting
             var count = value.Length;
             var b = new double[count];
             for (var i = 0; i < b.Length; i++)
                 b[i] = value[PivotPermutationVector[i]];
-
-
             // Solve L*Y = B
             var X = new double[count];
             for (var i = 0; i < rows; i++)
@@ -460,8 +441,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             if (!Nonsingular)
                 throw new SingularMatrixException("Matrix is singular.");
-
-
             // Copy right hand side with pivoting
             var X = value.Get(null, PivotPermutationVector);
 
@@ -486,8 +465,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             return X;
         }
-
-
         #region ICloneable Members
 
         private LuDecomposition()

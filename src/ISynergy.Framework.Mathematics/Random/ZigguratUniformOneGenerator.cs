@@ -119,8 +119,6 @@
                 result[i] = (int)Next();
             return result;
         }
-
-
         int[] IRandomNumberGenerator<int>.Generate(int samples)
         {
             return Generate(samples, new int[samples]);

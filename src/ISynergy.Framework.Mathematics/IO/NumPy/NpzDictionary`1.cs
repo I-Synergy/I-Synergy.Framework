@@ -29,8 +29,6 @@ namespace ISynergy.Framework.Mathematics.IO
 
         private Dictionary<string, ZipArchiveEntry> entries;
         private Stream stream;
-
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="NpzDictionary{T}" /> class.
         /// </summary>
@@ -132,8 +130,6 @@ namespace ISynergy.Framework.Mathematics.IO
         {
             Dispose(true);
         }
-
-
         /// <summary>
         ///     Gets an enumerable collection that contains the keys in the read-only dictionary.
         /// </summary>
@@ -206,8 +202,6 @@ namespace ISynergy.Framework.Mathematics.IO
             foreach (var entry in archive.Entries)
                 yield return new KeyValuePair<string, T>(entry.Name, OpenEntry(entry));
         }
-
-
         private T OpenEntry(ZipArchiveEntry entry)
         {
             T array;
@@ -243,8 +237,6 @@ namespace ISynergy.Framework.Mathematics.IO
             foreach (var v in this)
                 array.SetValue(v, arrayIndex++);
         }
-
-
         /// <summary>
         ///     Releases unmanaged and - optionally - managed resources.
         /// </summary>

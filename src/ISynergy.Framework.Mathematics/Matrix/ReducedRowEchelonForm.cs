@@ -38,11 +38,9 @@
             cols = rref.GetLength(1);
 
             pivot = new int[rows];
-            for (int i = 0; i < pivot.Length; i++)
+            for (var i = 0; i < pivot.Length; i++)
                 pivot[i] = i;
-
-
-            for (int r = 0; r < rows; r++)
+            for (var r = 0; r < rows; r++)
             {
                 if (cols <= lead)
                     break;
@@ -66,7 +64,7 @@
                 if (i != r)
                 {
                     // Swap rows i and r
-                    for (int j = 0; j < cols; j++)
+                    for (var j = 0; j < cols; j++)
                     {
                         var temp = rref[r, j];
                         rref[r, j] = rref[i, j];
@@ -85,16 +83,16 @@
                 var div = rref[r, lead];
                 if (div != 0)
                 {
-                    for (int j = 0; j < cols; j++)
+                    for (var j = 0; j < cols; j++)
                         rref[r, j] /= div;
                 }
 
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < rows; j++)
                 {
                     if (j != r)
                     {
                         var sub = rref[j, lead];
-                        for (int k = 0; k < cols; k++)
+                        for (var k = 0; k < cols; k++)
                             rref[j, k] -= (sub * rref[r, k]);
                     }
                 }
@@ -132,9 +130,9 @@
 
         private int count()
         {
-            for (int i = rows - 1; i >= 0; i--)
+            for (var i = rows - 1; i >= 0; i--)
             {
-                for (int j = 0; j < cols; j++)
+                for (var j = 0; j < cols; j++)
                 {
                     if (rref[i, j] != 0)
                         return rows - i - 1;
@@ -143,8 +141,6 @@
 
             return 0;
         }
-
-
 
     }
 }

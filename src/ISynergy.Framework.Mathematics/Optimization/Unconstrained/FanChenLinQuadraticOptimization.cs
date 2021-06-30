@@ -176,8 +176,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 C = value;
             }
         }
-
-
         /// <summary>
         ///     Gets the number of variables (free parameters) in the optimization
         ///     problem. In a SVM learning problem, this is the number of samples in
@@ -232,8 +230,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             var Q_j = new double[l];
 
             unshrink = false;
-
-
             // initialize alpha_status
             {
                 for (var i = 0; i < l; i++)
@@ -490,8 +486,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         swap_index(i,active_set[i]);
                         // or Q.swap_index(i,active_set[i]);
             }*/
-
-
             Trace.WriteLine("optimization finished, #iter = " + iter);
 
             return iter < max_iter;
@@ -527,8 +521,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             for (var i = 0; i < C.Length; i++)
                 C[i] = 1.0;
         }
-
-
         private void update_alpha_status(int i)
         {
             if (alpha[i] >= C[i])
@@ -552,8 +544,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         {
             return alpha_status[i] == Status.FREE;
         }
-
-
         private void reconstruct_gradient()
         {
             // reconstruct inactive elements of G from G_bar and free variables

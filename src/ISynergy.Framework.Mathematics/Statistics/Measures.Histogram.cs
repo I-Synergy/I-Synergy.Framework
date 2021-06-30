@@ -2,8 +2,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
 {
     using ISynergy.Framework.Core.Ranges;
     using System;
-
-
     public static partial class Measures
     {
         /// <summary>
@@ -18,7 +16,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             int min = values.Length;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 if (i < min)
                     min = i;
 
@@ -37,7 +35,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             int max = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 if (i > max)
                     max = i;
 
@@ -55,12 +53,10 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static long HistogramSum(this int[] values)
         {
             long sum = 0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum += values[i];
             return sum;
         }
-
-
         /// <summary>
         /// Calculate mean value of an histogram.
         /// </summary>
@@ -80,7 +76,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double total = 0;
             double mean = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 int hits = values[i];
                 mean += (double)i * hits;
@@ -134,7 +130,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             int total = 0;
 
             // for all values
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 int hits = values[i];
                 double diff = (double)i - mean;
@@ -169,7 +165,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             int total = 0;
 
             // for all values
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 // accumulate total
                 total += values[i];
@@ -210,12 +206,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// comprises the specified percentage of histogram's hits.</para>
         /// </remarks>
         /// 
-        public static IntRange GetHistogramRange(this int[] values, double percent)
+        public static NumericRange GetHistogramRange(this int[] values, double percent)
         {
             int total = 0;
 
             // for all values
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 // accumulate total
                 total += values[i];
@@ -240,7 +236,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
                     break;
             }
 
-            return new IntRange(min, max);
+            return new NumericRange(min, max);
         }
 
         /// <summary>
@@ -264,13 +260,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double p;
 
             // calculate total amount of hits
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 total += values[i];
 
             if (total != 0)
             {
                 // for all values
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                 {
                     // get item's probability
                     p = (double)values[i] / total;
@@ -304,7 +300,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             int mode = 0, curMax = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 if (values[i] > curMax)
                 {

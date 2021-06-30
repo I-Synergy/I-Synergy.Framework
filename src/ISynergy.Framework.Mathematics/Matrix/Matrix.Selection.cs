@@ -20,15 +20,11 @@ namespace ISynergy.Framework.Mathematics
 
             if (columnIndexes == null)
                 columnIndexes = new int[0];
-
-
             var srcRows = data.GetLength(0);
             var srcCols = data.GetLength(1);
 
             var dstRows = srcRows - rowIndexes.Length;
             var dstCols = srcCols - columnIndexes.Length;
-
-
             var X = new T[dstRows, dstCols];
 
             for (int i = 0, y = 0; i < srcRows; i++)
@@ -207,8 +203,6 @@ namespace ISynergy.Framework.Mathematics
 
             return set.ToArray();
         }
-
-
         /// <summary>
         ///     Gets the number of distinct values
         ///     present in each column of a matrix.
@@ -249,9 +243,6 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <param name="keys">The key value for each column.</param>
         /// <param name="values">The matrix to be sorted.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Selection.cs" region="doc_matrix_sort" />
-        /// </example>
         public static TValue[,] Sort<TKey, TValue>(TKey[] keys, TValue[,] values)
         {
             var indices = Vector.Range(keys.Length);
@@ -265,9 +256,6 @@ namespace ISynergy.Framework.Mathematics
         /// <param name="keys">The key value for each column.</param>
         /// <param name="values">The matrix to be sorted.</param>
         /// <param name="comparer">The comparer to use.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Selection.cs" region="doc_matrix_sort" />
-        /// </example>
         public static TValue[,] Sort<TKey, TValue>(TKey[] keys, TValue[,] values, IComparer<TKey> comparer)
         {
             var indices = Vector.Range(keys.Length);
@@ -281,9 +269,6 @@ namespace ISynergy.Framework.Mathematics
         /// <param name="keys">The key value for each column.</param>
         /// <param name="values">The matrix to be sorted.</param>
         /// <param name="comparer">The comparer to use.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Selection.cs" region="doc_matrix_sort" />
-        /// </example>
         public static TValue[][] Sort<TKey, TValue>(TKey[] keys, TValue[][] values, IComparer<TKey> comparer)
         {
             var indices = Vector.Range(keys.Length);
@@ -296,9 +281,6 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <param name="keys">The key value for each column.</param>
         /// <param name="values">The matrix to be sorted.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Selection.cs" region="doc_matrix_sort" />
-        /// </example>
         public static TValue[][] Sort<TKey, TValue>(TKey[] keys, TValue[][] values)
         {
             var indices = Vector.Range(keys.Length);
@@ -385,8 +367,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return (T)System.Convert.ChangeType(value, typeof(T));
         }
-
-
         #region Row and column getters and setters
 
         /// <summary>
@@ -616,8 +596,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Row and column insertion and removal
 
         /// <summary>
@@ -744,8 +722,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return InsertRow(matrix, new T[matrix[0].Length], matrix.Length);
         }
-
-
         /// <summary>
         ///     Returns a new matrix with a given column vector inserted at a given index.
         /// </summary>
@@ -1053,8 +1029,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Element search
 
         /// <summary>

@@ -113,10 +113,8 @@ namespace ISynergy.Framework.Mathematics.Integration
         private double error;
         private int evaluations;
 
-        private DoubleRange range;
+        private NumericRange range;
         private double result;
-
-
         /// <summary>
         ///     Creates a new <see cref="NonAdaptiveGaussKronrod" /> integration algorithm.
         /// </summary>
@@ -124,7 +122,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         {
             ToleranceAbsolute = 0;
             ToleranceRelative = 1e-3;
-            range = new DoubleRange(0, 1);
+            range = new NumericRange(0, 1);
         }
 
         /// <summary>
@@ -156,7 +154,7 @@ namespace ISynergy.Framework.Mathematics.Integration
             if (double.IsInfinity(b) || double.IsNaN(b))
                 throw new ArgumentOutOfRangeException("b");
 
-            range = new DoubleRange(a, b);
+            range = new NumericRange(a, b);
         }
 
         /// <summary>
@@ -200,7 +198,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         ///     Gets or sets the input range under
         ///     which the integral must be computed.
         /// </summary>
-        public DoubleRange Range
+        public NumericRange Range
         {
             get => range;
             set
@@ -242,8 +240,6 @@ namespace ISynergy.Framework.Mathematics.Integration
 
             return Status == NonAdaptiveGaussKronrodStatus.Success;
         }
-
-
         /// <summary>
         ///     Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -262,8 +258,6 @@ namespace ISynergy.Framework.Mathematics.Integration
 
             return clone;
         }
-
-
         /// <summary>
         ///     Computes the area under the integral for the given function,
         ///     in the given integration interval, using Gauss-Kronrod method.
@@ -299,8 +293,6 @@ namespace ISynergy.Framework.Mathematics.Integration
 
             return result;
         }
-
-
         #region Quadpack
 
         internal static int qng_(Func<double, double> f, double a, double b,

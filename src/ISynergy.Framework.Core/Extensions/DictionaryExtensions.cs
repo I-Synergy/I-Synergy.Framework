@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// Dictionary extensions.
+    /// </summary>
     public static class DictionaryExtensions
     {
         /// <summary>

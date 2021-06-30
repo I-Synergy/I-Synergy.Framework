@@ -35,8 +35,6 @@
         NoPossibleSolution
     }
 
-
-
     /// <summary>
     ///   Constrained optimization by linear approximation.
     /// </summary>
@@ -252,7 +250,7 @@
             if (constraints == null)
                 throw new ArgumentNullException("constraints");
 
-            for (int i = 0; i < constraints.Length; i++)
+            for (var i = 0; i < constraints.Length; i++)
             {
                 if (constraints[i].NumberOfVariables != function.NumberOfVariables)
                     throw new DimensionMismatchException("constraints", "The constraint at position " + i +
@@ -265,8 +263,6 @@
 
             this.constraints = constraints;
         }
-
-
         /// <summary>
         ///   Implements the actual optimization algorithm. This
         ///   method should try to minimize the objective function.
@@ -329,8 +325,6 @@
             //     the objective and constraint functions at X in F and CON(1),CON(2),
             //     ...,CON(M).  Note that we are trying to adjust X so that F(X) is as
             //     small as possible subject to the constraint functions being nonnegative.
-
-
             // N.B. Arguments CON, SIM, SIMI, DATMAT, A, VSIG, VETA, SIGBAR, DX, W & IACT
             //      have been removed.
 
@@ -380,7 +374,7 @@
             iterations = 0;
             var temp = 1.0 / rho;
 
-            for (int i = 1; i <= n; ++i)
+            for (var i = 1; i <= n; ++i)
             {
                 sim[i, np] = Solution[i - 1];
                 sim[i, i] = rho;
@@ -409,12 +403,12 @@
             f = Function(x);
 
             // Compute constraints
-            for (int i = 1; i <= m; i++)
+            for (var i = 1; i <= m; i++)
                 con[i] = constraints[i - 1].GetViolation(x);
 
             resmax = 0.0;
 
-            for (int k = 1; k <= m; ++k)
+            for (var k = 1; k <= m; ++k)
                 resmax = System.Math.Max(resmax, -con[k]);
 
             con[mp] = f;
@@ -429,7 +423,7 @@
             //     followed by the objective function and the greatest constraint violation
             //     at the vertex.
 
-            for (int i = 1; i <= mpp; ++i)
+            for (var i = 1; i <= mpp; ++i)
                 datmat[i, jdrop] = con[i];
 
             if (iterations <= np)
@@ -448,16 +442,16 @@
                     else
                     {
                         sim[jdrop, np] = x[jdrop - 1];
-                        for (int k = 1; k <= mpp; ++k)
+                        for (var k = 1; k <= mpp; ++k)
                         {
                             datmat[k, jdrop] = datmat[k, np];
                             datmat[k, np] = con[k];
                         }
-                        for (int k = 1; k <= jdrop; ++k)
+                        for (var k = 1; k <= jdrop; ++k)
                         {
                             sim[jdrop, k] = -rho;
                             temp = 0.0;
-                            for (int i = k; i <= jdrop; ++i)
+                            for (var i = k; i <= jdrop; ++i)
                                 temp -= simi[i, k];
                             simi[jdrop, k] = temp;
                         }
@@ -480,7 +474,7 @@
             var phimin = datmat[mp, np] + parmu * datmat[mpp, np];
             var nbest = np;
 
-            for (int j = 1; j <= n; ++j)
+            for (var j = 1; j <= n; ++j)
             {
                 temp = datmat[mp, j] + parmu * datmat[mpp, j];
                 if (temp < phimin)
@@ -499,20 +493,20 @@
 
             if (nbest <= n)
             {
-                for (int i = 1; i <= mpp; ++i)
+                for (var i = 1; i <= mpp; ++i)
                 {
                     temp = datmat[i, np];
                     datmat[i, np] = datmat[i, nbest];
                     datmat[i, nbest] = temp;
                 }
-                for (int i = 1; i <= n; ++i)
+                for (var i = 1; i <= n; ++i)
                 {
                     temp = sim[i, nbest];
                     sim[i, nbest] = 0.0;
                     sim[i, np] += temp;
 
                     double tempa = 0.0;
-                    for (int k = 1; k <= n; ++k)
+                    for (var k = 1; k <= n; ++k)
                     {
                         sim[i, k] -= temp;
                         tempa -= simi[k, i];
@@ -525,12 +519,12 @@
             //     the leading N by N submatrix of SIG.
 
             double error = 0.0;
-            for (int i = 1; i <= n; ++i)
+            for (var i = 1; i <= n; ++i)
             {
-                for (int j = 1; j <= n; ++j)
+                for (var j = 1; j <= n; ++j)
                 {
                     temp = 0.0;
-                    for (int ii = 1; ii <= n; ii++)
+                    for (var ii = 1; ii <= n; ii++)
                         temp += simi[i, ii] * sim[ii, j];
 
                     if (i == j)
@@ -550,16 +544,16 @@
             //     after the constraint gradients in the array A. The vector W is used for
             //     working space.
 
-            for (int k = 1; k <= mp; ++k)
+            for (var k = 1; k <= mp; ++k)
             {
                 con[k] = -datmat[k, np];
-                for (int j = 1; j <= n; ++j)
+                for (var j = 1; j <= n; ++j)
                     w[j] = datmat[k, j] + con[k];
 
-                for (int i = 1; i <= n; ++i)
+                for (var i = 1; i <= n; ++i)
                 {
                     temp = 0.0;
-                    for (int ii = 1; ii <= n; ii++)
+                    for (var ii = 1; ii <= n; ii++)
                         temp += w[ii] * simi[ii, i];
 
                     a[i, k] = (k == mp ? -1.0 : 1.0) * temp;
@@ -573,12 +567,12 @@
             parsig = alpha * rho;
             var pareta = beta * rho;
 
-            for (int j = 1; j <= n; ++j)
+            for (var j = 1; j <= n; ++j)
             {
-                var wsig = 0.0; for (int k = 1; k <= n; ++k)
+                var wsig = 0.0; for (var k = 1; k <= n; ++k)
                     wsig += simi[j, k] * simi[j, k];
 
-                var weta = 0.0; for (int k = 1; k <= n; ++k)
+                var weta = 0.0; for (var k = 1; k <= n; ++k)
                     weta += sim[k, j] * sim[k, j];
 
                 vsig[j] = 1.0 / System.Math.Sqrt(wsig);
@@ -595,7 +589,7 @@
             {
                 jdrop = 0;
                 temp = pareta;
-                for (int j = 1; j <= n; ++j)
+                for (var j = 1; j <= n; ++j)
                 {
                     if (veta[j] > temp)
                     {
@@ -605,7 +599,7 @@
                 }
                 if (jdrop == 0)
                 {
-                    for (int j = 1; j <= n; ++j)
+                    for (var j = 1; j <= n; ++j)
                     {
                         if (vsig[j] < temp)
                         {
@@ -618,16 +612,16 @@
                 //     Calculate the step to the new vertex and its sign.
 
                 temp = gamma * rho * vsig[jdrop];
-                for (int k = 1; k <= n; ++k)
+                for (var k = 1; k <= n; ++k)
                     dx[k] = temp * simi[jdrop, k];
                 var cvmaxp = 0.0;
                 var cvmaxm = 0.0;
 
                 total = 0.0;
-                for (int k = 1; k <= mp; ++k)
+                for (var k = 1; k <= mp; ++k)
                 {
                     total = 0.0;
-                    for (int ii = 1; ii <= n; ii++)
+                    for (var ii = 1; ii <= n; ii++)
                         total += a[ii, k] * dx[ii];
 
                     if (k < mp)
@@ -643,25 +637,25 @@
                 //     Update the elements of SIM and SIMI, and set the next X.
 
                 temp = 0.0;
-                for (int i = 1; i <= n; ++i)
+                for (var i = 1; i <= n; ++i)
                 {
                     dx[i] = dxsign * dx[i];
                     sim[i, jdrop] = dx[i];
                     temp += simi[jdrop, i] * dx[i];
                 }
 
-                for (int k = 1; k <= n; ++k)
+                for (var k = 1; k <= n; ++k)
                     simi[jdrop, k] /= temp;
 
-                for (int j = 1; j <= n; ++j)
+                for (var j = 1; j <= n; ++j)
                 {
                     if (j != jdrop)
                     {
                         temp = 0.0;
-                        for (int ii = 1; ii <= n; ii++)
+                        for (var ii = 1; ii <= n; ii++)
                             temp += simi[j, ii] * dx[ii];
 
-                        for (int k = 1; k <= n; ++k)
+                        for (var k = 1; k <= n; ++k)
                             simi[j, k] -= temp * simi[jdrop, k];
                     }
 
@@ -678,7 +672,7 @@
             if (!ifull)
             {
                 temp = 0.0;
-                for (int k = 1; k <= n; ++k)
+                for (var k = 1; k <= n; ++k)
                     temp += dx[k] * dx[k];
 
                 if (temp < 0.25 * rho * rho)
@@ -695,10 +689,10 @@
             var resnew = 0.0;
             con[mp] = 0.0;
 
-            for (int k = 1; k <= mp; ++k)
+            for (var k = 1; k <= mp; ++k)
             {
                 total = 0.0;
-                for (int ii = 1; ii <= n; ii++)
+                for (var ii = 1; ii <= n; ii++)
                     total += a[ii, k] * dx[ii];
 
                 total = con[k] - total;
@@ -721,7 +715,7 @@
 
                 var phi = datmat[mp, np] + parmu * datmat[mpp, np];
 
-                for (int j = 1; j <= n; ++j)
+                for (var j = 1; j <= n; ++j)
                 {
                     temp = datmat[mp, j] + parmu * datmat[mpp, j];
                     if (temp < phi ||
@@ -735,7 +729,7 @@
             //     Calculate the constraint and objective functions at x(*).
             //     Then find the actual reduction in the merit function.
 
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 x[k - 1] = sim[k, np] + dx[k];
 
             ibrnch = true;
@@ -761,10 +755,10 @@
 
             jdrop = 0;
 
-            for (int j = 1; j <= n; ++j)
+            for (var j = 1; j <= n; ++j)
             {
                 temp = 0.0;
-                for (int ii = 1; ii <= n; ii++)
+                for (var ii = 1; ii <= n; ii++)
                     temp += simi[j, ii] * dx[ii];
 
                 temp = System.Math.Abs(temp);
@@ -783,7 +777,7 @@
             var edgmax = delta * rho;
             var l = 0;
 
-            for (int j = 1; j <= n; ++j)
+            for (var j = 1; j <= n; ++j)
             {
                 if (sigbar[j] >= parsig || sigbar[j] >= vsig[j])
                 {
@@ -791,7 +785,7 @@
 
                     if (trured > 0.0)
                     {
-                        temp = 0.0; for (int k = 1; k <= n; ++k)
+                        temp = 0.0; for (var k = 1; k <= n; ++k)
                             temp += System.Math.Pow(dx[k] - sim[k, j], 2.0);
                         temp = System.Math.Sqrt(temp);
                     }
@@ -813,29 +807,29 @@
             //     Revise the simplex by updating the elements of SIM, SIMI and DATMAT.
 
             temp = 0.0;
-            for (int i = 1; i <= n; ++i)
+            for (var i = 1; i <= n; ++i)
             {
                 sim[i, jdrop] = dx[i];
                 temp += simi[jdrop, i] * dx[i];
             }
 
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 simi[jdrop, k] /= temp;
 
-            for (int j = 1; j <= n; ++j)
+            for (var j = 1; j <= n; ++j)
             {
                 if (j != jdrop)
                 {
                     temp = 0.0;
-                    for (int ii = 1; ii <= n; ii++)
+                    for (var ii = 1; ii <= n; ii++)
                         temp += simi[j, ii] * dx[ii];
 
-                    for (int k = 1; k <= n; ++k)
+                    for (var k = 1; k <= n; ++k)
                         simi[j, k] -= temp * simi[jdrop, k];
                 }
             }
 
-            for (int k = 1; k <= mpp; ++k)
+            for (var k = 1; k <= mpp; ++k)
                 datmat[k, jdrop] = con[k];
 
             //     Branch back for further iterations with the current RHO.
@@ -865,12 +859,12 @@
                 {
                     var denom = 0.0;
 
-                    for (int k = 1; k <= mp; ++k)
+                    for (var k = 1; k <= mp; ++k)
                     {
                         cmin = datmat[k, np];
                         cmax = cmin;
 
-                        for (int i = 1; i <= n; ++i)
+                        for (var i = 1; i <= n; ++i)
                         {
                             cmin = System.Math.Min(cmin, datmat[k, i]);
                             cmax = System.Math.Max(cmax, datmat[k, i]);
@@ -904,7 +898,7 @@
                 goto L_620;
 
             L_600:
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 x[k - 1] = sim[k, np];
 
             f = datmat[mp, np];
@@ -917,7 +911,7 @@
             if (status == CobylaStatus.Success)
             {
                 // Check if all constraints have been fulfilled
-                for (int i = 0; i < constraints.Length; i++)
+                for (var i = 0; i < constraints.Length; i++)
                     if (constraints[i].IsViolated(x))
                         status = CobylaStatus.NoPossibleSolution;
             }
@@ -987,7 +981,7 @@
             var mcon = m;
             var nact = 0;
 
-            for (int i = 1; i <= n; ++i)
+            for (var i = 1; i <= n; ++i)
             {
                 z[i, i] = 1.0;
                 dx[i] = 0.0;
@@ -998,7 +992,7 @@
 
             if (m >= 1)
             {
-                for (int k = 1; k <= m; ++k)
+                for (var k = 1; k <= m; ++k)
                 {
                     if (b[k] > resmax)
                     {
@@ -1006,7 +1000,7 @@
                         icon = k;
                     }
                 }
-                for (int k = 1; k <= m; ++k)
+                for (var k = 1; k <= m; ++k)
                 {
                     iact[k] = k;
                     vmultc[k] = resmax - b[k];
@@ -1037,7 +1031,7 @@
             else
             {
                 temp = 0.0;
-                for (int ii = 1; ii <= n; ii++)
+                for (var ii = 1; ii <= n; ii++)
                     temp += dx[ii] * a[ii, mcon];
 
                 optnew = -temp;
@@ -1073,7 +1067,7 @@
 
             var kk = iact[icon];
 
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 dxnew[k] = a[k, kk];
             var tot = 0.0;
 
@@ -1083,7 +1077,7 @@
                 {
                     var sp = 0.0;
                     var spabs = 0.0;
-                    for (int i = 1; i <= n; ++i)
+                    for (var i = 1; i <= n; ++i)
                     {
                         temp = z[i, k] * dxnew[i];
                         sp += temp;
@@ -1104,7 +1098,7 @@
                         var alpha = sp / temp;
                         var beta = tot / temp;
                         tot = temp;
-                        for (int i = 1; i <= n; ++i)
+                        for (var i = 1; i <= n; ++i)
                         {
                             temp = alpha * z[i, k] + beta * z[i, kp];
                             z[i, kp] = alpha * z[i, kp] - beta * z[i, k];
@@ -1142,7 +1136,7 @@
                     var zdotv = 0.0;
                     var zdvabs = 0.0;
 
-                    for (int i = 1; i <= n; ++i)
+                    for (var i = 1; i <= n; ++i)
                     {
                         temp = z[i, k] * dxnew[i];
                         zdotv = zdotv + temp;
@@ -1165,7 +1159,7 @@
                         if (k >= 2)
                         {
                             var kw = iact[k];
-                            for (int i = 1; i <= n; ++i) dxnew[i] -= temp * a[i, kw];
+                            for (var i = 1; i <= n; ++i) dxnew[i] -= temp * a[i, kw];
                         }
                         vmultd[k] = temp;
                     }
@@ -1183,7 +1177,7 @@
             //     that the one to be replaced is at the end of the list. Also calculate the
             //     new value of ZDOTA(NACT) and branch if it is not acceptable.
 
-            for (int k = 1; k <= nact; ++k)
+            for (var k = 1; k <= nact; ++k)
                 vmultc[k] = System.Math.Max(0.0, vmultc[k] - ratio * vmultd[k]);
 
             if (icon < nact)
@@ -1197,7 +1191,7 @@
                     var kw = iact[kp];
 
                     double sp = 0.0;
-                    for (int ii = 1; ii <= n; ii++)
+                    for (var ii = 1; ii <= n; ii++)
                         sp += z[ii, k] * a[ii, kw];
 
                     temp = System.Math.Sqrt(sp * sp + zdota[kp] * zdota[kp]);
@@ -1207,7 +1201,7 @@
                     zdota[kp] = alpha * zdota[k];
                     zdota[k] = temp;
 
-                    for (int i = 1; i <= n; ++i)
+                    for (var i = 1; i <= n; ++i)
                     {
                         temp = alpha * z[i, kp] + beta * z[i, k];
                         z[i, kp] = alpha * z[i, k] - beta * z[i, kp];
@@ -1223,7 +1217,7 @@
             }
 
             temp = 0;
-            for (int ii = 1; ii <= n; ii++)
+            for (var ii = 1; ii <= n; ii++)
                 temp += z[ii, nact] * a[ii, kk];
 
             if (temp == 0.0)
@@ -1244,7 +1238,7 @@
                 int k = nact - 1;
 
                 double sp = 0;
-                for (int ii = 1; ii <= n; ii++)
+                for (var ii = 1; ii <= n; ii++)
                     sp += z[ii, k] * a[ii, kk];
 
                 temp = System.Math.Sqrt(sp * sp + zdota[nact] * zdota[nact]);
@@ -1254,7 +1248,7 @@
                 zdota[nact] = alpha * zdota[k];
                 zdota[k] = temp;
 
-                for (int i = 1; i <= n; ++i)
+                for (var i = 1; i <= n; ++i)
                 {
                     temp = alpha * z[i, nact] + beta * z[i, k];
                     z[i, nact] = alpha * z[i, k] - beta * z[i, nact];
@@ -1277,11 +1271,11 @@
             kk = iact[nact];
 
             temp = 0;
-            for (int ii = 1; ii <= n; ii++)
+            for (var ii = 1; ii <= n; ii++)
                 temp += sdirn[ii] * a[ii, kk];
             temp = (temp - 1.0) / zdota[nact];
 
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 sdirn[k] -= temp * z[k, nact];
 
             goto L_340;
@@ -1300,7 +1294,7 @@
                     var kp = k + 1;
                     kk = iact[kp];
                     double sp = 0;
-                    for (int ii = 1; ii <= n; ii++)
+                    for (var ii = 1; ii <= n; ii++)
                         sp += z[ii, k] * a[ii, kk];
 
                     temp = System.Math.Sqrt(sp * sp + zdota[kp] * zdota[kp]);
@@ -1310,7 +1304,7 @@
                     zdota[kp] = alpha * zdota[k];
                     zdota[k] = temp;
 
-                    for (int i = 1; i <= n; ++i)
+                    for (var i = 1; i <= n; ++i)
                     {
                         temp = alpha * z[i, kp] + beta * z[i, k];
                         z[i, kp] = alpha * z[i, k] - beta * z[i, kp];
@@ -1334,10 +1328,10 @@
                 goto L_320;
 
             temp = 0;
-            for (int ii = 1; ii <= n; ii++)
+            for (var ii = 1; ii <= n; ii++)
                 temp += sdirn[ii] * z[ii, nact + 1];
 
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 sdirn[k] -= temp * z[k, nact + 1];
 
             goto L_340;
@@ -1347,7 +1341,7 @@
         L_320:
             temp = 1.0 / zdota[nact];
 
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 sdirn[k] = temp * z[k, nact];
 
             //     Calculate the step to the boundary of the trust region or take the step
@@ -1361,7 +1355,7 @@
             var sd = 0.0;
             var ss = 0.0;
 
-            for (int i = 1; i <= n; ++i)
+            for (var i = 1; i <= n; ++i)
             {
                 if (System.Math.Abs(dx[i]) >= 1.0E-6 * rho)
                     dd -= dx[i] * dx[i];
@@ -1397,19 +1391,19 @@
             //     Because DXNEW will be changed during the calculation of some Lagrange
             //     multipliers, it will be restored to the following value later.
 
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 dxnew[k] = dx[k] + step * sdirn[k];
 
             if (mcon == m)
             {
                 resold = resmax;
                 resmax = 0.0;
-                for (int k = 1; k <= nact; ++k)
+                for (var k = 1; k <= nact; ++k)
                 {
                     kk = iact[k];
 
                     temp = 0;
-                    for (int ii = 1; ii <= n; ii++)
+                    for (var ii = 1; ii <= n; ii++)
                         temp += a[ii, kk] * dxnew[ii];
 
                     temp = b[kk] - temp;
@@ -1428,7 +1422,7 @@
             L_390:
                 var zdotw = 0.0;
                 var zdwabs = 0.0;
-                for (int i = 1; i <= n; ++i)
+                for (var i = 1; i <= n; ++i)
                 {
                     temp = z[i, k] * dxnew[i];
                     zdotw += temp;
@@ -1446,7 +1440,7 @@
                 if (k >= 2)
                 {
                     kk = iact[k];
-                    for (int i = 1; i <= n; ++i)
+                    for (var i = 1; i <= n; ++i)
                         dxnew[i] -= vmultd[k] * a[i, kk];
                     --k;
                     goto L_390;
@@ -1458,20 +1452,20 @@
 
             //     Complete VMULTC by finding the new constraint residuals.
 
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 dxnew[k] = dx[k] + step * sdirn[k];
 
             if (mcon > nact)
             {
                 var kl = nact + 1;
 
-                for (int k = kl; k <= mcon; ++k)
+                for (var k = kl; k <= mcon; ++k)
                 {
                     kk = iact[k];
                     var total = resmax - b[kk];
                     var sumabs = resmax + System.Math.Abs(b[kk]);
 
-                    for (int i = 1; i <= n; ++i)
+                    for (var i = 1; i <= n; ++i)
                     {
                         temp = a[i, kk] * dxnew[i];
                         total += temp;
@@ -1492,7 +1486,7 @@
 
             ratio = 1.0;
             icon = 0;
-            for (int k = 1; k <= mcon; ++k)
+            for (var k = 1; k <= mcon; ++k)
             {
                 if (vmultd[k] < 0.0)
                 {
@@ -1508,10 +1502,10 @@
             //     Update DX, VMULTC and RESMAX.
 
             temp = 1.0 - ratio;
-            for (int k = 1; k <= n; ++k)
+            for (var k = 1; k <= n; ++k)
                 dx[k] = temp * dx[k] + ratio * dxnew[k];
 
-            for (int k = 1; k <= mcon; ++k)
+            for (var k = 1; k <= mcon; ++k)
                 vmultc[k] = System.Math.Max(0.0, temp * vmultc[k] + ratio * vmultd[k]);
 
             if (mcon == m)

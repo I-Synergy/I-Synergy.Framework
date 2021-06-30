@@ -178,8 +178,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             var s = new double[n];
             var r = new double[n];
             var w_new = new double[n];
-
-
             var f = Function(w);
             var g = Gradient(w);
 
@@ -302,8 +300,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 r[i] = -g[i];
                 d[i] = r[i];
             }
-
-
             double cgtol = 0; // cgtol = 0.1 * dnrm2_(&n, g, &inc);
             for (var j = 0; j < g.Length; j++)
                 cgtol += g[j] * g[j];
@@ -368,8 +364,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
                     var dsq = delta * delta;
                     var rad = Math.Sqrt(std * std + dtd * (dsq - sts));
-
-
                     if (std >= 0)
                         alpha = (dsq - sts) / (std + rad);
                     else

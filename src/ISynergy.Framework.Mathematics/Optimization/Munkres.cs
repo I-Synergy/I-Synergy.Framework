@@ -120,9 +120,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///         </list>
     ///     </para>
     /// </remarks>
-    /// <example>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\MunkresTest.cs" region="doc_example" />
-    /// </example>
     /// <seealso cref="ISynergy.Framework.Mathematics.Optimization.IOptimizationMethod" />
     public class Munkres : IOptimizationMethod
     {
@@ -146,8 +143,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         private bool[][] validMap;
 
         internal bool[] validRow;
-
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="Munkres" /> class.
         /// </summary>
@@ -260,8 +255,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         {
             return run(CostMatrix.Copy());
         }
-
-
         /// <summary>
         ///     Finds the maximum value of a function. The solution vector
         ///     will be made available at the <see cref="Solution" /> property.
@@ -292,8 +285,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return true;
         }
-
-
         internal int RunStep(int step)
         {
             switch (step)
@@ -318,8 +309,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     throw new InvalidOperationException();
             }
         }
-
-
         /// <summary>
         ///     Preprocesses the cost matrix to remove infinities and invalid values.
         /// </summary>
@@ -329,8 +318,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             validRow = new bool[NumberOfWorkers];
             validCol = new bool[NumberOfTasks];
             validMap = Jagged.Create<bool>(NumberOfWorkers, NumberOfTasks);
-
-
             double sum = 0;
             var max = double.NegativeInfinity;
 
@@ -452,8 +439,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 return 7; // done
             return 4;
         }
-
-
         /// <summary>
         ///     Find a noncovered zero and prime it. If there is no starred zero
         ///     in the row containing this primed zero, Go to Step 5. Otherwise,
@@ -548,8 +533,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return 3;
         }
-
-
         /// <summary>
         ///     Add the value found in Step 4 to every element of each covered row, and subtract
         ///     it from every element of each uncovered column.

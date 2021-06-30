@@ -11,10 +11,6 @@ namespace ISynergy.Framework.Mathematics
         /// <typeparam name="TInput">The type of the input.</typeparam>
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="matrix">The matrix to be converted.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_matrix" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_jagged" />
-        /// </example>
         public static TOutput[][] Convert<TInput, TOutput>(TInput[,] matrix)
         {
             return Convert(matrix, x => (TOutput)System.Convert.ChangeType(x, typeof(TOutput)));
@@ -26,10 +22,6 @@ namespace ISynergy.Framework.Mathematics
         /// <typeparam name="TInput">The type of the input.</typeparam>
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="matrix">The matrix to be converted.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_matrix" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_jagged" />
-        /// </example>
         public static TOutput[][] Convert<TInput, TOutput>(this TInput[][] matrix)
         {
             return Convert(matrix, x => (TOutput)System.Convert.ChangeType(x, typeof(TOutput)));
@@ -42,10 +34,6 @@ namespace ISynergy.Framework.Mathematics
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="matrix">The vector to be converted.</param>
         /// <param name="converter">The converter function.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_matrix" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_jagged" />
-        /// </example>
         public static TOutput[][] Convert<TInput, TOutput>(this TInput[,] matrix,
 #if !NETSTANDARD1_4
             Converter<TInput, TOutput> converter
@@ -72,17 +60,7 @@ namespace ISynergy.Framework.Mathematics
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="matrix">The vector to be converted.</param>
         /// <param name="converter">The converter function.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_matrix" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_jagged" />
-        /// </example>
-        public static TOutput[][] Convert<TInput, TOutput>(this TInput[][] matrix,
-#if !NETSTANDARD1_4
-            Converter<TInput, TOutput> converter
-#else
-            Func<TInput, TOutput> converter
-#endif
-        )
+        public static TOutput[][] Convert<TInput, TOutput>(this TInput[][] matrix, Converter<TInput, TOutput> converter)
         {
             var rows = matrix.Rows();
             var cols = matrix.Columns();
@@ -100,10 +78,6 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="array">The tensor to be converted.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_matrix" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_jagged" />
-        /// </example>
         public static Array Convert<TOutput>(this Array array)
         {
             return Convert(array, typeof(TOutput));
@@ -114,10 +88,6 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <param name="type">The type of the output.</param>
         /// <param name="array">The tensor to be converted.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_matrix" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_jagged" />
-        /// </example>
         public static Array Convert(this Array array, Type type)
         {
             var r = Zeros(type, array.GetLength(true));

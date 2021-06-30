@@ -47,8 +47,6 @@
             }
         }
 
-
-
         #region Static methods for output formatting
         /// <summary>
         ///   Converts a jagged or multidimensional array into a <a cref="System.String">System.String</a> representation.
@@ -70,21 +68,15 @@
             }
 
             IFormatProvider culture = formatProvider.InnerProvider;
-
-
             // Retrieve matrix dimensions. If the matrix is a jagged array,
             //  we will compute the columns for each of the rows.
             int rows = matrix.GetLength(0);
             int cols = (matrix.Rank == 2) ? matrix.GetLength(1) : 0;
-
-
             // Initialize the matrix construction
             StringBuilder sb = new StringBuilder();
             sb.Append(formatProvider.FormatMatrixStart);
-
-
             // For each row
-            for (int i = 0; i < rows; i++)
+            for (var i = 0; i < rows; i++)
             {
                 // Start constructing the row
                 sb.Append(formatProvider.FormatRowStart);
@@ -105,7 +97,7 @@
                         cols = row.Length;
 
                         // For each column
-                        for (int j = 0; j < cols; j++)
+                        for (var j = 0; j < cols; j++)
                         {
                             sb.Append(handleOtherFormats(elementFormat, row.GetValue(j), culture));
 
@@ -119,7 +111,7 @@
                     #region Process row for multidimensional arrays
 
                     // For each column
-                    for (int j = 0; j < cols; j++)
+                    for (var j = 0; j < cols; j++)
                     {
                         sb.Append(handleOtherFormats(elementFormat, matrix.GetValue(i, j), culture));
 
@@ -137,8 +129,6 @@
 
             // Finalize constructing the matrix
             sb.Append(formatProvider.FormatMatrixEnd);
-
-
             // Finally, perform post-processing such as replacing user
             // selected newlines or presenting the output in just one line.
             String str = sb.ToString();
@@ -257,8 +247,6 @@
 
         #endregion
 
-
-
         #region Static methods for input parsing
         /// <summary>
         ///   Converts a matrix represented in a System.String into a jagged array.
@@ -321,7 +309,5 @@
         }
 
         #endregion
-
-
     }
 }

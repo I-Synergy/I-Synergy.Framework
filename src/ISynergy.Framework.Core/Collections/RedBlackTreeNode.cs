@@ -33,11 +33,9 @@ namespace ISynergy.Framework.Core.Collections
     [Serializable]
     public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
     {
-        RedBlackTreeNode<T> parent;
-
-        RedBlackTreeNodeType color;
-
-        T value;
+        private RedBlackTreeNode<T> _parent;
+        private RedBlackTreeNodeType _color;
+        private T _value;
 
         /// <summary>
         ///   Constructs a new empty node.
@@ -45,7 +43,6 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode()
         {
-
         }
 
         /// <summary>
@@ -54,7 +51,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode(T value)
         {
-            this.value = value;
+            _value = value;
         }
 
         /// <summary>
@@ -63,8 +60,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> Parent
         {
-            get { return parent; }
-            set { parent = value; }
+            get { return _parent; }
+            set { _parent = value; }
         }
 
         /// <summary>
@@ -73,8 +70,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNodeType Color
         {
-            get { return color; }
-            set { color = value; }
+            get { return _color; }
+            set { _color = value; }
         }
 
         /// <summary>
@@ -83,8 +80,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public T Value
         {
-            get { return this.value; }
-            set { this.value = value; }
+            get { return this._value; }
+            set { this._value = value; }
         }
 
         /// <summary>
@@ -95,7 +92,7 @@ namespace ISynergy.Framework.Core.Collections
         /// </returns>
         public override string ToString()
         {
-            if (color == RedBlackTreeNodeType.Black)
+            if (_color == RedBlackTreeNodeType.Black)
                 return "Black: {0)".Format(Value);
             return "Red: {0)".Format(Value);
         }
@@ -117,7 +114,6 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode()
         {
-
         }
 
         /// <summary>

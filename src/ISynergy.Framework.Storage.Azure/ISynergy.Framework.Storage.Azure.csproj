@@ -3,10 +3,6 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{B7A9DB2D-EEE5-44B5-9F09-2B044C48E25D}</ProjectGuid>
-
         <PackageId>I-Synergy.Framework.Storage.Azure</PackageId>
         <Description>I-Synergy Framework Azure Storage for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>
@@ -15,7 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Storage.Blobs" Version="12.9.0" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.9.1" />
 		<PackageReference Include="System.Text.Encodings.Web" Version="5.0.1" />
     </ItemGroup>
 

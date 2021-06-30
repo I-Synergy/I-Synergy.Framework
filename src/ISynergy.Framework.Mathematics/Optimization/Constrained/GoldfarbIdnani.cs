@@ -83,15 +83,12 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///     <para>
     ///         This is an example stating the problem using lambdas:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\GoldfarbIdnaniTest.cs" region="doc_lambdas" />
     ///     <para>
     ///         This is an example stating the problem using strings:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\GoldfarbIdnaniTest.cs" region="doc_string" />
     ///     <para>
     ///         And finally, an example stating the problem using matrices:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\GoldfarbIdnaniTest.cs" region="doc_matrix" />
     /// </example>
     /// <seealso cref="AugmentedLagrangian" />
     public class GoldfarbIdnani : BaseGradientOptimizationMethod,
@@ -140,8 +137,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 function.QuadraticTerms, function.LinearTerms,
                 A, constraintValues, equalities);
         }
-
-
         /// <summary>
         ///     Constructs a new instance of the <see cref="GoldfarbIdnani" /> class.
         /// </summary>
@@ -184,8 +179,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 numberOfEqualities)
         {
         }
-
-
         /// <summary>
         ///     Gets the total number of constraints in the problem.
         /// </summary>
@@ -220,8 +213,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     last solution found.
         /// </summary>
         public double[] Lagrangian { get; private set; }
-
-
         /// <summary>
         ///     Gets the indices of the active constraints
         ///     found during the last call of the
@@ -256,8 +247,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     quadratic optimization problem.
         /// </summary>
         public double[] LinearTerms { get; private set; }
-
-
         /// <summary>
         ///     Finds the minimum value of a function. The solution vector
         ///     will be made available at the <see cref="IOptimizationMethod{TInput, TOutput}.Solution" /> property.
@@ -287,8 +276,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return Status == GoldfarbIdnaniStatus.Success;
         }
-
-
         /// <summary>
         ///     Finds the maximum value of a function. The solution vector
         ///     will be made available at the <see cref="IOptimizationMethod{TInput, TOutput}.Solution" /> property.
@@ -391,8 +378,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return GoldfarbIdnaniStatus.Success;
         }
-
-
         //
         // This routine uses the Goldfarb/Idnani algorithm to solve the
         // following minimization problem:
@@ -470,8 +455,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             double f = 0;
             nact = 0;
-
-
             // Store the initial dvec to calculate below the
             //  unconstrained minima of the critical value.
 
@@ -487,8 +470,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             for (var i = 0; i < iact.Length; i++)
                 iact[i] = -1;
-
-
             // Get the initial solution
             if (ierr == 0)
             {
@@ -550,8 +531,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             f = -f / 2.0;
             ierr = 0;
-
-
             // calculate the norm of each column of the A matrix 
 
             for (var i = 0; i < iwnbv.Length; i++)
@@ -566,8 +545,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             nact = 0;
             Iterations = 0;
             Deletions = 0;
-
-
         L50: // start a new iteration 
 
             if (Token.IsCancellationRequested)
@@ -651,8 +628,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             if (nvl == -1)
                 return;
-
-
             L55:
 
             // calculate d=J^Tn^+ where n^+ is the normal vector of the violated 
@@ -713,8 +688,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 t1inf = false;
                 it1 = i + 1;
             }
-
-
             // if r has positive elements, find the partial step length t1, which is 
             // the maximum step in dual space without violating dual feasibility. 
             // it1 stores in which component t1, the min of u/r, occurs. 
@@ -740,8 +713,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     }
                 }
             }
-
-
             // test if the z vector is equal to zero 
 
             sum = 0.0;
@@ -809,8 +780,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 // constraints and update J and R 
 
                 iact[nact++] = nvl;
-
-
                 // to update R we have to put the first nact-1 components of the d vector 
                 // into column (nact) of R 
 
@@ -923,8 +892,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             }
 
             goto L50;
-
-
         L700: // Drop constraint it1 
 
             // if it1 = nact it is only necessary
@@ -932,8 +899,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             if (it1 == nact)
                 goto L799;
-
-
             L797: // After updating one row of R (column of J) we will also come back here
 
             // We have to find the Givens rotation which will reduce the element
@@ -953,8 +918,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             temp = Special.Sign(gc * Math.Sqrt(1.0 + gs * gs / (gc * gc)), iwrm[l1 - 1]);
             gc = iwrm[l1 - 1] / temp;
             gs = iwrm[l1] / temp;
-
-
             // The Givens rotation is done with the matrix (gc gs, gs -gc). If gc is
             // one, then element (it1+1,it1+1) of R is zero compared with element 
             // (it1,it1+1). Hence we don't have to do anything. if gc is zero, then

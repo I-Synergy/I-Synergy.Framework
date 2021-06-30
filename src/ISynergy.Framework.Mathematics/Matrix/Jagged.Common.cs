@@ -32,8 +32,6 @@ namespace ISynergy.Framework.Mathematics
                 clone[i] = (T[])a[i].Clone();
             return clone;
         }
-
-
         /// <summary>
         ///     Copies the content of an array to another array.
         /// </summary>
@@ -96,8 +94,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         // TODO: Use T4 templates for the equality comparisons
-
-
         #region Transpose
 
         /// <summary>
@@ -164,8 +160,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return Transpose(matrix, false);
         }
-
-
         /// <summary>
         ///     Gets the transpose of a matrix.
         /// </summary>
@@ -239,8 +233,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Matrix Characteristics
 
         /// <summary>
@@ -447,8 +439,6 @@ namespace ISynergy.Framework.Mathematics
 
             return true;
         }
-
-
         // TODO: Move to T4 template
         /// <summary>
         ///     Gets the trace of a matrix.
@@ -530,7 +520,7 @@ namespace ISynergy.Framework.Mathematics
         //    if (array.Length == 0)
         //        return true;
         //    int cols = array[0].Length;
-        //    for (int i = 0; i < array.Length; i++)
+        //    for (var i = 0; i < array.Length; i++)
         //    {
         //        if (array[0].Length != cols)
         //            return false;
@@ -540,8 +530,6 @@ namespace ISynergy.Framework.Mathematics
         //}
 
         #endregion
-
-
         #region Operation Mapping (Apply)
 
         /// <summary>

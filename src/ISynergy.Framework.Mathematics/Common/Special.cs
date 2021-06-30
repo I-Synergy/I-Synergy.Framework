@@ -186,8 +186,6 @@ namespace ISynergy.Framework.Mathematics
             var r = s * Math.Sqrt(2) / 2.0;
             return r;
         }
-
-
         /// <summary>
         ///     Inverse complemented error function (<see cref="Erfc(double)" />.
         /// </summary>
@@ -250,8 +248,6 @@ namespace ISynergy.Framework.Mathematics
                 return x + Math.Exp(-x);
             return x;
         }
-
-
         #region Polynomial and spline functions
 
         /// <summary>
@@ -423,8 +419,6 @@ namespace ISynergy.Framework.Mathematics
         private static double[] lnfcache;
 
         #endregion
-
-
         #region Utility functions
 
         /// <summary>
@@ -580,8 +574,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Derived trigonometric functions
 
         //

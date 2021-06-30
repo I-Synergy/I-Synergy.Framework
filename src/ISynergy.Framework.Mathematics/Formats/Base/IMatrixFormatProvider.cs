@@ -40,8 +40,6 @@ namespace ISynergy.Framework.Mathematics
         string FormatColDelimiter { get; }
 
         #endregion
-
-
         #region Parsing specification
 
         /// <summary>A string denoting the start of the matrix to be used in parsing.</summary>

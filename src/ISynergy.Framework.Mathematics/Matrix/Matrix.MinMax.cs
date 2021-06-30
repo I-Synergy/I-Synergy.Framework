@@ -42,8 +42,6 @@ namespace ISynergy.Framework.Mathematics
             Max(matrix, dimension, result, values);
             return result;
         }
-
-
         /// <summary>
         ///     Gets the index of the minimum element in a matrix.
         /// </summary>
@@ -81,8 +79,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Matrix Min/Max
 
         /// <summary>
@@ -104,8 +100,6 @@ namespace ISynergy.Framework.Mathematics
             Tuple<int, int> index;
             return Min(matrix, out index);
         }
-
-
         /// <summary>
         ///     Gets the minimum values across one dimension of a matrix.
         /// </summary>
@@ -199,8 +193,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Core implementations
 
         /// <summary>
@@ -274,8 +266,6 @@ namespace ISynergy.Framework.Mathematics
 
             return result;
         }
-
-
         /// <summary>
         ///     Gets the minimum values across one dimension of a matrix.
         /// </summary>
@@ -309,8 +299,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region GetRange
 
         /// <summary>
@@ -364,18 +352,16 @@ namespace ISynergy.Framework.Mathematics
                     max = v;
             }
         }
-
-
         /// <summary>
         ///     Gets the maximum and minimum values in a vector.
         /// </summary>
         /// <param name="values">The vector whose min and max should be computed.</param>
         /// <exception cref="System.ArgumentException">Raised if the array is empty.</exception>
-        public static IntRange GetRange(this int[] values)
+        public static NumericRange GetRange(this int[] values)
         {
             int min, max;
             GetRange(values, out min, out max);
-            return new IntRange(min, max);
+            return new NumericRange(min, max);
         }
 
         /// <summary>
@@ -383,11 +369,11 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <param name="values">The vector whose min and max should be computed.</param>
         /// <exception cref="System.ArgumentException">Raised if the array is empty.</exception>
-        public static DoubleRange GetRange(this double[] values)
+        public static NumericRange GetRange(this double[] values)
         {
             double min, max;
             GetRange(values, out min, out max);
-            return new DoubleRange(min, max);
+            return new NumericRange(min, max);
         }
 
         /// <summary>
@@ -395,11 +381,11 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <param name="values">The vector whose min and max should be computed.</param>
         /// <exception cref="System.ArgumentException">Raised if the array is empty.</exception>
-        public static IntRange GetRange(this int[,] values)
+        public static NumericRange GetRange(this int[,] values)
         {
             int min, max;
             GetRange(values, out min, out max);
-            return new IntRange(min, max);
+            return new NumericRange(min, max);
         }
 
         /// <summary>
@@ -407,11 +393,11 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <param name="values">The vector whose min and max should be computed.</param>
         /// <exception cref="System.ArgumentException">Raised if the array is empty.</exception>
-        public static DoubleRange GetRange(this double[,] values)
+        public static NumericRange GetRange(this double[,] values)
         {
             double min, max;
             GetRange(values, out min, out max);
-            return new DoubleRange(min, max);
+            return new NumericRange(min, max);
         }
 
         /// <summary>
@@ -422,15 +408,15 @@ namespace ISynergy.Framework.Mathematics
         ///     Pass 0 if the range should be computed for each of the columns. Pass 1
         ///     if the range should be computed for each row. Default is 0.
         /// </param>
-        public static DoubleRange[] GetRange(this double[,] value, int dimension)
+        public static NumericRange[] GetRange(this double[,] value, int dimension)
         {
             var rows = value.GetLength(0);
             var cols = value.GetLength(1);
-            DoubleRange[] ranges;
+            NumericRange[] ranges;
 
             if (dimension == 0)
             {
-                ranges = new DoubleRange[cols];
+                ranges = new NumericRange[cols];
 
                 for (var j = 0; j < ranges.Length; j++)
                 {
@@ -445,12 +431,12 @@ namespace ISynergy.Framework.Mathematics
                             min = value[i, j];
                     }
 
-                    ranges[j] = new DoubleRange(min, max);
+                    ranges[j] = new NumericRange(min, max);
                 }
             }
             else
             {
-                ranges = new DoubleRange[rows];
+                ranges = new NumericRange[rows];
 
                 for (var j = 0; j < ranges.Length; j++)
                 {
@@ -465,7 +451,7 @@ namespace ISynergy.Framework.Mathematics
                             min = value[j, i];
                     }
 
-                    ranges[j] = new DoubleRange(min, max);
+                    ranges[j] = new NumericRange(min, max);
                 }
             }
 

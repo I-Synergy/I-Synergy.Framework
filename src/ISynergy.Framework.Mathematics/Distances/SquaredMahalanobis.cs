@@ -7,10 +7,6 @@
     ///   Squared Mahalanobis distance.
     /// </summary>
     /// 
-    /// <example>
-    ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_square_mahalanobis_3" />
-    /// </example>
-    /// 
     [Serializable]
     public struct SquareMahalanobis : IMetric<double[]>, ICloneable
     {
@@ -23,10 +19,6 @@
         /// </summary>
         /// 
         /// <param name="chol">A Cholesky decomposition of the covariance matrix.</param>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_square_mahalanobis_3" />
-        /// </example>
         /// 
         public SquareMahalanobis(CholeskyDecomposition chol)
         {
@@ -41,10 +33,6 @@
         /// 
         /// <param name="svd">A Singular Value decomposition of the covariance matrix.</param>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_square_mahalanobis_3" />
-        /// </example>
-        /// 
         public SquareMahalanobis(SingularValueDecomposition svd)
         {
             this.chol = null;
@@ -57,10 +45,6 @@
         /// </summary>
         /// 
         /// <param name="precision">The precision matrix (the inverse of the covariance matrix).</param>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_square_mahalanobis_3" />
-        /// </example>
         /// 
         public SquareMahalanobis(double[,] precision)
         {
@@ -80,10 +64,6 @@
         ///   of the given covariance matrix.
         /// </returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_square_mahalanobis_3" />
-        /// </example>
-        /// 
         public static SquareMahalanobis FromCovarianceMatrix(double[,] covariance)
         {
             return new SquareMahalanobis(new CholeskyDecomposition(covariance));
@@ -98,10 +78,6 @@
         /// <returns>
         ///   A square Mahalanobis distance using the given precision matrix.
         /// </returns>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_square_mahalanobis_3" />
-        /// </example>
         /// 
         public static SquareMahalanobis FromPrecisionMatrix(double[,] precision)
         {
@@ -122,14 +98,10 @@
         ///   to the distance function implemented by this class.
         /// </returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_square_mahalanobis_3" />
-        /// </example>
-        /// 
         public double Distance(double[] x, double[] y)
         {
             double[] d = new double[x.Length];
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 d[i] = x[i] - y[i];
 
             double[] z;
@@ -141,14 +113,10 @@
                 z = precision.Dot(d);
 
             double sum = 0.0;
-            for (int i = 0; i < d.Length; i++)
+            for (var i = 0; i < d.Length; i++)
                 sum += d[i] * z[i];
             return Math.Abs(sum);
         }
-
-
-
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>

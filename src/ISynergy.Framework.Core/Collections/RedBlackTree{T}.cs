@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -49,11 +50,10 @@ namespace ISynergy.Framework.Core.Collections
         ICollection<RedBlackTreeNode<T>>, ICollection<T>
     {
 
-        IComparer<T> compare;
-        RedBlackTreeNode<T> root;
-        int count;
-
-        bool duplicates = false;
+        private IComparer<T> _compare;
+        private RedBlackTreeNode<T> _root;
+        private int _count;
+        private bool _duplicates = false;
 
         /// <summary>
         ///   Constructs a new <see cref="RedBlackTree&lt;T&gt;"/> using the
@@ -62,7 +62,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTree()
         {
-            this.compare = Comparer<T>.Default;
+            _compare = Comparer<T>.Default;
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTree(IComparer<T> comparer)
         {
-            this.compare = comparer;
+            _compare = comparer;
         }
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTree(bool allowDuplicates)
         {
-            this.compare = Comparer<T>.Default;
-            this.duplicates = allowDuplicates;
+            _compare = Comparer<T>.Default;
+            _duplicates = allowDuplicates;
         }
 
         /// <summary>
@@ -106,15 +106,15 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTree(IComparer<T> comparer, bool allowDuplicates)
         {
-            this.compare = comparer;
-            this.duplicates = allowDuplicates;
+            _compare = comparer;
+            _duplicates = allowDuplicates;
         }
 
         /// <summary>
         ///   Gets the number of nodes contained in this red-black tree.
         /// </summary>
         /// 
-        public int Count { get { return count; } }
+        public int Count { get { return _count; } }
 
         /// <summary>
         ///   Gets the <see cref="IComparer{T}"/> for this red black tree.
@@ -122,7 +122,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public IComparer<T> Comparer
         {
-            get { return compare; }
+            get { return _compare; }
         }
 
         /// <summary>
@@ -131,8 +131,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public void Clear()
         {
-            this.root = null;
-            this.count = 0;
+            _root = null;
+            _count = 0;
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace ISynergy.Framework.Core.Collections
         public void Add(RedBlackTreeNode<T> item)
         {
             var k = item.Value;
-            var p = this.root;
+            var p = this._root;
 
             item.Color = RedBlackTreeNodeType.Red;
             item.Parent = null;
@@ -175,18 +175,18 @@ namespace ISynergy.Framework.Core.Collections
 
             if (p == null)
             {
-                this.root = item;
+                _root = item;
                 item.Color = RedBlackTreeNodeType.Black;
-                this.count++;
+                this._count++;
                 return;
             }
 
             // insert (red) node into tree
             while (true)
             {
-                int cmp = compare.Compare(k, p.Value);
+                int cmp = _compare.Compare(k, p.Value);
 
-                if (!duplicates && cmp == 0)
+                if (!_duplicates && cmp == 0)
                 {
                     p.Value = item.Value;
                     return;
@@ -258,7 +258,7 @@ namespace ISynergy.Framework.Core.Collections
                 }
             }
 
-            this.count++;
+            this._count++;
         }
 
         /// <summary>
@@ -316,9 +316,6 @@ namespace ISynergy.Framework.Core.Collections
             return Remove(node);
         }
 
-
-
-
         /// <summary>
         ///   Removes a node from the tree.
         /// </summary>
@@ -356,7 +353,7 @@ namespace ISynergy.Framework.Core.Collections
             }
             else
             {
-                this.root = m;
+                _root = m;
             }
 
             mp = node.Parent;
@@ -453,13 +450,10 @@ namespace ISynergy.Framework.Core.Collections
                 }
             }
 
-            this.count--;
+            this._count--;
             node.Value = k; // n may have changed during remove
             return node; // the node that was deleted may be different from initial n
         }
-
-
-
 
         /// <summary>
         ///   Copies the nodes of this tree to an array, starting at a
@@ -526,7 +520,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public override IEnumerator<RedBlackTreeNode<T>> GetEnumerator()
         {
-            RedBlackTreeNode<T> node = root;
+            RedBlackTreeNode<T> node = _root;
             RedBlackTreeNode<T> lastNode = null;
 
             while (node != null)
@@ -578,7 +572,7 @@ namespace ISynergy.Framework.Core.Collections
         ///   be used to traverse through this tree using in-order traversal.
         /// </returns>
         /// 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
@@ -632,11 +626,11 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> Find(T item)
         {
-            var p = root;
+            var p = _root;
 
             while (p != null)
             {
-                int comp = compare.Compare(item, p.Value);
+                int comp = _compare.Compare(item, p.Value);
 
                 if (comp == 0)
                     return p;
@@ -665,7 +659,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             while (node != null)
             {
-                if (compare.Compare(node.Value, value) <= 0)
+                if (_compare.Compare(node.Value, value) <= 0)
                 {
                     // p.k <= k
                     var r = FindLessThanOrEqualTo(node.Right, value);
@@ -699,7 +693,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> FindLessThanOrEqualTo(T value)
         {
-            return FindLessThanOrEqualTo(this.root, value);
+            return FindLessThanOrEqualTo(this._root, value);
         }
 
         /// <summary>
@@ -719,7 +713,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             while (node != null)
             {
-                if (compare.Compare(node.Value, value) < 0)
+                if (_compare.Compare(node.Value, value) < 0)
                 {
                     // p.k < k
                     var r = FindLessThan(node.Right, value);
@@ -750,7 +744,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> FindLessThan(T value)
         {
-            return FindLessThan(this.root, value);
+            return FindLessThan(this._root, value);
         }
 
         /// <summary>
@@ -770,7 +764,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             while (node != null)
             {
-                if (compare.Compare(node.Value, value) > 0)
+                if (_compare.Compare(node.Value, value) > 0)
                 {
                     // p.k > k
                     var l = FindGreaterThan(node.Left, value);
@@ -802,7 +796,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> FindGreaterThan(T value)
         {
-            return FindGreaterThan(this.root, value);
+            return FindGreaterThan(this._root, value);
         }
 
         /// <summary>
@@ -816,7 +810,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> Min()
         {
-            var n = this.root;
+            var n = this._root;
 
             while (n != null && n.Left != null)
             {
@@ -837,7 +831,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> Max()
         {
-            var n = this.root;
+            var n = this._root;
 
             while (n != null && n.Right != null)
             {
@@ -951,7 +945,7 @@ namespace ISynergy.Framework.Core.Collections
             }
             else
             {
-                this.root = n;
+                _root = n;
             }
 
             n.Parent = p.Parent;
@@ -976,7 +970,7 @@ namespace ISynergy.Framework.Core.Collections
             }
             else
             {
-                this.root = n;
+                _root = n;
             }
 
             n.Parent = p.Parent;
@@ -1002,13 +996,13 @@ namespace ISynergy.Framework.Core.Collections
             if (n.Right != null && n.Right.Parent != n)
                 return false;
 
-            if (n.Right != null && compare.Compare(n.Right.Value, n.Value) < 0)
+            if (n.Right != null && _compare.Compare(n.Right.Value, n.Value) < 0)
                 return false;
 
             if (n.Left != null && n.Left.Parent != n)
                 return false;
 
-            if (n.Left != null && compare.Compare(n.Left.Value, n.Value) > 0)
+            if (n.Left != null && _compare.Compare(n.Left.Value, n.Value) > 0)
                 return false;
 
             if (n.Color == RedBlackTreeNodeType.Red)
@@ -1035,13 +1029,13 @@ namespace ISynergy.Framework.Core.Collections
         {
             int nblack = 0;
 
-            if (root == null)
+            if (_root == null)
                 return true;
 
-            if (root.Color != RedBlackTreeNodeType.Black)
+            if (_root.Color != RedBlackTreeNodeType.Black)
                 return false;
 
-            return check_node(root, ref nblack);
+            return check_node(_root, ref nblack);
         }
     }
 }

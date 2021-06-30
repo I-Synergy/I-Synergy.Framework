@@ -66,7 +66,7 @@
         public double Distance(int[] x, int[] y)
         {
             double sum = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 sum += Math.Pow(Math.Abs(x[i] - y[i]), p);
             return Math.Pow(sum, 1 / p);
         }
@@ -88,7 +88,7 @@
         public double Distance(double[] x, double[] y)
         {
             double sum = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 sum += Math.Pow(Math.Abs(x[i] - y[i]), p);
             return Math.Pow(sum, 1 / p);
         }
@@ -123,8 +123,6 @@
         /// </summary>
         /// 
         public static readonly Minkowski Euclidean = new Minkowski(2);
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

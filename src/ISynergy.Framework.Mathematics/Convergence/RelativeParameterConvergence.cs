@@ -80,8 +80,6 @@ namespace ISynergy.Framework.Mathematics
         ///     Gets or sets the watched value before the iteration.
         /// </summary>
         public double[] OldValues { get; private set; }
-
-
         /// <summary>
         ///     Gets or sets the watched value after the iteration.
         /// </summary>
@@ -109,8 +107,6 @@ namespace ISynergy.Framework.Mathematics
                 return false;
             }
         }
-
-
         /// <summary>
         ///     Gets or sets the maximum change in the watched value
         ///     after an iteration of the algorithm used to detect convergence.

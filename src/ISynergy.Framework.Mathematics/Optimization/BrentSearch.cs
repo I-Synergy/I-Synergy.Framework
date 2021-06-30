@@ -77,8 +77,6 @@
     /// <para>
     ///   The following example shows how to compute the maximum,
     ///   minimum and a single root of a univariate function.</para>
-    ///   
-    /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\BrentSearchTest.cs" region="doc_example" />
     /// </example>
     /// 
     /// 
@@ -159,8 +157,6 @@
         /// </summary>
         /// 
         public Func<double, double> Function { get; private set; }
-
-
         /// <summary>
         ///   Constructs a new Brent search algorithm.
         /// </summary>
@@ -184,8 +180,6 @@
             this.Tolerance = tol;
             this.MaxIterations = maxIterations;
         }
-
-
         /// <summary>
         ///   Attempts to find a root in the interval [a;b] 
         /// </summary>
@@ -398,10 +392,8 @@
             fv = function(v);
             x = v; fx = fv;
             w = v; fw = fv;
-
-
             // Main loop
-            for (int i = 0; i < maxIterations; i++)
+            for (var i = 0; i < maxIterations; i++)
             {
                 double range = upperBound - lowerBound; // Range over which the minimum
 
@@ -415,8 +407,6 @@
 
                 // Obtain the gold section step
                 new_step = r * (x < middle_range ? upperBound - x : lowerBound - x);
-
-
                 // Decide if the interpolation can be tried:
                 // Check if x and w are distinct.
                 if (Math.Abs(x - w) >= tol_act)
@@ -433,8 +423,6 @@
                     // If q was calculated with the opposite sign,
                     // make q positive and assign possible minus to p
                     if (q > 0) { p = -p; } else { q = -q; }
-
-
                     if (Math.Abs(p) < Math.Abs(new_step * q) && // If x+p/q falls in [a,b]
                         p > q * (lowerBound - x + 2 * tol_act) &&        // not too close to a and 
                         p < q * (upperBound - x - 2 * tol_act))          // b, and isn't too large
@@ -522,10 +510,8 @@
 
             if (Math.Sign(fa) == Math.Sign(fb))
                 return new BrentSearchResult(upperBound, fb, BrentSearchStatus.RootNotBracketed);
-
-
             // Main loop
-            for (int i = 0; i < maxIterations; i++)
+            for (var i = 0; i < maxIterations; i++)
             {
                 double prev_step = upperBound - lowerBound;
 
@@ -534,8 +520,6 @@
 
                 // Interpolation step is calculated in the form p/q, but
                 // division operations are delayed until the last moment.
-
-
                 if (Math.Abs(fc) < Math.Abs(fb))
                 {
                     // Swap data for b to be the best approximation

@@ -199,8 +199,6 @@ namespace ISynergy.Framework.Mathematics
 
             return last;
         }
-
-
         /// <summary>
         ///     Insertion sort.
         /// </summary>
@@ -312,8 +310,6 @@ namespace ISynergy.Framework.Mathematics
                 Array.Reverse(items, 0, n);
             }
         }
-
-
         /// <summary>
         ///     Reorders the elements in the range [left, right) in such a way that all elements that
         ///     are smaller than the pivot precede those that are greater than the pivot. Relative order
@@ -413,8 +409,6 @@ namespace ISynergy.Framework.Mathematics
             keys.Swap(last - 1, storeIndex);
             return storeIndex;
         }
-
-
         /// <summary>
         ///     Reorders the elements in the range [left, right) in such a way that all elements for which
         ///     the function <paramref name="compare" /> returns true precede the elements for which <paramref name="compare" />
@@ -516,8 +510,6 @@ namespace ISynergy.Framework.Mathematics
             items.Swap(last - 1, storeIndex);
             return storeIndex;
         }
-
-
         /// <summary>
         ///     Retrieves the n-th smallest element in an array. See remarks for more info.
         /// </summary>
@@ -746,8 +738,6 @@ namespace ISynergy.Framework.Mathematics
             Insertion(items, first, last, asc);
             return items[n];
         }
-
-
         // To get the full effect of median-of-three, we have to actually
         // sort the first, middle and last elements to prevent cases that
         // would trigger worst-case performance in the sorting algorithm.
@@ -801,8 +791,6 @@ namespace ISynergy.Framework.Mathematics
 
             return middle;
         }
-
-
 #if NET45 || NET46 || NET462 || NETSTANDARD2_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif

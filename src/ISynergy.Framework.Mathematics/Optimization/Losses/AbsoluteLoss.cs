@@ -18,8 +18,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses
         {
             Expected = expected;
         }
-
-
         /// <summary>
         ///     Gets or sets a value indicating whether the
         ///     mean absolute loss should be computed.

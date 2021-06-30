@@ -80,8 +80,6 @@
         /// 
         TLoss Derivative(TInput expected, TScore actual);
     }
-
-
     /// <summary>
     ///   Common interface for loss functions, such as 
     ///   <see cref="SquareLoss"/>, <see cref="HingeLoss"/> and
@@ -113,6 +111,4 @@
     public interface ILoss<T> : ILoss<T, double>
     {
     }
-
-
 }

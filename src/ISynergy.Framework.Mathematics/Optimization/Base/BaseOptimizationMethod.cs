@@ -139,8 +139,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             Solution = values;
             return Maximize();
         }
-
-
         /// <summary>
         ///     Finds the minimum value of a function. The solution vector
         ///     will be made available at the <see cref="Solution" /> property.
@@ -183,8 +181,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return success;
         }
-
-
         /// <summary>
         ///     Finds the minimum value of a function. The solution vector
         ///     will be made available at the <see cref="Solution" /> property.
@@ -205,15 +201,11 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             return success;
         }
-
-
         /// <summary>
         ///     Implements the actual optimization algorithm. This
         ///     method should try to minimize the objective function.
         /// </summary>
         protected abstract bool Optimize();
-
-
         /// <summary>
         ///     Creates an exception with a given inner optimization algorithm code (for debugging purposes).
         /// </summary>

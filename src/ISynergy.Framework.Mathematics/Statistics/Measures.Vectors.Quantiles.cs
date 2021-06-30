@@ -112,14 +112,10 @@
         /// 
         Type9 = 9
     }
-
-
     public static partial class Measures
     {
         private static readonly double ONE_THIRD = 1.0 / 3.0;
         private static readonly double TWO_THIRDS = 2.0 / 3.0;
-
-
         /// <summary>
         ///   Computes the Median of the given values.
         /// </summary>
@@ -168,10 +164,10 @@
         ///   
         /// <returns>The second quartile, the median of the given data.</returns>
         /// 
-        public static double Quartiles(this double[] values, out DoubleRange range, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
+        public static double Quartiles(this double[] values, out NumericRange range, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
         {
             double[] result = Quantiles(values, type: type, probabilities: new[] { 0.25, 0.5, 0.75 }, alreadySorted: alreadySorted, inPlace: inPlace);
-            range = new DoubleRange(result[0], result[2]);
+            range = new NumericRange(result[0], result[2]);
             return result[1];
         }
 
@@ -230,12 +226,6 @@
         {
             return Quantile(values, type: type, probabilities: 0.75, alreadySorted: alreadySorted, inPlace: inPlace);
         }
-
-
-
-
-
-
         /// <summary>
         ///   Computes single quantile for the given sequence.
         /// </summary>
@@ -302,10 +292,6 @@
                     throw new ArgumentException("Invalid quantile type, must be between 1 and 9 (inclusive)", "type");
             }
         }
-
-
-
-
         private static double[] Q1(double[] x, double[] p, bool alreadySorted, double[] result)
         {
             if (!alreadySorted)
@@ -315,7 +301,7 @@
                 Sort.Partial(x, n);
             }
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q1(x, p[j]);
 
             return result;
@@ -335,10 +321,6 @@
 
             return x[i];
         }
-
-
-
-
         private static double[] Q2(double[] x, double[] p, bool alreadySorted, double[] result)
         {
             if (!alreadySorted)
@@ -349,7 +331,7 @@
                 Sort.Partial(x, n);
             }
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q2(x, p[j]);
 
             return result;
@@ -376,10 +358,6 @@
 
             return (x[i] + x[i2]) / 2;
         }
-
-
-
-
         private static T[] Q3<T>(T[] x, double[] p, bool alreadySorted, T[] result)
              where T : IComparable<T>
         {
@@ -392,7 +370,7 @@
 
             double lowThreshold = 0.5 / x.Length;
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q3(x, p[j], lowThreshold);
 
             return result;
@@ -412,10 +390,6 @@
 
             return x[i];
         }
-
-
-
-
         private static double[] Q4(double[] x, double[] p, bool alreadySorted, double[] result)
         {
             if (!alreadySorted)
@@ -428,7 +402,7 @@
 
             double lowThreshold = 1.0 / x.Length;
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q4(x, p[j], lowThreshold);
 
             return result;
@@ -458,10 +432,6 @@
 
             return x[i] + (h - hc) * (x[i2] - x[i]);
         }
-
-
-
-
         private static double[] Q5(double[] x, double[] p, bool alreadySorted, double[] result)
         {
             if (!alreadySorted)
@@ -475,7 +445,7 @@
             double lowThreshold = 0.5 / x.Length;
             double highThreshold = (x.Length - 0.5) / x.Length;
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q5(x, p[j], lowThreshold, highThreshold);
 
             return result;
@@ -505,10 +475,6 @@
 
             return x[i] + (h - hc) * (x[i2] - x[i]);
         }
-
-
-
-
         private static double[] Q6(double[] x, double[] p, bool alreadySorted, double[] result)
         {
             if (!alreadySorted)
@@ -522,7 +488,7 @@
             double lowThreshold = 1.0 / (x.Length + 1);
             double highThreshold = x.Length / (double)(x.Length + 1);
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q6(x, p[j], lowThreshold, highThreshold);
 
             return result;
@@ -553,8 +519,6 @@
             return x[i] + (h - hc) * (x[i2] - x[i]);
         }
 
-
-
         private static double[] Q7(double[] x, double[] p, bool alreadySorted, double[] result)
         {
             if (!alreadySorted)
@@ -565,7 +529,7 @@
                 Sort.Partial(x, n);
             }
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q7(x, p[j]);
 
             return result;
@@ -593,8 +557,6 @@
             return x[i] + (h - hc) * (x[i2] - x[i]);
         }
 
-
-
         private static double[] Q8(double[] x, double[] p, bool alreadySorted, double[] result)
         {
             if (!alreadySorted)
@@ -608,7 +570,7 @@
             double lowThreshold = TWO_THIRDS / (x.Length + ONE_THIRD);
             double highThreshold = (x.Length - ONE_THIRD) / (x.Length + ONE_THIRD);
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q8(x, p[j], lowThreshold, highThreshold);
 
             return result;
@@ -639,8 +601,6 @@
             return x[i] + (h - hc) * (x[i2] - x[i]);
         }
 
-
-
         private static double[] Q9(double[] x, double[] p, bool alreadySorted, double[] result)
         {
             if (!alreadySorted)
@@ -654,7 +614,7 @@
             double lowThreshold = 0.625 / (x.Length + 0.25);
             double highThreshold = (x.Length - 0.375) / (x.Length + 0.25);
 
-            for (int j = 0; j < result.Length; j++)
+            for (var j = 0; j < result.Length; j++)
                 result[j] = Q9(x, p[j], lowThreshold, highThreshold);
 
             return result;

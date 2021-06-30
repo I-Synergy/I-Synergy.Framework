@@ -48,7 +48,7 @@
         public double Distance(int[] x, int[] y)
         {
             double sum = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 sum += System.Math.Abs(x[i] - y[i]);
             return sum;
         }
@@ -70,12 +70,10 @@
         public double Distance(double[] x, double[] y)
         {
             double sum = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 sum += System.Math.Abs(x[i] - y[i]);
             return sum;
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

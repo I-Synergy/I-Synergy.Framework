@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// Stream reader extensions.
+    /// </summary>
     public static class StreamReaderExtensions
     {
         /// <summary>

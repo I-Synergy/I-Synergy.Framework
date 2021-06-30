@@ -22,8 +22,6 @@
 // Contains functions from the TVPACK Fortran routines,
 // Copyright (C) 2013, Alan Genz, under the BSD license.
 // See functions below for more details.
-
-
 namespace ISynergy.Framework.Mathematics
 {
     using System;
@@ -213,14 +211,10 @@ namespace ISynergy.Framework.Mathematics
                     return Double.PositiveInfinity;
                 throw new ArgumentOutOfRangeException("y0");
             }
-
-
             double s2pi = Math.Sqrt(2.0 * Math.PI);
             int code = 1;
             double y = y0;
             double x;
-
-
 
             if (y > 0.8646647167633873)
             {
@@ -342,9 +336,7 @@ namespace ISynergy.Framework.Mathematics
 
             double sum = a + h * b;
             double term = a;
-
-
-            for (int i = 2; sum != term; i += 2)
+            for (var i = 2; sum != term; i += 2)
             {
                 term = sum;
 
@@ -389,8 +381,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return BVND(x, y, rho);
         }
-
-
         /// <summary>
         ///   A function for computing bivariate normal probabilities. 
         ///   BVND calculates the probability that X > DH and Y > DK.
@@ -474,9 +464,9 @@ namespace ISynergy.Framework.Mathematics
                     double sh = (h * h + k * k) / 2;
                     double asr = Math.Asin(r);
 
-                    for (int i = 0; i < x.Length; i++)
+                    for (var i = 0; i < x.Length; i++)
                     {
-                        for (int j = -1; j <= 1; j += 2)
+                        for (var j = -1; j <= 1; j += 2)
                         {
                             double sn = Math.Sin(asr * (j * x[i] + 1) / 2);
                             bvn = bvn + w[i] * Math.Exp((sn * hk - sh) / (1 - sn * sn));
@@ -487,8 +477,6 @@ namespace ISynergy.Framework.Mathematics
 
                 return bvn + Normal.Function(-h) * Normal.Function(-k);
             }
-
-
             if (r < 0)
             {
                 k = -k;
@@ -517,9 +505,9 @@ namespace ISynergy.Framework.Mathematics
 
                 A = A / 2;
 
-                for (int i = 0; i < x.Length; i++)
+                for (var i = 0; i < x.Length; i++)
                 {
-                    for (int j = -1; j <= 1; j += 2)
+                    for (var j = -1; j <= 1; j += 2)
                     {
                         double xs = (A * (j * x[i] + 1));
                         xs = xs * xs;
@@ -616,8 +604,6 @@ namespace ISynergy.Framework.Mathematics
         {
             return -Constants.LogSqrt2PI - value * value * 0.5;
         }
-
-
 
         /// <summary>
         /// 1-D Gaussian function.

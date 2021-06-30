@@ -24,6 +24,6 @@ namespace ISynergy.Framework.Mathematics.Integration
         ///     Gets or sets the range of each input variable
         ///     under which the integral must be computed.
         /// </summary>
-        DoubleRange[] Range { get; }
+        NumericRange[] Range { get; }
     }
 }

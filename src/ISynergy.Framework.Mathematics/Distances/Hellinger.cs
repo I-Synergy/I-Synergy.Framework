@@ -43,13 +43,11 @@
         public double Distance(double[] x, double[] y)
         {
             double sum = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 sum += Math.Pow(Math.Sqrt(x[i]) - Math.Sqrt(y[i]), 2);
 
             return sum / Math.Sqrt(2);
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

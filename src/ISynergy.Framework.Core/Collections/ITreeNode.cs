@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     ///   Common interface for tree nodes, such as <see cref="BinaryTree{TNode}"/> and <see cref="TreeNode{TNode}"/>.

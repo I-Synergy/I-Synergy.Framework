@@ -165,8 +165,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         private double[] upperBound;
 
         private double[] work;
-
-
         /// <summary>
         ///     Implements the actual optimization algorithm. This
         ///     method should try to minimize the objective function.
@@ -180,8 +178,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 throw new InvalidOperationException("gradient");
 
             NonlinearObjectiveFunction.CheckGradient(Gradient, Solution);
-
-
             var n = NumberOfVariables;
             var m = corrections;
 
@@ -226,8 +222,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         u[i] = UpperBounds[i];
                 }
             }
-
-
             // We now define the starting point.
             {
                 for (i = 0; i < n; i++)
@@ -263,8 +257,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             setulb(n, m, x, 0, l, 0, u, 0, nbd, 0, ref f, g, 0,
                 factr, GradientTolerance, work, 0, iwa, 0, ref task, iprint, ref csave,
                 lsave, 0, isave, 0, dsave, 0);
-
-
             // 
             if (task.StartsWith("FG", StringComparison.OrdinalIgnoreCase))
             {
@@ -295,8 +287,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 exit(csave, lsave, isave, x, dsave, out newF, out newG);
                 return true;
             }
-
-
             if (Progress != null)
                 Progress(this, new OptimizationProgressEventArgs(Iterations, 0, newG, 0, null, 0, f, 0, false)
                 {
@@ -324,16 +314,12 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         isave, dsave, lsave, csave, work)
                 });
         }
-
-
         #region Properties
 
         /// <summary>
         ///     Occurs when progress is made during the optimization.
         /// </summary>
         public event EventHandler<OptimizationProgressEventArgs> Progress;
-
-
         /// <summary>
         ///     Gets the number of iterations performed in the last
         ///     call to <see cref="IOptimizationMethod{TInput, TOutput}.Minimize()" />

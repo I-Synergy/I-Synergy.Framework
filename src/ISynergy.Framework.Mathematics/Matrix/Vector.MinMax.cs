@@ -90,8 +90,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Vector Min/Max
 
         /// <summary>
@@ -133,8 +131,6 @@ namespace ISynergy.Framework.Mathematics
 
             return min;
         }
-
-
         /// <summary>
         ///     Gets the maximum element in a vector.
         /// </summary>
@@ -177,8 +173,6 @@ namespace ISynergy.Framework.Mathematics
             int imax;
             return Max(values, out imax);
         }
-
-
         /// <summary>
         ///     Gets the minimum element in a vector.
         /// </summary>
@@ -208,8 +202,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region limited length
 
         /// <summary>
@@ -239,8 +231,6 @@ namespace ISynergy.Framework.Mathematics
             int imax;
             return Max(values, length, out imax);
         }
-
-
         /// <summary>
         ///     Gets the minimum element in a vector up to a fixed length.
         /// </summary>

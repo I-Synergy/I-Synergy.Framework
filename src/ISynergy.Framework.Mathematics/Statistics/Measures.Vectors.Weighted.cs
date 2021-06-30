@@ -30,8 +30,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <example>
         /// <para>
         ///   The following example shows how to compute the EW mean.</para>
-        ///   
-        /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\ISynergy.Framework.Mathematics.Statistics\MeasuresTest.cs" region="doc_example3" />
         /// </example>
         ///
         public static double ExponentialWeightedMean(this double[] values, double alpha = 0)
@@ -65,8 +63,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <example>
         /// <para>
         ///   The following example shows how to compute the EW mean.</para>
-        ///   
-        /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\ISynergy.Framework.Mathematics.Statistics\MeasuresTest.cs" region="doc_example3" />
         /// </example>
         ///
         public static double ExponentialWeightedMean(this double[] values, int window, double alpha = 0)
@@ -90,8 +86,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             return truncatedSeries.WeightedMean(decayWeights);
         }
-
-
         /// <summary>
         ///   Calculates the exponentially weighted variance.
         /// </summary>
@@ -114,8 +108,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <example>
         /// <para>
         ///   The following example shows how to compute the EW variance.</para>
-        ///   
-        /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\ISynergy.Framework.Mathematics.Statistics\MeasuresTest.cs" region="doc_example4" />
         /// </example>
         ///
         public static double ExponentialWeightedVariance(
@@ -150,8 +142,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <example>
         /// <para>
         ///   The following example shows how to compute the EW variance.</para>
-        ///   
-        /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\ISynergy.Framework.Mathematics.Statistics\MeasuresTest.cs" region="doc_example4" />
         /// </example>
         ///
         public static double ExponentialWeightedVariance(
@@ -195,11 +185,11 @@ namespace ISynergy.Framework.Mathematics.Statistics
             }
 
             double sum = 0.0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum += weights[i] * values[i];
 
             double w = 0.0;
-            for (int i = 0; i < weights.Length; i++)
+            for (var i = 0; i < weights.Length; i++)
                 w += weights[i];
 
             return sum / w;
@@ -224,11 +214,11 @@ namespace ISynergy.Framework.Mathematics.Statistics
             }
 
             double sum = 0.0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum += weights[i] * values[i];
 
             int w = 0;
-            for (int i = 0; i < weights.Length; i++)
+            for (var i = 0; i < weights.Length; i++)
                 w += weights[i];
 
             return sum / w;
@@ -417,8 +407,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
             return WeightedVariance(values, weights, mean, true);
         }
 
-
-
         /// <summary>
         ///   Computes the weighted Variance of the given values.
         /// </summary>
@@ -453,7 +441,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double squareSum = 0.0;
             double weightSum = 0.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double z = values[i] - mean;
                 double w = weights[i];
@@ -604,7 +592,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double variance = 0.0;
             int weightSum = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double z = values[i] - mean;
                 int w = weights[i];
@@ -687,13 +675,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double[] variance = new double[cols];
 
             // for each column (for each variable)
-            for (int j = 0; j < variance.Length; j++)
+            for (var j = 0; j < variance.Length; j++)
             {
                 double sum = 0.0;
                 double weightSum = 0.0;
                 double squareSum = 0.0;
 
-                for (int i = 0; i < matrix.Length; i++)
+                for (var i = 0; i < matrix.Length; i++)
                 {
                     double z = matrix[i][j] - means[j];
                     double w = weights[i];
@@ -709,8 +697,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             return variance;
         }
-
-
         /// <summary>
         ///   Calculates the matrix Variance vector.
         /// </summary>
@@ -809,13 +795,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double[] variance = new double[cols];
 
             // for each column (for each variable)
-            for (int j = 0; j < variance.Length; j++)
+            for (var j = 0; j < variance.Length; j++)
             {
                 double sum = 0.0;
                 double weightSum = 0.0;
                 double squareSum = 0.0;
 
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
                     double z = matrix[i, j] - means[j];
                     double w = weights[i];
@@ -895,13 +881,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double[] variance = new double[cols];
 
             // for each column (for each variable)
-            for (int j = 0; j < variance.Length; j++)
+            for (var j = 0; j < variance.Length; j++)
             {
                 double sum = 0.0;
                 double weightSum = 0.0;
                 double squareSum = 0.0;
 
-                for (int i = 0; i < matrix.Length; i++)
+                for (var i = 0; i < matrix.Length; i++)
                 {
                     double z = matrix[i][j] - means[j];
                     double w = weights[i];
@@ -980,13 +966,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double[] variance = new double[cols];
 
             // for each column (for each variable)
-            for (int j = 0; j < variance.Length; j++)
+            for (var j = 0; j < variance.Length; j++)
             {
                 double sum = 0.0;
                 double weightSum = 0.0;
                 double squareSum = 0.0;
 
-                for (int i = 0; i < matrix.Length; i++)
+                for (var i = 0; i < matrix.Length; i++)
                 {
                     double z = matrix[i, j] - means[j];
                     double w = weights[i];
@@ -1057,7 +1043,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             var set = new Dictionary<T, double>();
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 T v = values[i];
 
@@ -1093,9 +1079,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             var bestValue = currentValue;
             double bestCount = currentCount;
-
-
-            for (int i = 1; i < values.Length; i++)
+            for (var i = 1; i < values.Length; i++)
             {
                 if (currentValue.Equals(values[i]))
                 {
@@ -1124,7 +1108,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             var set = new Dictionary<T, int>();
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 T v = values[i];
 
@@ -1160,9 +1144,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             var bestValue = currentValue;
             int bestCount = currentCount;
-
-
-            for (int i = 1; i < values.Length; i++)
+            for (var i = 1; i < values.Length; i++)
             {
                 if (currentValue.Equals(values[i]))
                 {
@@ -1202,7 +1184,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             if (alreadySorted)
             {
                 // Look for the last value whose weight is different from zero
-                for (int i = weights.Length - 1; i >= 0; i--)
+                for (var i = weights.Length - 1; i >= 0; i--)
                 {
                     if (weights[i] > 0)
                     {
@@ -1216,7 +1198,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             // Base case for non sorted arrays
             double max = Double.NegativeInfinity;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 if (values[i] > max && weights[i] > 0)
                 {
@@ -1246,7 +1228,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             if (alreadySorted)
             {
                 // Look for the first value whose weight is different from zero
-                for (int i = 0; i < weights.Length; i++)
+                for (var i = 0; i < weights.Length; i++)
                 {
                     if (weights[i] > 0)
                     {
@@ -1257,11 +1239,9 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
                 return Double.PositiveInfinity;
             }
-
-
             // Base case for non sorted arrays
             double min = Double.PositiveInfinity;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 if (values[i] < min && weights[i] > 0)
                 {
@@ -1291,7 +1271,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             if (alreadySorted)
             {
                 // Look for the last value whose weight is different from zero
-                for (int i = weights.Length - 1; i >= 0; i--)
+                for (var i = weights.Length - 1; i >= 0; i--)
                 {
                     if (weights[i] > 0)
                     {
@@ -1305,7 +1285,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             // Base case for non sorted arrays
             double max = Double.NegativeInfinity;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 if (values[i] > max && weights[i] > 0)
                 {
@@ -1335,7 +1315,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             if (alreadySorted)
             {
                 // Look for the first value whose weight is different from zero
-                for (int i = 0; i < weights.Length; i++)
+                for (var i = 0; i < weights.Length; i++)
                 {
                     if (weights[i] > 0)
                     {
@@ -1346,11 +1326,9 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
                 return Double.PositiveInfinity;
             }
-
-
             // Base case for non sorted arrays
             double min = Double.PositiveInfinity;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 if (values[i] < min && weights[i] > 0)
                 {

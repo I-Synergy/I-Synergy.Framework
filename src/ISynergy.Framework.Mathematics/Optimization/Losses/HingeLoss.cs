@@ -95,8 +95,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses
                 error += Loss(Expected[i][0], actual[i]);
             return error;
         }
-
-
         /// <summary>
         ///     Computes the derivative of the loss between the expected values (ground truth)
         ///     and the given actual values that have been predicted.

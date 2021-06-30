@@ -3,10 +3,6 @@
 
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{A5B0727D-FA08-4BFD-A04B-5E54183AD55C}</ProjectGuid>
-
         <PackageId>I-Synergy.Framework.Financial</PackageId>
         <Description>I-Synergy Financial Framework for .Net Standard 2.0 and .Net 5.0</Description>
         <PackageTags>I-Synergy, Financial, Framework</PackageTags>

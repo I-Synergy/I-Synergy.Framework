@@ -74,7 +74,7 @@ namespace ISynergy.Framework.Mathematics.Integration
     /// <seealso cref="MonteCarloIntegration" />
     public class RombergMethod : IUnivariateIntegration, INumericalIntegration
     {
-        private DoubleRange range;
+        private NumericRange range;
 
         private readonly double[] s;
 
@@ -113,7 +113,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         public RombergMethod(int steps)
         {
             s = new double[steps];
-            Range = new DoubleRange(0, 1);
+            Range = new NumericRange(0, 1);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace ISynergy.Framework.Mathematics.Integration
             if (function == null)
                 throw new ArgumentNullException("function");
 
-            Range = new DoubleRange(0, 1);
+            Range = new NumericRange(0, 1);
             Function = function;
             s = new double[steps];
         }
@@ -147,7 +147,7 @@ namespace ISynergy.Framework.Mathematics.Integration
                 throw new ArgumentOutOfRangeException("b");
 
             Function = function;
-            Range = new DoubleRange(a, b);
+            Range = new NumericRange(a, b);
             s = new double[steps];
         }
 
@@ -173,7 +173,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         ///     Gets or sets the input range under
         ///     which the integral must be computed.
         /// </summary>
-        public DoubleRange Range
+        public NumericRange Range
         {
             get => range;
             set
@@ -223,8 +223,6 @@ namespace ISynergy.Framework.Mathematics.Integration
 
             return true;
         }
-
-
         /// <summary>
         ///     Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -238,8 +236,6 @@ namespace ISynergy.Framework.Mathematics.Integration
 
             return clone;
         }
-
-
         /// <summary>
         ///     Computes the area under the integral for the given function,
         ///     in the given integration interval, using Romberg's method.

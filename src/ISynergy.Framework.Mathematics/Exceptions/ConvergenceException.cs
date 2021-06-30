@@ -40,8 +40,6 @@ namespace ISynergy.Framework.Mathematics.Exceptions
         public ConvergenceException(string message, Exception innerException) :
             base(message, innerException)
         { }
-
-
         /// <summary>
         ///   Initializes a new instance of the <see cref="ConvergenceException"/> class.
         /// </summary>

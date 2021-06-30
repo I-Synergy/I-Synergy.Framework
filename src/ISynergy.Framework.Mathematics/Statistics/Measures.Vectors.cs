@@ -28,7 +28,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double sum = 0.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum += values[i];
 
             return sum / values.Length;
@@ -46,13 +46,11 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double sum = 0.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum += values[i];
 
             return sum / values.Length;
         }
-
-
         /// <summary>
         ///   Computes the Geometric mean of the given values.
         /// </summary>
@@ -65,7 +63,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double sum = 1.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum *= values[i];
 
             return Math.Pow(sum, 1.0 / values.Length);
@@ -83,7 +81,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double lnsum = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 lnsum += Math.Log(values[i]);
 
             return lnsum / values.Length;
@@ -101,7 +99,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double sum = 1.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum *= values[i];
 
             return Math.Pow(sum, 1.0 / values.Length);
@@ -119,7 +117,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double lnsum = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 lnsum += Math.Log(values[i]);
 
             return lnsum / values.Length;
@@ -139,7 +137,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double sum = 0;
             int n = 0;
 
-            for (int i = 0; i < means.Length; i++)
+            for (var i = 0; i < means.Length; i++)
             {
                 sum += samples[i] * means[i];
                 n += samples[i];
@@ -160,7 +158,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double sum = 0.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum += values[i];
 
             return sum / values.Length;
@@ -178,7 +176,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             float sum = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 sum += values[i];
 
             return sum / values.Length;
@@ -206,7 +204,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             int k = (int)Math.Floor(values.Length * percent);
 
             double sum = 0;
-            for (int i = k; i < values.Length - k; i++)
+            for (var i = k; i < values.Length - k; i++)
                 sum += values[i];
 
             return sum / (values.Length - 2 * k);
@@ -224,7 +222,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double ContraHarmonicMean(double[] values, int order)
         {
             double r1 = 0, r2 = 0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 r1 += Math.Pow(values[i], order + 1);
                 r2 += Math.Pow(values[i], order);
@@ -244,7 +242,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double ContraHarmonicMean(double[] values)
         {
             double r1 = 0, r2 = 0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 r1 += values[i] * values[i];
                 r2 += values[i];
@@ -387,8 +385,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             return StandardError(values.Length, StandardDeviation(values));
         }
-
-
         /// <summary>
         ///   Computes the Variance of the given values.
         /// </summary>
@@ -552,7 +548,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double variance = 0.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double x = values[i] - mean;
                 variance += x * x;
@@ -608,7 +604,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             double variance = 0.0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double x = values[i] - mean;
                 variance += x * x;
@@ -638,7 +634,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             float variance = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 float x = values[i] - mean;
                 variance += x * x;
@@ -717,7 +713,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double sum = 0;
             int length = 0;
 
-            for (int i = 0; i < samples.Length; i++)
+            for (var i = 0; i < samples.Length; i++)
             {
                 double[] values = samples[i];
                 double var = Variance(values);
@@ -761,7 +757,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double sum = 0;
             int length = 0;
 
-            for (int i = 0; i < variances.Length; i++)
+            for (var i = 0; i < variances.Length; i++)
             {
                 double var = variances[i];
 
@@ -889,9 +885,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             var bestValue = currentValue;
             bestCount = currentCount;
-
-
-            for (int i = 1; i < values.Length; i++)
+            for (var i = 1; i < values.Length; i++)
             {
                 if (currentValue.Equals(values[i]))
                 {
@@ -999,7 +993,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             double covariance = 0.0;
 
-            for (int i = 0; i < vector1.Length; i++)
+            for (var i = 0; i < vector1.Length; i++)
             {
                 double x = vector1[i] - mean1;
                 double y = vector2[i] - mean2;
@@ -1073,7 +1067,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double s2 = 0;
             double s3 = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double dev = values[i] - mean;
 
@@ -1144,7 +1138,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double s2 = 0;
             double s4 = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double dev = values[i] - mean;
 
@@ -1185,7 +1179,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double Entropy(this double[] values, double[] weights, Func<double, double> pdf)
         {
             double sum = 0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double p = pdf(values[i]) * weights[i];
                 sum += p * Math.Log(p);
@@ -1207,7 +1201,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double Entropy(this double[] values, Func<double, double> pdf)
         {
             double sum = 0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double p = pdf(values[i]);
                 sum += p * Math.Log(p);
@@ -1257,7 +1251,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double WeightedEntropy(this double[] values, double[] weights, Func<double, double> pdf)
         {
             double sum = 0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double p = pdf(values[i]) * weights[i];
                 sum += p * Math.Log(p);
@@ -1280,7 +1274,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double WeightedEntropy(this double[] values, int[] weights, Func<double, double> pdf)
         {
             double sum = 0;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double p = pdf(values[i]);
                 sum += p * Math.Log(p) * weights[i];
@@ -1288,8 +1282,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             return sum;
         }
-
-
 
         /// <summary>
         ///   Computes the entropy for the given values.
@@ -1368,17 +1360,17 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <param name="endValue">The ending symbol.</param>
         /// <returns>The evaluated entropy.</returns>
         /// 
-        public static double Entropy(int[] values, int startValue, int endValue)
+        public static double Entropy(double[] values, double startValue, double endValue)
         {
             double entropy = 0;
 
             // For each class
-            for (int c = startValue; c <= endValue; c++)
+            for (var c = startValue; c <= endValue; c++)
             {
                 int count = 0;
 
                 // Count the number of instances inside
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                     if (values[i] == c)
                         count++;
 
@@ -1406,17 +1398,17 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         /// <returns>The evaluated entropy.</returns>
         /// 
-        public static double WeightedEntropy(int[] values, double[] weights, int startValue, int endValue)
+        public static double WeightedEntropy(double[] values, double[] weights, double startValue, double endValue)
         {
             double entropy = 0;
 
             // For each class
-            for (int c = startValue; c <= endValue; c++)
+            for (var c = startValue; c <= endValue; c++)
             {
                 double count = 0;
 
                 // Count the number of instances inside
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                     if (values[i] == c)
                         count += weights[i];
 
@@ -1450,12 +1442,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double totalWeightSum = weights.Sum();
 
             // For each class
-            for (int c = startValue; c <= endValue; c++)
+            for (var c = startValue; c <= endValue; c++)
             {
                 double classWeightSum = 0;
 
                 // Count the number of instances inside
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                     if (values[i] == c)
                         classWeightSum += weights[i];
 
@@ -1487,7 +1479,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double total = values.Count;
 
             // For each class
-            for (int c = startValue; c <= endValue; c++)
+            for (var c = startValue; c <= endValue; c++)
             {
                 int count = 0;
 
@@ -1525,12 +1517,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double totalWeightSum = weights.Sum();
 
             // For each class
-            for (int c = startValue; c <= endValue; c++)
+            for (var c = startValue; c <= endValue; c++)
             {
                 double classWeightSum = 0;
 
                 // Count the number of instances inside
-                for (int i = 0; i < values.Count; i++)
+                for (var i = 0; i < values.Count; i++)
                     if (values[i] == c)
                         classWeightSum += weights[i];
 
@@ -1555,7 +1547,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <param name="valueRange">The range of symbols.</param>
         /// <returns>The evaluated entropy.</returns>
         /// 
-        public static double Entropy(int[] values, IntRange valueRange)
+        public static double Entropy(double[] values, NumericRange valueRange)
         {
             return Entropy(values, valueRange.Min, valueRange.Max);
         }

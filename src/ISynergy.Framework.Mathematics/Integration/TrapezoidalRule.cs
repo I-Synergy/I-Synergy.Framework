@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Mathematics.Integration
     /// <seealso cref="MonteCarloIntegration" />
     public class TrapezoidalRule : INumericalIntegration, IUnivariateIntegration
     {
-        private DoubleRange range;
+        private NumericRange range;
 
         /// <summary>
         ///     Constructs a new <see cref="TrapezoidalRule" /> integration method.
@@ -110,7 +110,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         public TrapezoidalRule(int steps)
         {
             Steps = steps;
-            Range = new DoubleRange(0, 1);
+            Range = new NumericRange(0, 1);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace ISynergy.Framework.Mathematics.Integration
             if (function == null)
                 throw new ArgumentNullException("function");
 
-            Range = new DoubleRange(0, 1);
+            Range = new NumericRange(0, 1);
             Function = function;
             Steps = steps;
         }
@@ -156,7 +156,7 @@ namespace ISynergy.Framework.Mathematics.Integration
                 throw new ArgumentOutOfRangeException("b");
 
             Function = function;
-            Range = new DoubleRange(a, b);
+            Range = new NumericRange(a, b);
             Steps = steps;
         }
 
@@ -186,8 +186,6 @@ namespace ISynergy.Framework.Mathematics.Integration
 
             return true;
         }
-
-
         /// <summary>
         ///     Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -213,7 +211,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         ///     Gets or sets the input range under
         ///     which the integral must be computed.
         /// </summary>
-        public DoubleRange Range
+        public NumericRange Range
         {
             get => range;
             set
@@ -227,8 +225,6 @@ namespace ISynergy.Framework.Mathematics.Integration
                 range = value;
             }
         }
-
-
         /// <summary>
         ///     Computes the area under the integral for the given function,
         ///     in the given integration interval, using the Trapezoidal rule.

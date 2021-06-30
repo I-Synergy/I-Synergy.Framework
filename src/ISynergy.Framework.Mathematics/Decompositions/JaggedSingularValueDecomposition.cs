@@ -49,8 +49,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         private int? rank;
 
         private bool swapped;
-
-
         /// <summary>
         ///     Constructs a new singular value decomposition.
         /// </summary>
@@ -61,8 +59,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             : this(value, true, true)
         {
         }
-
-
         /// <summary>
         ///     Constructs a new singular value decomposition.
         /// </summary>
@@ -158,8 +154,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             for (var i = 0; i < value.Length; i++)
                 if (value[i].Length != n)
                     throw new ArgumentException("Matrix has rows of different sizes.", "value");
-
-
             if (m < n) // Check if we are violating JAMA's assumption
             {
                 if (!autoTranspose) // Yes, check if we should correct it
@@ -196,8 +190,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                 // Input matrix is ok
                 a = inPlace ? value : (double[][])value.MemberwiseClone();
             }
-
-
             var nu = Math.Min(m, n);
             var ni = Math.Min(m + 1, n);
             Diagonal = new double[ni];
@@ -217,8 +209,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             // Will store ordered sequence of indices after sorting.
             Ordering = new int[ni];
             for (var i = 0; i < ni; i++) Ordering[i] = i;
-
-
             // Reduce A to bidiagonal form, storing the diagonal elements in s and the super-diagonal elements in e.
             var nct = Math.Min(m - 1, n);
             var nrt = Math.Max(0, Math.Min(n - 2, m));
@@ -374,8 +364,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                         LeftSingularVectors[k][k] = 1;
                     }
             }
-
-
             // If required, generate V.
             if (wantv)
                 for (var k = n - 1; k >= 0; k--)
@@ -388,9 +376,9 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                         //  transpose of A and swap the left and right eigenvectors
 
                         // Original line:
-                        //   for (int j = k + 1; j < nu; j++)
+                        //   for (var j = k + 1; j < nu; j++)
                         // Pseudo correction:
-                        //   for (int j = k + 1; j < n; j++)
+                        //   for (var j = k + 1; j < n; j++)
 
                         for (var j = k + 1; j < n; j++) // pseudo-correction
                         {
@@ -664,8 +652,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                         break;
                 }
             }
-
-
             // If we are violating JAMA's assumption about 
             // the input dimension, we need to swap u and v.
             if (swapped)
@@ -790,8 +776,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                 return lndeterminant.Value;
             }
         }
-
-
         /// <summary>
         ///     Returns the pseudo-determinant for the matrix.
         /// </summary>
@@ -831,8 +815,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                 return lnpseudoDeterminant.Value;
             }
         }
-
-
         /// <summary>
         ///     Solves a linear equation system of the form AX = B.
         /// </summary>
@@ -862,8 +844,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             //singularity threshold
             var e = Threshold;
-
-
             var scols = Diagonal.Length;
             var Ls = new double[scols][];
             for (var i = 0; i < Diagonal.Length; i++)
@@ -937,8 +917,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             // one must replace 1/Li with 0. The value of e depends on the precision
             // of the hardware. This method can be used to solve linear equations
             // systems even if the matrices are singular or close to singular.
-
-
             var scols = Diagonal.Length;
 
             var Ls = new double[scols][];
@@ -1087,8 +1065,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             //singularity threshold
             var e = Threshold;
-
-
             var scols = Diagonal.Length;
             var Ls = new double[scols][];
             for (var i = 0; i < Diagonal.Length; i++)
@@ -1151,8 +1127,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
             //singularity threshold
             var e = Threshold;
-
-
             var scols = Diagonal.Length;
             var Ls = new double[scols][];
             for (var i = 0; i < Diagonal.Length; i++)

@@ -15,8 +15,6 @@
         IMetric<double[]>, ISimilarity<double[]>, ICloneable
     {
         private double[] weights;
-
-
         /// <summary>
         /// Gets or sets the weights for each dimension. Default is a vector of ones.
         /// </summary>
@@ -64,7 +62,7 @@
         public double Distance(double[] x, double[] y)
         {
             double sum = 0.0;
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 double u = x[i] - y[i];
                 sum += u * u * weights[i];

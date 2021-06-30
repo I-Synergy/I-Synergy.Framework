@@ -15,8 +15,6 @@ namespace ISynergy.Framework.Mathematics
         {
             InnerProvider = innerProvider;
         }
-
-
         /// <summary>
         ///     Gets the culture specific formatting information
         ///     to be used during parsing or formatting.

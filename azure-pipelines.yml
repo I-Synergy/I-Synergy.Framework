@@ -81,7 +81,7 @@ stages:
           inputs:
             FileNames: |
              src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj
-             src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj
+             src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj
              src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj
              src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj
              src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
@@ -126,14 +126,14 @@ stages:
           displayName: 'Dotnet build: I-Synergy.Framework.Core.IO'
           inputs:
             command: build
-            projects: 'src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj'
+            projects: 'src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet pack: I-Synergy.Framework.Core.IO'
           inputs:
             command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.Core.IO\ISynergy.Framework.Core.IO.csproj'
+            packagesToPack: 'src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
@@ -414,10 +414,10 @@ stages:
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Core.IO'
+          displayName: 'Run Test: I-Synergy.Framework.IO'
           inputs:
             command: test
-            projects: 'tests\ISynergy.Framework.Core.IO.Tests\ISynergy.Framework.Core.Linq.IO.csproj'
+            projects: 'tests\ISynergy.Framework.IO.Tests\ISynergy.Framework.IO.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: DotNetCoreCLI@2

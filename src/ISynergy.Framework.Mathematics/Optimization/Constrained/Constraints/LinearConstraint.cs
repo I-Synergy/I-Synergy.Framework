@@ -43,11 +43,7 @@
     ///   using a <see cref="string"/> representation, an <see cref="Expression"/> 
     ///   or using a vector of constraint values.
     /// </para>
-    /// 
-    /// <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\LinearConstraintTest.cs" region="doc_example" />
-    /// 
     /// </example>
-    /// 
     /// <seealso cref="LinearConstraintCollection"/>
     ///
 
@@ -277,7 +273,7 @@
         {
             double sum = 0;
 
-            for (int i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indices.Length; i++)
             {
                 int index = indices[i];
                 double val = x[index];
@@ -306,7 +302,7 @@
                 {
                     var tmp = new double[x.Length];
 
-                    for (int i = 0; i < indices.Length; i++)
+                    for (var i = 0; i < indices.Length; i++)
                     {
                         int index = indices[i];
                         tmp[index] = CombinedAs[i];
@@ -343,8 +339,6 @@
             else
                 throw new FormatException("Invalid constraint type.");
 
-
-
             var terms = new Dictionary<string, double>();
 
             string separator = culture.NumberFormat.NumberDecimalSeparator;
@@ -353,8 +347,6 @@
             Regex number = new Regex(@"\d*\" + separator + @"{0,1}\d+");
             Regex symbol = new Regex(@"[a-zA-Z]");
             Regex comp = new Regex(@"(>=|<=|=)");
-
-
             var sides = comp.Split(f);
             lhs = sides[0];
             rhs = sides[2];

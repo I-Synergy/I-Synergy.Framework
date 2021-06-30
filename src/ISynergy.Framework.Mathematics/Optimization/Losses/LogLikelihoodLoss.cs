@@ -23,8 +23,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses
     ///         The following example shows how to learn an one-class SVM
     ///         and measure its performance using the log-likelihood loss class.
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.MachineLearning\VectorMachines\OneclassSupportVectorLearningTest.cs"
-    ///         region="doc_learn" />
     /// </example>
     /// <seealso cref="BinaryCrossEntropyLoss" />
     /// <seealso cref="CategoryCrossEntropyLoss" />
@@ -48,8 +46,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses
                     error += actual[i][j];
             return error;
         }
-
-
         /// <summary>
         ///     Computes the loss between the expected values (ground truth)
         ///     and the given actual values that have been predicted.

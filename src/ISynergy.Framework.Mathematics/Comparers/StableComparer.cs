@@ -10,15 +10,9 @@ namespace ISynergy.Framework.Mathematics.Comparers
     /// <remarks>
     ///     This class helps sort the elements of an array without swapping
     ///     elements which are already in order. This comprises a <c>stable</c>
-    ///     sorting algorithm. This class is used by the
-    ///     <see cref="ISynergy.Framework.Mathematics
-    ///   .Tools.StableSort{T}(T[], out int[])" /> method to produce a stable
-    ///     sort
-    ///     of its given arguments.
+    ///     sorting algorithm.
     /// </remarks>
     /// <example>
-    ///     In order to use this class, please use <see cref="Tools.StableSort{T}(T[],
-    ///   out int[])" />.
     /// </example>
     /// <seealso cref="ElementComparer{T}" />
     /// <seealso cref="ArrayComparer{T}" />
@@ -29,7 +23,7 @@ namespace ISynergy.Framework.Mathematics.Comparers
         private readonly Comparison<T> comparison;
 
         /// <summary>
-        ///     Constructs a new instance of the <see cref="StableComparer&lt;T&gt;" /> class.
+        ///     Constructs a new instance of the <see cref="StableComparer{T}" /> class.
         /// </summary>
         /// <param name="comparison">The comparison function.</param>
         public StableComparer(Comparison<T> comparison)

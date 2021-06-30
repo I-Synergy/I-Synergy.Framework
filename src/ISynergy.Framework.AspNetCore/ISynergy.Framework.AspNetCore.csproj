@@ -3,10 +3,6 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{7189C677-1C79-4C43-A249-311FAE276591}</ProjectGuid>
-
         <PackageId>I-Synergy.Framework.AspNetCore</PackageId>
         <Description>I-Synergy Framework AspNetCore for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore</PackageTags>

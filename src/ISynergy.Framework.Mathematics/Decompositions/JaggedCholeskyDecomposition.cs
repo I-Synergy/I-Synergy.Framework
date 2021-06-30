@@ -45,8 +45,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
 
         private bool positiveDefinite;
         private bool robust;
-
-
         /// <summary>
         ///     Constructs a new Cholesky Decomposition.
         /// </summary>
@@ -308,8 +306,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             var X = Reverse();
             return X.TransposeAndDot(X).Inverse();
         }
-
-
         private void LLt()
         {
             Diagonal = Vector.Ones<double>(n);
@@ -338,8 +334,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                 L[j][j] = Math.Sqrt(s);
             }
         }
-
-
         private void LDLt()
         {
             Diagonal = new double[n];
@@ -656,8 +650,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             chol.Diagonal = Vector.Ones<double>(chol.n);
             return chol;
         }
-
-
         #region ICloneable Members
 
         private JaggedCholeskyDecomposition()

@@ -142,8 +142,6 @@ namespace ISynergy.Framework.Mathematics
         ///     and <see cref="OldValue" /> properties.
         /// </summary>
         public double StartValue { get; private set; }
-
-
         /// <summary>
         ///     Gets or sets the maximum relative change in the watched value
         ///     after an iteration of the algorithm used to detect convergence.
@@ -251,8 +249,6 @@ namespace ISynergy.Framework.Mathematics
 
             return false;
         }
-
-
         /// <summary>
         ///     Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>

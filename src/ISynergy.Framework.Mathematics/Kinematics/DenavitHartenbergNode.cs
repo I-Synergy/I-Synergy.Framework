@@ -73,14 +73,10 @@ namespace ISynergy.Framework.Mathematics.Kinematics
         ///     Gets the model contained at this node.
         /// </summary>
         public DenavitHartenbergModel Model { get; set; }
-
-
         /// <summary>
         ///     Gets the collection of models attached to this node.
         /// </summary>
         public DenavitHartenbergNodeCollection Children { get; private set; }
-
-
         /// <summary>
         ///     Calculates the whole combined model (this model plus all its
         ///     children plus all the children of the children and so on)

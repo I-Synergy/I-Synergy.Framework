@@ -141,8 +141,6 @@ namespace ISynergy.Framework.Mathematics.Random
 
             // throw new InvalidOperationException("Execution should not reach here.");
         }
-
-
         private void setup()
         {
             var dn = 3.442619855899;

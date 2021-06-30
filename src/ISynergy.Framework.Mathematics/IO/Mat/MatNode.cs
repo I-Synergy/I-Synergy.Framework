@@ -6,8 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
-
-
 namespace ISynergy.Framework.Mathematics.IO
 {
     /// <summary>
@@ -33,8 +31,6 @@ namespace ISynergy.Framework.Mathematics.IO
         private readonly Type type;
         private readonly int typeSize;
         private object value;
-
-
         internal unsafe MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
         {
             // TODO: Completely refactor this method.
@@ -82,8 +78,6 @@ namespace ISynergy.Framework.Mathematics.IO
 
             if (flagsElement.Class == MatArrayType.mxOBJECT_CLASS)
                 throw new NotSupportedException("Unexpected object class flag at position " + readBytes + ".");
-
-
             readBytes += 8;
             MatDataTag dimensionsTag;
             if (!reader.Read(out dimensionsTag))
@@ -143,8 +137,6 @@ namespace ISynergy.Framework.Mathematics.IO
                 for (var i = 0; i < ic.Length; i++)
                     ic[i] = reader.ReadInt32();
                 align(reader, icTag.NumberOfBytes);
-
-
                 // read values
                 readBytes += 8;
                 MatDataTag valuesTag;
@@ -366,8 +358,6 @@ namespace ISynergy.Framework.Mathematics.IO
         /// </summary>
         /// <param name="name">The name of the field to be retrieved.</param>
         public MatNode this[int name] => Fields[name.ToString()];
-
-
         /// <summary>
         ///     Returns an enumerator that iterates through a collection.
         /// </summary>

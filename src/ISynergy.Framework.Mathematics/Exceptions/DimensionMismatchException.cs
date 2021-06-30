@@ -51,8 +51,6 @@ namespace ISynergy.Framework.Mathematics.Exceptions
         public DimensionMismatchException(string message, Exception innerException) :
             base(message, innerException)
         { }
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DimensionMismatchException"/> class.
         /// </summary>

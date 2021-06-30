@@ -46,8 +46,6 @@
                 result[i] = Value;
             return result;
         }
-
-
         /// <summary>
         ///     Generates a random vector of observations from the current distribution.
         /// </summary>

@@ -76,8 +76,6 @@ namespace ISynergy.Framework.Mathematics.Wavelets
         {
             IWT97(data, levels);
         }
-
-
         /// <summary>
         ///     Forward biorthogonal 9/7 wavelet transform
         /// </summary>
@@ -210,8 +208,6 @@ namespace ISynergy.Framework.Mathematics.Wavelets
 
             return data;
         }
-
-
         private static double[,] fwt2d(double[,] x, int width, int height)
         {
             for (var j = 0; j < width; j++)
@@ -267,8 +263,6 @@ namespace ISynergy.Framework.Mathematics.Wavelets
             for (var i = 0; i < width; i++)
                 for (var j = 0; j < height; j++)
                     x[i, j] = tempbank[i, j];
-
-
             for (var j = 0; j < width; j++)
             {
                 // Undo update 2

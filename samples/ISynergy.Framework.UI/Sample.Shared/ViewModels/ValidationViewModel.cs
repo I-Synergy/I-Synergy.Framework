@@ -7,6 +7,9 @@ using System;
 
 namespace Sample.ViewModels
 {
+    /// <summary>
+    /// Validation sample viewmodel.
+    /// </summary>
     public class ValidationViewModel : ViewModelNavigation<object>
     {
         /// <summary>
@@ -60,6 +63,9 @@ namespace Sample.ViewModels
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Description.
+        /// </summary>
         public string Description { get; }
 
         /// <summary>

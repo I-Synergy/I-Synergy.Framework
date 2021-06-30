@@ -200,8 +200,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             : base(numberOfVariables, function, gradient)
         {
         }
-
-
         /// <summary>
         ///     Gets or sets the relative difference threshold
         ///     to be used as stopping criteria between two
@@ -306,16 +304,12 @@ namespace ISynergy.Framework.Mathematics.Optimization
             var xnorm = Math.Max(1.0, x.Euclidean());
             var stp1 = 1.0 / gnorm;
             var f_old = f;
-
-
             var finish = false;
 
             // Make initial progress report with initialization parameters
             if (Progress != null)
                 Progress(this, new OptimizationProgressEventArgs
                     (Iterations, Evaluations, g, gnorm, Solution, xnorm, f, stp1, finish));
-
-
             // Main iteration
             while (!finish)
             {
@@ -501,8 +495,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             sty = 0;
             fy = finit;
             dgy = dginit;
-
-
         L30: // Start of iteration.
 
             // Set the minimum and maximum steps to correspond
@@ -565,8 +557,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             if (brackt && stmax - stmin <= xtol * stmax)
                 return ConjugateGradientCode.Precision;
-
-
             // More's code has been modified so that at least one new 
             //  function value is computed during the line search (enforcing 
             //  at least one interpolation is not easy, since the code may 
@@ -578,8 +568,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 dgout = dg2;
                 return ConjugateGradientCode.Success;
             }
-
-
         L321:
 
             // In the first stage we seek a step for which the modified

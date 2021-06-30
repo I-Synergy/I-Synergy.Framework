@@ -67,7 +67,7 @@
         public static void Set<T>(this T[][] destination, T[][] value, int[] rowIndices, int startColumn, int endColumn)
         {
             int endIndex = end(endColumn, destination.Columns());
-            int[] columnIndices = ISynergy.Framework.Mathematics.Vector.Range(startColumn, endIndex);
+            int[] columnIndices = Vector.Range(startColumn, endIndex);
             set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
         }
 
@@ -84,7 +84,7 @@
         public static void Set<T>(this T[,] destination, T[,] value, int[] rowIndices, int startColumn, int endColumn)
         {
             int endIndex = end(endColumn, destination.Columns());
-            int[] columnIndices = ISynergy.Framework.Mathematics.Vector.Range(startColumn, endIndex);
+            int[] columnIndices = Vector.Range(startColumn, endIndex);
             set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
         }
 
@@ -116,7 +116,7 @@
         public static void Set<T>(this T[,] destination, T[,] value, int startRow, int endRow, int[] columnIndices)
         {
             int endIndex = end(endRow, destination.Rows());
-            int[] rowIndices = ISynergy.Framework.Mathematics.Vector.Range(startRow, endIndex);
+            int[] rowIndices = Vector.Range(startRow, endIndex);
             set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
         }
 
@@ -133,7 +133,7 @@
         public static void Set<T>(this T[][] destination, T[][] value, int startRow, int endRow, int[] columnIndices)
         {
             int endIndex = end(endRow, destination.Rows());
-            int[] rowIndices = ISynergy.Framework.Mathematics.Vector.Range(startRow, endIndex);
+            int[] rowIndices = Vector.Range(startRow, endIndex);
             set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
         }
 
@@ -184,8 +184,6 @@
             T[,] source = Matrix.Create(destination.Rows(), destination.Columns(), value);
             Set(destination, source, startRow, endRow, columnIndices);
         }
-
-
         /// <summary>
         ///   Sets a region of a matrix to the given values.
         /// </summary>
@@ -201,9 +199,9 @@
         {
             T[][] values = Jagged.Create<T>(destination.Rows(), destination.Columns(), value);
             int rowIndex = end(endRow, destination.Rows());
-            int[] rowIndices = ISynergy.Framework.Mathematics.Vector.Range(startRow, rowIndex);
+            int[] rowIndices = Vector.Range(startRow, rowIndex);
             int colIndex = end(endCol, destination.Columns());
-            int[] columnIndices = ISynergy.Framework.Mathematics.Vector.Range(startCol, colIndex);
+            int[] columnIndices = Vector.Range(startCol, colIndex);
             set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
         }
 
@@ -222,9 +220,9 @@
         {
             T[,] values = Matrix.Create<T>(destination.Rows(), destination.Columns(), value);
             int rowIndex = end(endRow, destination.Rows());
-            int[] rowIndices = ISynergy.Framework.Mathematics.Vector.Range(startRow, rowIndex);
+            int[] rowIndices = Vector.Range(startRow, rowIndex);
             int colIndex = end(endCol, destination.Columns());
-            int[] columnIndices = ISynergy.Framework.Mathematics.Vector.Range(startCol, colIndex);
+            int[] columnIndices = Vector.Range(startCol, colIndex);
             set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
         }
 
@@ -285,10 +283,6 @@
         {
             set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
         }
-
-
-
-
         /// <summary>
         ///   Sets a region of a matrix to the given values.
         /// </summary>
@@ -305,7 +299,7 @@
             if (indices == null)
                 throw new ArgumentNullException("Indices");
 
-            for (int i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indices.Length; i++)
                 destination[Matrix.index(indices[i], destination.Length)] = value;
         }
 
@@ -321,7 +315,7 @@
         public static void Set<T>(this T[] destination, T value, int startRow, int endRow)
         {
             endRow = end(endRow, destination.Length);
-            for (int i = startRow; i < endRow; i++)
+            for (var i = startRow; i < endRow; i++)
                 destination[i] = value;
         }
 
@@ -362,11 +356,9 @@
             if (indices == null)
                 throw new ArgumentNullException("Indices");
 
-            for (int i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indices.Length; i++)
                 destination[indices[i]] = value;
         }
-
-
 
         private static void set<T>(this
             T[,] dst, int[] dstRowIndices, int[] dstColumnIndices,
@@ -379,22 +371,22 @@
                 throw new ArgumentNullException("destination");
 
             if (srcRowIndices == null)
-                srcRowIndices = ISynergy.Framework.Mathematics.Vector.Range(0, src.Rows());
+                srcRowIndices = Vector.Range(0, src.Rows());
 
             if (srcColumnIndices == null)
-                srcColumnIndices = ISynergy.Framework.Mathematics.Vector.Range(0, src.Columns());
+                srcColumnIndices = Vector.Range(0, src.Columns());
 
             if (dstRowIndices == null)
-                dstRowIndices = ISynergy.Framework.Mathematics.Vector.Range(0, dst.Rows());
+                dstRowIndices = Vector.Range(0, dst.Rows());
             if (dstColumnIndices == null)
-                dstColumnIndices = ISynergy.Framework.Mathematics.Vector.Range(0, dst.Columns());
+                dstColumnIndices = Vector.Range(0, dst.Columns());
 
-            for (int i = 0; i < srcRowIndices.Length; i++)
+            for (var i = 0; i < srcRowIndices.Length; i++)
             {
                 int si = Matrix.index(srcRowIndices[i], src.Rows());
                 int di = Matrix.index(srcRowIndices[i], dst.Rows());
 
-                for (int j = 0; j < srcColumnIndices.Length; j++)
+                for (var j = 0; j < srcColumnIndices.Length; j++)
                 {
                     int sj = Matrix.index(srcColumnIndices[j], src.Columns());
                     int dj = Matrix.index(dstColumnIndices[j], dst.Columns());
@@ -414,21 +406,21 @@
                 throw new ArgumentNullException("destination");
 
             if (srcRowIndices == null)
-                srcRowIndices = ISynergy.Framework.Mathematics.Vector.Range(0, src.Rows());
+                srcRowIndices = Vector.Range(0, src.Rows());
             if (srcColumnIndices == null)
-                srcColumnIndices = ISynergy.Framework.Mathematics.Vector.Range(0, src.Columns());
+                srcColumnIndices = Vector.Range(0, src.Columns());
 
             if (dstRowIndices == null)
-                dstRowIndices = ISynergy.Framework.Mathematics.Vector.Range(0, dst.Rows());
+                dstRowIndices = Vector.Range(0, dst.Rows());
             if (dstColumnIndices == null)
-                dstColumnIndices = ISynergy.Framework.Mathematics.Vector.Range(0, dst.Columns());
+                dstColumnIndices = Vector.Range(0, dst.Columns());
 
-            for (int i = 0; i < srcRowIndices.Length; i++)
+            for (var i = 0; i < srcRowIndices.Length; i++)
             {
                 int si = Matrix.index(srcRowIndices[i], src.Rows());
                 int di = Matrix.index(srcRowIndices[i], dst.Rows());
 
-                for (int j = 0; j < srcColumnIndices.Length; j++)
+                for (var j = 0; j < srcColumnIndices.Length; j++)
                 {
                     int sj = Matrix.index(srcColumnIndices[j], src.Columns());
                     int dj = Matrix.index(dstColumnIndices[j], dst.Columns());

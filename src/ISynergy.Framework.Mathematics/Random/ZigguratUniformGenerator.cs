@@ -35,8 +35,6 @@
         IRandomNumberGenerator<double>
     {
         private readonly ZigguratUniformOneGenerator u;
-
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ZigguratExponentialGenerator" /> class.
         /// </summary>
@@ -100,8 +98,6 @@
                 result[i] = Generate();
             return result;
         }
-
-
         /// <summary>
         ///     Generates a random vector of observations from the current distribution.
         /// </summary>

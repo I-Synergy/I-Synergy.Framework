@@ -6,6 +6,11 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using ISynergy.Framework.Core.Events;
 
+#if NETFX_CORE
+using Windows.UI.Xaml.Input;
+using Windows.System;
+#endif
+
 namespace Sample.Views
 {
     /// <summary>
@@ -92,7 +97,7 @@ namespace Sample.Views
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void RootNavigationViewLoaded(object sender, RoutedEventArgs e)
         {
-#if __UWP__
+#if NETFX_CORE
             // add keyboard accelerators for backwards navigation
             var GoBack = new KeyboardAccelerator
             {
@@ -117,7 +122,7 @@ namespace Sample.Views
         }
 
 
-#if __UWP__
+#if NETFX_CORE
         /// <summary>
         /// Backs the invoked.
         /// </summary>

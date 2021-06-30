@@ -63,15 +63,15 @@
 
             int[,] d = new int[x.Length + 1, y.Length + 1];
 
-            for (int i = 0; i <= x.Length; i++)
+            for (var i = 0; i <= x.Length; i++)
                 d[i, 0] = i;
 
-            for (int i = 0; i <= y.Length; i++)
+            for (var i = 0; i <= y.Length; i++)
                 d[0, i] = i;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
-                for (int j = 0; j < y.Length; j++)
+                for (var j = 0; j < y.Length; j++)
                 {
                     int cost = (x[i].Equals(y[j])) ? 0 : 1;
 
@@ -85,8 +85,6 @@
 
             return d[x.Length, y.Length];
         }
-
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>

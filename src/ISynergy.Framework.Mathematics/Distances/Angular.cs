@@ -31,7 +31,7 @@
             double p = 0;
             double q = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 num += x[i] * y[i];
                 p += x[i] * x[i];
@@ -59,7 +59,7 @@
             double p = 0;
             double q = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 num += x[i] * y[i];
                 p += x[i] * x[i];
@@ -71,8 +71,6 @@
 
             return 1 - Math.Acos(similarity);
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

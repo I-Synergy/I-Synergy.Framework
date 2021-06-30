@@ -494,8 +494,6 @@
         }
 
         #endregion
-
-
         #region Parse
         /// <summary>
         ///   Converts the string representation of a matrix to its

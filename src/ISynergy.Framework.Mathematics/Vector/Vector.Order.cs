@@ -98,8 +98,7 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     Sorts the elements of an entire one-dimensional array using the given comparison.
         /// </summary>
-        public static void Sort<T>(this T[] values, out int[] order, bool stable = false,
-            ComparerDirection direction = ComparerDirection.Ascending)
+        public static void Sort<T>(this T[] values, out int[] order, bool stable = false, ComparerDirection direction = ComparerDirection.Ascending)
             where T : IComparable<T>
         {
             if (!stable)
@@ -129,8 +128,6 @@ namespace ISynergy.Framework.Mathematics
                     order[i] = keys[i].Key;
             }
         }
-
-
         /// <summary>
         ///     Shuffles an array.
         /// </summary>
@@ -145,18 +142,12 @@ namespace ISynergy.Framework.Mathematics
         ///     Shuffles a collection.
         /// </summary>
         public static TList Shuffled<TList, T>(this TList array)
-            where TList :
-#if !NETSTANDARD1_4
-            ICloneable,
-#endif
-            IList<T>
+            where TList : ICloneable, IList<T>
         {
             var clone = (TList)array.Clone();
             Shuffle(clone);
             return clone;
         }
-
-
         /// <summary>
         ///     Sorts the elements of an entire one-dimensional array using the given comparison.
         /// </summary>

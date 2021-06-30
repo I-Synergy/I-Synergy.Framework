@@ -23,8 +23,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         {
             Convergence = new RelativeConvergence(0, 1e-5);
         }
-
-
         /// <summary>
         ///     Gets or sets a parameterized model function mapping input vectors
         ///     into output values, whose optimum parameters must be found.
@@ -33,8 +31,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     The function to be optimized.
         /// </value>
         public LeastSquaresFunction Function { get; set; }
-
-
         /// <summary>
         ///     Gets or sets a function that computes the gradient vector in respect
         ///     to the function parameters, given a set of input and output values.

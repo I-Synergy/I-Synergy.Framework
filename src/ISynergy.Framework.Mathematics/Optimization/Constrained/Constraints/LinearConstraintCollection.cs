@@ -77,14 +77,14 @@
             tolerances = new double[numberOfConstraints];
             equalities = 0;
 
-            for (int i = 0; i < constraintArray.Length; i++)
+            for (var i = 0; i < constraintArray.Length; i++)
             {
                 LinearConstraint constraint = constraintArray[i];
 
                 if (constraint.NumberOfVariables > numberOfVariables)
                     throw new ArgumentException("The number of variables in the constraint exceeds the number of variables for the problem.");
 
-                for (int j = 0; j < constraint.VariablesAtIndices.Length; j++)
+                for (var j = 0; j < constraint.VariablesAtIndices.Length; j++)
                 {
                     int k = constraint.VariablesAtIndices[j];
 
@@ -135,7 +135,7 @@
             int numberOfConstraints = a.GetLength(0);
 
             var constraints = new LinearConstraint[numberOfConstraints];
-            for (int i = 0; i < constraints.Length; i++)
+            for (var i = 0; i < constraints.Length; i++)
             {
                 constraints[i] = new LinearConstraint(numberOfVariables);
                 a.GetRow(i, result: constraints[i].CombinedAs);

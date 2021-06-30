@@ -23,7 +23,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double[] GetRatio(int[] positives, int[] negatives)
         {
             double[] r = new double[positives.Length];
-            for (int i = 0; i < r.Length; i++)
+            for (var i = 0; i < r.Length; i++)
                 r[i] = positives[i] / (double)(positives[i] + negatives[i]);
             return r;
         }
@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double[] GetRatio(this int[][] data, int positiveColumn, int negativeColumn)
         {
             double[] r = new double[data.Length];
-            for (int i = 0; i < r.Length; i++)
+            for (var i = 0; i < r.Length; i++)
                 r[i] = (double)data[i][positiveColumn] / (data[i][positiveColumn] + data[i][negativeColumn]);
             return r;
         }
@@ -65,7 +65,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             var groups = new List<int>();
             var groupings = new List<int[]>();
 
-            for (int i = 0; i < data.Length; i++)
+            for (var i = 0; i < data.Length; i++)
             {
                 int group = data[i][groupIndex];
                 if (!groups.Contains(group))
@@ -73,7 +73,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
                     groups.Add(group);
 
                     int positives = 0, negatives = 0;
-                    for (int j = 0; j < data.Length; j++)
+                    for (var j = 0; j < data.Length; j++)
                     {
                         if (data[j][groupIndex] == group)
                         {
@@ -104,10 +104,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         /// <returns>The original values divided into groups.</returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ClassesTest.cs" region="doc_random" />
-        /// </example>
-        /// 
         public static T[][] Separate<T>(this T[] values, int[] labels)
         {
             return Separate(values, labels, labels.Max() + 1);
@@ -128,10 +124,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         /// <returns>The original values divided into groups.</returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ClassesTest.cs" region="doc_random" />
-        /// </example>
-        /// 
         public static T[][] Separate<T>(this T[] values, int[] labels, int groups)
         {
             if (values.Length != labels.Length)
@@ -139,11 +131,11 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             var result = new T[groups][];
 
-            for (int i = 0; i < result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
             {
                 var group = new List<T>();
 
-                for (int j = 0; j < values.Length; j++)
+                for (var j = 0; j < values.Length; j++)
                 {
                     if (labels[j] == i)
                         group.Add(values[j]);
@@ -179,12 +171,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             List<int[]> rows = new List<int[]>();
 
-            for (int i = 0; i < data.Length; i++)
+            for (var i = 0; i < data.Length; i++)
             {
-                for (int j = 0; j < positives[i]; j++)
+                for (var j = 0; j < positives[i]; j++)
                     rows.Add(new int[] { data[i], 1 });
 
-                for (int j = 0; j < negatives[i]; j++)
+                for (var j = 0; j < negatives[i]; j++)
                     rows.Add(new int[] { data[i], 0 });
             }
 
@@ -209,12 +201,12 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             List<int[]> rows = new List<int[]>();
 
-            for (int i = 0; i < data.Length; i++)
+            for (var i = 0; i < data.Length; i++)
             {
-                for (int j = 0; j < data[i][positiveColumn]; j++)
+                for (var j = 0; j < data[i][positiveColumn]; j++)
                     rows.Add(new int[] { data[i][labelColumn], 1 });
 
-                for (int j = 0; j < data[i][negativeColumn]; j++)
+                for (var j = 0; j < data[i][negativeColumn]; j++)
                     rows.Add(new int[] { data[i][labelColumn], 0 });
             }
 
@@ -228,10 +220,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <param name="samples">The sample size.</param>
         /// <param name="classes">The number of groups.</param>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ClassesTest.cs" region="doc_random" />
-        /// </example>
-        /// 
         public static int[] Random(int samples, int classes)
         {
             return Random(samples, Vector.Create(classes, 1.0 / classes));
@@ -244,10 +232,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <param name="samples">The sample size.</param>
         /// <param name="proportion">The desired proportion for each class.</param>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ClassesTest.cs" region="doc_random" />
-        /// </example>
-        /// 
         public static int[] Random(int samples, double[] proportion)
         {
             // Create the index vector
@@ -259,11 +243,11 @@ namespace ISynergy.Framework.Mathematics.Statistics
             double[] cumSum = proportion.CumulativeSum();
 
             int a = 0;
-            for (int i = 0; i < proportion.Length; i++)
+            for (var i = 0; i < proportion.Length; i++)
             {
                 int b = (int)Math.Round(cumSum[i] * samples, MidpointRounding.AwayFromZero);
 
-                for (int j = a; j < b; j++)
+                for (var j = a; j < b; j++)
                     idx[j] = i;
 
                 a = b;
@@ -283,10 +267,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <param name="samples">The sample size.</param>
         /// <param name="proportion">The proportion of samples between the groups.</param>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ClassesTest.cs" region="doc_random" />
-        /// </example>
-        /// 
         public static int[] Random(int samples, double proportion)
         {
             return Random(samples, new[] { proportion, 1.0 - proportion });
@@ -300,10 +280,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         /// <param name="labels">A vector containing class labels.</param>
         /// <param name="categories">The number of groups.</param>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ClassesTest.cs" region="doc_random" />
-        /// </example>
         /// 
         public static int[] Random(int[] labels, int categories)
         {
@@ -320,24 +296,20 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// <param name="classes">The number of different classes in <paramref name="labels"/>.</param>
         /// <param name="categories">The number of groups.</param>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ClassesTest.cs" region="doc_random" />
-        /// </example>
-        /// 
         public static int[] Random(int[] labels, int classes, int categories)
         {
             var buckets = new List<Tuple<int, int>>[classes];
-            for (int i = 0; i < buckets.Length; i++)
+            for (var i = 0; i < buckets.Length; i++)
                 buckets[i] = new List<Tuple<int, int>>();
 
-            for (int i = 0; i < labels.Length; i++)
+            for (var i = 0; i < labels.Length; i++)
                 buckets[labels[i]].Add(Tuple.Create(i, labels[i]));
 
-            for (int i = 0; i < buckets.Length; i++)
+            for (var i = 0; i < buckets.Length; i++)
                 Vector.Shuffle(buckets);
 
             var partitions = new List<Tuple<int, int>>[categories];
-            for (int i = 0; i < partitions.Length; i++)
+            for (var i = 0; i < partitions.Length; i++)
                 partitions[i] = new List<Tuple<int, int>>();
 
             // We are going to take samples from the buckets and assign to 
@@ -350,14 +322,14 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             do
             {
-                for (int i = 0; i < partitions.Length; i++)
+                for (var i = 0; i < partitions.Length; i++)
                 {
                     allEmpty = true;
 
                     var currentPartition = partitions[partitionIndex];
                     partitionIndex = (partitionIndex + 1) % partitions.Length;
 
-                    for (int j = 0; j < buckets.Length; j++)
+                    for (var j = 0; j < buckets.Length; j++)
                     {
                         var currentBucket = buckets[bucketIndex];
                         bucketIndex = (bucketIndex + 1) % buckets.Length;
@@ -375,11 +347,11 @@ namespace ISynergy.Framework.Mathematics.Statistics
 
             } while (!allEmpty);
 
-            for (int i = 0; i < partitions.Length; i++)
+            for (var i = 0; i < partitions.Length; i++)
                 Vector.Shuffle(partitions[i]);
 
             int[] splittings = new int[labels.Length];
-            for (int i = 0; i < partitions.Length; i++)
+            for (var i = 0; i < partitions.Length; i++)
                 foreach (var index in partitions[i])
                     splittings[index.Item1] = i;
 
@@ -394,10 +366,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         /// <param name="labels">A vector containing class labels.</param>
         /// <param name="proportion">The proportion of positive and negative samples.</param>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\ClassesTest.cs" region="doc_random" />
-        /// </example>
         /// 
         public static int[] Random(int[] labels, double proportion)
         {
@@ -420,13 +388,13 @@ namespace ISynergy.Framework.Mathematics.Statistics
             List<int> testing = new List<int>();
 
             // Put positives and negatives into training
-            for (int j = 0; j < firstGroupNegatives; j++)
+            for (var j = 0; j < firstGroupNegatives; j++)
             {
                 training.Add(negativeIndices[0]);
                 negativeIndices.RemoveAt(0);
             }
 
-            for (int j = 0; j < firstGroupPositives; j++)
+            for (var j = 0; j < firstGroupPositives; j++)
             {
                 training.Add(positiveIndices[0]);
                 positiveIndices.RemoveAt(0);
@@ -436,7 +404,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
             testing.AddRange(positiveIndices);
 
             int[] indices = new int[labels.Length];
-            for (int i = 0; i < testing.Count; i++)
+            for (var i = 0; i < testing.Count; i++)
                 indices[testing[i]] = 1;
             return indices;
         }
@@ -467,7 +435,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double GetRatio(this bool[] y, out int positives, out int negatives)
         {
             positives = 0;
-            for (int i = 0; i < y.Length; i++)
+            for (var i = 0; i < y.Length; i++)
             {
                 if (y[i])
                     positives++;
@@ -511,7 +479,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static int[] ToZeroOne(this bool[] p)
         {
             var result = new int[p.Length];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 result[i] = p[i] ? 1 : 0;
             return result;
         }
@@ -523,7 +491,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static int[] ToZeroOne(this int[] p)
         {
             var result = new int[p.Length];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 result[i] = Decide(p[i]) ? 1 : 0;
             return result;
         }
@@ -535,7 +503,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static int[] ToZeroOne(this double[] p)
         {
             var result = new int[p.Length];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 result[i] = Decide(p[i]) ? 1 : 0;
             return result;
         }
@@ -574,7 +542,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static int[] ToMinusOnePlusOne(this bool[] p)
         {
             var result = new int[p.Length];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 result[i] = p[i] ? 1 : -1;
             return result;
         }
@@ -586,7 +554,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static int[] ToMinusOnePlusOne(this int[] p)
         {
             var result = new int[p.Length];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 result[i] = Decide(p[i]) ? 1 : -1;
             return result;
         }
@@ -598,7 +566,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static int[] ToMinusOnePlusOne(this double[] p)
         {
             var result = new int[p.Length];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 result[i] = Decide(p[i]) ? 1 : -1;
             return result;
         }
@@ -622,17 +590,15 @@ namespace ISynergy.Framework.Mathematics.Statistics
             T negative = (T)System.Convert.ChangeType(-1, typeof(T));
 
             var result = new T[p.Length][];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
             {
                 result[i] = new T[p[i].Length];
-                for (int j = 0; j < p[i].Length; j++)
+                for (var j = 0; j < p[i].Length; j++)
                     result[i][j] = p[i][j] ? positive : negative;
             }
 
             return result;
         }
-
-
         /// <summary>
         ///   Converts double variables into class labels, starting at zero.
         /// </summary>
@@ -658,7 +624,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static int[] ToMulticlass(this double[] p, int min)
         {
             var result = new int[p.Length];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 result[i] = (int)p[i] - min;
             return result;
         }
@@ -670,19 +636,17 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static int[] ToMulticlass(this int[] p, int min)
         {
             var result = new int[p.Length];
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 result[i] = (int)p[i] - min;
             return result;
         }
-
-
         /// <summary>
         /// Determines whether the class labels contains only zero and ones.
         /// </summary>
         /// 
         public static bool IsZeroOne(this int[] p)
         {
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 if (p[i] != 0 && p[i] != +1)
                     return false;
             return true;
@@ -694,7 +658,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         public static bool IsMinusOnePlusOne(this int[] p)
         {
-            for (int i = 0; i < p.Length; i++)
+            for (var i = 0; i < p.Length; i++)
                 if (p[i] != -1 && p[i] != +1)
                     return false;
             return true;
@@ -726,8 +690,6 @@ namespace ISynergy.Framework.Mathematics.Statistics
         {
             return y.Sum(dimension: 1).IsEqual(1);
         }
-
-
         /// <summary>
         ///   Hyperplane decision function. Return true if distance
         ///   is higher than zero, and false otherwise.
@@ -760,7 +722,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static bool[] Decide(double[] values)
         {
             bool[] result = new bool[values.Length];
-            for (int i = 0; i < result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
                 result[i] = Decide(values[i]);
             return result;
         }
@@ -773,7 +735,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static bool[] Decide(int[] values)
         {
             bool[] result = new bool[values.Length];
-            for (int i = 0; i < result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
                 result[i] = Decide(values[i]);
             return result;
         }
@@ -786,7 +748,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static bool[][] Decide(double[][] values)
         {
             bool[][] result = new bool[values.Length][];
-            for (int i = 0; i < result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
                 result[i] = Decide(values[i]);
             return result;
         }
@@ -799,7 +761,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static bool[][] Decide(int[][] values)
         {
             bool[][] result = new bool[values.Length][];
-            for (int i = 0; i < result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
                 result[i] = Decide(values[i]);
             return result;
         }

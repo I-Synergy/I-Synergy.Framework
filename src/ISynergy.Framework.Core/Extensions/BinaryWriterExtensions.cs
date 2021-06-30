@@ -6,6 +6,9 @@ using System.Text;
 
 namespace ISynergy.Framework.Core.Extensions
 {
+    /// <summary>
+    /// Binary writer extensions.
+    /// </summary>
     public static class BinaryWriterExtensions
     {
         /// <summary>

@@ -74,19 +74,13 @@ namespace ISynergy.Framework.Mathematics.Optimization
         // bounds
 
         private int n;
-
-
         private NelderMead nelderMead;
-
-
         private int[] p; // subspace index permutation
         private int sindex; // starting index for this subspace
 
         private double[] xprev;
 
         private double[] xstep; // initial step sizes
-
-
         /// <summary>
         ///     Creates a new <see cref="Subplex" /> optimization algorithm.
         /// </summary>
@@ -184,8 +178,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             for (var i = 0; i < UpperBounds.Length; i++)
                 UpperBounds[i] = double.PositiveInfinity;
         }
-
-
         /// <summary>
         ///     Implements the actual optimization algorithm. This
         ///     method should try to minimize the objective function.
@@ -215,11 +207,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 return NelderMeadStatus.MaximumEvaluationsReached;
             if (NelderMead.nlopt_stop_time(Convergence))
                 return NelderMeadStatus.MaximumTimeReached;
-
-
             Array.Copy(StepSize, xstep, xstep.Length);
-
-
             while (true)
             {
                 double normi = 0;
@@ -242,8 +230,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     absdx[j] = Math.Abs(dx[j]);
 
                 Array.Sort(p, absdx);
-
-
                 // find the subspaces, and perform nelder-mead on each one
                 for (var i = 0; i < absdx.Length; i++)
                     normdx += absdx[i]; // L1 norm
@@ -351,8 +337,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
                 Trace.WriteLine(string.Format("sbplx: {0} NM iterations for ({1},{2}) subspace",
                     Convergence.Evaluations - nevals, sindex, ns));
-
-
                 for (var i = sindex; i < p.Length; i++)
                     x[p[i]] = nelderMead.Solution[i - sindex];
 
@@ -411,18 +395,12 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         if (scale > 1 / omega)
                             scale = 1 / omega;
                     }
-
-
                     Trace.WriteLine("sbplx: stepsize scale factor = " + scale);
-
-
                     for (var i = 0; i < xstep.Length; i++)
                         xstep[i] = dx[i] == 0 ? -(xstep[i] * scale) : Special.Sign(xstep[i] * scale, dx[i]);
                 }
             }
         }
-
-
         /// <summary>
         ///     Wrapper around objective function for subspace optimization.
         /// </summary>

@@ -40,8 +40,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses
     ///         adjusted and non-adjusted versions of the R² coefficient of determination at
     ///         the end:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\MultipleLinearRegressionTest.cs"
-    ///         region="doc_learn_2" />
     /// </example>
     /// <seealso cref="SquareLoss" />
     [Serializable]

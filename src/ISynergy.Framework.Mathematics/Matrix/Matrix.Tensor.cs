@@ -114,10 +114,6 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="array">The tensor to be converted.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_matrix" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_jagged" />
-        /// </example>
         public static Array Convert<TOutput>(this Array array)
         {
             return Convert(array, typeof(TOutput));
@@ -128,10 +124,6 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <param name="type">The type of the output.</param>
         /// <param name="array">The tensor to be converted.</param>
-        /// <example>
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_matrix" />
-        ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Matrix\Matrix.Conversion.cs" region="doc_convert_jagged" />
-        /// </example>
         public static Array Convert(this Array array, Type type)
         {
             Array r = Matrix.Zeros(type, array.GetLength(true));

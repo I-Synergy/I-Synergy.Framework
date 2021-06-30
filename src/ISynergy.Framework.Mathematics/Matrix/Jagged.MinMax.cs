@@ -18,8 +18,6 @@ namespace ISynergy.Framework.Mathematics
                 return values.GetLength(0);
             return values.GetLength(1);
         }
-
-
         /// <summary>
         ///     Gets the maximum and minimum values in a matrix.
         /// </summary>
@@ -46,8 +44,6 @@ namespace ISynergy.Framework.Mathematics
                         max = values[i][j];
                 }
         }
-
-
         /// <summary>
         ///     Gets the range of the values across the columns of a matrix.
         /// </summary>
@@ -56,15 +52,15 @@ namespace ISynergy.Framework.Mathematics
         ///     Pass 0 if the range should be computed for each of the columns. Pass 1
         ///     if the range should be computed for each row. Default is 0.
         /// </param>
-        public static DoubleRange[] GetRange(this double[][] value, int dimension)
+        public static NumericRange[] GetRange(this double[][] value, int dimension)
         {
             var rows = value.Length;
             var cols = value[0].Length;
-            DoubleRange[] ranges;
+            NumericRange[] ranges;
 
             if (dimension == 0)
             {
-                ranges = new DoubleRange[cols];
+                ranges = new NumericRange[cols];
 
                 for (var j = 0; j < ranges.Length; j++)
                 {
@@ -79,12 +75,12 @@ namespace ISynergy.Framework.Mathematics
                             min = value[i][j];
                     }
 
-                    ranges[j] = new DoubleRange(min, max);
+                    ranges[j] = new NumericRange(min, max);
                 }
             }
             else
             {
-                ranges = new DoubleRange[rows];
+                ranges = new NumericRange[rows];
 
                 for (var j = 0; j < ranges.Length; j++)
                 {
@@ -99,14 +95,12 @@ namespace ISynergy.Framework.Mathematics
                             min = value[j][i];
                     }
 
-                    ranges[j] = new DoubleRange(min, max);
+                    ranges[j] = new NumericRange(min, max);
                 }
             }
 
             return ranges;
         }
-
-
         #region Matrix ArgMin/ArgMax
 
         /// <summary>
@@ -144,8 +138,6 @@ namespace ISynergy.Framework.Mathematics
             Max(matrix, dimension, result, values);
             return result;
         }
-
-
         /// <summary>
         ///     Gets the index of the minimum element in a matrix.
         /// </summary>
@@ -183,8 +175,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Matrix Min/Max
 
         /// <summary>
@@ -211,8 +201,6 @@ namespace ISynergy.Framework.Mathematics
             Tuple<int, int> index;
             return Min(matrix, out index);
         }
-
-
         /// <summary>
         ///     Gets the minimum values across one dimension of a matrix.
         /// </summary>
@@ -258,8 +246,6 @@ namespace ISynergy.Framework.Mathematics
             var indices = new int[s];
             return Min(matrix, dimension, indices, result);
         }
-
-
         /// <summary>
         ///     Gets the minimum values across one dimension of a matrix.
         /// </summary>
@@ -307,8 +293,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         #endregion
-
-
         #region Core implementations
 
         /// <summary>
@@ -382,8 +366,6 @@ namespace ISynergy.Framework.Mathematics
 
             return result;
         }
-
-
         /// <summary>
         ///     Gets the minimum values across one dimension of a matrix.
         /// </summary>

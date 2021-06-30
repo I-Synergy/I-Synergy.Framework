@@ -8,10 +8,6 @@
     /// 
     /// <seealso cref="Angular"/>
     /// 
-    /// <example>
-    ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_cosine_2" />
-    /// </example>
-    /// 
     [Serializable]
     public struct Cosine : IDistance<double[]>, ISimilarity<double[]>, ICloneable
     {
@@ -29,17 +25,13 @@
         ///   to the distance function implemented by this class.
         /// </returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_cosine_2" />
-        /// </example>
-        /// 
         public double Distance(double[] x, double[] y)
         {
             double sum = 0;
             double p = 0;
             double q = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 sum += x[i] * y[i];
                 p += x[i] * x[i];
@@ -65,7 +57,7 @@
             double p = 0;
             double q = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 sum += x[i] * y[i];
                 p += x[i] * x[i];
@@ -75,10 +67,6 @@
             double den = Math.Sqrt(p) * Math.Sqrt(q);
             return (sum == 0) ? 0 : sum / den;
         }
-
-
-
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>

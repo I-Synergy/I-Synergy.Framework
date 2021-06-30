@@ -28,7 +28,7 @@
             int tf = 0;
             int ft = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 if (x[i] == 1 && y[i] == 0) tf++;
                 if (x[i] == 0 && y[i] == 1) ft++;
@@ -56,7 +56,7 @@
             int tf = 0;
             int ft = 0;
 
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
             {
                 if (x[i] == 1 && y[i] == 0) tf++;
                 if (x[i] == 0 && y[i] == 1) ft++;
@@ -64,8 +64,6 @@
 
             return (tf + ft) / (double)(x.Length);
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

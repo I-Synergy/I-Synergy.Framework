@@ -243,7 +243,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         /// <param name="array">A complex number vector.</param>
         /// <returns>The range of magnitude values in the complex vector.</returns>
-        public static DoubleRange Range(this Complex[] array)
+        public static NumericRange Range(this Complex[] array)
         {
             if (array == null)
                 throw new ArgumentNullException("array");
@@ -261,7 +261,7 @@ namespace ISynergy.Framework.Mathematics
                     max = value;
             }
 
-            return new DoubleRange(
+            return new NumericRange(
                 Math.Sqrt(min),
                 Math.Sqrt(max));
         }

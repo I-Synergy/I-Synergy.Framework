@@ -7,10 +7,6 @@
     ///   Mahalanobis distance.
     /// </summary>
     /// 
-    /// <example>
-    ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_mahalanobis_3" />
-    /// </example>
-    /// 
     [Serializable]
     public struct Mahalanobis : IMetric<double[]>, ICloneable
     {
@@ -23,10 +19,6 @@
         /// </summary>
         /// 
         /// <param name="chol">A Cholesky decomposition of the covariance matrix.</param>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_mahalanobis_3" />
-        /// </example>
         /// 
         public Mahalanobis(CholeskyDecomposition chol)
         {
@@ -41,10 +33,6 @@
         /// 
         /// <param name="svd">A Singular Value decomposition of the covariance matrix.</param>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_mahalanobis_3" />
-        /// </example>
-        /// 
         public Mahalanobis(SingularValueDecomposition svd)
         {
             this.chol = null;
@@ -57,10 +45,6 @@
         /// </summary>
         /// 
         /// <param name="precision">The precision matrix (the inverse of the covariance matrix).</param>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_mahalanobis_3" />
-        /// </example>
         /// 
         public Mahalanobis(double[,] precision)
         {
@@ -83,14 +67,10 @@
         ///   to the distance function implemented by this class.
         /// </returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_mahalanobis_3" />
-        /// </example>
-        /// 
         public double Distance(double[] x, double[] y)
         {
             double[] d = new double[x.Length];
-            for (int i = 0; i < x.Length; i++)
+            for (var i = 0; i < x.Length; i++)
                 d[i] = x[i] - y[i];
 
             double[] z;
@@ -102,7 +82,7 @@
                 z = precision.Dot(d);
 
             double sum = 0.0;
-            for (int i = 0; i < d.Length; i++)
+            for (var i = 0; i < d.Length; i++)
                 sum += d[i] * z[i];
             return Math.Sqrt(Math.Abs(sum));
         }
@@ -117,10 +97,6 @@
         ///   A Mahalanobis distance using the <see cref="SingularValueDecomposition"/>
         ///   of the given covariance matrix.
         /// </returns>
-        /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_mahalanobis_3" />
-        /// </example>
         /// 
         public static Mahalanobis FromCovarianceMatrix(double[,] covariance)
         {
@@ -137,18 +113,10 @@
         ///   A Mahalanobis distance using the given precision matrix.
         /// </returns>
         /// 
-        /// <example>
-        ///   <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\DistanceTest.cs" region="doc_mahalanobis_3" />
-        /// </example>
-        /// 
         public static Mahalanobis FromPrecisionMatrix(double[,] precision)
         {
             return new Mahalanobis(precision);
         }
-
-
-
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>

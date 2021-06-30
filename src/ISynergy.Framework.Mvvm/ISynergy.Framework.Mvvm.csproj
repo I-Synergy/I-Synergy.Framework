@@ -3,10 +3,6 @@
 
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{3828A883-B771-4E6B-B004-E521B6D7AD52}</ProjectGuid>
-
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
         <Description>I-Synergy Framework Mvvm for .Net Standard 2.0 and .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>

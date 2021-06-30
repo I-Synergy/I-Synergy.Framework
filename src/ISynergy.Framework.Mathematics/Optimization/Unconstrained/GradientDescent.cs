@@ -65,8 +65,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     Occurs when the current learning progress has changed.
         /// </summary>
         public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
-
-
         /// <summary>
         ///     Implements the actual optimization algorithm. This
         ///     method should try to minimize the objective function.

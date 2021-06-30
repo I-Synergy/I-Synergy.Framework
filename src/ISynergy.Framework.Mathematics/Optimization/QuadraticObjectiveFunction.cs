@@ -123,7 +123,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///         combinations of other quadratic functions. The <see cref="QuadraticObjectiveFunction" />
     ///         supports this by overloading the addition and multiplication operators.
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Optimization\QuadraticObjectiveFunctionTest.cs" region="doc_example" />
     /// </example>
     /// <seealso cref="GoldfarbIdnani" />
     public class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IObjectiveFunction
@@ -380,8 +379,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
                 sb.AppendFormat("{0:+#;-#}{1} ", LinearTerms[i], InnerIndices[i]);
             }
-
-
             if (ConstantTerm != 0)
                 sb.AppendFormat("{0:+#;-#} ", ConstantTerm);
 

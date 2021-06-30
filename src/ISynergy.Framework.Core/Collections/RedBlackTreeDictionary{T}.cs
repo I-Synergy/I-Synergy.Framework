@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,13 +15,11 @@ namespace ISynergy.Framework.Core.Collections
     [Serializable]
     public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-
-        private RedBlackTree<TKey, TValue> tree;
-
+        private RedBlackTree<TKey, TValue> _tree;
 
         // proxies for tree iteration
-        private ValueCollection values;
-        private KeyCollection keys;
+        private ValueCollection _values;
+        private KeyCollection _keys;
 
 
         /// <summary>
@@ -49,15 +48,15 @@ namespace ISynergy.Framework.Core.Collections
         private void init(IComparer<TKey> comparer)
         {
             var keyComparer = new KeyValuePairComparer<TKey, TValue>(comparer);
-            this.tree = new RedBlackTree<TKey, TValue>(keyComparer, false);
-            this.values = new ValueCollection(tree);
-            this.keys = new KeyCollection(tree);
+            _tree = new RedBlackTree<TKey, TValue>(keyComparer, false);
+            _values = new ValueCollection(_tree);
+            _keys = new KeyCollection(_tree);
         }
 
 
 
         /// <summary>
-        ///   Adds an element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2" />.
+        ///   Adds an element with the provided key and value to the <see cref="T:IDictionary`2" />.
         /// </summary>
         /// 
         /// <param name="key">The object to use as the key of the element to add.</param>
@@ -65,7 +64,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public void Add(TKey key, TValue value)
         {
-            tree.Add(new RedBlackTreeNode<TKey, TValue>(key, value));
+            _tree.Add(new RedBlackTreeNode<TKey, TValue>(key, value));
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            tree.Add(new RedBlackTreeNode<TKey, TValue>(item));
+            _tree.Add(new RedBlackTreeNode<TKey, TValue>(item));
         }
 
         /// <summary>
@@ -113,12 +112,12 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            var node = tree.Find(item);
+            var node = _tree.Find(item);
 
             if (node == null)
                 return false;
 
-            var result = tree.Remove(node);
+            var result = _tree.Remove(node);
 
             return result != null;
         }
@@ -136,7 +135,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool ContainsKey(TKey key)
         {
-            return tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue))) != null;
+            return _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue))) != null;
         }
 
         /// <summary>
@@ -151,29 +150,29 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            var result = tree.Find(item);
+            var result = _tree.Find(item);
 
             return result != null && item.Value.Equals(result.Value);
         }
 
         /// <summary>
-        ///   Gets an <see cref="T:System.Collections.Generic.ICollection{T}" /> 
+        ///   Gets an <see cref="T:ICollection{T}" /> 
         ///   containing the keys of the <see cref="RedBlackTreeDictionary{TKey, TValue}"/>.
         /// </summary>
         /// 
         public ICollection<TKey> Keys
         {
-            get { return keys; }
+            get { return _keys; }
         }
 
         /// <summary>
-        ///   Gets an <see cref="T:System.Collections.Generic.ICollection{T}" /> 
+        ///   Gets an <see cref="T:ICollection{T}" /> 
         ///   containing the values of the <see cref="RedBlackTreeDictionary{TKey, TValue}"/>.
         /// </summary>
         /// 
         public ICollection<TValue> Values
         {
-            get { return values; }
+            get { return _values; }
         }
 
 
@@ -197,7 +196,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             value = default(TValue);
 
-            var result = tree.Find(new KeyValuePair<TKey, TValue>(key, value));
+            var result = _tree.Find(new KeyValuePair<TKey, TValue>(key, value));
 
             if (result == null)
                 return false;
@@ -214,13 +213,13 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         /// <param name="key">The key.</param>
         /// 
-        /// <exception cref="System.Collections.Generic.KeyNotFoundException">The requested key was not found in the present tree.</exception>
+        /// <exception cref="KeyNotFoundException">The requested key was not found in the present tree.</exception>
         /// 
         public TValue this[TKey key]
         {
             get
             {
-                var result = tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+                var result = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
 
                 if (result == null)
                     throw new KeyNotFoundException("The requested key was not found in the present tree.");
@@ -231,7 +230,7 @@ namespace ISynergy.Framework.Core.Collections
             {
                 var pair = new KeyValuePair<TKey, TValue>(key, value);
 
-                var result = tree.Find(pair);
+                var result = _tree.Find(pair);
 
                 if (result != null)
                 {
@@ -251,7 +250,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public void Clear()
         {
-            tree.Clear();
+            _tree.Clear();
         }
 
 
@@ -266,7 +265,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            foreach (var node in tree)
+            foreach (var node in _tree)
                 array[arrayIndex++] = node.Value;
         }
 
@@ -276,7 +275,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public int Count
         {
-            get { return tree.Count; }
+            get { return _tree.Count; }
         }
 
         /// <summary>
@@ -298,13 +297,13 @@ namespace ISynergy.Framework.Core.Collections
         /// </summary>
         /// 
         /// <returns>
-        ///   An <see cref="T:System.Collections.Generic.IEnumerator{T}"/>
+        ///   An <see cref="T:IEnumerator{T}"/>
         ///   object that can be used to iterate through the collection.
         /// </returns>
         /// 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            foreach (var node in tree)
+            foreach (var node in _tree)
                 yield return node.Value;
         }
 
@@ -316,7 +315,7 @@ namespace ISynergy.Framework.Core.Collections
         ///   An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
         /// </returns>
         /// 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
@@ -332,10 +331,10 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public KeyValuePair<TKey, TValue> Min()
         {
-            if (tree.Count == 0)
+            if (_tree.Count == 0)
                 throw new InvalidOperationException("The dictionary is empty.");
 
-            return tree.Min().Value;
+            return _tree.Min().Value;
         }
 
         /// <summary>
@@ -349,10 +348,10 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public KeyValuePair<TKey, TValue> Max()
         {
-            if (tree.Count == 0)
+            if (_tree.Count == 0)
                 throw new InvalidOperationException("The dictionary is empty.");
 
-            return tree.Max().Value;
+            return _tree.Max().Value;
         }
 
 
@@ -369,8 +368,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public KeyValuePair<TKey, TValue> GetPrevious(TKey key)
         {
-            var node = tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
-            var prevNode = tree.GetPreviousNode(node);
+            var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+            var prevNode = _tree.GetPreviousNode(node);
 
             if (prevNode != null)
                 return prevNode.Value;
@@ -397,8 +396,8 @@ namespace ISynergy.Framework.Core.Collections
         {
             prev = default(KeyValuePair<TKey, TValue>);
 
-            var node = tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
-            var prevNode = tree.GetPreviousNode(node);
+            var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+            var prevNode = _tree.GetPreviousNode(node);
 
             if (prevNode != null)
             {
@@ -422,8 +421,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public KeyValuePair<TKey, TValue> GetNext(TKey key)
         {
-            var node = tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
-            var nextNode = tree.GetNextNode(node);
+            var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+            var nextNode = _tree.GetNextNode(node);
 
             if (nextNode != null)
                 return nextNode.Value;
@@ -450,8 +449,8 @@ namespace ISynergy.Framework.Core.Collections
         {
             next = default(KeyValuePair<TKey, TValue>);
 
-            var node = tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
-            var nextNode = tree.GetNextNode(node);
+            var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
+            var nextNode = _tree.GetNextNode(node);
 
             if (nextNode != null)
             {
@@ -519,7 +518,7 @@ namespace ISynergy.Framework.Core.Collections
                     yield return node.Value.Value;
             }
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
             }
@@ -580,11 +579,10 @@ namespace ISynergy.Framework.Core.Collections
                     yield return node.Value.Key;
             }
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
             }
         }
-
     }
 }

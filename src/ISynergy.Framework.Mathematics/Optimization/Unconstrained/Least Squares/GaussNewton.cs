@@ -19,15 +19,10 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///         method for solving least squares problems, this class is intended to be used as
     ///         a strategy for NonlinearLeastSquares, as shown in the example below:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\NonlinearLeastSquaresTest.cs"
-    ///         region="doc_learn_gn" lang="cs" />
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics.VB\Models\Regression\NonlinearLeastSquaresTest.vb"
-    ///         region="doc_learn_gn" lang="vb" />
     ///     <para>
     ///         However, as mentioned above it is also possible to use <see cref="GaussNewton" /> as
     ///         a standalone class, as shown in the example below:
     ///     </para>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Statistics\Models\Regression\GaussNewtonTest.cs" region="doc_minimize" />
     /// </example>
     /// <seealso cref="LevenbergMarquardt" />
     /// <seealso cref="FiniteDifferences" />
@@ -92,8 +87,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     Gets standard error for each parameter in the solution.
         /// </summary>
         public double[] StandardErrors => decomposition.Inverse().Diagonal().Sqrt();
-
-
         /// <summary>
         ///     Attempts to find the best values for the parameter vector
         ///     minimizing the discrepancy between the generated outputs
@@ -164,8 +157,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     },
                     grad => { }
                 );
-
-
             // Compute error gradient using Jacobian
             Jacobian.Dot(Residuals, gradient);
 

@@ -34,15 +34,11 @@
         /// </summary>
         /// 
         public double Value { get; private set; }
-
-
         /// <summary>
         ///   Gets the function to be searched.
         /// </summary>
         /// 
         public Func<int, double> Function { get; private set; }
-
-
         /// <summary>
         ///   Constructs a new Binary search algorithm.
         /// </summary>
@@ -57,8 +53,6 @@
             this.LowerBound = a;
             this.UpperBound = b;
         }
-
-
         /// <summary>
         ///  Finds a value of a function in the interval [a;b). The function can 
         ///  be monotonically increasing or decreasing over the interface [a;b). 
@@ -86,8 +80,6 @@
             Value = Function(Solution);
             return Solution;
         }
-
-
         /// <summary>
         ///  Finds a value of a function in the interval [a;b). The function can 
         ///  be monotonically increasing or decreasing over the interface [a;b). 

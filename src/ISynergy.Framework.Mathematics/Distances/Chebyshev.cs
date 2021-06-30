@@ -27,7 +27,7 @@
         {
             double max = System.Math.Abs(x[0] - y[0]);
 
-            for (int i = 1; i < x.Length; i++)
+            for (var i = 1; i < x.Length; i++)
             {
                 double abs = System.Math.Abs(x[i] - y[i]);
                 if (abs > max)
@@ -36,8 +36,6 @@
 
             return max;
         }
-
-
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.

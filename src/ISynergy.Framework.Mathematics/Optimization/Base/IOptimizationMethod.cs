@@ -77,8 +77,6 @@
         /// </returns>
         bool Maximize();
     }
-
-
     /// <summary>
     ///     Common interface for function optimization methods.
     /// </summary>

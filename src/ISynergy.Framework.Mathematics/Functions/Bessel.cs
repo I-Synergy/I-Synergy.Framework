@@ -342,7 +342,7 @@ namespace ISynergy.Framework.Mathematics
             tox = 2.0 / x;
             by = Y(x);
             bym = Y0(x);
-            for (int j = 1; j < n; j++)
+            for (var j = 1; j < n; j++)
             {
                 byp = j * tox * by - bym;
                 bym = by;
@@ -444,7 +444,7 @@ namespace ISynergy.Framework.Mathematics
             double bip = 0, ans = 0.0;
             double bi = 1.0;
 
-            for (int j = 2 * (n + (int)Math.Sqrt(ACC * n)); j > 0; j--)
+            for (var j = 2 * (n + (int)Math.Sqrt(ACC * n)); j > 0; j--)
             {
                 double bim = bip + j * tox * bi;
                 bip = bi;

@@ -66,8 +66,6 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                     OrthogonalFactor.SetColumn(j, v.Divide(UpperTriangularFactor[j, j]));
                 }
         }
-
-
         /// <summary>
         ///     Returns the orthogonal factor matrix <c>Q</c>.
         /// </summary>

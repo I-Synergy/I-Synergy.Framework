@@ -59,8 +59,6 @@ namespace ISynergy.Framework.Mathematics.Kinematics
     {
         // TODO: remove the NonSerialized tags in case AForge.NET implements 
         // [Serializable] for those structs in the future (AForge.NET Issue 349)
-
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="DenavitHartenbergModel" />
         ///     class given a specified model position in 3D space.
@@ -80,8 +78,6 @@ namespace ISynergy.Framework.Mathematics.Kinematics
             : this(new Vector3(0, 0, 0))
         {
         }
-
-
         /// <summary>
         ///     Gets the model kinematic chain.
         /// </summary>
@@ -122,8 +118,6 @@ namespace ISynergy.Framework.Mathematics.Kinematics
         {
             return Joints.GetEnumerator();
         }
-
-
         /// <summary>
         ///     Computes the entire model, calculating the
         ///     final position for each joint in the model.
@@ -144,8 +138,6 @@ namespace ISynergy.Framework.Mathematics.Kinematics
         {
             if (parent == null)
                 throw new ArgumentNullException("parent", "Parent cannot be null.");
-
-
             // The model position will be the position
             // of the last joint in the parent model:
             //
@@ -160,8 +152,6 @@ namespace ISynergy.Framework.Mathematics.Kinematics
 
             compute(parent.Transform, parent.Position);
         }
-
-
         private void compute(Matrix4x4 currentMatrix, Vector3 position)
         {
             Vector4 referencePosition;

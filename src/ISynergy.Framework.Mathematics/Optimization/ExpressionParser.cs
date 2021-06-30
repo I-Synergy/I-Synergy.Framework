@@ -16,8 +16,6 @@
             MemberExpression em = expr as MemberExpression;
             UnaryExpression eu = expr as UnaryExpression;
             MethodCallExpression ec = expr as MethodCallExpression;
-
-
             if (em != null) // member expression
             {
                 list.Add(em.Member.Name);
@@ -36,8 +34,6 @@
                 foreach (var a in ec.Arguments)
                     Parse(list, a);
             }
-
-
             return;
         }
 

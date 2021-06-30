@@ -19,8 +19,6 @@
     public class Haar : IWavelet
     {
         private const double SQRT2 = Constants.Sqrt2;
-
-
         private const double w0 = 0.5;
         private const double w1 = -0.5;
         private const double s0 = 0.5;
@@ -68,8 +66,6 @@
         {
             IWT(data, levels);
         }
-
-
         /// <summary>
         ///     Discrete Haar Wavelet Transform
         /// </summary>
@@ -107,8 +103,6 @@
             for (var i = 0; i < data.Length; i++)
                 data[i] = temp[i];
         }
-
-
         /// <summary>
         ///     Discrete Haar Wavelet 2D Transform
         /// </summary>
@@ -138,8 +132,6 @@
                     for (var j = 0; j < row.Length; j++)
                         data[i, j] = row[j];
                 }
-
-
                 col = new double[levRows];
                 for (var j = 0; j < levCols; j++)
                 {

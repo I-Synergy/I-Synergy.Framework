@@ -27,15 +27,11 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             var replaceQuad = new Regex(@"([a-zA-Z])(²)");
             f = replaceQuad.Replace(f, "$1$1");
-
-
             var separator = culture.NumberFormat.NumberDecimalSeparator;
 
             var r = new Regex(@"[\-\+]?[\s]*((\d*\" + separator + @"{0,1}\d+)|[a-zA-Z][²]?)+");
             var number = new Regex(@"\d*\" + separator + @"{0,1}\d+");
             var symbol = new Regex(@"[a-zA-Z]");
-
-
             var matches = r.Matches(f, 0);
 
             foreach (Match m in matches)
@@ -99,8 +95,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     var rm = eb.Right as MemberExpression;
                     var rb = eb.Right as BinaryExpression;
                     var ru = eb.Right as UnaryExpression;
-
-
                     if (c != null)
                     {
                         // This is constant*expression or expression*constant
@@ -206,8 +200,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     var rm = eb.Right as MemberExpression;
 
                     var rc = eb.Right as ConstantExpression;
-
-
                     if (lb != null)
                     {
                         ParseExpression(terms, lb, out scalar);

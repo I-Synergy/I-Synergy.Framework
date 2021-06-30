@@ -169,8 +169,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 // DISPLAY: 'At X0 ',i9,' variables are exactly at the bounds'" (nbdd)
             }
         }
-
-
         // 
         // c====================== The end of dpofa ===============================
         // 
@@ -1144,8 +1142,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 f1 = (f1 + (dibp * wmc));
                 f2 = ((f2 + ((2.0e0 * dibp) * wmp)) - (dibp2 * wmw));
             }
-
-
             f2 = System.Math.Max((epsmch * f2_org), f2);
 
             if ((nleft > 0))
@@ -1200,8 +1196,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             {
                 daxpy(col2, dtm, p, _p_offset, 1, c, _c_offset, 1);
             }
-
-
             if ((iprint > 100))
             {
                 for (i = 1; i <= n; i++)
@@ -2814,8 +2808,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         {
                             nenter = (nenter + 1);
                             indx2[(nenter - (1)) + _indx2_offset] = k;
-
-
                             if ((iprint >= 100))
                             {
                                 // DISPLAY: "Variable " + k + " enters the set of free variables"
@@ -3662,8 +3654,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 nseg = 0;
                 goto L333;
             }
-
-
             // cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
             // c
             // c     Compute the Generalized Cauchy Point (GCP).
@@ -3720,8 +3710,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             {
                 goto L555;
             }
-
-
             // cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
             // c
             // c     Subspace minimization.
@@ -3804,8 +3792,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
                 goto L222;
             }
-
-
         L555:
             // 
             // cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -3822,8 +3808,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     d[(i - (1)) + _d_offset] = (z[(i - (1)) + _z_offset] - x[(i - (1)) + _x_offset]);
                 }
             }
-
-
         L666:
             lnsrlb(n, l, _l_offset, u, _u_offset, nbd, _nbd_offset, x, _x_offset,
                 f, ref fold, ref gd, ref gdold, g, _g_offset, d, _d_offset, r, _r_offset, t, _t_offset,
@@ -3965,8 +3949,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 // skip the L-BFGS update.
                 nskip = (nskip + 1);
                 updatd = false;
-
-
                 if ((iprint >= 1))
                 {
                     // DISPLAY: dr, ddum
@@ -4883,8 +4865,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     pointr = ((pointr) % (m) + 1);
                 }
             }
-
-
             dscal(nsub, (1.0 / theta), d, _d_offset, 1);
 
             //  
@@ -4943,8 +4923,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     }
                 }
             }
-
-
             if ((iword == 0))
             {
                 goto L911;
@@ -5043,8 +5021,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     x[(k - (1)) + _x_offset] = (x[(k - (1)) + _x_offset] + (alpha * d[(i - (1)) + _d_offset]));
                 }
             }
-
-
         L911:
 
             if ((iprint >= 99))

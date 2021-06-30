@@ -39,8 +39,6 @@ namespace ISynergy.Framework.Mathematics.Exceptions
         public NonSymmetricMatrixException(string message, Exception innerException) :
             base(message, innerException)
         { }
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="NonSymmetricMatrixException"/> class.
         /// </summary>

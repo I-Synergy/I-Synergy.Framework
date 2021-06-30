@@ -184,8 +184,6 @@ namespace ISynergy.Framework.Mathematics.Integration
         private double reltol;
         private double result;
         private double[] work;
-
-
         /// <summary>
         ///     Creates a new <see cref="InfiniteAdaptiveGaussKronrod" /> integration algorithm.
         /// </summary>
@@ -298,7 +296,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         ///     Gets or sets the input range under
         ///     which the integral must be computed.
         /// </summary>
-        public DoubleRange Range { get; set; }
+        public NumericRange Range { get; set; }
 
         /// <summary>
         ///     Gets the numerically computed result of the
@@ -356,8 +354,6 @@ namespace ISynergy.Framework.Mathematics.Integration
                     out result, out error, out evaluations, out errorCode,
                     limit, lenw, out last, iwork, work);
             }
-
-
             if (errorCode == 6)
                 throw new InvalidOperationException("Invalid inputs. If this error happens, the "
                                                     + "framework didn't check for inputs correctly. If you encounter this error, "
@@ -396,7 +392,7 @@ namespace ISynergy.Framework.Mathematics.Integration
                     "Number of subintervals must be higher than zero.");
 
             Function = function;
-            Range = new DoubleRange(a, b);
+            Range = new NumericRange(a, b);
 
             ToleranceAbsolute = 0;
             ToleranceRelative = 1e-3;
@@ -462,8 +458,6 @@ namespace ISynergy.Framework.Mathematics.Integration
 
             return iagk.Area;
         }
-
-
         #region Quadpack
 
         private static int qagi_(Func<double, double> f, double bound, int inf, double epsabs,
@@ -598,8 +592,6 @@ namespace ISynergy.Framework.Mathematics.Integration
                 if (epsabs <= 0.0 && epsrel < Math.Max(epmach * 50.0, 5e-15)) ier = 6;
 
                 if (ier == 6) return 0;
-
-
                 /*           first approximation to the integral */
                 /*           ----------------------------------- */
 
@@ -1070,8 +1062,6 @@ namespace ISynergy.Framework.Mathematics.Integration
                 double absc, din, resg, resk, fsum, absc1;
                 double absc2, fval1, fval2, hlgth, centr, reskh, uflow;
                 double tabsc1, tabsc2, epmach;
-
-
                 /* ***first executable statement  qk15i */
                 epmach = Constants.SingleEpsilon;
                 uflow = float.MinValue;
@@ -1152,8 +1142,6 @@ namespace ISynergy.Framework.Mathematics.Integration
             /* Local variables */
             int i__, j, k, ido, ibeg, jbnd, isucc, jupbn;
             double errmin, errmax;
-
-
             /* Function Body */
             if (last > 2) goto L10;
             iord[1] = 1;

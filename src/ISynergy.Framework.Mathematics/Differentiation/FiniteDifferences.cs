@@ -48,18 +48,12 @@ namespace ISynergy.Framework.Mathematics.Differentiation
     ///         </list>
     ///     </para>
     /// </remarks>
-    /// <example>
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Differentiation\FiniteDifferencesTest.cs" region="doc_gradient" />
-    ///     <code source="tests\ISynergy.Framework.Mathematics.Tests.Math\Differentiation\FiniteDifferencesTest.cs" region="doc_hessian" />
-    /// </example>
     /// <seealso cref="ISynergy.Framework.Mathematics.Integration" />
     public class FiniteDifferences
     {
         private const double DEFAULT_STEPSIZE = 1e-2;
         private const int DEFAULT_NPOINTS = 3;
         private const int DEFAULT_ORDER = 1;
-
-
         private static readonly double[][,] coefficientCache = CreateCoefficients(3);
         private int center;
 
@@ -176,8 +170,6 @@ namespace ISynergy.Framework.Mathematics.Differentiation
                 derivativeOrder = value;
             }
         }
-
-
         /// <summary>
         ///     Gets or sets the number of points to be used when
         ///     computing the approximation. Default is 3.
@@ -366,8 +358,6 @@ namespace ISynergy.Framework.Mathematics.Differentiation
             var r = sum / Math.Pow(step, order);
             return r;
         }
-
-
         /// <summary>
         ///     Creates the interpolation coefficient table for interpolated numerical differentation.
         /// </summary>
@@ -407,8 +397,6 @@ namespace ISynergy.Framework.Mathematics.Differentiation
 
             return c;
         }
-
-
         /// <summary>
         ///     Computes the derivative for a simpler unidimensional function.
         /// </summary>
@@ -451,8 +439,6 @@ namespace ISynergy.Framework.Mathematics.Differentiation
             if (Math.Abs(original) > 1e-10)
                 stepSize *= Math.Abs(original);
             else stepSize = 1e-10;
-
-
             // Create the interpolation points
             var outputs = new double[coefficientCache.Length];
 

@@ -22,16 +22,16 @@ namespace ISynergy.Framework.Core.Collections
     public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
 
-        private List<TKey> list;
-        private Dictionary<TKey, TValue> dictionary;
+        private List<TKey> _list;
+        private Dictionary<TKey, TValue> _dictionary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrderedDictionary{TKey, TValue}"/> class.
         /// </summary>
         public OrderedDictionary()
         {
-            this.dictionary = new Dictionary<TKey, TValue>();
-            this.list = new List<TKey>();
+            _dictionary = new Dictionary<TKey, TValue>();
+            _list = new List<TKey>();
         }
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public OrderedDictionary(int capacity)
         {
-            this.dictionary = new Dictionary<TKey, TValue>(capacity);
-            this.list = new List<TKey>(capacity);
+            _dictionary = new Dictionary<TKey, TValue>(capacity);
+            _list = new List<TKey>(capacity);
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public OrderedDictionary(IEqualityComparer<TKey> comparer)
         {
-            this.dictionary = new Dictionary<TKey, TValue>(comparer);
-            this.list = new List<TKey>();
+            _dictionary = new Dictionary<TKey, TValue>(comparer);
+            _list = new List<TKey>();
         }
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public OrderedDictionary(int capacity, IEqualityComparer<TKey> comparer)
         {
-            this.dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
-            this.list = new List<TKey>();
+            _dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
+            _list = new List<TKey>();
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace ISynergy.Framework.Core.Collections
 
         public OrderedDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
         {
-            this.dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
-            this.list = new List<TKey>();
+            _dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
+            _list = new List<TKey>();
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public TKey GetKeyByIndex(int index)
         {
-            return list[index];
+            return _list[index];
         }
 
         /// <summary>
@@ -119,12 +119,12 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public TValue this[TKey key]
         {
-            get { return dictionary[key]; }
+            get { return _dictionary[key]; }
             set
             {
-                dictionary[key] = value;
-                if (!list.Contains(key))
-                    list.Add(key);
+                _dictionary[key] = value;
+                if (!_list.Contains(key))
+                    _list.Add(key);
             }
         }
 
@@ -136,7 +136,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public ICollection<TKey> Keys
         {
-            get { return list; }
+            get { return _list; }
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public ICollection<TValue> Values
         {
-            get { return list.Select(x => dictionary[x]).ToList(); }
+            get { return _list.Select(x => _dictionary[x]).ToList(); }
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public int Count
         {
-            get { return dictionary.Count; }
+            get { return _dictionary.Count; }
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool IsReadOnly
         {
-            get { return ((IDictionary<TKey, TValue>)dictionary).IsReadOnly; }
+            get { return ((IDictionary<TKey, TValue>)_dictionary).IsReadOnly; }
         }
 
         /// <summary>
@@ -177,9 +177,9 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public void Add(TKey key, TValue value)
         {
-            dictionary.Add(key, value);
-            if (!list.Contains(key))
-                list.Add(key);
+            _dictionary.Add(key, value);
+            if (!_list.Contains(key))
+                _list.Add(key);
         }
 
         /// <summary>
@@ -190,9 +190,9 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            ((IDictionary<TKey, TValue>)dictionary).Add(item);
-            if (!list.Contains(item.Key))
-                list.Add(item.Key);
+            ((IDictionary<TKey, TValue>)_dictionary).Add(item);
+            if (!_list.Contains(item.Key))
+                _list.Add(item.Key);
         }
 
         /// <summary>
@@ -201,8 +201,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public void Clear()
         {
-            dictionary.Clear();
-            list.Clear();
+            _dictionary.Clear();
+            _list.Clear();
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            return ((IDictionary<TKey, TValue>)dictionary).Contains(item);
+            return ((IDictionary<TKey, TValue>)_dictionary).Contains(item);
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool ContainsKey(TKey key)
         {
-            return dictionary.ContainsKey(key);
+            return _dictionary.ContainsKey(key);
         }
 
         /// <summary>
@@ -252,8 +252,8 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            foreach (TKey key in list)
-                yield return new KeyValuePair<TKey, TValue>(key, dictionary[key]);
+            foreach (TKey key in _list)
+                yield return new KeyValuePair<TKey, TValue>(key, _dictionary[key]);
         }
 
         /// <summary>
@@ -266,9 +266,9 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool Remove(TKey key)
         {
-            if (dictionary.Remove(key))
+            if (_dictionary.Remove(key))
             {
-                list.Remove(key);
+                _list.Remove(key);
                 return true;
             }
 
@@ -285,9 +285,9 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            if (((IDictionary<TKey, TValue>)dictionary).Remove(item))
+            if (((IDictionary<TKey, TValue>)_dictionary).Remove(item))
             {
-                list.Remove(item.Key);
+                _list.Remove(item.Key);
                 return true;
             }
 
@@ -305,7 +305,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            return ((IDictionary<TKey, TValue>)dictionary).TryGetValue(key, out value);
+            return ((IDictionary<TKey, TValue>)_dictionary).TryGetValue(key, out value);
         }
 
         /// <summary>

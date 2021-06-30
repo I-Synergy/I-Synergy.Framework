@@ -18,6 +18,6 @@ namespace ISynergy.Framework.Mathematics.Integration
         ///     Gets or sets the input range under
         ///     which the integral must be computed.
         /// </summary>
-        DoubleRange Range { get; set; }
+        NumericRange Range { get; set; }
     }
 }
