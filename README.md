@@ -15,7 +15,7 @@ ___
 | Release | Status |
 |:---|---|
 | [I-Synergy.Framework.Core](https://www.nuget.org/packages/I-Synergy.Framework.Core/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Core) |
-| [I-Synergy.Framework.Core.Linq](https://www.nuget.org/packages/I-Synergy.Framework.Core.Linq/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Core.Linq) |
+| [I-Synergy.Framework.IO](https://www.nuget.org/packages/I-Synergy.Framework.IO/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.IO) |
 | [I-Synergy.Framework.Mvvm](https://www.nuget.org/packages/I-Synergy.Framework.Mvvm/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mvvm) |
 | [I-Synergy.Framework.Mathematics](https://www.nuget.org/packages/I-Synergy.Framework.Mathematics/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mathematics) |
 | [I-Synergy.Framework.Financial](https://www.nuget.org/packages/I-Synergy.Framework.Financial/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Financial) |

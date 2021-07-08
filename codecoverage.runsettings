@@ -11,7 +11,7 @@
                                 <ModulePath>.*\ISynergy.Framework.AspNetCore.dll</ModulePath>
                                 <ModulePath>.*\ISynergy.Framework.AspNetCore.Authentication.dll</ModulePath>
                                 <ModulePath>.*\ISynergy.Framework.Core.dll</ModulePath>
-								<ModulePath>.*\ISynergy.Framework.Core.IO.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.IO.dll</ModulePath>
                                 <ModulePath>.*\ISynergy.Framework.EntityFramework.dll</ModulePath>
                                 <ModulePath>.*\ISynergy.Framework.Financial.dll</ModulePath>
                                 <ModulePath>.*\ISynergy.Framework.Geography.dll</ModulePath>

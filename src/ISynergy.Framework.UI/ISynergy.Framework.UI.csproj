@@ -6,10 +6,6 @@
 		
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-
-		<!-- SonarQube needs this -->
-		<ProjectGuid>{837B30FA-B4F1-4ECE-B8B7-656C76C469CB}</ProjectGuid>
-
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Uno Platform Applications</Description>
 		<PackageTags>I-Synergy, Framework, UI, Uno, Platform, UWP, WinUI, WebAssembly, WASM, Android and .Net 5.0</PackageTags>
@@ -37,26 +33,29 @@
 				<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 			</PropertyGroup>
 			<ItemGroup>
-				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.2" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.3" />
-				<PackageReference Include="Microsoft.ProjectReunion" Version="0.5.7" />
-				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.5.7" />
-				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.5.7" />
+				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.3" />
+				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
+				<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.0" />
+				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.0" />
+				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.0" />
 				
 				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.18362.16" />
 				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.18362.16" />
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
+			<PropertyGroup>
+				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+			</PropertyGroup>
 			<ItemGroup>
-				<PackageReference Include="Microsoft.UI.Xaml" Version="2.5.0" />
+				<PackageReference Include="Microsoft.UI.Xaml" Version="2.6.1" />
 				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
 				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.1" />
 			</ItemGroup>
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.UI" Version="3.8.6" />
+				<PackageReference Include="Uno.UI" Version="3.8.11" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.207.gcac670e618" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.3-uno.95" />
 			</ItemGroup>

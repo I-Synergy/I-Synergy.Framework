@@ -10,8 +10,8 @@
         /// </summary>
         /// <param name="vatPercentage">The vat percentage.</param>
         /// <param name="amountVatIncluded">The amount vat included.</param>
-        /// <returns>System.Decimal.</returns>
-        public static decimal CalculateAmountFromAmountExcludingVAT(decimal vatPercentage, decimal amountVatIncluded)
+        /// <returns>System.double.</returns>
+        public static double CalculateAmountFromAmountExcludingVAT(double vatPercentage, double amountVatIncluded)
         {
             return amountVatIncluded / (100 + vatPercentage) * 100;
         }
@@ -21,8 +21,8 @@
         /// </summary>
         /// <param name="vatPercentage">The vat percentage.</param>
         /// <param name="amountVatExcluded">The amount vat excluded.</param>
-        /// <returns>System.Decimal.</returns>
-        public static decimal CalculateAmountFromAmountIncludingVAT(decimal vatPercentage, decimal amountVatExcluded)
+        /// <returns>System.double.</returns>
+        public static double CalculateAmountFromAmountIncludingVAT(double vatPercentage, double amountVatExcluded)
         {
             return amountVatExcluded + (amountVatExcluded / 100 * vatPercentage);
         }
@@ -32,8 +32,8 @@
         /// </summary>
         /// <param name="vatPercentage">The vat percentage.</param>
         /// <param name="amountVatIncluded">The amount vat included.</param>
-        /// <returns>System.Decimal.</returns>
-        public static decimal CalculateVATFromAmountIncludingVAT(decimal vatPercentage, decimal amountVatIncluded)
+        /// <returns>System.double.</returns>
+        public static double CalculateVATFromAmountIncludingVAT(double vatPercentage, double amountVatIncluded)
         {
             return amountVatIncluded / (100 + vatPercentage) * vatPercentage;
         }
@@ -43,8 +43,8 @@
         /// </summary>
         /// <param name="vatPercentage">The vat percentage.</param>
         /// <param name="amountVatExcluded">The amount vat excluded.</param>
-        /// <returns>System.Decimal.</returns>
-        public static decimal CalculateVATFromAmountExcludingVAT(decimal vatPercentage, decimal amountVatExcluded)
+        /// <returns>System.double.</returns>
+        public static double CalculateVATFromAmountExcludingVAT(double vatPercentage, double amountVatExcluded)
         {
             return amountVatExcluded / 100 * vatPercentage;
         }

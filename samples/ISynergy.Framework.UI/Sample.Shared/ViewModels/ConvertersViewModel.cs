@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Sample.ViewModels
 {

@@ -3,10 +3,6 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-
-		<!-- SonarQube needs this -->
-		<ProjectGuid>{24DB0377-44A6-44F9-856A-DC4D7DB903E0}</ProjectGuid>
-
 		<PackageId>I-Synergy.Framework.Physics</PackageId>
 		<Description>I-Synergy Framework Physics for .Net Standard 2.0 and .Net 5.0</Description>
 		<PackageTags>I-Synergy, Framework, Physics</PackageTags>

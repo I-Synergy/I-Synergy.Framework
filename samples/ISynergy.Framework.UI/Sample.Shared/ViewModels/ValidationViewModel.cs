@@ -1,14 +1,15 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System;
-using System.ComponentModel;
 
 namespace Sample.ViewModels
 {
+    /// <summary>
+    /// Validation sample viewmodel.
+    /// </summary>
     public class ValidationViewModel : ViewModelNavigation<object>
     {
         /// <summary>
@@ -62,6 +63,9 @@ namespace Sample.ViewModels
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Description.
+        /// </summary>
         public string Description { get; }
 
         /// <summary>

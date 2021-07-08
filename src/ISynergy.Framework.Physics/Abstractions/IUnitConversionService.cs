@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Physics.Abstractions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ISynergy.Framework.Physics.Abstractions
 {

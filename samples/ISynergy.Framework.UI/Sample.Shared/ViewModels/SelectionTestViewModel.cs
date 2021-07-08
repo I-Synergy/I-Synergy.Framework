@@ -38,9 +38,24 @@ namespace Sample.ViewModels
         /// <value>The select multiple command.</value>
         public Command SelectMultiple_Command { get; set; }
 
+        /// <summary>
+        /// Show Yes/No dialog.
+        /// </summary>
         public Command ShowDialogYesNo { get; set; }
+
+        /// <summary>
+        /// Show Yes/No/Cancel dialog.
+        /// </summary>
         public Command ShowDialogYesNoCancel { get; set; }
+
+        /// <summary>
+        /// Show Ok dialog.
+        /// </summary>
         public Command ShowDialogOk { get; set; }
+
+        /// <summary>
+        /// Show Ok/Cancel dialog.
+        /// </summary>
         public Command ShowDialogOkCancel { get; set; }
 
         /// <summary>

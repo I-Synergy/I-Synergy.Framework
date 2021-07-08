@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -579,6 +580,39 @@ namespace ISynergy.Framework.Core.Extensions
                 return defaultValue;
 
             return Enum.TryParse<T>(_self, true, out var result) ? result : defaultValue;
+        }
+
+        /// <summary>
+        ///   Replaces the format item in a specified string with the string
+        ///   representation of a corresponding object in a specified array.
+        /// </summary>
+        /// 
+        /// <param name="str">A composite format string.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        /// 
+        /// <returns>
+        ///   A copy of str in which the format items have been replaced by
+        ///   the string representation of the corresponding objects in args.
+        /// </returns>
+        /// 
+        public static string Format(this string str, params object[] args) =>
+            String.Format(str, args);
+
+        /// <summary>
+        ///   Checks whether a type implements a method with the given name.
+        /// </summary>
+        /// 
+        public static bool HasMethod<T>(string methodName)
+        {
+            try
+            {
+                var type = typeof(T);
+                return type.GetMethod(methodName) != null;
+            }
+            catch (AmbiguousMatchException)
+            {
+                return true;
+            }
         }
     }
 }

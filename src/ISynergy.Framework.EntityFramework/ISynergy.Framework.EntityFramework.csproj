@@ -3,10 +3,6 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{FCDB6358-94B5-48FE-A3BC-696280F1E896}</ProjectGuid>
-
         <PackageId>I-Synergy.Framework.EntityFramework</PackageId>
         <Description>I-Synergy Entity Framework for .Net 5.0</Description>
         <PackageTags>I-Synergy, Entity, Framework</PackageTags>

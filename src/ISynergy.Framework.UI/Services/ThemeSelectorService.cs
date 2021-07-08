@@ -1,9 +1,9 @@
 ﻿using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System;
+using Windows.Storage;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
-using Windows.Storage;
 using Windows.UI.ViewManagement;
 
 #if (NETFX_CORE || HAS_UNO)

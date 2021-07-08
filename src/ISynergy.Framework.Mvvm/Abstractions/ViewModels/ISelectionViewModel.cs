@@ -1,11 +1,5 @@
-﻿using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Mvvm.Enumerations;
-using System;
+﻿using ISynergy.Framework.Mvvm.Enumerations;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {

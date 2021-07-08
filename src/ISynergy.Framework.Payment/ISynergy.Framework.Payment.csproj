@@ -3,10 +3,6 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{010BC780-7E20-4B66-98FD-4F8D76052449}</ProjectGuid>
-
         <PackageId>I-Synergy.Framework.Payment</PackageId>
         <Description>I-Synergy Framework Payment for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Payment</PackageTags>

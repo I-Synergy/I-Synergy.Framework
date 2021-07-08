@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -24,6 +26,34 @@ namespace ISynergy.Framework.Core.Extensions
             }
 
             return result;
+        }
+
+        /// <summary>
+        ///   Deserializes (converts) a byte array to a given structure type.
+        /// </summary>
+        /// 
+        /// <remarks>
+        ///  This is a potentiality unsafe operation.
+        /// </remarks>
+        /// 
+        /// <param name="rawData">The byte array containing the serialized object.</param>
+        /// <param name="position">The starting position in the rawData array where the object is located.</param>
+        /// <returns>The object stored in the byte array.</returns>
+        /// 
+        public static T ToStruct<T>(this byte[] rawData, int position = 0)
+            where T : struct
+        {
+            Type type = typeof(T);
+            int rawsize = Marshal.SizeOf(type);
+
+            if (rawsize > (rawData.Length - position))
+                throw new ArgumentException("The given array is smaller than the object size.");
+
+            IntPtr buffer = Marshal.AllocHGlobal(rawsize);
+            Marshal.Copy(rawData, position, buffer, rawsize);
+            T obj = (T)Marshal.PtrToStructure(buffer, type);
+            Marshal.FreeHGlobal(buffer);
+            return obj;
         }
     }
 }

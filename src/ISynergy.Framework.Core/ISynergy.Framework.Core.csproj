@@ -3,18 +3,21 @@
 
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{3C9680BF-C7CD-4839-9487-79850CCE180C}</ProjectGuid>
-        
         <PackageId>I-Synergy.Framework.Core</PackageId>
         <Description>I-Synergy Framework Core for .Net Standard 2.0 and .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Core</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		 <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-    
-    <ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>ISynergy.Framework.Mathematics.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />

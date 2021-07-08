@@ -3,10 +3,6 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-
-        <!-- SonarQube needs this -->
-        <ProjectGuid>{6E5DB5ED-80F1-4DC7-BEED-B3DDB6149F51}</ProjectGuid>
-
         <PackageId>I-Synergy.Framework.Storage</PackageId>
         <Description>I-Synergy Framework Storage for .Net 5.0</Description>
         <PackageTags>I-Synergy, Framework, Storage</PackageTags>

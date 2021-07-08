@@ -10,7 +10,6 @@ using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace Sample.ViewModels
 {

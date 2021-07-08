@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Attributes;
 
 namespace ISynergy.Framework.AspNetCore.ViewModels.Exceptions
 {

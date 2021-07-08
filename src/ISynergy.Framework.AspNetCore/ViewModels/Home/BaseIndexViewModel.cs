@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Attributes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
-using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.AspNetCore.ViewModels.Home
 {

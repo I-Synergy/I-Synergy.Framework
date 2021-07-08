@@ -4,16 +4,9 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.UI.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.Popups;
-
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Controls;
 #elif (NET5_0 && WINDOWS)

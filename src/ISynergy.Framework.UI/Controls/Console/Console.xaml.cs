@@ -2,11 +2,11 @@
 using Windows.UI;
 using Windows.UI.Core;
 using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.System;
+using System.Linq;
 
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;

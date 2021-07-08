@@ -1,18 +1,12 @@
-﻿using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
+
 #elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

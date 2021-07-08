@@ -13,9 +13,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -27,7 +24,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.System;
+using Microsoft.UI.Dispatching;
 #endif
 
 namespace ISynergy.Framework.UI.Services
