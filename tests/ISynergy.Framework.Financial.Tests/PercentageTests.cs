@@ -23,11 +23,13 @@ namespace ISynergy.Framework.Financial.Tests
         [DataRow(75, 15, -0.80)]
         [DataRow(573, 520, -0.0925)]
         [DataRow(12510.41, 14696.23, 0.1747)]
-        public void CalcPercAmountOfAmountTest(double amount, double mainamount, double result)
+        public void CalcPercAmountOfAmountTest(object amount, object mainamount, object result)
         {
             var assert = Math.Round(
-                Percentage.CalculatePercentageAmountOfAmount(amount, mainamount), 4);
-            Assert.AreEqual(result, assert);
+                Percentage.CalculatePercentageAmountOfAmount(
+                    Convert.ToDecimal(amount),
+                    Convert.ToDecimal(mainamount)), 4);
+            Assert.AreEqual(Convert.ToDecimal(result), assert);
         }
 
         /// <summary>
@@ -36,8 +38,8 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcPercAmountOfAmountDevideByZeroTest()
         {
-            var result = Percentage.CalculatePercentageAmountOfAmount(0d, 0d);
-            Assert.AreEqual(0, result);
+            var result = Percentage.CalculatePercentageAmountOfAmount(0m, 0m);
+            Assert.AreEqual(0m, result);
         }
 
         /// <summary>
@@ -46,8 +48,8 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcAmountOfPercentageTest()
         {
-            var result = Percentage.CalculateAmountOfPercentage(121, 21);
-            Assert.AreEqual(25.41d, result);
+            var result = Percentage.CalculateAmountOfPercentage(121m, 21m);
+            Assert.AreEqual(25.41m, result);
         }
 
         /// <summary>
@@ -63,12 +65,14 @@ namespace ISynergy.Framework.Financial.Tests
         [DataRow(0, 100, 1)]
         [DataRow(1.25, 1.75, 0.4)]
         [DataRow(4.95, 2.5, -0.4949)]
-        public void CalcMarginPercentageTest(double purchasePrice, double salesPrice, double result)
+        public void CalcMarginPercentageTest(object purchasePrice, object salesPrice, object result)
         {
             var assert = Math.Round(
-                Percentage.CalculateMarginPercentage(salesPrice, purchasePrice), 4);
+                Percentage.CalculateMarginPercentage(
+                    Convert.ToDecimal(salesPrice),
+                    Convert.ToDecimal(purchasePrice)), 4);
 
-            Assert.AreEqual(result, assert);
+            Assert.AreEqual(Convert.ToDecimal(result), assert);
         }
 
         /// <summary>
@@ -78,7 +82,7 @@ namespace ISynergy.Framework.Financial.Tests
         public void CalcMarginPercentageDevideByZeroTest()
         {
             var result = Percentage.CalculateMarginPercentage(100, 0);
-            Assert.AreEqual(1d, result);
+            Assert.AreEqual(1, result);
         }
     }
 }

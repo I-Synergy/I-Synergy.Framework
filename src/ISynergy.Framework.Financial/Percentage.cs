@@ -11,7 +11,7 @@
         /// <param name="previousAmount">The previous amount.</param>
         /// <param name="actualAmount">The actual amount.</param>
         /// <returns>System.Decimal.</returns>
-        public static double CalculatePercentageAmountOfAmount(double previousAmount, double actualAmount)
+        public static decimal CalculatePercentageAmountOfAmount(decimal previousAmount, decimal actualAmount)
         {
             if (previousAmount > 0 || previousAmount < 0)
             {
@@ -33,7 +33,7 @@
         /// <param name="amount">The amount.</param>
         /// <param name="percentage">The percentage.</param>
         /// <returns>System.Decimal.</returns>
-        public static double CalculateAmountOfPercentage(double amount, double percentage)
+        public static decimal CalculateAmountOfPercentage(decimal amount, decimal percentage)
         {
             return (amount / 100) * percentage;
         }
@@ -44,7 +44,7 @@
         /// <param name="salesPrice">The sales price.</param>
         /// <param name="purchasePrice">The purchase price.</param>
         /// <returns>System.Decimal.</returns>
-        public static double CalculateMarginPercentage(double salesPrice, double purchasePrice)
+        public static decimal CalculateMarginPercentage(decimal salesPrice, decimal purchasePrice)
         {
             if (purchasePrice > 0 || purchasePrice < 0)
             {

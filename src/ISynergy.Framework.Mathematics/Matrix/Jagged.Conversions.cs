@@ -34,13 +34,7 @@ namespace ISynergy.Framework.Mathematics
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="matrix">The vector to be converted.</param>
         /// <param name="converter">The converter function.</param>
-        public static TOutput[][] Convert<TInput, TOutput>(this TInput[,] matrix,
-#if !NETSTANDARD1_4
-            Converter<TInput, TOutput> converter
-#else
-            Func<TInput, TOutput> converter
-#endif
-        )
+        public static TOutput[][] Convert<TInput, TOutput>(this TInput[,] matrix, Converter<TInput, TOutput> converter)
         {
             var rows = matrix.Rows();
             var cols = matrix.Columns();
