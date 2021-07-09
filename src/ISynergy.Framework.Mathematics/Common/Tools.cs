@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Points;
-using ISynergy.Framework.Core.Ranges;
 using System;
-using Range = ISynergy.Framework.Core.Ranges.NumericRange;
 
 namespace ISynergy.Framework.Mathematics
 {

@@ -6,7 +6,7 @@
 //  
 //    Copyright (c) 2000 Robert A. Pilgrim
 //                       Murray State University
-//                       Dept. of Computer Science & Information Systems
+//                       Dept. of Computer Science && Information Systems
 //                       Murray,Kentucky
 //  
 //    Permission is hereby granted, free of charge, to any person obtaining a copy

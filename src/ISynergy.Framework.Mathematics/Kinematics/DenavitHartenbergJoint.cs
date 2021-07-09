@@ -91,7 +91,7 @@ namespace ISynergy.Framework.Mathematics.Kinematics
         /// </param>
         public void Add(DenavitHartenbergParameters parameters)
         {
-            Add(parameters);
+            Add(parameters.Alpha, parameters.Theta, parameters.Radius, parameters.Offset);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using ISynergy.Framework.Mathematics.Decompositions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ISynergy.Framework.Mathematics
 {
@@ -267,9 +268,7 @@ namespace ISynergy.Framework.Mathematics
         /// <returns>The number of columns in the matrix.</returns>
         public static int Columns<T>(this IEnumerable<T[]> matrix)
         {
-            foreach (var row in matrix)
-                return row.Length;
-            return 0;
+            return matrix.FirstOrDefault() is T[] result ? result.Length : 0;
         }
 
         /// <summary>

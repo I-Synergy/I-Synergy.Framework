@@ -437,7 +437,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     On entry pgtol >= 0 is specified by the user.  The iteration
         ///     will stop when
         ///     <code>
-        ///   max{|proj g_i | i = 1, ..., n} &lt;= pgtol
+        ///   max{|proj g_i || i = 1, ..., n} &lt;= pgtol
         /// </code>
         ///     <para>
         ///         where pg_i is the ith component of the projected gradient.

@@ -1,9 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
-    using System;
-    using ISynergy.Framework.Mathematics;
-    using System.Runtime.CompilerServices;
-
     public static partial class Elementwise
     {
         /// <summary>
@@ -52,7 +48,7 @@
         public static double[] Subtract(this double[] a, double[] b)
         {
             return Subtract(a, b, new double[a.Length]);
-        }     
+        }
 
         /// <summary>
         ///   Elementwise subtraction between a matrix <c>A</c> and a matrix <c>B</c>.
@@ -64,7 +60,7 @@
         public static double[][] Subtract(this double[][] a, double[][] b)
         {
             return Subtract(a, b, JaggedCreateAs<double, double>(a));
-        }     
+        }
 
         /// <summary>
         ///   Elementwise subtraction between a matrix <c>A</c> and a matrix <c>B</c>.
@@ -76,7 +72,7 @@
         public static double[,] Subtract(this double[,] a, double[,] b)
         {
             return Subtract(a, b, MatrixCreateAs<double, double>(a));
-        }     
+        }
 
         /// <summary>
         ///   Elementwise subtraction between a scalar <c>a</c> and a matrix <c>B</c>.
@@ -88,7 +84,7 @@
         public static double[,] Subtract(this double a, double[,] b)
         {
             return Subtract(a, b, MatrixCreateAs<double, double>(b));
-        }     
+        }
 
         /// <summary>
         ///   Elementwise subtraction between a scalar <c>a</c> and a matrix <c>B</c>.
@@ -100,7 +96,7 @@
         public static double[][] Subtract(this double a, double[][] b)
         {
             return Subtract(a, b, JaggedCreateAs<double, double>(b));
-        }     
+        }
 
         /// <summary>
         ///   Elementwise subtraction between a scalar <c>a</c> and a vector <c>b</c>.
@@ -152,13 +148,13 @@
             return Subtract(a, b, dimension, JaggedCreateAs<double, double>(a));
         }
 
-                /// <summary>
+        /// <summary>
         ///   Elementwise subtraction between a matrix <c>A</c> and a vector<c>b</c>.
         /// </summary>
         ///
         /// <param name="a">The vector <c>a</c>.</param>
         /// <param name="b">The matrix <c>B</c>.</param>
-		/// <param name="dimension">
+        /// <param name="dimension">
         ///   The type of the vector being passed to the function. If the vector
         ///   is a <see cref="VectorType.RowVector"/>, then the operation will
         ///   be applied between each row of the matrix and the given vector. If
@@ -285,7 +281,7 @@
         {
             return SubtractFromDiagonal(a, b, a.MemberwiseClone());
         }
-        
+
         #region Matrix matrix
 
         /// <summary>
@@ -335,7 +331,7 @@
 
             return result;
         }
-#endregion
+        #endregion
         #region Matrix with scalar
 
         /// <summary>
@@ -388,8 +384,8 @@
             check<double, double, double>(a: a, b: b, result: result);
             unsafe
             {
-                fixed (double* ptrB = b)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrB = b)
+                fixed (double* ptrR = result)
                 {
                     var pr = ptrR;
                     var pb = ptrB;
@@ -610,10 +606,10 @@
             int rows = b.GetLength(0);
             int cols = b.GetLength(1);
 
-            unsafe 
+            unsafe
             {
-                fixed (double* ptrB = b)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrB = b)
+                fixed (double* ptrR = result)
                 {
                     var pr = ptrR;
                     var pb = ptrB;
@@ -638,10 +634,10 @@
             int rows = b.GetLength(0);
             int cols = b.GetLength(1);
 
-            unsafe 
+            unsafe
             {
-                fixed (double* ptrB = b)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrB = b)
+                fixed (double* ptrR = result)
                 {
                     var pr = ptrR;
                     var pb = ptrB;
@@ -666,10 +662,10 @@
             int rows = a.GetLength(0);
             int cols = a.GetLength(1);
 
-            unsafe 
+            unsafe
             {
-                fixed (double* ptrA = a)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrA = a)
+                fixed (double* ptrR = result)
                 {
                     var pa = ptrA;
                     var pr = ptrR;
@@ -694,10 +690,10 @@
             int rows = b.GetLength(0);
             int cols = b.GetLength(1);
 
-            unsafe 
+            unsafe
             {
-                fixed (double* ptrA = a)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrA = a)
+                fixed (double* ptrR = result)
                 {
                     var pr = ptrR;
                     var pa = ptrA;
@@ -715,7 +711,7 @@
                 result[i][i] = (double)((double)a[i][i] - (double)b[i]);
             return result;
         }
- 
+
         #endregion
 
         /// <summary>

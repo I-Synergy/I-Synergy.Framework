@@ -266,19 +266,6 @@ namespace ISynergy.Framework.Mathematics
 
         /// <summary>
         ///   Creates a k-hot vector, where all values are zero except for the elements
-        ///   at the positions where <paramref name="mask"/> is true, which are set to one.
-        /// </summary>
-        /// 
-        /// <param name="mask">The boolean mask determining where the values will be placed.</param>
-        /// 
-        /// <returns>A k-hot vector where the indicated positions are one and the others are zero.</returns>
-        /// 
-        public static T[] KHot<T>(bool[] mask)
-        {
-            return KHot<T>(mask);
-        }
-        /// <summary>
-        ///   Creates a k-hot vector, where all values are zero except for the elements
         ///   at the indicated <paramref name="indices"/>, which are set to one.
         /// </summary>
         /// 

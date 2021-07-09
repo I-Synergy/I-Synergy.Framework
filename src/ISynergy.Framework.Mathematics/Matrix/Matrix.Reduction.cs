@@ -1,9 +1,6 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
     using System;
-    using System.CodeDom.Compiler;
-    using ISynergy.Framework.Mathematics;
-    using System.Runtime.CompilerServices;
 
     public static partial class Matrix
     {
@@ -59,7 +56,7 @@
         ///
         public static double[] Sum(this double[][] matrix, int dimension)
         {
-            var result = new double[Matrix.GetLength(matrix, dimension)];      
+            var result = new double[Matrix.GetLength(matrix, dimension)];
             return Sum(matrix, dimension, result);
         }
 
@@ -73,7 +70,7 @@
         ///
         public static double[] Sum(this double[,] matrix, int dimension)
         {
-            var result = new double[Matrix.GetLength(matrix, dimension)];      
+            var result = new double[Matrix.GetLength(matrix, dimension)];
             return Sum(matrix, dimension, result);
         }
         /// <summary>
@@ -128,7 +125,7 @@
         ///
         public static double[] Product(this double[][] matrix, int dimension)
         {
-            var result = new double[Matrix.GetLength(matrix, dimension)];      
+            var result = new double[Matrix.GetLength(matrix, dimension)];
             return Product(matrix, dimension, result);
         }
 
@@ -142,10 +139,10 @@
         ///
         public static double[] Product(this double[,] matrix, int dimension)
         {
-            var result = new double[Matrix.GetLength(matrix, dimension)];      
+            var result = new double[Matrix.GetLength(matrix, dimension)];
             return Product(matrix, dimension, result);
         }
-  
+
         /// <summary>
         ///   Matrix sum.
         /// </summary>
@@ -158,7 +155,7 @@
         ///
         public static int[] Sum(this double[][] matrix, int dimension, int[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -204,7 +201,7 @@
         ///
         public static int[] Sum(this double[,] matrix, int dimension, int[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -250,7 +247,7 @@
         ///
         public static int[] Product(this double[][] matrix, int dimension, int[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -296,7 +293,7 @@
         ///
         public static int[] Product(this double[,] matrix, int dimension, int[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -342,7 +339,7 @@
         ///
         public static short[] Sum(this double[][] matrix, int dimension, short[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -388,7 +385,7 @@
         ///
         public static short[] Sum(this double[,] matrix, int dimension, short[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -434,7 +431,7 @@
         ///
         public static short[] Product(this double[][] matrix, int dimension, short[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -480,7 +477,7 @@
         ///
         public static short[] Product(this double[,] matrix, int dimension, short[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -526,7 +523,7 @@
         ///
         public static float[] Sum(this double[][] matrix, int dimension, float[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -572,7 +569,7 @@
         ///
         public static float[] Sum(this double[,] matrix, int dimension, float[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -618,7 +615,7 @@
         ///
         public static float[] Product(this double[][] matrix, int dimension, float[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -664,7 +661,7 @@
         ///
         public static float[] Product(this double[,] matrix, int dimension, float[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -710,7 +707,7 @@
         ///
         public static double[] Sum(this double[][] matrix, int dimension, double[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -756,7 +753,7 @@
         ///
         public static double[] Sum(this double[,] matrix, int dimension, double[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -802,7 +799,7 @@
         ///
         public static double[] Product(this double[][] matrix, int dimension, double[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -848,7 +845,7 @@
         ///
         public static double[] Product(this double[,] matrix, int dimension, double[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -894,7 +891,7 @@
         ///
         public static long[] Sum(this double[][] matrix, int dimension, long[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -940,7 +937,7 @@
         ///
         public static long[] Sum(this double[,] matrix, int dimension, long[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -986,7 +983,7 @@
         ///
         public static long[] Product(this double[][] matrix, int dimension, long[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -1032,7 +1029,7 @@
         ///
         public static long[] Product(this double[,] matrix, int dimension, long[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -1078,7 +1075,7 @@
         ///
         public static decimal[] Sum(this double[][] matrix, int dimension, decimal[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -1124,7 +1121,7 @@
         ///
         public static decimal[] Sum(this double[,] matrix, int dimension, decimal[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -1170,7 +1167,7 @@
         ///
         public static decimal[] Product(this double[][] matrix, int dimension, decimal[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Length;
@@ -1216,7 +1213,7 @@
         ///
         public static decimal[] Product(this double[,] matrix, int dimension, decimal[] result)
         {
-            if (matrix == null) 
+            if (matrix == null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.GetLength(0);
@@ -1295,7 +1292,7 @@
             if (dimension == 1)
                 return CumulativeSum(matrix, dimension, Jagged.Zeros<double>(rows, cols));
             return CumulativeSum(matrix, dimension, Jagged.Zeros<double>(cols, rows));
-        }        
+        }
 
         /// <summary>
         ///   Matrix cumulative sum.
@@ -1348,8 +1345,8 @@
             int cols = matrix.Columns();
             if (dimension == 1)
                 return CumulativeSum(matrix, dimension, Matrix.Zeros<double>(rows, cols));
-            return CumulativeSum(matrix, dimension, Matrix.Zeros<double>(cols, rows)); 
-        }        
+            return CumulativeSum(matrix, dimension, Matrix.Zeros<double>(cols, rows));
+        }
 
         /// <summary>
         ///   Matrix cumulative sum.

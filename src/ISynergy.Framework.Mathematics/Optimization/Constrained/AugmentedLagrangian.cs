@@ -412,7 +412,7 @@
             iterations = 0;
             functionEvaluations = 0;
 
-            // magic parameters from Birgin & Martinez
+            // magic parameters from Birgin && Martinez
             const double tau = 0.5, gam = 10;
             const double lam_min = -1e20;
             const double lam_max = 1e20;
@@ -424,7 +424,7 @@
             Array.Clear(mu, 0, mu.Length);
             Array.Clear(nu, 0, nu.Length);
             rho = 1;
-            // Starting rho suggested by B & M 
+            // Starting rho suggested by B && M 
             if (lambda.Length > 0 || mu.Length > 0 || nu.Length > 0)
             {
                 double con2 = 0;

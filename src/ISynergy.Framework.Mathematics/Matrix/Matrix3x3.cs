@@ -671,20 +671,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         /// <summary>
-        /// Returns the hashcode for this instance.
-        /// </summary>
-        /// 
-        /// <returns>A 32-bit signed integer hash code.</returns>
-        /// 
-        public override int GetHashCode()
-        {
-            return
-                V00.GetHashCode() + V01.GetHashCode() + V02.GetHashCode() +
-                V10.GetHashCode() + V11.GetHashCode() + V12.GetHashCode() +
-                V20.GetHashCode() + V21.GetHashCode() + V22.GetHashCode();
-        }
-
-        /// <summary>
         /// Transpose the matrix, A<sup>T</sup>.
         /// </summary>
         /// 
@@ -889,5 +875,20 @@ namespace ISynergy.Framework.Mathematics
             e.Y = (float)eArray[1];
             e.Z = (float)eArray[2];
         }
+
+        /// <summary>
+        /// Returns the hashcode for this instance.
+        /// </summary>
+        /// 
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        /// 
+        public override int GetHashCode()
+        {
+            return
+                V00.GetHashCode() + V01.GetHashCode() + V02.GetHashCode() +
+                V10.GetHashCode() + V11.GetHashCode() + V12.GetHashCode() +
+                V20.GetHashCode() + V21.GetHashCode() + V22.GetHashCode();
+        }
+
     }
 }

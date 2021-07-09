@@ -325,7 +325,7 @@
             //     the objective and constraint functions at X in F and CON(1),CON(2),
             //     ...,CON(M).  Note that we are trying to adjust X so that F(X) is as
             //     small as possible subject to the constraint functions being nonnegative.
-            // N.B. Arguments CON, SIM, SIMI, DATMAT, A, VSIG, VETA, SIGBAR, DX, W & IACT
+            // N.B. Arguments CON, SIM, SIMI, DATMAT, A, VSIG, VETA, SIGBAR, DX, W && IACT
             //      have been removed.
 
             //     Set the initial values of some parameters. The last column of SIM holds
@@ -922,7 +922,7 @@
         private static void trstlp(int n, int m, double[,] a, double[] b,
             double rho, double[] dx, out bool ifull)
         {
-            // N.B. Arguments Z, ZDOTA, VMULTC, SDIRN, DXNEW, VMULTD & IACT have been removed.
+            // N.B. Arguments Z, ZDOTA, VMULTC, SDIRN, DXNEW, VMULTD && IACT have been removed.
 
             //     This subroutine calculates an N-component vector DX by applying the
             //     following two stages. In the first stage, DX is set to the shortest

@@ -915,7 +915,7 @@ namespace ISynergy.Framework.Mathematics
             }
 
             var vector = new int[array.Rank];
-            
+
             for (var i = 0; i < vector.Length; i++)
                 vector[i] = array.GetUpperBound(i) + 1;
 
@@ -1163,21 +1163,21 @@ namespace ISynergy.Framework.Mathematics
         ///     double[] b = { 4, 5, 6 };
         ///     // We can create a grid
         ///     var grid = a.MeshGrid(b);
-        ///     // get the x-axis values     //        | 1   1   1 |
-        ///     double[,] x = grid.Item1;    //  x =   | 2   2   2 |
-        ///     //        | 3   3   3 |
-        ///     // get the y-axis values     //        | 4   5   6 |
-        ///     double[,] y = grid.Item2;    //  y =   | 4   5   6 |
-        ///     //        | 4   5   6 |
+        ///     // get the x-axis values     //        || 1   1   1 |
+        ///     double[,] x = grid.Item1;    //  x =   || 2   2   2 |
+        ///     //        || 3   3   3 |
+        ///     // get the y-axis values     //        || 4   5   6 |
+        ///     double[,] y = grid.Item2;    //  y =   || 4   5   6 |
+        ///     //        || 4   5   6 |
         ///     // we can either use those matrices separately (such as for plotting
         ///     // purposes) or we can also generate a grid of all the (x,y) pairs as
         ///     //
         ///     double[,][] xy = x.ApplyWithIndex((v, i, j) => new[] { x[i, j], y[i, j] });
         ///     // The result will be
         ///     //
-        ///     //         |  (1, 4)   (1, 5)   (1, 6)  |
-        ///     //  xy  =  |  (2, 4)   (2, 5)   (2, 6)  |
-        ///     //         |  (3, 4)   (3, 5)   (3, 6)  |
+        ///     //         ||  (1, 4)   (1, 5)   (1, 6)  |
+        ///     //  xy  =  ||  (2, 4)   (2, 5)   (2, 6)  |
+        ///     //         ||  (3, 4)   (3, 5)   (3, 6)  |
         /// </example>
         public static Tuple<T[,], T[,]> MeshGrid<T>(this T[] x, T[] y)
         {

@@ -19,32 +19,32 @@ namespace ISynergy.Framework.Mathematics
         /// <summary>
         ///     Symmetric matrix.
         /// </summary>
-        Symmetric,
+        Symmetric = 0,
 
         /// <summary>
         ///     Lower (left) triangular matrix.
         /// </summary>
-        LowerTriangular,
+        LowerTriangular = 1,
 
         /// <summary>
         ///     Upper (right) triangular matrix.
         /// </summary>
-        UpperTriangular,
+        UpperTriangular = 2,
 
         /// <summary>
         ///     Diagonal matrix.
         /// </summary>
-        Diagonal,
+        Diagonal = 4,
 
         /// <summary>
         ///     Rectangular matrix.
         /// </summary>
-        Rectangular,
+        Rectangular = 8,
 
         /// <summary>
         ///     Square matrix.
         /// </summary>
-        Square
+        Square = 16
     }
 
     public static partial class Matrix

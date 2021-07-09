@@ -3230,7 +3230,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
         // c       On entry pgtol >= 0 is specified by the user.  The iteration
         // c         will stop when
         // c
-        // c                 max{|proj g_i | i = 1, ..., n} <= pgtol
+        // c                 max{|proj g_i || i = 1, ..., n} <= pgtol
         // c
         // c         where pg_i is the ith component of the projected gradient.
         // c       On exit pgtol is unchanged.
@@ -3518,7 +3518,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 // Prn1lb.prn1lb(n, m, l, _l_offset, u, _u_offset, x, _x_offset, iprint, itfile, epsmch);
 
                 // 
-                // c        Initialize iwhere & project x onto the feasible set.
+                // c        Initialize iwhere && project x onto the feasible set.
                 // 
                 active(n, l, _l_offset, u, _u_offset, nbd, _nbd_offset, x,
                     _x_offset, iwhere, _iwhere_offset, iprint, ref prjctd, ref cnstnd, ref boxed);
@@ -4367,7 +4367,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
         // c       On entry pgtol >= 0 is specified by the user.  The iteration
         // c         will stop when
         // c
-        // c                 max{|proj g_i | i = 1, ..., n} <= pgtol
+        // c                 max{|proj g_i || i = 1, ..., n} <= pgtol
         // c
         // c         where pg_i is the ith component of the projected gradient.   
 

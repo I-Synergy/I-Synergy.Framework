@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using ISynergy.Framework.Core.Ranges;
-    using ISynergy.Framework.Mathematics;
     using NumericRange = ISynergy.Framework.Core.Ranges.NumericRange;
 
     public static partial class Vector
@@ -128,7 +126,7 @@
         ///
         public static double[] Range(double n)
         {
-            double[] r = new double[(int)n]; 
+            double[] r = new double[(int)n];
             for (var i = 0; i < r.Length; i++)
                 r[i] = (double)i;
             return r;
@@ -324,7 +322,7 @@
 
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
-                    r[i] = (double)(a +  i * stepSize);
+                    r[i] = (double)(a + i * stepSize);
             }
             else
             {
@@ -397,8 +395,8 @@
 
                 uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
                 for (uint i = 0; i < steps; i++)
-                    yield return (double)(a +  i * stepSize);
-                last = (double)(a +  steps * stepSize);
+                    yield return (double)(a + i * stepSize);
+                last = (double)(a + steps * stepSize);
             }
             else
             {
@@ -469,7 +467,7 @@
 
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
-                    r[i] = (double)(a +  i * stepSize);
+                    r[i] = (double)(a + i * stepSize);
             }
             else
             {
@@ -542,8 +540,8 @@
 
                 uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
                 for (uint i = 0; i < steps; i++)
-                    yield return (double)(a +  i * stepSize);
-                last = (double)(a +  steps * stepSize);
+                    yield return (double)(a + i * stepSize);
+                last = (double)(a + steps * stepSize);
             }
             else
             {
@@ -614,7 +612,7 @@
 
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
-                    r[i] = (double)(a +  i * stepSize);
+                    r[i] = (double)(a + i * stepSize);
             }
             else
             {
@@ -687,8 +685,8 @@
 
                 uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
                 for (uint i = 0; i < steps; i++)
-                    yield return (double)(a +  i * stepSize);
-                last = (double)(a +  steps * stepSize);
+                    yield return (double)(a + i * stepSize);
+                last = (double)(a + steps * stepSize);
             }
             else
             {
@@ -759,7 +757,7 @@
 
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
-                    r[i] = (double)(a +  i * stepSize);
+                    r[i] = (double)(a + i * stepSize);
             }
             else
             {
@@ -832,8 +830,8 @@
 
                 uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
                 for (uint i = 0; i < steps; i++)
-                    yield return (double)(a +  i * stepSize);
-                last = (double)(a +  steps * stepSize);
+                    yield return (double)(a + i * stepSize);
+                last = (double)(a + steps * stepSize);
             }
             else
             {
@@ -904,7 +902,7 @@
 
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
-                    r[i] = (double)(a +  i * stepSize);
+                    r[i] = (double)(a + i * stepSize);
             }
             else
             {
@@ -977,8 +975,8 @@
 
                 uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
                 for (uint i = 0; i < steps; i++)
-                    yield return (double)(a +  i * stepSize);
-                last = (double)(a +  steps * stepSize);
+                    yield return (double)(a + i * stepSize);
+                last = (double)(a + steps * stepSize);
             }
             else
             {
@@ -1049,7 +1047,7 @@
 
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
-                    r[i] = (double)(a +  i * stepSize);
+                    r[i] = (double)(a + i * stepSize);
             }
             else
             {
@@ -1122,8 +1120,8 @@
 
                 uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
                 for (uint i = 0; i < steps; i++)
-                    yield return (double)(a +  i * stepSize);
-                last = (double)(a +  steps * stepSize);
+                    yield return (double)(a + i * stepSize);
+                last = (double)(a + steps * stepSize);
             }
             else
             {
@@ -1194,7 +1192,7 @@
 
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
-                    r[i] = (double)(a +  i * stepSize);
+                    r[i] = (double)(a + i * stepSize);
             }
             else
             {
@@ -1267,8 +1265,8 @@
 
                 uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
                 for (uint i = 0; i < steps; i++)
-                    yield return (double)(a +  i * stepSize);
-                last = (double)(a +  steps * stepSize);
+                    yield return (double)(a + i * stepSize);
+                last = (double)(a + steps * stepSize);
             }
             else
             {
@@ -1339,7 +1337,7 @@
 
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
-                    r[i] = (double)(a +  i * stepSize);
+                    r[i] = (double)(a + i * stepSize);
             }
             else
             {
@@ -1412,8 +1410,8 @@
 
                 uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
                 for (uint i = 0; i < steps; i++)
-                    yield return (double)(a +  i * stepSize);
-                last = (double)(a +  steps * stepSize);
+                    yield return (double)(a + i * stepSize);
+                last = (double)(a + steps * stepSize);
             }
             else
             {

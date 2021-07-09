@@ -3,8 +3,6 @@ using ISynergy.Framework.Mathematics.Random;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using ISynergy.Framework.Core.Ranges;
 
 namespace ISynergy.Framework.Mathematics
 {

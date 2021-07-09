@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Statistics;
+using System;
 using System.Collections.Generic;
-using ISynergy.Framework.Mathematics.Statistics;
 
 namespace ISynergy.Framework.Mathematics
 {

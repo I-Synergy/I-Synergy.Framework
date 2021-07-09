@@ -459,17 +459,6 @@ namespace ISynergy.Framework.Mathematics
         }
 
         /// <summary>
-        /// Returns the hashcode for this instance.
-        /// </summary>
-        /// 
-        /// <returns>A 32-bit signed integer hash code.</returns>
-        /// 
-        public override int GetHashCode()
-        {
-            return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
-        }
-
-        /// <summary>
         /// Normalizes the vector by dividing it’s all coordinates with the vector's norm.
         /// </summary>
         /// 
@@ -557,6 +546,17 @@ namespace ISynergy.Framework.Mathematics
         public Vector4 ToVector4()
         {
             return new Vector4(X, Y, Z, 1);
+        }
+
+        /// <summary>
+        /// Returns the hashcode for this instance.
+        /// </summary>
+        /// 
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        /// 
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
         }
     }
 }

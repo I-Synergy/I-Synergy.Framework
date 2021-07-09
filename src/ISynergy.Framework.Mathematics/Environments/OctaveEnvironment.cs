@@ -1,9 +1,8 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Reflection;
-using ISynergy.Framework.Mathematics.Decompositions;
 
 namespace ISynergy.Framework.Mathematics.Environments
 {

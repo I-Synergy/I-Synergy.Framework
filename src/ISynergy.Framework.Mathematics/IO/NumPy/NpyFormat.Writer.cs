@@ -45,11 +45,7 @@ namespace ISynergy.Framework.Mathematics.IO
         /// <returns>The number of bytes written when saving the file to disk.</returns>
         public static ulong Save(Array array, Stream stream)
         {
-            using (var writer = new BinaryWriter(stream
-#if !NET35 && !NET40
-                , Encoding.ASCII, true
-#endif
-            ))
+            using (var writer = new BinaryWriter(stream, Encoding.ASCII, true))
             {
                 Type type;
                 int maxLength;
@@ -82,11 +78,7 @@ namespace ISynergy.Framework.Mathematics.IO
             Buffer.BlockCopy(matrix, 0, buffer, 0, buffer.Length);
             reader.Write(buffer, 0, buffer.Length);
 
-#if NETSTANDARD1_4
-            return (ulong)buffer.Length;
-#else
             return (ulong)buffer.LongLength;
-#endif
         }
 
         private static ulong writeValueJagged(BinaryWriter reader, Array matrix, int bytes, int[] shape)
@@ -101,11 +93,7 @@ namespace ISynergy.Framework.Mathematics.IO
                 Array.Clear(buffer, arr.Length, buffer.Length - buffer.Length);
                 Buffer.BlockCopy(arr, 0, buffer, 0, buffer.Length);
                 reader.Write(buffer, 0, buffer.Length);
-#if NETSTANDARD1_4
-                writtenBytes += (ulong)buffer.Length;
-#else
                 writtenBytes += (ulong)buffer.LongLength;
-#endif
             }
 
             return writtenBytes;
@@ -142,11 +130,7 @@ namespace ISynergy.Framework.Mathematics.IO
                             reader.Write(empty, 0, bytes);
                         }
 
-#if NETSTANDARD1_4
-                        writtenBytes += (ulong)buffer.Length;
-#else
                         writtenBytes += (ulong)buffer.LongLength;
-#endif
                     }
                 }
             }
@@ -204,9 +188,7 @@ namespace ISynergy.Framework.Mathematics.IO
             }
             else
             {
-#pragma warning disable 618 // SizeOf would be Obsolete
                 bytes = Marshal.SizeOf(type);
-#pragma warning restore 618 // SizeOf would be Obsolete
             }
 
             if (type == typeof(bool))

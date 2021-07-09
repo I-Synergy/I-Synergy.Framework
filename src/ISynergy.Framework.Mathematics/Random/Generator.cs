@@ -73,11 +73,11 @@ namespace ISynergy.Framework.Mathematics.Random
             {
                 threadSeed = value;
 
-                if (value.HasValue)
+                if (threadSeed.HasValue)
                 {
                     threadOverriden = true;
                     threadLastUpdateTicks = Environment.TickCount;
-                    threadRandom = value.HasValue ? new System.Random(threadSeed.Value) : new System.Random();
+                    threadRandom = new System.Random(threadSeed.Value);
                 }
                 else
                 {

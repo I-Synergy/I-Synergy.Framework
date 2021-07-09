@@ -48,7 +48,7 @@
         public static double[] Divide(this double[] a, double[] b)
         {
             return Divide(a, b, new double[a.Length]);
-        }     
+        }
 
         /// <summary>
         ///   Elementwise division between a matrix <c>A</c> and a matrix <c>B</c>.
@@ -60,7 +60,7 @@
         public static double[][] Divide(this double[][] a, double[][] b)
         {
             return Divide(a, b, JaggedCreateAs<double, double>(a));
-        }     
+        }
 
         /// <summary>
         ///   Elementwise division between a matrix <c>A</c> and a matrix <c>B</c>.
@@ -72,7 +72,7 @@
         public static double[,] Divide(this double[,] a, double[,] b)
         {
             return Divide(a, b, MatrixCreateAs<double, double>(a));
-        }     
+        }
 
         /// <summary>
         ///   Elementwise division between a scalar <c>a</c> and a matrix <c>B</c>.
@@ -84,7 +84,7 @@
         public static double[,] Divide(this double a, double[,] b)
         {
             return Divide(a, b, MatrixCreateAs<double, double>(b));
-        }     
+        }
 
         /// <summary>
         ///   Elementwise division between a scalar <c>a</c> and a matrix <c>B</c>.
@@ -96,7 +96,7 @@
         public static double[][] Divide(this double a, double[][] b)
         {
             return Divide(a, b, JaggedCreateAs<double, double>(b));
-        }     
+        }
 
         /// <summary>
         ///   Elementwise division between a scalar <c>a</c> and a vector <c>b</c>.
@@ -331,7 +331,7 @@
 
             return result;
         }
-#endregion
+        #endregion
 
         #region Matrix with scalar
 
@@ -385,8 +385,8 @@
             check<double, double, double>(a: a, b: b, result: result);
             unsafe
             {
-                fixed (double* ptrB = b)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrB = b)
+                fixed (double* ptrR = result)
                 {
                     var pr = ptrR;
                     var pb = ptrB;
@@ -611,10 +611,10 @@
             int rows = b.GetLength(0);
             int cols = b.GetLength(1);
 
-            unsafe 
+            unsafe
             {
-                fixed (double* ptrB = b)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrB = b)
+                fixed (double* ptrR = result)
                 {
                     var pr = ptrR;
                     var pb = ptrB;
@@ -639,10 +639,10 @@
             int rows = b.GetLength(0);
             int cols = b.GetLength(1);
 
-            unsafe 
+            unsafe
             {
-                fixed (double* ptrB = b)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrB = b)
+                fixed (double* ptrR = result)
                 {
                     var pr = ptrR;
                     var pb = ptrB;
@@ -667,10 +667,10 @@
             int rows = a.GetLength(0);
             int cols = a.GetLength(1);
 
-            unsafe 
+            unsafe
             {
-                fixed (double* ptrA = a)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrA = a)
+                fixed (double* ptrR = result)
                 {
                     var pa = ptrA;
                     var pr = ptrR;
@@ -695,10 +695,10 @@
             int rows = b.GetLength(0);
             int cols = b.GetLength(1);
 
-            unsafe 
+            unsafe
             {
-                fixed (double* ptrA = a)        
-                fixed (double* ptrR = result)        
+                fixed (double* ptrA = a)
+                fixed (double* ptrR = result)
                 {
                     var pr = ptrR;
                     var pa = ptrA;
@@ -716,7 +716,7 @@
                 result[i][i] = (double)((double)a[i][i] / (double)b[i]);
             return result;
         }
- 
+
         #endregion
     }
 }
