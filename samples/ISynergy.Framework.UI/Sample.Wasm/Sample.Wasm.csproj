@@ -13,6 +13,7 @@
         <Authors>Ismail Hassani</Authors>
         <AssemblyName>Sample</AssemblyName>
         <DefineConstants>__WASM__</DefineConstants>
+		<WasmShellEnableLongPathSupport>false</WasmShellEnableLongPathSupport>
     </PropertyGroup>
 	
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
