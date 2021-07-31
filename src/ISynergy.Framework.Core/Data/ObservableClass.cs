@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using ISynergy.Framework.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Abstractions;
 
 namespace ISynergy.Framework.Core.Data
 {
@@ -125,6 +127,25 @@ namespace ISynergy.Framework.Core.Data
             });
         }
 
+        private IMessenger _messengerInstance;
+
+        /// <summary>
+        /// Gets or sets an instance of a <see cref="IMessenger" /> used to
+        /// broadcast messages to other objects. If null, this class will
+        /// attempt to broadcast using the Messenger's default instance.
+        /// </summary>
+        protected IMessenger MessengerInstance
+        {
+            get
+            {
+                return _messengerInstance ?? Messenger.Default;
+            }
+            set
+            {
+                _messengerInstance = value;
+            }
+        }
+
         /// <summary>
         /// Gets the value.
         /// </summary>
@@ -152,7 +173,8 @@ namespace ISynergy.Framework.Core.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
+        /// <param name="broadcast"></param>
+        protected void SetValue<T>(T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
 
@@ -168,6 +190,9 @@ namespace ISynergy.Framework.Core.Data
                     property.Value = value;
                     OnPropertyChanged(propertyName);
 
+                    if (broadcast)
+                        Broadcast(previous, value, propertyName);
+
                     if (AutomaticValidationTrigger)
                         Validate();
                 }
@@ -181,7 +206,8 @@ namespace ISynergy.Framework.Core.Data
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        /// <param name="broadcast"></param>
+        protected void SetValue<T>(ref T field, T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
 
@@ -196,6 +222,9 @@ namespace ISynergy.Framework.Core.Data
                 {
                     field = value;
                     OnPropertyChanged(propertyName);
+
+                    if (broadcast)
+                        Broadcast(previous, value, propertyName);
 
                     if (AutomaticValidationTrigger)
                         Validate();
@@ -274,8 +303,29 @@ namespace ISynergy.Framework.Core.Data
                 property.Value.MarkAsClean();
             }
 
+            MessengerInstance.Unregister(this);
+
             if (AutomaticValidationTrigger)
                 Validate();
+        }
+
+        /// <summary>
+        /// Broadcasts a PropertyChangedMessage using either the instance of
+        /// the Messenger that was passed to this class (if available) 
+        /// or the Messenger's default instance.
+        /// </summary>
+        /// <typeparam name="T">The type of the property that
+        /// changed.</typeparam>
+        /// <param name="oldValue">The value of the property before it
+        /// changed.</param>
+        /// <param name="newValue">The value of the property after it
+        /// changed.</param>
+        /// <param name="propertyName">The name of the property that
+        /// changed.</param>
+        protected virtual void Broadcast<T>(T oldValue, T newValue, string propertyName)
+        {
+            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, propertyName);
+            MessengerInstance.Send(message);
         }
 
         #region INotifyPropertyChanged
