@@ -1,21 +1,15 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Enumerations;
-using ISynergy.Framework.Automations.Conditions;
-using ISynergy.Framework.Automations.Actions;
 using ISynergy.Framework.Core.Data;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations
 {
     /// <summary>
     /// Automation class.
     /// </summary>
-    public class Automation : ObservableClass, IAutomation
+    public class Automation : ObservableClass
     {
         /// <summary>
         /// Gets or sets the AutomationId property value.
@@ -63,11 +57,20 @@ namespace ISynergy.Framework.Automations
         }
 
         /// <summary>
+        /// Gets or sets the Excecution Timeout property value.
+        /// </summary>
+        public TimeSpan ExecutionTimeout
+        {
+            get { return GetValue<TimeSpan>(); }
+            set { SetValue(value); }
+        }
+
+        /// <summary>
         /// Gets or sets the Triggers property value.
         /// </summary>
-        public ObservableCollection<ITrigger> Triggers
+        public ObservableCollection<object> Triggers
         {
-            get { return GetValue<ObservableCollection<ITrigger>>(); }
+            get { return GetValue<ObservableCollection<object>>(); }
             set { SetValue(value); }
         }
 
@@ -97,88 +100,10 @@ namespace ISynergy.Framework.Automations
             AutomationId = Guid.NewGuid();
             Mode = RunModes.Single;
             IsActive = false;
-            Triggers = new ObservableCollection<ITrigger>();
+            ExecutionTimeout = TimeSpan.FromSeconds(30);
+            Triggers = new ObservableCollection<object>();
             Conditions = new ObservableCollection<ICondition>();
             Actions = new ObservableCollection<IAction>();
-        }
-
-        public async Task<bool> ExecuteAsync(object value)
-        {
-            if (IsActive)
-            {
-                var areAllConditionsValid = true;
-
-                // Check if all conditions met.
-                foreach (var condition in Conditions)
-                {
-                    if (condition.Operator == OperatorTypes.And)
-                        areAllConditionsValid = areAllConditionsValid && condition.Validate(value);
-                    else
-                        areAllConditionsValid = areAllConditionsValid || condition.Validate(value);
-                }
-
-                if (areAllConditionsValid)
-                {
-                    var repeatCount = 0;
-
-                    // Excecute all actions.
-                    for (int i = 0; i < Actions.Count; i++)
-                    {
-                        if (Actions[i] is CommandAction commandAction && commandAction.Command.CanExecute(commandAction.CommandParameter))
-                        {
-                            commandAction.Command.Execute(commandAction.CommandParameter);
-                        }
-                        else if (Actions[i] is DelayAction delayAction)
-                        {
-                            await Task.Delay(delayAction.Delay);
-                        }
-                        else if (Actions[i] is AutomationAction automationAction)
-                        {
-                            await automationAction.Automation.ExecuteAsync(value);
-                        }
-                        else if (Actions[i] is RepeatPreviousAction repeatAction && repeatAction.Count > 0)
-                        {
-                            if (repeatCount == repeatAction.Count)
-                            {
-                                repeatCount = 0;
-                            }
-                            else
-                            {
-                                i -= 2;
-                                repeatCount += 1;
-                            }
-                        }
-                        else if (Actions[i] is IRepeatAction untilRepeatAction && untilRepeatAction.RepeatType == RepeatTypes.Until)
-                        {
-                            if (repeatCount.Equals(untilRepeatAction.CountCircuitBreaker) || untilRepeatAction.Validate(value))
-                            {
-                                repeatCount = 0;
-                            }
-                            else
-                            {
-                                i -= 2;
-                                repeatCount += 1;
-                            }
-                        }
-                        else if (Actions[i] is IRepeatAction whileRepeatAction && whileRepeatAction.RepeatType == RepeatTypes.While)
-                        {
-                            if (repeatCount.Equals(whileRepeatAction.CountCircuitBreaker) || !whileRepeatAction.Validate(value))
-                            {
-                                repeatCount = 0;
-                            }
-                            else
-                            {
-                                i -= 2;
-                                repeatCount += 1;
-                            }
-                        }
-                    }
-                }
-
-                return areAllConditionsValid;
-            }
-
-            return false;
         }
     }
 }

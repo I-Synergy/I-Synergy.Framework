@@ -35,6 +35,14 @@ namespace ISynergy.Framework.Automations.Tests.Data
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the Active property value.
+        /// </summary>
+        public bool Active
+        {
+            get { return GetValue<bool>(); }
+            set { SetValue(value); }
+        }
 
         public enum ProcessState
         {

@@ -1,4 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Messaging.Tests
@@ -24,20 +26,20 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string TestContent = "abcd";
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<TestMessage>(this, m => StringContent1 = m.Content);
+            MessageService.Default.Register<TestMessage>(this, m => StringContent1 = m.Content);
 
-            Messenger.Default.Register<TestMessage>(this, m => StringContent2 = m.Content);
+            MessageService.Default.Register<TestMessage>(this, m => StringContent2 = m.Content);
 
             var externalRecipient = new TestRecipient();
-            externalRecipient.RegisterWith(Messenger.Default);
+            externalRecipient.RegisterWith(MessageService.Default);
 
             Assert.AreEqual(null, StringContent1);
             Assert.AreEqual(null, StringContent2);
             Assert.AreEqual(null, externalRecipient.StringContent);
 
-            Messenger.Default.Send(new TestMessage
+            MessageService.Default.Send(new TestMessage
             {
                 Content = TestContent
             });
@@ -50,8 +52,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestSendingNullMessage()
         {
-            Messenger.Reset();
-            Messenger.Default.Send<TestMessageImpl>(null);
+            MessageService.Reset();
+            MessageService.Default.Send<TestMessageImpl>(null);
         }
 
         //// Helpers
@@ -79,7 +81,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 private set;
             }
 
-            internal void RegisterWith(IMessenger messenger)
+            internal void RegisterWith(IMessageService messenger)
             {
                 messenger.Register<TestMessage>(this, m => StringContent = m.Content);
             }

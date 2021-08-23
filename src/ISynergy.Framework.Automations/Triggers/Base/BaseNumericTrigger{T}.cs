@@ -1,6 +1,11 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Triggers.Base
 {
@@ -46,6 +51,35 @@ namespace ISynergy.Framework.Automations.Triggers.Base
             Below = below;
             Above = above;
             For = @for;
+        }
+
+        /// <summary>
+        /// Trigger for T type properties.
+        /// </summary>
+        /// <param name="automationId"></param>
+        /// <param name="function"></param>
+        /// <param name="below"></param>
+        /// <param name="above"></param>
+        /// <param name="callbackAsync"></param>
+        protected BaseNumericTrigger(
+            Guid automationId, 
+            Func<(IObservableClass Entity, IProperty<T> Property)> function, 
+            T below, 
+            T above, 
+            Func<T, Task> callbackAsync)
+            : this(automationId, below, above, TimeSpan.Zero)
+        {
+            if (function.Invoke() is (IObservableClass Entity, IProperty<T> Property) result)
+            {
+                result.Property.BroadCastChanges = true;
+
+                MessageService.Default.Register<PropertyChangedMessage<T>>(this, m =>
+                {
+                    var comparer = Comparer<T>.Default;
+                    if (comparer.Compare(m.NewValue, below) < 0 && comparer.Compare(m.NewValue, above) > 0)
+                        callbackAsync.Invoke(m.NewValue).Wait();
+                });
+            }
         }
     }
 }

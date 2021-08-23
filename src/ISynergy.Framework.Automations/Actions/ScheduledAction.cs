@@ -7,14 +7,14 @@ namespace ISynergy.Framework.Automations.Actions
     /// <summary>
     /// Wait action.
     /// </summary>
-    public class WaitAction : BaseAction
+    public class ScheduledAction : BaseAction
     {
         /// <summary>
-        /// Gets or sets the WaitTime property value.
+        /// Gets or sets the ExecutionTime property value.
         /// </summary>
-        public TimeSpan WaitTime
+        public DateTimeOffset ExecutionTime
         {
-            get { return GetValue<TimeSpan>(); }
+            get { return GetValue<DateTimeOffset>(); }
             set { SetValue(value); }
         }
 
@@ -28,23 +28,13 @@ namespace ISynergy.Framework.Automations.Actions
         }
 
         /// <summary>
-        /// Gets or sets the ContinueOnTimeout property value.
-        /// </summary>
-        public bool ContinueOnTimeout
-        {
-            get { return GetValue<bool>(); }
-            set { SetValue(value); }
-        }
-
-        /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="automationId"></param>
-        public WaitAction(Guid automationId)
+        public ScheduledAction(Guid automationId)
             : base(automationId)
         {
-            WaitTime = TimeSpan.Zero;
-            ContinueOnTimeout = false;
+            ExecutionTime = DateTimeOffset.Now;
             Timeout = TimeSpan.Zero;
         }
     }

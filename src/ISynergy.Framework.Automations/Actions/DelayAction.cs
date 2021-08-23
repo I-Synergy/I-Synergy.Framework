@@ -1,8 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Actions.Base;
-using ISynergy.Framework.Automations.Enumerations;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ISynergy.Framework.Automations.Actions
 {
@@ -24,6 +21,7 @@ namespace ISynergy.Framework.Automations.Actions
         /// Default constructor.
         /// </summary>
         /// <param name="automationId"></param>
+        /// <param name="delay"></param>
         public DelayAction(Guid automationId, TimeSpan delay)
             : base(automationId)
         {

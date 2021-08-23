@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace ISynergy.Framework.Core.Abstractions
+namespace ISynergy.Framework.Core.Abstractions.Services
 {
     /// <summary>
     /// The Messenger is a class allowing objects to exchange messages.
     /// </summary>
-    public interface IMessenger
+    public interface IMessageService
     {
         /// <summary>
         /// Registers a recipient for a type of message TMessage. The action

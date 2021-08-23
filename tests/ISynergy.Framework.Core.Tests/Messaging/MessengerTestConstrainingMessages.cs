@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ISynergy.Framework.Core.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace ISynergy.Framework.Core.Messaging.Tests
@@ -25,8 +26,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         public void TestConstrainingMessageByInterface()
         {
             Reset();
-            Messenger.Reset();
-            Messenger.Default.Register<ITestMessage>(this, ReceiveITestMessage);
+            MessageService.Reset();
+            MessageService.Default.Register<ITestMessage>(this, ReceiveITestMessage);
 
             var testMessage = new TestMessageImpl(this)
             {
@@ -37,16 +38,16 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
             Assert.IsFalse(_messageWasReceivedInITestMessage);
-            Messenger.Default.Send(testMessage);
+            MessageService.Default.Send(testMessage);
             Assert.IsFalse(_messageWasReceived);
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
             Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-            Messenger.Default.Unregister<ITestMessage>(this);
-            Messenger.Default.Register<ITestMessage>(this, true, ReceiveITestMessage);
+            MessageService.Default.Unregister<ITestMessage>(this);
+            MessageService.Default.Register<ITestMessage>(this, true, ReceiveITestMessage);
 
-            Messenger.Default.Send(testMessage);
+            MessageService.Default.Send(testMessage);
             Assert.IsTrue(_messageWasReceived);
             Assert.IsTrue(_messageWasReceivedInITestMessage);
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
@@ -57,8 +58,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         public void TestConstrainingMessageByBaseClass()
         {
             Reset();
-            Messenger.Reset();
-            Messenger.Default.Register<TestMessageBase>(this, ReceiveTestMessageBase);
+            MessageService.Reset();
+            MessageService.Default.Register<TestMessageBase>(this, ReceiveTestMessageBase);
 
             var testMessage = new TestMessageImpl(this)
             {
@@ -69,16 +70,16 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
             Assert.IsFalse(_messageWasReceivedInITestMessage);
-            Messenger.Default.Send(testMessage);
+            MessageService.Default.Send(testMessage);
             Assert.IsFalse(_messageWasReceived);
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
             Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-            Messenger.Default.Unregister<ITestMessage>(this);
-            Messenger.Default.Register<TestMessageBase>(this, true, ReceiveTestMessageBase);
+            MessageService.Default.Unregister<ITestMessage>(this);
+            MessageService.Default.Register<TestMessageBase>(this, true, ReceiveTestMessageBase);
 
-            Messenger.Default.Send(testMessage);
+            MessageService.Default.Send(testMessage);
             Assert.IsTrue(_messageWasReceived);
             Assert.IsTrue(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
@@ -89,8 +90,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         public void TestConstrainingMessageByBaseClassAndReceiveWithInterface()
         {
             Reset();
-            Messenger.Reset();
-            Messenger.Default.Register<TestMessageBase>(this, ReceiveITestMessage);
+            MessageService.Reset();
+            MessageService.Default.Register<TestMessageBase>(this, ReceiveITestMessage);
 
             var testMessage = new TestMessageImpl(this)
             {
@@ -101,16 +102,16 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
             Assert.IsFalse(_messageWasReceivedInITestMessage);
-            Messenger.Default.Send(testMessage);
+            MessageService.Default.Send(testMessage);
             Assert.IsFalse(_messageWasReceived);
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
             Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-            Messenger.Default.Unregister<ITestMessage>(this);
-            Messenger.Default.Register<TestMessageBase>(this, true, ReceiveITestMessage);
+            MessageService.Default.Unregister<ITestMessage>(this);
+            MessageService.Default.Register<TestMessageBase>(this, true, ReceiveITestMessage);
 
-            Messenger.Default.Send(testMessage);
+            MessageService.Default.Send(testMessage);
             Assert.IsTrue(_messageWasReceived);
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
@@ -121,8 +122,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         public void TestConstrainingMessageByBaseBaseClass()
         {
             Reset();
-            Messenger.Reset();
-            Messenger.Default.Register<Message>(this, ReceiveMessageBase);
+            MessageService.Reset();
+            MessageService.Default.Register<Message>(this, ReceiveMessageBase);
 
             var testMessage = new TestMessageImpl(this)
             {
@@ -133,16 +134,16 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
             Assert.IsFalse(_messageWasReceivedInITestMessage);
-            Messenger.Default.Send(testMessage);
+            MessageService.Default.Send(testMessage);
             Assert.IsFalse(_messageWasReceived);
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsFalse(_messageWasReceivedInMessageBase);
             Assert.IsFalse(_messageWasReceivedInITestMessage);
 
-            Messenger.Default.Unregister<ITestMessage>(this);
-            Messenger.Default.Register<Message>(this, true, ReceiveMessageBase);
+            MessageService.Default.Unregister<ITestMessage>(this);
+            MessageService.Default.Register<Message>(this, true, ReceiveMessageBase);
 
-            Messenger.Default.Send(testMessage);
+            MessageService.Default.Send(testMessage);
             Assert.IsTrue(_messageWasReceived);
             Assert.IsFalse(_messageWasReceivedInTestMessageBase);
             Assert.IsTrue(_messageWasReceivedInMessageBase);

@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Automations.Actions
     /// <summary>
     /// Repeats action.
     /// </summary>
-    public class RepeatAction<TEntity> : BaseAction, IRepeatAction
+    public class RepeatPreviousAction<TEntity> : BaseAction, IRepeatAction
          where TEntity : class, new()
     {
         /// <summary>
@@ -45,7 +45,7 @@ namespace ISynergy.Framework.Automations.Actions
         /// <param name="repeatType"></param>
         /// <param name="validator"></param>
         /// <param name="countCircuitBreaker"></param>
-        public RepeatAction(Guid automationId, RepeatTypes repeatType, Func<TEntity, bool> validator, int countCircuitBreaker = 100)
+        public RepeatPreviousAction(Guid automationId, RepeatTypes repeatType, Func<TEntity, bool> validator, int countCircuitBreaker = 100)
             : base(automationId)
         {
             RepeatType = repeatType;

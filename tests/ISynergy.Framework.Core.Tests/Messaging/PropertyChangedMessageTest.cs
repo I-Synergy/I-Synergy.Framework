@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Messaging.Base;
+using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -34,9 +35,9 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             var testViewModel = new TestViewModel(previousDateTime, (InvalidOperationException)PreviousException);
 
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<PropertyChangedMessageBase>(
+            MessageService.Default.Register<PropertyChangedMessageBase>(
                 this,
                 true,
                 m =>
@@ -133,9 +134,9 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             var testViewModel = new TestViewModel(previousDateTime, (InvalidOperationException)PreviousException);
 
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<PropertyChangedMessage<DateTime>>(this,
+            MessageService.Default.Register<PropertyChangedMessage<DateTime>>(this,
                                                                          m =>
                                                                          {
                                                                              receivedSender = m.Sender;
@@ -150,7 +151,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                                                                              }
                                                                          });
 
-            Messenger.Default.Register<PropertyChangedMessage<InvalidOperationException>>(this,
+            MessageService.Default.Register<PropertyChangedMessage<InvalidOperationException>>(this,
                                                                                           m =>
                                                                                           {
                                                                                               receivedSender = m.Sender;
@@ -240,9 +241,9 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             object receivedSender = null;
             object receivedTarget = null;
 
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<PropertyChangedMessage<string>>(this,
+            MessageService.Default.Register<PropertyChangedMessage<string>>(this,
                                                                        m =>
                                                                        {
                                                                            receivedSender = m.Sender;
@@ -304,7 +305,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 }
             }
 
-            Messenger.Default.Send(propertyMessage1);
+            MessageService.Default.Send(propertyMessage1);
 
             Assert.AreEqual(sender, receivedSender);
             Assert.AreEqual(target, receivedTarget);
@@ -316,7 +317,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             receivedTarget = null;
             receivedSender = null;
 
-            Messenger.Default.Send(propertyMessage2);
+            MessageService.Default.Send(propertyMessage2);
 
             Assert.AreEqual(sender, receivedSender);
             Assert.AreEqual(target, receivedTarget);

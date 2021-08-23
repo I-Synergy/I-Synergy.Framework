@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ISynergy.Framework.Core.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
@@ -20,30 +21,30 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string TestContent2 = "Test content 2";
             const string TestContent3 = "Test content 3";
 
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<string>(this, m => ReceivedContent = m);
+            MessageService.Default.Register<string>(this, m => ReceivedContent = m);
             Assert.IsNull(ReceivedContent);
-            Messenger.Default.Send(TestContent1);
+            MessageService.Default.Send(TestContent1);
             Assert.AreEqual(TestContent1, ReceivedContent);
 
-            Messenger.Reset();
-            Messenger.OverrideDefault(new TestMessenger());
+            MessageService.Reset();
+            MessageService.OverrideDefault(new TestMessenger());
 
-            Messenger.Default.Send(TestContent2);
-            Assert.AreEqual(1, ((TestMessenger)Messenger.Default).MessagesTransmitted);
+            MessageService.Default.Send(TestContent2);
+            Assert.AreEqual(1, ((TestMessenger)MessageService.Default).MessagesTransmitted);
             Assert.AreEqual(TestContent1, ReceivedContent);
 
-            Messenger.Default.Register<string>(this, m => ReceivedContent = m);
-            Assert.AreEqual(1, ((TestMessenger)Messenger.Default).MessagesTransmitted);
-            Messenger.Default.Send(TestContent3);
+            MessageService.Default.Register<string>(this, m => ReceivedContent = m);
+            Assert.AreEqual(1, ((TestMessenger)MessageService.Default).MessagesTransmitted);
+            MessageService.Default.Send(TestContent3);
             Assert.AreEqual(TestContent3, ReceivedContent);
-            Assert.AreEqual(2, ((TestMessenger)Messenger.Default).MessagesTransmitted);
+            Assert.AreEqual(2, ((TestMessenger)MessageService.Default).MessagesTransmitted);
         }
 
         // Helpers
 
-        private class TestMessenger : Messenger
+        private class TestMessenger : MessageService
         {
             private readonly List<Delegate> _recipients = new List<Delegate>();
 

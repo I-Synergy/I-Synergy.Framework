@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Automations.Enumerations;
-using System;
+﻿using System;
 
 namespace ISynergy.Framework.Automations.Abstractions
 {
@@ -20,5 +19,13 @@ namespace ISynergy.Framework.Automations.Abstractions
         /// Gets or sets the Data property value.
         /// </summary>
         object Data { get; set; }
+        /// <summary>
+        /// Gets the Executed property value.
+        /// </summary>
+        bool Executed { get; }
+        /// <summary>
+        /// Gets the ExecutedDateTime property value.
+        /// </summary>
+        DateTimeOffset ExecutedDateTime { get; }
     }
 }

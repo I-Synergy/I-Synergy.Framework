@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Automations.States.Base;
 using System;
-using System.Reflection;
 
 namespace ISynergy.Framework.Automations.States
 {

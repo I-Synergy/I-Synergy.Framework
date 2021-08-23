@@ -1,10 +1,6 @@
-﻿using ISynergy.Framework.Automations.States.Base;
-using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Core.Data;
+﻿using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Validation;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ISynergy.Framework.Automations.States
 {

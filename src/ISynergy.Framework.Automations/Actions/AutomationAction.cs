@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.Actions.Base;
-using ISynergy.Framework.Automations.Enumerations;
+﻿using ISynergy.Framework.Automations.Actions.Base;
 using System;
 
 namespace ISynergy.Framework.Automations.Actions
@@ -13,9 +11,9 @@ namespace ISynergy.Framework.Automations.Actions
         /// <summary>
         /// Gets or sets the Service property value.
         /// </summary>
-        public IAutomation Automation
+        public Automation Automation
         {
-            get { return GetValue<IAutomation>(); }
+            get { return GetValue<Automation>(); }
             set { SetValue(value); }
         }
 

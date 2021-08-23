@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Base;
-using ISynergy.Framework.Automations.Enumerations;
 using System;
 
 namespace ISynergy.Framework.Automations.Actions.Base
@@ -29,10 +28,27 @@ namespace ISynergy.Framework.Automations.Actions.Base
         }
 
         /// <summary>
+        /// Gets the Executed property value.
+        /// </summary>
+        public bool Executed
+        {
+            get { return GetValue<bool>(); }
+            private set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// Gets the ExecutedDateTime property value.
+        /// </summary>
+        public DateTimeOffset ExecutedDateTime
+        {
+            get { return GetValue<DateTimeOffset>(); }
+            private set { SetValue(value); }
+        }
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="automationId"></param>
-        /// <param name="actionType"></param>
         protected BaseAction(Guid automationId)
             : base(automationId)
         {

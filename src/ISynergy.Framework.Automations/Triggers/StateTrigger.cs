@@ -1,5 +1,7 @@
 ﻿using ISynergy.Framework.Automations.Triggers.Base;
+using ISynergy.Framework.Core.Data;
 using System;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Triggers
 {
@@ -12,11 +14,17 @@ namespace ISynergy.Framework.Automations.Triggers
         /// Default constructor.
         /// </summary>
         /// <param name="automationId"></param>
+        /// <param name="function"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        /// <param name="for"></param>
-        public BooleanStateTrigger(Guid automationId, bool from, bool to, TimeSpan @for)
-            : base(automationId, from, to, @for)
+        /// <param name="callbackAsync"></param>
+        public BooleanStateTrigger(
+            Guid automationId,
+            Func<(IObservableClass Entity, IProperty<bool> Property)> function,
+            bool from, 
+            bool to,
+            Func<bool, Task> callbackAsync)
+            : base(automationId, function, from, to, callbackAsync, TimeSpan.Zero)
         {
         }
     }
@@ -30,11 +38,17 @@ namespace ISynergy.Framework.Automations.Triggers
         /// Default constructor.
         /// </summary>
         /// <param name="automationId"></param>
+        /// <param name="function"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        /// <param name="for"></param>
-        public StringStateTrigger(Guid automationId, string from, string to, TimeSpan @for)
-            : base(automationId, from, to, @for)
+        /// <param name="callbackAsync"></param>
+        public StringStateTrigger(
+            Guid automationId,
+            Func<(IObservableClass Entity, IProperty<string> Property)> function,
+            string from,
+            string to,
+            Func<string, Task> callbackAsync)
+            : base(automationId, function, from, to, callbackAsync, TimeSpan.Zero)
         {
         }
     }

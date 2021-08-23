@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WorkflowCore" Version="3.5.0" />
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

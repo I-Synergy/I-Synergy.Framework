@@ -1,10 +1,12 @@
 ﻿using ISynergy.Framework.Automations.Actions.Base;
-using ISynergy.Framework.Automations.Enumerations;
 using System;
 using System.Windows.Input;
 
 namespace ISynergy.Framework.Automations.Actions
 {
+    /// <summary>
+    /// Action that executes a command.
+    /// </summary>
     public class CommandAction : BaseAction
     {
         /// <summary>
@@ -26,6 +28,15 @@ namespace ISynergy.Framework.Automations.Actions
         }
 
         /// <summary>
+        /// Gets or sets the Timeout property value.
+        /// </summary>
+        public TimeSpan Timeout
+        {
+            get { return GetValue<TimeSpan>(); }
+            set { SetValue(value); }
+        }
+
+        /// <summary>
         /// Default constructor for command action.
         /// </summary>
         /// <param name="automationId"></param>
@@ -36,6 +47,7 @@ namespace ISynergy.Framework.Automations.Actions
         {
             Command = command;
             CommandParameter = commandParameter;
+            Timeout = TimeSpan.Zero;
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Data;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Extensions
@@ -169,6 +172,55 @@ namespace ISynergy.Framework.Core.Extensions
             }
 
             return defaultValue;
+        }
+
+        /// <summary>
+        /// GetPropertyInfo extension.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="_self"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static PropertyInfo GetPropertyInfo<T, TValue>(this T _self, Expression<Func<T, TValue>> selector)
+        {
+            Expression body = selector;
+
+            if (body is LambdaExpression)
+                body = ((LambdaExpression)body).Body;
+
+            switch (body.NodeType)
+            {
+                case ExpressionType.MemberAccess:
+                    return (PropertyInfo)((MemberExpression)body).Member;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        /// <summary>
+        /// GetProperty extension.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="_self"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static Property<TValue> GetProperty<T, TValue>(this T _self, Expression<Func<T, TValue>> selector)
+            where T : class, IObservableClass
+        {
+            Expression body = selector;
+
+            if (body is LambdaExpression)
+                body = ((LambdaExpression)body).Body;
+
+            if (body.NodeType == ExpressionType.MemberAccess)
+            {
+                var key = ((MemberExpression)body).Member.Name;
+                return _self.Properties[key] as Property<TValue>;
+            }
+
+            throw new InvalidOperationException();
         }
     }
 }

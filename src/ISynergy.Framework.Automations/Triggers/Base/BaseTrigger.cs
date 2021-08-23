@@ -1,5 +1,7 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Base;
+using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Events;
 using System;
 
 namespace ISynergy.Framework.Automations.Triggers.Base
@@ -31,7 +33,8 @@ namespace ISynergy.Framework.Automations.Triggers.Base
         /// Default constructor.
         /// </summary>
         /// <param name="automationId"></param>
-        protected BaseTrigger(Guid automationId)
+        protected BaseTrigger(
+            Guid automationId)
             : base(automationId)
         {
             TriggerId = Guid.NewGuid();

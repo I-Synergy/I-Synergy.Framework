@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Automations.Abstractions
+﻿using System;
+
+namespace ISynergy.Framework.Automations.Abstractions
 {
     /// <summary>
     /// Public interface of a generic trigger.

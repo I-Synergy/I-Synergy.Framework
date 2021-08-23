@@ -1,45 +1,36 @@
 ﻿using ISynergy.Framework.Automations.Triggers.Base;
+using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Validation;
 using System;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Triggers
 {
     /// <summary>
     /// Trigger based on an event.
     /// </summary>
-    public class EventTrigger : BaseTrigger
+    public class EventTrigger<T> : BaseTrigger
     {
-        /// <summary>
-        /// Gets or sets the Event property value.
-        /// </summary>
-        public string Event
-        {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the EventData property value.
-        /// </summary>
-        public object EventData
-        {
-            get { return GetValue<object>(); }
-            set { SetValue(value); }
-        }
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="automationId"></param>
-        /// <param name="event"></param>
-        /// <param name="eventData"></param>
-        public EventTrigger(Guid automationId, string @event, object eventData)
+        /// <param name="entity"></param>
+        /// <param name="subscription"></param>
+        /// <param name="callbackAsync"></param>
+        public EventTrigger(
+            Guid automationId, 
+            T entity,
+            Action<EventHandler> subscription,
+            Func<T, Task> callbackAsync)
             : base(automationId)
         {
-            Argument.IsNotNullOrEmpty(nameof(@event), @event);
+            Argument.IsNotNull(nameof(entity), entity);
 
-            Event = @event;
-            EventData = eventData;
+            subscription.Invoke((s, e) =>
+            {
+                callbackAsync.Invoke(entity).Wait();
+            });
         }
     }
 }

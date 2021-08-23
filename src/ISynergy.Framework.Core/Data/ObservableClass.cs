@@ -1,16 +1,17 @@
-﻿using ISynergy.Framework.Core.Collections;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
-using ISynergy.Framework.Core.Attributes;
-using System.ComponentModel.DataAnnotations;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Abstractions;
 
 namespace ISynergy.Framework.Core.Data
 {
@@ -119,7 +120,7 @@ namespace ISynergy.Framework.Core.Data
                     if (Attribute.IsDefined(item, typeof(RequiredAttribute)) && value is null)
                     {
                         if (!Properties.ContainsKey(item.Name))
-                            Properties.Add(item.Name, new Property<object>(value));
+                            Properties.Add(item.Name, new Property<object>(item.Name, value));
 
                         Properties[item.Name].Errors.Add(string.Format(ISynergy.Framework.Core.Properties.Resources.WarningMandatoryProperty, $"[{item.Name}]"));
                     }
@@ -127,18 +128,18 @@ namespace ISynergy.Framework.Core.Data
             });
         }
 
-        private IMessenger _messengerInstance;
+        private IMessageService _messengerInstance;
 
         /// <summary>
-        /// Gets or sets an instance of a <see cref="IMessenger" /> used to
+        /// Gets or sets an instance of a <see cref="IMessageService" /> used to
         /// broadcast messages to other objects. If null, this class will
         /// attempt to broadcast using the Messenger's default instance.
         /// </summary>
-        protected IMessenger MessengerInstance
+        protected IMessageService MessengerInstance
         {
             get
             {
-                return _messengerInstance ?? Messenger.Default;
+                return _messengerInstance ?? MessageService.Default;
             }
             set
             {
@@ -157,7 +158,7 @@ namespace ISynergy.Framework.Core.Data
             Argument.IsNotNull(propertyName, propertyName);
 
             if (!Properties.ContainsKey(propertyName))
-                Properties.Add(propertyName, new Property<T>());
+                Properties.Add(propertyName, new Property<T>(propertyName));
 
             if (Properties[propertyName] is IProperty<T> property)
             {
@@ -179,7 +180,7 @@ namespace ISynergy.Framework.Core.Data
             Argument.IsNotNull(propertyName, propertyName);
 
             if (!Properties.ContainsKey(propertyName))
-                Properties.Add(propertyName, new Property<T>());
+                Properties.Add(propertyName, new Property<T>(propertyName));
 
             if (Properties[propertyName] is IProperty<T> property)
             {
@@ -212,7 +213,7 @@ namespace ISynergy.Framework.Core.Data
             Argument.IsNotNull(propertyName, propertyName);
 
             if (!Properties.ContainsKey(propertyName))
-                Properties.Add(propertyName, new Property<T>());
+                Properties.Add(propertyName, new Property<T>(propertyName));
 
             if (Properties[propertyName] is IProperty<T> property)
             {

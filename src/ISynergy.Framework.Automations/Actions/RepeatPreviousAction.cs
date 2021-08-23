@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.Actions.Base;
-using ISynergy.Framework.Automations.Enumerations;
+﻿using ISynergy.Framework.Automations.Actions.Base;
 using System;
 
 namespace ISynergy.Framework.Automations.Actions
@@ -23,7 +21,7 @@ namespace ISynergy.Framework.Automations.Actions
         /// Default constructor
         /// </summary>
         /// <param name="automationId"></param>
-        /// <param name="repeatType"></param>
+        /// <param name="count"></param>
         public RepeatPreviousAction(Guid automationId, int count)
             : base(automationId)
         {

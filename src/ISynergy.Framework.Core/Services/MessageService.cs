@@ -1,37 +1,39 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace ISynergy.Framework.Core.Messaging
+namespace ISynergy.Framework.Core.Services
 {
     /// <summary>
     /// The Messenger is a class allowing objects to exchange messages.
     /// </summary>
-    public class Messenger : IMessenger
+    public class MessageService : IMessageService
     {
-        private static readonly object CreationLock = new object();
-        private static IMessenger _defaultInstance;
         private readonly object _registerLock = new object();
         private Dictionary<Type, List<WeakActionAndToken>> _recipientsOfSubclassesAction;
         private Dictionary<Type, List<WeakActionAndToken>> _recipientsStrictAction;
+
+        private static readonly object _creationLock = new object();
+        private static IMessageService _defaultInstance;
 
         /// <summary>
         /// Gets the Messenger's default instance, allowing
         /// to register and send messages in a static manner.
         /// </summary>
-        public static IMessenger Default
+        public static IMessageService Default
         {
             get
             {
                 if (_defaultInstance == null)
                 {
-                    lock (CreationLock)
+                    lock (_creationLock)
                     {
                         if (_defaultInstance == null)
                         {
-                            _defaultInstance = new Messenger();
+                            _defaultInstance = new MessageService();
                         }
                     }
                 }
@@ -366,7 +368,7 @@ namespace ISynergy.Framework.Core.Messaging
         /// a custom instance, for example for unit testing purposes.
         /// </summary>
         /// <param name="newMessenger">The instance that will be used as Messenger.Default.</param>
-        public static void OverrideDefault(IMessenger newMessenger)
+        public static void OverrideDefault(IMessageService newMessenger)
         {
             _defaultInstance = newMessenger;
         }

@@ -1,4 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -60,10 +62,10 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             var testContentDateTime = DateTime.Now;
             const string testContentString = "abcd";
 
-            Messenger.Reset();
+            MessageService.Reset();
             Reset();
 
-            Messenger.Default.Register<TestMessageGenericBase>(
+            MessageService.Default.Register<TestMessageGenericBase>(
                 this,
                 true,
                 m =>
@@ -98,7 +100,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, ReceivedContentException);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
-            Messenger.Default.Send(new TestMessageGeneric<Exception>
+            MessageService.Default.Send(new TestMessageGeneric<Exception>
             {
                 Content = testContentException
             });
@@ -107,7 +109,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentException, ReceivedContentException);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
-            Messenger.Default.Send(new TestMessageGeneric<DateTime>
+            MessageService.Default.Send(new TestMessageGeneric<DateTime>
             {
                 Content = testContentDateTime
             });
@@ -116,7 +118,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentException, ReceivedContentException);
             Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
 
-            Messenger.Default.Send(new TestMessageGeneric<string>
+            MessageService.Default.Send(new TestMessageGeneric<string>
             {
                 Content = testContentString
             });
@@ -133,18 +135,18 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             var testContentDateTime = DateTime.Now;
             const string testContentString = "abcd";
 
-            Messenger.Reset();
+            MessageService.Reset();
             Reset();
 
-            Messenger.Default.Register<TestMessageGeneric<DateTime>>(this, m => ReceivedContentDateTime1 = m.Content);
-            Messenger.Default.Register<TestMessageGeneric<Exception>>(this, m => ReceivedContentException = m.Content);
-            Messenger.Default.Register<TestMessageGeneric<string>>(this, m => ReceivedContentStringA1 = m.Content);
+            MessageService.Default.Register<TestMessageGeneric<DateTime>>(this, m => ReceivedContentDateTime1 = m.Content);
+            MessageService.Default.Register<TestMessageGeneric<Exception>>(this, m => ReceivedContentException = m.Content);
+            MessageService.Default.Register<TestMessageGeneric<string>>(this, m => ReceivedContentStringA1 = m.Content);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(null, ReceivedContentException);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
-            Messenger.Default.Send(new TestMessageGeneric<Exception>
+            MessageService.Default.Send(new TestMessageGeneric<Exception>
             {
                 Content = testContentException
             });
@@ -153,7 +155,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentException, ReceivedContentException);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
-            Messenger.Default.Send(new TestMessageGeneric<DateTime>
+            MessageService.Default.Send(new TestMessageGeneric<DateTime>
             {
                 Content = testContentDateTime
             });
@@ -162,7 +164,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentException, ReceivedContentException);
             Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
 
-            Messenger.Default.Send(new TestMessageGeneric<string>
+            MessageService.Default.Send(new TestMessageGeneric<string>
             {
                 Content = testContentString
             });
@@ -178,12 +180,12 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             var testContentDateTime = DateTime.Now;
             const string testContentString = "abcd";
 
-            Messenger.Reset();
+            MessageService.Reset();
             Reset();
 
             var receivedMessages = 0;
 
-            Messenger.Default.Register<TestMessageGenericBase>(
+            MessageService.Default.Register<TestMessageGenericBase>(
                 this,
                 true,
                 m =>
@@ -207,7 +209,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                     }
                 });
 
-            Messenger.Default.Register<TestMessageGeneric<DateTime>>(this,
+            MessageService.Default.Register<TestMessageGeneric<DateTime>>(this,
                                                                      m =>
                                                                      {
                                                                          receivedMessages++;
@@ -218,7 +220,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime2);
 
-            Messenger.Default.Send(new TestMessageGeneric<DateTime>
+            MessageService.Default.Send(new TestMessageGeneric<DateTime>
             {
                 Content = testContentDateTime
             });
@@ -228,7 +230,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
             Assert.AreEqual(testContentDateTime, ReceivedContentDateTime2);
 
-            Messenger.Default.Send(new TestMessageGeneric<string>
+            MessageService.Default.Send(new TestMessageGeneric<string>
             {
                 Content = testContentString
             });
@@ -255,9 +257,9 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string testContentB = "efgh";
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<object>(
+            MessageService.Default.Register<object>(
                 this,
                 true,
                 m =>
@@ -280,7 +282,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(null, ReceivedContentStringB);
 
-            Messenger.Default.Send(new TestMessageA
+            MessageService.Default.Send(new TestMessageA
             {
                 Content = testContentA
             });
@@ -288,7 +290,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentA, ReceivedContentStringA1);
             Assert.AreEqual(null, ReceivedContentStringB);
 
-            Messenger.Default.Send(new TestMessageB
+            MessageService.Default.Send(new TestMessageB
             {
                 Content = testContentB
             });
@@ -305,9 +307,9 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string testContentB = "efgh";
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<TestMessageA>(
+            MessageService.Default.Register<TestMessageA>(
                 this,
                 true,
                 m =>
@@ -329,7 +331,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, ReceivedContentStringA2);
             Assert.AreEqual(null, ReceivedContentStringB);
 
-            Messenger.Default.Send(new TestMessageA
+            MessageService.Default.Send(new TestMessageA
             {
                 Content = testContentA
             });
@@ -338,7 +340,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, ReceivedContentStringA2);
             Assert.AreEqual(null, ReceivedContentStringB);
 
-            Messenger.Default.Send(new TestMessageAa
+            MessageService.Default.Send(new TestMessageAa
             {
                 Content = testContentAa
             });
@@ -347,7 +349,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentAa, ReceivedContentStringA2);
             Assert.AreEqual(null, ReceivedContentStringB);
 
-            Messenger.Default.Send(new TestMessageB
+            MessageService.Default.Send(new TestMessageB
             {
                 Content = testContentB
             });
@@ -364,30 +366,30 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             var testContentDateTime = DateTime.Now;
             const int testContentInt = 42;
 
-            Messenger.Reset();
+            MessageService.Reset();
             Reset();
 
-            Messenger.Default.Register<string>(this, m => ReceivedContentStringA1 = m);
-            Messenger.Default.Register<DateTime>(this, m => ReceivedContentDateTime1 = m);
-            Messenger.Default.Register<int>(this, m => ReceivedContentInt = m);
+            MessageService.Default.Register<string>(this, m => ReceivedContentStringA1 = m);
+            MessageService.Default.Register<DateTime>(this, m => ReceivedContentDateTime1 = m);
+            MessageService.Default.Register<int>(this, m => ReceivedContentInt = m);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
             Assert.AreEqual(default(int), ReceivedContentInt);
 
-            Messenger.Default.Send(testContentString);
+            MessageService.Default.Send(testContentString);
 
             Assert.AreEqual(testContentString, ReceivedContentStringA1);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
             Assert.AreEqual(default(int), ReceivedContentInt);
 
-            Messenger.Default.Send(testContentDateTime);
+            MessageService.Default.Send(testContentDateTime);
 
             Assert.AreEqual(testContentString, ReceivedContentStringA1);
             Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
             Assert.AreEqual(default(int), ReceivedContentInt);
 
-            Messenger.Default.Send(testContentInt);
+            MessageService.Default.Send(testContentInt);
 
             Assert.AreEqual(testContentString, ReceivedContentStringA1);
             Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
@@ -403,16 +405,16 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string testContentB2 = "5678";
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
             Action<TestMessageA> actionA1 = m => ReceivedContentStringA1 = m.Content;
 
-            Messenger.Default.Register(this, actionA1);
-            Messenger.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
-            Messenger.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
+            MessageService.Default.Register(this, actionA1);
+            MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
+            MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
             var externalRecipient = new TestRecipient();
-            externalRecipient.RegisterWith(Messenger.Default);
+            externalRecipient.RegisterWith(MessageService.Default);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(null, ReceivedContentStringA2);
@@ -420,12 +422,12 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, externalRecipient.ReceivedContentA);
             Assert.AreEqual(null, externalRecipient.ReceivedContentB);
 
-            Messenger.Default.Send(new TestMessageA
+            MessageService.Default.Send(new TestMessageA
             {
                 Content = testContentA1
             });
 
-            Messenger.Default.Send(new TestMessageB
+            MessageService.Default.Send(new TestMessageB
             {
                 Content = testContentB1
             });
@@ -436,14 +438,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentA1, externalRecipient.ReceivedContentA);
             Assert.AreEqual(testContentB1, externalRecipient.ReceivedContentB);
 
-            Messenger.Default.Unregister(this, actionA1);
+            MessageService.Default.Unregister(this, actionA1);
 
-            Messenger.Default.Send(new TestMessageA
+            MessageService.Default.Send(new TestMessageA
             {
                 Content = testContentA2
             });
 
-            Messenger.Default.Send(new TestMessageB
+            MessageService.Default.Send(new TestMessageB
             {
                 Content = testContentB2
             });
@@ -464,14 +466,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string testContentB2 = "5678";
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<TestMessageA>(this, m => ReceivedContentStringA1 = m.Content);
-            Messenger.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
-            Messenger.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
+            MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA1 = m.Content);
+            MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
+            MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
             var externalRecipient = new TestRecipient();
-            externalRecipient.RegisterWith(Messenger.Default);
+            externalRecipient.RegisterWith(MessageService.Default);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(null, ReceivedContentStringA2);
@@ -479,12 +481,12 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, externalRecipient.ReceivedContentA);
             Assert.AreEqual(null, externalRecipient.ReceivedContentB);
 
-            Messenger.Default.Send(new TestMessageA
+            MessageService.Default.Send(new TestMessageA
             {
                 Content = testContentA1
             });
 
-            Messenger.Default.Send(new TestMessageB
+            MessageService.Default.Send(new TestMessageB
             {
                 Content = testContentB1
             });
@@ -495,14 +497,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentA1, externalRecipient.ReceivedContentA);
             Assert.AreEqual(testContentB1, externalRecipient.ReceivedContentB);
 
-            Messenger.Default.Unregister(this);
+            MessageService.Default.Unregister(this);
 
-            Messenger.Default.Send(new TestMessageA
+            MessageService.Default.Send(new TestMessageA
             {
                 Content = testContentA2
             });
 
-            Messenger.Default.Send(new TestMessageB
+            MessageService.Default.Send(new TestMessageB
             {
                 Content = testContentB2
             });
@@ -523,14 +525,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string testContentB2 = "5678";
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<TestMessageA>(this, m => ReceivedContentStringA1 = m.Content);
-            Messenger.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
-            Messenger.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
+            MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA1 = m.Content);
+            MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
+            MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
             var externalRecipient = new TestRecipient();
-            externalRecipient.RegisterWith(Messenger.Default);
+            externalRecipient.RegisterWith(MessageService.Default);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(null, ReceivedContentStringA2);
@@ -538,12 +540,12 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, externalRecipient.ReceivedContentA);
             Assert.AreEqual(null, externalRecipient.ReceivedContentB);
 
-            Messenger.Default.Send(new TestMessageA
+            MessageService.Default.Send(new TestMessageA
             {
                 Content = testContentA1
             });
 
-            Messenger.Default.Send(new TestMessageB
+            MessageService.Default.Send(new TestMessageB
             {
                 Content = testContentB1
             });
@@ -554,14 +556,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(testContentA1, externalRecipient.ReceivedContentA);
             Assert.AreEqual(testContentB1, externalRecipient.ReceivedContentB);
 
-            Messenger.Default.Unregister<TestMessageA>(this);
+            MessageService.Default.Unregister<TestMessageA>(this);
 
-            Messenger.Default.Send(new TestMessageA
+            MessageService.Default.Send(new TestMessageA
             {
                 Content = testContentA2
             });
 
-            Messenger.Default.Send(new TestMessageB
+            MessageService.Default.Send(new TestMessageB
             {
                 Content = testContentB2
             });
@@ -580,19 +582,19 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string testContent2 = "efgh";
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<IMessage>(this, true, m => ReceivedContentStringA1 = m.GetValue());
+            MessageService.Default.Register<IMessage>(this, true, m => ReceivedContentStringA1 = m.GetValue());
 
             Assert.AreEqual(null, ReceivedContentStringA1);
 
-            Messenger.Default.Send(new TestMessageImplementsIMessage(testContent1));
+            MessageService.Default.Send(new TestMessageImplementsIMessage(testContent1));
 
             Assert.AreEqual(testContent1, ReceivedContentStringA1);
 
-            Messenger.Default.Unregister<IMessage>(this);
+            MessageService.Default.Unregister<IMessage>(this);
 
-            Messenger.Default.Send(new TestMessageImplementsIMessage(testContent2));
+            MessageService.Default.Send(new TestMessageImplementsIMessage(testContent2));
 
             Assert.AreEqual(testContent1, ReceivedContentStringA1);
         }
@@ -608,26 +610,26 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const int token2 = 4567;
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
             Action<string> action1 = m => ReceivedContentStringA1 = m;
             Action<string> action2 = m => ReceivedContentStringA2 = m;
             Action<string> action3 = m => ReceivedContentStringB = m;
 
-            Messenger.Default.Register(this, token1, action1);
-            Messenger.Default.Register(this, token2, action2);
-            Messenger.Default.Register(this, token2, action3);
+            MessageService.Default.Register(this, token1, action1);
+            MessageService.Default.Register(this, token2, action2);
+            MessageService.Default.Register(this, token2, action3);
 
-            Messenger.Default.Send(testContent1, token1);
-            Messenger.Default.Send(testContent2, token2);
+            MessageService.Default.Send(testContent1, token1);
+            MessageService.Default.Send(testContent2, token2);
 
             Assert.AreEqual(testContent1, ReceivedContentStringA1);
             Assert.AreEqual(testContent2, ReceivedContentStringA2);
             Assert.AreEqual(testContent2, ReceivedContentStringB);
 
-            Messenger.Default.Unregister(this, token2, action3);
-            Messenger.Default.Send(testContent3, token1);
-            Messenger.Default.Send(testContent4, token2);
+            MessageService.Default.Unregister(this, token2, action3);
+            MessageService.Default.Send(testContent3, token1);
+            MessageService.Default.Send(testContent4, token2);
 
             Assert.AreEqual(testContent3, ReceivedContentStringA1);
             Assert.AreEqual(testContent4, ReceivedContentStringA2);
@@ -644,26 +646,26 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const int token2 = 4567;
 
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
-            Messenger.Default.Register<string>(this, token1, m => ReceivedContentStringA1 = m);
-            Messenger.Default.Register<string>(this, token2, m => ReceivedContentStringA2 = m);
+            MessageService.Default.Register<string>(this, token1, m => ReceivedContentStringA1 = m);
+            MessageService.Default.Register<string>(this, token2, m => ReceivedContentStringA2 = m);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(null, ReceivedContentStringA2);
 
-            Messenger.Default.Send(testContent1, token1);
+            MessageService.Default.Send(testContent1, token1);
 
             Assert.AreEqual(testContent1, ReceivedContentStringA1);
             Assert.AreEqual(null, ReceivedContentStringA2);
 
-            Messenger.Default.Send(testContent2, token2);
+            MessageService.Default.Send(testContent2, token2);
 
             Assert.AreEqual(testContent1, ReceivedContentStringA1);
             Assert.AreEqual(testContent2, ReceivedContentStringA2);
 
-            Messenger.Default.Unregister<string>(this, token1);
-            Messenger.Default.Send(testContent3, token1);
+            MessageService.Default.Unregister<string>(this, token1);
+            MessageService.Default.Send(testContent3, token1);
 
             Assert.AreEqual(testContent1, ReceivedContentStringA1);
             Assert.AreEqual(testContent2, ReceivedContentStringA2);
@@ -673,11 +675,11 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         public void TestRegisterStaticHandler()
         {
             Reset();
-            Messenger.Reset();
+            MessageService.Reset();
 
             _context = this;
 
-            Messenger.Default.Register<TestMessageImpl>(
+            MessageService.Default.Register<TestMessageImpl>(
                 this,
                 msg =>
                 {
@@ -688,7 +690,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 });
 
             Assert.IsFalse(_result);
-            Messenger.Default.Send(
+            MessageService.Default.Send(
                 new TestMessageImpl(_context)
                 {
                     Result = true
@@ -761,7 +763,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 private set;
             }
 
-            internal void RegisterWith(IMessenger messenger)
+            internal void RegisterWith(IMessageService messenger)
             {
                 messenger.Register<TestMessageA>(this, m => ReceivedContentA = m.Content);
                 messenger.Register<TestMessageB>(this, m => ReceivedContentB = m.Content);

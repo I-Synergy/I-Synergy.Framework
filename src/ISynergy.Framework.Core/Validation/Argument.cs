@@ -312,5 +312,28 @@ namespace ISynergy.Framework.Core.Validation
 
             return value;
         }
+
+        /// <summary>
+        /// Conditions the specified parameter name.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameterName">Name of the parameter.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="compareValue"></param>
+        /// <returns>T.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static T Equals<T>(string parameterName, T value, T compareValue)
+        {
+            IsNotNull(nameof(compareValue), compareValue);
+            IsNotNull(nameof(value), value);
+
+            if (value.Equals(compareValue))
+            {
+                IsNotNullOrEmpty(nameof(parameterName), parameterName);
+                throw new ArgumentException($"Property '{parameterName}' cannot have the same value as the comparer value.");
+            }
+
+            return value;
+        }
     }
 }

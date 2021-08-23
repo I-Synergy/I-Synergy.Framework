@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ISynergy.Framework.Core.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Messaging.Tests
 {
@@ -8,8 +9,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestMultipleMessengerInstances()
         {
-            var messenger1 = new Messenger();
-            var messenger2 = new Messenger();
+            var messenger1 = new MessageService();
+            var messenger2 = new MessageService();
 
             var recipient11 = new TestRecipient1();
             var recipient12 = new TestRecipient1();

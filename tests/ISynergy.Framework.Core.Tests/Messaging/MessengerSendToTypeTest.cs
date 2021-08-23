@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ISynergy.Framework.Core.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Messaging.Tests
 {
@@ -8,17 +9,17 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestBroadcastToOneType()
         {
-            Messenger.Reset();
+            MessageService.Reset();
 
             var recipient11 = new TestRecipient1();
             var recipient12 = new TestRecipient1();
             var recipient21 = new TestRecipient2();
             var recipient22 = new TestRecipient2();
 
-            Messenger.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
-            Messenger.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
-            Messenger.Default.Register<string>(recipient21, recipient21.ReceiveMessage);
-            Messenger.Default.Register<string>(recipient22, recipient22.ReceiveMessage);
+            MessageService.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
+            MessageService.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
+            MessageService.Default.Register<string>(recipient21, recipient21.ReceiveMessage);
+            MessageService.Default.Register<string>(recipient22, recipient22.ReceiveMessage);
 
             const string testContent1 = "abcd";
             const string testContent2 = "efgh";
@@ -28,14 +29,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, recipient21.ReceivedContentString);
             Assert.AreEqual(null, recipient22.ReceivedContentString);
 
-            Messenger.Default.Send<string, TestRecipient1>(testContent1);
+            MessageService.Default.Send<string, TestRecipient1>(testContent1);
 
             Assert.AreEqual(testContent1, recipient11.ReceivedContentString);
             Assert.AreEqual(testContent1, recipient12.ReceivedContentString);
             Assert.AreEqual(null, recipient21.ReceivedContentString);
             Assert.AreEqual(null, recipient22.ReceivedContentString);
 
-            Messenger.Default.Send<string, TestRecipient2>(testContent2);
+            MessageService.Default.Send<string, TestRecipient2>(testContent2);
 
             Assert.AreEqual(testContent1, recipient11.ReceivedContentString);
             Assert.AreEqual(testContent1, recipient12.ReceivedContentString);
@@ -46,7 +47,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestBroadcastToOneInterface()
         {
-            Messenger.Reset();
+            MessageService.Reset();
 
             var recipient11 = new TestRecipient1();
             var recipient12 = new TestRecipient1();
@@ -55,12 +56,12 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             var recipient31 = new TestRecipient3();
             var recipient32 = new TestRecipient3();
 
-            Messenger.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
-            Messenger.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
-            Messenger.Default.Register<string>(recipient21, recipient21.DoSomething);
-            Messenger.Default.Register<string>(recipient22, recipient22.DoSomething);
-            Messenger.Default.Register<string>(recipient31, recipient31.DoSomething);
-            Messenger.Default.Register<string>(recipient32, recipient32.DoSomething);
+            MessageService.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
+            MessageService.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
+            MessageService.Default.Register<string>(recipient21, recipient21.DoSomething);
+            MessageService.Default.Register<string>(recipient22, recipient22.DoSomething);
+            MessageService.Default.Register<string>(recipient31, recipient31.DoSomething);
+            MessageService.Default.Register<string>(recipient32, recipient32.DoSomething);
 
             const string testContent1 = "abcd";
 
@@ -71,7 +72,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, recipient31.ReceivedContentString);
             Assert.AreEqual(null, recipient32.ReceivedContentString);
 
-            Messenger.Default.Send<string, ITestRecipient>(testContent1);
+            MessageService.Default.Send<string, ITestRecipient>(testContent1);
 
             Assert.AreEqual(null, recipient11.ReceivedContentString);
             Assert.AreEqual(null, recipient12.ReceivedContentString);

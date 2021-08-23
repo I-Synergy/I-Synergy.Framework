@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Automations.States.Base;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ISynergy.Framework.Automations.States
 {
