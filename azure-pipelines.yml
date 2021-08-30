@@ -82,6 +82,7 @@ stages:
             FileNames: |
              src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj
              src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj
+             src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj
              src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj
              src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj
              src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
@@ -134,6 +135,23 @@ stages:
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Automations'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Automations'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
@@ -418,6 +436,13 @@ stages:
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.IO.Tests\ISynergy.Framework.IO.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Automations'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Automations.Tests\ISynergy.Framework.Automations.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: DotNetCoreCLI@2

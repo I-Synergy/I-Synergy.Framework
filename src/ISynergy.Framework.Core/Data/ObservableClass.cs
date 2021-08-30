@@ -1,14 +1,17 @@
-﻿using ISynergy.Framework.Core.Collections;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
-using ISynergy.Framework.Core.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.Core.Data
 {
@@ -117,12 +120,31 @@ namespace ISynergy.Framework.Core.Data
                     if (Attribute.IsDefined(item, typeof(RequiredAttribute)) && value is null)
                     {
                         if (!Properties.ContainsKey(item.Name))
-                            Properties.Add(item.Name, new Property<object>(value));
+                            Properties.Add(item.Name, new Property<object>(item.Name, value));
 
                         Properties[item.Name].Errors.Add(string.Format(ISynergy.Framework.Core.Properties.Resources.WarningMandatoryProperty, $"[{item.Name}]"));
                     }
                 }
             });
+        }
+
+        private IMessageService _messengerInstance;
+
+        /// <summary>
+        /// Gets or sets an instance of a <see cref="IMessageService" /> used to
+        /// broadcast messages to other objects. If null, this class will
+        /// attempt to broadcast using the Messenger's default instance.
+        /// </summary>
+        protected IMessageService MessengerInstance
+        {
+            get
+            {
+                return _messengerInstance ?? MessageService.Default;
+            }
+            set
+            {
+                _messengerInstance = value;
+            }
         }
 
         /// <summary>
@@ -136,7 +158,7 @@ namespace ISynergy.Framework.Core.Data
             Argument.IsNotNull(propertyName, propertyName);
 
             if (!Properties.ContainsKey(propertyName))
-                Properties.Add(propertyName, new Property<T>());
+                Properties.Add(propertyName, new Property<T>(propertyName));
 
             if (Properties[propertyName] is IProperty<T> property)
             {
@@ -152,12 +174,13 @@ namespace ISynergy.Framework.Core.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
+        /// <param name="broadcast"></param>
+        protected void SetValue<T>(T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
 
             if (!Properties.ContainsKey(propertyName))
-                Properties.Add(propertyName, new Property<T>());
+                Properties.Add(propertyName, new Property<T>(propertyName));
 
             if (Properties[propertyName] is IProperty<T> property)
             {
@@ -167,6 +190,9 @@ namespace ISynergy.Framework.Core.Data
                 {
                     property.Value = value;
                     OnPropertyChanged(propertyName);
+
+                    if (broadcast)
+                        Broadcast(previous, value, propertyName);
 
                     if (AutomaticValidationTrigger)
                         Validate();
@@ -181,12 +207,13 @@ namespace ISynergy.Framework.Core.Data
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        /// <param name="broadcast"></param>
+        protected void SetValue<T>(ref T field, T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
 
             if (!Properties.ContainsKey(propertyName))
-                Properties.Add(propertyName, new Property<T>());
+                Properties.Add(propertyName, new Property<T>(propertyName));
 
             if (Properties[propertyName] is IProperty<T> property)
             {
@@ -196,6 +223,9 @@ namespace ISynergy.Framework.Core.Data
                 {
                     field = value;
                     OnPropertyChanged(propertyName);
+
+                    if (broadcast)
+                        Broadcast(previous, value, propertyName);
 
                     if (AutomaticValidationTrigger)
                         Validate();
@@ -274,8 +304,29 @@ namespace ISynergy.Framework.Core.Data
                 property.Value.MarkAsClean();
             }
 
+            MessengerInstance.Unregister(this);
+
             if (AutomaticValidationTrigger)
                 Validate();
+        }
+
+        /// <summary>
+        /// Broadcasts a PropertyChangedMessage using either the instance of
+        /// the Messenger that was passed to this class (if available) 
+        /// or the Messenger's default instance.
+        /// </summary>
+        /// <typeparam name="T">The type of the property that
+        /// changed.</typeparam>
+        /// <param name="oldValue">The value of the property before it
+        /// changed.</param>
+        /// <param name="newValue">The value of the property after it
+        /// changed.</param>
+        /// <param name="propertyName">The name of the property that
+        /// changed.</param>
+        protected virtual void Broadcast<T>(T oldValue, T newValue, string propertyName)
+        {
+            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, propertyName);
+            MessengerInstance.Send(message);
         }
 
         #region INotifyPropertyChanged

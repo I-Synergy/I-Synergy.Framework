@@ -29,6 +29,8 @@ using System.Globalization;
 using Windows.ApplicationModel.Background;
 using System.Text.RegularExpressions;
 using ISynergy.Framework.Mvvm.Extensions;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -437,6 +439,7 @@ namespace ISynergy.Framework.UI
             services.AddSingleton((s) => _navigationService);
 
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
+            services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<IDialogService, DialogService>();
