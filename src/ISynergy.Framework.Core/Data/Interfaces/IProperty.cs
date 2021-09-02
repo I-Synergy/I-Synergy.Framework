@@ -43,12 +43,24 @@ namespace ISynergy.Framework.Core.Data
         /// Gets a value indicating whether this instance is dirty.
         /// </summary>
         /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
+        [JsonIgnore] 
         bool IsDirty { get; }
+
+        /// <summary>
+        /// Gets or sets the Broadcast on changes.
+        /// </summary>
+        [JsonIgnore]
+        bool BroadCastChanges { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is original set.
         /// </summary>
         /// <value><c>true</c> if this instance is original set; otherwise, <c>false</c>.</value>
         bool IsOriginalSet { get; }
+
+        /// <summary>
+        /// Gets the name of the property.
+        /// </summary>
+        string Name { get; }
     }
 }

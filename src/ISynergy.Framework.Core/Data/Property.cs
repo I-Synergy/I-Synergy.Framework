@@ -1,9 +1,13 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
+using Newtonsoft.Json;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Core.Data
 {
@@ -16,7 +20,6 @@ namespace ISynergy.Framework.Core.Data
     /// <seealso cref="IProperty{T}" />
     public class Property<T> : IProperty<T>
     {
-
         /// <summary>
         /// Occurs when [value changed].
         /// </summary>
@@ -36,6 +39,10 @@ namespace ISynergy.Framework.Core.Data
         /// </summary>
         private bool _IsDirty = true;
         /// <summary>
+        /// If set to true, changes will be broadcasted to the MessageService.
+        /// </summary>
+        private bool _broadCastChanges = false;
+        /// <summary>
         /// The value
         /// </summary>
         private T _Value = default;
@@ -47,8 +54,11 @@ namespace ISynergy.Framework.Core.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="Property{T}"/> class.
         /// </summary>
-        public Property()
+        public Property(string name)
         {
+            Argument.IsNotNullOrEmpty(nameof(name), name);
+
+            Name = name;
             Errors = new ObservableCollection<string>();
             Errors.CollectionChanged += (s, e) => OnPropertyChanged(nameof(IsValid));
         }
@@ -56,9 +66,10 @@ namespace ISynergy.Framework.Core.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="Property{T}"/> class.
         /// </summary>
+        /// <param name="name"></param>
         /// <param name="value">The value.</param>
-        public Property(T value)
-            : this()
+        public Property(string name, T value)
+            : this(name)
         {
             Value = value;
         }
@@ -89,6 +100,21 @@ namespace ISynergy.Framework.Core.Data
         }
 
         /// <summary>
+        /// If set to true, changes will be broadcasted to the MessageService.
+        /// </summary>
+        [JsonIgnore]
+        public bool BroadCastChanges
+        {
+            get {  return _broadCastChanges; }
+            set { _broadCastChanges = value; }
+        }
+
+        /// <summary>
+        /// Name of the property.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>The value.</value>
@@ -105,6 +131,9 @@ namespace ISynergy.Framework.Core.Data
                 Set(ref _Value, value);
                 IsDirty = true;
                 ValueChanged?.Invoke(this, EventArgs.Empty);
+
+                if (_broadCastChanges)
+                    Broadcast(OriginalValue, value);
             }
         }
 
@@ -179,6 +208,40 @@ namespace ISynergy.Framework.Core.Data
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private IMessageService _messengerInstance;
+
+        /// <summary>
+        /// Gets or sets an instance of a <see cref="IMessageService" /> used to
+        /// broadcast messages to other objects. If null, this class will
+        /// attempt to broadcast using the Messenger's default instance.
+        /// </summary>
+        protected IMessageService MessengerInstance
+        {
+            get
+            {
+                return _messengerInstance ?? MessageService.Default;
+            }
+            set
+            {
+                _messengerInstance = value;
+            }
+        }
+
+        /// <summary>
+        /// Broadcasts a PropertyChangedMessage using either the instance of
+        /// the Messenger that was passed to this class (if available) 
+        /// or the Messenger's default instance.
+        /// </summary>
+        /// <param name="oldValue">The value of the property before it
+        /// changed.</param>
+        /// <param name="newValue">The value of the property after it
+        /// changed.</param>
+        protected virtual void Broadcast(T oldValue, T newValue)
+        {
+            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, Name);
+            MessengerInstance.Send(message);
         }
     }
 }

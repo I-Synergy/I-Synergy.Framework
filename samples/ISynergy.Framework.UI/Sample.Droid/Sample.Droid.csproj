@@ -71,15 +71,15 @@
     <PackageReference Include="Uno.Material">
       <Version>1.0.0-dev.764</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.8.13" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.9.7" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.35" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
     <PackageReference Include="Xamarin.AndroidX.AppCompat.AppCompatResources">
-      <Version>1.2.0.7</Version>
+      <Version>1.3.1.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData">
-      <Version>2.3.1</Version>
+      <Version>2.3.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,10 @@ namespace ISynergy.Framework.UI.Services
         /// <value>The telemetry service.</value>
         public ITelemetryService TelemetryService { get; }
         /// <summary>
+        /// Gets the messaging service.
+        /// </summary>
+        public IMessageService MessageService { get; }
+        /// <summary>
         /// Gets the dialog service.
         /// </summary>
         /// <value>The dialog service.</value>
@@ -49,29 +53,32 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseCommonService"/> class.
         /// </summary>
-        /// <param name="busy">The busy.</param>
-        /// <param name="language">The language.</param>
-        /// <param name="telemetry">The telemetry.</param>
-        /// <param name="dialog">The dialog.</param>
-        /// <param name="navigation">The navigation.</param>
-        /// <param name="info">The information.</param>
-        /// <param name="converter">The converter.</param>
+        /// <param name="busyService">The busy.</param>
+        /// <param name="messageService"></param>
+        /// <param name="languageService">The language.</param>
+        /// <param name="telemetryService">The telemetry.</param>
+        /// <param name="dialogService">The dialog.</param>
+        /// <param name="navigationService">The navigation.</param>
+        /// <param name="infoService">The information.</param>
+        /// <param name="converterService">The converter.</param>
         protected BaseCommonService(
-            IBusyService busy,
-            ILanguageService language,
-            ITelemetryService telemetry,
-            IDialogService dialog,
-            INavigationService navigation,
-            IInfoService info,
-            IConverterService converter)
+            IBusyService busyService,
+            IMessageService messageService,
+            ILanguageService languageService,
+            ITelemetryService telemetryService,
+            IDialogService dialogService,
+            INavigationService navigationService,
+            IInfoService infoService,
+            IConverterService converterService)
         {
-            BusyService = busy;
-            LanguageService = language;
-            TelemetryService = telemetry;
-            DialogService = dialog;
-            NavigationService = navigation;
-            InfoService = info;
-            ConverterService = converter;
+            BusyService = busyService;
+            MessageService = messageService;
+            LanguageService = languageService;
+            TelemetryService = telemetryService;
+            DialogService = dialogService;
+            NavigationService = navigationService;
+            InfoService = infoService;
+            ConverterService = converterService;
         }
     }
 }

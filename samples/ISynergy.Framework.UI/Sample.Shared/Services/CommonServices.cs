@@ -77,6 +77,7 @@ namespace Sample.Services
         /// <param name="clientMonitorService">The client monitor service.</param>
         public CommonServices(
             IBusyService busyService,
+            IMessageService messageService,
             ILanguageService languageService,
             ITelemetryService telemetryService,
             IDialogService dialogService,
@@ -92,7 +93,14 @@ namespace Sample.Services
             IPrintingService printingService,
             IClipboardService clipboardService,
             IClientMonitorService clientMonitorService)
-            :base(busyService, languageService, telemetryService, dialogService, navigationService, infoService, converterService)
+            :base(busyService,
+                 messageService,
+                 languageService, 
+                 telemetryService, 
+                 dialogService, 
+                 navigationService, 
+                 infoService, 
+                 converterService)
         {
             AuthenticationService = authenticationService;
             MasterDataService = masterDataService;

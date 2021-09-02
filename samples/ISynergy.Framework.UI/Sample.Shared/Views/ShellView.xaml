@@ -11,6 +11,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
 	xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
 	mc:Ignorable="d">
 
 	<c:View.Resources>
