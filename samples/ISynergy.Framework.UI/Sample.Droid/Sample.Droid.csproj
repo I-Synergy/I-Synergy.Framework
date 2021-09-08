@@ -68,8 +68,11 @@
     <PackageReference Include="Microsoft.Extensions.Logging">
       <Version>5.0.0</Version>
     </PackageReference>
+    <PackageReference Include="System.Numerics.Vectors">
+      <Version>4.5.0</Version>
+    </PackageReference>
     <PackageReference Include="Uno.Material">
-      <Version>1.0.0-dev.764</Version>
+      <Version>1.0.0-dev.823</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI.RemoteControl" Version="3.9.7" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.35" />
