@@ -42,5 +42,9 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// </summary>
         /// <value>The converter service.</value>
         IConverterService ConverterService { get; }
+        /// <summary>
+        /// Gets the messaging service.
+        /// </summary>
+        IMessageService MessageService {  get; }
     }
 }

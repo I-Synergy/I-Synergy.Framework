@@ -38,7 +38,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
 using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 using LaunchActivatedEventArgs = Windows.ApplicationModel.Activation.LaunchActivatedEventArgs;
-#elif (NET5_0 && WINDOWS)
+#elif ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -56,6 +56,13 @@ namespace ISynergy.Framework.UI
     /// <seealso cref="Application" />
     public abstract class BaseApplication : Application
     {
+#if (NET5_0 || NET6_0_OR_GREATER) && WINDOWS
+        private Window _window;
+
+#else
+        private Windows.UI.Xaml.Window _window;
+#endif
+
         /// <summary>
         /// Gets the context.
         /// </summary>
@@ -152,7 +159,7 @@ namespace ISynergy.Framework.UI
             RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 #endif
 
-#if NETFX_CORE
+#if HAS_UNO || NETFX_CORE
             Suspending += OnSuspending;
 #endif
         }
@@ -212,7 +219,14 @@ namespace ISynergy.Framework.UI
         /// <param name="args">Event data for the event.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if (NET5_0 || NET6_0_OR_GREATER) && WINDOWS
+            _window = new Window();
+            _window.Activate();
+#else
+            _window = Windows.UI.Xaml.Window.Current;
+#endif
+
+#if NETFX_CORE || ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS)
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
                 case "Windows.Desktop":
@@ -225,11 +239,13 @@ namespace ISynergy.Framework.UI
             }
 #endif
 
+            var rootFrame = _window.Content as Frame;
+
             Application.Current.Resources["SystemAccentColor"] = ThemeSelector.AccentColor;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (!(Window.Current.Content is Frame rootFrame))
+            if (rootFrame is null)
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
@@ -239,7 +255,7 @@ namespace ISynergy.Framework.UI
 
 #if (NETFX_CORE || HAS_UNO)
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
-#elif (NET5_0 && WINDOWS)
+#elif ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS)
                 if (args.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
 #endif
                 {
@@ -268,12 +284,12 @@ namespace ISynergy.Framework.UI
                     AppViewBackButtonVisibility.Collapsed;
 
                 // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
+               _window.Content = rootFrame;
             }
 
 #if (NETFX_CORE || HAS_UNO)
             if (!args.PrelaunchActivated)
-#elif (NET5_0 && WINDOWS)
+#elif ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS)
             if (!args.UWPLaunchActivatedEventArgs.PrelaunchActivated)
 #endif
             {
@@ -288,7 +304,7 @@ namespace ISynergy.Framework.UI
                 }
 
                 // Ensure the current window is active
-                Window.Current.Activate();
+                _window.Activate();
             }
         }
 
@@ -374,7 +390,7 @@ namespace ISynergy.Framework.UI
             return null;
         }
 
-#if NETFX_CORE
+#if HAS_UNO || NETFX_CORE
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
         /// without knowing whether the application will be terminated or resumed with the contents
@@ -585,7 +601,7 @@ namespace ISynergy.Framework.UI
             Context = _serviceProvider.GetRequiredService<IContext>();
             Context.ViewModels = ViewModelTypes;
 
-#if NETFX_CORE || (NET5_0 && WINDOWS) || __WASM__
+#if NETFX_CORE || ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS) || __WASM__
             //Only in Windows i can set the culture.
             var culture = CultureInfo.CurrentCulture;
 

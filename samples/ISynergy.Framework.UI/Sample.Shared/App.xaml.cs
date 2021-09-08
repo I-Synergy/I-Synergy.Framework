@@ -66,7 +66,7 @@ namespace Sample
         {
 
             // Set a default palette to make sure all colors used by MaterialResources exist
-            Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
+            //Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
 
             // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
             Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
