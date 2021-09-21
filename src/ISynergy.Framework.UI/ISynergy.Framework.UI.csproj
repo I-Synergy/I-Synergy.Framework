@@ -19,6 +19,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		
 	</ItemGroup>
 
 	<Choose>
@@ -54,7 +55,7 @@
 		<Otherwise>
 			<ItemGroup>
 				<PackageReference Include="Uno.Core" Version="3.0.0" />
-				<PackageReference Include="Uno.UI" Version="3.10.7" />
+				<PackageReference Include="Uno.UI" Version="3.10.11" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.0.0" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.3-uno.95" />
 			</ItemGroup>

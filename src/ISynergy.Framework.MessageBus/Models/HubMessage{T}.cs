@@ -19,7 +19,7 @@ namespace ISynergy.Framework.MessageBus.Models
             Channel = channel;
             Event = @event;
             Data = data;
-            ContentType = data.GetType().Name;
+            ContentType = data?.GetType().Name;
         }
 
         /// <summary>
