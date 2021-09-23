@@ -4,7 +4,7 @@
     /// Interface IHubMessage
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    interface IHubMessage<TEntity> : IBaseMessage
+    public interface IHubMessage<TEntity> : IBaseMessage
     {
         /// <summary>
         /// Gets the channel.
