@@ -33,9 +33,9 @@
 			<ItemGroup>
 				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.3" />
 				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
-				<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.3" />
-				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.3" />
-				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.3" />
+				<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.4" />
+				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.4" />
+				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.4" />
 				
 				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.18362.18" />
 				<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.18362.18" />
