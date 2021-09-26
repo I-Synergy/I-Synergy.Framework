@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:ISynergy.Framework.UI.Controls"
     xmlns:behaviors="using:ISynergy.Framework.UI.Behaviors"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -22,7 +21,7 @@
               Margin="10">
 
             <StackPanel Orientation="Vertical">
-                <toolkit:MarkdownTextBlock Margin="0,10" Text="{Binding Description}"/>
+                <TextBlock Margin="0,10" Text="{Binding Description}"/>
                 <ToggleButton Content="Automatic Validation Trigger" IsChecked="{Binding AutomaticValidationTrigger, Mode=TwoWay}" />
                 
                 <RadioButton Content="Null or Empty" GroupName="Validation" IsChecked="{Binding IsNullCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

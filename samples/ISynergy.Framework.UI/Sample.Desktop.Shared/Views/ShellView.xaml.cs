@@ -1,15 +1,12 @@
-﻿using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using ISynergy.Framework.Core.Events;
-
-#if NETFX_CORE
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
 using Windows.System;
-#endif
 
 namespace Sample.Views
 {
@@ -27,11 +24,11 @@ namespace Sample.Views
         /// <summary>
         /// The weak root navigation view loaded event
         /// </summary>
-        private readonly WeakEventListener<ShellView, object, RoutedEventArgs> WeakRootNavigationViewLoadedEvent = null;
+        private readonly WeakEventListener<ShellView, object, RoutedEventArgs> WeakRootNavigationViewLoadedEvent;
         /// <summary>
         /// The weak root navigation view back requested event
         /// </summary>
-        private readonly WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs> WeakRootNavigationViewBackRequestedEvent = null;
+        private readonly WeakEventListener<ShellView, NavigationView, NavigationViewBackRequestedEventArgs> WeakRootNavigationViewBackRequestedEvent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellView" /> class.
@@ -60,7 +57,7 @@ namespace Sample.Views
         }
 
         /// <summary>
-        /// Handles the <see cref="E:NavigatedTo" /> event.
+        /// Handles the OnNavigatedTo event.
         /// </summary>
         /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -80,7 +77,7 @@ namespace Sample.Views
             {
                 if (ViewModel.Context.IsAuthenticated)
                 {
-                    if (ViewModel.Settings_Command.CanExecute(null)) 
+                    if (ViewModel.Settings_Command.CanExecute(null))
                         ViewModel.Settings_Command.Execute(null);
                 }
                 else
@@ -97,16 +94,15 @@ namespace Sample.Views
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void RootNavigationViewLoaded(object sender, RoutedEventArgs e)
         {
-#if NETFX_CORE
             // add keyboard accelerators for backwards navigation
-            var GoBack = new KeyboardAccelerator
+            KeyboardAccelerator GoBack = new()
             {
                 Key = VirtualKey.GoBack
             };
 
             GoBack.Invoked += BackInvoked;
 
-            var AltLeft = new KeyboardAccelerator
+            KeyboardAccelerator AltLeft = new()
             {
                 Key = VirtualKey.Left
             };
@@ -118,11 +114,9 @@ namespace Sample.Views
 
             // ALT routes here
             AltLeft.Modifiers = VirtualKeyModifiers.Menu;
-#endif
         }
 
 
-#if NETFX_CORE
         /// <summary>
         /// Backs the invoked.
         /// </summary>
@@ -133,7 +127,6 @@ namespace Sample.Views
             OnBackRequested();
             args.Handled = true;
         }
-#endif
 
         /// <summary>
         /// Roots the navigation view back requested.
