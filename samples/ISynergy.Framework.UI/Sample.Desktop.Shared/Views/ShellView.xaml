@@ -34,7 +34,7 @@
         </FrameworkNavigation:MenuItemTemplateSelector>
     </c:View.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
         <RelativePanel>
             <NavigationView x:Name="RootNavigationView"
 							RelativePanel.AlignTopWithPanel="True"
@@ -64,7 +64,7 @@
             </NavigationView>
 
             <Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-                <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.75" />
+                <Grid Opacity="0.75" />
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
                     <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>

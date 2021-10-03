@@ -7,8 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:ISynergy.Framework.UI.Controls"
     xmlns:behaviors="using:ISynergy.Framework.UI.Behaviors"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <RelativePanel>
         <Grid x:Name="RootLayout"

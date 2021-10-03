@@ -12,25 +12,18 @@
         <c:BaseMenu x:Name="MenuLayout" 
                     RelativePanel.AlignRightWithPanel="True" 
                     RelativePanel.AlignLeftWithPanel="True" 
-                    RelativePanel.AlignTopWithPanel="True"/>
+                    RelativePanel.AlignTopWithPanel="True"
+                    IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}"/>
 
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalScrollBarVisibility="Disabled" 
                       RelativePanel.AlignLeftWithPanel="True" 
                       RelativePanel.LeftOf="BladeDetails" 
                       RelativePanel.Below="MenuLayout" 
-                      RelativePanel.AlignBottomWithPanel="True">
+                      RelativePanel.AlignBottomWithPanel="True"
+                      IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}">
             <base_controls:BaseList x:Name="DataSummary" />
         </ScrollViewer>
-
-        <Grid x:Name="DisabledLayout"
-              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-              Visibility="{Binding IsPaneEnabled, Converter={StaticResource IsEditableToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-              RelativePanel.AlignLeftWithPanel="True"
-              RelativePanel.AlignTopWithPanel="True"
-              RelativePanel.AlignBottomWithPanel="True"
-              RelativePanel.AlignRightWithPanel="True"
-              Opacity="0.75"/>
 
         <toolkit:BladeView x:Name="BladeDetails" 
                            AutoCollapseCountThreshold="3" 
