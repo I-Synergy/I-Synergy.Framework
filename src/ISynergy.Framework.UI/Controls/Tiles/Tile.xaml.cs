@@ -1,7 +1,9 @@
 ﻿#if (NETFX_CORE || HAS_UNO)
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 #elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -45,7 +47,11 @@ namespace ISynergy.Framework.UI.Controls
         public Modes Mode
         {
             get => (Modes)GetValue(ModeProperty);
-            set => SetValue(ModeProperty, value);
+            set
+            {
+                SetValue(ModeProperty, value);
+                ResizeTile();
+            }
         }
 
         // Using a DependencyProperty as the backing store for Mode.  This enables animation, styling, binding, etc...
@@ -167,6 +173,23 @@ namespace ISynergy.Framework.UI.Controls
         public static readonly DependencyProperty HeaderFontSizeProperty = DependencyProperty.Register(nameof(HeaderFontSize), typeof(int), typeof(Tile), new PropertyMetadata(14));
 
         /// <summary>
+        /// Gets or sets the Icon.
+        /// </summary>
+        /// <value>The size of the header font.</value>
+        public string Icon
+        {
+            get => (string)GetValue(IconProperty);
+            set => SetValue(IconProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for Icon.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// The Icon property
+        /// </summary>
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(string), typeof(Tile), new PropertyMetadata(string.Empty));
+
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Tile"/> class.
         /// </summary>
         public Tile()
@@ -183,9 +206,27 @@ namespace ISynergy.Framework.UI.Controls
             switch (Mode)
             {
                 case Modes.Wide:
+                    Height = 100;
+                    Width = 300;
+                    HeaderFontSize = 14;
+                    TitleFontSize = 10;
+                    CountFontSize = 18;
                     break;
 
                 case Modes.Small:
+                    Width = 72;
+                    Height = 72;
+                    HeaderFontSize = 12;
+                    TitleFontSize = 8;
+                    CountFontSize = 16;
+                    break;
+
+                default:
+                    Width = 100;
+                    Height = 100;
+                    HeaderFontSize = 14;
+                    TitleFontSize = 10;
+                    CountFontSize = 18;
                     break;
             }
         }

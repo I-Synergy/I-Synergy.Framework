@@ -16,41 +16,53 @@
                         RelativePanel.AlignLeftWithPanel="True" 
                         RelativePanel.AlignTopWithPanel="True"
                         IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}">
-            <StackPanel Orientation="Vertical">
-                <Button Command="{Binding SelectSingle_Command}" 
-                        Content="Select single item..." 
-                        Width="200"
-                        Height="35"
-                        Margin="1"/>
-                <Button Command="{Binding SelectMultiple_Command}" 
-                        Content="Select multiple items..."
-                        Width="200"
-                        Height="35"
-                        Margin="1"/>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <Button Command="{Binding SelectSingle_Command}" 
+                            Content="Select single item..." 
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
+                
+                    <Button Command="{Binding SelectMultiple_Command}" 
+                            Content="Select multiple items..."
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
 
-                <Button Command="{Binding ShowDialogYesNo}" 
-                        Content="Show Yes/No dialog..."
-                        Width="200"
-                        Height="35"
-                        Margin="1,20,1,1"/>
+                    <Button Command="{Binding ShowDialogYesNo}" 
+                            Content="Show Yes/No dialog..."
+                            Width="200"
+                            Height="35"
+                            Margin="1,20,1,1"/>
 
-                <Button Command="{Binding ShowDialogYesNoCancel}" 
-                        Content="Show Yes/No/Cancel dialog..."
-                        Width="200"
-                        Height="35"
-                        Margin="1"/>
+                    <Button Command="{Binding ShowDialogYesNoCancel}" 
+                            Content="Show Yes/No/Cancel dialog..."
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
 
-                <Button Command="{Binding ShowDialogOk}" 
-                        Content="Show Ok dialog..."
-                        Width="200"
-                        Height="35"
-                        Margin="1"/>
+                    <Button Command="{Binding ShowDialogOk}" 
+                            Content="Show Ok dialog..."
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
 
-                <Button Command="{Binding ShowDialogOkCancel}" 
-                        Content="Show Ok/Cancel dialog..."
-                        Width="200"
-                        Height="35"
-                        Margin="1"/>
+                    <Button Command="{Binding ShowDialogOkCancel}" 
+                            Content="Show Ok/Cancel dialog..."
+                            Width="200"
+                            Height="35"
+                            Margin="1"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <c:Tile Title="Title" Icon="{StaticResource address}" />
+                    <c:Tile Title="Title" Icon="{StaticResource accounting}"/>
+                    <c:Tile Title="Title" Header="Header" Count="5" Icon="{StaticResource atm}"/>
+                    <c:Tile Title="Title" Header="Header" Count="Count" Icon="{StaticResource admin}"/>
+                    <c:Tile Title="Title" Header="Header (small)" Mode="Small" Count="Count" Icon="{StaticResource admin}"/>
+                    <c:Tile Title="Title" Header="Header (wide)" Mode="Wide"  Count="Count" Icon="{StaticResource admin}"/>
+                </StackPanel>
             </StackPanel>
         </ContentControl>
 

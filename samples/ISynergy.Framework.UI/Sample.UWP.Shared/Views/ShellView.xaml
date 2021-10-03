@@ -72,7 +72,9 @@
 							ItemInvoked="NavigationItemInvoked"
 							IsSettingsVisible="{Binding Context.IsAuthenticated, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                             PaneDisplayMode="Left"
-                            Canvas.ZIndex="0">
+                            DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
+                            Canvas.ZIndex="0"
+                            IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}">
 
 				<Frame x:Name="ContentRootFrame"
 						   Margin="10"
@@ -85,8 +87,7 @@
 					</not_wasm:Frame.ContentTransitions>
 				</Frame>
 			</muxc:NavigationView>
-        <Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-				<Grid Opacity="0.75" />
+			<Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
 				<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <muxc:ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
 					<TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
