@@ -57,10 +57,7 @@ namespace ISynergy.Framework.UI.Services
         public object Frame
         {
             get => _frame ??= (Frame)Window.Current.Content;
-            set
-            {
-                _frame = (Frame)value;
-            }
+            set => _frame = (Frame)value;
         }
 
         /// <summary>

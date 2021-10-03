@@ -10,20 +10,20 @@
     d:DesignWidth="400">
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-        <Button x:Name="ButtonSubmit"
-                        Content="{m:LanguageResource Key=Ok}"
-                        Command="{Binding Submit_Command}"
-                        CommandParameter="{Binding SelectedItem}"
-                        Margin="{ThemeResource ContentDialogButton1HostMargin}"
-                        MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
-                        MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
-                        MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" />
-        <Button x:Name="ButtonCancel"
-                        Content="{m:LanguageResource Key=Cancel}"
-                        Command="{Binding Close_Command}"
-                        Margin="{ThemeResource ContentDialogButton2HostMargin}"
-                        MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
-                        MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
-                        MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" />
+        <Button
+            Content="{m:LanguageResource Key=Ok}"
+            Command="{Binding Submit_Command}"
+            CommandParameter="{Binding SelectedItem}"
+            Margin="{ThemeResource ContentDialogButton1HostMargin}"
+            MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
+            MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
+            MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" />
+        <Button
+            Content="{m:LanguageResource Key=Cancel}"
+            Command="{Binding Close_Command}"
+            Margin="{ThemeResource ContentDialogButton2HostMargin}"
+            MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
+            MinHeight="{ThemeResource ContentDialogButtonMinHeight}"
+            MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" />
     </StackPanel>
 </UserControl>

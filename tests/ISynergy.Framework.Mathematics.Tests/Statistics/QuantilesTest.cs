@@ -1,11 +1,11 @@
-﻿namespace ISynergy.Framework.Core.Tests.Statistics
+﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ISynergy.Framework.Mathematics.Statistics;
 
     [TestClass]
-    class QuantilesTest
+    public class QuantilesTest
     {
         private static readonly double[] EVEN_DATA = new double[] { 8.2, 6.2, 10.2, 20.2, 16.2, 15.2, 13.2, 3.2, 7.2, 8.2 };
         private static readonly double[] ODD_DATA = new double[] { 8.2, 6.2, 10.2, 9.2, 20.2, 16.2, 15.2, 13.2, 3.2, 7.2, 8.2 };

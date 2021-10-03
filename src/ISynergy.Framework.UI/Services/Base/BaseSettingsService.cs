@@ -43,10 +43,7 @@ namespace ISynergy.Framework.UI.Services.Base
                 return (string)setting;
             }
 
-            set
-            {
-                localSettings.Values[nameof(Color)] = value;
-            }
+            set => localSettings.Values[nameof(Color)] = value;
         }
 
         /// <summary>
@@ -68,10 +65,7 @@ namespace ISynergy.Framework.UI.Services.Base
                 return (string)setting;
             }
 
-            set
-            {
-                localSettings.Values[nameof(Culture)] = value;
-            }
+            set => localSettings.Values[nameof(Culture)] = value;
         }
 
         /// <summary>
@@ -93,10 +87,7 @@ namespace ISynergy.Framework.UI.Services.Base
                 return (bool)setting;
             }
 
-            set
-            {
-                localSettings.Values[nameof(IsFullscreen)] = value;
-            }
+            set => localSettings.Values[nameof(IsFullscreen)] = value;
         }
 
         /// <summary>
@@ -118,10 +109,7 @@ namespace ISynergy.Framework.UI.Services.Base
                 return (string)setting;
             }
 
-            set
-            {
-                localSettings.Values[nameof(DefaultUser)] = value;
-            }
+            set => localSettings.Values[nameof(DefaultUser)] = value;
         }
 
         /// <summary>
@@ -143,10 +131,7 @@ namespace ISynergy.Framework.UI.Services.Base
                 return setting.ToString();
             }
 
-            set
-            {
-                localSettings.Values[nameof(Users)] = value;
-            }
+            set => localSettings.Values[nameof(Users)] = value;
         }
 
         /// <summary>
@@ -167,10 +152,7 @@ namespace ISynergy.Framework.UI.Services.Base
 
                 return (string)setting;
             }
-            set
-            {
-                localSettings.Values[nameof(RefreshToken)] = value;
-            }
+            set => localSettings.Values[nameof(RefreshToken)] = value;
         }
 
         /// <summary>
@@ -191,10 +173,7 @@ namespace ISynergy.Framework.UI.Services.Base
 
                 return (bool)setting;
             }
-            set
-            {
-                localSettings.Values[nameof(IsAutoLogin)] = value;
-            }
+            set => localSettings.Values[nameof(IsAutoLogin)] = value;
         }
 
         /// <summary>
@@ -216,10 +195,7 @@ namespace ISynergy.Framework.UI.Services.Base
                 return Convert.FromBase64String(setting.ToString());
             }
 
-            set
-            {
-                localSettings.Values[nameof(Wallpaper)] = Convert.ToBase64String(value);
-            }
+            set => localSettings.Values[nameof(Wallpaper)] = Convert.ToBase64String(value);
         }
 
         /// <summary>
@@ -240,10 +216,7 @@ namespace ISynergy.Framework.UI.Services.Base
 
                 return (bool)setting;
             }
-            set
-            {
-                localSettings.Values[nameof(IsUpdate)] = value;
-            }
+            set => localSettings.Values[nameof(IsUpdate)] = value;
         }
 
         /// <summary>
@@ -264,10 +237,7 @@ namespace ISynergy.Framework.UI.Services.Base
 
                 return (bool)setting;
             }
-            set
-            {
-                localSettings.Values[nameof(IsAdvanced)] = value;
-            }
+            set => localSettings.Values[nameof(IsAdvanced)] = value;
         }
     }
 }

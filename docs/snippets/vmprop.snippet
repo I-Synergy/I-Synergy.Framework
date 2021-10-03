@@ -24,15 +24,16 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[/// <summary>
-/// Gets or sets the $name$ property value.
-/// </summary>
-public $type$ $name$
-{
-	get { return GetValue<$type$>(); }
-	set { SetValue(value); }
-}
-]]>
+            <![CDATA[
+            /// <summary>
+            /// Gets or sets the $name$ property value.
+            /// </summary>
+            public $type$ $name$
+            {
+                get => GetValue<$type$>();
+                set => SetValue(value);
+            }
+            ]]>
             </Code>
         </Snippet>
     </CodeSnippet>

@@ -62,14 +62,8 @@ namespace ISynergy.Framework.UI.Controls
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public string DarkResourcesPath
         {
-            get
-            {
-                return darkResourcesPath;
-            }
-            set
-            {
-                darkResourcesPath = value;
-            }
+            get => darkResourcesPath;
+            set => darkResourcesPath = value;
         }
 
         /// <summary>
@@ -79,14 +73,8 @@ namespace ISynergy.Framework.UI.Controls
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public string LightResourcesPath
         {
-            get
-            {
-                return lightResourcesPath;
-            }
-            set
-            {
-                lightResourcesPath = value;
-            }
+            get => lightResourcesPath;
+            set => lightResourcesPath = value;
         }
 
         /// <summary>
@@ -96,14 +84,8 @@ namespace ISynergy.Framework.UI.Controls
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public string HighContrastResourcesPath
         {
-            get
-            {
-                return highContrastResourcesPath;
-            }
-            set
-            {
-                highContrastResourcesPath = value;
-            }
+            get => highContrastResourcesPath;
+            set => highContrastResourcesPath = value;
         }
 
         /// <summary>

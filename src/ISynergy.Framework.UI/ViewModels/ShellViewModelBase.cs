@@ -74,8 +74,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The display mode.</value>
         public SplitViewDisplayMode DisplayMode
         {
-            get { return GetValue<SplitViewDisplayMode>(); }
-            set { SetValue(value); }
+            get => GetValue<SplitViewDisplayMode>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -84,8 +84,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The color of the foreground.</value>
         public SolidColorBrush ForegroundColor
         {
-            get { return GetValue<SolidColorBrush>() ?? GetStandardTextColorBrush(); }
-            set { SetValue(value); }
+            get => GetValue<SolidColorBrush>() ?? GetStandardTextColorBrush();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The display name.</value>
         public string DisplayName
         {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -310,8 +310,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The primary items.</value>
         public ObservableCollection<NavigationItem> PrimaryItems
         {
-            get { return GetValue<ObservableCollection<NavigationItem>>(); }
-            set { SetValue(value); }
+            get => GetValue<ObservableCollection<NavigationItem>>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -320,8 +320,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The primary items.</value>
         public ObservableCollection<NavigationItem> SecondaryItems
         {
-            get { return GetValue<ObservableCollection<NavigationItem>>(); }
-            set { SetValue(value); }
+            get => GetValue<ObservableCollection<NavigationItem>>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -330,8 +330,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The last selected item.</value>
         public NavigationItem LastSelectedItem
         {
-            get { return GetValue<NavigationItem>(); }
-            set { SetValue(value); }
+            get => GetValue<NavigationItem>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -340,11 +340,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The selected item.</value>
         public NavigationItem SelectedItem
         {
-            get { return GetValue<NavigationItem>(); }
-            set
-            {
-                SetValue(value);
-            }
+            get => GetValue<NavigationItem>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -353,8 +350,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The query.</value>
         public string Query
         {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -363,8 +360,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The caption.</value>
         public string Caption
         {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -373,8 +370,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value><c>true</c> if this instance is update available; otherwise, <c>false</c>.</value>
         public bool IsUpdateAvailable
         {
-            get { return GetValue<bool>(); }
-            set { SetValue(value); }
+            get => GetValue<bool>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -383,11 +380,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The wallpaper.</value>
         public ImageSource Wallpaper
         {
-            get { return GetValue<ImageSource>(); }
-            set
-            {
-                SetValue(value);
-            }
+            get => GetValue<ImageSource>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -396,8 +390,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The width.</value>
         public double Width
         {
-            get { return GetValue<double>(); }
-            set { SetValue(value); }
+            get => GetValue<double>();
+            set => SetValue(value);
         }
 
         /// <summary>

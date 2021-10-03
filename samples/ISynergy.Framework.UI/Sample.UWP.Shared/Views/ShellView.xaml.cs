@@ -16,7 +16,7 @@ namespace Sample.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ShellView : IShellView
+    public sealed partial class ShellView : ISynergy.Framework.UI.Controls.View, IShellView
     {
         /// <summary>
         /// Gets the view model.

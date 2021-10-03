@@ -122,6 +122,7 @@
     <AndroidResource Include="Resources\drawable\splash.xml" />
   </ItemGroup>
   <Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.Shared\Sample.Shared.projitems')" />
+  <Import Project="..\Sample.UWP.Shared\Sample.UWP.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->
   <!-- This will force the generation of the APK when not building inside visual studio -->

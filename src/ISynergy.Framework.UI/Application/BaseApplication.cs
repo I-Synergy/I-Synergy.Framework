@@ -433,7 +433,7 @@ namespace ISynergy.Framework.UI
 
                 return _factory;
             }
-            set { _factory = value; }
+            set => _factory = value;
         }
 
         /// <summary>

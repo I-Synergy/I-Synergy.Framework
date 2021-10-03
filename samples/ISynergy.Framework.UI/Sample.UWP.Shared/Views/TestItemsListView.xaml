@@ -9,16 +9,17 @@
         mc:Ignorable="d">
 
     <RelativePanel>
-        <CommandBar x:Name="MenuLayout" DefaultLabelPosition="Right" OverflowButtonVisibility="Collapsed" Background="Transparent" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True">
-            <CommandBar.Content>
-                <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}"/>
-            </CommandBar.Content>
-            <CommandBar.PrimaryCommands>
-                <AppBarButton x:Name="Button_Add" Style="{StaticResource IconAppBarButtonStyle}" Content="{StaticResource plus}" Command="{Binding Add_Command}" Label="{m:LanguageResource Key=Add}" ToolTipService.ToolTip="{m:LanguageResource Key=Add}"/>
-            </CommandBar.PrimaryCommands>
-        </CommandBar>
+        <c:BaseMenu x:Name="MenuLayout" 
+                    RelativePanel.AlignRightWithPanel="True" 
+                    RelativePanel.AlignLeftWithPanel="True" 
+                    RelativePanel.AlignTopWithPanel="True"/>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" RelativePanel.AlignLeftWithPanel="True" RelativePanel.LeftOf="BladeDetails" RelativePanel.Below="MenuLayout" RelativePanel.AlignBottomWithPanel="True">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                      VerticalScrollBarVisibility="Disabled" 
+                      RelativePanel.AlignLeftWithPanel="True" 
+                      RelativePanel.LeftOf="BladeDetails" 
+                      RelativePanel.Below="MenuLayout" 
+                      RelativePanel.AlignBottomWithPanel="True">
             <base_controls:BaseList x:Name="DataSummary" />
         </ScrollViewer>
 
