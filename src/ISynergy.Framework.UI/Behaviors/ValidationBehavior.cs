@@ -162,8 +162,8 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <value>The name of the property.</value>
         public string PropertyName
         {
-            get { return (string)GetValue(PropertyNameProperty); }
-            set { SetValue(PropertyNameProperty, value); }
+            get => (string)GetValue(PropertyNameProperty);
+            set => SetValue(PropertyNameProperty, value);
         }
 
         /// <summary>

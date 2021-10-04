@@ -42,8 +42,8 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <value>The selected items.</value>
         public IList<object> SelectedItems
         {
-            get { return (IList<object>)GetValue(SelectedItemsProperty); }
-            set { SetValue(SelectedItemsProperty, value); }
+            get => (IList<object>)GetValue(SelectedItemsProperty);
+            set => SetValue(SelectedItemsProperty, value);
         }
 
         /// <summary>

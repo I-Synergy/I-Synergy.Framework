@@ -11,8 +11,8 @@
     PrimaryButtonCommand="{Binding Submit_Command}"
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
     SecondaryButtonCommand="{Binding Close_Command}"
-    PrimaryButtonStyle="{ThemeResource DefaultButtonStyle}"
-    SecondaryButtonStyle="{ThemeResource DefaultButtonStyle}">
+    PrimaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
+    SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
 
     <StackPanel Orientation="Vertical">
         <RadioButton x:Name="Button_Language_nl" Content="{m:LanguageResource Key=Language_Dutch}" GroupName="Language" Command="{Binding SetLanguage_Command}" CommandParameter="nl" />

@@ -17,7 +17,7 @@ namespace ISynergy.Framework.UI.Controls
     /// Implements the <see cref="UserControl" />
     /// </summary>
     /// <seealso cref="UserControl" />
-    public sealed partial class ImageView
+    public sealed partial class ImageView : UserControl
     {
         /// <summary>
         /// The source property
@@ -43,8 +43,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The source.</value>
         public ImageSource Source
         {
-            get { return (ImageSource)GetValue(SourceProperty); }
-            set { SetValue(SourceProperty, value); }
+            get => (ImageSource)GetValue(SourceProperty);
+            set => SetValue(SourceProperty, value);
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The place holder.</value>
         public ImageSource PlaceHolder
         {
-            get { return (ImageSource)GetValue(PlaceHolderProperty); }
-            set { SetValue(PlaceHolderProperty, value); }
+            get => (ImageSource)GetValue(PlaceHolderProperty);
+            set => SetValue(PlaceHolderProperty, value);
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The stretch.</value>
         public Stretch Stretch
         {
-            get { return (Stretch)GetValue(StretchProperty); }
-            set { SetValue(StretchProperty, value); }
+            get => (Stretch)GetValue(StretchProperty);
+            set => SetValue(StretchProperty, value);
         }
 
         /// <summary>

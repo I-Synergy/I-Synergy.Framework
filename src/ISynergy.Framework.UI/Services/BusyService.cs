@@ -33,7 +33,7 @@ namespace ISynergy.Framework.UI.Services
         /// <value><c>true</c> if this instance is busy; otherwise, <c>false</c>.</value>
         public bool IsBusy
         {
-            get { return GetValue<bool>(); }
+            get => GetValue<bool>();
             set
             {
                 SetValue(value);
@@ -47,8 +47,8 @@ namespace ISynergy.Framework.UI.Services
         /// <value><c>true</c> if this instance is enabled; otherwise, <c>false</c>.</value>
         public bool IsEnabled
         {
-            get { return GetValue<bool>(); }
-            set { SetValue(value); }
+            get => GetValue<bool>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -57,8 +57,8 @@ namespace ISynergy.Framework.UI.Services
         /// <value>The busy message.</value>
         public string BusyMessage
         {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
 
         /// <summary>

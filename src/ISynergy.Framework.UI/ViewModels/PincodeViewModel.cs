@@ -15,13 +15,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets the title.
         /// </summary>
         /// <value>The title.</value>
-        public override string Title
-        {
-            get
-            {
-                return BaseCommonServices.LanguageService.GetString("Pin");
-            }
-        }
+        public override string Title => BaseCommonServices.LanguageService.GetString("Pin");
 
         /// <summary>
         /// Gets or sets the Language property value.
@@ -29,8 +23,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The pincode.</value>
         public string Pincode
         {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -39,8 +33,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <value>The property.</value>
         public object Property
         {
-            get { return GetValue<object>(); }
-            private set { SetValue(value); }
+            get => GetValue<object>();
+            private set => SetValue(value);
         }
 
         /// <summary>

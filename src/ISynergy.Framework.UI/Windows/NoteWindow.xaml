@@ -11,8 +11,8 @@
     PrimaryButtonCommand="{Binding Submit_Command}"
     PrimaryButtonCommandParameter="{Binding SelectedItem}"
     SecondaryButtonCommand="{Binding Close_Command}"
-    PrimaryButtonStyle="{ThemeResource DefaultButtonStyle}"
-    SecondaryButtonStyle="{ThemeResource DefaultButtonStyle}">
+    PrimaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}"
+    SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
 
     <Grid>
         <TextBox x:Name="TextBox_Memo" 

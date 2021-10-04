@@ -17,7 +17,7 @@ namespace ISynergy.Framework.UI.Controls
     /// </summary>
     /// <seealso cref="CommandBar" />
     /// <seealso cref="IComponentConnector" />
-    public sealed partial class BaseMenu
+    public sealed partial class BaseMenu : CommandBar
     {
         /// <summary>
         /// The refresh enabled property
@@ -31,8 +31,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The refresh enabled.</value>
         public Visibility Refresh_Enabled
         {
-            get { return (Visibility)GetValue(Refresh_EnabledProperty); }
-            set { SetValue(Refresh_EnabledProperty, value); }
+            get => (Visibility)GetValue(Refresh_EnabledProperty);
+            set => SetValue(Refresh_EnabledProperty, value);
         }
 
         /// <summary>

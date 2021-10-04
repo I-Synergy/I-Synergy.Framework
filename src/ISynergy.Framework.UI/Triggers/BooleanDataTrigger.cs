@@ -22,8 +22,8 @@ namespace ISynergy.Framework.UI.Triggers
         /// <value><c>true</c> if [data value]; otherwise, <c>false</c>.</value>
         public bool DataValue
         {
-            get { return (bool)GetValue(DataValueProperty); }
-            set { SetValue(DataValueProperty, value); }
+            get => (bool)GetValue(DataValueProperty);
+            set => SetValue(DataValueProperty, value);
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace ISynergy.Framework.UI.Triggers
         /// <value><c>true</c> if [trigger value]; otherwise, <c>false</c>.</value>
         public bool TriggerValue
         {
-            get { return (bool)GetValue(TriggerValueProperty); }
-            set { SetValue(TriggerValueProperty, value); }
+            get => (bool)GetValue(TriggerValueProperty);
+            set => SetValue(TriggerValueProperty, value);
         }
 
         /// <summary>

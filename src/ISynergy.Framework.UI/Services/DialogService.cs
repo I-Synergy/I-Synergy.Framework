@@ -7,10 +7,18 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Controls;
 using System;
 using System.Threading.Tasks;
+
+
 #if (NETFX_CORE || HAS_UNO)
 using Windows.UI.Xaml.Controls;
+using Application = Windows.UI.Xaml.Application;
+using Style = Windows.UI.Xaml.Style;
+using Setter = Windows.UI.Xaml.Setter;
 #elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml.Controls;
+using Application = Microsoft.UI.Xaml.Application;
+using Style = Microsoft.UI.Xaml.Style;
+using Setter = Microsoft.UI.Xaml.Setter;
 #endif
 
 namespace ISynergy.Framework.UI.Services
@@ -128,18 +136,26 @@ namespace ISynergy.Framework.UI.Services
                 case MessageBoxButton.OKCancel:
                     dialog.PrimaryButtonText = _languageService.GetString("Ok");
                     dialog.CloseButtonText = _languageService.GetString("Cancel");
+                    dialog.PrimaryButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    dialog.CloseButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                     break;
                 case MessageBoxButton.YesNoCancel:
                     dialog.PrimaryButtonText = _languageService.GetString("Yes");
                     dialog.SecondaryButtonText = _languageService.GetString("No");
                     dialog.CloseButtonText = _languageService.GetString("Cancel");
+                    dialog.PrimaryButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    dialog.SecondaryButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    dialog.CloseButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                     break;
                 case MessageBoxButton.YesNo:
                     dialog.PrimaryButtonText = _languageService.GetString("Yes");
                     dialog.CloseButtonText = _languageService.GetString("No");
+                    dialog.PrimaryButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+                    dialog.CloseButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                     break;
                 default:
                     dialog.CloseButtonText = _languageService.GetString("Ok");
+                    dialog.CloseButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
                     break;
             }
 
@@ -229,9 +245,14 @@ namespace ISynergy.Framework.UI.Services
         private async Task CreateDialogAsync<TEntity>(Window dialog, IViewModelDialog<TEntity> viewmodel)
         {
             dialog.DataContext = viewmodel;
+
             dialog.PrimaryButtonCommand = viewmodel.Submit_Command;
             dialog.SecondaryButtonCommand = viewmodel.Close_Command;
             dialog.CloseButtonCommand = viewmodel.Close_Command;
+
+            dialog.PrimaryButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+            dialog.SecondaryButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
+            dialog.CloseButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
 
             viewmodel.Submitted += (sender, e) => CloseDialog(dialog);
             viewmodel.Cancelled += (sender, e) => CloseDialog(dialog);

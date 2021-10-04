@@ -18,6 +18,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets or sets a value indicating whether this instance is pane enabled.
         /// </summary>
         /// <value><c>true</c> if this instance is pane enabled; otherwise, <c>false</c>.</value>
-        bool IsPaneEnabled { get; set; }
+        bool IsPaneVisible { get; set; }
     }
 }

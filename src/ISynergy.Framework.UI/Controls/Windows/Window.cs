@@ -27,13 +27,21 @@ namespace ISynergy.Framework.UI.Controls
     public partial class Window : ContentDialog, IWindow
     {
         /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Window()
+        {
+            CornerRadius = new CornerRadius(8);
+        }
+
+        /// <summary>
         /// Gets or sets the data context for a FrameworkElement. A common use of a data context is when a **FrameworkElement** uses the {Binding} markup extension and participates in data binding.
         /// </summary>
         /// <value>The data context.</value>
         public new IViewModel DataContext
         {
-            get { return base.DataContext as IViewModel; }
-            set { base.DataContext = value; }
+            get => base.DataContext as IViewModel;
+            set => base.DataContext = value;
         }
 
         /// <summary>

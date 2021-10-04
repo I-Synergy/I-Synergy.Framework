@@ -167,8 +167,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value><c>true</c> if show diagnostics; otherwise, <c>false</c>.</value>
         public bool ShowDiagnostics
         {
-            get { return (bool)GetValue(ShowDiagnosticsProperty); }
-            set { SetValue(ShowDiagnosticsProperty, value); }
+            get => (bool)GetValue(ShowDiagnosticsProperty);
+            set => SetValue(ShowDiagnosticsProperty, value);
         }
 
         /// <summary>
@@ -193,8 +193,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The output stream.</value>
         public InMemoryRandomAccessStream OutputStream
         {
-            get { return (InMemoryRandomAccessStream)GetValue(OutputStreamProperty); }
-            private set { SetValue(OutputStreamProperty, value); }
+            get => (InMemoryRandomAccessStream)GetValue(OutputStreamProperty);
+            private set => SetValue(OutputStreamProperty, value);
         }
 
         /// <summary>
@@ -210,8 +210,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The error stream.</value>
         public InMemoryRandomAccessStream ErrorStream
         {
-            get { return (InMemoryRandomAccessStream)GetValue(ErrorStreamProperty); }
-            private set { SetValue(ErrorStreamProperty, value); }
+            get => (InMemoryRandomAccessStream)GetValue(ErrorStreamProperty);
+            private set => SetValue(ErrorStreamProperty, value);
         }
     }
 }

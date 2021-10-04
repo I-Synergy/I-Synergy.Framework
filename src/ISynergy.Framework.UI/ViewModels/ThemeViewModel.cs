@@ -19,13 +19,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets the title.
         /// </summary>
         /// <value>The title.</value>
-        public override string Title
-        {
-            get
-            {
-                return BaseCommonServices.LanguageService.GetString("Colors");
-            }
-        }
+        public override string Title => BaseCommonServices.LanguageService.GetString("Colors");
 
         /// <summary>
         /// The settings service.

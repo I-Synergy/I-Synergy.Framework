@@ -64,8 +64,8 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <value>The action.</value>
         public AuthenticationAction Action
         {
-            get { return (AuthenticationAction)GetValue(ActionProperty); }
-            set { SetValue(ActionProperty, value); }
+            get => (AuthenticationAction)GetValue(ActionProperty);
+            set => SetValue(ActionProperty, value);
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <value>The authentication tag.</value>
         public string AuthenticationTag
         {
-            get { return (string)GetValue(AuthenticationTagProperty); }
-            set { SetValue(AuthenticationTagProperty, value); }
+            get => (string)GetValue(AuthenticationTagProperty);
+            set => SetValue(AuthenticationTagProperty, value);
         }
 
         /// <summary>

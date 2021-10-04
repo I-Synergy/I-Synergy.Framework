@@ -42,8 +42,8 @@ namespace ISynergy.Framework.Mvvm
         /// <value>The blades.</value>
         public ObservableCollection<IView> Blades
         {
-            get { return GetValue<ObservableCollection<IView>>(); }
-            set { SetValue(value); }
+            get => GetValue<ObservableCollection<IView>>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -52,18 +52,18 @@ namespace ISynergy.Framework.Mvvm
         /// <value>The items.</value>
         public ObservableCollection<TEntity> Items
         {
-            get { return GetValue<ObservableCollection<TEntity>>(); }
-            set { SetValue(value); }
+            get => GetValue<ObservableCollection<TEntity>>();
+            set => SetValue(value);
         }
 
         /// <summary>
         /// Gets or sets the IsPaneEnabled property value.
         /// </summary>
         /// <value><c>true</c> if this instance is pane enabled; otherwise, <c>false</c>.</value>
-        public bool IsPaneEnabled
+        public bool IsPaneVisible
         {
-            get { return GetValue<bool>(); }
-            set { SetValue(value); }
+            get => GetValue<bool>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace ISynergy.Framework.Mvvm
         /// <value>The selected item.</value>
         public TEntity SelectedItem
         {
-            get { return GetValue<TEntity>(); }
-            set { SetValue(value); }
+            get => GetValue<TEntity>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace ISynergy.Framework.Mvvm
         /// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
         public bool IsNew
         {
-            get { return GetValue<bool>(); }
-            set { SetValue(value); }
+            get => GetValue<bool>();
+            set => SetValue(value);
         }
 
         /// <summary>

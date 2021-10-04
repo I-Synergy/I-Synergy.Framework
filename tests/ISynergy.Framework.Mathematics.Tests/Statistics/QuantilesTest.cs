@@ -1,16 +1,22 @@
-﻿namespace ISynergy.Framework.Core.Tests.Statistics
-{
-    using ISynergy.Framework.Mathematics;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ISynergy.Framework.Mathematics.Statistics;
+﻿using ISynergy.Framework.Mathematics;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Statistics;
 
+namespace ISynergy.Framework.Mathematics.Tests
+{
+    /// <summary>
+    /// Quantiles test.
+    /// </summary>
     [TestClass]
-    class QuantilesTest
+    public class QuantilesTest
     {
         private static readonly double[] EVEN_DATA = new double[] { 8.2, 6.2, 10.2, 20.2, 16.2, 15.2, 13.2, 3.2, 7.2, 8.2 };
         private static readonly double[] ODD_DATA = new double[] { 8.2, 6.2, 10.2, 9.2, 20.2, 16.2, 15.2, 13.2, 3.2, 7.2, 8.2 };
         private static readonly double[] TEST_PROBABILITIES = new double[] { 0.0, 0.25, 0.5, 0.75, 1.0 };
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile1_Even()
         {
@@ -19,6 +25,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile1_Odd()
         {
@@ -27,6 +36,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile2_Even()
         {
@@ -35,6 +47,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile2_Odd()
         {
@@ -43,6 +58,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile3_Even()
         {
@@ -51,6 +69,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile3_Odd()
         {
@@ -59,6 +80,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile4_Even()
         {
@@ -67,6 +91,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile4_Odd()
         {
@@ -75,6 +102,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile5_Even()
         {
@@ -83,6 +113,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile5_Odd()
         {
@@ -91,6 +124,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile6_Even()
         {
@@ -99,6 +135,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile6_Odd()
         {
@@ -107,6 +146,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile7_Even()
         {
@@ -115,6 +157,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile7_Odd()
         {
@@ -123,6 +168,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile8_Even()
         {
@@ -131,6 +179,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile8_Odd()
         {
@@ -139,6 +190,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile even test
+        /// </summary>
         [TestMethod]
         public void Quantile9_Even()
         {
@@ -147,6 +201,9 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Quantile odd test
+        /// </summary>
         [TestMethod]
         public void Quantile9_Odd()
         {
@@ -155,6 +212,12 @@
             Assert_AreEqual(expected, actual);
         }
 
+        /// <summary>
+        /// Assert equal test.
+        /// </summary>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
+        /// <param name="rtol"></param>
         private static void Assert_AreEqual(double[] expected, double[] actual, double rtol = 1e-8)
         {
             Assert.IsTrue(expected.IsEqual(actual, rtol: rtol));

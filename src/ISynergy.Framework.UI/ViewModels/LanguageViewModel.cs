@@ -20,13 +20,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets the title.
         /// </summary>
         /// <value>The title.</value>
-        public override string Title
-        {
-            get
-            {
-                return BaseCommonServices.LanguageService.GetString("Language");
-            }
-        }
+        public override string Title => BaseCommonServices.LanguageService.GetString("Language");
 
         /// <summary>
         /// The localization functions

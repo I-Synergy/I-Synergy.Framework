@@ -22,16 +22,9 @@ namespace ISynergy.Framework.Mathematics.Decompositions
     ///     </para>
     ///     <para>
     ///         If you need to compute a LU decomposition for matrices with data types other than
-    ///         double, see <see cref="LuDecompositionF" />, <see cref="LuDecompositionD" />. If you
-    ///         need to compute a LU decomposition for a jagged matrix, see <see cref="JaggedLuDecomposition" />,
-    ///         <see cref="JaggedLuDecompositionF" />, and <see cref="JaggedLuDecompositionD" />.
+    ///         double. If you need to compute a LU decomposition for a jagged matrix. />.
     ///     </para>
     /// </remarks>
-    /// <seealso cref="CholeskyDecomposition" />
-    /// <seealso cref="EigenvalueDecomposition" />
-    /// <seealso cref="SingularValueDecomposition" />
-    /// <seealso cref="JaggedEigenvalueDecomposition" />
-    /// <seealso cref="JaggedSingularValueDecomposition" />
     public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<double>
     {
         private int cols;
