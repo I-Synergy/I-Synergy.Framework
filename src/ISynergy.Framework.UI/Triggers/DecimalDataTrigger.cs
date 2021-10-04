@@ -23,8 +23,8 @@ namespace ISynergy.Framework.UI.Triggers
         /// <value>The data value.</value>
         public decimal DataValue
         {
-            get { return (decimal)GetValue(DataValueProperty); }
-            set { SetValue(DataValueProperty, value); }
+            get => (decimal)GetValue(DataValueProperty);
+            set => SetValue(DataValueProperty, value);
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace ISynergy.Framework.UI.Triggers
         /// <value>The trigger value.</value>
         public decimal TriggerValue
         {
-            get { return (decimal)GetValue(TriggerValueProperty); }
-            set { SetValue(TriggerValueProperty, value); }
+            get => (decimal)GetValue(TriggerValueProperty);
+            set => SetValue(TriggerValueProperty, value);
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace ISynergy.Framework.UI.Triggers
         /// <value>The operator.</value>
         public string Operator
         {
-            get { return (string)GetValue(OperatorProperty); }
-            set { SetValue(OperatorProperty, value); }
+            get => (string)GetValue(OperatorProperty);
+            set => SetValue(OperatorProperty, value);
         }
 
         /// <summary>

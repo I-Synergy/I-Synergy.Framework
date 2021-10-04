@@ -16,7 +16,7 @@ namespace ISynergy.Framework.UI
     /// <summary>
     /// Class LanguageWindow. This class cannot be inherited.
     /// </summary>
-    public sealed partial class LanguageWindow : ILanguageWindow
+    public sealed partial class LanguageWindow : ISynergy.Framework.UI.Controls.Window, ILanguageWindow
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LanguageWindow"/> class.

@@ -1,7 +1,9 @@
 ﻿#if (NETFX_CORE || HAS_UNO)
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 #elif (NET5_0 && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -44,8 +46,12 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The mode.</value>
         public Modes Mode
         {
-            get { return (Modes)GetValue(ModeProperty); }
-            set { SetValue(ModeProperty, value); }
+            get => (Modes)GetValue(ModeProperty);
+            set
+            {
+                SetValue(ModeProperty, value);
+                ResizeTile();
+            }
         }
 
         // Using a DependencyProperty as the backing store for Mode.  This enables animation, styling, binding, etc...
@@ -60,8 +66,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The count.</value>
         public string Count
         {
-            get { return (string)GetValue(CountProperty); }
-            set { SetValue(CountProperty, value); }
+            get => (string)GetValue(CountProperty);
+            set => SetValue(CountProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for Count.  This enables animation, styling, binding, etc...
@@ -76,8 +82,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The size of the count font.</value>
         public double CountFontSize
         {
-            get { return (double)GetValue(CountFontSizeProperty); }
-            set { SetValue(CountFontSizeProperty, value); }
+            get => (double)GetValue(CountFontSizeProperty);
+            set => SetValue(CountFontSizeProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for CountFontSize.  This enables animation, styling, binding, etc...
@@ -92,8 +98,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The title.</value>
         public string Title
         {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for Header.  This enables animation, styling, binding, etc...
@@ -108,8 +114,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The size of the title font.</value>
         public int TitleFontSize
         {
-            get { return (int)GetValue(TitleFontSizeProperty); }
-            set { SetValue(TitleFontSizeProperty, value); }
+            get => (int)GetValue(TitleFontSizeProperty);
+            set => SetValue(TitleFontSizeProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for HeaderFontSize.  This enables animation, styling, binding, etc...
@@ -124,8 +130,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The title vertical alignment.</value>
         public VerticalAlignment TitleVerticalAlignment
         {
-            get { return (VerticalAlignment)GetValue(TitleVerticalAlignmentProperty); }
-            set { SetValue(TitleVerticalAlignmentProperty, value); }
+            get => (VerticalAlignment)GetValue(TitleVerticalAlignmentProperty);
+            set => SetValue(TitleVerticalAlignmentProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for HeaderVerticalAlignment.  This enables animation, styling, binding, etc...
@@ -140,8 +146,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The header.</value>
         public object Header
         {
-            get { return GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
+            get => GetValue(HeaderProperty);
+            set => SetValue(HeaderProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for Details.  This enables animation, styling, binding, etc...
@@ -156,8 +162,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The size of the header font.</value>
         public int HeaderFontSize
         {
-            get { return (int)GetValue(HeaderFontSizeProperty); }
-            set { SetValue(HeaderFontSizeProperty, value); }
+            get => (int)GetValue(HeaderFontSizeProperty);
+            set => SetValue(HeaderFontSizeProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for DetailsFontSize.  This enables animation, styling, binding, etc...
@@ -165,6 +171,23 @@ namespace ISynergy.Framework.UI.Controls
         /// The header font size property
         /// </summary>
         public static readonly DependencyProperty HeaderFontSizeProperty = DependencyProperty.Register(nameof(HeaderFontSize), typeof(int), typeof(Tile), new PropertyMetadata(14));
+
+        /// <summary>
+        /// Gets or sets the Icon.
+        /// </summary>
+        /// <value>The size of the header font.</value>
+        public string Icon
+        {
+            get => (string)GetValue(IconProperty);
+            set => SetValue(IconProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for Icon.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// The Icon property
+        /// </summary>
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(string), typeof(Tile), new PropertyMetadata(string.Empty));
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tile"/> class.
@@ -183,9 +206,27 @@ namespace ISynergy.Framework.UI.Controls
             switch (Mode)
             {
                 case Modes.Wide:
+                    Height = 100;
+                    Width = 300;
+                    HeaderFontSize = 14;
+                    TitleFontSize = 10;
+                    CountFontSize = 18;
                     break;
 
                 case Modes.Small:
+                    Width = 72;
+                    Height = 72;
+                    HeaderFontSize = 12;
+                    TitleFontSize = 8;
+                    CountFontSize = 16;
+                    break;
+
+                default:
+                    Width = 100;
+                    Height = 100;
+                    HeaderFontSize = 14;
+                    TitleFontSize = 10;
+                    CountFontSize = 18;
                     break;
             }
         }

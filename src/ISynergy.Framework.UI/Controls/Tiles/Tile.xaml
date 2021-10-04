@@ -1,4 +1,4 @@
-﻿    <Button x:Name="TileControl"
+﻿<Button x:Name="TileControl"
         x:Class="ISynergy.Framework.UI.Controls.Tile"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,12 +9,12 @@
         IsDoubleTapEnabled="False"
         Foreground="White"
         Background="{StaticResource SystemAccentBrush}"
-        Margin="5"
+        Margin="4"
         Height="100"
         Width="100"
         FocusVisualPrimaryBrush="Transparent"
         FocusVisualSecondaryBrush="Transparent">
-    
+
     <Button.Resources>
         <Converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
         <Converters:StringToGeometryConverter x:Key="StringToGeometryConverter" />
@@ -22,7 +22,7 @@
     
     <Button.Template>
         <ControlTemplate TargetType="Button">
-            <Border x:Name="RootGrid" CornerRadius="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Background}">
+            <Border x:Name="RootGrid" CornerRadius="4" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Background}">
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="CommonStates">
                         <VisualState x:Name="Normal">
@@ -66,24 +66,56 @@
                         </VisualState>
                     </VisualStateGroup>
                 </VisualStateManager.VisualStateGroups>
-                
+
                 <ContentPresenter x:Name="ContentPresenter" Margin="4">
                     <ContentPresenter.Content>
                         <RelativePanel x:Name="TileGrid" Margin="4">
-                            <TextBlock RelativePanel.AlignTopWithPanel="True" x:Name="Title" Foreground="{TemplateBinding Foreground}" Text="{Binding Title, ElementName=TileControl}" FontSize="{Binding TitleFontSize, ElementName=TileControl}" VerticalAlignment="{Binding TitleVerticalAlignment, ElementName=TileControl}" TextWrapping="Wrap" Visibility="{Binding Title, ElementName=TileControl, Converter={StaticResource StringToVisibilityConverter}}" />
+                            <TextBlock x:Name="Title" 
+                                       RelativePanel.AlignTopWithPanel="True" 
+                                       Foreground="{TemplateBinding Foreground}" 
+                                       Text="{Binding Title, ElementName=TileControl}" 
+                                       FontSize="{Binding TitleFontSize, ElementName=TileControl}" 
+                                       VerticalAlignment="{Binding TitleVerticalAlignment, ElementName=TileControl}" 
+                                       TextWrapping="Wrap" 
+                                       Visibility="{Binding Title, ElementName=TileControl, Converter={StaticResource StringToVisibilityConverter}}" />
 
-                            <Grid x:Name="IconStack" Height="32" Width="32" RelativePanel.Below="Title" RelativePanel.AlignLeftWithPanel="True" RelativePanel.Above="Header" Margin="10,4">
-                                <Path x:Name="ButtonImage" Fill="{TemplateBinding Foreground}" Opacity="{TemplateBinding Opacity}" Stretch="Uniform" Width="28" Height="28" Margin="0" RenderTransformOrigin="0.5,0.5" Data="{Binding Tag, ElementName=TileControl, Converter={StaticResource StringToGeometryConverter}}" />
+                            <Grid x:Name="IconStack"
+                                  RelativePanel.Below="Title" 
+                                  RelativePanel.AlignLeftWithPanel="True"
+                                  RelativePanel.Above="Header"
+                                  Height="32" 
+                                  Width="32" 
+                                  Margin="10,4">
+                                <Path x:Name="ButtonImage" 
+                                      Fill="{TemplateBinding Foreground}" 
+                                      Opacity="{TemplateBinding Opacity}" 
+                                      Stretch="Uniform" 
+                                      Width="28" 
+                                      Height="28" 
+                                      Margin="0" 
+                                      RenderTransformOrigin="0.5,0.5" 
+                                      Data="{Binding Icon, ElementName=TileControl, Converter={StaticResource StringToGeometryConverter}}" />
                             </Grid>
 
-                            <TextBlock RelativePanel.Above="Header" RelativePanel.AlignRightWith="IconStack" x:Name="Count" Foreground="{TemplateBinding Foreground}" Text="{Binding Count, ElementName=TileControl}" FontSize="{Binding CountFontSize, ElementName=TileControl}" Visibility="{Binding Count, ElementName=TileControl, Converter={StaticResource StringToVisibilityConverter}}" />
+                            <TextBlock x:Name="Count" 
+                                       RelativePanel.Above="Header" 
+                                       RelativePanel.AlignRightWithPanel="True" 
+                                       Foreground="{TemplateBinding Foreground}" 
+                                       Text="{Binding Count, ElementName=TileControl}" 
+                                       FontSize="{Binding CountFontSize, ElementName=TileControl}" 
+                                       Visibility="{Binding Count, ElementName=TileControl, Converter={StaticResource StringToVisibilityConverter}}" />
 
-                            <TextBlock RelativePanel.AlignBottomWithPanel="True" x:Name="Header" Foreground="{TemplateBinding Foreground}" Text="{Binding Header, ElementName=TileControl}" FontSize="{Binding HeaderFontSize, ElementName=TileControl}" VerticalAlignment="Bottom" TextWrapping="Wrap" />
+                            <TextBlock x:Name="Header"
+                                       RelativePanel.AlignBottomWithPanel="True" 
+                                       Foreground="{TemplateBinding Foreground}" 
+                                       Text="{Binding Header, ElementName=TileControl}" 
+                                       FontSize="{Binding HeaderFontSize, ElementName=TileControl}" 
+                                       VerticalAlignment="Bottom" 
+                                       TextWrapping="Wrap" />
                         </RelativePanel>
                     </ContentPresenter.Content>
                 </ContentPresenter>
             </Border>
         </ControlTemplate>
     </Button.Template>
-
 </Button>

@@ -9,7 +9,12 @@ using ISynergy.Framework.UI.Navigation;
 using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
+
+#if NETFX_CORE || HAS_UNO
 using Windows.UI.Xaml;
+#endif
+
+using Microsoft.UI.Xaml;
 
 namespace Sample.ViewModels
 {

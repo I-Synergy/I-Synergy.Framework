@@ -160,6 +160,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.Shared\Sample.Shared.projitems')" />
+  <Import Project="..\Sample.UWP.Shared\Sample.UWP.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

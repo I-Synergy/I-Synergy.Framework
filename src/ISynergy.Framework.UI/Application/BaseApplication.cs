@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -38,7 +38,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
 using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 using LaunchActivatedEventArgs = Windows.ApplicationModel.Activation.LaunchActivatedEventArgs;
-#elif ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS)
+#elif ((NET5_0 || NET5_0_OR_GREATER) && WINDOWS)
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -226,7 +226,7 @@ namespace ISynergy.Framework.UI
             _window = Windows.UI.Xaml.Window.Current;
 #endif
 
-#if NETFX_CORE || ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS)
+#if NETFX_CORE || ((NET5_0 || NET5_0_OR_GREATER) && WINDOWS)
             switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
                 case "Windows.Desktop":
@@ -255,7 +255,7 @@ namespace ISynergy.Framework.UI
 
 #if (NETFX_CORE || HAS_UNO)
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
-#elif ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS)
+#elif ((NET5_0 || NET5_0_OR_GREATER) && WINDOWS)
                 if (args.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
 #endif
                 {
@@ -289,7 +289,7 @@ namespace ISynergy.Framework.UI
 
 #if (NETFX_CORE || HAS_UNO)
             if (!args.PrelaunchActivated)
-#elif ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS)
+#elif ((NET5_0 || NET5_0_OR_GREATER) && WINDOWS)
             if (!args.UWPLaunchActivatedEventArgs.PrelaunchActivated)
 #endif
             {
@@ -433,7 +433,7 @@ namespace ISynergy.Framework.UI
 
                 return _factory;
             }
-            set { _factory = value; }
+            set => _factory = value;
         }
 
         /// <summary>
@@ -601,7 +601,7 @@ namespace ISynergy.Framework.UI
             Context = _serviceProvider.GetRequiredService<IContext>();
             Context.ViewModels = ViewModelTypes;
 
-#if NETFX_CORE || ((NET5_0 || NET6_0_OR_GREATER) && WINDOWS) || __WASM__
+#if NETFX_CORE || __WASM__
             //Only in Windows i can set the culture.
             var culture = CultureInfo.CurrentCulture;
 

@@ -57,10 +57,7 @@ namespace ISynergy.Framework.UI.Services
         public object Frame
         {
             get => _frame ??= (Frame)Window.Current.Content;
-            set
-            {
-                _frame = (Frame)value;
-            }
+            set => _frame = (Frame)value;
         }
 
         /// <summary>
@@ -219,7 +216,7 @@ namespace ISynergy.Framework.UI.Services
                 owner.Blades.Add(view);
             }
 
-            owner.IsPaneEnabled = true;
+            owner.IsPaneVisible = true;
         }
 
         /// <summary>
@@ -254,7 +251,7 @@ namespace ISynergy.Framework.UI.Services
                 {
                     if (owner.Blades.Count < 1)
                     {
-                        owner.IsPaneEnabled = false;
+                        owner.IsPaneVisible = false;
                     }
                     else if (owner.Blades.Last() is IView blade)
                     {

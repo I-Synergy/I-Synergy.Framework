@@ -11,11 +11,11 @@
     Opacity="0.85">
 
     <UserControl.Resources>
-        <SolidColorBrush x:Key="SystemAccentBrush_Red" Color="{StaticResource SystemAccentColor_Red}" />
+        <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{StaticResource SystemAccentColorRed}" />
         <Converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
     </UserControl.Resources>
     
-    <Border x:Name="RootBorder" CornerRadius="4" Background="{ThemeResource SystemAccentBrush_Red}" BorderBrush="{x:Null}">
+    <Border x:Name="RootBorder" CornerRadius="4" Background="{ThemeResource SystemAccentBrushRed}" BorderBrush="{x:Null}">
         <Grid x:Name="RootGrid">
             <ListView x:Name="ErrorList" ItemsSource="{Binding Errors}" SelectionMode="None">
                 <ListView.ItemTemplate>

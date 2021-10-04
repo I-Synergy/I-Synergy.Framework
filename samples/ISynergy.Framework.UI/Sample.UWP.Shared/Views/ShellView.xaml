@@ -18,6 +18,9 @@
 		<Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
 		<Converters:BooleanToStringConverter x:Key="BooleanToStringConverter" True="Logoff" False="Login" />
 
+        <!--This top margin is the height of the custom TitleBar-->
+        <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
+        
 		<FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
 			<FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
 				<DataTemplate x:DataType="FrameworkNavigation:NavigationItem">
@@ -36,14 +39,32 @@
 		</FrameworkNavigation:MenuItemTemplateSelector>
 	</c:View.Resources>
 
-	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-		<RelativePanel>
-            <muxc:NavigationView x:Name="RootNavigationView"
-							RelativePanel.AlignTopWithPanel="True"
-							RelativePanel.AlignLeftWithPanel="True" 
-							RelativePanel.AlignRightWithPanel="True" 
-							RelativePanel.AlignBottomWithPanel="True" 
-							PaneTitle="{Binding Context.Title}"
+	<Grid>
+        <Border x:Name="AppTitleBar"
+                IsHitTestVisible="True"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                Height="40"
+                Canvas.ZIndex="1" 
+                Margin="48,8,0,0">
+            <StackPanel Orientation="Horizontal">
+                <Image x:Name="AppFontIcon"
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center"
+                    Source="Assets/Square44x44Logo.png" 
+                    Width="16" 
+                    Height="16"/>
+                <TextBlock x:Name="AppTitle"
+                    Text="{Binding Context.Title}"
+                    VerticalAlignment="Center"
+                    Margin="12, 0, 0, 0"
+                    Style="{StaticResource CaptionTextBlockStyle}" />
+            </StackPanel>
+        </Border>
+        <muxc:NavigationView x:Name="RootNavigationView"
+                             IsTitleBarAutoPaddingEnabled="False"            
+							IsBackButtonVisible="Visible"           
+							Header="{Binding Title}" 
 							ExpandedModeThresholdWidth="1920"
 							MenuItemsSource="{Binding PrimaryItems}"
                             FooterMenuItemsSource="{Binding SecondaryItems}"
@@ -51,7 +72,9 @@
 							ItemInvoked="NavigationItemInvoked"
 							IsSettingsVisible="{Binding Context.IsAuthenticated, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                             PaneDisplayMode="Left"
-                            AlwaysShowHeader="False">
+                            DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
+                            Canvas.ZIndex="0"
+                            IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}">
 
 				<Frame x:Name="ContentRootFrame"
 						   Margin="10"
@@ -64,14 +87,11 @@
 					</not_wasm:Frame.ContentTransitions>
 				</Frame>
 			</muxc:NavigationView>
-
-			<Grid RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignTopWithPanel="True" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
-				<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.75" />
+			<Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
 				<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <muxc:ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
 					<TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
 				</StackPanel>
 			</Grid>
-		</RelativePanel>
 	</Grid>
 </c:View>

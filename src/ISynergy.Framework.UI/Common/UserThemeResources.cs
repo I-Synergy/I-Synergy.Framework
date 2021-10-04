@@ -27,19 +27,6 @@ namespace ISynergy.Framework.UI.Controls
         internal const string HighContrastResourcesPathKeyName = "HighContrastResourcesPath";
 
         /// <summary>
-        /// The light resources path
-        /// </summary>
-        private static string lightResourcesPath;
-        /// <summary>
-        /// The dark resources path
-        /// </summary>
-        private static string darkResourcesPath;
-        /// <summary>
-        /// The high contrast resources path
-        /// </summary>
-        private static string highContrastResourcesPath;
-
-        /// <summary>
         /// Initializes static members of the <see cref="UserThemeResources" /> class.
         /// </summary>
         static UserThemeResources()
@@ -50,7 +37,7 @@ namespace ISynergy.Framework.UI.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="UserThemeResources" /> class.
         /// </summary>
-        public UserThemeResources()
+        private UserThemeResources()
         {
             EnsureCustomXamlResourceLoader();
         }
@@ -59,52 +46,19 @@ namespace ISynergy.Framework.UI.Controls
         /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the Dark theme.
         /// </summary>
         /// <value>The dark resources path.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public string DarkResourcesPath
-        {
-            get
-            {
-                return darkResourcesPath;
-            }
-            set
-            {
-                darkResourcesPath = value;
-            }
-        }
+        public static string DarkResourcesPath { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the Light theme.
         /// </summary>
         /// <value>The light resources path.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public string LightResourcesPath
-        {
-            get
-            {
-                return lightResourcesPath;
-            }
-            set
-            {
-                lightResourcesPath = value;
-            }
-        }
+        public static string LightResourcesPath { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the HighContrast theme.
         /// </summary>
         /// <value>The high contrast resources path.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public string HighContrastResourcesPath
-        {
-            get
-            {
-                return highContrastResourcesPath;
-            }
-            set
-            {
-                highContrastResourcesPath = value;
-            }
-        }
+        public static string HighContrastResourcesPath { get; set; }
 
         /// <summary>
         /// Gets the URI by path.
@@ -115,23 +69,23 @@ namespace ISynergy.Framework.UI.Controls
         {
             if (resourceId == LightResourcesPathKeyName)
             {
-                if (!string.IsNullOrEmpty(lightResourcesPath))
+                if (!string.IsNullOrEmpty(LightResourcesPath))
                 {
-                    return new Uri(lightResourcesPath);
+                    return new Uri(LightResourcesPath);
                 }
             }
             else if (resourceId == DarkResourcesPathKeyName)
             {
-                if (!string.IsNullOrEmpty(darkResourcesPath))
+                if (!string.IsNullOrEmpty(DarkResourcesPath))
                 {
-                    return new Uri(darkResourcesPath);
+                    return new Uri(DarkResourcesPath);
                 }
             }
             else if (resourceId == HighContrastResourcesPathKeyName)
             {
-                if (!string.IsNullOrEmpty(highContrastResourcesPath))
+                if (!string.IsNullOrEmpty(HighContrastResourcesPath))
                 {
-                    return new Uri(highContrastResourcesPath);
+                    return new Uri(HighContrastResourcesPath);
                 }
             }
 

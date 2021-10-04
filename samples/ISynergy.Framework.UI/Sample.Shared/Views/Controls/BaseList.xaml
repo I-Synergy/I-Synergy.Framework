@@ -45,8 +45,7 @@
                   ItemsSource="{Binding Items}" 
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectionMode="Single"
-                  Margin="1,4" 
-                  Style="{StaticResource ListViewMetroUI}">
+                  Margin="1,4">
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="DoubleTapped">
                     <ic:InvokeCommandAction Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}" />

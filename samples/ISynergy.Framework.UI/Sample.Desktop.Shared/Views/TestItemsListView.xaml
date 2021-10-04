@@ -4,12 +4,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:base_controls="using:Sample.Views.Controls"
-        xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+        xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
         xmlns:m="using:ISynergy.Framework.UI.Markup"
         mc:Ignorable="d">
 
     <RelativePanel>
-        <CommandBar x:Name="MenuLayout" DefaultLabelPosition="Right" OverflowButtonVisibility="Collapsed" Background="Transparent" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True">
+        <CommandBar x:Name="MenuLayout" 
+                    DefaultLabelPosition="Right" 
+                    OverflowButtonVisibility="Collapsed" 
+                    Background="Transparent" 
+                    RelativePanel.AlignRightWithPanel="True" 
+                    RelativePanel.AlignLeftWithPanel="True" 
+                    RelativePanel.AlignTopWithPanel="True"
+                    IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}">
             <CommandBar.Content>
                 <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}"/>
             </CommandBar.Content>
@@ -18,18 +25,15 @@
             </CommandBar.PrimaryCommands>
         </CommandBar>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" RelativePanel.AlignLeftWithPanel="True" RelativePanel.LeftOf="BladeDetails" RelativePanel.Below="MenuLayout" RelativePanel.AlignBottomWithPanel="True">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                      VerticalScrollBarVisibility="Disabled" 
+                      RelativePanel.AlignLeftWithPanel="True" 
+                      RelativePanel.LeftOf="BladeDetails" 
+                      RelativePanel.Below="MenuLayout" 
+                      RelativePanel.AlignBottomWithPanel="True"
+                      IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}">
             <base_controls:BaseList x:Name="DataSummary" />
         </ScrollViewer>
-
-        <Grid x:Name="DisabledLayout"
-              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-              Visibility="{Binding IsPaneEnabled, Converter={StaticResource IsEditableToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-              RelativePanel.AlignLeftWithPanel="True"
-              RelativePanel.AlignTopWithPanel="True"
-              RelativePanel.AlignBottomWithPanel="True"
-              RelativePanel.AlignRightWithPanel="True"
-              Opacity="0.75"/>
 
         <toolkit:BladeView x:Name="BladeDetails" 
                            AutoCollapseCountThreshold="3" 

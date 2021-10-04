@@ -18,12 +18,6 @@ namespace ISynergy.Framework.UI.Helpers
         /// Gets the instance.
         /// </summary>
         /// <value>The instance.</value>
-        public static T Instance
-        {
-            get
-            {
-                return _instances.GetOrAdd(typeof(T), (_) => new T());
-            }
-        }
+        public static T Instance => _instances.GetOrAdd(typeof(T), (_) => new T());
     }
 }

@@ -5,7 +5,7 @@ namespace Sample.Views
     /// <summary>
     /// Validation sample view.
     /// </summary>
-    public sealed partial class ValidationView : IView
+    public sealed partial class ValidationView : ISynergy.Framework.UI.Controls.View, IView
     {
         /// <summary>
         /// Default constructor.

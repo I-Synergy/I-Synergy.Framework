@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
+using Sample.Enumerations;
 using Sample.Models;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,15 @@ namespace Sample.ViewModels
             set { SetValue(value); }
         }
 
+
+        /// <summary>
+        /// Gets or sets the QueryTypes property value.
+        /// </summary>
+        public QueryTypes QueryTypes
+        {
+            get => GetValue<QueryTypes>();
+            set => SetValue(value);
+        }
 
         /// <summary>
         /// Gets or sets the SelectedQueryType property value.

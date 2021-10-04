@@ -29,6 +29,10 @@ using System.Resources;
 using Uno.Material;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
+#elif NETFX_CORE
+using Windows.UI.Xaml;
+#elif NET5_0 && WINDOWS
+using Microsoft.UI.Xaml;
 #endif
 
 namespace Sample
@@ -57,6 +61,20 @@ namespace Sample
             InitializeComponent();
         }
 
+#if NETFX_CORE
+        protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+            new List<ResourceDictionary>()
+            {
+                new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Uwp.xaml") }
+            };
+#elif NET5_0 && WINDOWS
+        protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+            new List<ResourceDictionary>()
+            {
+                new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Desktop.xaml") }
+            };
+#endif
+
 #if HAS_UNO
         /// <summary>
         /// On loanched event handler.
@@ -79,11 +97,11 @@ namespace Sample
         }
 #endif
 
-        /// <summary>
-        /// Configures the logger.
-        /// </summary>
-        /// <param name="factory">The factory.</param>
-        protected override void ConfigureLogger(ILoggerFactory factory)
+    /// <summary>
+    /// Configures the logger.
+    /// </summary>
+    /// <param name="factory">The factory.</param>
+    protected override void ConfigureLogger(ILoggerFactory factory)
         {
             factory = LoggerFactory.Create(builder =>
             {
@@ -91,10 +109,8 @@ namespace Sample
                 builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
 #elif __IOS__
                 builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
-#elif NETFX_CORE
+#elif NETFX_CORE || (NET5_0 && WINDOWS)
                 builder.AddDebug();
-#else
-                builder.AddConsole();
 #endif
 
                 // Exclude logs below this level

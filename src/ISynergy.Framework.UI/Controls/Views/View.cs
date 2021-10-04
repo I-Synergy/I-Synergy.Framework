@@ -31,8 +31,8 @@ namespace ISynergy.Framework.UI.Controls
         /// <value>The data context.</value>
         public new IViewModel DataContext
         {
-            get { return base.DataContext as IViewModel; }
-            set { base.DataContext = value; }
+            get => base.DataContext as IViewModel;
+            set => base.DataContext = value;
         }
 
         /// <summary>
