@@ -1,12 +1,12 @@
-﻿using System.Text;
-using Newtonsoft.Json;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Azure.Messaging.ServiceBus;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.MessageBus.Azure.Queue
 {
@@ -26,6 +26,16 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
         /// The logger
         /// </summary>
         protected readonly ILogger _logger;
+
+        /// <summary>
+        /// ServiceBus client.
+        /// </summary>
+        private ServiceBusClient _serviceBusClient;
+
+        /// <summary>
+        /// ServiceBus processor.
+        /// </summary>
+        private ServiceBusProcessor _serviceBusProcessor;
 
         /// <summary>
         /// Constructor of service bus.
@@ -62,80 +72,83 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
         /// </summary>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Task.</returns>
-        public virtual async Task SubscribeToMessagesAsync(CancellationToken cancellationToken = default)
+        public virtual Task SubscribeToMessageBusAsync(CancellationToken cancellationToken = default)
         {
-            // First, we create a generic MessageReceiver for the queue. This class can 
-            // also receive from a topic subscription when given the correct path. 
-            // 
-            // Note that the receiver is created the with the ReceiveMode.PeekLock receive mode. 
-            // This mode will pass the message to the receiver while the broker maintains 
-            // a lock on message and hold on to the message. If the message has not been 
-            // completed, deferred, dead lettered, or abandoned during the lock timeout period, 
-            // the message will again appear in the queue (or in the topic subscription) 
-            // for retrieval.
-            //
-            // This is different from the ReceiveMode.ReceiveAndDelete alternative where the 
-            // message has been deleted as it arrives at the receiver. Here, the message
-            // is either completed or dead lettered as you will see further below.
-            //var receiver = new MessageReceiver(_option.ConnectionString, _option.QueueName, ReceiveMode.PeekLock);
-            var receiver = new QueueClient(_option.ConnectionString, _option.QueueName, ReceiveMode.PeekLock);
+            _serviceBusClient = new ServiceBusClient(_option.ConnectionString);
 
-            var doneReceiving = new TaskCompletionSource<bool>();
+            // create the options to use for configuring the processor
+            var options = new ServiceBusProcessorOptions
+            {
+                // By default or when AutoCompleteMessages is set to true, the processor will complete the message after executing the message handler
+                // Set AutoCompleteMessages to false to [settle messages](https://docs.microsoft.com/en-us/azure/service-bus-messaging/message-transfers-locks-settlement#peeklock) on your own.
+                // In both cases, if the message handler throws an exception without settling the message, the processor will abandon the message.
+                AutoCompleteMessages = false,
+                // I can also allow for multi-threading
+                MaxConcurrentCalls = 2,
+                ReceiveMode = ServiceBusReceiveMode.PeekLock
+            };
 
-            // If the cancellation token is triggered, we close the receiver, which will trigger 
-            // the receive operation below to return null as the receiver closes.
-            cancellationToken.Register(
-                async () =>
-                {
-                    await receiver.CloseAsync().ConfigureAwait(false);
-                    doneReceiving.SetResult(true);
-                });
+            // create a processor that we can use to process the messages
+            _serviceBusProcessor = _serviceBusClient.CreateProcessor(_option.QueueName, options);
 
-            // register the RegisterMessageHandler callback
-            receiver.RegisterMessageHandler(
-                async (message, token) =>
-                {
-                    var body = Encoding.UTF8.GetString(message.Body);
-                    var data = JsonConvert.DeserializeObject<TEntity>(body);
+            // configure the message and error handler to use
+            _serviceBusProcessor.ProcessMessageAsync += MessageHandlerAsync;
+            _serviceBusProcessor.ProcessErrorAsync += ErrorHandlerAsync;
 
-                    if (ValidateMessage(data))
-                    {
-                        if (await ProcessDataAsync(data).ConfigureAwait(false))
-                        {
-                            // Now that we're done with "processing" the message, we tell the broker about that being the
-                            // case. The MessageReceiver.CompleteAsync operation will settle the message transfer with 
-                            // the broker and remove it from the broker.
-                            await receiver.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            // If the message does not meet our processing criteria, we will dead letter it, meaning
-                            // it is put into a special queue for handling defective messages. The broker will automatically
-                            // dead letter the message, if delivery has been attempted too many times. 
-                            await receiver.DeadLetterAsync(message.SystemProperties.LockToken).ConfigureAwait(false); //, "ProcessingError", "Don't know what to do with this message");
-                        }
-                    }
-                },
-                new MessageHandlerOptions((e) => ExceptionReceivedHandler(e)) { AutoComplete = false, MaxConcurrentCalls = 1 });
-
-            await doneReceiving.Task;
+            // start processing
+            return _serviceBusProcessor.StartProcessingAsync();
         }
 
         /// <summary>
-        /// Exceptions the received handler.
+        /// Unsubscribe from messagebus and closes connection.
         /// </summary>
-        /// <param name="exceptionReceivedEventArgs">The <see cref="ExceptionReceivedEventArgs"/> instance containing the event data.</param>
-        /// <returns>Task.</returns>
-        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual async Task UnSubscribeFromMessageBusAsync(CancellationToken cancellationToken = default)
         {
-            _logger.LogError(exceptionReceivedEventArgs.Exception, "Message handler encountered an exception");
-            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+            if (_serviceBusProcessor is not null)
+                await _serviceBusProcessor.DisposeAsync();
 
-            _logger.LogDebug($"- Endpoint: {context.Endpoint}");
-            _logger.LogDebug($"- Entity Path: {context.EntityPath}");
-            _logger.LogDebug($"- Executing Action: {context.Action}");
+            if (_serviceBusClient is not null)
+                await _serviceBusClient.DisposeAsync();
+        }
 
-            return Task.CompletedTask;
+        private Task ErrorHandlerAsync(ProcessErrorEventArgs arg)
+        {
+            _logger.LogError(arg.Exception, "Message handler encountered an exception");
+            _logger.LogDebug($"- Error Source: {arg.ErrorSource}");
+            _logger.LogDebug($"- Fully Qualified Namespace: {arg.FullyQualifiedNamespace}");
+            _logger.LogDebug($"- Entity Path: {arg.EntityPath}");
+            _logger.LogDebug($"- Exception: {arg.Exception.ToString()}");
+
+            return _serviceBusProcessor.CloseAsync();
+        }
+
+        private async Task MessageHandlerAsync(ProcessMessageEventArgs arg)
+        {
+            var message = arg.Message;
+            var body = Encoding.UTF8.GetString(message.Body);
+            var data = JsonConvert.DeserializeObject<TEntity>(body);
+
+            if (ValidateMessage(data))
+            {
+                if (await ProcessDataAsync(data).ConfigureAwait(false))
+                {
+                    // Now that we're done with "processing" the message, we tell the broker about that being the
+                    // case. The MessageReceiver.CompleteAsync operation will settle the message transfer with 
+                    // the broker and remove it from the broker.
+                    await arg.CompleteMessageAsync(message)
+                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    // If the message does not meet our processing criteria, we will dead letter it, meaning
+                    // it is put into a special queue for handling defective messages. The broker will automatically
+                    // dead letter the message, if delivery has been attempted too many times. 
+                    await arg.DeadLetterMessageAsync(message)
+                        .ConfigureAwait(false);
+                }
+            }
         }
     }
 }

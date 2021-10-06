@@ -10,10 +10,17 @@ namespace ISynergy.Framework.MessageBus.Abstractions
     public interface ISubscriberServiceBus<TEntity>
     {
         /// <summary>
-        /// Subscribes to messages asynchronous.
+        /// Subscribes to messagebus asynchronous.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Task.</returns>
-        Task SubscribeToMessagesAsync(CancellationToken cancellationToken = default);
+        Task SubscribeToMessageBusAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Unsubscribe from messagebus and closes connection.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task UnSubscribeFromMessageBusAsync(CancellationToken cancellationToken = default);
     }
 }
