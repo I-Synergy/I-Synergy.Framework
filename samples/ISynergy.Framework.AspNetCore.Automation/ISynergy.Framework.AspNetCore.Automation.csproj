@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj" />
+    <Compile Remove="Models\**" />
+    <Content Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj" />
   </ItemGroup>
 
 </Project>

@@ -33,15 +33,19 @@ namespace ISynergy.Framework.MessageBus.Sample.Subscriber
             var cancellationTokenSource = new CancellationTokenSource();
 
             var allReceives = Task.WhenAll(
-                _messageBus.SubscribeToMessagesAsync(cancellationTokenSource.Token));
+                _messageBus.SubscribeToMessageBusAsync(cancellationTokenSource.Token));
 
             Console.WriteLine("Receiving messages...");
+            Console.WriteLine("Wait for a minute or press any key to end the processing");
 
             await Task.WhenAll(
                 Task.WhenAny(
                     Task.Run(() => Console.ReadKey()),
                     Task.Delay(TimeSpan.FromSeconds(60))
-                ).ContinueWith((t) => cancellationTokenSource.Cancel()),
+                ).ContinueWith(async (t) => {
+                    await _messageBus.UnSubscribeFromMessageBusAsync();
+                    cancellationTokenSource.Cancel();
+                }),
                 allReceives);
         }
     }

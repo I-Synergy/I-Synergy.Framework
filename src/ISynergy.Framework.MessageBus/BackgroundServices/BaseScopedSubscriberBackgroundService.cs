@@ -51,7 +51,7 @@ namespace ISynergy.Framework.MessageBus.BackgroundServices
                 scope.ServiceProvider
                     .GetRequiredService<TService>();
 
-            return scopedProcessingService.SubscribeToMessagesAsync(stoppingToken);
+            return scopedProcessingService.SubscribeToMessageBusAsync(stoppingToken);
         }
     }
 }

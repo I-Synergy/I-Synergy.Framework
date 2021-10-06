@@ -1,13 +1,12 @@
-﻿using System;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
+﻿using Azure.Messaging.ServiceBus;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.MessageBus.Azure.Queue
 {
@@ -53,14 +52,15 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
         /// <param name="sessionId">The session identifier.</param>
         /// <returns>Task.</returns>
         /// <exception cref="ArgumentException">Entity should be type of IQueueMessage{TModel} instead of {queueMessage.GetType().FullName}</exception>
-        public virtual Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId)
+        public virtual async Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId)
         {
             if(queueMessage is TQueueMessage model)
             {
-                var sender = new MessageSender(_option.ConnectionString, _option.QueueName);
+                await using var client = new ServiceBusClient(_option.ConnectionString);
+                var sender = client.CreateSender(_option.QueueName);
 
                 var body = JsonConvert.SerializeObject(queueMessage);
-                var message = new Message(Encoding.UTF8.GetBytes(body));
+                var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(body));
 
                 //If a session id is provided, add message to session.
                 if (sessionId != Guid.Empty)
@@ -72,12 +72,14 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
 
                 //If a Tag is provided, add label to session.
                 if (!string.IsNullOrEmpty(model.Tag))
-                    message.Label = model.Tag;
+                    message.Subject = model.Tag;
 
-                return sender.SendAsync(message);
+                await sender.SendMessageAsync(message);
             }
-
-            throw new ArgumentException($"Entity should be type of IQueueMessage<TModel> instead of {queueMessage.GetType().FullName}");
+            else
+            {
+                throw new ArgumentException($"Entity should be type of IQueueMessage<TModel> instead of {queueMessage.GetType().FullName}");
+            }
         }
     }
 }

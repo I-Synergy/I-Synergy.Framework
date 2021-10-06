@@ -35,14 +35,6 @@ namespace ISynergy.Framework.UI.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserThemeResources" /> class.
-        /// </summary>
-        private UserThemeResources()
-        {
-            EnsureCustomXamlResourceLoader();
-        }
-
-        /// <summary>
         /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the Dark theme.
         /// </summary>
         /// <value>The dark resources path.</value>
@@ -67,26 +59,17 @@ namespace ISynergy.Framework.UI.Controls
         /// <returns>Uri.</returns>
         internal static Uri GetUriByPath(string resourceId)
         {
-            if (resourceId == LightResourcesPathKeyName)
+            if (resourceId == LightResourcesPathKeyName && !string.IsNullOrEmpty(LightResourcesPath))
             {
-                if (!string.IsNullOrEmpty(LightResourcesPath))
-                {
-                    return new Uri(LightResourcesPath);
-                }
+                return new Uri(LightResourcesPath);
             }
-            else if (resourceId == DarkResourcesPathKeyName)
+            else if (resourceId == DarkResourcesPathKeyName && !string.IsNullOrEmpty(DarkResourcesPath))
             {
-                if (!string.IsNullOrEmpty(DarkResourcesPath))
-                {
-                    return new Uri(DarkResourcesPath);
-                }
+                return new Uri(DarkResourcesPath);
             }
-            else if (resourceId == HighContrastResourcesPathKeyName)
+            else if (resourceId == HighContrastResourcesPathKeyName && !string.IsNullOrEmpty(HighContrastResourcesPath))
             {
-                if (!string.IsNullOrEmpty(HighContrastResourcesPath))
-                {
-                    return new Uri(HighContrastResourcesPath);
-                }
+                return new Uri(HighContrastResourcesPath);
             }
 
             return null;
