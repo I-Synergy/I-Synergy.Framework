@@ -8,13 +8,13 @@ using Windows.ApplicationModel.Core;
 using Windows.System;
 using System.Linq;
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
@@ -41,7 +41,7 @@ namespace ISynergy.Framework.UI.Controls
             InitializeComponent();
         }
 
-#if NETFX_CORE
+#if WINDOWS_UWP
         /// <summary>
         /// Writes the output to the console control.
         /// </summary>

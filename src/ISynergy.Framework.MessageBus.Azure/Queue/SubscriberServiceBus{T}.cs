@@ -96,7 +96,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Queue
             _serviceBusProcessor.ProcessErrorAsync += ErrorHandlerAsync;
 
             // start processing
-            return _serviceBusProcessor.StartProcessingAsync();
+            return _serviceBusProcessor.StartProcessingAsync(cancellationToken);
         }
 
         /// <summary>

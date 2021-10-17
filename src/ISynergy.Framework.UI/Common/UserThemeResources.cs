@@ -1,8 +1,8 @@
 ﻿using System;
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml.Resources;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml.Resources;
 #endif
 
@@ -30,14 +30,6 @@ namespace ISynergy.Framework.UI.Controls
         /// Initializes static members of the <see cref="UserThemeResources" /> class.
         /// </summary>
         static UserThemeResources()
-        {
-            EnsureCustomXamlResourceLoader();
-        }
-
-        /// <summary>
-        /// Initializes members of the <see cref="UserThemeResources" /> class.
-        /// </summary>
-        private UserThemeResources()
         {
             EnsureCustomXamlResourceLoader();
         }

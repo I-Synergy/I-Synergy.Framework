@@ -3,11 +3,11 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System.Collections.Generic;
 using System.Linq;
-#if (NETFX_CORE || HAS_UNO)
+
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -64,7 +64,7 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="DataContextChangedEventArgs"/> instance containing the event data.</param>
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if WINDOWS_UWP || WINDOWS
         private void SelectionView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 #else
         private void SelectionView_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)

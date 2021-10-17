@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using Windows.Foundation.Collections;
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml;
 #endif
 

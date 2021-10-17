@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31423.177
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}"
 EndProject
@@ -131,19 +131,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Desktop", "samples\I
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "Sample.Desktop (Package)", "samples\ISynergy.Framework.UI\Sample.Desktop (Package)\Sample.Desktop (Package).wapproj", "{CE3C30E5-F520-4718-B223-19C62339E9D6}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.Desktop.Shared", "samples\ISynergy.Framework.UI\Sample.Desktop.Shared\Sample.Desktop.Shared.shproj", "{BE0BA878-0E0B-4AD6-AD1F-2C6E2439BF78}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.UWP.Shared", "samples\ISynergy.Framework.UI\Sample.UWP.Shared\Sample.UWP.Shared.shproj", "{FFB5FBCD-9856-4F58-9EA8-64D245FF3BB6}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.Desktop.Shared", "samples\ISynergy.Framework.UI\Sample.Desktop.Shared\Sample.Desktop.Shared.shproj", "{BE0BA878-0E0B-4AD6-AD1F-2C6E2439BF78}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems*{58ac244e-38e5-4165-a25e-fedad3ad26c2}*SharedItemsImports = 13
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{77e89c13-f0aa-4e6b-a7cb-ad5ec5bf391a}*SharedItemsImports = 5
-		samples\ISynergy.Framework.UI\Sample.UWP.Shared\Sample.UWP.Shared.projitems*{77e89c13-f0aa-4e6b-a7cb-ad5ec5bf391a}*SharedItemsImports = 5
 		samples\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems*{81924ac4-c08f-4e9b-bd05-fb7f75291609}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{8d7f5a42-90a1-4e77-a1a7-78e4c3c498a1}*SharedItemsImports = 4
-		samples\ISynergy.Framework.UI\Sample.UWP.Shared\Sample.UWP.Shared.projitems*{8d7f5a42-90a1-4e77-a1a7-78e4c3c498a1}*SharedItemsImports = 4
 		samples\ISynergy.Framework.UI\Sample.Desktop.Shared\Sample.Desktop.Shared.projitems*{92ba2c8d-c14e-458a-b53d-ae9afa29e9b3}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{92ba2c8d-c14e-458a-b53d-ae9afa29e9b3}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{b3bccab0-e662-4443-8af3-63721f4dadb5}*SharedItemsImports = 4
@@ -2795,8 +2793,8 @@ Global
 		{6561091C-BFF3-4B16-86FC-5AAF5D437742} = {F941E2DA-5AEF-4FA2-BD97-A823AAC8542A}
 		{92BA2C8D-C14E-458A-B53D-AE9AFA29E9B3} = {748C5FD2-1F73-4289-BC5C-4AC0F7FECB1B}
 		{CE3C30E5-F520-4718-B223-19C62339E9D6} = {748C5FD2-1F73-4289-BC5C-4AC0F7FECB1B}
-		{BE0BA878-0E0B-4AD6-AD1F-2C6E2439BF78} = {748C5FD2-1F73-4289-BC5C-4AC0F7FECB1B}
 		{FFB5FBCD-9856-4F58-9EA8-64D245FF3BB6} = {748C5FD2-1F73-4289-BC5C-4AC0F7FECB1B}
+		{BE0BA878-0E0B-4AD6-AD1F-2C6E2439BF78} = {748C5FD2-1F73-4289-BC5C-4AC0F7FECB1B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}

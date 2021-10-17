@@ -65,7 +65,10 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <StackPanel Orientation="Horizontal" x:Name="BottomLayout" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                <StackPanel Orientation="Horizontal" 
+                            x:Name="BottomLayout" 
+                            RelativePanel.AlignRightWithPanel="True" 
+                            RelativePanel.AlignBottomWithPanel="True">
                     <Button x:Name="Select_Button" 
                             Content="{m:LanguageResource Key=Select}" 
                             HorizontalAlignment="Right" 

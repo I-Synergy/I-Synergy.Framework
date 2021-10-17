@@ -1,4 +1,4 @@
-﻿#if NETFX_CORE || (NET5_0 && WINDOWS)
+﻿#if WINDOWS_UWP || WINDOWS
 
 using System;
 using System.IO;

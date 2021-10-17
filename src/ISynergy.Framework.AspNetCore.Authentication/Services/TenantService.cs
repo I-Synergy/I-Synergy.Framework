@@ -72,18 +72,16 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Services
         /// <returns>Guid.</returns>
         private Guid RetrieveTenantId()
         {
-            var principal = _httpContextAccessor.HttpContext.User;
-            Guid.TryParse(principal?.FindFirst(Core.Constants.ClaimTypes.AccountIdType)?.Value, out var parsedtenant);
-            return parsedtenant;
+            if (Guid.TryParse(_httpContextAccessor.HttpContext.User?.FindFirst(Core.Constants.ClaimTypes.AccountIdType)?.Value, out var parsedtenant))
+                return parsedtenant;
+
+            throw new UnauthorizedAccessException("Tenant could not be retrieved.");
         }
         /// <summary>
         /// Retrieves the name of the user.
         /// </summary>
         /// <returns>System.String.</returns>
-        private string RetrieveUserName()
-        {
-            var principal = _httpContextAccessor.HttpContext.User;
-            return principal?.Identity?.Name ?? string.Empty;
-        }
+        private string RetrieveUserName() =>
+            _httpContextAccessor.HttpContext.User?.Identity?.Name ?? string.Empty;
     }
 }

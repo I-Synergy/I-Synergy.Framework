@@ -10,7 +10,7 @@ using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 
-#if NETFX_CORE || HAS_UNO
+#if WINDOWS_UWP || HAS_UNO
 using Windows.UI.Xaml;
 #endif
 

@@ -33,7 +33,6 @@
 
                         <VisualState x:Name="PointerOver">
                             <VisualState.Setters>
-                                <Setter Target="RootGrid.(RevealBrush.State)" Value="PointerOver" />
                                 <Setter Target="RootGrid.Background" Value="{ThemeResource ButtonRevealBackgroundPointerOver}" />
                                 <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrushPointerOver}" />
                                 <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPointerOver}" />
@@ -46,7 +45,6 @@
 
                         <VisualState x:Name="Pressed">
                             <VisualState.Setters>
-                                <Setter Target="RootGrid.(RevealBrush.State)" Value="Pressed" />
                                 <Setter Target="RootGrid.Background" Value="{ThemeResource ButtonRevealBackgroundPressed}" />
                                 <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonRevealBorderBrushPressed}" />
                                 <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPressed}" />

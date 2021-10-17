@@ -1,4 +1,4 @@
-﻿#if NETFX_CORE
+﻿#if WINDOWS_UWP
 using System;
 using System.Collections.Generic;
 using System.Linq;
