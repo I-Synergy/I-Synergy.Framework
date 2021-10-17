@@ -32,10 +32,10 @@
 			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.3" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
-				<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.4" />
-				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.4" />
-				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.4" />
+				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.6" />
+				<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" />
+				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.5" />
+				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.5" />
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">

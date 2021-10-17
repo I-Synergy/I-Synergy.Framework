@@ -35,6 +35,14 @@ namespace ISynergy.Framework.UI.Controls
         }
 
         /// <summary>
+        /// Initializes members of the <see cref="UserThemeResources" /> class.
+        /// </summary>
+        private UserThemeResources()
+        {
+            EnsureCustomXamlResourceLoader();
+        }
+
+        /// <summary>
         /// Gets or sets the <see cref="Uri" /> path to the resource dictionary containing theme resource definitions for the Dark theme.
         /// </summary>
         /// <value>The dark resources path.</value>
