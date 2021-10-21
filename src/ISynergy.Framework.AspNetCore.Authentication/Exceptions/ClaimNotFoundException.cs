@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ISynergy.Framework.AspNetCore.Authentication.Exceptions
 {
@@ -32,5 +33,12 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Exceptions
         public ClaimNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
         }
+
+        /// <summary>
+        /// Serializable constructor.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected ClaimNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

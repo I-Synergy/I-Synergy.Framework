@@ -14,11 +14,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\SelectionTestView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Views\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -31,9 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\SelectionTestView.xaml.cs">
       <DependentUpon>SelectionTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\ShellView.xaml.cs">
-      <DependentUpon>ShellView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ShellView.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\TestItemsListView.xaml.cs">
       <DependentUpon>TestItemsListView.xaml</DependentUpon>
     </Compile>

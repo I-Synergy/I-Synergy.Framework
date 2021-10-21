@@ -23,22 +23,22 @@ using Windows.UI.Core;
 using Microsoft.Extensions.DependencyInjection;
 using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Core.Abstractions.Services;
-using Windows.System.Profile;
 using Windows.UI.ViewManagement;
 using System.Globalization;
 using Windows.ApplicationModel.Background;
 using System.Text.RegularExpressions;
 using ISynergy.Framework.Mvvm.Extensions;
-using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
-#if (NETFX_CORE || HAS_UNO)
+using System.Resources;
+
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
 using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 using LaunchActivatedEventArgs = Windows.ApplicationModel.Activation.LaunchActivatedEventArgs;
-#elif ((NET5_0 || NET5_0_OR_GREATER) && WINDOWS)
+#else
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -56,39 +56,17 @@ namespace ISynergy.Framework.UI
     /// <seealso cref="Application" />
     public abstract class BaseApplication : Application
     {
-#if (NET5_0 || NET6_0_OR_GREATER) && WINDOWS
-        private Window _window;
-
-#else
-        private Windows.UI.Xaml.Window _window;
-#endif
-
         /// <summary>
-        /// Gets the context.
+        /// Main Application Window.
         /// </summary>
-        /// <value>The context.</value>
-        public IContext Context { get; private set; }
-        /// <summary>
-        /// Gets the logger.
-        /// </summary>
-        /// <value>The logger.</value>
-        public ILogger Logger { get; private set; }
+        public Window MainWindow { get; private set; }
+        
         /// <summary>
         /// Gets the theme selector.
         /// </summary>
         /// <value>The theme selector.</value>
-        public IThemeSelectorService ThemeSelector { get; private set; }
-        /// <summary>
-        /// Gets the language service.
-        /// </summary>
-        /// <value>The language service.</value>
-        public ILanguageService LanguageService { get; private set; }
-
-        /// <summary>
-        /// The service provider
-        /// </summary>
-        protected readonly IServiceProvider _serviceProvider;
-
+        private readonly IThemeSelectorService _themeSelector;
+        
         /// <summary>
         /// The services
         /// </summary>
@@ -100,15 +78,36 @@ namespace ISynergy.Framework.UI
         private readonly INavigationService _navigationService;
 
         /// <summary>
+        /// Gets the language service.
+        /// </summary>
+        /// <value>The language service.</value>
+        private readonly ILanguageService _languageService;
+
+        /// <summary>
+        /// The service provider
+        /// </summary>
+        protected readonly IServiceProvider _serviceProvider;
+
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <value>The logger.</value>
+        protected readonly ILogger _logger;
+
+        /// <summary>
+        /// Gets the context.
+        /// </summary>
+        /// <value>The context.</value>
+        protected IContext _context;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BaseApplication" /> class.
         /// </summary>
         protected BaseApplication()
         {
             _services = new ServiceCollection();
-           
             _navigationService = new NavigationService();
-
-            LanguageService = new LanguageService();
+            _languageService = new LanguageService();
 
             ConfigureServices(_services);
             
@@ -116,8 +115,8 @@ namespace ISynergy.Framework.UI
 
             ServiceLocator.SetLocatorProvider(_serviceProvider);
 
-            Logger = _serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(BaseApplication));
-            Logger.LogInformation("Starting application");
+            _logger = _serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(BaseApplication));
+            _logger.LogInformation("Starting application");
 
             Current.UnhandledException += Current_UnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -125,41 +124,25 @@ namespace ISynergy.Framework.UI
 
             SetContext();
 
-#if NETFX_CORE|| (NET5_0 && WINDOWS)
+#if WINDOWS_UWP || WINDOWS
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 #endif
 
-            ThemeSelector = _serviceProvider.GetRequiredService<IThemeSelectorService>();
-            ThemeSelector.Initialize();
+            _themeSelector = _serviceProvider.GetRequiredService<IThemeSelectorService>();
+            _themeSelector.Initialize();
 
-            if (ThemeSelector.Theme is ElementTheme.Dark)
+            if (_themeSelector.Theme is ElementTheme.Dark)
             {
                 RequestedTheme = ApplicationTheme.Dark;
             }
-            else if (ThemeSelector.Theme is ElementTheme.Light)
+            else if (_themeSelector.Theme is ElementTheme.Light)
             {
                 RequestedTheme = ApplicationTheme.Light;
             }
 
-            ThemeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IBaseSettingsService>().Color.ToEnum(Mvvm.Enumerations.ThemeColors.Default));
+            _themeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IBaseSettingsService>().Color.ToEnum(Mvvm.Enumerations.ThemeColors.Default));
 
-#if NETFX_CORE
-            switch (AnalyticsInfo.VersionInfo.DeviceFamily)
-            {
-                case "Windows.Desktop":
-                    break;
-                case "Windows.IoT":
-                    break;
-                case "Windows.Xbox":
-                    RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-                    var result = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
-                    break;
-            }
-
-            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
-#endif
-
-#if HAS_UNO || NETFX_CORE
+#if HAS_UNO || WINDOWS_UWP
             Suspending += OnSuspending;
 #endif
         }
@@ -175,7 +158,7 @@ namespace ISynergy.Framework.UI
             e.SetObserved();
         }
 
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if WINDOWS_UWP || WINDOWS
         /// <summary>
         /// Handles the UnhandledException event of the Current control.
         /// </summary>
@@ -219,29 +202,16 @@ namespace ISynergy.Framework.UI
         /// <param name="args">Event data for the event.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-#if (NET5_0 || NET6_0_OR_GREATER) && WINDOWS
-            _window = new Window();
-            _window.Activate();
+#if WINDOWS
+            MainWindow = new Window();
+            MainWindow.Activate();
 #else
-            _window = Windows.UI.Xaml.Window.Current;
+            MainWindow = Window.Current;
 #endif
 
-#if NETFX_CORE || ((NET5_0 || NET5_0_OR_GREATER) && WINDOWS)
-            switch (AnalyticsInfo.VersionInfo.DeviceFamily)
-            {
-                case "Windows.Desktop":
-                    break;
-                case "Windows.IoT":
-                    break;
-                case "Windows.Xbox":
-                    ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                    break;
-            }
-#endif
+            var rootFrame = MainWindow.Content as Frame;
 
-            var rootFrame = _window.Content as Frame;
-
-            Application.Current.Resources["SystemAccentColor"] = ThemeSelector.AccentColor;
+            Application.Current.Resources["SystemAccentColor"] = _themeSelector.AccentColor;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -251,11 +221,14 @@ namespace ISynergy.Framework.UI
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-                rootFrame.Navigated += OnNavigated;
 
-#if (NETFX_CORE || HAS_UNO)
+#if !WINDOWS
+                rootFrame.Navigated += OnNavigated;
+#endif
+
+#if (WINDOWS_UWP || HAS_UNO)
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
-#elif ((NET5_0 || NET5_0_OR_GREATER) && WINDOWS)
+#else
                 if (args.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
 #endif
                 {
@@ -274,6 +247,7 @@ namespace ISynergy.Framework.UI
                     }
                 }
 
+#if !WINDOWS
                 // Register a handler for BackRequested events and set the
                 // visibility of the Back button
                 SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
@@ -282,15 +256,15 @@ namespace ISynergy.Framework.UI
                     rootFrame.CanGoBack ?
                     AppViewBackButtonVisibility.Visible :
                     AppViewBackButtonVisibility.Collapsed;
-
+#endif
                 // Place the frame in the current Window
-               _window.Content = rootFrame;
+                MainWindow.Content = rootFrame;
             }
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
             if (!args.PrelaunchActivated)
-#elif ((NET5_0 || NET5_0_OR_GREATER) && WINDOWS)
-            if (!args.UWPLaunchActivatedEventArgs.PrelaunchActivated)
+#else
+            if (args.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Launch)
 #endif
             {
                 if (rootFrame.Content is null)
@@ -304,7 +278,7 @@ namespace ISynergy.Framework.UI
                 }
 
                 // Ensure the current window is active
-                _window.Activate();
+                MainWindow.Activate();
             }
         }
 
@@ -325,6 +299,7 @@ namespace ISynergy.Framework.UI
         private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
             throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
 
+#if !WINDOWS
         /// <summary>
         /// Handles the <see cref="E:Navigated" /> event.
         /// </summary>
@@ -332,6 +307,7 @@ namespace ISynergy.Framework.UI
         /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
         private static void OnNavigated(object sender, NavigationEventArgs e)
         {
+
             // Each time a navigation event occurs, update the Back button's visibility
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
                 ((Frame)sender).CanGoBack ?
@@ -359,6 +335,8 @@ namespace ISynergy.Framework.UI
                 rootFrame.GoBack();
             }
         }
+#endif
+
 
         /// <summary>
         /// Gets the name of the descendant from.
@@ -390,7 +368,7 @@ namespace ISynergy.Framework.UI
             return null;
         }
 
-#if HAS_UNO || NETFX_CORE
+#if HAS_UNO || WINDOWS_UWP
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
         /// without knowing whether the application will be terminated or resumed with the contents
@@ -451,7 +429,7 @@ namespace ISynergy.Framework.UI
             services.AddLogging();
             services.AddOptions();
 
-            services.AddSingleton((s) => LanguageService);
+            services.AddSingleton((s) => _languageService);
             services.AddSingleton((s) => _navigationService);
 
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
@@ -598,22 +576,28 @@ namespace ISynergy.Framework.UI
         /// </summary>
         public virtual void SetContext()
         {
-            Context = _serviceProvider.GetRequiredService<IContext>();
-            Context.ViewModels = ViewModelTypes;
+            _context = _serviceProvider.GetRequiredService<IContext>();
+            _context.ViewModels = ViewModelTypes;
 
-#if NETFX_CORE || __WASM__
+#if WINDOWS_UWP || __WASM__
             //Only in Windows i can set the culture.
             var culture = CultureInfo.CurrentCulture;
 
-                culture.NumberFormat.CurrencySymbol = $"{Context.CurrencySymbol} ";
+                culture.NumberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
                 culture.NumberFormat.CurrencyNegativePattern = 1;
 
-                Context.NumberFormat = culture.NumberFormat;
+                _context.NumberFormat = culture.NumberFormat;
 #endif
 
             var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
             localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IBaseSettingsService>().Culture);
         }
+
+        /// <summary>
+        /// Add resource managers to languageservice.
+        /// </summary>
+        public virtual void AddResourceManager(ResourceManager resourceManager) =>
+            _languageService.AddResourceManager(resourceManager);
 
         /// <summary>
         /// Handles the exception.

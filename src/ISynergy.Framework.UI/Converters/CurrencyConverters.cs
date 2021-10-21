@@ -4,9 +4,9 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Windows.ApplicationModel;
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml.Data;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml.Data;
 #endif
 

@@ -9,9 +9,47 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using System.IO;
 using Windows.System;
+using System.Linq;
+
+#if WINDOWS
+using System.Runtime.InteropServices;
+using WinRT;
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
+#if WINDOWS
+    /// <summary>
+    /// IInitializeWithWindow interface.
+    /// </summary>
+    [ComImport]
+    [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IInitializeWithWindow
+    {
+        /// <summary>
+        /// Initialize with window.
+        /// </summary>
+        /// <param name="hwnd"></param>
+        void Initialize(IntPtr hwnd);
+    }
+
+    /// <summary>
+    /// IWindowNative interface.
+    /// </summary>
+    [ComImport]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [Guid("EECDBF0E-BAE9-4CB6-A68E-9598E1CB57BB")]
+    internal interface IWindowNative
+    {
+        /// <summary>
+        /// Get window handle.
+        /// </summary>
+        IntPtr WindowHandle { get; }
+    }
+#endif
+
     /// <summary>
     /// Base class for file services.
     /// </summary>
@@ -227,17 +265,20 @@ namespace ISynergy.Framework.UI.Services
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
             };
 
+#if WINDOWS
+            var hwnd = Window.Current.CoreWindow.As<IWindowNative>().WindowHandle;
+            var initializeWithWindow = picker.As<IInitializeWithWindow>();
+            initializeWithWindow.Initialize(hwnd);
+#endif
+
             if (allowedTypes != null)
             {
                 var hasAtleastOneType = false;
 
-                foreach (var type in allowedTypes)
+                foreach (var type in allowedTypes.Where(q => q.StartsWith(".")))
                 {
-                    if (type.StartsWith("."))
-                    {
-                        picker.FileTypeFilter.Add(type);
-                        hasAtleastOneType = true;
-                    }
+                    picker.FileTypeFilter.Add(type);
+                    hasAtleastOneType = true;
                 }
 
                 if (!hasAtleastOneType)
@@ -273,12 +314,8 @@ namespace ISynergy.Framework.UI.Services
         {
             try
             {
-                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileToOpen);
-
-                if (file != null)
-                {
+                if (await ApplicationData.Current.LocalFolder.GetFileAsync(fileToOpen) is StorageFile file)
                     await Launcher.LaunchFileAsync(file);
-                }
             }
             catch (FileNotFoundException)
             {

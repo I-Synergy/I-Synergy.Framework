@@ -9,21 +9,11 @@
         mc:Ignorable="d">
 
     <RelativePanel>
-        <CommandBar x:Name="MenuLayout" 
-                    DefaultLabelPosition="Right" 
-                    OverflowButtonVisibility="Collapsed" 
-                    Background="Transparent" 
+        <c:BaseMenu x:Name="MenuLayout" 
                     RelativePanel.AlignRightWithPanel="True" 
                     RelativePanel.AlignLeftWithPanel="True" 
                     RelativePanel.AlignTopWithPanel="True"
-                    IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}">
-            <CommandBar.Content>
-                <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}"/>
-            </CommandBar.Content>
-            <CommandBar.PrimaryCommands>
-                <AppBarButton x:Name="Button_Add" Style="{StaticResource IconAppBarButtonStyle}" Content="{StaticResource plus}" Command="{Binding Add_Command}" Label="{m:LanguageResource Key=Add}" ToolTipService.ToolTip="{m:LanguageResource Key=Add}"/>
-            </CommandBar.PrimaryCommands>
-        </CommandBar>
+                    IsEnabled="{Binding IsPaneVisible, Converter={StaticResource InverseBooleanConverter}}"/>
 
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalScrollBarVisibility="Disabled" 

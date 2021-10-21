@@ -4,10 +4,10 @@ using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.Core.Locators;
 using Microsoft.Xaml.Interactivity;
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endif
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <summary>
         /// The authentication provider.
         /// </summary>
-        private static IAuthenticationProvider AuthenticationProvider;
+        private readonly IAuthenticationProvider _authenticationProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Authorization" /> class.
@@ -50,10 +50,10 @@ namespace ISynergy.Framework.UI.Behaviors
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                if (AuthenticationProvider is null)
-                    AuthenticationProvider = ServiceLocator.Default.GetInstance<IAuthenticationProvider>();
+                if (_authenticationProvider is null)
+                    _authenticationProvider = ServiceLocator.Default.GetInstance<IAuthenticationProvider>();
 
-                if (AuthenticationProvider is null)
+                if (_authenticationProvider is null)
                     throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");
             }
         }
@@ -97,7 +97,7 @@ namespace ISynergy.Framework.UI.Behaviors
         {
             base.OnAttached();
 
-            if (!AuthenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
+            if (!_authenticationProvider.HasAccessToUIElement(AssociatedObject, AssociatedObject.Tag, AuthenticationTag))
             {
                 switch (Action)
                 {

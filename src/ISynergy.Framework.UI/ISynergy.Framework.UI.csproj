@@ -32,10 +32,8 @@
 			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.3" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
-				<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.4" />
-				<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.4" />
-				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.4" />
+				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.6" />
+				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-preview2" />
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
@@ -45,7 +43,7 @@
 			<ItemGroup>
 				<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.0" />
 				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
-				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.0" />
+				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.1" />
 			</ItemGroup>
 		</When>
 		<Otherwise>

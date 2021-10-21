@@ -57,7 +57,7 @@ namespace ISynergy.Framework.Core.Collections
             set
             {
                 if (value.Length != 2)
-                    throw new ArgumentException("The array must have length 2.", "value");
+                    throw new ArgumentException("The array must have length 2.");
                 Left = value[0];
                 Right = value[1];
             }

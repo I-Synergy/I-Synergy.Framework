@@ -39,7 +39,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
 		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.1.0" />
-		<PackageReference Include="Uno.Material" Version="1.0.0-dev.832" />
+		<PackageReference Include="Uno.Material" Version="1.0.0-dev.842" />
         <PackageReference Include="Uno.UI.WebAssembly" Version="3.10.11" />
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.0.0" />
         <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.0.0" />
@@ -51,5 +51,4 @@
         <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
     </ItemGroup>
     <Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.Shared\Sample.Shared.projitems')" />
-    <Import Project="..\Sample.UWP.Shared\Sample.UWP.Shared.projitems" Label="Shared" />
 </Project>

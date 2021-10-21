@@ -6,10 +6,12 @@ using Sample.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.System.Threading;
-using Windows.UI.Core;
+
+#if WINDOWS_UWP || HAS_UNO
+using Windows.UI.Xaml;
+#else
+using Microsoft.UI.Xaml;
+#endif
 
 namespace Sample.ViewModels
 {
@@ -38,9 +40,9 @@ namespace Sample.ViewModels
         /// Gets or sets the Timer property value.
         /// </summary>
         /// <value>The slideshow timer.</value>
-        public ThreadPoolTimer SlideshowTimer
+        public DispatcherTimer SlideshowTimer
         {
-            get { return GetValue<ThreadPoolTimer>(); }
+            get { return GetValue<DispatcherTimer>(); }
             set { SetValue(value); }
         }
 
@@ -48,9 +50,9 @@ namespace Sample.ViewModels
         /// Gets or sets the UpdateSourceTimer property value.
         /// </summary>
         /// <value>The update source timer.</value>
-        public ThreadPoolTimer UpdateSourceTimer
+        public DispatcherTimer UpdateSourceTimer
         {
-            get { return GetValue<ThreadPoolTimer>(); }
+            get { return GetValue<DispatcherTimer>(); }
             set { SetValue(value); }
         }
 
@@ -66,7 +68,10 @@ namespace Sample.ViewModels
             ILoggerFactory loggerFactory)
             : base(context, commonServices, loggerFactory)
         {
-            UpdateSourceTimer = ThreadPoolTimer.CreateTimer(async (e) => await UpdateSourceTimeOutTimerTickAsync(e), TimeSpan.FromMinutes(30));
+            UpdateSourceTimer = new DispatcherTimer();
+            UpdateSourceTimer.Tick += UpdateSourceTimer_Tick;
+            UpdateSourceTimer.Interval = TimeSpan.FromMinutes(30);
+            UpdateSourceTimer.Start();
 
             // Get initial images from source.
             Items = new ObservableCollection<MediaItem>()
@@ -80,16 +85,36 @@ namespace Sample.ViewModels
             // Set timer if images count is at least 1.
             if (Items.Count > 0)
             {
-                SlideshowTimer = ThreadPoolTimer.CreateTimer(async (e) => await SlideshowTimeOutTimerTickAsync(e), TimeSpan.FromSeconds(5));
+                SlideshowTimer = new DispatcherTimer();
+                SlideshowTimer.Tick += SlideshowTimer_Tick;
+                SlideshowTimer.Interval = TimeSpan.FromSeconds(5);
+                SlideshowTimer.Start();
             }
         }
 
         /// <summary>
-        /// Updates the source time out timer tick asynchronous.
+        /// slideshow time out timer tick as an asynchronous operation.
         /// </summary>
-        /// <param name="e">The e.</param>
-        /// <returns>Task.</returns>
-        private Task UpdateSourceTimeOutTimerTickAsync(ThreadPoolTimer e)
+        private void SlideshowTimer_Tick(object sender, object e)
+        {
+            SlideshowTimer.Stop();
+
+            if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
+            {
+                SelectedItem = Items.First();
+            }
+            else if (SelectedItem.Index < Items.Count - 1)
+            {
+                SelectedItem = Items.Where(q => q.Index == SelectedItem.Index + 1).Single();
+            }
+
+            SlideshowTimer.Start();
+        }
+
+        /// <summary>
+        /// Updates the source time out timer tick synchronous.
+        /// </summary>
+        private void UpdateSourceTimer_Tick(object sender, object e)
         {
             Items = new ObservableCollection<MediaItem>()
             {
@@ -98,34 +123,6 @@ namespace Sample.ViewModels
                 new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
                 new MediaItem { Index = 3, ImageUri = "http://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
             };
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// slideshow time out timer tick as an asynchronous operation.
-        /// </summary>
-        /// <param name="timer">The timer.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
-        private async Task SlideshowTimeOutTimerTickAsync(ThreadPoolTimer timer)
-        {
-            timer.Cancel();
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(
-                CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
-                    {
-                        SelectedItem = Items.First();
-                    }
-                    else if (SelectedItem.Index < Items.Count - 1)
-                    {
-                        SelectedItem = Items.Where(q => q.Index == SelectedItem.Index + 1).Single();
-                    }
-                });
-
-            timer = ThreadPoolTimer.CreateTimer(async (e) => await SlideshowTimeOutTimerTickAsync(e), TimeSpan.FromSeconds(5));
         }
     }
 }

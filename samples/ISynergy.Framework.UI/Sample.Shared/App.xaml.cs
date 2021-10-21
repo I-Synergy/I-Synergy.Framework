@@ -29,9 +29,9 @@ using System.Resources;
 using Uno.Material;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
-#elif NETFX_CORE
+#elif WINDOWS_UWP
 using Windows.UI.Xaml;
-#elif NET5_0 && WINDOWS
+#else
 using Microsoft.UI.Xaml;
 #endif
 
@@ -61,20 +61,19 @@ namespace Sample
             InitializeComponent();
         }
 
-#if NETFX_CORE
+#if WINDOWS_UWP || HAS_UNO
         protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>()
             {
                 new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Uwp.xaml") }
             };
-#elif NET5_0 && WINDOWS
+#elif WINDOWS
         protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>()
             {
                 new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Desktop.xaml") }
             };
 #endif
-
 #if HAS_UNO
         /// <summary>
         /// On loanched event handler.
@@ -97,11 +96,11 @@ namespace Sample
         }
 #endif
 
-    /// <summary>
-    /// Configures the logger.
-    /// </summary>
-    /// <param name="factory">The factory.</param>
-    protected override void ConfigureLogger(ILoggerFactory factory)
+        /// <summary>
+        /// Configures the logger.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        protected override void ConfigureLogger(ILoggerFactory factory)
         {
             factory = LoggerFactory.Create(builder =>
             {
@@ -109,7 +108,7 @@ namespace Sample
                 builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
 #elif __IOS__
                 builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
-#elif NETFX_CORE || (NET5_0 && WINDOWS)
+#elif WINDOWS_UWP || WINDOWS
                 builder.AddDebug();
 #endif
 
@@ -174,7 +173,7 @@ namespace Sample
             services.AddSingleton<IContext, Context>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
-#if NETFX_CORE
+#if WINDOWS_UWP
             services.AddSingleton<IUpdateService, UpdateService>();
 #endif
 
@@ -196,13 +195,11 @@ namespace Sample
             services.AddSingleton<IShellViewModel, ShellViewModel>();
             services.AddSingleton<IShellView, ShellView>();
 
-            LanguageService.AddResourceManager(new ResourceManager(typeof(Resources)));
+            //Add current resource manager.
+            AddResourceManager(new ResourceManager(typeof(Resources)));
 
-            //Load assemblies
-            RegisterAssemblies(new List<Assembly>
-            {
-                assembly
-            });
+            //Add current assembly.
+            RegisterAssemblies(new List<Assembly> { assembly });
         }
 
         /// <summary>

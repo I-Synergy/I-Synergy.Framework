@@ -95,11 +95,11 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Accessors
         {
             var claims = GetClaims(claimType);
 
-            if (claims.Count > 1)
-                throw new DuplicateClaimException(claimType);
-
             if (claims is null || claims.Count == 0)
                 throw new ClaimNotFoundException(claimType);
+
+            if (claims.Count > 1)
+                throw new DuplicateClaimException(claimType);
 
             return claims.Single();
         }

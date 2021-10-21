@@ -1,10 +1,10 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using System.IO;
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 #endif

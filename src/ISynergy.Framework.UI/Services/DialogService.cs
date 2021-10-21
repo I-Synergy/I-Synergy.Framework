@@ -9,12 +9,12 @@ using System;
 using System.Threading.Tasks;
 
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml.Controls;
 using Application = Windows.UI.Xaml.Application;
 using Style = Windows.UI.Xaml.Style;
 using Setter = Windows.UI.Xaml.Setter;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml.Controls;
 using Application = Microsoft.UI.Xaml.Application;
 using Style = Microsoft.UI.Xaml.Style;
@@ -131,6 +131,11 @@ namespace ISynergy.Framework.UI.Services
                 Content = message
             };
 
+#if WINDOWS
+            if(Application.Current is BaseApplication baseApplication)
+                dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+#endif
+
             switch (buttons)
             {
                 case MessageBoxButton.OKCancel:
@@ -244,6 +249,11 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="viewmodel">The viewmodel.</param>
         private async Task CreateDialogAsync<TEntity>(Window dialog, IViewModelDialog<TEntity> viewmodel)
         {
+#if WINDOWS
+            if(Application.Current is BaseApplication baseApplication)
+                dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
+#endif
+
             dialog.DataContext = viewmodel;
 
             dialog.PrimaryButtonCommand = viewmodel.Submit_Command;

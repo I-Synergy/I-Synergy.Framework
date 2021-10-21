@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace ISynergy.Framework.Core.Exceptions
 {
@@ -16,5 +17,12 @@ namespace ISynergy.Framework.Core.Exceptions
         public InvalidHandleEventException(string message, TargetParameterCountException targetParameterCountException) : base(message, targetParameterCountException)
         {
         }
+
+        /// <summary>
+        /// Serializable constructor.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected InvalidHandleEventException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

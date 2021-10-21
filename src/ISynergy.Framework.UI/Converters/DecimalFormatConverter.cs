@@ -1,12 +1,12 @@
 ﻿using System;
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml.Data;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml.Data;
 #endif
 
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if WINDOWS_UWP || WINDOWS
 using ISynergy.Framework.Core.Abstractions;
 using Windows.Globalization.NumberFormatting;
 #endif
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-#if NETFX_CORE || (NET5_0 && WINDOWS)
+#if WINDOWS_UWP || WINDOWS
             var decimalFormatter = new DecimalFormatter();
 
             if (value is IContext context && context.NumberFormat != null)

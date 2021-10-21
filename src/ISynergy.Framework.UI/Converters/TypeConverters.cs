@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
 
-#if (NETFX_CORE || HAS_UNO)
+#if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
-#elif (NET5_0 && WINDOWS)
+#else
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 #endif
@@ -69,22 +69,18 @@ namespace ISynergy.Framework.UI.Converters
 
         private static String GetScope(string name)
         {
-            int indexOfLastPeriod = name.LastIndexOf('.');
+            var indexOfLastPeriod = name.LastIndexOf('.');
             if (indexOfLastPeriod != name.Length - 1)
-            {
                 return name.Substring(0, indexOfLastPeriod);
-            }
 
             return name;
         }
 
         private static String GetType(string name)
         {
-            int indexOfLastPeriod = name.LastIndexOf('.');
+            var indexOfLastPeriod = name.LastIndexOf('.');
             if (indexOfLastPeriod != name.Length - 1)
-            {
-                return name.Substring(++indexOfLastPeriod);
-            }
+                return name.Substring(indexOfLastPeriod + 1);
 
             return name;
         }

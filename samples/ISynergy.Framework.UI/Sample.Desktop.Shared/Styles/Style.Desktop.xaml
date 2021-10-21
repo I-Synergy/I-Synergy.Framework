@@ -18,5 +18,6 @@
     <Style TargetType="controls:BladeItem">
         <Setter Property="Width" Value="Auto" />
         <Setter Property="TitleBarVisibility" Value="Collapsed"/>
+        <Setter Property="Background" Value="{StaticResource ApplicationPageBackgroundThemeBrush}"/>
     </Style>
 </ResourceDictionary>
