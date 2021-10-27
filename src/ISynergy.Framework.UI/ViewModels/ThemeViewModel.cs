@@ -38,13 +38,13 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
         /// <param name="settingsService">The settings services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         public ThemeViewModel(
             IContext context,
             IBaseCommonServices commonServices,
             IBaseSettingsService settingsService,
-            ILoggerFactory loggerFactory)
-            : base(context, commonServices, loggerFactory)
+            ILogger logger)
+            : base(context, commonServices, logger)
         {
             _settingsService = settingsService;
 

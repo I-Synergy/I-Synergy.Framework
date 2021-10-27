@@ -115,14 +115,14 @@ namespace ISynergy.Framework.UI
 
             ServiceLocator.SetLocatorProvider(_serviceProvider);
 
-            _logger = _serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(BaseApplication));
+            _logger = _serviceProvider.GetRequiredService<ILogger>();
             _logger.LogInformation("Starting application");
 
             Current.UnhandledException += Current_UnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-            SetContext();
+            Initialize();
 
 #if WINDOWS_UWP || WINDOWS
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
@@ -390,35 +390,66 @@ namespace ISynergy.Framework.UI
         }
 #endif
 
-        /// <summary>
-        /// The factory
-        /// </summary>
-        private ILoggerFactory _factory = null;
-
-        /// <summary>
-        /// Gets or sets the logger factory.
-        /// </summary>
-        /// <value>The logger factory.</value>
-        private ILoggerFactory LoggerFactory
-        {
-            get
-            {
-                if (_factory is null)
-                {
-                    _factory = new LoggerFactory();
-                    ConfigureLogger(_factory);
-                }
-
-                return _factory;
-            }
-            set => _factory = value;
-        }
 
         /// <summary>
         /// Configures the logger.
         /// </summary>
-        /// <param name="factory">The factory.</param>
-        protected abstract void ConfigureLogger(ILoggerFactory factory);
+        protected virtual ILoggerFactory ConfigureLogger(LogLevel loglevel = LogLevel.Information)
+        {
+            var factory =  LoggerFactory.Create(builder =>
+            {
+#if __WASM__
+                builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
+#elif __IOS__
+                builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
+#elif WINDOWS_UWP || WINDOWS
+                builder.AddDebug();
+#endif
+
+                // Exclude logs below this level
+                builder.SetMinimumLevel(loglevel);
+
+                // Exclude logs below this level
+                builder.SetMinimumLevel(LogLevel.Information);
+
+                // Default filters for Uno Platform namespaces
+                builder.AddFilter("Uno", LogLevel.Warning);
+                builder.AddFilter("Windows", LogLevel.Warning);
+                builder.AddFilter("Microsoft", LogLevel.Warning);
+
+                // Generic Xaml events
+                builder.AddFilter("Microsoft.UI.Xaml", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.UIElement", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace);
+
+                // Layouter specific messages
+                builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug);
+
+                builder.AddFilter("Windows.Storage", LogLevel.Debug);
+
+                // Binding related messages
+                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
+                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
+
+                // Binder memory references tracking
+                builder.AddFilter("Uno.UI.DataBinding.BinderReferenceHolder", LogLevel.Debug);
+
+                // RemoteControl and HotReload related
+                builder.AddFilter("Uno.UI.RemoteControl", LogLevel.Information);
+
+                // Debug JS interop
+                builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug);
+            });
+
+#if HAS_UNO
+            global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
+#endif
+            return factory;
+        }
 
         /// <summary>
         /// Configures the services.
@@ -431,8 +462,9 @@ namespace ISynergy.Framework.UI
 
             services.AddSingleton((s) => _languageService);
             services.AddSingleton((s) => _navigationService);
-
-            services.AddSingleton<ILoggerFactory, LoggerFactory>();
+            
+            services.AddSingleton<ILogger>((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+            
             services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
@@ -440,6 +472,7 @@ namespace ISynergy.Framework.UI
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IConverterService, ConverterService>();
             services.AddSingleton<IFileService, FileService>();
+            services.AddSingleton<IDispatcherService, DispatcherService>();
 
             //Register functions
             services.AddSingleton<LocalizationFunctions>();
@@ -450,16 +483,39 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <value>The view model types.</value>
         public List<Type> ViewModelTypes { get; private set; }
+        
         /// <summary>
         /// Gets the view types.
         /// </summary>
         /// <value>The view types.</value>
         public List<Type> ViewTypes { get; private set; }
+
         /// <summary>
         /// Gets the window types.
         /// </summary>
         /// <value>The window types.</value>
         public List<Type> WindowTypes { get; private set; }
+
+        /// <summary>
+        /// Bootstrapper types
+        /// </summary>
+        public List<Type> BootstrapperTypes { get; private set; }
+
+        /// <summary>
+        /// Registers the assemblies.
+        /// </summary>
+        /// <param name="mainAssembly"></param>
+        /// <param name="assemblyFilter"></param>
+        protected void RegisterAssemblies(Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
+        {
+            var assemblies = new List<Assembly>();
+            assemblies.Add(mainAssembly);
+
+            foreach (var item in mainAssembly.GetReferencedAssemblies().Where(assemblyFilter))
+                assemblies.Add(Assembly.Load(item));
+
+            RegisterAssemblies(assemblies);
+        }
 
         /// <summary>
         /// Registers the assemblies.
@@ -473,6 +529,7 @@ namespace ISynergy.Framework.UI
             ViewTypes = new List<Type>();
             WindowTypes = new List<Type>();
             ViewModelTypes = new List<Type>();
+            BootstrapperTypes = new List<Type>();
 
             foreach (var assembly in assemblies)
             {
@@ -504,6 +561,13 @@ namespace ISynergy.Framework.UI
                         && q.Name.EndsWith(GenericConstants.Window)
                         && q.Name != GenericConstants.Window
                         && q.Name != nameof(ISynergy.Framework.UI.Controls.Window)
+                        && !q.IsAbstract
+                        && !q.IsInterface)
+                    .ToList());
+
+                BootstrapperTypes.AddRange(assembly.GetTypes()
+                    .Where(q =>
+                        q.GetInterface(nameof(IBootstrap), false) != null
                         && !q.IsAbstract
                         && !q.IsInterface)
                     .ToList());
@@ -569,12 +633,17 @@ namespace ISynergy.Framework.UI
                     _services.AddSingleton(window);
                 }
             }
+
+            foreach (var bootstrapper in BootstrapperTypes.Distinct())
+            {
+                _services.AddSingleton(bootstrapper);
+            }
         }
 
         /// <summary>
         /// Sets the context.
         /// </summary>
-        public virtual void SetContext()
+        public virtual void Initialize()
         {
             _context = _serviceProvider.GetRequiredService<IContext>();
             _context.ViewModels = ViewModelTypes;
@@ -591,6 +660,11 @@ namespace ISynergy.Framework.UI
 
             var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
             localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IBaseSettingsService>().Culture);
+
+            // Bootstrap all registered modules.
+            foreach (var bootstrapper in BootstrapperTypes.Distinct())
+                if (_serviceProvider.GetService(bootstrapper) is IBootstrap instance)
+                    instance.Bootstrap();
         }
 
         /// <summary>

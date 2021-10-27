@@ -87,16 +87,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="name">The name.</param>
         /// <param name="address">The address.</param>
         public MapsViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             string name, 
             string address)
-            : base(context, commonServices, loggerFactory)
+            : base(context, commonServices, logger)
         {
             Locations = new ObservableCollection<object>();
             Title = address;

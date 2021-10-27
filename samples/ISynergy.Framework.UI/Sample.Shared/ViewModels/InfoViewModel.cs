@@ -64,12 +64,12 @@ namespace Sample.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         public InfoViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory)
-            : base(context, commonServices, loggerFactory)
+            ILogger logger)
+            : base(context, commonServices, logger)
         {
             CompanyName = commonServices.InfoService.CompanyName;
             ProductName = commonServices.InfoService.ProductName;

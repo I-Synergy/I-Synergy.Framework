@@ -83,9 +83,9 @@ namespace Sample.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonService">The common service.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
-        public TestItemsListViewModel(IContext context, ICommonServices commonService, ILoggerFactory loggerFactory)
-            : base(context, commonService, loggerFactory)
+        /// <param name="logger">The logger factory.</param>
+        public TestItemsListViewModel(IContext context, ICommonServices commonService, ILogger logger)
+            : base(context, commonService, logger)
         {
             CommonServices = commonService;
 
@@ -180,7 +180,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         public override Task AddAsync()
         {
-            var selectionVM = new SelectionViewModel<TestItem>(Context, CommonServices, _loggerFactory, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+            var selectionVM = new SelectionViewModel<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
             selectionVM.Submitted += SelectionVM_Submitted;
             return CommonServices.NavigationService.OpenBladeAsync(this, selectionVM);
         }

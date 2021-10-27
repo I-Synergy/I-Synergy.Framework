@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\..\project.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+    <ProjectReference Include="..\Sample.Models.Display\Sample.Models.Display.csproj" />
+  </ItemGroup>
+
+</Project>

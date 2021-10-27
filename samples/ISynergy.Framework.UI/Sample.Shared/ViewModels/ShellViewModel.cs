@@ -81,17 +81,17 @@ namespace Sample.ViewModels
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
         /// <param name="settingsService">The settings services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="themeSelectorService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         public ShellViewModel(
             IContext context,
             ICommonServices commonServices,
             ISettingsService settingsService,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             IThemeSelectorService themeSelectorService,
             LocalizationFunctions localizationFunctions)
-            : base(context, commonServices, settingsService, loggerFactory, themeSelectorService, localizationFunctions)
+            : base(context, commonServices, settingsService, logger, themeSelectorService, localizationFunctions)
         {
             CommonServices = commonServices;
 

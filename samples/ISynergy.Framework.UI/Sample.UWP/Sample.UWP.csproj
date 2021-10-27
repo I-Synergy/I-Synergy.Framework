@@ -158,6 +158,14 @@
       <Project>{837b30fa-b4f1-4ece-b8b7-656c76c469cb}</Project>
       <Name>ISynergy.Framework.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sample.ViewModels.Display\Sample.ViewModels.Display.csproj">
+      <Project>{26164f71-37c9-4060-92ff-75fcd3eeb2a9}</Project>
+      <Name>Sample.ViewModels.Display</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sample.Views.Display\Sample.Views.Display.csproj">
+      <Project>{c8dc6c34-6819-4ba8-b224-034d35589239}</Project>
+      <Name>Sample.Views.Display</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.Shared\Sample.Shared.projitems')" />
   <Import Project="..\Sample.UWP.Shared\Sample.UWP.Shared.projitems" Label="Shared" />
