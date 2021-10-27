@@ -88,9 +88,9 @@ namespace Sample
             // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
             Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
 
-            Application.Current.Resources["MaterialPrimaryColor"] = ThemeSelector.AccentColor;
-            Application.Current.Resources["MaterialPrimaryVariantLightColor"] = ThemeSelector.LightAccentColor;
-            Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = ThemeSelector.DarkAccentColor;
+            Application.Current.Resources["MaterialPrimaryColor"] = _themeSelector.AccentColor;
+            Application.Current.Resources["MaterialPrimaryVariantLightColor"] = _themeSelector.LightAccentColor;
+            Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = _themeSelector.DarkAccentColor;
 
             base.OnLaunched(args);
         }

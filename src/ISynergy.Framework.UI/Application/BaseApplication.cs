@@ -65,7 +65,7 @@ namespace ISynergy.Framework.UI
         /// Gets the theme selector.
         /// </summary>
         /// <value>The theme selector.</value>
-        private readonly IThemeSelectorService _themeSelector;
+        protected readonly IThemeSelectorService _themeSelector;
         
         /// <summary>
         /// The services
