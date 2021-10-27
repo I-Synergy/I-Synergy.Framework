@@ -19,8 +19,8 @@ using Sample.ViewModels;
 using Sample.Views;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Resources;
@@ -97,63 +97,6 @@ namespace Sample
 #endif
 
         /// <summary>
-        /// Configures the logger.
-        /// </summary>
-        /// <param name="factory">The factory.</param>
-        protected override void ConfigureLogger(ILoggerFactory factory)
-        {
-            factory = LoggerFactory.Create(builder =>
-            {
-#if __WASM__
-                builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
-#elif __IOS__
-                builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
-#elif WINDOWS_UWP || WINDOWS
-                builder.AddDebug();
-#endif
-
-                // Exclude logs below this level
-                builder.SetMinimumLevel(LogLevel.Information);
-
-                // Default filters for Uno Platform namespaces
-                builder.AddFilter("Uno", LogLevel.Warning);
-                builder.AddFilter("Windows", LogLevel.Warning);
-                builder.AddFilter("Microsoft", LogLevel.Warning);
-
-                // Generic Xaml events
-                builder.AddFilter("Microsoft.UI.Xaml", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.UIElement", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace);
-
-                // Layouter specific messages
-                builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug);
-
-                builder.AddFilter("Windows.Storage", LogLevel.Debug);
-
-                // Binding related messages
-                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
-
-                // Binder memory references tracking
-                builder.AddFilter("Uno.UI.DataBinding.BinderReferenceHolder", LogLevel.Debug);
-
-                // RemoteControl and HotReload related
-                builder.AddFilter("Uno.UI.RemoteControl", LogLevel.Information);
-
-                // Debug JS interop
-                builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug);
-            });
-
-#if HAS_UNO
-            global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
-#endif
-        }
-
-        /// <summary>
         /// Configures the services.
         /// </summary>
         /// <param name="services">The services.</param>
@@ -199,7 +142,7 @@ namespace Sample
             AddResourceManager(new ResourceManager(typeof(Resources)));
 
             //Add current assembly.
-            RegisterAssemblies(new List<Assembly> { assembly });
+            RegisterAssemblies(assembly, x => x.Name.StartsWith("Sample"));
         }
 
         /// <summary>
@@ -211,7 +154,7 @@ namespace Sample
         {
             try
             {
-                Debug.WriteLine(message);
+                _logger.LogDebug(message);
 
                 if(exception.InnerException is WebSocketException)
                     return;
@@ -250,7 +193,7 @@ namespace Sample
             }
             catch (Exception ex)
             {
-                Trace.TraceError(ex.Message, ex);
+                _logger.LogTrace(ex.Message, ex);
             }
         }
     }

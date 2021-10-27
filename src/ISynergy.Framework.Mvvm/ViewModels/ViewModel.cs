@@ -59,11 +59,6 @@ namespace ISynergy.Framework.Mvvm
         public ILogger Logger { get; }
 
         /// <summary>
-        /// The logger factory
-        /// </summary>
-        protected readonly ILoggerFactory _loggerFactory;
-
-        /// <summary>
         /// Gets or sets the close command.
         /// </summary>
         /// <value>The close command.</value>
@@ -94,20 +89,18 @@ namespace ISynergy.Framework.Mvvm
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="automaticValidation">The validation.</param>
         protected ViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             bool automaticValidation = false)
             : base(automaticValidation)
         {
-            _loggerFactory = loggerFactory;
-
             Context = context;
             BaseCommonServices = commonServices;
-            Logger = loggerFactory.CreateLogger(GetType());
+            Logger = logger;
 
             PropertyChanged += OnPropertyChanged;
             IsInitialized = false;

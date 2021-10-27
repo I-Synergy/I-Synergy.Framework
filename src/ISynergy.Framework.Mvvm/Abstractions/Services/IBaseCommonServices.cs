@@ -46,5 +46,9 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// Gets the messaging service.
         /// </summary>
         IMessageService MessageService {  get; }
+        /// <summary>
+        /// Dispatcher service.
+        /// </summary>
+        IDispatcherService DispatcherService { get; }
     }
 }

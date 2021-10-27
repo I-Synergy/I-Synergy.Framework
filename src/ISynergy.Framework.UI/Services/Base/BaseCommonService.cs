@@ -51,6 +51,11 @@ namespace ISynergy.Framework.UI.Services
         public IConverterService ConverterService { get; }
 
         /// <summary>
+        /// Dispatcher service.
+        /// </summary>
+        public IDispatcherService DispatcherService { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BaseCommonService"/> class.
         /// </summary>
         /// <param name="busyService">The busy.</param>
@@ -61,6 +66,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="navigationService">The navigation.</param>
         /// <param name="infoService">The information.</param>
         /// <param name="converterService">The converter.</param>
+        /// <param name="dispatcherService"></param>
         protected BaseCommonService(
             IBusyService busyService,
             IMessageService messageService,
@@ -69,7 +75,8 @@ namespace ISynergy.Framework.UI.Services
             IDialogService dialogService,
             INavigationService navigationService,
             IInfoService infoService,
-            IConverterService converterService)
+            IConverterService converterService,
+            IDispatcherService dispatcherService)
         {
             BusyService = busyService;
             MessageService = messageService;
@@ -79,6 +86,7 @@ namespace ISynergy.Framework.UI.Services
             NavigationService = navigationService;
             InfoService = infoService;
             ConverterService = converterService;
+            DispatcherService = dispatcherService;
         }
     }
 }

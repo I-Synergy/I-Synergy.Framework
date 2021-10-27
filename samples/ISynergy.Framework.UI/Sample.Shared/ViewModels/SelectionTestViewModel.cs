@@ -69,12 +69,12 @@ namespace Sample.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         public SelectionTestViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory)
-            : base(context, commonServices, loggerFactory)
+            ILogger logger)
+            : base(context, commonServices, logger)
         {
             SelectSingle_Command = new Command(async () => await SelectSingleAsync());
             SelectMultiple_Command = new Command(async () => await SelectMultipleAsync());
@@ -102,7 +102,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         private Task SelectMultipleAsync()
         {
-            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, _loggerFactory, Items, SelectedTestItems, SelectionModes.Multiple);
+            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
             return BaseCommonServices.NavigationService.OpenBladeAsync(this, selectionVm);
         }
@@ -113,7 +113,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         private Task SelectSingleAsync()
         {
-            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, _loggerFactory, Items, SelectedTestItems, SelectionModes.Single);
+            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
             return BaseCommonServices.NavigationService.OpenBladeAsync(this, selectionVm);
         }

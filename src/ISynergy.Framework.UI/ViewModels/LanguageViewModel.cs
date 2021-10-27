@@ -45,14 +45,14 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="commonServices">The common services.</param>
         /// <param name="settingsService">The settings services.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         public LanguageViewModel(
             IContext context,
             IBaseCommonServices commonServices,
             IBaseSettingsService settingsService,
             LocalizationFunctions localizationFunctions,
-            ILoggerFactory loggerFactory)
-            : base(context, commonServices, loggerFactory)
+            ILogger logger)
+            : base(context, commonServices, logger)
         {
             _localizationFunctions = localizationFunctions;
             _settingsService = settingsService;

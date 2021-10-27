@@ -6,12 +6,7 @@ using Sample.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-
-#if WINDOWS_UWP || HAS_UNO
-using Windows.UI.Xaml;
-#else
-using Microsoft.UI.Xaml;
-#endif
+using System.Timers;
 
 namespace Sample.ViewModels
 {
@@ -40,9 +35,9 @@ namespace Sample.ViewModels
         /// Gets or sets the Timer property value.
         /// </summary>
         /// <value>The slideshow timer.</value>
-        public DispatcherTimer SlideshowTimer
+        public Timer SlideshowTimer
         {
-            get { return GetValue<DispatcherTimer>(); }
+            get { return GetValue<Timer>(); }
             set { SetValue(value); }
         }
 
@@ -50,9 +45,9 @@ namespace Sample.ViewModels
         /// Gets or sets the UpdateSourceTimer property value.
         /// </summary>
         /// <value>The update source timer.</value>
-        public DispatcherTimer UpdateSourceTimer
+        public Timer UpdateSourceTimer
         {
-            get { return GetValue<DispatcherTimer>(); }
+            get { return GetValue<Timer>(); }
             set { SetValue(value); }
         }
 
@@ -61,16 +56,16 @@ namespace Sample.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         public SlideShowViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory)
-            : base(context, commonServices, loggerFactory)
+            ILogger logger)
+            : base(context, commonServices, logger)
         {
-            UpdateSourceTimer = new DispatcherTimer();
-            UpdateSourceTimer.Tick += UpdateSourceTimer_Tick;
-            UpdateSourceTimer.Interval = TimeSpan.FromMinutes(30);
+            UpdateSourceTimer = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
+            UpdateSourceTimer.Elapsed += UpdateSourceTimer_Tick;
+            UpdateSourceTimer.AutoReset = true;
             UpdateSourceTimer.Start();
 
             // Get initial images from source.
@@ -85,9 +80,9 @@ namespace Sample.ViewModels
             // Set timer if images count is at least 1.
             if (Items.Count > 0)
             {
-                SlideshowTimer = new DispatcherTimer();
-                SlideshowTimer.Tick += SlideshowTimer_Tick;
-                SlideshowTimer.Interval = TimeSpan.FromSeconds(5);
+                SlideshowTimer = new Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
+                SlideshowTimer.Elapsed += SlideshowTimer_Tick;
+                UpdateSourceTimer.AutoReset = true;
                 SlideshowTimer.Start();
             }
         }
@@ -95,27 +90,32 @@ namespace Sample.ViewModels
         /// <summary>
         /// slideshow time out timer tick as an asynchronous operation.
         /// </summary>
-        private void SlideshowTimer_Tick(object sender, object e)
+        private async void SlideshowTimer_Tick(object sender, ElapsedEventArgs e)
         {
-            SlideshowTimer.Stop();
+            SlideshowTimer.Enabled = false;
 
-            if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
+            await BaseCommonServices.DispatcherService.InvokeAsync(() =>
             {
-                SelectedItem = Items.First();
-            }
-            else if (SelectedItem.Index < Items.Count - 1)
-            {
-                SelectedItem = Items.Where(q => q.Index == SelectedItem.Index + 1).Single();
-            }
+                if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
+                {
+                    SelectedItem = Items.First();
+                }
+                else if (SelectedItem.Index < Items.Count - 1)
+                {
+                    SelectedItem = Items.Where(q => q.Index == SelectedItem.Index + 1).Single();
+                }
+            });
 
-            SlideshowTimer.Start();
+            SlideshowTimer.Enabled = true;
         }
 
         /// <summary>
         /// Updates the source time out timer tick synchronous.
         /// </summary>
-        private void UpdateSourceTimer_Tick(object sender, object e)
+        private void UpdateSourceTimer_Tick(object sender, ElapsedEventArgs e)
         {
+            UpdateSourceTimer.Enabled = false;
+
             Items = new ObservableCollection<MediaItem>()
             {
                 new MediaItem { Index = 0, ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
@@ -123,6 +123,8 @@ namespace Sample.ViewModels
                 new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
                 new MediaItem { Index = 3, ImageUri = "http://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
             };
+
+            UpdateSourceTimer.Enabled = true;
         }
     }
 }

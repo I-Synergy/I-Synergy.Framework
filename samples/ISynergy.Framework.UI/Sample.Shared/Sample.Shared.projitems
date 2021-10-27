@@ -21,7 +21,6 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\QueryTypes.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\MediaItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Options\AppCenterOptions.cs" />
@@ -47,7 +46,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InfoViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SelectionTestViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TestItemsListViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ValidationViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Controls\BaseList.xaml.cs">
@@ -61,9 +59,6 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\SlideShowView.xaml.cs">
-      <DependentUpon>SlideShowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\ValidationView.xaml.cs">
       <DependentUpon>ValidationView.xaml</DependentUpon>
@@ -95,10 +90,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\ShellView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Views\SlideShowView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

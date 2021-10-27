@@ -129,16 +129,16 @@ namespace ISynergy.Framework.Mvvm
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="refreshOnInitialization">if set to <c>true</c> [refresh on initialization].</param>
         /// <param name="automaticValidation"></param>
         protected ViewModelBladeView(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             bool refreshOnInitialization = true,
             bool automaticValidation = false) 
-            : base(context, commonServices, loggerFactory, automaticValidation)
+            : base(context, commonServices, logger, automaticValidation)
         {
             RefreshOnInitialization = refreshOnInitialization;
 

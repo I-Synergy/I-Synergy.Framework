@@ -35,15 +35,15 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="note">The note.</param>
         [PreferredConstructor]
         public NoteViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             string note)
-            : base(context, commonServices, loggerFactory)
+            : base(context, commonServices, logger)
         {
             SelectedItem = note;
         }
@@ -53,16 +53,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="note">The note.</param>
         /// <param name="targetProperty">The target property.</param>
         public NoteViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             string note,
             string targetProperty)
-            : this(context, commonServices, loggerFactory, note)
+            : this(context, commonServices, logger, note)
         {
             _targetProperty = targetProperty;
         }

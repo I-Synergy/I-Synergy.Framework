@@ -80,14 +80,14 @@ namespace ISynergy.Framework.Mvvm
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="automaticValidation"></param>
         protected ViewModelBladeWizard(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             bool automaticValidation = false)
-            : base(context, commonServices, loggerFactory, automaticValidation)
+            : base(context, commonServices, logger, automaticValidation)
         {
             Back_Command = new Command(PerformBackAction);
             Next_Command = new Command(PerformNextAction);

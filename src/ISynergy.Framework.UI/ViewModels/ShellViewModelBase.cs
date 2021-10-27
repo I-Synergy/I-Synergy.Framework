@@ -163,17 +163,17 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
         /// <param name="settingsService">The settings services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="themeSelectorService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         protected ShellViewModelBase(
             IContext context,
             IBaseCommonServices commonServices,
             IBaseSettingsService settingsService,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             IThemeSelectorService themeSelectorService,
             LocalizationFunctions localizationFunctions)
-            : base(context, commonServices, loggerFactory)
+            : base(context, commonServices, logger)
         {
             _settingsService = settingsService;
             _themeSelector = themeSelectorService;
@@ -413,7 +413,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenLanguageAsync()
         {
-            var languageVM = new LanguageViewModel(Context, BaseCommonServices, _settingsService, _localizationFunctions, _loggerFactory);
+            var languageVM = new LanguageViewModel(Context, BaseCommonServices, _settingsService, _localizationFunctions, Logger);
             languageVM.Submitted += LanguageVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, string>(languageVM);
         }
@@ -445,7 +445,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenColorsAsync()
         {
-            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _settingsService, _loggerFactory);
+            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _settingsService, Logger);
             themeVM.Submitted += ThemeVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ThemeColors>(themeVM);
         }

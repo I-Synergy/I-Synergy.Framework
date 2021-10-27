@@ -87,6 +87,7 @@ namespace Sample.Services
             ICameraService cameraService,
             IInfoService infoService,
             IConverterService converterService,
+            IDispatcherService dispatcherService,
             IAuthenticationService authenticationService,
             IMasterDataService masterDataService,
             IDownloadFileService downloadFileService,
@@ -101,7 +102,8 @@ namespace Sample.Services
                  dialogService, 
                  navigationService, 
                  infoService, 
-                 converterService)
+                 converterService,
+                 dispatcherService)
         {
             AuthenticationService = authenticationService;
             MasterDataService = masterDataService;

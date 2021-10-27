@@ -42,14 +42,14 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="property">The property.</param>
         public PincodeViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             object property)
-            : base(context, commonServices, loggerFactory)
+            : base(context, commonServices, logger)
         {
             Property = property;
         }

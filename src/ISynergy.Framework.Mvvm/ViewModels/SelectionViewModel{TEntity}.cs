@@ -66,7 +66,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger factory.</param>
         /// <param name="items">The items.</param>
         /// <param name="selectedItems">The selected items.</param>
         /// <param name="selectionMode">The selection mode.</param>
@@ -74,12 +74,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         public SelectionViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILoggerFactory loggerFactory,
+            ILogger logger,
             IEnumerable<TEntity> items,
             IEnumerable<object> selectedItems,
             SelectionModes selectionMode = SelectionModes.Single,
             bool automaticValidation = false)
-            : base(context, commonServices, loggerFactory, automaticValidation)
+            : base(context, commonServices, logger, automaticValidation)
         {
             if (items is null)
                 items = items.EnsureNotNull();
