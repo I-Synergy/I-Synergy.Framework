@@ -30,6 +30,7 @@ using System.Text.RegularExpressions;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.Core.Services;
 using System.Resources;
+using ISynergy.Framework.UI.Extensions;
 
 #if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
@@ -324,7 +325,7 @@ namespace ISynergy.Framework.UI
         {
             var rootFrame = Window.Current.Content as Frame;
 
-            if (GetDescendantFromName(Window.Current.Content, "ContentRootFrame") is Frame _frame)
+            if (Window.Current.Content.FindDescendantByName("ContentRootFrame") is Frame _frame)
             {
                 rootFrame = _frame;
             }
@@ -336,37 +337,6 @@ namespace ISynergy.Framework.UI
             }
         }
 #endif
-
-
-        /// <summary>
-        /// Gets the name of the descendant from.
-        /// </summary>
-        /// <param name="parent">The parent.</param>
-        /// <param name="name">The name.</param>
-        /// <returns>FrameworkElement.</returns>
-        public static FrameworkElement GetDescendantFromName(DependencyObject parent, string name)
-        {
-            var count = VisualTreeHelper.GetChildrenCount(parent);
-
-            if (count < 1)
-                return null;
-
-            for (var i = 0; i < count; i++)
-            {
-                if (VisualTreeHelper.GetChild(parent, i) is FrameworkElement frameworkElement)
-                {
-                    if (frameworkElement.Name == name)
-                        return frameworkElement;
-
-                    frameworkElement = GetDescendantFromName(frameworkElement, name);
-
-                    if (frameworkElement != null)
-                        return frameworkElement;
-                }
-            }
-
-            return null;
-        }
 
 #if HAS_UNO || WINDOWS_UWP
         /// <summary>
