@@ -31,9 +31,9 @@ namespace Sample
         /// Initializes a new instance of the <see cref="Context" /> class.
         /// </summary>
         /// <param name="configurationOptions">The configuration options.</param>
-        public Context(IOptions<ConfigurationOptions> configurationOptions)
+        public Context(ConfigurationOptions configurationOptions)
         {
-            _configurationOptions = configurationOptions.Value;
+            _configurationOptions = configurationOptions;
 
             Profiles = new ObservableCollection<IProfile>() {  new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();

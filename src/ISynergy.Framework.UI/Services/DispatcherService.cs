@@ -1,8 +1,15 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
+
+#if WINDOWS_UWP || HAS_UNO
+using Windows.UI.Xaml;
+#else
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -11,29 +18,27 @@ namespace ISynergy.Framework.UI.Services
     /// </summary>
     public class DispatcherService : IDispatcherService
     {
-        private readonly CoreDispatcherPriority _priority;
-
         /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public DispatcherService()
-        {
-            _priority = CoreDispatcherPriority.Normal;
-        }
-
-        /// <summary>
-        /// Dispatcher asynchronous invoke task.
+        /// Invokes action with the dispatcher.
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public async Task InvokeAsync(Action action)
+        public Task InvokeAsync(Action action)
         {
-            var dispatcher = CoreApplication.MainView.Dispatcher;
+#if WINDOWS_UWP || HAS_UNO
+            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(
+                CoreDispatcherPriority.Normal, action);
+#else
+            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
+            {
+                return Task.Run(() =>
+                {
+                    dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => action());
+                });
+            }
 
-            if (dispatcher is null || dispatcher.HasThreadAccess)
-                action();
-            else
-                await dispatcher.RunAndAwaitAsync(_priority, action);
+            return Task.CompletedTask;
+#endif
         }
     }
 }

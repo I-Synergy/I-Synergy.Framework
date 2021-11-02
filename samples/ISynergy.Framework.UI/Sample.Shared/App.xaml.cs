@@ -43,16 +43,6 @@ namespace Sample
     public sealed partial class App : BaseApplication
     {
         /// <summary>
-        /// The configuration root
-        /// </summary>
-        private IConfigurationRoot ConfigurationRoot;
-
-        /// <summary>
-        /// The application center options
-        /// </summary>
-        private AppCenterOptions _appCenterOptions = new AppCenterOptions();
-
-        /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
@@ -106,11 +96,7 @@ namespace Sample
 
             var assembly = Assembly.GetAssembly(typeof(App));
 
-            ConfigurationRoot = new ConfigurationBuilder()
-                .AddJsonStream(assembly.GetManifestResourceStream("appsettings.json"))
-                .Build();
-
-            services.Configure<ConfigurationOptions>(ConfigurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
+            services.AddSingleton(e => new ConfigurationOptions("I-Synergy Framework UI Sample", "client_id", "client_secret"));
 
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();

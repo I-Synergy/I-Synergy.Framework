@@ -9,17 +9,17 @@
         /// Gets or sets the application title.
         /// </summary>
         /// <value>The application title.</value>
-        public string ApplicationTitle { get; set; }
+        public string ApplicationTitle { get; }
         /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
         /// <value>The client identifier.</value>
-        public string ClientId { get; set; }
+        public string ClientId { get; }
         /// <summary>
         /// Gets or sets the client secret.
         /// </summary>
         /// <value>The client secret.</value>
-        public string ClientSecret { get; set; }
+        public string ClientSecret { get; }
         /// <summary>
         /// Gets or sets the service endpoint.
         /// </summary>
@@ -45,5 +45,18 @@
         /// </summary>
         /// <value>The web endpoint.</value>
         public string WebEndpoint { get; set; }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="applicationTitle"></param>
+        /// <param name="clientId"></param>
+        /// <param name="clientSecret"></param>
+        public ConfigurationOptions(string applicationTitle, string clientId, string clientSecret)
+        {
+            ApplicationTitle = applicationTitle;
+            ClientId = clientId;
+            ClientSecret = clientSecret;    
+        }
     }
 }

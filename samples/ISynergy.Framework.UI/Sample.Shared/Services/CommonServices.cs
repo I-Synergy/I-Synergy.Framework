@@ -69,6 +69,7 @@ namespace Sample.Services
         /// <param name="cameraService">The camera service.</param>
         /// <param name="infoService">The information service.</param>
         /// <param name="converterService">The converter service.</param>
+        /// <param name="dispatcherService">The dispatcher service.</param>
         /// <param name="authenticationService">The authentication service.</param>
         /// <param name="masterDataService">The master data service.</param>
         /// <param name="downloadFileService">The download file service.</param>
