@@ -49,6 +49,9 @@
         <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
         <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
         <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+        <ProjectReference Include="..\Sample.ViewModels.Display\Sample.ViewModels.Display.csproj" />
+        <ProjectReference Include="..\Sample.Views.Display\Sample.Views.Display.csproj" />
     </ItemGroup>
     <Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.Shared\Sample.Shared.projitems')" />
+    <Import Project="..\Sample.UWP.Shared\Sample.UWP.Shared.projitems" Label="Shared" />
 </Project>

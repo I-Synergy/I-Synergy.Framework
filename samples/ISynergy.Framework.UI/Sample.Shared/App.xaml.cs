@@ -43,16 +43,6 @@ namespace Sample
     public sealed partial class App : BaseApplication
     {
         /// <summary>
-        /// The configuration root
-        /// </summary>
-        private IConfigurationRoot ConfigurationRoot;
-
-        /// <summary>
-        /// The application center options
-        /// </summary>
-        private AppCenterOptions _appCenterOptions = new AppCenterOptions();
-
-        /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
@@ -88,9 +78,9 @@ namespace Sample
             // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
             Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
 
-            Application.Current.Resources["MaterialPrimaryColor"] = ThemeSelector.AccentColor;
-            Application.Current.Resources["MaterialPrimaryVariantLightColor"] = ThemeSelector.LightAccentColor;
-            Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = ThemeSelector.DarkAccentColor;
+            Application.Current.Resources["MaterialPrimaryColor"] = _themeSelector.AccentColor;
+            Application.Current.Resources["MaterialPrimaryVariantLightColor"] = _themeSelector.LightAccentColor;
+            Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = _themeSelector.DarkAccentColor;
 
             base.OnLaunched(args);
         }
@@ -106,11 +96,7 @@ namespace Sample
 
             var assembly = Assembly.GetAssembly(typeof(App));
 
-            ConfigurationRoot = new ConfigurationBuilder()
-                .AddJsonStream(assembly.GetManifestResourceStream("appsettings.json"))
-                .Build();
-
-            services.Configure<ConfigurationOptions>(ConfigurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
+            services.AddSingleton(e => new ConfigurationOptions("I-Synergy Framework UI Sample", "client_id", "client_secret"));
 
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();

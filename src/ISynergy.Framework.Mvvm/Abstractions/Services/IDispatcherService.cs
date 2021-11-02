@@ -8,11 +8,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     /// </summary>
     public interface IDispatcherService
     {
-        /// <summary>
-        /// Dispatcher asynchronous invoke task.
-        /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
         Task InvokeAsync(Action action);
     }
 }

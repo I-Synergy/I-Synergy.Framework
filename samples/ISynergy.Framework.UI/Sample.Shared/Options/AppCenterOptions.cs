@@ -9,6 +9,15 @@
         /// Gets or sets the instrumentation key.
         /// </summary>
         /// <value>The instrumentation key.</value>
-        public string InstrumentationKey { get; set; }
+        public string InstrumentationKey { get; }
+
+        /// <summary>
+        /// Default constructur.
+        /// </summary>
+        /// <param name="instrumentationKey"></param>
+        public AppCenterOptions(string instrumentationKey)
+        {
+            InstrumentationKey = instrumentationKey;
+        }
     }
 }

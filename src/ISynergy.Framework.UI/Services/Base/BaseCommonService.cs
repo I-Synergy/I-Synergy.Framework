@@ -49,7 +49,6 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The converter service.</value>
         public IConverterService ConverterService { get; }
-
         /// <summary>
         /// Dispatcher service.
         /// </summary>

@@ -139,15 +139,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.ViewModels.Display",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Views.Display", "samples\ISynergy.Framework.UI\Sample.Views.Display\Sample.Views.Display.csproj", "{C8DC6C34-6819-4BA8-B224-034D35589239}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Models.Display", "samples\ISynergy.Framework.UI\Sample.Models.Display\Sample.Models.Display.csproj", "{569DC4CD-E17B-45D0-BBE7-75AC0914DF5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Models.Display", "samples\ISynergy.Framework.UI\Sample.Models.Display\Sample.Models.Display.csproj", "{569DC4CD-E17B-45D0-BBE7-75AC0914DF5E}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems*{58ac244e-38e5-4165-a25e-fedad3ad26c2}*SharedItemsImports = 13
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{77e89c13-f0aa-4e6b-a7cb-ad5ec5bf391a}*SharedItemsImports = 5
+		samples\ISynergy.Framework.UI\Sample.UWP.Shared\Sample.UWP.Shared.projitems*{77e89c13-f0aa-4e6b-a7cb-ad5ec5bf391a}*SharedItemsImports = 5
 		samples\ISynergy.Framework.Messagebus.Sample.Shared\ISynergy.Framework.Messagebus.Sample.Shared.projitems*{81924ac4-c08f-4e9b-bd05-fb7f75291609}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{8d7f5a42-90a1-4e77-a1a7-78e4c3c498a1}*SharedItemsImports = 4
+		samples\ISynergy.Framework.UI\Sample.UWP.Shared\Sample.UWP.Shared.projitems*{8d7f5a42-90a1-4e77-a1a7-78e4c3c498a1}*SharedItemsImports = 4
 		samples\ISynergy.Framework.UI\Sample.Desktop.Shared\Sample.Desktop.Shared.projitems*{92ba2c8d-c14e-458a-b53d-ae9afa29e9b3}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{92ba2c8d-c14e-458a-b53d-ae9afa29e9b3}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{b3bccab0-e662-4443-8af3-63721f4dadb5}*SharedItemsImports = 4
