@@ -112,10 +112,6 @@
       <Project>{3828a883-b771-4e6b-b004-e521b6d7ad52}</Project>
       <Name>ISynergy.Framework.Mvvm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj">
-      <Project>{19299d2e-c242-4deb-bd2b-e0a5e7cbaa40}</Project>
-      <Name>ISynergy.Framework.UI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sample.Models.Display\Sample.Models.Display.csproj">
       <Project>{569dc4cd-e17b-45d0-bbe7-75ac0914df5e}</Project>
       <Name>Sample.Models.Display</Name>
@@ -139,7 +135,9 @@
   <!-- This will force the generation of the APK when not building inside visual studio -->
   <!--<Target Name="GenerateBuild" DependsOnTargets="SignAndroidPackage" AfterTargets="Build" Condition="'$(BuildingInsideVisualStudio)'==''" />-->
   <!--<Target Name="Issue3897Workaround" Condition=" '$(ManagedDesignTimeBuild)' == 'True' " AfterTargets="_RemoveLegacyDesigner">
-    --><!-- See https://github.com/unoplatform/uno/issues/3897 and https://github.com/xamarin/xamarin-android/issues/5069 for more details --><!--
+    -->
+  <!-- See https://github.com/unoplatform/uno/issues/3897 and https://github.com/xamarin/xamarin-android/issues/5069 for more details -->
+  <!--
     <ItemGroup>
       <Compile Remove="$(_AndroidResourceDesignerFile)" />
     </ItemGroup>

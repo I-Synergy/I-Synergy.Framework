@@ -2,16 +2,16 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
         <PackageId>I-Synergy.Framework.AspNetCore.Authentication</PackageId>
-        <Description>I-Synergy Framework Authentication for .Net 5.0</Description>
+        <Description>I-Synergy Framework Authentication for .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
     </ItemGroup>
 
     <ItemGroup>

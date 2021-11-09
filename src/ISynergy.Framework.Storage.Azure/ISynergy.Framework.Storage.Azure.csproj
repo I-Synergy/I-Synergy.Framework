@@ -2,17 +2,17 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Storage.Azure</PackageId>
-        <Description>I-Synergy Framework Azure Storage for .Net 5.0</Description>
+        <Description>I-Synergy Framework Azure Storage for .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, Azure, Storage</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
         <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
-		<PackageReference Include="System.Text.Encodings.Web" Version="5.0.1" />
     </ItemGroup>
 
     <ItemGroup>

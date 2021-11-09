@@ -1,0 +1,28 @@
+﻿using ISynergy.Services.Enumerations;
+using ISynergy.Services.Models;
+
+namespace ISynergy.Services
+{
+    /// <summary>
+    /// Reporting service.
+    /// </summary>
+    public interface IDocumentService
+    {
+        /// <summary>
+        /// Generates a Microsoft Excel  stream.
+        /// </summary>
+        /// <param name="spreadsheetRequest"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<Stream> GenerateExcelSheetAsync<T>(SpreadsheetRequest<T> spreadsheetRequest, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Generates a Microsoft Word or Pdf document stream.
+        /// </summary>
+        /// <param name="documentRequest"></param>
+        /// <param name="exportAsPdf"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default);
+    }
+}

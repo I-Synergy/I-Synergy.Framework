@@ -40,7 +40,6 @@
     <AssetTargetFallback>net5.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
-    <EntryPointProjectUniqueName>..\Sample.Desktop\Sample.Desktop.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -48,10 +47,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" IncludeAssets="build" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sample.Desktop\Sample.Desktop.csproj" />
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" IncludeAssets="build" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

@@ -2,18 +2,19 @@
     <Import Project="..\..\project.props" />
     
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
         <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
-        <Description>I-Synergy Framework Azure MessageBus for .Net 5.0</Description>
+        <Description>I-Synergy Framework Azure MessageBus for .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
-    <ItemGroup>
+	<ItemGroup>
         <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     </ItemGroup>
+	
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />
     </ItemGroup>

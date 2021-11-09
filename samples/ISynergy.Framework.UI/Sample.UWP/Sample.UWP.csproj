@@ -151,10 +151,6 @@
       <Project>{3828a883-b771-4e6b-b004-e521b6d7ad52}</Project>
       <Name>ISynergy.Framework.Mvvm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj">
-      <Project>{837b30fa-b4f1-4ece-b8b7-656c76c469cb}</Project>
-      <Name>ISynergy.Framework.UI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sample.ViewModels.Display\Sample.ViewModels.Display.csproj">
       <Project>{26164f71-37c9-4060-92ff-75fcd3eeb2a9}</Project>
       <Name>Sample.ViewModels.Display</Name>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -207,6 +208,15 @@ namespace ISynergy.Framework.Core.Extensions
                 r[i + 1] = vector[i];
 
             return r;
+        }
+
+        public static bool IsNullOrEmpty<T>(T[] array)
+            where T: class
+        {
+            if (array == null || array.Length == 0)
+                return true;
+            else
+                return array.All(item => item == null);
         }
     }
 }

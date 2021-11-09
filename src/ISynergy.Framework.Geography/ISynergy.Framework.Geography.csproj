@@ -4,7 +4,7 @@
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Geography</PackageId>
-        <Description>I-Synergy Framework Geography for .Net Standard 2.0 and .Net 5.0</Description>
+        <Description>I-Synergy Framework Geography for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, Geography</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>

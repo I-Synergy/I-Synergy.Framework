@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.AspNetCore.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.AspNetCore
 {
@@ -237,6 +238,7 @@ namespace ISynergy.Framework.AspNetCore
         protected virtual void AddLogging(IServiceCollection services)
         {
             services.AddLogging();
+            services.AddSingleton<ILogger>((s) => new LoggerFactory().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
         }
 
         /// <summary>
