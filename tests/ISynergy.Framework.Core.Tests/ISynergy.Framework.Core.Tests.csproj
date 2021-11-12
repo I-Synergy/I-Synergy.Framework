@@ -18,10 +18,4 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Collections\" />
-      <Folder Include="Points\" />
-      <Folder Include="Ranges\" />
-    </ItemGroup>
-
 </Project>

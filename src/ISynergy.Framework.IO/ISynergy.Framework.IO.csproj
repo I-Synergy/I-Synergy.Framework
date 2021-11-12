@@ -2,11 +2,15 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Core.IO</PackageId>
-		<Description>I-Synergy IO Framework for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
+		<Description>I-Synergy IO Framework for .Net 6.0</Description>
 		<PackageTags>I-Synergy, Framework, IO</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 

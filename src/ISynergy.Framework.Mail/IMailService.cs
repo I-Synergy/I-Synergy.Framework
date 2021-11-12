@@ -1,4 +1,4 @@
-﻿using ISynergy.Services.Models;
+﻿using ISynergy.Framework.Models;
 
 namespace ISynergy.Services
 {

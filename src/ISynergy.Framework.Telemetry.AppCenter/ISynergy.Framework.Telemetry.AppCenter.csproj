@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\project.props" />
+    <PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Telemetry.AppCenter</PackageId>
+		<Description>I-Synergy Framework Telemetry library for AppCenter</Description>
+		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
+      <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+      <ProjectReference Include="..\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj" />
+    </ItemGroup>
+</Project>

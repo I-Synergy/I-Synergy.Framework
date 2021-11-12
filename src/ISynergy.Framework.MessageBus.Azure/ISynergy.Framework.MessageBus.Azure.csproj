@@ -4,14 +4,18 @@
     <PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
         <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
-        <Description>I-Synergy Framework Azure MessageBus for .Net 6.0</Description>
+        <Description>I-Synergy Framework Azure MessageBus for .Net Standard 2.0 and .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
 	<ItemGroup>
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     </ItemGroup>
 	

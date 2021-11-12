@@ -6,9 +6,13 @@
         <PackageId>I-Synergy.Framework.Core</PackageId>
         <Description>I-Synergy Framework Core for .Net Standard 2.0 and .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, Core</PackageTags>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		 <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
 	<ItemGroup>

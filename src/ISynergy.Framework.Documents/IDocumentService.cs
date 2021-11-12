@@ -1,5 +1,5 @@
-﻿using ISynergy.Services.Enumerations;
-using ISynergy.Services.Models;
+﻿using ISynergy.Framework.Enumerations;
+using ISynergy.Framework.Models;
 
 namespace ISynergy.Services
 {

@@ -50,10 +50,5 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// Dispatcher service.
         /// </summary>
         IDispatcherService DispatcherService { get; }
-        /// <summary>
-        /// Gets the file service.
-        /// </summary>
-        /// <value>The file service.</value>
-        IFileService FileService { get; }
     }
 }

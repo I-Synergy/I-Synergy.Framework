@@ -2,14 +2,14 @@
 	<Import Project="..\..\..\project.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net5.0-windows10.0.18362.0;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.22000.0</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<Description>Sample View for Display</Description>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 	</PropertyGroup>
 
 	<Choose>
-		<When Condition="'$(TargetFramework)' == 'net5.0-windows10.0.18362.0'">
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.22000.0'">
 			<PropertyGroup>
 				<DefineConstants>NET5_0;WINDOWS</DefineConstants>
 				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
@@ -18,8 +18,16 @@
 			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.3" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
-				<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" />
+				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.5" />
+			</ItemGroup>
+
+			<ItemGroup>
+				<Reference Include="Microsoft.Xaml.Interactions">
+					<HintPath>..\..\resources\Microsoft.Xaml.Interactions.dll</HintPath>
+				</Reference>
+				<Reference Include="Microsoft.Xaml.Interactivity">
+					<HintPath>..\..\resources\Microsoft.Xaml.Interactivity.dll</HintPath>
+				</Reference>
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
@@ -34,10 +42,11 @@
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.Core" Version="3.0.0" />
-				<PackageReference Include="Uno.UI" Version="3.11.0" />
-				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.0.0" />
-				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.5" />
+				<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+				<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.1.0" />
+				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.5" />
+				<PackageReference Include="Uno.Microsoft.Toolkit.WinUI.Controls.Layout" Version="7.0.0" />
+				<PackageReference Include="Uno.WinUI.WebAssembly" Version="3.11.6" />
 			</ItemGroup>
 		</Otherwise>
 	</Choose>
@@ -56,6 +65,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

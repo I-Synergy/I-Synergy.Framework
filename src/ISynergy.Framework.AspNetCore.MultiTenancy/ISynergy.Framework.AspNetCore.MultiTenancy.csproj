@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<PackageId>I-Synergy.Framework.AspNetCore.MultiTenancy</PackageId>
+		<Description>I-Synergy Framework MultiTenancy for .Net 6.0</Description>
+		<PackageTags>I-Synergy, Framework, MultiTenancy, AspNetCore</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
+</Project>

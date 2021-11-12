@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace Sample.ViewModels
 {

@@ -1,0 +1,63 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\..\project.props" />
+	
+  <PropertyGroup>
+	  <TargetFrameworks>uap10.0.18362;net6.0;net6.0-windows;net6.0-windows10.0.22000.0</TargetFrameworks>
+	  <PackageId>I-Synergy.Framework.UI.Common</PackageId>
+	  <Description>I-Synergy Framework UI (Common) for UWP, WPF, .Net 6.0 and WinUI</Description>
+	  <PackageTags>I-Synergy, Framework, UI, Common, UWP, WPF, net6.0, WinUI</PackageTags>
+	  <GenerateLibraryLayout>true</GenerateLibraryLayout>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <IncludeBuildOutput>true</IncludeBuildOutput>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <EnableDefaultPageItems>false</EnableDefaultPageItems>
+	  <RootNamespace>ISynergy.Framework.UI</RootNamespace>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+	</ItemGroup>
+
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
+			<PropertyGroup>
+				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.22000.0'">
+			<PropertyGroup>
+				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+				<DefineConstants>WinUI</DefineConstants>
+				<UseWinUI>true</UseWinUI>
+			</PropertyGroup>
+
+			<ItemGroup>
+				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.5" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows'">
+			<PropertyGroup>
+				<DefineConstants>WPF</DefineConstants>
+				<UseWPF>true</UseWPF>
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="Uno.WinUI.Skia.Wpf" Version="3.11.6" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="Uno.WinUI.WebAssembly" Version="3.11.6" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	</ItemGroup>
+</Project>

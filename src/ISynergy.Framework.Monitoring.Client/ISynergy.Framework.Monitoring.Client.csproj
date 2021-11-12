@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\project.props" />
+    <PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Monitoring.Client</PackageId>
+		<Description>I-Synergy Framework Monitoring Client for .Net Standard 2.0 and .Net 6.0</Description>
+		<PackageTags>I-Synergy, Framework, Monitoring, Client</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\project.props" />
+    <PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Telemetry</PackageId>
+		<Description>I-Synergy Framework Telemetry library for .Net Standard 2.0</Description>
+		<PackageTags>I-Synergy, Framework, Telemetry</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+</Project>

@@ -2,12 +2,16 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
-        <Description>I-Synergy Framework Mvvm for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
+        <Description>I-Synergy Framework Mvvm for .Net Standard 2.0 and .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
 	<ItemGroup>

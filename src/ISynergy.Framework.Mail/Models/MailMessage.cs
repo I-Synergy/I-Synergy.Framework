@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Services.Models
+﻿namespace ISynergy.Framework.Models
 {
     public class MailMessage
     {

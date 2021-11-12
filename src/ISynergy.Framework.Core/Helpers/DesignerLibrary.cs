@@ -80,7 +80,7 @@ namespace ISynergy.Framework.Core.Helpers
                     _isInDesignMode = DesignMode.DesignModeEnabled;
 #elif XAMARIN
                     _isInDesignMode = false;
-#elif WINDOWS_UWP
+#elif NETFX_CORE
                     _isInDesignMode = Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
 #else

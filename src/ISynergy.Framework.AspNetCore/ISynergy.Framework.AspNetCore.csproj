@@ -6,8 +6,12 @@
         <PackageId>I-Synergy.Framework.AspNetCore</PackageId>
         <Description>I-Synergy Framework AspNetCore for .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore</PackageTags>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
 	<ItemGroup>

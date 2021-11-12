@@ -1,7 +1,7 @@
-﻿using ISynergy.Services.Models.Base;
+﻿using ISynergy.Framework.Models.Base;
 using System.Collections;
 
-namespace ISynergy.Services.Models
+namespace ISynergy.Framework.Models
 {
     /// <summary>
     /// Class DocumentRequest.

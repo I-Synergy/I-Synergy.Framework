@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ISynergy.Services.Messages
+namespace ISynergy.Framework.Messages
 {
     /// <summary>
     /// Class CallerMessage.

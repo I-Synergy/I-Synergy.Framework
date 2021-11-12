@@ -1,0 +1,104 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>uap10.0.18362;net6.0;net6.0-windows;net6.0-windows10.0.22000.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.UI</PackageId>
+		<Description>I-Synergy Framework UI for UWP, WPF, .Net 6.0 and WinUI</Description>
+		<PackageTags>I-Synergy, Framework, UI, UAP, UWP, WPF, WinUI, net6.0</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+	</ItemGroup>
+		
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
+			<PropertyGroup>
+				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.0" />
+				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
+			</ItemGroup>
+			<ItemGroup>
+				<ProjectReference Include="..\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.22000.0'">
+			<PropertyGroup>
+				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+				<DefineConstants>WinUI</DefineConstants>
+				<UseWinUI>true</UseWinUI>
+			</PropertyGroup>
+
+			<ItemGroup>
+				<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.5" />
+				<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+			</ItemGroup>
+
+			<ItemGroup>
+				<Reference Include="Microsoft.Xaml.Interactions">
+					<HintPath>..\..\resources\Microsoft.Xaml.Interactions.dll</HintPath>
+				</Reference>
+				<Reference Include="Microsoft.Xaml.Interactivity">
+					<HintPath>..\..\resources\Microsoft.Xaml.Interactivity.dll</HintPath>
+				</Reference>
+			</ItemGroup>
+
+			<ItemGroup>
+				<ProjectReference Include="..\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows'">
+			<PropertyGroup>
+				<DefineConstants>WPF</DefineConstants>
+				<UseWPF>true</UseWPF>
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.5" />
+				<PackageReference Include="Uno.WinUI.Skia.Wpf" Version="3.11.6" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+				<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.1.0" />
+				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.5" />
+				<PackageReference Include="Uno.WinUI.WebAssembly" Version="3.11.6" />
+			</ItemGroup>
+
+			<ItemGroup>
+				<ProjectReference Include="..\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.UI.Common\ISynergy.Framework.UI.Common.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	  </Compile>
+	</ItemGroup>
+</Project>

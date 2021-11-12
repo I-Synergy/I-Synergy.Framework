@@ -18,7 +18,7 @@
 		<FileVersion>1.0.0.0</FileVersion>
 		<Version>1.0.0</Version>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">

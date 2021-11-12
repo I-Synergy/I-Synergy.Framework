@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Services.Models.Base
+﻿namespace ISynergy.Framework.Models.Base
 {
     /// <summary>
     /// Base report request.

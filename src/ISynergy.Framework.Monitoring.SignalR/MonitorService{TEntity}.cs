@@ -1,4 +1,4 @@
-﻿using ISynergy.Services.Hubs;
+﻿using ISynergy.Framework.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ISynergy.Services

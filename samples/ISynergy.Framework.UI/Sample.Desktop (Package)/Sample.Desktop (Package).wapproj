@@ -35,11 +35,12 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>ce3c30e5-f520-4718-b223-19c62339e9d6</ProjectGuid>
-    <TargetPlatformVersion>10.0.20348.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <AssetTargetFallback>net5.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
+    <AssetTargetFallback>net6.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <EntryPointProjectUniqueName>..\Sample.Desktop\Sample.Desktop.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -48,6 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" IncludeAssets="build" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sample.Desktop\Sample.Desktop.csproj" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

@@ -4,7 +4,7 @@ using ISynergy.Framework.Core.Constants;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.SignalR;
 
-namespace ISynergy.Services.Accessors
+namespace ISynergy.Framework.Accessors
 {
     /// <summary>
     /// Claims accessors.

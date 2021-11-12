@@ -1,4 +1,4 @@
-﻿using ISynergy.Services.Messages;
+﻿using ISynergy.Framework.Messages;
 using System;
 using System.Threading.Tasks;
 

@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Events;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace ISynergy.Framework.Core.Services
@@ -439,9 +438,7 @@ namespace ISynergy.Framework.Core.Services
 
                 foreach (var item in listClone)
                 {
-                    var executeAction = item.Action as IExecuteWithObject;
-
-                    if (executeAction != null
+                    if (item.Action is IExecuteWithObject executeAction
                         && item.Action.IsAlive
                         && item.Action.Target != null
                         && (messageTargetType == null
@@ -503,9 +500,7 @@ namespace ISynergy.Framework.Core.Services
             {
                 foreach (var item in lists[messageType])
                 {
-                    var weakActionCasted = item.Action as WeakAction<TMessage>;
-
-                    if (weakActionCasted != null
+                    if (item.Action is WeakAction<TMessage> weakActionCasted
                         && recipient == weakActionCasted.Target
                         && (action == null
                             || action.Method.Name == weakActionCasted.MethodName)

@@ -210,6 +210,12 @@ namespace ISynergy.Framework.Core.Extensions
             return r;
         }
 
+        /// <summary>
+        /// Checks if array is null or empty.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
         public static bool IsNullOrEmpty<T>(T[] array)
             where T: class
         {

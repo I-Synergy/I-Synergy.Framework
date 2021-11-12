@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Validation;
-using ISynergy.Services.Models;
-using ISynergy.Services.Options;
+using ISynergy.Framework.Models;
+using ISynergy.Framework.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

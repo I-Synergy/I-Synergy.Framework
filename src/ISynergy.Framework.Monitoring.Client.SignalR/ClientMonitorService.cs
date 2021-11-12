@@ -1,14 +1,12 @@
-﻿using ISynergy.Common.Options;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Options;
+using ISynergy.Framework.Enumerations;
+using ISynergy.Framework.Messages;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Services.Enumerations;
-using ISynergy.Services.Messages;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Services
 {
@@ -42,7 +40,7 @@ namespace ISynergy.Services
         /// <summary>
         /// The configuration options
         /// </summary>
-        protected readonly ConfigurationOptions _configurationOptions;
+        protected readonly IConfigurationOptions _configurationOptions;
 
         /// <summary>
         /// The connection
@@ -59,7 +57,7 @@ namespace ISynergy.Services
         public ClientMonitorService(
             IDialogService dialogService,
             ILanguageService languageService,
-            IOptions<ConfigurationOptions> configurationOptions,
+            IOptions<IConfigurationOptions> configurationOptions,
             ILogger logger)
         {
             _dialogService = dialogService;

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Services.Enumerations
+﻿namespace ISynergy.Framework.Enumerations
 {
     /// <summary>
     /// Enum DocumentTypes

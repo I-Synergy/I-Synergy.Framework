@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Services.Options
+﻿namespace ISynergy.Framework.Options
 {
     public class MailOptions
     {
