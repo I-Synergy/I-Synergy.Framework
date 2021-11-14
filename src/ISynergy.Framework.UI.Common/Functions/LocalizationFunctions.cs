@@ -1,8 +1,4 @@
-﻿using System.Globalization;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-
-#if WINDOWS_UWP || WINDOWS
+﻿#if WINDOWS_UWP || WINDOWS
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
 #endif

@@ -1,11 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
-    using System;
-    using System.CodeDom.Compiler;
-    using ISynergy.Framework.Mathematics;
-    using System.Runtime.CompilerServices;
-	using System.Numerics;
-
     public static partial class Matrix
     {
         /// <summary>

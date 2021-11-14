@@ -1,12 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Data;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Class ReflectionExtensions.
@@ -166,7 +158,7 @@ namespace ISynergy.Framework.Core.Extensions
             var propInfo = _self.GetType().GetProperty(propertyName);
             var prop = propInfo.GetValue(_self, null);
 
-            if(prop is TResult result)
+            if (prop is TResult result)
             {
                 return result;
             }

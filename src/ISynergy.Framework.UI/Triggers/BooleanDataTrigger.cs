@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml;
 #else
 using Microsoft.UI.Xaml;

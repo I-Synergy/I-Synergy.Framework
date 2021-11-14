@@ -1,10 +1,4 @@
-﻿using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-
-namespace ISynergy.Framework.AspNetCore.Extensions
+﻿namespace ISynergy.Framework.AspNetCore.Extensions
 {
     /// <summary>
     /// Class HttpContextExtensions.

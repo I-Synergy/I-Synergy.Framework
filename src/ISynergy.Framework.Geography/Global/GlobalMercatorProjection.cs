@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Geography
+﻿namespace ISynergy.Framework.Geography.Global
 {
     /// <summary>
     /// This is the base class of all Mercator projections that map the
@@ -171,7 +169,7 @@ namespace ISynergy.Framework.Geography
                 // See: http://hrcak.srce.hr/file/24998
                 var e2 = ReferenceGlobe.Eccentricity * ReferenceGlobe.Eccentricity;
                 mercatorRhumbDistance = ReferenceGlobe.SemiMajorAxis / Math.Cos(bearing.Radians) *
-                                        (((1 - e2 / 4.0) * (end.Latitude - start.Latitude).Radians)
+                                        ((1 - e2 / 4.0) * (end.Latitude - start.Latitude).Radians
                                          -
                                          e2 * (Math.Sin(2 * end.Latitude.Radians)
                                              - Math.Sin(2 * start.Latitude.Radians)) * 3.0 / 8.0);

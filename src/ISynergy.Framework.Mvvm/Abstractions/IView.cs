@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-
-namespace ISynergy.Framework.Mvvm.Abstractions
+﻿namespace ISynergy.Framework.Mvvm.Abstractions
 {
     /// <summary>
     /// Interface IView

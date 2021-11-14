@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Validation;
-using System;
-using System.Windows.Input;
-
-namespace ISynergy.Framework.Mvvm.Commands
+﻿namespace ISynergy.Framework.Mvvm.Commands
 {
     /// <summary>
     /// Class RelayCommand.

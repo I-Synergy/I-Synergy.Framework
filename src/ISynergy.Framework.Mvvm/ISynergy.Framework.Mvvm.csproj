@@ -36,4 +36,29 @@
 	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Abstractions"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Base"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.Core.Attributes"/>
+		<Using Include="ISynergy.Framework.Core.Base"/>
+		<Using Include="ISynergy.Framework.Core.Enumerations"/>
+		<Using Include="ISynergy.Framework.Core.Events"/>
+		<Using Include="ISynergy.Framework.Core.Extensions"/>
+		<Using Include="ISynergy.Framework.Core.Utilities"/>
+		<Using Include="ISynergy.Framework.Core.Validation"/>
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions"/>
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.ViewModels"/>
+		<Using Include="ISynergy.Framework.Mvvm.Commands"/>
+		<Using Include="ISynergy.Framework.Mvvm.Enumerations"/>
+		<Using Include="ISynergy.Framework.Mvvm.Events"/>
+		<Using Include="ISynergy.Framework.Mvvm.Models"/>
+		<Using Include="Microsoft.Extensions.Logging"/>
+		<Using Include="System.Collections.ObjectModel"/>
+		<Using Include="System.ComponentModel"/>
+		<Using Include="System.ComponentModel.DataAnnotations"/>
+		<Using Include="System.Windows.Input"/>
+	</ItemGroup>
 </Project>

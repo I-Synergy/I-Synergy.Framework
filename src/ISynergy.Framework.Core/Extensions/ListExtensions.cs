@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Extensions for the <see cref="IList" /> and <see cref="IList{T}" /> classes.

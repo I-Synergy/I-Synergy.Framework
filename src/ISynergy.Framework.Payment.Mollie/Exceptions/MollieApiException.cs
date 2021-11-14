@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.Serialization;
-using ISynergy.Framework.Payment.Mollie.Models.Error;
+﻿using ISynergy.Framework.Payment.Mollie.Models.Error;
 using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace ISynergy.Framework.Payment.Mollie.Exceptions
 {

@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Distances
 {
-    using System;
-
     /// <summary>
     ///   Hamming distance.
     /// </summary>

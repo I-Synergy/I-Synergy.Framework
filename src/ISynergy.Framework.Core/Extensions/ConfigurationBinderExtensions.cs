@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Class ConfigurationBinderExtensions.

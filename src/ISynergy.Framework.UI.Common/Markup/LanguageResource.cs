@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Abstractions.Services;
-using Windows.ApplicationModel;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 #else

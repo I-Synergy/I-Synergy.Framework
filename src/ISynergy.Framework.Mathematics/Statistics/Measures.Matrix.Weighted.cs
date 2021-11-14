@@ -1,9 +1,5 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-
-namespace ISynergy.Framework.Mathematics.Statistics
+﻿namespace ISynergy.Framework.Mathematics.Statistics
 {
-    using System;
-
     /// <summary>
     ///   Sample weight types.
     /// </summary>

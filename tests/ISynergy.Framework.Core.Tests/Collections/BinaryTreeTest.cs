@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ISynergy.Framework.Core.Collections.Tests
+namespace ISynergy.Framework.Core.Tests.Collections
 {
     [TestClass]
     public class BinaryTreeTest

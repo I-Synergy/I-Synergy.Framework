@@ -1,12 +1,12 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
-    using System;
     using ISynergy.Framework.Core.Collections;
     using ISynergy.Framework.Mathematics;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Linq;
-    using System.Collections.Generic;
     using ISynergy.Framework.Mathematics.Random;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     [TestClass]
     public class RedBlackTreeTest
@@ -260,7 +260,7 @@
 
             // Create a vector of random numbers with duplicates
             int[] k = new int[n];
-            for (int i = 0; i < k.Length; i++) 
+            for (int i = 0; i < k.Length; i++)
                 k[i] = i;
 
             Vector.Shuffle(k);

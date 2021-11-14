@@ -1,9 +1,4 @@
-﻿using System.Net;
-using System.Net.NetworkInformation;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Core.Utilities
+﻿namespace ISynergy.Framework.Core.Utilities
 {
     /// <summary>
     /// Class NetworkUtility.
@@ -100,15 +95,14 @@ namespace ISynergy.Framework.Core.Utilities
         /// <param name="url">The URL.</param>
         /// <param name="method">The method.</param>
         /// <returns><c>true</c> if [is URL reachable] [the specified URL]; otherwise, <c>false</c>.</returns>
-        public static bool IsUrlReachable(string url, string method = "GET")
+        public static async Task<bool> IsUrlReachable(string url, HttpMethod method)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Timeout = 1000;
-            request.Method = method;
-
             try
             {
-                using var response = (HttpWebResponse)request.GetResponse();
+                var client = new HttpClient();
+                client.Timeout = TimeSpan.FromSeconds(1);
+                var request = new HttpRequestMessage(method, url);
+                using var response = await client.SendAsync(request);
                 return response.StatusCode == HttpStatusCode.OK;
             }
             catch (WebException)

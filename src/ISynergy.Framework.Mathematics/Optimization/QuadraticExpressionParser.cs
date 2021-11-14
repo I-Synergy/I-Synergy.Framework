@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization
 {
     internal static class QuadraticExpressionParser
     {

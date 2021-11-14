@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ISynergy.Framework.Core.Extensions;
-
-namespace ISynergy.Framework.Core.Utilities
+﻿namespace ISynergy.Framework.Core.Utilities
 {
     /// <summary>
     /// Class CompareUtility.

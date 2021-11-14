@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ISynergy.Framework.Physics.Abstractions
+﻿namespace ISynergy.Framework.Physics.Abstractions
 {
     /// <summary>
     /// Service for handling matters that concern units and SI units.

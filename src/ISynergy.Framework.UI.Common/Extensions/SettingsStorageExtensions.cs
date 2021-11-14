@@ -1,11 +1,4 @@
-﻿using System;
-using System.IO;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using Windows.Storage;
-using ISynergy.Framework.Core.Validation;
-
-#if WINDOWS_UWP || WINDOWS
+﻿#if WINDOWS_UWP || WINDOWS
 using Windows.Storage.Streams;
 #endif
 

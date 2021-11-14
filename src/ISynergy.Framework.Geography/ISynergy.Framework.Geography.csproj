@@ -23,4 +23,15 @@
         <DesignTime>True</DesignTime>
       </Compile>
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Extensions"/>
+		<Using Include="ISynergy.Framework.Geography.Common"/>
+		<Using Include="ISynergy.Framework.Geography.Global"/>
+		<Using Include="ISynergy.Framework.Geography.Projection"/>
+		<Using Include="ISynergy.Framework.Geography.Utm"/>
+		<Using Include="ISynergy.Framework.Geography.Geodetic"/>
+		<Using Include="System.Globalization"/>
+		<Using Include="System.Text"/>
+	</ItemGroup>
 </Project>

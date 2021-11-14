@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using ISynergy.Framework.AspNetCore.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 
 namespace ISynergy.Framework.AspNetCore.Sample
 {

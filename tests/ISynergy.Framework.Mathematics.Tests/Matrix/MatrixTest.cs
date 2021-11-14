@@ -1,15 +1,16 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Core.Ranges;
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Decompositions;
+    using ISynergy.Framework.Mathematics.Enumerations;
+    using ISynergy.Framework.Mathematics.Exceptions;
+    using ISynergy.Framework.Mathematics.Formats;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using ISynergy.Framework.Core.Ranges;
-    using ISynergy.Framework.Mathematics.Exceptions;
-    using ISynergy.Framework.Mathematics.Comparers;
 
     public partial class MatrixTest
     {
@@ -746,7 +747,7 @@
 
             double[,] expected =
             {
-                { 1.7321,  ISynergy.Framework.Mathematics.Constants.Sqrt2 },
+                { 1.7321,  Common.Constants.Sqrt2 },
                 { 1.0000, Double.NaN },
             };
 
@@ -2382,7 +2383,7 @@
 
             for (int i = 0; i < actual.GetLength(0); i++)
                 for (int j = 0; j < actual.GetLength(1); j++)
-                    Assert.AreEqual(expected[i,j], actual[i,j]);
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
         }
 
         [TestMethod]

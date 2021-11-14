@@ -1,8 +1,4 @@
 ﻿using ISynergy.Framework.IO.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.IO.Tests

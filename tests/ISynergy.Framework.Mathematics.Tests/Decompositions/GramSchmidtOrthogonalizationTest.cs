@@ -28,7 +28,7 @@
         [TestMethod]
         public void ConstructorTest1()
         {
-            double[,] value = 
+            double[,] value =
             {
                {  4, -2 },
                {  3,  1 },

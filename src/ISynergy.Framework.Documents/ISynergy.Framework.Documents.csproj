@@ -13,4 +13,10 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Documents.Models"/>
+		<Using Include="ISynergy.Framework.Documents.Enumerations"/>
+		<Using Include="ISynergy.Framework.Documents.Models.Base"/>
+		<Using Include="System.Collections"/>
+	</ItemGroup>
 </Project>

@@ -12,6 +12,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.Storage</RootNamespace>
     </PropertyGroup>
 
 	<ItemGroup>
@@ -23,4 +24,15 @@
         <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
         <ProjectReference Include="..\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Azure" />
+		<Using Include="Azure.Storage.Blobs" />
+		<Using Include="Azure.Storage.Blobs.Models" />
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services" />
+		<Using Include="ISynergy.Framework.Core.Validation" />
+		<Using Include="ISynergy.Framework.Storage.Abstractions.Options" />
+		<Using Include="ISynergy.Framework.Storage.Abstractions.Services" />
+		<Using Include="Microsoft.Extensions.Options" />
+	</ItemGroup>
 </Project>

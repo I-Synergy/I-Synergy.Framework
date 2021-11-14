@@ -1,11 +1,11 @@
 ﻿#if WINDOWS_UWP
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Sample.Abstractions.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Core.Abstractions.Services;
-using Sample.Abstractions.Services;
 using Windows.Services.Store;
 
 namespace Sample.Services
@@ -85,7 +85,7 @@ namespace Sample.Services
         /// </summary>
         public async Task DownloadAndInstallUpdateAsync()
         {
-            if(updates != null && updates.Count > 0)
+            if (updates != null && updates.Count > 0)
             {
                 // Download the packages.
                 var downloaded = await DownloadPackageUpdatesAsync(updates);

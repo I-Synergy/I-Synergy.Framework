@@ -1,12 +1,10 @@
-﻿using System;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Resources;
 #else
 using Microsoft.UI.Xaml.Resources;
 #endif
 
-namespace ISynergy.Framework.UI.Controls
+namespace ISynergy.Framework.UI.Common
 {
     /// <summary>
     /// Defines an entry point allowing user-specified resources to replace the built-in theme resources.

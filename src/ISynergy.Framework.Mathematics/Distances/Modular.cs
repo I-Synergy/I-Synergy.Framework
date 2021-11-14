@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Distances
 {
-    using System;
-
     /// <summary>
     ///   Modular distance (shortest distance between two marks on a circle).
     /// </summary>

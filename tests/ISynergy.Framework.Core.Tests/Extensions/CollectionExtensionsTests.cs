@@ -1,12 +1,10 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Tests.Fixtures.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections;
+using System.Collections.ObjectModel;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Tests.Extensions
 {
     /// <summary>
     /// Class CollectionExtensionsTests.
@@ -61,9 +59,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
             };
 
-            if(collection is ICollection<Product> data)
+            if (collection is ICollection<Product> data)
             {
-                var dataTable = data.ToDataTable<Product>("Test");
+                var dataTable = data.ToDataTable("Test");
 
                 Assert.IsNotNull(dataTable);
                 Assert.AreEqual(5, dataTable.Rows.Count);

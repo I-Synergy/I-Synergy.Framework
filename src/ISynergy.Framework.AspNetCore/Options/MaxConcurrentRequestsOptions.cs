@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Enumerations;
-
-namespace ISynergy.Framework.AspNetCore.Options
+﻿namespace ISynergy.Framework.AspNetCore.Options
 {
     /// <summary>
     /// Class MaxConcurrentRequestsOptions.

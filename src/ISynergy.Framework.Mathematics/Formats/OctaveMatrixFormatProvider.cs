@@ -1,8 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Formats
 {
-    using System;
-    using System.Globalization;
-
     /// <summary>
     ///   Format provider for the matrix format used by Octave.
     /// </summary>
@@ -54,7 +51,7 @@
     /// </code>
     /// </example>
     /// 
-    /// <seealso cref="ISynergy.Framework.Mathematics.Matrix"/>
+    /// <seealso cref="Matrix"/>
     /// <seealso cref="CSharpMatrixFormatProvider"/>
     /// 
     /// <seealso cref="CSharpJaggedMatrixFormatProvider"/>
@@ -75,19 +72,19 @@
         {
             FormatMatrixStart = "[";
             FormatMatrixEnd = "]";
-            FormatRowStart = String.Empty;
-            FormatRowEnd = String.Empty;
-            FormatColStart = String.Empty;
-            FormatColEnd = String.Empty;
+            FormatRowStart = string.Empty;
+            FormatRowEnd = string.Empty;
+            FormatColStart = string.Empty;
+            FormatColEnd = string.Empty;
             FormatRowDelimiter = "; ";
             FormatColDelimiter = " ";
 
             ParseMatrixStart = "[";
             ParseMatrixEnd = "]";
-            ParseRowStart = String.Empty;
-            ParseRowEnd = String.Empty;
-            ParseColStart = String.Empty;
-            ParseColEnd = String.Empty;
+            ParseRowStart = string.Empty;
+            ParseRowEnd = string.Empty;
+            ParseColStart = string.Empty;
+            ParseColEnd = string.Empty;
             ParseRowDelimiter = "; ";
             ParseColDelimiter = " ";
         }

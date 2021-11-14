@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-
-namespace ISynergy.Framework.Mathematics.Environments
+﻿namespace ISynergy.Framework.Mathematics.Environments
 {
     /// <summary>
     ///   Programming environment for Octave.

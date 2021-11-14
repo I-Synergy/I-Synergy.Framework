@@ -1,10 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-
     /// <summary>
     ///   Linear Constraint Collection.
     /// </summary>
@@ -27,7 +22,7 @@
         public LinearConstraintCollection(IEnumerable<LinearConstraint> list)
         {
             foreach (var c in list)
-                this.Add(c);
+                Add(c);
         }
 
         /// <summary>

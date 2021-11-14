@@ -1,15 +1,14 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Enumerations;
+using Sample.Options;
+using Sample.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Enumerations;
-using Microsoft.Extensions.Options;
-using Sample.Options;
-using Sample.Shared.Models;
 
 namespace Sample
 {
@@ -35,14 +34,14 @@ namespace Sample
         {
             _configurationOptions = configurationOptions;
 
-            Profiles = new ObservableCollection<IProfile>() {  new Profile() };
+            Profiles = new ObservableCollection<IProfile>() { new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();
             ViewModels = new List<Type>();
 
             Title = "Sample";
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
-            
+
         }
 
         /// <summary>

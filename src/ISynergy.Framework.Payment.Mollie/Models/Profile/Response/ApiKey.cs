@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Payment.Mollie.Models.Profile.Response
+﻿namespace ISynergy.Framework.Payment.Mollie.Models.Profile.Response
 {
     /// <summary>
     /// Class ApiKey.

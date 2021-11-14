@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Microsoft.Extensions.Logging;
-using ISynergy.Framework.Mvvm.Events;
-using ISynergy.Framework.Core.Attributes;
-
-namespace ISynergy.Framework.Mvvm.ViewModels
+﻿namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class NoteViewModel.
@@ -73,7 +67,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <param name="e">The e.</param>
         protected override void OnSubmitted(SubmitEventArgs<string> e)
         {
-            if(!string.IsNullOrEmpty(_targetProperty))
+            if (!string.IsNullOrEmpty(_targetProperty))
             {
                 base.OnSubmitted(new SubmitEventArgs<string>(e.Owner, e.Result, _targetProperty));
             }

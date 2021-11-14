@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     public static partial class Vector
     {

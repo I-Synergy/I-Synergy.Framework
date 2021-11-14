@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Threading;
-
-namespace ISynergy.Framework.Mathematics.Differentiation
+﻿namespace ISynergy.Framework.Mathematics.Differentiation
 {
     /// <summary>
     ///     Derivative approximation by finite differences.

@@ -1,9 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
-    using System;
-    using System.Collections.Generic;
-    using NumericRange = ISynergy.Framework.Core.Ranges.NumericRange;
-
     public static partial class Vector
     {
         /// <summary>

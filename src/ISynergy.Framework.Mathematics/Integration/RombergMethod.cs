@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Ranges;
-using System;
-
-namespace ISynergy.Framework.Mathematics.Integration
+﻿namespace ISynergy.Framework.Mathematics.Integration
 {
     /// <summary>
     ///     Romberg's method for numerical integration.

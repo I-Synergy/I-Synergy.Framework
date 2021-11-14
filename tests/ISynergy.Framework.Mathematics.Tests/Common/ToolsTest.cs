@@ -3,6 +3,7 @@
     using ISynergy.Framework.Core.Points;
     using ISynergy.Framework.Core.Ranges;
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -56,16 +57,16 @@
             double toMin = 0;
             double toMax = 100;
 
-            double[][] x = 
-            { 
+            double[][] x =
+            {
                 new double[] { -1.0,  1.0 },
                 new double[] { -0.2,  0.0 },
                 new double[] { -0.6,  0.0 },
                 new double[] {  0.0, -1.0 },
             };
 
-            double[][] expected = 
-            { 
+            double[][] expected =
+            {
                 new double[] {    0, 100 },
                 new double[] {   80,  50 },
                 new double[] {   40,  50 },
@@ -140,35 +141,35 @@
             int actual;
             int expected;
 
-            actual = ISynergy.Framework.Mathematics.Tools.Direction(center, w);
+            actual = Tools.Direction(center, w);
             expected = (int)System.Math.Floor(0 / 18.0);
             Assert.AreEqual(expected, actual);
 
-            actual = ISynergy.Framework.Mathematics.Tools.Direction(center, nw);
+            actual = Tools.Direction(center, nw);
             expected = (int)System.Math.Floor(45 / 18.0);
             Assert.AreEqual(expected, actual);
 
-            actual = ISynergy.Framework.Mathematics.Tools.Direction(center, n);
+            actual = Tools.Direction(center, n);
             expected = (int)System.Math.Floor(90 / 18.0);
             Assert.AreEqual(expected, actual);
 
-            actual = ISynergy.Framework.Mathematics.Tools.Direction(center, ne);
+            actual = Tools.Direction(center, ne);
             expected = (int)System.Math.Floor(135 / 18.0);
             Assert.AreEqual(expected, actual);
 
-            actual = ISynergy.Framework.Mathematics.Tools.Direction(center, e);
+            actual = Tools.Direction(center, e);
             expected = (int)System.Math.Floor(180 / 18.0);
             Assert.AreEqual(expected, actual);
 
-            actual = ISynergy.Framework.Mathematics.Tools.Direction(center, se);
+            actual = Tools.Direction(center, se);
             expected = (int)System.Math.Floor(225 / 18.0);
             Assert.AreEqual(expected, actual);
 
-            actual = ISynergy.Framework.Mathematics.Tools.Direction(center, s);
+            actual = Tools.Direction(center, s);
             expected = (int)System.Math.Floor(270 / 18.0);
             Assert.AreEqual(expected, actual);
 
-            actual = ISynergy.Framework.Mathematics.Tools.Direction(center, sw);
+            actual = Tools.Direction(center, sw);
             expected = (int)System.Math.Floor(315 / 18.0);
             Assert.AreEqual(expected, actual);
         }

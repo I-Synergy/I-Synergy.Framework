@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-
-namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
     /// <summary>
     /// Interface IViewModelSelectedItem
@@ -8,7 +6,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <seealso cref="IViewModel" />
-    public interface IViewModelSelectedItem<TEntity> : IViewModel 
+    public interface IViewModelSelectedItem<TEntity> : IViewModel
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is new.

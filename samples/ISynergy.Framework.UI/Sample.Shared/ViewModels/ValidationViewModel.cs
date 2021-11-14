@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Mvvm;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -48,7 +48,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the IsLengthCheck property value.
         /// </summary>
-        public bool IsLengthCheck   
+        public bool IsLengthCheck
         {
             get { return GetValue<bool>(); }
             set { SetValue(value); }
@@ -86,7 +86,7 @@ namespace Sample.ViewModels
 
             this.Validator = new Action<IObservableClass>(_ =>
             {
-                if(string.IsNullOrEmpty(Test))
+                if (string.IsNullOrEmpty(Test))
                 {
                     Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] cannot be null or empty.");
                 }
@@ -103,7 +103,7 @@ namespace Sample.ViewModels
                         Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] should be a valid regex expression.");
                     }
 
-                    if(!System.Text.RegularExpressions.Regex.IsMatch(Test, Regex))
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(Test, Regex))
                     {
                         Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] does not match the regular expression.");
                     }

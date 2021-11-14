@@ -1,14 +1,10 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Imaging;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
 #endif
 
 namespace ISynergy.Framework.UI.Services

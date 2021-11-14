@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mathematics.Random;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     ///   Jagged matrices.

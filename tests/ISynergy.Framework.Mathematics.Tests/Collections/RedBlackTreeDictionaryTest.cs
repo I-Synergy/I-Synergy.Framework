@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
-    using System;
-    using System.Collections.Generic;
     using ISynergy.Framework.Core.Collections;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Collections.Generic;
 
     [TestClass]
     public class RedBlackDictionaryTest
@@ -35,24 +35,24 @@
             var map = new RedBlackTreeDictionary<int, string>();
 
             bool thrown;
-            
+
             thrown = false;
             try { var c = map[1]; }
             catch (KeyNotFoundException) { thrown = true; }
             Assert.IsTrue(thrown);
 
             thrown = false;
-            try { var min = map.Min();}
+            try { var min = map.Min(); }
             catch (InvalidOperationException) { thrown = true; }
             Assert.IsTrue(thrown);
 
             thrown = false;
-            try { var max = map.Max();}
+            try { var max = map.Max(); }
             catch (InvalidOperationException) { thrown = true; }
             Assert.IsTrue(thrown);
 
             thrown = false;
-            try { var next = map.GetNext(0);}
+            try { var next = map.GetNext(0); }
             catch (KeyNotFoundException) { thrown = true; }
             Assert.IsTrue(thrown);
 
@@ -66,7 +66,7 @@
         [TestMethod]
         public void NextPrevTest()
         {
-            bool thrown = false; 
+            bool thrown = false;
 
             var map = new RedBlackTreeDictionary<int, string>();
 
@@ -103,7 +103,7 @@
                 KeyValuePair<int, string> a;
 
                 thrown = false;
-                try {  a = map.GetPrevious(0); }
+                try { a = map.GetPrevious(0); }
                 catch (KeyNotFoundException) { thrown = true; }
                 Assert.IsTrue(thrown);
                 Assert.IsFalse(map.TryGetPrevious(0, out a));

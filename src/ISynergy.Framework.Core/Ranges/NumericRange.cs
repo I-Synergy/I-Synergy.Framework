@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Ranges
+﻿namespace ISynergy.Framework.Core.Ranges
 {
     /// <summary>
     ///   Represents a double range with minimum and maximum values,

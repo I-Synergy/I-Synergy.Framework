@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Common
 {
     /// <summary>
     ///     Extension methods for sorting operations.
@@ -275,7 +271,7 @@ namespace ISynergy.Framework.Mathematics
         public static void Partial<T>(T[] items, int n, bool asc = true)
             where T : IComparable<T>
         {
-            NthElement(items, n, asc);
+            items.NthElement(n, asc);
 
             Array.Sort(items, 0, n);
 
@@ -300,7 +296,7 @@ namespace ISynergy.Framework.Mathematics
         public static void Partial<TKey, TValue>(TKey[] keys, TValue[] items, int n, bool asc = true)
             where TKey : IComparable<TKey>
         {
-            NthElement(keys, items, n, asc);
+            keys.NthElement(items, n, asc);
 
             Array.Sort(keys, items, 0, n);
 
@@ -540,7 +536,7 @@ namespace ISynergy.Framework.Mathematics
         {
             while (last - first >= INTROSORT_THRESHOLD)
             {
-                var pivotIndex = Partition(keys, items, first, last, compare, asc);
+                var pivotIndex = keys.Partition(items, first, last, compare, asc);
 
                 if (n == pivotIndex)
                     return keys[n];
@@ -583,7 +579,7 @@ namespace ISynergy.Framework.Mathematics
         {
             while (last - first >= INTROSORT_THRESHOLD)
             {
-                var pivotIndex = Partition(items, first, last, compare, asc);
+                var pivotIndex = items.Partition(first, last, compare, asc);
 
                 if (n == pivotIndex)
                     return items[n];
@@ -628,7 +624,7 @@ namespace ISynergy.Framework.Mathematics
         {
             while (last - first >= INTROSORT_THRESHOLD)
             {
-                var pivotIndex = Partition(keys, items, first, last, asc);
+                var pivotIndex = keys.Partition(items, first, last, asc);
 
                 if (n == pivotIndex)
                     return keys[n];
@@ -666,7 +662,7 @@ namespace ISynergy.Framework.Mathematics
         public static T NthElement<T>(this T[] items, int n, bool asc = true)
             where T : IComparable<T>
         {
-            return NthElement(items, 0, items.Length, n, asc);
+            return items.NthElement(0, items.Length, n, asc);
         }
 
         /// <summary>
@@ -694,7 +690,7 @@ namespace ISynergy.Framework.Mathematics
         public static TKey NthElement<TKey, TValue>(this TKey[] keys, TValue[] items, int n, bool asc = true)
             where TKey : IComparable<TKey>
         {
-            return NthElement(keys, items, 0, keys.Length, n, asc);
+            return keys.NthElement(items, 0, keys.Length, n, asc);
         }
 
         /// <summary>
@@ -724,7 +720,7 @@ namespace ISynergy.Framework.Mathematics
         {
             while (last - first >= INTROSORT_THRESHOLD)
             {
-                var pivotIndex = Partition(items, first, last, asc);
+                var pivotIndex = items.Partition(first, last, asc);
 
                 if (n == pivotIndex)
                     return items[n];
@@ -752,19 +748,19 @@ namespace ISynergy.Framework.Mathematics
             var middle = first + (last - first) / 2;
             if (dir * keys[middle].CompareTo(keys[first]) < 0)
             {
-                Matrix.Swap(keys, middle, first);
-                Matrix.Swap(items, middle, first);
+                keys.Swap(middle, first);
+                items.Swap(middle, first);
             }
 
             if (dir * keys[last].CompareTo(keys[middle]) < 0)
             {
-                Matrix.Swap(keys, last, middle);
-                Matrix.Swap(items, last, middle);
+                keys.Swap(last, middle);
+                items.Swap(last, middle);
 
                 if (dir * keys[middle].CompareTo(keys[first]) < 0)
                 {
-                    Matrix.Swap(keys, middle, first);
-                    Matrix.Swap(items, middle, first);
+                    keys.Swap(middle, first);
+                    items.Swap(middle, first);
                 }
             }
 
@@ -780,13 +776,13 @@ namespace ISynergy.Framework.Mathematics
             var dir = asc ? 1 : -1;
             var middle = first + (last - first) / 2;
             if (dir * keys[middle].CompareTo(keys[first]) < 0)
-                Matrix.Swap(keys, middle, first);
+                keys.Swap(middle, first);
 
             if (dir * keys[last].CompareTo(keys[middle]) < 0)
             {
-                Matrix.Swap(keys, last, middle);
+                keys.Swap(last, middle);
                 if (dir * keys[middle].CompareTo(keys[first]) < 0)
-                    Matrix.Swap(keys, middle, first);
+                    keys.Swap(middle, first);
             }
 
             return middle;
@@ -800,19 +796,19 @@ namespace ISynergy.Framework.Mathematics
             var middle = first + (last - first) / 2;
             if (dir * comparer(keys[middle], keys[first]) < 0)
             {
-                Matrix.Swap(keys, middle, first);
-                Matrix.Swap(items, middle, first);
+                keys.Swap(middle, first);
+                items.Swap(middle, first);
             }
 
             if (dir * comparer(keys[last], keys[middle]) < 0)
             {
-                Matrix.Swap(keys, last, middle);
-                Matrix.Swap(items, last, middle);
+                keys.Swap(last, middle);
+                items.Swap(last, middle);
 
                 if (dir * comparer(keys[middle], keys[first]) < 0)
                 {
-                    Matrix.Swap(keys, middle, first);
-                    Matrix.Swap(items, middle, first);
+                    keys.Swap(middle, first);
+                    items.Swap(middle, first);
                 }
             }
 
@@ -827,13 +823,13 @@ namespace ISynergy.Framework.Mathematics
             var dir = asc ? 1 : -1;
             var middle = first + (last - first) / 2;
             if (dir * comparer(keys[middle], keys[first]) < 0)
-                Matrix.Swap(keys, middle, first);
+                keys.Swap(middle, first);
 
             if (dir * comparer(keys[last], keys[middle]) < 0)
             {
-                Matrix.Swap(keys, last, middle);
+                keys.Swap(last, middle);
                 if (dir * comparer(keys[middle], keys[first]) < 0)
-                    Matrix.Swap(keys, middle, first);
+                    keys.Swap(middle, first);
             }
 
             return middle;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-
-namespace ISynergy.Framework.Mathematics.Random
+﻿namespace ISynergy.Framework.Mathematics.Random
 {
     /// <summary>
     ///     Framework-wide random number generator. If you would like to always generate

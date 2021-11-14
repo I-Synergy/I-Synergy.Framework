@@ -11,8 +11,8 @@ namespace Sample.Shared.Views
         /// Initializes a new instance of the <see cref="InfoView"/> class.
         /// </summary>
         public InfoView()
-    {
-      this.InitializeComponent();
+        {
+            this.InitializeComponent();
+        }
     }
-  }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Automations.Abstractions
+﻿namespace ISynergy.Framework.Automations.Abstractions
 {
     /// <summary>
     /// Base state interface

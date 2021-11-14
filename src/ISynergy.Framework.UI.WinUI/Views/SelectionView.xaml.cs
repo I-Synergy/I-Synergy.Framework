@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using System.Collections.Generic;
-using System.Linq;
 
 #if WINDOWS_UWP
 using Windows.UI.Xaml;

@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Ranges;
-using System;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     public static partial class Matrix
     {

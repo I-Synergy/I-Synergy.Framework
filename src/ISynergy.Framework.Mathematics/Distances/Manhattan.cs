@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Distances
 {
-    using System;
-
     /// <summary>
     ///   Manhattan (also known as Taxicab or L1) distance.
     /// </summary>

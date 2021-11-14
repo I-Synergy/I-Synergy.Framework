@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace ISynergy.Framework.Mathematics.Transforms
+﻿namespace ISynergy.Framework.Mathematics.Transforms
 {
     /// <summary>
     ///     Discrete Hilbert Transformation.

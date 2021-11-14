@@ -37,7 +37,7 @@
         public void InverseTest()
         {
             var value = new double[][]
-            { 
+            {
                   new double[] { 1.0, 1.0 },
                   new double[] { 2.0, 2.0 }
             };
@@ -95,7 +95,7 @@
             // routine was not meant to be used in this case.
 
             var value = new double[][]
-            { 
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
@@ -135,10 +135,10 @@
             Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors.Submatrix(0, 3, 0, 1), V, 0.0001));
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -155,7 +155,7 @@
             // routine was not meant to be used in this case.
 
             double[][] value = new double[][]
-            { 
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
@@ -165,7 +165,7 @@
             var target = new JaggedSingularValueDecomposition(value, true, true, true);
 
             double[][] actual = Matrix.Dot(
-                Matrix.Dot(target.LeftSingularVectors, target.DiagonalMatrix), 
+                Matrix.Dot(target.LeftSingularVectors, target.DiagonalMatrix),
                 target.RightSingularVectors.Transpose());
 
             // Checking the decomposition
@@ -195,10 +195,10 @@
             Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors, V, 0.0001));
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -212,7 +212,7 @@
             // test for m-x-n matrices where m > n (4 > 2)
 
             double[][] value = new double[][]
-            { 
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
@@ -254,10 +254,10 @@
             Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors, V, 0.0001));
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -272,7 +272,7 @@
             // without computing the right singular vectors.
 
             double[][] value = new double[][]
-            { 
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
@@ -306,10 +306,10 @@
             Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors, V));
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -323,7 +323,7 @@
             // without computing the left singular vectors.
 
             var value = new double[][]
-            { 
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
@@ -357,10 +357,10 @@
 
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal

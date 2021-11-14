@@ -11,6 +11,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.Monitoring</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,4 +23,18 @@
         <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />
         <ProjectReference Include="..\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.AspNetCore.Authentication.Exceptions"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Authentication.Extensions"/>
+		<Using Include="ISynergy.Framework.Core.Constants"/>
+		<Using Include="ISynergy.Framework.MessageBus.Models"/>
+		<Using Include="ISynergy.Framework.Monitoring.Enumerations"/>
+		<Using Include="ISynergy.Framework.Monitoring.Accessors"/>
+		<Using Include="ISynergy.Framework.Monitoring.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.Monitoring.Hubs"/>
+		<Using Include="Microsoft.AspNetCore.SignalR"/>
+		<Using Include="Microsoft.AspNetCore.Authorization"/>
+		<Using Include="Microsoft.Extensions.Logging"/>
+	</ItemGroup>
 </Project>

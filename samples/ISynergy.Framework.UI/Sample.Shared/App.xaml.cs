@@ -5,10 +5,9 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -20,7 +19,6 @@ using Sample.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Resources;
@@ -46,7 +44,7 @@ namespace Sample
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        public App() : base() 
+        public App() : base()
         {
             InitializeComponent();
         }
@@ -142,7 +140,7 @@ namespace Sample
             {
                 _logger.LogDebug(message);
 
-                if(exception.InnerException is WebSocketException)
+                if (exception.InnerException is WebSocketException)
                     return;
 
                 // Set busyIndicator to false if it's true.

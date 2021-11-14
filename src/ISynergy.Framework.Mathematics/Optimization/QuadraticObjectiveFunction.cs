@@ -1,12 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization
 {
     /// <summary>
     ///     Quadratic objective function.

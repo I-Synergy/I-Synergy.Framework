@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization
 {
     /// <summary>
     ///     Nonlinear objective function.

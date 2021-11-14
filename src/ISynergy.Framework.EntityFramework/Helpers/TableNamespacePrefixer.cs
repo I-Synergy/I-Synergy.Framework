@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.EntityFramework.Helpers
+﻿namespace ISynergy.Framework.EntityFramework.Helpers
 {
     /// <summary>
     /// Generates a table name, with the namespace as a prefix. E.g.: 'namespace_name'.

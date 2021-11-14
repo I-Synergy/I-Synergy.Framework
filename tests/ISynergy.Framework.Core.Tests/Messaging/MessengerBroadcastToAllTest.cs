@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Messaging.Tests
+namespace ISynergy.Framework.Core.Tests.Messaging
 {
     [TestClass]
     public class MessengerBroadcastToAllTest

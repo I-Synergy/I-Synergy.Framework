@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Distances
 {
-    using System;
-
     /// <summary>
     ///   Square-Euclidean distance and similarity. Please note that this
     ///   distance is not a metric as it doesn't obey the triangle inequality.

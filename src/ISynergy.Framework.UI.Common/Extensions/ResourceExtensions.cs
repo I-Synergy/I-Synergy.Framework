@@ -1,6 +1,4 @@
-﻿using Windows.ApplicationModel.Resources;
-
-namespace ISynergy.Framework.UI.Extensions
+﻿namespace ISynergy.Framework.UI.Extensions
 {
     /// <summary>
     /// Class ResourceExtensions.

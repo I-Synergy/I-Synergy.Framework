@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-
-namespace ISynergy.Framework.UI.Helpers
+﻿namespace ISynergy.Framework.UI.Helpers
 {
     /// <summary>
     /// Class Singleton.

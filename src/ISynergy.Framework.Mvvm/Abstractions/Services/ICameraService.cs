@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Models;
-
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
     /// <summary>
     /// Interface ICameraService

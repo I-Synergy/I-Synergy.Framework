@@ -1,22 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.AspNetCore.Options;
-using ISynergy.Framework.AspNetCore.Routing;
-using ISynergy.Framework.Core;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.AspNetCore.Extensions;
-using Microsoft.Extensions.Logging;
-
-namespace ISynergy.Framework.AspNetCore
+﻿namespace ISynergy.Framework.AspNetCore.Startup
 {
     /// <summary>
     /// Class BaseStartup.
@@ -113,7 +95,7 @@ namespace ISynergy.Framework.AspNetCore
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints => 
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
@@ -238,7 +220,7 @@ namespace ISynergy.Framework.AspNetCore
         protected virtual void AddLogging(IServiceCollection services)
         {
             services.AddLogging();
-            services.AddSingleton<ILogger>((s) => new LoggerFactory().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+            services.AddSingleton((s) => new LoggerFactory().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
         }
 
         /// <summary>
@@ -247,7 +229,7 @@ namespace ISynergy.Framework.AspNetCore
         /// <param name="services">The services.</param>
         /// <param name="authorizedRazorPages">The authorized razor pages.</param>
         protected abstract void AddMvc(IServiceCollection services, IEnumerable<string> authorizedRazorPages = null);
-        
+
         /// <summary>
         /// Adds the routing.
         /// </summary>

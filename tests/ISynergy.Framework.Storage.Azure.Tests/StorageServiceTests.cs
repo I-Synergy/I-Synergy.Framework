@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Storage.Abstractions;
-using Moq;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Storage.Abstractions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace ISynergy.Framework.Storage.Azure.Tests
 {

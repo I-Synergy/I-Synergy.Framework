@@ -1,9 +1,9 @@
-﻿using System;
-using System.Globalization;
-using ISynergy.Framework.Core.Constants;
+﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Tests.Extensions
 {
     /// <summary>
     /// Class DateTimeOffsetExtensionsTests.
@@ -189,8 +189,8 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         public void ToUniversalTimeStringTest()
         {
             var timezoneWesternEurope = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35,  timezoneWesternEurope.BaseUtcOffset).ToUniversalTimeString();
-            var expected = new DateTimeOffset(1975, 10, 1, 13, 43, 35, TimeSpan.FromHours(0)).ToString(GenericConstants.DateTimeOffsetFormat); ; 
+            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, timezoneWesternEurope.BaseUtcOffset).ToUniversalTimeString();
+            var expected = new DateTimeOffset(1975, 10, 1, 13, 43, 35, TimeSpan.FromHours(0)).ToString(GenericConstants.DateTimeOffsetFormat); ;
             Assert.AreEqual(expected, result);
         }
 
@@ -211,7 +211,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [DataRow("T", "1:45:30 PM", "en-US")]
         public void ToLocalDateStringTest(string format, string expected, string culture)
         {
-            var sourceDate =  new DateTime(2009, 6, 15, 13, 45, 30, DateTimeKind.Utc);
+            var sourceDate = new DateTime(2009, 6, 15, 13, 45, 30, DateTimeKind.Utc);
             var date = new DateTimeOffset(sourceDate);
             var result = date.ToLocalDateString(format, TimeSpan.FromHours(0), new CultureInfo(culture));
             Assert.AreEqual(expected, result);
@@ -230,7 +230,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [DataRow("2021-01-29 20:55:47.8056804 +01:00", 1, 20)]
         public void ToLocalDateTimeOffsetTest(string datetime, int offset, int hour)
         {
-            if(DateTimeOffset.TryParse(datetime, out var actualDateTime))
+            if (DateTimeOffset.TryParse(datetime, out var actualDateTime))
             {
                 var localDateTime = actualDateTime.ToOffset(TimeSpan.FromHours(offset));
                 Assert.AreEqual(hour, localDateTime.Hour);

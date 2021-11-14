@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Geography.Tests;
+﻿using ISynergy.Framework.Geography.Utm;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Utm.Tests
+namespace ISynergy.Framework.Geography.Tests.Utm
 {
     /// <summary>
     /// Class UtmProjectionTests.

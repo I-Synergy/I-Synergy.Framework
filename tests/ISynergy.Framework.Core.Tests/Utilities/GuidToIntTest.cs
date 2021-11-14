@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Utilities.Tests
+namespace ISynergy.Framework.Core.Tests.Utilities
 {
     /// <summary>
     /// Class GuidToIntTest.

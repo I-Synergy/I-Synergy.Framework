@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace ISynergy.Framework.MessageBus.Extensions
+﻿namespace ISynergy.Framework.MessageBus.Extensions
 {
     /// <summary>
     /// Class ServiceCollectionExtensions.
@@ -22,7 +19,7 @@ namespace ISynergy.Framework.MessageBus.Extensions
             _self.AddSingleton<TImplementation>();
             _self.AddSingleton<IPublisherServiceBus<TQueueMessage>, TImplementation>();
 
-            return _self; 
+            return _self;
         }
 
 
@@ -38,7 +35,7 @@ namespace ISynergy.Framework.MessageBus.Extensions
             where TQueueMessage : class, IBaseMessage
             where TImplementation : class, ISubscriberServiceBus<TQueueMessage>
         {
-            if(isScoped)
+            if (isScoped)
             {
                 _self.AddScoped<TImplementation>();
                 _self.AddScoped<ISubscriberServiceBus<TQueueMessage>, TImplementation>();

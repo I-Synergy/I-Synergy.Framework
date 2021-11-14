@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace ISynergy.Framework.AspNetCore.Filters
+﻿namespace ISynergy.Framework.AspNetCore.Filters
 {
     /// <summary>
     /// Class RequestShouldBeLocalFilter. This class cannot be inherited.

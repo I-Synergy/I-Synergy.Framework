@@ -1,8 +1,4 @@
-﻿using Microsoft.Xaml.Interactivity;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #else
@@ -10,7 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endif
 
-namespace ISynergy.Framework.UI.Behaviors
+namespace ISynergy.Framework.UI.Behaviors.MultiSelection
 {
     /// <summary>
     /// Class MultiSelectionBehavior.

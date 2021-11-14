@@ -13,10 +13,15 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="DYMO.Connect.SDK" Version="1.4.2.26" />
+      <PackageReference Include="DYMO.Connect.SDK" Version="1.4.2.35" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<Using Include="DymoSDK.Implementations" />
+		<Using Include="DymoSDK.Interfaces" />
+		<Using Include="ISynergy.Framework.Printer.Label.Abstractions.Services" />
+	</ItemGroup>
 </Project>

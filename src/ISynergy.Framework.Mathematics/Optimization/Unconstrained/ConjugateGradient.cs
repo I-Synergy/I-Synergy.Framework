@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core;
-using System;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
     ///     Conjugate gradient direction update formula.
@@ -358,8 +355,8 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     return false;
 
                 // Test if descent direction is obtained for methods 2 and 3
-                double gg = Matrix.Dot(g, g);
-                double gg0 = Matrix.Dot(g, gold);
+                double gg = g.Dot(g);
+                double gg0 = g.Dot(gold);
                 var betapr = (gg - gg0) / (gnorm * gnorm);
 
                 // When nrst > n and irest == 1 then restart.

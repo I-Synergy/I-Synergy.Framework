@@ -1,8 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
-
-namespace ISynergy.Framework.Core.Utilities
+﻿namespace ISynergy.Framework.Core.Utilities
 {
     /// <summary>
     /// Class SecretUtility.

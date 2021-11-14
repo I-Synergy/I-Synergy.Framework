@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Mathematics.Decompositions
+﻿namespace ISynergy.Framework.Mathematics.Decompositions
 {
     /// <summary>
     ///     Cholesky Decomposition of a symmetric, positive definite matrix.

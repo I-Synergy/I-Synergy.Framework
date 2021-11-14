@@ -1,8 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace ISynergy.Framework.Core.Converters
+﻿namespace ISynergy.Framework.Core.Converters
 {
     /// <summary>
     /// Class IsoDateTimeOffsetConverter.

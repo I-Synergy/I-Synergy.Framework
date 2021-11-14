@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ISynergy.Framework.Geography.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Common.Tests
+namespace ISynergy.Framework.Geography.Tests.Common
 {
     /// <summary>
     /// Class AngleTests.
@@ -55,7 +55,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         public void TestConstructor5()
         {
             var a = new Angle(45, 30, 30);
-            Assert.AreEqual(a.Degrees, 45.5 + (1.0 / 120.0));
+            Assert.AreEqual(a.Degrees, 45.5 + 1.0 / 120.0);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         public void TestConstructor8()
         {
             var a = new Angle(-45, 30, 30);
-            Assert.AreEqual(a.Degrees, -45.5 - (1.0 / 120.0));
+            Assert.AreEqual(a.Degrees, -45.5 - 1.0 / 120.0);
         }
 
         /// <summary>

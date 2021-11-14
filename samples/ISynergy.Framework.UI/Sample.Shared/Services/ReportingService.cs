@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Sample.Abstractions.Services;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Sample.Abstractions.Services;
 
 namespace Sample.Services
 {

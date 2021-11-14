@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Base
 {
     /// <summary>
     ///     Least Squares function delegate.

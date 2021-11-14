@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-
-namespace ISynergy.Framework.Mathematics.Decompositions
+﻿namespace ISynergy.Framework.Mathematics.Decompositions
 {
     /// <summary>
     ///     LU decomposition of a multidimensional rectangular matrix.

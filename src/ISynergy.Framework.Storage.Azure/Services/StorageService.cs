@@ -1,12 +1,4 @@
-﻿using Azure;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Storage.Abstractions;
-using Microsoft.Extensions.Options;
-
-namespace ISynergy.Framework.Storage.Azure.Services
+﻿namespace ISynergy.Framework.Storage.Services
 {
     /// <summary>
     /// Class StorageService.
@@ -25,28 +17,6 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// The cloud storage account
         /// </summary>
         private readonly BlobContainerClient _blobContainer;
-        /// <summary>
-        /// The tenant service
-        /// </summary>
-        private readonly ITenantService _tenantService;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}" /> class.
-        /// </summary>
-        /// <param name="storageOptions">The azure BLOB options.</param>
-        /// <param name="tenantService">The tenant service.</param>
-        public StorageService(IOptions<TStorageOptions> storageOptions, ITenantService tenantService)
-        {
-            Argument.IsNotNull(nameof(storageOptions), storageOptions.Value);
-            Argument.IsNotNull(nameof(tenantService), tenantService);
-            Argument.IsNotNullOrEmpty(nameof(tenantService.TenantId), tenantService.TenantId);
-
-            _tenantService = tenantService;
-            _storageOptions = storageOptions.Value;
-
-            _blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, _tenantService.TenantId.ToString());
-            _blobContainer.CreateIfNotExists(PublicAccessType.Blob);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}"/> class.

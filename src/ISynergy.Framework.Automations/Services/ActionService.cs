@@ -1,16 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.Actions;
-using ISynergy.Framework.Automations.Extensions;
-using ISynergy.Framework.Automations.Options;
-using ISynergy.Framework.Core.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Automations.Services
+﻿namespace ISynergy.Framework.Automations.Services
 {
     /// <summary>
     /// Action service.

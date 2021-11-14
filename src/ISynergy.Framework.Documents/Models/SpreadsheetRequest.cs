@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Models.Base;
-using System.Collections;
-
-namespace ISynergy.Framework.Models
+﻿namespace ISynergy.Framework.Documents.Models
 {
     /// <summary>
     /// Class SpreadsheetRequest.

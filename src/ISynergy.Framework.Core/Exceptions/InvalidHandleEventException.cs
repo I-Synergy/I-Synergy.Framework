@@ -1,8 +1,4 @@
-﻿using System;
-using System.Reflection;
-using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Core.Exceptions
+﻿namespace ISynergy.Framework.Core.Exceptions
 {
     /// <summary>
     /// Represents errors that occur during WeakEventManager.HandleEvent execution.

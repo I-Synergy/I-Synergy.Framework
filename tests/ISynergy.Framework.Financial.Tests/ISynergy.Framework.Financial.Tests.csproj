@@ -19,5 +19,4 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj" />
     </ItemGroup>
-
 </Project>

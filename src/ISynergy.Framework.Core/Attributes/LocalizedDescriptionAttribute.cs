@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using System;
-
-namespace ISynergy.Framework.Core.Attributes
+﻿namespace ISynergy.Framework.Core.Attributes
 {
     /// <summary>
     /// Class DescriptionAttribute.

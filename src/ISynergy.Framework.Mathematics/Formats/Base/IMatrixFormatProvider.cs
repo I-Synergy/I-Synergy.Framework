@@ -1,6 +1,4 @@
-using System;
-
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Formats.Base
 {
     /// <summary>
     ///     Common interface for Matrix format providers.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ISynergy.Framework.Core.Models;
-
-namespace ISynergy.Framework.Core.Abstractions
+﻿namespace ISynergy.Framework.Core.Abstractions
 {
     /// <summary>
     /// Interface IProfile

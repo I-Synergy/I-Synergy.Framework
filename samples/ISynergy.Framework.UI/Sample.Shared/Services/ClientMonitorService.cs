@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Sample.Abstractions.Services;
+﻿using Sample.Abstractions.Services;
+using System.Threading.Tasks;
 
 namespace Sample.Services
 {

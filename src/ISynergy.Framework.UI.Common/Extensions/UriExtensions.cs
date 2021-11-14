@@ -1,10 +1,9 @@
 ﻿#if WINDOWS_UWP || WINDOWS
-
+using ISynergy.Framework.Core.Extensions;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.UI.Extensions
 {

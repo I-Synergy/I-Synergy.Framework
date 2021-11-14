@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 
 #if WINDOWS_UWP
 using Windows.UI.Xaml.Controls;
@@ -10,7 +8,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 #endif
 
-namespace ISynergy.Framework.UI.Controls
+namespace ISynergy.Framework.UI.Controls.Wrappers
 {
     /// <inheritdoc />
     /// <summary>A wrapper class for <see cref="TextBlock.Inlines">TextBlock.Inlines</see> to

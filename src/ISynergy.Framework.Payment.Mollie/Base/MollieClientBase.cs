@@ -1,6 +1,5 @@
-﻿using System;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Payment.Clients;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Payment.Base;
 using ISynergy.Framework.Payment.Mollie.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,7 +28,7 @@ namespace ISynergy.Framework.Payment.Mollie.Base
         /// <param name="clientService">The client service.</param>
         /// <param name="options">The options.</param>
         /// <param name="logger">The logger.</param>
-        protected MollieClientBase(IMollieClientService clientService, IOptions<MollieApiOptions> options, ILogger<MollieClientBase> logger) 
+        protected MollieClientBase(IMollieClientService clientService, IOptions<MollieApiOptions> options, ILogger<MollieClientBase> logger)
             : base(logger)
         {
             Argument.IsNotNull(nameof(options), options);

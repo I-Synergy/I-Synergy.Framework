@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Optimization
 {
-    using System.Runtime.CompilerServices;
-
     /// <summary>
     ///   Contains classes for constrained and unconstrained optimization. Includes 
     ///   <see cref="ConjugateGradient">Conjugate Gradient (CG)</see>, <see cref="BoundedBroydenFletcherGoldfarbShanno">

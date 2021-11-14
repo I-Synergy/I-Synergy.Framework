@@ -11,6 +11,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.Monitoring.Client</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,4 +22,17 @@
         <ProjectReference Include="..\ISynergy.Framework.Monitoring.Client\ISynergy.Framework.Monitoring.Client.csproj" />
         <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Options"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.Monitoring.Client.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.Monitoring.Enumerations"/>
+		<Using Include="ISynergy.Framework.Monitoring.Messages"/>
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.Services"/>
+		<Using Include="Microsoft.AspNetCore.SignalR.Client"/>
+		<Using Include="Microsoft.Extensions.Logging"/>
+		<Using Include="Microsoft.Extensions.Options"/>
+		<Using Include="Newtonsoft.Json"/>
+	</ItemGroup>
 </Project>

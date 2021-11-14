@@ -1,11 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Formats.Base
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Text;
-    using System.Text.RegularExpressions;
-
     /// <summary>
     ///   Defines how matrices are formatted and displayed, depending on the
     ///   chosen format representation.
@@ -49,7 +43,7 @@
 
         #region Static methods for output formatting
         /// <summary>
-        ///   Converts a jagged or multidimensional array into a <a cref="System.String">System.String</a> representation.
+        ///   Converts a jagged or multidimensional array into a <a cref="string">System.String</a> representation.
         /// </summary>
         ///
         public static string Format(string format, Array matrix, IMatrixFormatProvider formatProvider)
@@ -64,14 +58,14 @@
             string newline, elementFormat;
             if (!parseOptions(format, out newline, out elementFormat))
             {
-                throw new FormatException(String.Format("The format of '{0}' is invalid.", format));
+                throw new FormatException(string.Format("The format of '{0}' is invalid.", format));
             }
 
             IFormatProvider culture = formatProvider.InnerProvider;
             // Retrieve matrix dimensions. If the matrix is a jagged array,
             //  we will compute the columns for each of the rows.
             int rows = matrix.GetLength(0);
-            int cols = (matrix.Rank == 2) ? matrix.GetLength(1) : 0;
+            int cols = matrix.Rank == 2 ? matrix.GetLength(1) : 0;
             // Initialize the matrix construction
             StringBuilder sb = new StringBuilder();
             sb.Append(formatProvider.FormatMatrixStart);
@@ -84,7 +78,7 @@
                 // Construct the columns for the row
                 if (matrix.Rank == 1)
                 {
-                    Object obj = matrix.GetValue(i);
+                    object obj = matrix.GetValue(i);
                     Array row = obj as Array;
 
                     if (row == null)
@@ -131,10 +125,10 @@
             sb.Append(formatProvider.FormatMatrixEnd);
             // Finally, perform post-processing such as replacing user
             // selected newlines or presenting the output in just one line.
-            String str = sb.ToString();
+            string str = sb.ToString();
             str = str.Replace("\n", newline);
 
-            if (String.IsNullOrEmpty(newline))
+            if (string.IsNullOrEmpty(newline))
                 str = Regex.Replace(str, " +", " ");
 
             return str;
@@ -151,10 +145,10 @@
             // "{0:Mrn,g}"  -> multiline with \r\n new line character (Windows) and number format g
             // "{0:Ms,g}"   -> single line and number format g
 
-            if (String.IsNullOrEmpty(format))
+            if (string.IsNullOrEmpty(format))
             {
                 newline = Environment.NewLine;
-                elementFormat = String.Empty;
+                elementFormat = string.Empty;
                 return true;
             }
 
@@ -162,7 +156,7 @@
 
             if (options.Length == 1)
             {
-                elementFormat = String.Empty;
+                elementFormat = string.Empty;
 
                 switch (options[0])
                 {
@@ -179,7 +173,7 @@
                         return true;
 
                     case "Ms":
-                        newline = String.Empty;
+                        newline = string.Empty;
                         return true;
 
                     default:
@@ -205,17 +199,17 @@
                         newline = "\r\n"; break;
 
                     case "Ms":
-                        newline = String.Empty; break;
+                        newline = string.Empty; break;
 
                     default:
-                        newline = String.Empty;
+                        newline = string.Empty;
                         return false;
                 }
 
                 return true;
             }
 
-            newline = String.Empty;
+            newline = string.Empty;
             elementFormat = format;
             return false;
         }
@@ -239,10 +233,10 @@
             }
             catch (FormatException e)
             {
-                throw new FormatException(String.Format("The format of '{0}' is invalid.", format), e);
+                throw new FormatException(string.Format("The format of '{0}' is invalid.", format), e);
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         #endregion
@@ -281,7 +275,7 @@
 
                 foreach (string strCol in strCols)
                 {
-                    string col = Regex.Replace(strCol, @"\s", String.Empty);
+                    string col = Regex.Replace(strCol, @"\s", string.Empty);
 
                     // Remove starting and trailing tokens
                     if (col.StartsWith(provider.ParseColStart, StringComparison.Ordinal))
@@ -290,7 +284,7 @@
                         col = col.Remove(col.Length - provider.ParseColEnd.Length, provider.ParseColEnd.Length);
 
                     // finally, parse the value and store
-                    values.Add(Double.Parse(col, provider.InnerProvider));
+                    values.Add(double.Parse(col, provider.InnerProvider));
                 }
 
                 rows.Add(values.ToArray());

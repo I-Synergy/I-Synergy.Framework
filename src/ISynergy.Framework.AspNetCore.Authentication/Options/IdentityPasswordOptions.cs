@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Text.RegularExpressions;
-
-namespace ISynergy.Framework.AspNetCore.Authentication.Options
+﻿namespace ISynergy.Framework.AspNetCore.Authentication.Options
 {
     /// <summary>
     /// Class IdentityPasswordOptions.

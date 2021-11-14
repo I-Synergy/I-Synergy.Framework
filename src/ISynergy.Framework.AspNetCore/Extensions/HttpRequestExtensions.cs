@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Net;
-using System.Net.Http;
-
-namespace ISynergy.Framework.AspNetCore.Extensions
+﻿namespace ISynergy.Framework.AspNetCore.Extensions
 {
     /// <summary>
     /// Class HttpRequestExtensions.

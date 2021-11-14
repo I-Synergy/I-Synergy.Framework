@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using ISynergy.Framework.Payment.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ISynergy.Framework.Payment.Extensions;
 
 namespace ISynergy.Framework.Payment.Tests.Extensions
 {

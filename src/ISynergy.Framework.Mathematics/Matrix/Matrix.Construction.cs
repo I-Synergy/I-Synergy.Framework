@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Ranges;
-using ISynergy.Framework.Mathematics.Random;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     ///     Matrix major order. The default is to use C-style Row-Major order.

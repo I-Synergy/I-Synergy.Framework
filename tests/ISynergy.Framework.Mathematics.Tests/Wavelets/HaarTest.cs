@@ -1,6 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
+    using ISynergy.Framework.Mathematics.Formats;
     using ISynergy.Framework.Mathematics.Wavelets;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -23,12 +25,12 @@
 
             Haar.FWT(data, 1);
 
-            double[,] expected = 
+            double[,] expected =
             {
                 {  4.25,  3.25,  0.25, -0.25 },
                 {  3.25,  3.5,   1.25,  2.5  },
                 {  1.25, -1.75, -0.75, -0.25 },
-                { -1.25,  0.5,  -0.25,  0.5  } 
+                { -1.25,  0.5,  -0.25,  0.5  }
             };
 
             // string dataStr = data.ToString(CSharpMatrixFormatProvider.InvariantCulture);
@@ -57,12 +59,12 @@
 
             Haar.FWT(data, levels);
 
-            double[,] expected = 
+            double[,] expected =
             {
                 {  3.5625, 0.1875, 0.25, -0.25 },
                 {  0.1875, 0.3125, 1.25,  2.5  },
                 {  1.25,  -1.75,  -0.75, -0.25 },
-                { -1.25,   0.5,   -0.25,  0.5  } 
+                { -1.25,   0.5,   -0.25,  0.5  }
             };
 
             string dataStr = data.ToString(CSharpMatrixFormatProvider.InvariantCulture);

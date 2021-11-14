@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     /// A structure representing 3x3 matrix.
@@ -103,8 +101,8 @@ namespace ISynergy.Framework.Mathematics
         {
             Matrix3x3 m = new Matrix3x3();
 
-            float cos = (float)System.Math.Cos(radians);
-            float sin = (float)System.Math.Sin(radians);
+            float cos = (float)Math.Cos(radians);
+            float sin = (float)Math.Sin(radians);
 
             m.V00 = m.V22 = cos;
             m.V02 = sin;
@@ -126,8 +124,8 @@ namespace ISynergy.Framework.Mathematics
         {
             Matrix3x3 m = new Matrix3x3();
 
-            float cos = (float)System.Math.Cos(radians);
-            float sin = (float)System.Math.Sin(radians);
+            float cos = (float)Math.Cos(radians);
+            float sin = (float)Math.Sin(radians);
 
             m.V11 = m.V22 = cos;
             m.V12 = -sin;
@@ -149,8 +147,8 @@ namespace ISynergy.Framework.Mathematics
         {
             Matrix3x3 m = new Matrix3x3();
 
-            float cos = (float)System.Math.Cos(radians);
-            float sin = (float)System.Math.Sin(radians);
+            float cos = (float)Math.Cos(radians);
+            float sin = (float)Math.Sin(radians);
 
             m.V00 = m.V11 = cos;
             m.V01 = -sin;
@@ -178,7 +176,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static Matrix3x3 CreateFromYawPitchRoll(float yaw, float pitch, float roll)
         {
-            return (CreateRotationY(yaw) * CreateRotationX(pitch)) * CreateRotationZ(roll);
+            return CreateRotationY(yaw) * CreateRotationX(pitch) * CreateRotationZ(roll);
         }
 
         /// <summary>
@@ -311,11 +309,11 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public Vector3 GetRow(int index)
         {
-            if ((index < 0) || (index > 2))
+            if (index < 0 || index > 2)
                 throw new ArgumentException("Invalid row index was specified.", "index");
 
-            return (index == 0) ? new Vector3(V00, V01, V02) :
-                   (index == 1) ? new Vector3(V10, V11, V12) : new Vector3(V20, V21, V22);
+            return index == 0 ? new Vector3(V00, V01, V02) :
+                   index == 1 ? new Vector3(V10, V11, V12) : new Vector3(V20, V21, V22);
         }
 
         /// <summary>
@@ -330,11 +328,11 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public Vector3 GetColumn(int index)
         {
-            if ((index < 0) || (index > 2))
+            if (index < 0 || index > 2)
                 throw new ArgumentException("Invalid column index was specified.", "index");
 
-            return (index == 0) ? new Vector3(V00, V10, V20) :
-                   (index == 1) ? new Vector3(V01, V11, V21) : new Vector3(V02, V12, V22);
+            return index == 0 ? new Vector3(V00, V10, V20) :
+                   index == 1 ? new Vector3(V01, V11, V21) : new Vector3(V02, V12, V22);
         }
 
         /// <summary>
@@ -599,19 +597,19 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator ==(Matrix3x3 matrix1, Matrix3x3 matrix2)
         {
-            return (
-                (matrix1.V00 == matrix2.V00) &&
-                (matrix1.V01 == matrix2.V01) &&
-                (matrix1.V02 == matrix2.V02) &&
+            return
+                matrix1.V00 == matrix2.V00 &&
+                matrix1.V01 == matrix2.V01 &&
+                matrix1.V02 == matrix2.V02 &&
 
-                (matrix1.V10 == matrix2.V10) &&
-                (matrix1.V11 == matrix2.V11) &&
-                (matrix1.V12 == matrix2.V12) &&
+                matrix1.V10 == matrix2.V10 &&
+                matrix1.V11 == matrix2.V11 &&
+                matrix1.V12 == matrix2.V12 &&
 
-                (matrix1.V20 == matrix2.V20) &&
-                (matrix1.V21 == matrix2.V21) &&
-                (matrix1.V22 == matrix2.V22)
-            );
+                matrix1.V20 == matrix2.V20 &&
+                matrix1.V21 == matrix2.V21 &&
+                matrix1.V22 == matrix2.V22
+            ;
         }
 
         /// <summary>
@@ -625,19 +623,19 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator !=(Matrix3x3 matrix1, Matrix3x3 matrix2)
         {
-            return (
-                (matrix1.V00 != matrix2.V00) ||
-                (matrix1.V01 != matrix2.V01) ||
-                (matrix1.V02 != matrix2.V02) ||
+            return
+                matrix1.V00 != matrix2.V00 ||
+                matrix1.V01 != matrix2.V01 ||
+                matrix1.V02 != matrix2.V02 ||
 
-                (matrix1.V10 != matrix2.V10) ||
-                (matrix1.V11 != matrix2.V11) ||
-                (matrix1.V12 != matrix2.V12) ||
+                matrix1.V10 != matrix2.V10 ||
+                matrix1.V11 != matrix2.V11 ||
+                matrix1.V12 != matrix2.V12 ||
 
-                (matrix1.V20 != matrix2.V20) ||
-                (matrix1.V21 != matrix2.V21) ||
-                (matrix1.V22 != matrix2.V22)
-            );
+                matrix1.V20 != matrix2.V20 ||
+                matrix1.V21 != matrix2.V21 ||
+                matrix1.V22 != matrix2.V22
+            ;
         }
 
         /// <summary>
@@ -650,7 +648,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public bool Equals(Matrix3x3 matrix)
         {
-            return (this == matrix);
+            return this == matrix;
         }
 
         /// <summary>
@@ -661,7 +659,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         /// <returns>Returns <see langword="true"/> if the matrix equals to the specified object or <see langword="false"/> otherwise.</returns>
         /// 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if (obj is Matrix3x3)
             {

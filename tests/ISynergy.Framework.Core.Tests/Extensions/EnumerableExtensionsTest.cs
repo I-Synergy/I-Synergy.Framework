@@ -1,11 +1,9 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Tests.Fixtures.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Tests.Extensions
 {
     /// <summary>
     /// Class EnumerableExtensionsTest.
@@ -63,7 +61,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
 
             if (collection is IEnumerable<Product> data)
             {
-                var dataTable = data.ToDataTable<Product>("Test");
+                var dataTable = data.ToDataTable("Test");
 
                 Assert.IsNotNull(dataTable);
                 Assert.AreEqual(5, dataTable.Rows.Count);

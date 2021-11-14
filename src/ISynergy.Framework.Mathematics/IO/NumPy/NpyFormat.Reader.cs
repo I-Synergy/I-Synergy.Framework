@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.Mathematics;
-using System;
-using System.Collections;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace ISynergy.Framework.Mathematics.IO
+﻿namespace ISynergy.Framework.Mathematics.IO
 {
 #if !NET35 && !NET40
     /// <summary>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Mathematics.MachineLearning
+﻿namespace ISynergy.Framework.Mathematics.MachineLearning
 {
     /// <summary>
     ///   Base class for parallel learning algorithms.

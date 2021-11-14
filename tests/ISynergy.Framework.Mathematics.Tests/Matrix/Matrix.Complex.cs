@@ -84,7 +84,7 @@
         public void ToArrayTest()
         {
             Complex[] c = { new Complex(1, 5), new Complex(2, -1), new Complex(-5, 1) };
-            double[,] expected = 
+            double[,] expected =
             {
                 {  1, 5  },
                 {  2, -1 },
@@ -100,15 +100,15 @@
         [TestMethod]
         public void MatrixImTest()
         {
-            Complex[,] x = 
+            Complex[,] x =
             {
                 { new Complex(1, 5), new Complex(2, 6) },
                 { new Complex(3, 7), new Complex(4, 8) },
                 { new Complex(5, 9), new Complex(6, 0) },
             };
 
-            double[,] expected = 
-            { 
+            double[,] expected =
+            {
                 { 5, 6 },
                 { 7, 8 },
                 { 9, 0 },
@@ -121,15 +121,15 @@
         [TestMethod]
         public void MatrixReTest()
         {
-            Complex[,] x = 
+            Complex[,] x =
             {
                 { new Complex(1, 5), new Complex(2, 6) },
                 { new Complex(3, 7), new Complex(4, 8) },
                 { new Complex(5, 9), new Complex(6, 0) },
             };
 
-            double[,] expected = 
-            { 
+            double[,] expected =
+            {
                 { 1, 2 },
                 { 3, 4 },
                 { 5, 6 },

@@ -1,8 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Enumerations;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Class DateTimeExtensions.

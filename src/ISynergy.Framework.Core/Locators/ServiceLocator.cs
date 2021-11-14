@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace ISynergy.Framework.Core.Locators
+﻿namespace ISynergy.Framework.Core.Locators
 {
     /// <summary>
     /// This class provides the ambient container for this application. If your

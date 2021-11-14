@@ -1,12 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.BackgroundServices;
-using ISynergy.Framework.Automations.Options;
-using ISynergy.Framework.Automations.Services;
-using ISynergy.Framework.Core.Extensions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace ISynergy.Framework.Automations.Extensions
+﻿namespace ISynergy.Framework.Automations.Extensions
 {
     /// <summary>
     /// ServiceCollection extensions for Automation.

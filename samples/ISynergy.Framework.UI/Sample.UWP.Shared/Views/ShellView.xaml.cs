@@ -14,7 +14,7 @@ namespace Sample.Views
         public ShellView()
         {
             InitializeComponent();
-            
+
             BackdropMaterial.SetApplyToRootOrPageBackground(this, true);
 
             InitializeView();

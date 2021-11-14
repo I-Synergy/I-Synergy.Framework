@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Globalization;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.AspNetCore.ViewModels.Base
+﻿namespace ISynergy.Framework.AspNetCore.ViewModels.Base
 {
     /// <summary>
     /// Class BaseViewModel.

@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Comparers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     public static partial class Matrix
     {
@@ -338,7 +333,7 @@ namespace ISynergy.Framework.Mathematics
             var idx = Vector.Range(values.Length);
             if (count < values.Length)
                 work.NthElement(idx, 0, work.Length, count, asc: false);
-            ISynergy.Framework.Mathematics.Sort.Insertion(work, idx, 0, count, false);
+            Common.Sort.Insertion(work, idx, 0, count, false);
             return idx.First(count);
         }
 
@@ -359,7 +354,7 @@ namespace ISynergy.Framework.Mathematics
             var idx = Vector.Range(values.Length);
             if (count < values.Length)
                 work.NthElement(idx, 0, work.Length, count, asc: true);
-            ISynergy.Framework.Mathematics.Sort.Insertion(work, idx, 0, count);
+            Common.Sort.Insertion(work, idx, 0, count);
             return idx.First(count);
         }
 

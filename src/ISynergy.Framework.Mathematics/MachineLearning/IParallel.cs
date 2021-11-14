@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Mathematics.MachineLearning
+﻿namespace ISynergy.Framework.Mathematics.MachineLearning
 {
     /// <summary>
     ///   Common interface for parallel algorithms.

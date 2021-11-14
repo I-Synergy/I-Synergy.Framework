@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
-using System;
-using System.Collections.Generic;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     ///   Vanilla key-based comparer for <see cref="KeyValuePair{TKey, TValue}"/>.

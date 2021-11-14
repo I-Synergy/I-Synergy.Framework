@@ -11,6 +11,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.Mail</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,4 +24,15 @@
         <ProjectReference Include="..\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Validation"/>
+		<Using Include="ISynergy.Framework.Mail.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.Mail.Models"/>
+		<Using Include="ISynergy.Framework.Mail.Options"/>
+		<Using Include="Microsoft.Extensions.Configuration"/>
+		<Using Include="Microsoft.Extensions.Logging"/>
+		<Using Include="Microsoft.Extensions.Options"/>
+		<Using Include="SendGrid"/>
+		<Using Include="SendGrid.Helpers.Mail"/>
+	</ItemGroup>
 </Project>

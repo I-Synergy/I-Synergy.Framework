@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained
 {
     /// <summary>
     ///     Status codes for the <see cref="GoldfarbIdnani" />

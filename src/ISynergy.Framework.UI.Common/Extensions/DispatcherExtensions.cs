@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Windows.Foundation;
-
-namespace Windows.UI.Core
+﻿namespace Windows.UI.Core
 {
     /// <summary>
     /// Class DispatcherExtensions.

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Class DoubleExtensions.

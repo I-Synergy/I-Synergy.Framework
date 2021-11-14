@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.AspNetCore.Authentication.Exceptions
+﻿namespace ISynergy.Framework.AspNetCore.Authentication.Exceptions
 {
     /// <summary>
     /// Class ClaimNotFoundException.

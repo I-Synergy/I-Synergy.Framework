@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Enumerations
+﻿namespace ISynergy.Framework.Monitoring.Enumerations
 {
     /// <summary>
     /// Monitor event names.

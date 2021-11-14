@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.IO.Events;
+using ISynergy.Framework.IO.Models;
 using ISynergy.Framework.IO.Models.Tests;
-using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.IO.Watchers;
 
 namespace ISynergy.Framework.IO.Tests.Fixtures
 {
@@ -94,7 +93,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         /// </summary>
         public void RemoveEventHandlers()
         {
-            if(FileWatcher != null)
+            if (FileWatcher != null)
             {
                 FileWatcher.EventChangedAttribute -= new WatcherExEventHandler(fileWatcher_EventChanged);
                 FileWatcher.EventChangedCreationTime -= new WatcherExEventHandler(fileWatcher_EventChanged);

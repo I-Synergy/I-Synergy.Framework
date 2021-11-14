@@ -1,18 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Extensions;
-using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.AspNetCore.Authentication.Options;
-using ISynergy.Framework.Core.Constants;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-
-namespace ISynergy.Framework.AspNetCore.Authentication.Services
+﻿namespace ISynergy.Framework.AspNetCore.Authentication.Services
 {
     /// <summary>
     /// JwtTokenService that can be injected in controllers for basic token handling

@@ -2,9 +2,9 @@
 {
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using ISynergy.Framework.Mathematics.Random;
 
     [TestClass]
     public class MunkresTest

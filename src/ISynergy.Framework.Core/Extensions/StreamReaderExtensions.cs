@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Stream reader extensions.

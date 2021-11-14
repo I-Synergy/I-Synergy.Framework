@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ISynergy.Framework.Payment.Abstractions;
+﻿using ISynergy.Framework.Payment.Abstractions.Services;
 using ISynergy.Framework.Payment.Mollie.Models.Url;
 
 namespace ISynergy.Framework.Payment.Mollie.Base

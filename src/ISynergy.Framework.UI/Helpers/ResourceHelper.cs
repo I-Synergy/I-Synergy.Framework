@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Markup;
 #else

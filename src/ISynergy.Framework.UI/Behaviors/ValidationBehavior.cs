@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
-using Microsoft.Xaml.Interactivity;
-using System;
-using System.Collections.Generic;
-using Windows.ApplicationModel;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml;
 #else
 using Microsoft.UI.Xaml;
@@ -48,12 +42,12 @@ namespace ISynergy.Framework.UI.Behaviors
         /// </summary>
         private void TearDown()
         {
-            if(GetProperty(false) != null)
+            if (GetProperty(false) != null)
             {
                 GetProperty(false).PropertyChanged -= Property_PropertyChanged;
             }
 
-            if(Control != null)
+            if (Control != null)
             {
                 Control.DataContextChanged -= Control_DataContextChanged;
             }

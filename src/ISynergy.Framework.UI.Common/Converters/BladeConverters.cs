@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using ISynergy.Framework.Mvvm.Abstractions;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Data;
 #else
 using Microsoft.UI.Xaml.Data;

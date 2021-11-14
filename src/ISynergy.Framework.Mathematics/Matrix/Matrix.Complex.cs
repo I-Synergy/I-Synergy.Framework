@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Core.Ranges;
-using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Numerics;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     ///     Static class ComplexExtensions. Defines a set of extension methods

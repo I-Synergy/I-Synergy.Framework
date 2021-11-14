@@ -1,8 +1,8 @@
-﻿using System;
-using ISynergy.Framework.Core.Data.Tests.TestClasses;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Tests.Fixtures.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Tests.Extensions
 {
     /// <summary>
     /// Class ObjectExtensionTests.

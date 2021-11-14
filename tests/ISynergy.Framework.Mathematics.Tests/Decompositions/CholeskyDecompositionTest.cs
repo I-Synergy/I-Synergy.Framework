@@ -1,8 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Decompositions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ISynergy.Framework.Mathematics;
     using System;
 
     [TestClass]
@@ -154,12 +154,12 @@
 
             double[,] B = Matrix.Identity(4);
 
-            double[,] expected = 
+            double[,] expected =
             {
                 { 0.4000,    1.2000,    1.4000,   -0.5000 },
                 { 1.2000,    3.6000,    4.2000,   -2.0000 },
                 { 1.4000,    4.2000,    5.4000,   -2.5000 },
-                { -0.5000,  -2.0000,   -2.5000,    1.0000 }, 
+                { -0.5000,  -2.0000,   -2.5000,    1.0000 },
             };
             double[,] actual = chol.Solve(B);
 

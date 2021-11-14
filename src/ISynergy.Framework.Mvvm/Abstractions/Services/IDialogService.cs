@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Enumerations;
-
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
     /// <summary>
     /// Interface abstracting the interaction between view models and views when it comes to
@@ -80,7 +75,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
         Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel);
-        
+
         /// <summary>
         /// Shows the dialog asynchronous.
         /// </summary>

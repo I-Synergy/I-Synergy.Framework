@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Threading.Tasks;
-
-namespace System.Net.Http
+﻿namespace ISynergy.Framework.AspNetCore.Extensions
 {
     /// <summary>
     /// Class HttpContentExtensions.

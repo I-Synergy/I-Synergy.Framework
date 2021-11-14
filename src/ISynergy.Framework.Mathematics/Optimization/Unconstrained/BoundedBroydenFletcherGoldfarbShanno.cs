@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Core;
-using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.ComponentModel;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization
 {
     /// <summary>
     ///     Status codes for the <see cref="BoundedBroydenFletcherGoldfarbShanno" />

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Events
+﻿namespace ISynergy.Framework.Core.Events
 {
     /// <summary>
     /// Class WeakAction.

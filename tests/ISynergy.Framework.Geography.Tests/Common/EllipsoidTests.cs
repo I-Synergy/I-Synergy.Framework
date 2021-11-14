@@ -1,7 +1,8 @@
 ﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Geography.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Common.Tests
+namespace ISynergy.Framework.Geography.Tests.Common
 {
     /// <summary>
     /// Class EllipsoidTests.

@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Class FileNameExtensions.

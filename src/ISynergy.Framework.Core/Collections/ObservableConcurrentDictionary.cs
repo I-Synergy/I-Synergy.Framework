@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Threading;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     /// Provides a thread-safe dictionary for use with data binding.
@@ -123,7 +114,7 @@ namespace ISynergy.Framework.Core.Collections
         /// <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</param>
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
-            if(!TryAddWithNotification(item))
+            if (!TryAddWithNotification(item))
                 throw new InvalidOperationException($"{item.Key} could not be added.");
         }
 

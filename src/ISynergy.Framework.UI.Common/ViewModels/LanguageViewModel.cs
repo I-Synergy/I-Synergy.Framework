@@ -1,12 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.UI.Functions;
-using Microsoft.Extensions.Logging;
-
-namespace ISynergy.Framework.UI.ViewModels
+﻿namespace ISynergy.Framework.UI.ViewModels
 {
     /// <summary>
     /// Class LanguageViewModel.

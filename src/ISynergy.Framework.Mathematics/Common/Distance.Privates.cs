@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Distances;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     public static partial class Distance
     {

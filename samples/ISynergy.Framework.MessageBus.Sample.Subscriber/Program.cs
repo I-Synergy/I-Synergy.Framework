@@ -1,11 +1,11 @@
-﻿using System;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.MessageBus.Extensions;
 using ISynergy.Framework.MessageBus.Sample.Models;
 using ISynergy.Framework.MessageBus.Sample.Subscriber.Options;
 using ISynergy.Framework.MessageBus.Sample.Subscriber.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace ISynergy.Framework.MessageBus.Sample.Subscriber
 {

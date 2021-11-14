@@ -1,7 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.IO
+﻿namespace ISynergy.Framework.Mathematics.IO.Mat
 {
-    using System;
-
     /// <summary>
     ///   Sparse matrix representation used by
     ///   <see cref="MatReader">.MAT files</see>.

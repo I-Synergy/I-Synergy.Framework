@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
+﻿using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
 using ISynergy.Framework.Payment.Mollie.Base;
 using ISynergy.Framework.Payment.Mollie.Models.List;
 using ISynergy.Framework.Payment.Mollie.Models.Profile.Request;

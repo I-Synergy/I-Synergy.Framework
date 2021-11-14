@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
-
-namespace ISynergy.Framework.Physics.Enumerations
+﻿namespace ISynergy.Framework.Physics.Enumerations
 {
     /// <summary>
     /// Units

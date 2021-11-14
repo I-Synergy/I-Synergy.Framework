@@ -1,11 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.IO
+﻿namespace ISynergy.Framework.Mathematics.IO.Mat
 {
-    using ISynergy.Framework.Core.Extensions;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-
     /// <summary>
     ///   Reader for .mat files (such as the ones created by Matlab and Octave).
     /// </summary>
@@ -215,7 +209,7 @@
             if (terminator < 0)
                 terminator = title.Length;
 
-            Description = new String(title, 0, terminator).Trim();
+            Description = new string(title, 0, terminator).Trim();
             Version = version;
             BigEndian = endian[0] == 'M';
             if (BitConverter.IsLittleEndian && BigEndian)

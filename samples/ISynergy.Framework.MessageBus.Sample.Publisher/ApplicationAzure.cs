@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ISynergy.Framework.MessageBus.Abstractions.Services;
+using ISynergy.Framework.MessageBus.Sample.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Framework.MessageBus.Abstractions;
-using ISynergy.Framework.MessageBus.Sample.Models;
 
 namespace ISynergy.Framework.MessageBus.Sample
 {

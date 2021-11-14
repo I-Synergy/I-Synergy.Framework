@@ -1,6 +1,4 @@
-﻿using System;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Data;
 #else
 using Microsoft.UI.Xaml.Data;
@@ -111,7 +109,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is DateTime dt)
+            if (value is DateTime dt)
             {
                 return new DateTimeOffset(dt);
             }
@@ -129,7 +127,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if(value is DateTimeOffset dt)
+            if (value is DateTimeOffset dt)
             {
                 if (dt.Offset.Equals(TimeSpan.Zero))
                     return dt.UtcDateTime;

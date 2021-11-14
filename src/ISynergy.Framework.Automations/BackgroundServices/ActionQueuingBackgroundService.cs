@@ -1,13 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.Options;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Automations.BackgroundServices
+﻿namespace ISynergy.Framework.Automations.BackgroundServices
 {
     /// <summary>
     /// Background service where scheduled or delayed actions are monitored and executed.
@@ -34,7 +25,7 @@ namespace ISynergy.Framework.Automations.BackgroundServices
         {
             _service = actionService;
             _options = options.Value;
-            _logger = logger;    
+            _logger = logger;
         }
 
         /// <summary>
@@ -62,7 +53,7 @@ namespace ISynergy.Framework.Automations.BackgroundServices
             return Task.CompletedTask;
         }
 
-        
+
 
         /// <summary>
         /// Refreshes the queue and sets the execution timer to the first available tasks.
@@ -84,9 +75,9 @@ namespace ISynergy.Framework.Automations.BackgroundServices
         /// Executes task when task delay has elapsed.
         /// </summary>
         /// <param name="state"></param>
-        private async void ExecuteTask(object state) 
-        { 
-            if(state is IAction action) 
+        private async void ExecuteTask(object state)
+        {
+            if (state is IAction action)
                 await _service.ExcecuteActionAsync(action);
         }
 
@@ -96,7 +87,7 @@ namespace ISynergy.Framework.Automations.BackgroundServices
         public void Dispose()
         {
             _executionTimer?.Dispose();
-            _backgroundTimer?.Dispose();    
+            _backgroundTimer?.Dispose();
         }
     }
 }

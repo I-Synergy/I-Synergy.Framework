@@ -19,4 +19,15 @@
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Base"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.Core.Base"/>
+		<Using Include="ISynergy.Framework.Core.Extensions"/>
+		<Using Include="ISynergy.Framework.EntityFramework.Attributes"/>
+		<Using Include="Microsoft.EntityFrameworkCore"/>
+		<Using Include="Microsoft.EntityFrameworkCore.Query"/>
+		<Using Include="System.Linq.Expressions"/>
+	</ItemGroup>
 </Project>

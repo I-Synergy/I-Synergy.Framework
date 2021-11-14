@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Payment.Mollie.Enumerations;
-using System;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.Order
 {

@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using ISynergy.Framework.Mathematics.Random;
 
     [TestClass]
     public class BoundedBroydenFletcherGoldfarbShannoTest
@@ -69,7 +69,7 @@
             //   g(x,y)  =  { del f / del x, del f / del y }
             // 
 
-            Func<double[], double[]> g = (x) => new double[] 
+            Func<double[], double[]> g = (x) => new double[]
             {
                 // df/dx = {-2 e^(-    (x-1)^2) (x-1)}
                 2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
@@ -125,7 +125,7 @@
             // min f(x, y) = -exp(-(x-1)^2) - exp(-0.5*(y-2)^2)
             f = (x) => -Math.Exp(-Math.Pow(x[0] - 1, 2)) - Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2));
 
-            g = (x) => new[] 
+            g = (x) => new[]
             {
                 2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
                 Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2)) * (x[1] - 2)
@@ -205,7 +205,7 @@
             Assert.AreEqual(expectedMinimum, minimum);
         }
 
-     
+
 
 
         [TestMethod]
@@ -246,7 +246,7 @@
             f = (x) =>
                            -Math.Exp(-Math.Pow(x[0] - 1, 2)) - Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2));
 
-            g = (x) => new double[] 
+            g = (x) => new double[]
             {
                 // df/dx = {-2 e^(-    (x-1)^2) (x-1)}
                 2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
@@ -256,7 +256,7 @@
             };
         }
 
-        
+
 
     }
 }

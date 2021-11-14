@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Ranges;
-using System;
-using System.Diagnostics;
-
-namespace ISynergy.Framework.Mathematics.Integration
+﻿namespace ISynergy.Framework.Mathematics.Integration
 {
     /// <summary>
     ///     Status codes for the <see cref="NonAdaptiveGaussKronrod" />

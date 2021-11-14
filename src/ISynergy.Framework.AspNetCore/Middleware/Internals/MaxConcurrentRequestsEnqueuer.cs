@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using ISynergy.Framework.AspNetCore.Enumerations;
-using ISynergy.Framework.AspNetCore.Options;
-
-namespace ISynergy.Framework.AspNetCore.Middleware.Internals
+﻿namespace ISynergy.Framework.AspNetCore.Middleware.Internals
 {
     /// <summary>
     /// Class MaxConcurrentRequestsEnqueuer.

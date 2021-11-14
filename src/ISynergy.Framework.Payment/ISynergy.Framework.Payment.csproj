@@ -18,4 +18,13 @@
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<Using Include="Microsoft.Extensions.Logging"/>
+		<Using Include="Newtonsoft.Json.Serialization"/>
+		<Using Include="ISynergy.Framework.Payment.ContractResolvers"/>
+		<Using Include="Newtonsoft.Json"/>
+		<Using Include="Newtonsoft.Json.Linq"/>
+		<Using Include="System.Reflection"/>
+		<Using Include="System.Net"/>
+	</ItemGroup>
 </Project>

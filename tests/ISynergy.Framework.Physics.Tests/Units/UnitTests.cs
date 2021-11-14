@@ -1,8 +1,7 @@
 ﻿using ISynergy.Framework.Physics.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
-namespace ISynergy.Framework.Physics.Tests
+namespace ISynergy.Framework.Physics.Tests.Units
 {
     /// <summary>
     /// Test the unit.

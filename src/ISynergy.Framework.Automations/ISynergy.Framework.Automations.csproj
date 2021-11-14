@@ -24,4 +24,32 @@
 	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Automations.Abstractions"/>
+		<Using Include="ISynergy.Framework.Automations.Actions"/>
+		<Using Include="ISynergy.Framework.Automations.Actions.Base"/>
+		<Using Include="ISynergy.Framework.Automations.BackgroundServices"/>
+		<Using Include="ISynergy.Framework.Automations.Base"/>
+		<Using Include="ISynergy.Framework.Automations.Enumerations"/>
+		<Using Include="ISynergy.Framework.Automations.Extensions"/>
+		<Using Include="ISynergy.Framework.Automations.Options"/>
+		<Using Include="ISynergy.Framework.Automations.Services"/>
+		<Using Include="ISynergy.Framework.Automations.States"/>
+		<Using Include="ISynergy.Framework.Automations.States.Base"/>
+		<Using Include="ISynergy.Framework.Automations.Triggers.Base"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Base"/>
+		<Using Include="ISynergy.Framework.Core.Base"/>
+		<Using Include="ISynergy.Framework.Core.Extensions"/>
+		<Using Include="ISynergy.Framework.Core.Messaging"/>
+		<Using Include="ISynergy.Framework.Core.Services"/>
+		<Using Include="ISynergy.Framework.Core.Validation"/>
+		<Using Include="Microsoft.Extensions.Configuration"/>
+		<Using Include="Microsoft.Extensions.DependencyInjection"/>
+		<Using Include="Microsoft.Extensions.Hosting"/>
+		<Using Include="Microsoft.Extensions.Logging"/>
+		<Using Include="Microsoft.Extensions.Options"/>
+		<Using Include="System.Collections.ObjectModel"/>
+		<Using Include="System.Reflection"/>
+		<Using Include="System.Windows.Input"/>
+	</ItemGroup>
 </Project>

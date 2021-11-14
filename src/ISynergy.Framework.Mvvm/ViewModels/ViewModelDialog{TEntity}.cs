@@ -1,15 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Events;
-using ISynergy.Framework.Core.Utilities;
-
-namespace ISynergy.Framework.Mvvm
+﻿namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class ViewModelDialog.
@@ -68,7 +57,7 @@ namespace ISynergy.Framework.Mvvm
             IContext context,
             IBaseCommonServices commonServices,
             ILogger logger,
-            bool automaticValidation = false) 
+            bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation)
         {
             Validator = new Action<IObservableClass>(arg =>

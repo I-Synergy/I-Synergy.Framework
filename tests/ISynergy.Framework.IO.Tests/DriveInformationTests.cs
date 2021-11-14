@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ISynergy.Framework.IO.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.IO.Tests
@@ -27,7 +27,7 @@ namespace ISynergy.Framework.IO.Tests
         {
             // If result = -1, the expected outcome is an exception.
             // otherwise its a boolean value.
-            if(result == -1)
+            if (result == -1)
             {
                 Assert.ThrowsException<ArgumentException>(() => DriveInformation.IsNetworkDrive(path));
             }

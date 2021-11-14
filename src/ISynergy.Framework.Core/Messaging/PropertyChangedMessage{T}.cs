@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Messaging.Base;
-
-namespace ISynergy.Framework.Core.Messaging
+﻿namespace ISynergy.Framework.Core.Messaging
 {
     /// <summary>
     /// Passes a string property name (PropertyName) and a generic value

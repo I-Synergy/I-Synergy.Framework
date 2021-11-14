@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.UI.Extensions;
-using System;
-using System.IO;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Data;
 #else
 using Microsoft.UI.Xaml.Data;

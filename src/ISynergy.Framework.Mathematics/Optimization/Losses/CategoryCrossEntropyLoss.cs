@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Statistics;
-using System;
-
-namespace ISynergy.Framework.Mathematics.Optimization.Losses
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Losses
 {
     /// <summary>
     ///     Categorical cross-entropy loss for multi-class problems,

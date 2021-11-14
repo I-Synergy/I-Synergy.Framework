@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using ISynergy.Framework.Core.Data;
-
-namespace ISynergy.Framework.Core.Models.Accounts
+﻿namespace ISynergy.Framework.Core.Models.Accounts
 {
     /// <summary>
     /// Class RegistrationData.

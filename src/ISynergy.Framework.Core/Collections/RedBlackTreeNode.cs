@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     ///   Possible node colors for <see cref="RedBlackTree{T}"/>s.

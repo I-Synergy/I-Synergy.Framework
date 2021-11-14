@@ -1,18 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Automations.Abstractions
+﻿namespace ISynergy.Framework.Automations.Abstractions
 {
     /// <summary>
     /// Repository manager for Scheduled and Delayed actions.
     /// </summary>
     public interface IActionManager
     {
+        /// <summary>
+        /// Get action by id asynchronous
+        /// </summary>
+        /// <param name="actionId"></param>
+        /// <returns></returns>
         Task<IAction> GetItemAsync(Guid actionId);
+
+        /// <summary>
+        /// Add action asynchronous.
+        /// </summary>
+        /// <param name="automationQueue"></param>
+        /// <returns></returns>
         Task<bool> AddAsync(IAction automationQueue);
+
+        /// <summary>
+        /// Remove action asynchronous.
+        /// </summary>
+        /// <param name="actionId"></param>
+        /// <returns></returns>
         Task<bool> RemoveAsync(Guid actionId);
+
+        /// <summary>
+        /// Update action asynchronous.
+        /// </summary>
+        /// <param name="automationQueue"></param>
+        /// <returns></returns>
         Task<bool> UpdateAsync(IAction automationQueue);
+
+        /// <summary>
+        /// Get first upcoming task asynchronous.
+        /// </summary>
+        /// <returns></returns>
         Task<IAction> GetFirstUpcomingTaskAsync();
 
         /// <summary>

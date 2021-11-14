@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.States;
-using System;
-
-namespace ISynergy.Framework.Automations.Conditions
+﻿namespace ISynergy.Framework.Automations.Conditions
 {
     /// <summary>
     /// Value holder for a state.

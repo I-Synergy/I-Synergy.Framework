@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
     /// <summary>
     /// Interface IBaseCommonServices
@@ -45,7 +43,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <summary>
         /// Gets the messaging service.
         /// </summary>
-        IMessageService MessageService {  get; }
+        IMessageService MessageService { get; }
         /// <summary>
         /// Dispatcher service.
         /// </summary>

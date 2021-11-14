@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Exceptions;
-using ISynergy.Framework.AspNetCore.Authentication.Extensions;
-using ISynergy.Framework.Core.Constants;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.SignalR;
-
-namespace ISynergy.Framework.Accessors
+﻿namespace ISynergy.Framework.Monitoring.Accessors
 {
     /// <summary>
     /// Claims accessors.

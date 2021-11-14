@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Convergence
 {
     /// <summary>
     ///     Absolute convergence criteria.

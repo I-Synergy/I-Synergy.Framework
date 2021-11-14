@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     ///   Tree node with arbitrary number of children.

@@ -1,51 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Providers;
-using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Views;
-using ISynergy.Framework.UI.Functions;
-using ISynergy.Framework.UI.Providers;
-using ISynergy.Framework.UI.Services;
-using Microsoft.Extensions.Logging;
-using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel;
-using Windows.UI.Core;
-using Microsoft.Extensions.DependencyInjection;
-using ISynergy.Framework.Mvvm;
-using ISynergy.Framework.Core.Abstractions.Services;
-using Windows.UI.ViewManagement;
-using System.Globalization;
-using Windows.ApplicationModel.Background;
-using System.Text.RegularExpressions;
-using ISynergy.Framework.Mvvm.Extensions;
-using ISynergy.Framework.Core.Services;
-using System.Resources;
-using ISynergy.Framework.UI.Extensions;
-
 #if (WINDOWS_UWP)
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
-using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
+using Windows.UI.Xaml.Navigation;
 using LaunchActivatedEventArgs = Windows.ApplicationModel.Activation.LaunchActivatedEventArgs;
+using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
+using Window = Windows.UI.Xaml.Window;
 #else
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Media;
-using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
+using Microsoft.UI.Xaml.Navigation;
 using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
+using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
+using Window = Microsoft.UI.Xaml.Window;
 #endif
 
 namespace ISynergy.Framework.UI
@@ -61,13 +29,13 @@ namespace ISynergy.Framework.UI
         /// Main Application Window.
         /// </summary>
         public Window MainWindow { get; private set; }
-        
+
         /// <summary>
         /// Gets the theme selector.
         /// </summary>
         /// <value>The theme selector.</value>
         protected readonly IThemeSelectorService _themeSelector;
-        
+
         /// <summary>
         /// The services
         /// </summary>
@@ -111,7 +79,7 @@ namespace ISynergy.Framework.UI
             _languageService = new LanguageService();
 
             ConfigureServices(_services);
-            
+
             _serviceProvider = _services.BuildServiceProvider();
 
             ServiceLocator.SetLocatorProvider(_serviceProvider);
@@ -224,12 +192,12 @@ namespace ISynergy.Framework.UI
 
                 // Add custom resourcedictionaries from code.
                 var dictionary = Application.Current.Resources?.MergedDictionaries;
-                
-                if(dictionary is not null)
+
+                if (dictionary is not null)
                 {
                     foreach (var item in GetAdditionalResourceDictionaries())
                     {
-                        if(!dictionary.Any(t => t.Source == item.Source))
+                        if (!dictionary.Any(t => t.Source == item.Source))
                             Application.Current.Resources.MergedDictionaries.Add(item);
                     }
                 }
@@ -304,59 +272,59 @@ namespace ISynergy.Framework.UI
         /// </summary>
         protected virtual ILoggerFactory ConfigureLogger(LogLevel loglevel = LogLevel.Information)
         {
-            var factory =  LoggerFactory.Create(builder =>
-            {
+            var factory = LoggerFactory.Create(builder =>
+           {
 #if __WASM__
-                builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
+               builder.AddProvider(new Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
 #elif __IOS__
                 builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
 #elif WINDOWS_UWP
-                builder.AddDebug();
+               builder.AddDebug();
 #else
-                builder.AddConsole();
+               builder.AddConsole();
 #endif
 
-                // Exclude logs below this level
-                builder.SetMinimumLevel(loglevel);
+               // Exclude logs below this level
+               builder.SetMinimumLevel(loglevel);
 
-                // Exclude logs below this level
-                builder.SetMinimumLevel(LogLevel.Information);
+               // Exclude logs below this level
+               builder.SetMinimumLevel(LogLevel.Information);
 
-                // Default filters for Uno Platform namespaces
-                builder.AddFilter("Uno", LogLevel.Warning);
-                builder.AddFilter("Windows", LogLevel.Warning);
-                builder.AddFilter("Microsoft", LogLevel.Warning);
+               // Default filters for Uno Platform namespaces
+               builder.AddFilter("Uno", LogLevel.Warning);
+               builder.AddFilter("Windows", LogLevel.Warning);
+               builder.AddFilter("Microsoft", LogLevel.Warning);
 
-                // Generic Xaml events
-                builder.AddFilter("Microsoft.UI.Xaml", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.UIElement", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace);
+               // Generic Xaml events
+               builder.AddFilter("Microsoft.UI.Xaml", LogLevel.Debug);
+               builder.AddFilter("Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug);
+               builder.AddFilter("Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug);
+               builder.AddFilter("Microsoft.UI.Xaml.UIElement", LogLevel.Debug);
+               builder.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace);
 
-                // Layouter specific messages
-                builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug);
+               // Layouter specific messages
+               builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug);
+               builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug);
+               builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug);
 
-                builder.AddFilter("Windows.Storage", LogLevel.Debug);
+               builder.AddFilter("Windows.Storage", LogLevel.Debug);
 
-                // Binding related messages
-                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
+               // Binding related messages
+               builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
+               builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
 
-                // Binder memory references tracking
-                builder.AddFilter("Uno.UI.DataBinding.BinderReferenceHolder", LogLevel.Debug);
+               // Binder memory references tracking
+               builder.AddFilter("Uno.UI.DataBinding.BinderReferenceHolder", LogLevel.Debug);
 
-                // RemoteControl and HotReload related
-                builder.AddFilter("Uno.UI.RemoteControl", LogLevel.Information);
+               // RemoteControl and HotReload related
+               builder.AddFilter("Uno.UI.RemoteControl", LogLevel.Information);
 
-                // Debug JS interop
-                builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug);
-            });
+               // Debug JS interop
+               builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug);
+           });
 
 #if HAS_UNO
-            global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
+            Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
 #endif
             return factory;
         }
@@ -372,9 +340,9 @@ namespace ISynergy.Framework.UI
 
             services.AddSingleton((s) => _languageService);
             services.AddSingleton((s) => _navigationService);
-            
-            services.AddSingleton<ILogger>((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
-            
+
+            services.AddSingleton((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+
             services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
@@ -393,7 +361,7 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <value>The view model types.</value>
         public List<Type> ViewModelTypes { get; private set; }
-        
+
         /// <summary>
         /// Gets the view types.
         /// </summary>
@@ -464,7 +432,7 @@ namespace ISynergy.Framework.UI
                         q.Name.EndsWith(GenericConstants.View)
                         || q.Name.EndsWith(GenericConstants.Page))
                         && q.Name != GenericConstants.View
-                        && q.Name != nameof(ISynergy.Framework.UI.Controls.View)
+                        && q.Name != nameof(Controls.View)
                         && q.Name != GenericConstants.Page
                         && !q.IsAbstract
                         && !q.IsInterface)
@@ -475,7 +443,7 @@ namespace ISynergy.Framework.UI
                         q.GetInterface(nameof(IWindow), false) != null
                         && q.Name.EndsWith(GenericConstants.Window)
                         && q.Name != GenericConstants.Window
-                        && q.Name != nameof(ISynergy.Framework.UI.Controls.Window)
+                        && q.Name != nameof(Controls.Window)
                         && !q.IsAbstract
                         && !q.IsInterface)
                     .ToList());
@@ -567,10 +535,10 @@ namespace ISynergy.Framework.UI
             //Only in Windows i can set the culture.
             var culture = CultureInfo.CurrentCulture;
 
-                culture.NumberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
-                culture.NumberFormat.CurrencyNegativePattern = 1;
+            culture.NumberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+            culture.NumberFormat.CurrencyNegativePattern = 1;
 
-                _context.NumberFormat = culture.NumberFormat;
+            _context.NumberFormat = culture.NumberFormat;
 #endif
 
             var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();

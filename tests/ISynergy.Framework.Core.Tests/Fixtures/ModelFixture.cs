@@ -1,16 +1,15 @@
-﻿using System;
-using ISynergy.Framework.Core.Data;
+﻿using ISynergy.Framework.Core.Base;
 
-namespace ISynergy.Framework.Core.Fixtures
+namespace ISynergy.Framework.Core.Tests.Fixtures
 {
     /// <summary>
     /// Class ModelFixture.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// Implements the <see cref="System.IDisposable" />
+    /// Implements the <see cref="ModelBase" />
+    /// Implements the <see cref="IDisposable" />
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
-    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="ModelBase" />
+    /// <seealso cref="IDisposable" />
     public class ModelFixture<T> : ModelBase, IDisposable
     {
         /// <summary>
@@ -41,9 +40,9 @@ namespace ISynergy.Framework.Core.Fixtures
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="string" /> that represents this instance.
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        /// <returns>A <see cref="string" /> that represents this instance.</returns>
         public override string ToString()
         {
             if (Value is null)

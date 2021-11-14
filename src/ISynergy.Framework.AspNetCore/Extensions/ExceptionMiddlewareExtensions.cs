@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using ISynergy.Framework.AspNetCore.Middleware;
-
-namespace ISynergy.Framework.AspNetCore.Extensions
+﻿namespace ISynergy.Framework.AspNetCore.Extensions
 {
     /// <summary>
     /// Class ExceptionMiddlewareExtensions.

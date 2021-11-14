@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Payment.Mollie.Models.Chargeback;
+﻿using ISynergy.Framework.Payment.Mollie.Models.Chargeback;
 using ISynergy.Framework.Payment.Mollie.Models.List;
 
 namespace ISynergy.Framework.Payment.Mollie.Abstractions.Clients

@@ -2,8 +2,8 @@
 {
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Decompositions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ISynergy.Framework.Mathematics.Random;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class NonnegativeMatrixFactorizationTest
@@ -41,13 +41,13 @@
                     Assert.IsTrue(Matrix.IsEqual(actual[i, j], expected[i, j], 0.05));
                 }
             }
-                
+
         }
 
         [TestMethod]
         public void NonNegativeMatrixFactorizationConstructorTest2()
         {
-            double[] data = 
+            double[] data =
             {
                 0.814723686, 0.157613082, 0.655740699, 0.706046088, 0.43874436, 0.276025077, 0.751267059, 0.840717256, 0.351659507, 0.07585429,
                 0.905791937, 0.970592782, 0.035711679, 0.031832846, 0.381558457, 0.679702677, 0.255095115, 0.254282179, 0.830828628, 0.053950119,

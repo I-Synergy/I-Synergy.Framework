@@ -1,8 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Optimization
 {
-    using ISynergy.Framework.Mathematics.Exceptions;
-    using System;
-
     /// <summary>
     ///   Status codes for the <see cref="BrentSearch"/>.
     /// </summary>

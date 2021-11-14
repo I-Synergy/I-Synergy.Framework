@@ -1,10 +1,5 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-
-namespace ISynergy.Framework.Mathematics.Statistics
+﻿namespace ISynergy.Framework.Mathematics.Statistics
 {
-    using System;
-    using System.Collections.Generic;
-
     static partial class Measures
     {
 

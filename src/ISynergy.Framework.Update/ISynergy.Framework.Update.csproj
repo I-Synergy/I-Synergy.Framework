@@ -1,0 +1,17 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>uap10.0.18362;net6.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Update</PackageId>
+		<Description>I-Synergy Framework Update for UWP and .Net 6.0</Description>
+		<PackageTags>I-Synergy, Framework, Update, net6.0</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+	</PropertyGroup>
+</Project>

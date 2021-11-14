@@ -56,10 +56,6 @@
 //   POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace ISynergy.Framework.Mathematics.Optimization
 {
     /// <summary>
@@ -120,7 +116,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///         </list>
     ///     </para>
     /// </remarks>
-    /// <seealso cref="ISynergy.Framework.Mathematics.Optimization.IOptimizationMethod" />
+    /// <seealso cref="Base.IOptimizationMethod" />
     public class Munkres : IOptimizationMethod
     {
         private bool[] colCover;

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.IO
+﻿namespace ISynergy.Framework.Mathematics.IO.Mat
 {
 
     internal enum MatArrayType : byte

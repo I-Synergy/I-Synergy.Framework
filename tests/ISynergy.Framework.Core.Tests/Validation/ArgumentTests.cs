@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
-using System;
-using System.Collections.Generic;
+﻿using ISynergy.Framework.Core.Tests.Fixtures.TestClasses;
+using ISynergy.Framework.Core.Validation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Validation.Tests
+namespace ISynergy.Framework.Core.Tests.Validation
 {
     /// <summary>
     /// Class ArgumentTests.
@@ -100,7 +99,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
             var test = new List<Product>();
             test.Add(new Product());
             test.Add(null);
-            
+
             Assert.ThrowsException<ArgumentNullException>(() => Argument.HasNoNulls(nameof(test), test));
         }
 

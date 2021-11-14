@@ -1,9 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
-using ISynergy.Framework.Core.Extensions;
-
-namespace ISynergy.Framework.Geography
+﻿namespace ISynergy.Framework.Geography.Global
 {
     /// <summary>
     /// Encapsulates a three dimensional location on a globe (GlobalCoordinates combined with
@@ -121,9 +116,9 @@ namespace ISynergy.Framework.Geography
         /// <returns>true if the obj is a GlobalPosition and is the same.</returns>
         public override bool Equals(object obj)
         {
-            if(obj is GlobalPosition position)
+            if (obj is GlobalPosition position)
             {
-                return((IEquatable<GlobalPosition>)this).Equals(position);
+                return ((IEquatable<GlobalPosition>)this).Equals(position);
             }
 
             return false;

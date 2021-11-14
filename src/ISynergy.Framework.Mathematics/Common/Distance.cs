@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions;
-using ISynergy.Framework.Mathematics.Distances;
-using System;
-using System.Reflection;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     ///     Static class Distance. Defines a set of extension methods defining distance measures.

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-
-namespace ISynergy.Framework.AspNetCore.Authentication.Extensions
+﻿namespace ISynergy.Framework.AspNetCore.Authentication.Extensions
 {
     /// <summary>
     /// Class ClaimsExtensions.

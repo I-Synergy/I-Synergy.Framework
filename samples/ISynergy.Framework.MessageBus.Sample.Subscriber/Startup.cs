@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ISynergy.Framework.MessageBus.Abstractions.Services;
+using ISynergy.Framework.MessageBus.Sample.Models;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Framework.MessageBus.Abstractions;
-using ISynergy.Framework.MessageBus.Sample.Models;
 
 namespace ISynergy.Framework.MessageBus.Sample.Subscriber
 {
@@ -42,7 +42,8 @@ namespace ISynergy.Framework.MessageBus.Sample.Subscriber
                 Task.WhenAny(
                     Task.Run(() => Console.ReadKey()),
                     Task.Delay(TimeSpan.FromSeconds(60))
-                ).ContinueWith(async (t) => {
+                ).ContinueWith(async (t) =>
+                {
                     await _messageBus.UnSubscribeFromMessageBusAsync();
                     cancellationTokenSource.Cancel();
                 }),

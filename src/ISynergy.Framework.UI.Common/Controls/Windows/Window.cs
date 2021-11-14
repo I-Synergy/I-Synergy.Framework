@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 #if WINDOWS_UWP
 using Windows.UI.Xaml;

@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
 {
     /// <summary>
     ///     Constraint with only linear terms.
@@ -241,12 +234,12 @@ namespace ISynergy.Framework.Mathematics.Optimization
         }
 
         /// <summary>
-        ///     Returns a <see cref="System.String" /> that represents this instance.
+        ///     Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        ///     A <see cref="System.String" /> that represents this instance.
+        ///     A <see cref="string" /> that represents this instance.
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
@@ -373,10 +366,10 @@ namespace ISynergy.Framework.Mathematics.Optimization
             function = functionExpression.Compile() as Func<double[], double>;
         }
         /// <summary>
-        ///     Returns a <see cref="System.String" /> that represents this instance.
+        ///     Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///     A <see cref="System.String" /> that represents this instance.
+        ///     A <see cref="string" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {

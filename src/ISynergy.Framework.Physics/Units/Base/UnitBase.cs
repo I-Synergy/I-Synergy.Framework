@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Physics.Abstractions;
-using ISynergy.Framework.Physics.Enumerations;
-using ISynergy.Framework.Physics.Extensions;
-using System.Linq;
-
-namespace ISynergy.Framework.Physics.Base
+﻿namespace ISynergy.Framework.Physics.Base
 {
     /// <summary>
     /// Base Unit

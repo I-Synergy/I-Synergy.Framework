@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+using System;
 using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace Sample.Services
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ISynergy.Framework.Payment.Mollie.Models.Payment.Response.Specific
+﻿namespace ISynergy.Framework.Payment.Mollie.Models.Payment.Response.Specific
 {
     /// <summary>
     /// Class GiftcardPaymentResponse.

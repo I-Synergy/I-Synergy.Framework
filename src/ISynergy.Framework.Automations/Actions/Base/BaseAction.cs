@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.Base;
-using System;
-
-namespace ISynergy.Framework.Automations.Actions.Base
+﻿namespace ISynergy.Framework.Automations.Actions.Base
 {
     /// <summary>
     /// Base action.

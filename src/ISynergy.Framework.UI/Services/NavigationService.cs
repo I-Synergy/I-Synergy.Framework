@@ -1,31 +1,17 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Utilities;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Extensions;
-using ISynergy.Framework.UI.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Windows.System;
 
 #if WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.System;
+using Window = Windows.UI.Xaml.Window;
 #else
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Dispatching;
+using Window = Microsoft.UI.Xaml.Window;
 #endif
 
 namespace ISynergy.Framework.UI.Services

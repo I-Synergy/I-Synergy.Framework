@@ -1,10 +1,20 @@
 ﻿#if WINDOWS_UWP
+using ISynergy;
+using ISynergy.Framework;
+using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Common;
+using ISynergy.Framework.UI.Controls;
 using Windows.UI.Xaml.Resources;
 #else
+using ISynergy;
+using ISynergy.Framework;
+using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Common;
+using ISynergy.Framework.UI.Controls;
 using Microsoft.UI.Xaml.Resources;
 #endif
 
-namespace ISynergy.Framework.UI.Controls
+namespace ISynergy.Framework.UI.Common
 {
     /// <summary>
     /// Represents a custom implementation of the <see cref="CustomXamlResourceLoader" /> class that allows users to replace the built-in theme resources via the <see cref="UserThemeResources" /> class.

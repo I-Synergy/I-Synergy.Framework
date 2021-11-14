@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.InteropServices;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
-    using ISynergy.Framework.Core.Extensions;
-    using System.Data;
-
     public static partial class Matrix
     {
         /// <summary>

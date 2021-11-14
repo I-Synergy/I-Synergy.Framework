@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Input;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.UI.Abstractions.Providers;
-
-namespace ISynergy.Framework.UI.Providers
+﻿namespace ISynergy.Framework.UI.Providers
 {
     /// <summary>
     /// Class AuthenticationProvider.

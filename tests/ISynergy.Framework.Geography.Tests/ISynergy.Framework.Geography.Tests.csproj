@@ -19,5 +19,4 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj" />
     </ItemGroup>
-
 </Project>

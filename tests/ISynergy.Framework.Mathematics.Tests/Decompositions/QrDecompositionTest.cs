@@ -174,12 +174,12 @@
 
             // Matrices
             {
-                double[,] b = 
+                double[,] b =
                 {
                     { 4 },
                     { 1 },
                     { 0 },
-                    { 0 }, 
+                    { 0 },
                     { 2 },
                     { 5 },
                 };
@@ -221,7 +221,7 @@
         [TestMethod]
         public void SolveTransposeTest()
         {
-            double[,] a = 
+            double[,] a =
             {
                 { 2, 1, 4 },
                 { 6, 2, 2 },

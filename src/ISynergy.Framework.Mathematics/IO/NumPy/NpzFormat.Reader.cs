@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.IO;
-using System.Linq;
-
-#if !NET35 && !NET40
+﻿#if !NET35 && !NET40
 namespace ISynergy.Framework.Mathematics.IO
 {
     /// <summary>

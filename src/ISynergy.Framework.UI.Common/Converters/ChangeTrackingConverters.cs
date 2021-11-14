@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Abstractions.Services;
-using System;
-using System.Text;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Data;
 #else
 using Microsoft.UI.Xaml.Data;

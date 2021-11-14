@@ -1,12 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Reflection;
-
-namespace ISynergy.Framework.Core.Extensions.Base
+﻿namespace ISynergy.Framework.Core.Extensions.Base
 {
     /// <summary>
     /// Base collection extension
@@ -38,7 +30,7 @@ namespace ISynergy.Framework.Core.Extensions.Base
             };
 
             //Populate the table
-            if(collection is not null)
+            if (collection is not null)
             {
                 // Exclude all properties that are have the JsonIgnoreAttribute or are an Enumarable.
                 var typeProperties = type.GetProperties()
@@ -74,7 +66,7 @@ namespace ISynergy.Framework.Core.Extensions.Base
                     dataTable.Rows.Add(dataRow);
                 }
             }
-            
+
             return dataTable;
         }
     }

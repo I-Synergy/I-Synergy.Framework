@@ -1,13 +1,4 @@
-﻿using ISynergy.Framework.IO.Abtractions;
-using ISynergy.Framework.IO.Models;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace ISynergy.Framework.IO.Base
+﻿namespace ISynergy.Framework.IO.Base
 {
     /// <summary>
     /// Class BaseFileTypeAnalyzer.
@@ -90,8 +81,8 @@ namespace ISynergy.Framework.IO.Base
 
             // iterate over each type and determine if we have a match based on file signature.
             foreach (var fileTypeInfo in AvailableTypes
-                .Where(q => 
-                    q.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
+                .Where(q =>
+                    q.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
                     (!string.IsNullOrEmpty(q.Alias) && q.Alias.IndexOf(extension, 0, StringComparison.OrdinalIgnoreCase) != -1))
                 .ToList())
             {
@@ -130,8 +121,8 @@ namespace ISynergy.Framework.IO.Base
         /// <returns>System.String.</returns>
         public string GetMimeTypeByExtension(string extension) =>
             AvailableTypes
-                .Where(q => 
-                    q.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
+                .Where(q =>
+                    q.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
                     q.Alias.IndexOf(extension, 0, StringComparison.OrdinalIgnoreCase) != -1)
                 .Select(s => s.MimeType)
                 .FirstOrDefault();

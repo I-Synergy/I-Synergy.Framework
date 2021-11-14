@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.AspNetCore.Routing;
-using System;
-
-namespace ISynergy.Framework.AspNetCore.Attributes
+﻿namespace ISynergy.Framework.AspNetCore.Attributes
 {
     /// <summary>
     /// Class FormValueRequiredAttribute. This class cannot be inherited.

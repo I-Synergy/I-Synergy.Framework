@@ -5,11 +5,13 @@ using ISynergy.Framework.Payment.Mollie.Models.PaymentMethod;
 using ISynergy.Framework.Payment.Mollie.Models.Refund;
 using ISynergy.Framework.Payment.Mollie.Models.Url;
 
-namespace ISynergy.Framework.Payment.Mollie.Models.Profile.Response {
+namespace ISynergy.Framework.Payment.Mollie.Models.Profile.Response
+{
     /// <summary>
     /// Class ProfileResponseLinks.
     /// </summary>
-    public class ProfileResponseLinks {
+    public class ProfileResponseLinks
+    {
         /// <summary>
         /// Gets or sets the self.
         /// </summary>

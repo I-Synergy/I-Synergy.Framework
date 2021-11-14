@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Core.Exceptions
+﻿namespace ISynergy.Framework.Core.Exceptions
 {
     /// <summary>
     /// Class ArgumentBelowZeroException.

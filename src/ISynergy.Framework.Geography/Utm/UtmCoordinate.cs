@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-namespace ISynergy.Framework.Geography
+﻿namespace ISynergy.Framework.Geography.Utm
 {
     /// <summary>
     /// UTM Coordinates need additionally the zone and the band info
@@ -150,7 +147,7 @@ namespace ISynergy.Framework.Geography
         /// <returns>True if the other object is an UtmCoordinate equal to this one</returns>
         public override bool Equals(object obj)
         {
-            if(obj is UtmCoordinate coordinate)
+            if (obj is UtmCoordinate coordinate)
             {
                 return ((IEquatable<UtmCoordinate>)this).Equals(coordinate);
             }
@@ -170,7 +167,7 @@ namespace ISynergy.Framework.Geography
         /// <summary>
         /// The culture invariant string representation of the UTM coordinate
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        /// <returns>A <see cref="string" /> that represents this instance.</returns>
         public override string ToString()
         {
             var x = (long)Math.Floor(X);

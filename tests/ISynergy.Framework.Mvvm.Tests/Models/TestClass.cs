@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Data;
+﻿using ISynergy.Framework.Core.Base;
 
-namespace ISynergy.Framework.Mvvm.Models.Tests
+namespace ISynergy.Framework.Mvvm.Tests.Models
 {
     public class TestClass : ModelBase
     {

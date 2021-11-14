@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ISynergy.Framework.Payment.Mollie.Models.Connect;
+﻿using ISynergy.Framework.Payment.Mollie.Models.Connect;
 
 namespace ISynergy.Framework.Payment.Mollie.Abstractions.Clients
 {

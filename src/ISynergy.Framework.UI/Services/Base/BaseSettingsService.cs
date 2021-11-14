@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
-using System;
-using System.Globalization;
-using Windows.Storage;
-
-namespace ISynergy.Framework.UI.Services.Base
+﻿namespace ISynergy.Framework.UI.Services.Base
 {
     /// <summary>
     /// Abstract class BaseSettingsService.

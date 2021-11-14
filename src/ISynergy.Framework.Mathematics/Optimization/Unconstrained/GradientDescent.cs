@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
     ///     Gradient Descent (GD) for unconstrained optimization.

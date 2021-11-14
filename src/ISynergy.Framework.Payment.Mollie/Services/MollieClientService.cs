@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using ISynergy.Framework.Core.Validation;
+﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Services;
 using ISynergy.Framework.Payment.Mollie.Base;
 using ISynergy.Framework.Payment.Mollie.Converters;
@@ -14,6 +7,9 @@ using ISynergy.Framework.Payment.Mollie.Models.Url;
 using ISynergy.Framework.Payment.Mollie.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace ISynergy.Framework.Payment.Mollie.Services
 {

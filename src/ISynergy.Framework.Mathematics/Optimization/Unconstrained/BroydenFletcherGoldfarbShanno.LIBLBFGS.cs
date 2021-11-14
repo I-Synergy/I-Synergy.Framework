@@ -59,9 +59,7 @@ license.
                                                         -- Naoaki Okazaki 
 */
 
-using System;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     internal class lbfgs_parameter_t
     {

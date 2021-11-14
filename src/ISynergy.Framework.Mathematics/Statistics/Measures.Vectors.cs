@@ -1,13 +1,5 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-
-namespace ISynergy.Framework.Mathematics.Statistics
+﻿namespace ISynergy.Framework.Mathematics.Statistics
 {
-    using ISynergy.Framework.Core.Ranges;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-
     /// <summary>
     ///   Set of statistics measures, such as <see cref="Mean(double[])"/>,
     ///   <see cref="Variance(double[])"/> and <see cref="StandardDeviation(double[], bool)"/>.

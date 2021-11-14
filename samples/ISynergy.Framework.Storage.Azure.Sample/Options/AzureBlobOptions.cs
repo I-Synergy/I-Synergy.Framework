@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Storage.Abstractions;
+﻿using ISynergy.Framework.Storage.Abstractions.Options;
 
 namespace ISynergy.Framework.Storage.Azure.Sample.Options
 {

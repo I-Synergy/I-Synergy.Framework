@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-
-namespace ISynergy.Framework.AspNetCore.Models
+﻿namespace ISynergy.Framework.AspNetCore.Models
 {
     /// <summary>
     /// Proxy class with mapping properties.

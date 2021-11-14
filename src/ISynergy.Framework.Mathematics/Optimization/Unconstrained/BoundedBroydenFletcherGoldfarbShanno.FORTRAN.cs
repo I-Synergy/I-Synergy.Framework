@@ -34,7 +34,6 @@
 //    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-using System;
 namespace ISynergy.Framework.Mathematics.Optimization
 {
     partial class BoundedBroydenFletcherGoldfarbShanno
@@ -1864,8 +1863,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
             if ((fp > fx))
             {
                 theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
-
-                s = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
+                s = Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
 
                 gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dx / s)) * ((dp / s))))));
                 if ((stp < stx))
@@ -1900,7 +1898,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
             else if ((sgnd < 0.0))
             {
                 theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
-                s = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
+                s = Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
                 gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dx / s)) * ((dp / s))))));
 
                 if ((stp > stx))
@@ -1939,7 +1937,8 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 // c        secant step.
                 // 
                 theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
-                s = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
+
+                s = Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
 
                 // 
                 // c        The case gamma = 0 only arises if the cubic does not tend
@@ -2029,7 +2028,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 if (brackt)
                 {
                     theta = ((((3.0 * ((fp - fy))) / ((sty - stp))) + dy) + dp);
-                    s = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dy), System.Math.Abs(dp));
+                    s = Tools.Max(System.Math.Abs(theta), System.Math.Abs(dy), System.Math.Abs(dp));
                     gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dy / s)) * ((dp / s))))));
 
                     if ((stp > sty))
@@ -3903,8 +3902,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 goto L999;
             }
 
-            // 
-            ddum = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(fold), System.Math.Abs(f), 1.0);
+            ddum = Tools.Max(System.Math.Abs(fold), System.Math.Abs(f), 1.0);
 
             if ((((fold - f)) <= (tol * ddum)))
             {

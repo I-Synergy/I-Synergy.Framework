@@ -1,8 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace ISynergy.Framework.Payment.Converters
+﻿namespace ISynergy.Framework.Payment.Converters
 {
     /// <summary>
     /// Class RawJsonConverter.

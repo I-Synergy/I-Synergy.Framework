@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.ViewModels.Base;
-using ISynergy.Framework.Core.Attributes;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Caching.Memory;
-
-namespace ISynergy.Framework.AspNetCore.ViewModels.Home
+﻿namespace ISynergy.Framework.AspNetCore.ViewModels.Home
 {
     /// <summary>
     /// Class BaseIndexViewModel.

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
@@ -121,7 +120,7 @@ namespace Sample.ViewModels
         /// </summary>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
-        public override Task<List<TestItem>> RetrieveItemsAsync(CancellationToken cancellationToken) => 
+        public override Task<List<TestItem>> RetrieveItemsAsync(CancellationToken cancellationToken) =>
             Task.FromResult(new List<TestItem>()
                 {
                     new TestItem { Id = 1, Description = "Test 1"},

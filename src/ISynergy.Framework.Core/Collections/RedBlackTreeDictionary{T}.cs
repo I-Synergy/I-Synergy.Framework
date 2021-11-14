@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     ///   Sorted dictionary based on a <see cref="RedBlackTree{T}">red-black tree</see>.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Binary reader extensions.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using ISynergy.Framework.Core.Validation;
-
-namespace ISynergy.Framework.IO.Base
+﻿namespace ISynergy.Framework.IO.Base
 {
     /// <summary>
     /// Class BaseWatcher.

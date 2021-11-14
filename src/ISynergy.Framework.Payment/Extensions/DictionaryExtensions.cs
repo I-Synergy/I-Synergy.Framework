@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-
-namespace ISynergy.Framework.Payment.Extensions
+﻿namespace ISynergy.Framework.Payment.Extensions
 {
     /// <summary>
     /// Class DictionaryExtensions.

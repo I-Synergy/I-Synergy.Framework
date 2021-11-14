@@ -22,10 +22,9 @@
 // Contains functions from the TVPACK Fortran routines,
 // Copyright (C) 2013, Alan Genz, under the BSD license.
 // See functions below for more details.
-namespace ISynergy.Framework.Mathematics
-{
-    using System;
 
+namespace ISynergy.Framework.Mathematics.Functions
+{
     /// <summary>
     ///   Normal distribution functions.
     /// </summary>
@@ -201,14 +200,14 @@ namespace ISynergy.Framework.Mathematics
             if (y0 <= 0.0)
             {
                 if (y0 == 0)
-                    return Double.NegativeInfinity;
+                    return double.NegativeInfinity;
                 throw new ArgumentOutOfRangeException("y0");
             }
 
             if (y0 >= 1.0)
             {
                 if (y0 == 1)
-                    return Double.PositiveInfinity;
+                    return double.PositiveInfinity;
                 throw new ArgumentOutOfRangeException("y0");
             }
             double s2pi = Math.Sqrt(2.0 * Math.PI);
@@ -226,7 +225,7 @@ namespace ISynergy.Framework.Mathematics
             {
                 y -= 0.5;
                 double y2 = y * y;
-                x = y + y * ((y2 * Special.Polevl(y2, inverse_P0, 4)) / Special.P1evl(y2, inverse_Q0, 8));
+                x = y + y * (y2 * Special.Polevl(y2, inverse_P0, 4) / Special.P1evl(y2, inverse_Q0, 8));
                 x *= s2pi;
                 return x;
             }
@@ -238,11 +237,11 @@ namespace ISynergy.Framework.Mathematics
 
             if (x < 8.0)
             {
-                x1 = (z * Special.Polevl(z, inverse_P1, 8)) / Special.P1evl(z, inverse_Q1, 8);
+                x1 = z * Special.Polevl(z, inverse_P1, 8) / Special.P1evl(z, inverse_Q1, 8);
             }
             else
             {
-                x1 = (z * Special.Polevl(z, inverse_P2, 8)) / Special.P1evl(z, inverse_Q2, 8);
+                x1 = z * Special.Polevl(z, inverse_P2, 8) / Special.P1evl(z, inverse_Q2, 8);
             }
 
             x = x0 - x1;
@@ -340,7 +339,7 @@ namespace ISynergy.Framework.Mathematics
             {
                 term = sum;
 
-                a = (a + z * b) / (i);
+                a = (a + z * b) / i;
                 b = (b + z * a) / (i + 1);
                 pwr *= q;
 
@@ -349,7 +348,7 @@ namespace ISynergy.Framework.Mathematics
 
             sum *= Math.Exp(-0.5 * x * x - 0.91893853320467274178);
 
-            return (x >= 0) ? sum : (1.0 - sum);
+            return x >= 0 ? sum : 1.0 - sum;
         }
 
         /// <summary>
@@ -475,7 +474,7 @@ namespace ISynergy.Framework.Mathematics
                     bvn = bvn * asr / (2 * TWOPI);
                 }
 
-                return bvn + Normal.Function(-h) * Normal.Function(-k);
+                return bvn + Function(-h) * Function(-k);
             }
             if (r < 0)
             {
@@ -487,7 +486,7 @@ namespace ISynergy.Framework.Mathematics
             {
                 double sa = (1 - r) * (1 + r);
                 double A = Math.Sqrt(sa);
-                double sb = (h - k);
+                double sb = h - k;
                 sb = sb * sb;
                 double c = (4 - hk) / 8;
                 double d = (12 - hk) / 16;
@@ -499,7 +498,7 @@ namespace ISynergy.Framework.Mathematics
                 if (-hk < 100)
                 {
                     double B = Math.Sqrt(sb);
-                    bvn = bvn - Math.Exp(-hk / 2) * Math.Sqrt(TWOPI) * Normal.Function(-B / A) * B
+                    bvn = bvn - Math.Exp(-hk / 2) * Math.Sqrt(TWOPI) * Function(-B / A) * B
                               * (1 - c * sb * (1 - d * sb / 5) / 3);
                 }
 
@@ -509,7 +508,7 @@ namespace ISynergy.Framework.Mathematics
                 {
                     for (var j = -1; j <= 1; j += 2)
                     {
-                        double xs = (A * (j * x[i] + 1));
+                        double xs = A * (j * x[i] + 1);
                         xs = xs * xs;
                         double rs = Math.Sqrt(1 - xs);
                         asr = -(sb / xs + hk) / 2;
@@ -527,7 +526,7 @@ namespace ISynergy.Framework.Mathematics
             }
 
             if (r > 0)
-                return bvn + Normal.Function(-Math.Max(h, k));
+                return bvn + Function(-Math.Max(h, k));
 
             bvn = -bvn;
 
@@ -535,9 +534,9 @@ namespace ISynergy.Framework.Mathematics
                 return bvn;
 
             if (h < 0)
-                return bvn + Normal.Function(k) - Normal.Function(h);
+                return bvn + Function(k) - Function(h);
 
-            return bvn + Normal.Function(-h) - Normal.Function(-k);
+            return bvn + Function(-h) - Function(-k);
         }
 
         private static readonly double[] BVND_WN20 =
@@ -623,7 +622,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static double Gaussian(double sigmaSquared, double x)
         {
-            return Math.Exp(x * x / (-2 * sigmaSquared)) / (Math.Sqrt(2 * Math.PI * sigmaSquared));
+            return Math.Exp(x * x / (-2 * sigmaSquared)) / Math.Sqrt(2 * Math.PI * sigmaSquared);
         }
 
         /// <summary>
@@ -667,7 +666,7 @@ namespace ISynergy.Framework.Mathematics
         public static double[] Kernel(double sigmaSquared, int size)
         {
             // check for evem size and for out of range
-            if (((size % 2) == 0) || (size < 3))
+            if (size % 2 == 0 || size < 3)
                 throw new ArgumentOutOfRangeException("size", "Kernel size must be odd and higher than 2.");
 
             int r = size / 2;
@@ -698,7 +697,7 @@ namespace ISynergy.Framework.Mathematics
         public static double[,] Kernel2D(double sigmaSquared, int size)
         {
             // check for evem size and for out of range
-            if (((size % 2) == 0) || (size < 3))
+            if (size % 2 == 0 || size < 3)
                 throw new ArgumentOutOfRangeException("size", "Kernel size must be odd and higher than 2.");
 
             int r = size / 2;

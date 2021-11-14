@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
-
-namespace ISynergy.Framework.EntityFramework.Events
+﻿namespace ISynergy.Framework.EntityFramework.Events
 {
     /// <summary>
     /// A container for passing entities that have been deleted. This is not used for entities that are deleted logically via a bit column.

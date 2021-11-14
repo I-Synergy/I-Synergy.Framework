@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Messaging.Tests
+﻿namespace ISynergy.Framework.Core.Tests.Messaging
 {
     public interface ITestMessage
     {

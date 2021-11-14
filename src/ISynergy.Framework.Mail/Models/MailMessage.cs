@@ -1,5 +1,8 @@
-﻿namespace ISynergy.Framework.Models
+﻿namespace ISynergy.Framework.Mail.Models
 {
+    /// <summary>
+    /// Mail message model.
+    /// </summary>
     public class MailMessage
     {
         /// <summary>

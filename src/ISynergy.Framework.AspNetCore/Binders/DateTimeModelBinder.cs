@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Core.Utilities;
-using ISynergy.Framework.Core.Validation;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.AspNetCore.Binders
+﻿namespace ISynergy.Framework.AspNetCore.Binders
 {
     /// <summary>
     /// Binds DateTime objects of all kinds as the specified kind.

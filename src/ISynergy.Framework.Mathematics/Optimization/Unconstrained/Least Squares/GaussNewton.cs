@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions;
-using ISynergy.Framework.Mathematics.Differentiation;
-using ISynergy.Framework.Mathematics.Statistics;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization
 {
     /// <summary>
     ///     Gauss-Newton algorithm for solving Least-Squares problems.

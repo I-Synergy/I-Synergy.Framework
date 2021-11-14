@@ -1,9 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
-    using System;
-    using ISynergy.Framework.Mathematics;
-    using System.Runtime.CompilerServices;
-
     public static partial class Elementwise
     {
 #pragma warning disable 1591

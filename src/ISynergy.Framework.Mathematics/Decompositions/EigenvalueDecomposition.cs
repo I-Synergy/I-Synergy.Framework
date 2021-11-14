@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics.Decompositions
+﻿namespace ISynergy.Framework.Mathematics.Decompositions
 {
     /// <summary>
     ///     Determines the eigenvalues and eigenvectors of a real square matrix.

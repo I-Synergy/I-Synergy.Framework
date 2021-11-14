@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Utilities
+﻿namespace ISynergy.Framework.Core.Utilities
 {
     /// <summary>
     /// Type utilities.

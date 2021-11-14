@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Automations.Triggers.Base;
-using ISynergy.Framework.Core.Validation;
-using System;
-
-namespace ISynergy.Framework.Automations.Triggers
+﻿namespace ISynergy.Framework.Automations.Triggers
 {
     /// <summary>
     /// Time trigger.

@@ -1,17 +1,13 @@
-﻿using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
-using System;
-using Windows.Storage;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation.Metadata;
-using Windows.UI.ViewManagement;
+﻿using Windows.Foundation.Metadata;
 
 #if WINDOWS_UWP
 using Windows.UI;
 using Windows.UI.Xaml;
+using Window = Windows.UI.Xaml.Window;
 #else
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using Window = Microsoft.UI.Xaml.Window;
 #endif
 
 namespace ISynergy.Framework.UI.Services
@@ -186,7 +182,7 @@ namespace ISynergy.Framework.UI.Services
 
                     titleBar.BackgroundColor = Colors.Black;
 
-                    titleBar.ButtonInactiveBackgroundColor =  Colors.Transparent;
+                    titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
                     titleBar.ButtonInactiveForegroundColor = Colors.LightGray;
                 }
             }

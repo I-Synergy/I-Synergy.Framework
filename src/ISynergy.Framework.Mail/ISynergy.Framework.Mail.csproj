@@ -18,4 +18,8 @@
     <ItemGroup>
       <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Mail.Models"/>
+	</ItemGroup>
 </Project>

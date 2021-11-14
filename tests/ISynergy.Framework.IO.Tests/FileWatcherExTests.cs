@@ -1,14 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using ISynergy.Framework.IO.Tests.Fixtures;
+﻿using ISynergy.Framework.IO.Tests.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.IO.Tests
 {
     /// <summary>
     /// Class FileWatcherExTests.
-    /// Implements the <see cref="IClassFixture{FileWatcherExFixture}" />
     /// </summary>
     public class FileWatcherExTests
     {

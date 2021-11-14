@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-
-namespace ISynergy.Framework.AspNetCore.Controllers.Base
+﻿namespace ISynergy.Framework.AspNetCore.Controllers.Base
 {
     /// <summary>
     /// Class BaseController.

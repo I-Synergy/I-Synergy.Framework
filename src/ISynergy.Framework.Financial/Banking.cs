@@ -1,7 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Core.Extensions;
-
-namespace ISynergy.Framework.Financial
+﻿namespace ISynergy.Framework.Financial
 {
     /// <summary>
     /// Calculations regarding banking.

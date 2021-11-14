@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Microsoft.Extensions.DependencyInjection;
+using ISynergy.Framework.Mvvm.Base;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Sample.ViewModels.Display
 {

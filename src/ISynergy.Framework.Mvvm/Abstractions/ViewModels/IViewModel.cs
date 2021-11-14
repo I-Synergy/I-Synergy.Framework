@@ -1,13 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Microsoft.Extensions.Logging;
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
     /// <summary>
     /// Interface IViewModel

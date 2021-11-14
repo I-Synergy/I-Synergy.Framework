@@ -1,13 +1,9 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using System;
-using System.Threading.Tasks;
-
-#if WINDOWS_UWP || HAS_UNO
-using Windows.UI.Core;
+﻿#if WINDOWS_UWP || HAS_UNO
 using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 #else
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 #endif
 
 namespace ISynergy.Framework.UI.Services

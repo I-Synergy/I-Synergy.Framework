@@ -22,4 +22,14 @@
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.MessageBus.Abstractions.Messages"/>
+		<Using Include="ISynergy.Framework.MessageBus.Abstractions.Options"/>
+		<Using Include="ISynergy.Framework.MessageBus.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.MessageBus.Enumerations"/>
+		<Using Include="Microsoft.Extensions.DependencyInjection"/>
+		<Using Include="Microsoft.Extensions.Hosting"/>
+		<Using Include="Microsoft.Extensions.Logging"/>
+	</ItemGroup>
 </Project>

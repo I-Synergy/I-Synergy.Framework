@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.UI.Extensions;
-using System;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;

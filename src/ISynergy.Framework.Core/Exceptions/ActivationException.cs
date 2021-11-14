@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Core.Exceptions
+﻿namespace ISynergy.Framework.Core.Exceptions
 {
     /// <summary>
     /// The standard exception thrown when a ServiceLocator has an error in resolving an object.

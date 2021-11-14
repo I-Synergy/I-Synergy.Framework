@@ -1,8 +1,7 @@
-﻿using System;
-using ISynergy.Framework.Geography.Tests;
+﻿using ISynergy.Framework.Geography.Projection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Projection.Tests
+namespace ISynergy.Framework.Geography.Tests.Projection
 {
     /// <summary>
     /// Class MercatorProjectionTests.

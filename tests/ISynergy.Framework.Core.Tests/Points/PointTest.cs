@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Points;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Points.Tests
+namespace ISynergy.Framework.Core.Tests.Points
 {
     [TestClass]
     public class PointTest

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Numerics;
-
-namespace ISynergy.Framework.Mathematics.Transforms
+﻿namespace ISynergy.Framework.Mathematics.Transforms
 {
     /// <summary>
     ///   Original Fourier transform from AForge.NET. If possible, 

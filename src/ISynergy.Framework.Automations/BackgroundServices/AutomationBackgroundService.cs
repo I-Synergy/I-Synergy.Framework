@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Automations.BackgroundServices
+﻿namespace ISynergy.Framework.Automations.BackgroundServices
 {
     /// <summary>
     /// Background service where automations are run and monitored.
@@ -14,7 +7,7 @@ namespace ISynergy.Framework.Automations.BackgroundServices
     {
         private readonly ILogger _logger;
         private readonly IAutomationService _service;
-        
+
 
         /// <summary>
         /// Default constructor for all automations.
@@ -49,9 +42,11 @@ namespace ISynergy.Framework.Automations.BackgroundServices
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
     }
 }

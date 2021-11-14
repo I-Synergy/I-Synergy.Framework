@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics.Geometry
+﻿namespace ISynergy.Framework.Mathematics.Geometry
 {
     /// <summary>
     ///   3D point structure with X, Y, and coordinates.

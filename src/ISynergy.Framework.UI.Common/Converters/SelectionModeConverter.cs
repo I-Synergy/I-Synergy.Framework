@@ -1,7 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Mvvm.Enumerations;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 #else

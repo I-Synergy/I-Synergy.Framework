@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm
+﻿namespace ISynergy.Framework.Mvvm.Assembly
 {
     /// <summary>
     /// Assembly Identifier.

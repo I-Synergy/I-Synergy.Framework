@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
+using ISynergy.Framework.Payment.Mollie.Enumerations;
 using ISynergy.Framework.Payment.Mollie.Models.Issuer;
 using ISynergy.Framework.Payment.Mollie.Models.PaymentMethod.Pricing;
-using ISynergy.Framework.Payment.Mollie.Enumerations;
-using ISynergy.Framework.Payment.Mollie.Abstractions.Models;
 using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Payment.Mollie.Models.PaymentMethod

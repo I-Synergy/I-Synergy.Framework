@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Automations.Actions.Base;
-using System;
-
-namespace ISynergy.Framework.Automations.Actions
+﻿namespace ISynergy.Framework.Automations.Actions
 {
     /// <summary>
     /// Repeats action.

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics.Decompositions
+﻿namespace ISynergy.Framework.Mathematics.Decompositions
 {
     /// <summary>
     ///     QR decomposition for a rectangular matrix.

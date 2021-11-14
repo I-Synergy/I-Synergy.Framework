@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ISynergy.Framework.AspNetCore.Enumerations;
+﻿using ISynergy.Framework.AspNetCore.Enumerations;
 using ISynergy.Framework.AspNetCore.Options;
 using ISynergy.Framework.AspNetCore.Tests.Fixture;
 using ISynergy.Framework.AspNetCore.Tests.Internals;
@@ -13,6 +7,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Net;
 
 namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 {

@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace Sample.Abstractions.Services
-{ 
+{
     /// <summary>
     /// Interface ISettingsService
     /// </summary>

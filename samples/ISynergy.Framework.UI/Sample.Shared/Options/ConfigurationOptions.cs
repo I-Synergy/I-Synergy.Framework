@@ -56,7 +56,7 @@
         {
             ApplicationTitle = applicationTitle;
             ClientId = clientId;
-            ClientSecret = clientSecret;    
+            ClientSecret = clientSecret;
         }
     }
 }

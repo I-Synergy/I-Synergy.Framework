@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq;
-
-namespace ISynergy.Framework.AspNetCore.Extensions
+﻿namespace ISynergy.Framework.AspNetCore.Extensions
 {
     /// <summary>
     /// Class ImageHelperExtensions.
@@ -20,7 +15,7 @@ namespace ISynergy.Framework.AspNetCore.Extensions
         /// <returns>HtmlString.</returns>
         public static HtmlString InlineImageAsync(this IHtmlHelper html, string notfoundPath, string imagePath, object attributes = null)
         {
-            if(html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
+            if (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
             {
                 var img = "";
 

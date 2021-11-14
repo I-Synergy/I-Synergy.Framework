@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Class StringExtensions.
@@ -224,7 +215,7 @@ namespace ISynergy.Framework.Core.Extensions
             var result = new StringBuilder();
 
             foreach (var character in self.EnsureNotNull())
-                if (isHexDigit.IsMatch(character.ToString())) 
+                if (isHexDigit.IsMatch(character.ToString()))
                     result.Append(character.ToString());
 
             return result.ToString();

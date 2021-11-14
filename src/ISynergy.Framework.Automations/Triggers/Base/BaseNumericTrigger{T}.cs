@@ -1,13 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Automations.Triggers.Base
+﻿namespace ISynergy.Framework.Automations.Triggers.Base
 {
     /// <summary>
     /// Base generic numeric trigger. 
@@ -62,10 +53,10 @@ namespace ISynergy.Framework.Automations.Triggers.Base
         /// <param name="above"></param>
         /// <param name="callbackAsync"></param>
         protected BaseNumericTrigger(
-            Guid automationId, 
-            Func<(IObservableClass Entity, IProperty<T> Property)> function, 
-            T below, 
-            T above, 
+            Guid automationId,
+            Func<(IObservableClass Entity, IProperty<T> Property)> function,
+            T below,
+            T above,
             Func<T, Task> callbackAsync)
             : this(automationId, below, above, TimeSpan.Zero)
         {

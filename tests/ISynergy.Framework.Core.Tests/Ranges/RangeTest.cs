@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Ranges;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Ranges.Tests
+namespace ISynergy.Framework.Core.Tests.Ranges
 {
     [TestClass]
     public class RangeTest

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
+using System;
+using System.Threading.Tasks;
 using Windows.System;
 
 namespace Sample.Services
@@ -33,7 +33,7 @@ namespace Sample.Services
         /// <returns>A Task representing the asynchronous operation.</returns>
         public async Task DownloadFileAsync(string filename, byte[] file)
         {
-            if(await FileService.SaveFileAsync(filename, file) is FileResult result)
+            if (await FileService.SaveFileAsync(filename, file) is FileResult result)
             {
                 await Launcher.LaunchUriAsync(new Uri(result.FilePath));
             };

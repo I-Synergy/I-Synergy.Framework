@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ISynergy.Framework.Storage.Abstractions.Services;
+using ISynergy.Framework.Storage.Azure.Sample.Options;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using ISynergy.Framework.Storage.Abstractions;
-using ISynergy.Framework.Storage.Azure.Sample.Options;
 
 namespace ISynergy.Framework.Storage.Azure.Sample
 {
@@ -34,8 +34,8 @@ namespace ISynergy.Framework.Storage.Azure.Sample
 
             Console.WriteLine("Download started...");
             var fileBytes = await DownloadAsync(fileName).ConfigureAwait(false);
-            
-            if(fileBytes != null)
+
+            if (fileBytes != null)
             {
                 Console.WriteLine($"Download completed with {fileBytes.Length} bits.");
 
@@ -44,10 +44,10 @@ namespace ISynergy.Framework.Storage.Azure.Sample
 
                 Console.WriteLine($"Update completed of {url}.");
             }
-            
+
             Console.WriteLine("Removal started...");
 
-            if(await RemoveAsync(fileName))
+            if (await RemoveAsync(fileName))
             {
                 Console.WriteLine("File successfully removed.");
             }

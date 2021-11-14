@@ -23,4 +23,54 @@
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.AspNetCore.Binders"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Enumerations"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Extensions"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Middleware"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Middleware.Internals"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Models"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Options"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Routing"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Senders"/>
+		<Using Include="ISynergy.Framework.AspNetCore.ViewModels.Base"/>
+		<Using Include="ISynergy.Framework.AspNetCore.ViewModels.Exceptions"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Async"/>
+		<Using Include="ISynergy.Framework.Core.Extensions"/>
+		<Using Include="ISynergy.Framework.Core.Models"/>
+		<Using Include="ISynergy.Framework.Core.Utilities"/>
+		<Using Include="ISynergy.Framework.Core.Validation"/>
+		<Using Include="Microsoft.AspNetCore.Authorization"/>
+		<Using Include="Microsoft.AspNetCore.Builder"/>
+		<Using Include="Microsoft.AspNetCore.Hosting"/>
+		<Using Include="Microsoft.AspNetCore.Html"/>
+		<Using Include="Microsoft.AspNetCore.Http"/>
+		<Using Include="Microsoft.AspNetCore.Http.Features"/>
+		<Using Include="Microsoft.AspNetCore.Localization"/>
+		<Using Include="Microsoft.AspNetCore.Mvc"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.Abstractions"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.ActionConstraints"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.ApplicationModels"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.Controllers"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.Filters"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.ModelBinding"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.RazorPages"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.Rendering"/>
+		<Using Include="Microsoft.AspNetCore.Routing"/>
+		<Using Include="Microsoft.Extensions.Caching.Memory"/>
+		<Using Include="Microsoft.Extensions.Configuration"/>
+		<Using Include="Microsoft.Extensions.DependencyInjection"/>
+		<Using Include="Microsoft.Extensions.Hosting"/>
+		<Using Include="Microsoft.Extensions.Logging"/>
+		<Using Include="Microsoft.Extensions.Options"/>
+		<Using Include="Microsoft.Net.Http.Headers"/>
+		<Using Include="Newtonsoft.Json"/>
+		<Using Include="System.ComponentModel"/>
+		<Using Include="System.Diagnostics"/>
+		<Using Include="System.Globalization"/>
+		<Using Include="System.Net"/>
+		<Using Include="System.Security.Cryptography.X509Certificates"/>
+		<Using Include="System.Text.Encodings.Web"/>
+	</ItemGroup>
 </Project>

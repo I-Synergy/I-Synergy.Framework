@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.Mathematics;
-using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace ISynergy.Framework.Mathematics.IO
+﻿namespace ISynergy.Framework.Mathematics.IO
 {
     public static partial class NpyFormat
     {

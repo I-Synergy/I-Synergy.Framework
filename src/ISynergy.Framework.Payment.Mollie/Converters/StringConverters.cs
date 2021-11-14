@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ISynergy.Framework.Payment.Extensions;
+﻿using ISynergy.Framework.Payment.Extensions;
 
 namespace ISynergy.Framework.Payment.Mollie.Converters
 {

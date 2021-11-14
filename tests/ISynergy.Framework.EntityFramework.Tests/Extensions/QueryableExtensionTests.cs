@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using ISynergy.Framework.EntityFramework.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.EntityFramework.Extensions.Tests
+namespace ISynergy.Framework.EntityFramework.Tests.Extensions
 {
     /// <summary>
     /// Class QueryableExtensionTests.

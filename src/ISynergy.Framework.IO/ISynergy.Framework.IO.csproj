@@ -29,9 +29,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="FileSystemWatcherEx.cs">
+		<Compile Update="Watchers\FileSystemWatcherEx.cs">
 			<SubType>Component</SubType>
 		</Compile>
 	</ItemGroup>
 
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Enumerations"/>
+		<Using Include="ISynergy.Framework.Core.Validation"/>
+		<Using Include="ISynergy.Framework.IO.Abtractions"/>
+		<Using Include="ISynergy.Framework.IO.Base"/>
+		<Using Include="ISynergy.Framework.IO.Events"/>
+		<Using Include="ISynergy.Framework.IO.Models"/>
+		<Using Include="ISynergy.Framework.IO.Watchers"/>
+		<Using Include="Newtonsoft.Json"/>
+		<Using Include="System.Reflection"/>
+		<Using Include="System.Text"/>
+	</ItemGroup>
 </Project>

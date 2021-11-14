@@ -1,10 +1,4 @@
-﻿using System;
-using Windows.ApplicationModel;
-using ISynergy.Framework.UI.Abstractions.Providers;
-using ISynergy.Framework.Core.Locators;
-using Microsoft.Xaml.Interactivity;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #else

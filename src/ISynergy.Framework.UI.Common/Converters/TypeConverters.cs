@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 #else

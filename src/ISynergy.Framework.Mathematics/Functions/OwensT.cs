@@ -1,7 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Functions
 {
-    using System;
-
     /// <summary>
     ///   Owen's T function and related functions.
     /// </summary>
@@ -260,7 +258,7 @@
 
                 for (; ; )
                 {
-                    value = value + dj * aj / (double)(jj);
+                    value = value + dj * aj / jj;
 
                     if (m <= j)
                     {
@@ -270,7 +268,7 @@
                     jj = jj + 2;
                     aj = aj * AS;
                     dj = gj - dj;
-                    gj = gj * hs / (double)(j);
+                    gj = gj * hs / j;
                 }
             }
 
@@ -299,7 +297,7 @@
                         value = value * rrtpi * Math.Exp(-0.5 * hs);
                         return value;
                     }
-                    z = y * (vi - (double)(ii) * z);
+                    z = y * (vi - ii * z);
                     vi = AS * vi;
                     ii = ii + 2;
                 }
@@ -329,7 +327,7 @@
                         value = value * rrtpi * Math.Exp(-0.5 * hs);
                         return value;
                     }
-                    zi = y * ((double)(ii) * zi - vi);
+                    zi = y * (ii * zi - vi);
                     vi = AS * vi;
                     i = i + 1;
                     ii = ii + 2;
@@ -357,7 +355,7 @@
                         return value;
 
                     ii = ii + 2;
-                    yi = (1.0 - hs * yi) / (double)(ii);
+                    yi = (1.0 - hs * yi) / ii;
                     ai = ai * AS;
                 }
             }

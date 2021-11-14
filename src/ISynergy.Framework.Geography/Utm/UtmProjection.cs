@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Geography
+﻿namespace ISynergy.Framework.Geography.Utm
 {
     /// <summary>
     /// The Universal Transverse Mercator Projection

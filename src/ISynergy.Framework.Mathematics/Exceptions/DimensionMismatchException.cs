@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Mathematics.Exceptions
+﻿namespace ISynergy.Framework.Mathematics.Exceptions
 {
     /// <summary>
     ///   Dimension Mismatch Exception.

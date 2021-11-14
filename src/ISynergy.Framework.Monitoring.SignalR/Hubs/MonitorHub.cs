@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Models;
-using ISynergy.Framework.Enumerations;
-using ISynergy.Framework.Accessors;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-
-namespace ISynergy.Framework.Hubs
+﻿namespace ISynergy.Framework.Monitoring.Hubs
 {
     /// <summary>
     /// Monitor hub class.

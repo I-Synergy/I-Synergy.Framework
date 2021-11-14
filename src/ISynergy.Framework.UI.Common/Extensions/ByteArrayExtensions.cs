@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using System.IO;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 #else

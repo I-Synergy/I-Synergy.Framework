@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.MessageBus.Azure.Queue;
+﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Sample.Models;
 using ISynergy.Framework.MessageBus.Sample.Subscriber.Options;
+using ISynergy.Framework.MessageBus.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.MessageBus.Sample.Subscriber.Services
 {
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.MessageBus.Sample.Subscriber.Services
         {
             Argument.IsNotNull(nameof(message), message);
 
-            if(message.Action == Enumerations.QueueMessageActions.Add)
+            if (message.Action == Enumerations.QueueMessageActions.Add)
             {
                 return true;
             }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
     ///     Line Search Failed Exception.
@@ -28,7 +25,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
         public LineSearchFailedException(int info, string message)
             : base(message)
         {
-            this.Information = info;
+            Information = info;
         }
 
         /// <summary>
@@ -107,7 +104,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             base.GetObjectData(info, context);
 
-            info.AddValue("Information", this.Information);
+            info.AddValue("Information", Information);
         }
 #endif
     }

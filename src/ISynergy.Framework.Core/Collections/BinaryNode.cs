@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     ///   Tree node for binary trees.

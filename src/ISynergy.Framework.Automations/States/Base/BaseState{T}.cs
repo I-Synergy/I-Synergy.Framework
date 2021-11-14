@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Core.Validation;
-using System;
-using System.Reflection;
-
-namespace ISynergy.Framework.Automations.States.Base
+﻿namespace ISynergy.Framework.Automations.States.Base
 {
     /// <summary>
     /// Base Generic State

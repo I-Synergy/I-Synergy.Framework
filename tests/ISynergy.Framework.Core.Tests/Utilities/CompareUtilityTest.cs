@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using ISynergy.Framework.Core.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Utilities.Tests
+namespace ISynergy.Framework.Core.Tests.Utilities
 {
     /// <summary>
     /// Class CompareUtilityTest.
@@ -50,7 +49,7 @@ namespace ISynergy.Framework.Core.Utilities.Tests
                 "Property EmployeeNumber was: 1; is: 2",
                 "Property CompanyNumber was: 0; is: 3"
             };
-            
+
             Assert.IsTrue(assert.All(result.Contains) && assert.Count == result.Count);
         }
 

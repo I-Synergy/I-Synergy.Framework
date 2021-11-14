@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Options;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.AspNetCore.Authentication.Validators
+﻿namespace ISynergy.Framework.AspNetCore.Authentication.Validators
 {
     /// <summary>
     /// Class IdentityPasswordValidator.

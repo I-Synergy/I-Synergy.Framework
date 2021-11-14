@@ -1,9 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
     ///     Resilient Backpropagation method for unconstrained optimization.

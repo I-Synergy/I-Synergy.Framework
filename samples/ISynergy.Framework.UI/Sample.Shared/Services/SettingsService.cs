@@ -1,6 +1,6 @@
-﻿using System;
-using ISynergy.Framework.UI.Services.Base;
+﻿using ISynergy.Framework.UI.Services.Base;
 using Sample.Abstractions.Services;
+using System;
 
 namespace Sample.Services
 {

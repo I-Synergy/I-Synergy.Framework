@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
-using System.Collections.ObjectModel;
-using System.Globalization;
-
-namespace ISynergy.Framework.Core.Abstractions
+﻿namespace ISynergy.Framework.Core.Abstractions
 {
     /// <summary>
     /// Interface IContext

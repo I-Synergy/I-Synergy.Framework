@@ -1,5 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Payment.Converters;
+﻿using ISynergy.Framework.Payment.Converters;
 using ISynergy.Framework.Payment.Mollie.Enumerations;
 using ISynergy.Framework.Payment.Mollie.Factories;
 using ISynergy.Framework.Payment.Mollie.Models.Payment.Response;

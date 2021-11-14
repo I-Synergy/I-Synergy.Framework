@@ -1,9 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
-    using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Geometry;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Globalization;
-    using ISynergy.Framework.Mathematics.Geometry;
 
     [TestClass]
     public class PlaneTest

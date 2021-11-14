@@ -1,18 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.UI.Navigation;
-using Windows.System;
-using ISynergy.Framework.Mvvm;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI.Abstractions.Services;
-using Microsoft.Extensions.Logging;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Windows;
-using ISynergy.Framework.UI.Abstractions.Windows;
-using ISynergy.Framework.UI.Functions;
-using ISynergy.Framework.Mvvm.Events;
+﻿using Windows.System;
 
 #if WINDOWS_UWP
 using Windows.UI.Xaml;

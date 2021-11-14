@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Net.Http.Headers;
-
-namespace ISynergy.Framework.AspNetCore.Filters
+﻿namespace ISynergy.Framework.AspNetCore.Filters
 {
     /// <summary>
     /// Class NoCacheFilter. This class cannot be inherited.

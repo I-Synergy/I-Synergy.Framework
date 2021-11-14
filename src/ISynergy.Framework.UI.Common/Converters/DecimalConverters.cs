@@ -1,6 +1,4 @@
-﻿using System;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 #else
@@ -340,7 +338,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is decimal decimalValue)
+            if (value is decimal decimalValue)
             {
                 return System.Convert.ToDouble(decimalValue);
             }
@@ -358,7 +356,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if(value is double doubleValue)
+            if (value is double doubleValue)
             {
                 return System.Convert.ToDecimal(doubleValue);
             }

@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Physics.Enumerations;
-using ISynergy.Framework.Physics.Base;
-
-namespace ISynergy.Framework.Physics
+﻿namespace ISynergy.Framework.Physics
 {
     /// <summary>
     /// Base SI Unit.

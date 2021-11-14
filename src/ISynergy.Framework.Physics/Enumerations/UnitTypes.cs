@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
-
-namespace ISynergy.Framework.Physics.Enumerations
+﻿namespace ISynergy.Framework.Physics.Enumerations
 {
     /// <summary>
     /// The SI base units are the standard units of measurement defined by the International System of Units (SI) for the seven base quantities of what is now known as the International System of Quantities.

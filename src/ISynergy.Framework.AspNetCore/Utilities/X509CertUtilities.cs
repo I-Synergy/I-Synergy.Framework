@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace ISynergy.Framework.AspNetCore.Utilities
+﻿namespace ISynergy.Framework.AspNetCore.Utilities
 {
     /// <summary>
     /// Class X509CertUtilities.

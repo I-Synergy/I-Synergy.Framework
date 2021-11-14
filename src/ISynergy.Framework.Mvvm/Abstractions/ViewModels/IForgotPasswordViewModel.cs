@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ISynergy.Framework.UI.Abstractions.ViewModels
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
     /// <summary>
     /// Interface IForgotPasswordViewModel

@@ -1,9 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Microsoft.Extensions.Logging;
-
-namespace ISynergy.Framework.Mvvm.ViewModels
+﻿namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class MapsViewModel.
@@ -94,7 +89,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             IContext context,
             IBaseCommonServices commonServices,
             ILogger logger,
-            string name, 
+            string name,
             string address)
             : base(context, commonServices, logger)
         {

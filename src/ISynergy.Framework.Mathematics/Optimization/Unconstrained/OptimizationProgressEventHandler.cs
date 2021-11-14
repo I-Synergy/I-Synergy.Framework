@@ -1,7 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
-    using System;
-
     /// <summary>
     ///   Optimization progress event arguments.
     /// </summary>
@@ -91,20 +89,20 @@
             double value, double stp, bool finished)
         {
             if (gradient != null)
-                this.Gradient = (double[])gradient.Clone();
+                Gradient = (double[])gradient.Clone();
 
             if (solution != null)
-                this.Solution = (double[])solution.Clone();
+                Solution = (double[])solution.Clone();
 
-            this.Value = value;
-            this.GradientNorm = gnorm;
-            this.SolutionNorm = xnorm;
+            Value = value;
+            GradientNorm = gnorm;
+            SolutionNorm = xnorm;
 
-            this.Iteration = iteration;
-            this.Evaluations = evaluations;
+            Iteration = iteration;
+            Evaluations = evaluations;
 
-            this.Finished = finished;
-            this.Step = stp;
+            Finished = finished;
+            Step = stp;
         }
     }
 }

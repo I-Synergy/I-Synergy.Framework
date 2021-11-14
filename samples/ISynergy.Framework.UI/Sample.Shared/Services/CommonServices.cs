@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.UI.Services;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Services.Base;
 using Sample.Abstractions.Services;
 
 namespace Sample.Services
@@ -24,7 +24,7 @@ namespace Sample.Services
         /// Gets the download file service.
         /// </summary>
         /// <value>The download file service.</value>
-        public IDownloadFileService DownloadFileService{ get; }
+        public IDownloadFileService DownloadFileService { get; }
         /// <summary>
         /// Gets the reporting service.
         /// </summary>
@@ -96,13 +96,13 @@ namespace Sample.Services
             IPrintingService printingService,
             IClipboardService clipboardService,
             IClientMonitorService clientMonitorService)
-            :base(busyService,
+            : base(busyService,
                  messageService,
-                 languageService, 
-                 telemetryService, 
-                 dialogService, 
-                 navigationService, 
-                 infoService, 
+                 languageService,
+                 telemetryService,
+                 dialogService,
+                 navigationService,
+                 infoService,
                  converterService,
                  dispatcherService)
         {

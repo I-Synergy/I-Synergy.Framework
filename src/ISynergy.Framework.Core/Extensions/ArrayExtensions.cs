@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Array extensions.
@@ -37,7 +33,7 @@ namespace ISynergy.Framework.Core.Extensions
 
             for (int i = 0; i < array.GetLength(0); i++)
                 for (int j = 0; j < array.GetLength(1); j++)
-                    result[i,j] = Convert.ToDouble(array[i,j]);
+                    result[i, j] = Convert.ToDouble(array[i, j]);
 
             return result;
         }
@@ -167,7 +163,7 @@ namespace ISynergy.Framework.Core.Extensions
                 vector[i] = array.GetUpperBound(i) + 1;
             return vector;
         }
-                
+
         /// <summary>
         ///     Determines whether an array is a jagged array
         ///     (containing inner arrays as its elements).
@@ -217,7 +213,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="array"></param>
         /// <returns></returns>
         public static bool IsNullOrEmpty<T>(T[] array)
-            where T: class
+            where T : class
         {
             if (array == null || array.Length == 0)
                 return true;

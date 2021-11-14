@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ISynergy.Framework.Core.Services
+﻿namespace ISynergy.Framework.Core.Services
 {
     /// <summary>
     /// The Messenger is a class allowing objects to exchange messages.

@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using System.ComponentModel;
-using ISynergy.Framework.Core.Events;
+﻿using System.ComponentModel;
 
 #if WINDOWS_UWP
 using Windows.UI.Xaml;

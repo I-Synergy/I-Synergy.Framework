@@ -1,12 +1,9 @@
 ﻿using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Core;
-using System;
 using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.System;
-using System.Linq;
 
 #if WINDOWS_UWP
 using Windows.UI.Xaml;

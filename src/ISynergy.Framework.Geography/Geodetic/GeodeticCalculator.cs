@@ -1,7 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Core.Extensions;
-
-namespace ISynergy.Framework.Geography
+﻿namespace ISynergy.Framework.Geography.Geodetic
 {
     /// <summary>
     /// Implementation of Thaddeus Vincenty's algorithms to solve the direct and
@@ -251,12 +248,12 @@ namespace ISynergy.Framework.Geography
                 var coslambda = Math.Cos(lambda);
 
                 // eq. 14
-                var sin2Sigma = (cosU2 * sinlambda * cosU2 * sinlambda) +
+                var sin2Sigma = cosU2 * sinlambda * cosU2 * sinlambda +
                                 Math.Pow(cosU1SinU2 - sinU1CosU2 * coslambda, 2.0);
                 var sinsigma = Math.Sqrt(sin2Sigma);
 
                 // eq. 15
-                var cossigma = sinU1SinU2 + (cosU1CosU2 * coslambda);
+                var cossigma = sinU1SinU2 + cosU1CosU2 * coslambda;
 
                 // eq. 16
                 sigma = Math.Atan2(sinsigma, cossigma);
@@ -294,7 +291,7 @@ namespace ISynergy.Framework.Geography
                 // see how much improvement we got
                 var change = Math.Abs((lambda - lambda0) / lambda);
 
-                if ((i > 1) && (change < Precision))
+                if (i > 1 && change < Precision)
                 {
                     converged = true;
                     break;

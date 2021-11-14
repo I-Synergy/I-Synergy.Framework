@@ -1,7 +1,4 @@
-﻿using System.IO;
-using ISynergy.Framework.Core.Enumerations;
-
-namespace ISynergy.Framework.IO.Events
+﻿namespace ISynergy.Framework.IO.Events
 {
     /// <summary>
     /// Class WatcherEventArgs.

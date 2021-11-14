@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-
-namespace ISynergy.Framework.UI.Abstractions.Providers
+﻿namespace ISynergy.Framework.UI.Abstractions.Providers
 {
     /// <summary>
     /// Interface IAuthenticationProvider

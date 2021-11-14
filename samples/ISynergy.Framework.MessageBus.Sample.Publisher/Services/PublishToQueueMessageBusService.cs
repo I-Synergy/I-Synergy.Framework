@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.MessageBus.Azure.Queue;
-using ISynergy.Framework.MessageBus.Sample.Models;
+﻿using ISynergy.Framework.MessageBus.Sample.Models;
 using ISynergy.Framework.MessageBus.Sample.Publisher.Options;
+using ISynergy.Framework.MessageBus.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

@@ -1,10 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Formats;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Collections.Generic;
     using System;
-    using System.IO;
 
     [TestClass]
     public class MatrixFormatTest
@@ -37,7 +36,7 @@
 
             double[,] expected, actual;
 
-            expected = new double[,] 
+            expected = new double[,]
             {
                 { 1, 2 },
                 { 3, 4 },
@@ -81,7 +80,7 @@
 
             double[][] expected, actual;
 
-            expected = new double[][] 
+            expected = new double[][]
             {
                 new double[] { 1, 2 },
                 new double[] { 3, 4 },
@@ -121,7 +120,7 @@
         [TestMethod]
         public void ToStringTest()
         {
-            double[,] matrix = 
+            double[,] matrix =
             {
                 { 1, 2 },
                 { 3, 4 },
@@ -158,7 +157,7 @@
         [TestMethod]
         public void ToStringTest2()
         {
-            double[][] matrix = 
+            double[][] matrix =
             {
                 new double[] { 1, 2 },
                 new double[] { 3, 4 },
@@ -195,7 +194,7 @@
         [TestMethod]
         public void StringFormat()
         {
-            double[,] matrix = 
+            double[,] matrix =
             {
                 { 1, 2 },
                 { 3, 4 },
@@ -248,7 +247,7 @@
         [TestMethod]
         public void StringFormat2()
         {
-            double[][] matrix = 
+            double[][] matrix =
             {
                 new double[] { 1, 2 },
                 new double[] { 3, 4 },

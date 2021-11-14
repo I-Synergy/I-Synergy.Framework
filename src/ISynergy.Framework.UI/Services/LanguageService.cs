@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Resources;
-using ISynergy.Framework.Core.Abstractions.Services;
-
-namespace ISynergy.Framework.UI.Services
+﻿namespace ISynergy.Framework.UI.Services
 {
     /// <summary>
     /// Class LanguageService.

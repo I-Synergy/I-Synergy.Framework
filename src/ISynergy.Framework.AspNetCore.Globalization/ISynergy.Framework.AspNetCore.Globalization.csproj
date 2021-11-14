@@ -20,4 +20,10 @@
       <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
+		<Using Include="Microsoft.AspNetCore.Http"/>
+		<Using Include="System.Globalization"/>
+		<Using Include="System.Resources"/>
+	</ItemGroup>
 </Project>

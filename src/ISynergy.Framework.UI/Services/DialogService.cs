@@ -1,24 +1,13 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI.Controls;
-using System;
-using System.Threading.Tasks;
-
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Controls;
 using Application = Windows.UI.Xaml.Application;
-using Style = Windows.UI.Xaml.Style;
 using Setter = Windows.UI.Xaml.Setter;
+using Style = Windows.UI.Xaml.Style;
 #else
 using Microsoft.UI.Xaml.Controls;
 using Application = Microsoft.UI.Xaml.Application;
-using Style = Microsoft.UI.Xaml.Style;
 using Setter = Microsoft.UI.Xaml.Setter;
+using Style = Microsoft.UI.Xaml.Style;
 #endif
 
 namespace ISynergy.Framework.UI.Services
@@ -164,7 +153,7 @@ namespace ISynergy.Framework.UI.Services
                     break;
             }
 
-            if(await OpenDialogAsync(dialog) is ContentDialogResult result)
+            if (await OpenDialogAsync(dialog) is ContentDialogResult result)
             {
                 switch (buttons)
                 {
@@ -214,12 +203,12 @@ namespace ISynergy.Framework.UI.Services
         public Task ShowDialogAsync<TWindow, TViewModel, TEntity>(IViewModelDialog<TEntity> viewmodel = null)
             where TWindow : IWindow
             where TViewModel : IViewModelDialog<TEntity>
-            {
-                if (viewmodel is null)
-                    viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Default.GetInstance(typeof(TViewModel));
+        {
+            if (viewmodel is null)
+                viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Default.GetInstance(typeof(TViewModel));
 
-                return CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel);
-            }
+            return CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel);
+        }
 
         /// <summary>
         /// Shows the dialog asynchronous.
@@ -276,7 +265,7 @@ namespace ISynergy.Framework.UI.Services
 
         private Task<ContentDialogResult> OpenDialogAsync(Window dialog)
         {
-            if(_activeDialog is not null)
+            if (_activeDialog is not null)
                 CloseDialog(_activeDialog);
 
             _activeDialog = dialog;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ISynergy.Framework.Core.Extensions;
-
-namespace ISynergy.Framework.Geography
+﻿namespace ISynergy.Framework.Geography.Common
 {
     /// <summary>
     /// This class specifically models two-dimensional points in a flat plane
@@ -128,7 +124,7 @@ namespace ISynergy.Framework.Geography
         /// <returns>True if the object is the same coordinate</returns>
         public override bool Equals(object obj)
         {
-            if(obj is EuclidianCoordinate coordinate)
+            if (obj is EuclidianCoordinate coordinate)
             {
                 return ((IEquatable<EuclidianCoordinate>)this).Equals(coordinate);
             }

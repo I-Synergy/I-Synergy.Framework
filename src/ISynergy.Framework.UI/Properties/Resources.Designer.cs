@@ -459,6 +459,15 @@ namespace ISynergy.Framework.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mandatory update has failed..
+        /// </summary>
+        public static string Warning_MandatoryUpdateFailed {
+            get {
+                return ResourceManager.GetString("Warning_MandatoryUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to restart the application to apply the color changes..
         /// </summary>
         public static string WarningColorChange {

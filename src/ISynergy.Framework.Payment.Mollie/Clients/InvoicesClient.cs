@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ISynergy.Framework.Payment.Extensions;
+﻿using ISynergy.Framework.Payment.Extensions;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
 using ISynergy.Framework.Payment.Mollie.Base;
 using ISynergy.Framework.Payment.Mollie.Models.Invoice;
 using ISynergy.Framework.Payment.Mollie.Models.List;
 using ISynergy.Framework.Payment.Mollie.Models.Url;
 using ISynergy.Framework.Payment.Mollie.Options;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ISynergy.Framework.Payment.Mollie.Clients
 {

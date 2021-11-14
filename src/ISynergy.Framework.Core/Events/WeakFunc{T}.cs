@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-
-namespace ISynergy.Framework.Core.Events
+﻿namespace ISynergy.Framework.Core.Events
 {
     /// <summary>
     /// Class WeakFunc.
@@ -65,7 +62,7 @@ namespace ISynergy.Framework.Core.Events
         /// Gets or sets the reference.
         /// </summary>
         /// <value>The reference.</value>
-        protected WeakReference Reference { get;set; }
+        protected WeakReference Reference { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeakFunc{TResult}"/> class.

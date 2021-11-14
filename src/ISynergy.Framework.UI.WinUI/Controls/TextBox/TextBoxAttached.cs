@@ -1,7 +1,15 @@
 ﻿#if WINDOWS_UWP
+using ISynergy;
+using ISynergy.Framework;
+using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #else
+using ISynergy;
+using ISynergy.Framework;
+using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endif

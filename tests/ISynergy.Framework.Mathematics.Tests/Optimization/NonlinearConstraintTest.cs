@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
-    using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -68,7 +68,7 @@
             };
 
             double[] expected;
-            
+
             expected = new double[] { -0.5, 0.5 };
             for (int i = 0; i < targets.Length; i++)
             {

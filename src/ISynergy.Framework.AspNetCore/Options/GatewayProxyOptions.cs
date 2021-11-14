@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ISynergy.Framework.AspNetCore.Models;
-
-namespace ISynergy.Framework.AspNetCore.Options
+﻿namespace ISynergy.Framework.AspNetCore.Options
 {
     /// <summary>
     /// Options for gateway proxies.

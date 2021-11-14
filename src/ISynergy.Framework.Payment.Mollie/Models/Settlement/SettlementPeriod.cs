@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ISynergy.Framework.Payment.Mollie.Models.Settlement
+﻿namespace ISynergy.Framework.Payment.Mollie.Models.Settlement
 {
     /// <summary>
     /// Class SettlementPeriod.

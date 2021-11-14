@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions;
-using ISynergy.Framework.Mathematics.Differentiation;
-using ISynergy.Framework.Mathematics.Statistics;
-using System;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization
 {
     /// <summary>
     ///     Levenberg-Marquardt algorithm for solving Least-Squares problems.

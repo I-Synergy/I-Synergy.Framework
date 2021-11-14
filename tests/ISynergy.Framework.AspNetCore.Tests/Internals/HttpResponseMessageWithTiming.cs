@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-
-namespace ISynergy.Framework.AspNetCore.Tests.Internals
+﻿namespace ISynergy.Framework.AspNetCore.Tests.Internals
 {
     /// <summary>
     /// Class HttpResponseMessageWithTiming.

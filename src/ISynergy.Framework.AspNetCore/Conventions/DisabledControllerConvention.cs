@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
-
-namespace ISynergy.Framework.AspNetCore.Conventions
+﻿namespace ISynergy.Framework.AspNetCore.Conventions
 {
     /// <summary>
     /// Disabled controllers with namespaces than end with '.Disabled'.

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ISynergy.Framework.Messages
+﻿namespace ISynergy.Framework.Monitoring.Messages
 {
     /// <summary>
     /// Class CallerMessage.

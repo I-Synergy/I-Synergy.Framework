@@ -1,12 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
-    using System;
-    using System.CodeDom.Compiler;
-    using ISynergy.Framework.Mathematics;
-    using System.Runtime.CompilerServices;
-    using ISynergy.Framework.Mathematics.Decompositions;
-    using ISynergy.Framework.Mathematics.Exceptions;
-
     public static partial class Matrix
     {
 

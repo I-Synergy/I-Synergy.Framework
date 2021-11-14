@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using ISynergy.Framework.Payment.ContractResolvers;
+﻿using ISynergy.Framework.Payment.ContractResolvers;
 using ISynergy.Framework.Payment.Converters;
 using ISynergy.Framework.Payment.Extensions;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
 using ISynergy.Framework.Payment.Mollie.Models.Connect;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace ISynergy.Framework.Payment.Mollie.Base
 {
@@ -101,7 +97,7 @@ namespace ISynergy.Framework.Payment.Mollie.Base
         /// <returns>An token object.</returns>
         public async Task<TokenResponse> GetAccessTokenAsync(TokenRequest request)
         {
-            var jsonData = JsonConvertExtensions.SerializeObjectSnakeCase(request);
+            var jsonData = JsonConvertEx.SerializeObjectSnakeCase(request);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
             var httpRequest = CreateHttpRequest(HttpMethod.Post, TokenEndPoint, content);
 

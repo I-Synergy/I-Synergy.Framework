@@ -11,6 +11,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.Telemetry</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.ApplicationInsights" Version="2.19.0" />

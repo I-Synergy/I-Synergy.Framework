@@ -1,12 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using ISynergy.Framework.MessageBus.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
-namespace ISynergy.Framework.MessageBus.BackgroundServices
+﻿namespace ISynergy.Framework.MessageBus.BackgroundServices
 {
     /// <summary>
     /// Class BaseScopedSubscriberBackgroundService.

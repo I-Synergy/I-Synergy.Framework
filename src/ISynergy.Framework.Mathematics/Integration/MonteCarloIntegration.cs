@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Ranges;
-using System;
-
-namespace ISynergy.Framework.Mathematics.Integration
+﻿namespace ISynergy.Framework.Mathematics.Integration
 {
     /// <summary>
     ///     Monte Carlo method for multi-dimensional integration.

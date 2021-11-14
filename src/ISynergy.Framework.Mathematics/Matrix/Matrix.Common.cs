@@ -1,13 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mathematics.Comparers;
-using ISynergy.Framework.Mathematics.Decompositions;
-using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     ///     Special matrix types.

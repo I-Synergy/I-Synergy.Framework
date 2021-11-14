@@ -1,11 +1,11 @@
-﻿using System;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Storage.Abstractions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Storage.Abstractions.Services;
 using ISynergy.Framework.Storage.Azure.Sample.Options;
-using ISynergy.Framework.Storage.Azure.Services;
+using ISynergy.Framework.Storage.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System;
 
 namespace ISynergy.Framework.Storage.Azure.Sample
 {

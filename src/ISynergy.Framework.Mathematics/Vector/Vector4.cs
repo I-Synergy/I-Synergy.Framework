@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     /// 4D Vector structure with X, Y, Z and W coordinates.
@@ -39,10 +37,10 @@ namespace ISynergy.Framework.Mathematics
         {
             get
             {
-                float v1 = (X > Y) ? X : Y;
-                float v2 = (Z > W) ? Z : W;
+                float v1 = X > Y ? X : Y;
+                float v2 = Z > W ? Z : W;
 
-                return (v1 > v2) ? v1 : v2;
+                return v1 > v2 ? v1 : v2;
             }
         }
 
@@ -56,10 +54,10 @@ namespace ISynergy.Framework.Mathematics
         {
             get
             {
-                float v1 = (X < Y) ? X : Y;
-                float v2 = (Z < W) ? Z : W;
+                float v1 = X < Y ? X : Y;
+                float v2 = Z < W ? Z : W;
 
-                return (v1 < v2) ? v1 : v2;
+                return v1 < v2 ? v1 : v2;
             }
         }
 
@@ -105,7 +103,7 @@ namespace ISynergy.Framework.Mathematics
                     i2 = 3;
                 }
 
-                return (v1 >= v2) ? i1 : i2;
+                return v1 >= v2 ? i1 : i2;
             }
         }
 
@@ -151,7 +149,7 @@ namespace ISynergy.Framework.Mathematics
                     i2 = 3;
                 }
 
-                return (v1 <= v2) ? i1 : i2;
+                return v1 <= v2 ? i1 : i2;
             }
         }
 
@@ -165,7 +163,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public float Norm
         {
-            get { return (float)System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
+            get { return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W); }
         }
 
         /// <summary>
@@ -479,8 +477,8 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator ==(Vector4 vector1, Vector4 vector2)
         {
-            return ((vector1.X == vector2.X) && (vector1.Y == vector2.Y) &&
-                     (vector1.Z == vector2.Z) && (vector1.W == vector2.W));
+            return vector1.X == vector2.X && vector1.Y == vector2.Y &&
+                     vector1.Z == vector2.Z && vector1.W == vector2.W;
         }
 
         /// <summary>
@@ -494,8 +492,8 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator !=(Vector4 vector1, Vector4 vector2)
         {
-            return ((vector1.X != vector2.X) || (vector1.Y != vector2.Y) ||
-                     (vector1.Z != vector2.Z) || (vector1.W != vector2.W));
+            return vector1.X != vector2.X || vector1.Y != vector2.Y ||
+                     vector1.Z != vector2.Z || vector1.W != vector2.W;
         }
 
         /// <summary>
@@ -508,7 +506,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public bool Equals(Vector4 vector)
         {
-            return ((vector.X == X) && (vector.Y == Y) && (vector.Z == Z) && (vector.W == W));
+            return vector.X == X && vector.Y == Y && vector.Z == Z && vector.W == W;
         }
 
         /// <summary>
@@ -519,7 +517,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         /// <returns>Returns <see langword="true"/> if the vector equals to the specified object or <see langword="false"/> otherwise.</returns>
         /// 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if (obj is Vector4)
             {
@@ -536,7 +534,7 @@ namespace ISynergy.Framework.Mathematics
         ///
         public float Normalize()
         {
-            float norm = (float)System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
+            float norm = (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
             float invNorm = 1.0f / norm;
 
             X *= invNorm;
@@ -557,10 +555,10 @@ namespace ISynergy.Framework.Mathematics
         public Vector4 Inverse()
         {
             return new Vector4(
-                (X == 0) ? 0 : 1.0f / X,
-                (Y == 0) ? 0 : 1.0f / Y,
-                (Z == 0) ? 0 : 1.0f / Z,
-                (W == 0) ? 0 : 1.0f / W);
+                X == 0 ? 0 : 1.0f / X,
+                Y == 0 ? 0 : 1.0f / Y,
+                Z == 0 ? 0 : 1.0f / Z,
+                W == 0 ? 0 : 1.0f / W);
         }
 
         /// <summary>
@@ -571,7 +569,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public Vector4 Abs()
         {
-            return new Vector4(System.Math.Abs(X), System.Math.Abs(Y), System.Math.Abs(Z), System.Math.Abs(W));
+            return new Vector4(Math.Abs(X), Math.Abs(Y), Math.Abs(Z), Math.Abs(W));
         }
 
         /// <summary>

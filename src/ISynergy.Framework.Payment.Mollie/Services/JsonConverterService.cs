@@ -3,7 +3,6 @@ using ISynergy.Framework.Payment.Mollie.Converters;
 using ISynergy.Framework.Payment.Mollie.Factories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Payment.Mollie.Services
 {

@@ -1,5 +1,5 @@
-﻿using System;
-using Sample.Abstractions.Services;
+﻿using Sample.Abstractions.Services;
+using System;
 
 namespace Sample.Services
 {

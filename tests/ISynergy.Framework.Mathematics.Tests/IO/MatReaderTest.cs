@@ -1,7 +1,7 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
-    using ISynergy.Framework.Mathematics.IO;
+    using ISynergy.Framework.Mathematics.IO.Mat;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.IO;
@@ -15,7 +15,7 @@
             return new FileStream(fileName, FileMode.Open, FileAccess.Read);
         }
 
-      
+
         [TestMethod]
         public void matrix_test_int32()
         {
@@ -175,7 +175,7 @@
             var node = reader["arr"];
             var value = node.Value as sbyte[,];
 
-            sbyte[,] expected = 
+            sbyte[,] expected =
             {
                 { -128, 127 },
             };
@@ -199,7 +199,7 @@
             var node = reader["a"];
             var value = node.Value as int[,];
 
-            int[,] expected = 
+            int[,] expected =
             {
                 { 1, 2, 3, 4 },
             };
@@ -223,7 +223,7 @@
             var node = reader["arr"];
             var value = node.Value as long[,];
 
-            System.Int64[,] expected = 
+            System.Int64[,] expected =
             {
                 { 0, -1 },
             };
@@ -247,7 +247,7 @@
             var node = reader["A64"];
             var value = node.Value as long[,];
 
-            long[,] expected = 
+            long[,] expected =
             {
                {  -83,  -91,  -92,  -93,   -1,   92,  -78,   42,  -92,    25 },
                {  -79,  -60,   96,  -23,  -85,  -44,   85,   48,   71,   -17 },
@@ -275,7 +275,7 @@
             var node = reader["arr"];
             var value = node.Value as ulong[,];
 
-            System.UInt64[,] expected = 
+            System.UInt64[,] expected =
             {
                 { 0, unchecked ((System.UInt64)(-1)) },
             };
@@ -299,9 +299,9 @@
             var node = reader["arr"];
             var value = node.Value as float[,];
 
-            float[,] expected = 
+            float[,] expected =
             {
-                { 1.1f, 2.2f, 3.3f } 
+                { 1.1f, 2.2f, 3.3f }
             };
 
             Assert.IsTrue(expected.IsEqual(value));
@@ -323,11 +323,11 @@
             var node = reader["arr"];
             var value = node.Value as byte[,];
 
-            byte[,] expected = 
+            byte[,] expected =
             {
                 { 1, 4 },
                 { 2, 5 },
-                { 3, 6 } 
+                { 3, 6 }
             };
 
             Assert.IsTrue(expected.IsEqual(value));
@@ -349,11 +349,11 @@
             var node = reader["arr"];
             var value = node.Value as double[,];
 
-            double[,] expected = 
+            double[,] expected =
             {
                 { 1.1, 4.4 },
                 { 2.2, 5.5 },
-                { 3.3, 6.6 } 
+                { 3.3, 6.6 }
             };
 
             Assert.IsTrue(expected.IsEqual(value));
@@ -375,7 +375,7 @@
             var node = reader["bool"];
             var value = node.Value as byte[,];
 
-            byte[,] expected = 
+            byte[,] expected =
             {
                 { 1, 0 },
             };
@@ -404,7 +404,7 @@
             Assert.AreEqual("a", value1.Name);
             var a = value1.Value as byte[,];
 
-            byte[,] expected = 
+            byte[,] expected =
             {
                 { 1, 2, 3 },
                 { 4, 5, 6 },

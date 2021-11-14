@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
-    using System;
-
     public static partial class Jagged
     {
 

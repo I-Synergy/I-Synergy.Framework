@@ -1,9 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
-using ISynergy.Framework.Core.Extensions;
-
-namespace ISynergy.Framework.Geography
+﻿namespace ISynergy.Framework.Geography.Geodetic
 {
     /// <summary>
     /// This is the outcome of a three dimensional geodetic calculation.  It represents

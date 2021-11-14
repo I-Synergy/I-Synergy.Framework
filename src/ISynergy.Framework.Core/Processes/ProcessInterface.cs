@@ -1,10 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Processes
+﻿namespace ISynergy.Framework.Core.Processes
 {
     /// <summary>
     /// A ProcessEventHandler is a delegate for process input/output events.
@@ -208,7 +202,7 @@ namespace ISynergy.Framework.Core.Processes
         void CurrentProcess_Exited(object sender, EventArgs e)
         {
             //  Fire process exited.
-            if(Process != null) FireProcessExitEvent(Process.ExitCode);
+            if (Process != null) FireProcessExitEvent(Process.ExitCode);
 
             //  Disable the threads.
             OutputWorker.CancelAsync();

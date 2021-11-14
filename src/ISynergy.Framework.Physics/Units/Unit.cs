@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Physics.Enumerations;
-using ISynergy.Framework.Physics.Base;
-using System;
-
-namespace ISynergy.Framework.Physics
+﻿namespace ISynergy.Framework.Physics
 {
     /// <summary>
     /// Unit derived from a SI unit.

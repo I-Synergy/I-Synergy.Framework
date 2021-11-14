@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     /// A structure representing 4x4 matrix.
@@ -142,10 +140,10 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static Matrix4x4 CreateRotationY(float radians)
         {
-            Matrix4x4 m = Matrix4x4.Identity;
+            Matrix4x4 m = Identity;
 
-            float cos = (float)System.Math.Cos(radians);
-            float sin = (float)System.Math.Sin(radians);
+            float cos = (float)Math.Cos(radians);
+            float sin = (float)Math.Sin(radians);
 
             m.V00 = m.V22 = cos;
             m.V02 = sin;
@@ -164,10 +162,10 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static Matrix4x4 CreateRotationX(float radians)
         {
-            Matrix4x4 m = Matrix4x4.Identity;
+            Matrix4x4 m = Identity;
 
-            float cos = (float)System.Math.Cos(radians);
-            float sin = (float)System.Math.Sin(radians);
+            float cos = (float)Math.Cos(radians);
+            float sin = (float)Math.Sin(radians);
 
             m.V11 = m.V22 = cos;
             m.V12 = -sin;
@@ -186,10 +184,10 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static Matrix4x4 CreateRotationZ(float radians)
         {
-            Matrix4x4 m = Matrix4x4.Identity;
+            Matrix4x4 m = Identity;
 
-            float cos = (float)System.Math.Cos(radians);
-            float sin = (float)System.Math.Sin(radians);
+            float cos = (float)Math.Cos(radians);
+            float sin = (float)Math.Sin(radians);
 
             m.V00 = m.V11 = cos;
             m.V01 = -sin;
@@ -216,7 +214,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static Matrix4x4 CreateFromYawPitchRoll(float yaw, float pitch, float roll)
         {
-            return (CreateRotationY(yaw) * CreateRotationX(pitch)) * CreateRotationZ(roll);
+            return CreateRotationY(yaw) * CreateRotationX(pitch) * CreateRotationZ(roll);
         }
 
         /// <summary>
@@ -274,7 +272,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static Matrix4x4 CreateFromRotation(Matrix3x3 rotationMatrix)
         {
-            Matrix4x4 m = Matrix4x4.Identity;
+            Matrix4x4 m = Identity;
 
             m.V00 = rotationMatrix.V00;
             m.V01 = rotationMatrix.V01;
@@ -304,7 +302,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static Matrix4x4 CreateTranslation(Vector3 position)
         {
-            Matrix4x4 m = Matrix4x4.Identity;
+            Matrix4x4 m = Identity;
 
             m.V03 = position.X;
             m.V13 = position.Y;
@@ -388,7 +386,7 @@ namespace ISynergy.Framework.Mathematics
             m.V22 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
 
             m.V32 = -1;
-            m.V23 = (nearPlaneDistance * farPlaneDistance) / (nearPlaneDistance - farPlaneDistance);
+            m.V23 = nearPlaneDistance * farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
 
             return m;
         }
@@ -501,12 +499,12 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public Vector4 GetRow(int index)
         {
-            if ((index < 0) || (index > 3))
+            if (index < 0 || index > 3)
                 throw new ArgumentException("Invalid row index was specified.", "index");
 
-            return (index == 0) ? new Vector4(V00, V01, V02, V03) :
-                   (index == 1) ? new Vector4(V10, V11, V12, V13) :
-                   (index == 2) ? new Vector4(V20, V21, V22, V23) : new Vector4(V30, V31, V32, V33);
+            return index == 0 ? new Vector4(V00, V01, V02, V03) :
+                   index == 1 ? new Vector4(V10, V11, V12, V13) :
+                   index == 2 ? new Vector4(V20, V21, V22, V23) : new Vector4(V30, V31, V32, V33);
         }
 
         /// <summary>
@@ -521,12 +519,12 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public Vector4 GetColumn(int index)
         {
-            if ((index < 0) || (index > 3))
+            if (index < 0 || index > 3)
                 throw new ArgumentException("Invalid column index was specified.", "index");
 
-            return (index == 0) ? new Vector4(V00, V10, V20, V30) :
-                   (index == 1) ? new Vector4(V01, V11, V21, V31) :
-                   (index == 2) ? new Vector4(V02, V12, V22, V32) : new Vector4(V03, V13, V23, V33);
+            return index == 0 ? new Vector4(V00, V10, V20, V30) :
+                   index == 1 ? new Vector4(V01, V11, V21, V31) :
+                   index == 2 ? new Vector4(V02, V12, V22, V32) : new Vector4(V03, V13, V23, V33);
         }
 
         /// <summary>
@@ -729,27 +727,27 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator ==(Matrix4x4 matrix1, Matrix4x4 matrix2)
         {
-            return (
-                (matrix1.V00 == matrix2.V00) &&
-                (matrix1.V01 == matrix2.V01) &&
-                (matrix1.V02 == matrix2.V02) &&
-                (matrix1.V03 == matrix2.V03) &&
+            return
+                matrix1.V00 == matrix2.V00 &&
+                matrix1.V01 == matrix2.V01 &&
+                matrix1.V02 == matrix2.V02 &&
+                matrix1.V03 == matrix2.V03 &&
 
-                (matrix1.V10 == matrix2.V10) &&
-                (matrix1.V11 == matrix2.V11) &&
-                (matrix1.V12 == matrix2.V12) &&
-                (matrix1.V13 == matrix2.V13) &&
+                matrix1.V10 == matrix2.V10 &&
+                matrix1.V11 == matrix2.V11 &&
+                matrix1.V12 == matrix2.V12 &&
+                matrix1.V13 == matrix2.V13 &&
 
-                (matrix1.V20 == matrix2.V20) &&
-                (matrix1.V21 == matrix2.V21) &&
-                (matrix1.V22 == matrix2.V22) &&
-                (matrix1.V23 == matrix2.V23) &&
+                matrix1.V20 == matrix2.V20 &&
+                matrix1.V21 == matrix2.V21 &&
+                matrix1.V22 == matrix2.V22 &&
+                matrix1.V23 == matrix2.V23 &&
 
-                (matrix1.V30 == matrix2.V30) &&
-                (matrix1.V31 == matrix2.V31) &&
-                (matrix1.V32 == matrix2.V32) &&
-                (matrix1.V33 == matrix2.V33)
-            );
+                matrix1.V30 == matrix2.V30 &&
+                matrix1.V31 == matrix2.V31 &&
+                matrix1.V32 == matrix2.V32 &&
+                matrix1.V33 == matrix2.V33
+            ;
         }
 
         /// <summary>
@@ -763,27 +761,27 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator !=(Matrix4x4 matrix1, Matrix4x4 matrix2)
         {
-            return (
-                (matrix1.V00 != matrix2.V00) ||
-                (matrix1.V01 != matrix2.V01) ||
-                (matrix1.V02 != matrix2.V02) ||
-                (matrix1.V03 != matrix2.V03) ||
+            return
+                matrix1.V00 != matrix2.V00 ||
+                matrix1.V01 != matrix2.V01 ||
+                matrix1.V02 != matrix2.V02 ||
+                matrix1.V03 != matrix2.V03 ||
 
-                (matrix1.V10 != matrix2.V10) ||
-                (matrix1.V11 != matrix2.V11) ||
-                (matrix1.V12 != matrix2.V12) ||
-                (matrix1.V13 != matrix2.V13) ||
+                matrix1.V10 != matrix2.V10 ||
+                matrix1.V11 != matrix2.V11 ||
+                matrix1.V12 != matrix2.V12 ||
+                matrix1.V13 != matrix2.V13 ||
 
-                (matrix1.V20 != matrix2.V20) ||
-                (matrix1.V21 != matrix2.V21) ||
-                (matrix1.V22 != matrix2.V22) ||
-                (matrix1.V23 != matrix2.V23) ||
+                matrix1.V20 != matrix2.V20 ||
+                matrix1.V21 != matrix2.V21 ||
+                matrix1.V22 != matrix2.V22 ||
+                matrix1.V23 != matrix2.V23 ||
 
-                (matrix1.V30 != matrix2.V30) ||
-                (matrix1.V31 != matrix2.V31) ||
-                (matrix1.V32 != matrix2.V32) ||
-                (matrix1.V33 != matrix2.V33)
-            );
+                matrix1.V30 != matrix2.V30 ||
+                matrix1.V31 != matrix2.V31 ||
+                matrix1.V32 != matrix2.V32 ||
+                matrix1.V33 != matrix2.V33
+            ;
         }
 
         /// <summary>
@@ -796,7 +794,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public bool Equals(Matrix4x4 matrix)
         {
-            return (this == matrix);
+            return this == matrix;
         }
 
         /// <summary>
@@ -807,7 +805,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         /// <returns>Returns <see langword="true"/> if the matrix equals to the specified object or <see langword="false"/> otherwise.</returns>
         /// 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if (obj is Matrix4x4)
             {

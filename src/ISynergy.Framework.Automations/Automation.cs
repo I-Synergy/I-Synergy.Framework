@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.Enumerations;
-using ISynergy.Framework.Core.Data;
-using System;
-using System.Collections.ObjectModel;
-
-namespace ISynergy.Framework.Automations
+﻿namespace ISynergy.Framework.Automations
 {
     /// <summary>
     /// Automation class.

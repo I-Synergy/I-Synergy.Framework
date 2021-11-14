@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     ///     Static class Norm. Defines a set of extension methods defining norms measures.

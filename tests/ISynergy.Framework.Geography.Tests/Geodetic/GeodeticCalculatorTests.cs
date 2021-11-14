@@ -1,8 +1,9 @@
-﻿using System;
-using ISynergy.Framework.Geography.Tests;
+﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Geodetic;
+using ISynergy.Framework.Geography.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Geodetic.Tests
+namespace ISynergy.Framework.Geography.Tests.Geodetic
 {
     /// <summary>
     /// Class GeodeticCalculatorTests.

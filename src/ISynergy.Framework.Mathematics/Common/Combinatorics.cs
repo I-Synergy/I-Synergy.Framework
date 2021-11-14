@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Common
 {
     /// <summary>
     ///     Static class for combinatorics functions.
@@ -77,14 +74,14 @@ namespace ISynergy.Framework.Mathematics
         /// };
         /// </code>
         /// </example>
-        /// <seealso cref="Combinatorics.Sequences(int,int,bool)" />
+        /// <seealso cref="Sequences(int,int,bool)" />
         public static int[][] TruthTable(int symbols, int length)
         {
             var sym = new int[length];
             for (var i = 0; i < sym.Length; i++)
                 sym[i] = symbols;
 
-            return TruthTable(sym);
+            return sym.TruthTable();
         }
 
         /// <summary>
@@ -125,7 +122,7 @@ namespace ISynergy.Framework.Mathematics
         /// };
         /// </code>
         /// </example>
-        /// <seealso cref="Combinatorics.Sequences(int,int,bool)" />
+        /// <seealso cref="Sequences(int,int,bool)" />
         public static int[][] TruthTable(this int[] symbols)
         {
             var size = 1;
@@ -170,7 +167,7 @@ namespace ISynergy.Framework.Mathematics
         /// <example>
         ///     <para>
         ///         Suppose we would like to generate the same sequences shown
-        ///         in the <see cref="Combinatorics.TruthTable(int,int)" />example,
+        ///         in the <see cref="TruthTable(int,int)" />example,
         ///         however, without explicitly storing all possible combinations
         ///         in an array. In order to iterate over all possible combinations
         ///         efficiently, we can use:
@@ -200,7 +197,7 @@ namespace ISynergy.Framework.Mathematics
             for (var i = 0; i < sym.Length; i++)
                 sym[i] = 2;
 
-            return Sequences(sym, inPlace);
+            return sym.Sequences(inPlace);
         }
 
         /// <summary>
@@ -220,7 +217,7 @@ namespace ISynergy.Framework.Mathematics
         /// <example>
         ///     <para>
         ///         Suppose we would like to generate the same sequences shown
-        ///         in the <see cref="Combinatorics.TruthTable(int,int)" />example,
+        ///         in the <see cref="TruthTable(int,int)" />example,
         ///         however, without explicitly storing all possible combinations
         ///         in an array. In order to iterate over all possible combinations
         ///         efficiently, we can use:
@@ -251,7 +248,7 @@ namespace ISynergy.Framework.Mathematics
             for (var i = 0; i < sym.Length; i++)
                 sym[i] = symbols;
 
-            return Sequences(sym, inPlace);
+            return sym.Sequences(inPlace);
         }
 
         /// <summary>
@@ -275,7 +272,7 @@ namespace ISynergy.Framework.Mathematics
         /// <example>
         ///     <para>
         ///         Suppose we would like to generate the same sequences shown
-        ///         in the <see cref="Combinatorics.TruthTable(int,int)" />example,
+        ///         in the <see cref="TruthTable(int,int)" />example,
         ///         however, without explicitly storing all possible combinations
         ///         in an array. In order to iterate over all possible combinations
         ///         efficiently, we can use:
@@ -360,7 +357,7 @@ namespace ISynergy.Framework.Mathematics
         {
             // TODO: Test
             for (var i = 0; i < values.Length; i++)
-                foreach (var value in Combinations(values, i + 1, inPlace))
+                foreach (var value in values.Combinations(i + 1, inPlace))
                     yield return value;
         }
 
@@ -440,7 +437,7 @@ namespace ISynergy.Framework.Mathematics
             // TODO: Optimize
             var values = set.ToArray();
             for (var i = 0; i < values.Length; i++)
-                foreach (var value in Combinations(values, i + 1, inPlace))
+                foreach (var value in values.Combinations(i + 1, inPlace))
                     yield return new SortedSet<T>(value);
         }
 
@@ -451,7 +448,7 @@ namespace ISynergy.Framework.Mathematics
         {
             // TODO: Optimize
             var values = set.ToArray();
-            foreach (var value in Combinations(values, k, inPlace))
+            foreach (var value in values.Combinations(k, inPlace))
                 yield return new SortedSet<T>(value);
         }
 

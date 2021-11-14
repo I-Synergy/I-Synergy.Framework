@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Validation;
-using System;
-
-namespace ISynergy.Framework.Automations.Base
+﻿namespace ISynergy.Framework.Automations.Base
 {
     /// <summary>
     /// Abstract class for automation objects.

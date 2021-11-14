@@ -44,12 +44,12 @@
             var Q = target.Eigenvectors;
 
             double[][] expectedD =
-            { 
+            {
                 new double[] { 2, 0 },
                 new double[] { 0, 6 }
             };
 
-            double[][] expectedQ = 
+            double[][] expectedQ =
             {
                new double[] {  0.7071, 0.7071 },
                new double[] { -0.7071, 0.7071 }
@@ -87,7 +87,7 @@
             var Q = target.Eigenvectors;
 
             double[][] expectedD =
-            { 
+            {
                 new double[] { 6, 0, 0 },
                 new double[] { 0, 4, 0 },
                 new double[] { 0, 0, 2 }

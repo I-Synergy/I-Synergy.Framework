@@ -1,6 +1,5 @@
-﻿using ISynergy.Framework.Mathematics;
+﻿using ISynergy.Framework.Mathematics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ISynergy.Framework.Mathematics.Statistics;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {

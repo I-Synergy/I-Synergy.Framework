@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
-
-namespace ISynergy.Framework.UI.Abstractions.Views
+﻿namespace ISynergy.Framework.UI.Abstractions.Views
 {
     /// <summary>
     /// Interface IShellView

@@ -21,4 +21,25 @@
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.AspNetCore.Authentication.Abstractions.Services"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Authentication.Exceptions"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Authentication.Extensions"/>
+		<Using Include="ISynergy.Framework.AspNetCore.Authentication.Options"/>
+		<Using Include="ISynergy.Framework.Core.Constants"/>
+		<Using Include="ISynergy.Framework.Core.Models"/>
+		<Using Include="Microsoft.AspNetCore.Http"/>
+		<Using Include="Microsoft.AspNetCore.Identity"/>
+		<Using Include="Microsoft.AspNetCore.Mvc"/>
+		<Using Include="Microsoft.AspNetCore.Mvc.Filters"/>
+		<Using Include="Microsoft.Extensions.Options"/>
+		<Using Include="Microsoft.IdentityModel.Tokens"/>
+		<Using Include="System.IdentityModel.Tokens.Jwt"/>
+		<Using Include="System.Runtime.Serialization"/>
+		<Using Include="System.Security.Claims"/>
+		<Using Include="System.Security.Principal"/>
+		<Using Include="System.Text"/>
+		<Using Include="System.Text.RegularExpressions"/>
+	</ItemGroup>
 </Project>

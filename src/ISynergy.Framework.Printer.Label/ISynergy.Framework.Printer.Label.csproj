@@ -12,4 +12,8 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
+
+	<ItemGroup>
+		<Using Include="System.Threading.Tasks"/>
+	</ItemGroup>
 </Project>

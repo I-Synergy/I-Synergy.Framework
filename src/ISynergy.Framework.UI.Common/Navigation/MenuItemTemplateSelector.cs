@@ -31,7 +31,7 @@ namespace ISynergy.Framework.UI.Navigation
         /// <returns>DataTemplate.</returns>
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if(item is NavigationItem)
+            if (item is NavigationItem)
             {
                 return ItemTemplate;
             }

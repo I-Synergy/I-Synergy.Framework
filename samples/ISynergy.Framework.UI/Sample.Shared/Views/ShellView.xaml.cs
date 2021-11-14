@@ -30,7 +30,7 @@ namespace Sample.Views
             RootNavigationView.ItemInvoked += NavigationItemInvoked;
             ContentRootFrame.Navigated += ContentRootFrameNavigated;
         }
-        
+
         /// <summary>
         /// Executes settings command if authenticated.
         /// Otherwise authenticate first.

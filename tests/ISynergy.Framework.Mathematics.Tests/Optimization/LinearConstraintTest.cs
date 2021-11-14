@@ -2,6 +2,7 @@
 {
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -36,7 +37,7 @@
             var lc1 = new LinearConstraint(f, "3*x + 5*y <= 7");
 
             double x = 0, y = 0; // Define some dummy variables
-            var lc2 = new LinearConstraint(f, () => 3*x + 5*y <= 7);
+            var lc2 = new LinearConstraint(f, () => 3 * x + 5 * y <= 7);
 
             var lc3 = new LinearConstraint(numberOfVariables: 2)
             {

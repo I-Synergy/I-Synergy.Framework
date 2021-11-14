@@ -134,13 +134,13 @@
             double[,] L = target.LowerTriangularFactor;
             double[,] U = target.UpperTriangularFactor;
 
-            double[,] expectedL = 
+            double[,] expectedL =
             {
                {  1.000, 0.000 },
                { -0.500, 1.000 },
             };
 
-            double[,] expectedU = 
+            double[,] expectedU =
             {
                 { 2.000, 3.000, 0.000 },
                 { 0.000, 3.500, 1.000  },
@@ -159,9 +159,9 @@
                 { 1.6, 4.2 },
             };
 
-            double[] rhs = {  6.1, 4.3 };
+            double[] rhs = { 6.1, 4.3 };
 
-            double[] expected = {  3.1839, -0.1891 };
+            double[] expected = { 3.1839, -0.1891 };
 
             var target1 = new LuDecomposition(value);
             var target2 = new JaggedLuDecomposition(value.ToJagged());
@@ -202,7 +202,7 @@
         [TestMethod]
         public void SolveTransposeTest()
         {
-            double[,] a = 
+            double[,] a =
             {
                 { 2, 1, 4 },
                 { 6, 2, 2 },
@@ -231,7 +231,7 @@
             int[] idx = p.ArgSort();
 
             var r = target.LowerTriangularFactor.Dot(target.UpperTriangularFactor).Submatrix(idx, null).Transpose();
-            
+
             Assert.IsTrue(Matrix.IsEqual(b, r, 1e-3));
             Assert.IsTrue(Matrix.IsEqual(b.Transpose(), target.Reverse(), 1e-3));
             Assert.IsTrue(Matrix.IsEqual(b.Transpose(), new JaggedLuDecomposition(b.ToJagged(), true).Reverse(), 1e-3));

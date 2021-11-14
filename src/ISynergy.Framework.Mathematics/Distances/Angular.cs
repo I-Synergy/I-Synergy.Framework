@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Distances
 {
-    using System;
-
     /// <summary>
     /// Angular distance, or the proper distance metric version of <see cref="Cosine" /> distance.
     /// </summary>

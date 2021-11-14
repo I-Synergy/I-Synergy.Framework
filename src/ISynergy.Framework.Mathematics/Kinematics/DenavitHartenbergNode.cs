@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-
-namespace ISynergy.Framework.Mathematics.Kinematics
+﻿namespace ISynergy.Framework.Mathematics.Kinematics
 {
     /// <summary>
     ///     Denavit Hartenberg Model Combinator class to make combination

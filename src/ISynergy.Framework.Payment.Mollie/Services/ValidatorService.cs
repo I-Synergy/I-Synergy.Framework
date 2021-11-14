@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Payment.Mollie.Abstractions.Services;
 using ISynergy.Framework.Payment.Mollie.Models.Url;
-using System;
 
 namespace ISynergy.Framework.Payment.Mollie.Services
 {

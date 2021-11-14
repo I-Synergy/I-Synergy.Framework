@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics.Optimization.Losses
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Losses
 {
     /// <summary>
     ///     Euclidean loss, also known as zero-one-loss. This class

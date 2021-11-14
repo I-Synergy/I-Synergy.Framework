@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Extensions.Tests
+namespace ISynergy.Framework.Core.Tests.Extensions
 {
     [TestClass]
     public class ExtensionsTest

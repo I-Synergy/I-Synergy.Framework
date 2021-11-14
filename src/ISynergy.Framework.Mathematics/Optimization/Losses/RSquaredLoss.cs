@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Statistics;
-using System;
-
-namespace ISynergy.Framework.Mathematics.Optimization.Losses
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Losses
 {
     /// <summary>
     ///     R² (r-squared) loss.

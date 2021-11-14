@@ -1,10 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Physics.Abstractions;
-using System;
-using System.Linq;
-
-namespace ISynergy.Framework.Physics.Services
+﻿namespace ISynergy.Framework.Physics.Services
 {
     /// <summary>
     /// Service for handling matters that concern units and SI units.

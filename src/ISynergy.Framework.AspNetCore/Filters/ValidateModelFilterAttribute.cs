@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace ISynergy.Framework.AspNetCore.Filters
+﻿namespace ISynergy.Framework.AspNetCore.Filters
 {
     /// <summary>
     /// Checks if ModelState is valid.

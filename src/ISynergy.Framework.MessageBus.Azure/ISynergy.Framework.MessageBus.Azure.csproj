@@ -12,6 +12,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>ISynergy.Framework.MessageBus</RootNamespace>
     </PropertyGroup>
 
 	<ItemGroup>
@@ -22,4 +23,15 @@
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Azure.Messaging.ServiceBus"/>
+		<Using Include="ISynergy.Framework.Core.Validation"/>
+		<Using Include="ISynergy.Framework.MessageBus.Abstractions.Options"/>
+		<Using Include="ISynergy.Framework.MessageBus.Abstractions.Services"/>
+		<Using Include="Microsoft.Extensions.Logging"/>
+		<Using Include="Microsoft.Extensions.Options"/>
+		<Using Include="Newtonsoft.Json"/>
+		<Using Include="System.Text"/>
+	</ItemGroup>
 </Project>

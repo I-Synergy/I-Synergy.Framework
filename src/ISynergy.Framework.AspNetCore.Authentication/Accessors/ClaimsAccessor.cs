@@ -1,11 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Exceptions;
-using ISynergy.Framework.AspNetCore.Authentication.Extensions;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ISynergy.Framework.AspNetCore.Authentication.Accessors
+﻿namespace ISynergy.Framework.AspNetCore.Authentication.Accessors
 {
     /// <summary>
     /// Class ClaimsAccessor.

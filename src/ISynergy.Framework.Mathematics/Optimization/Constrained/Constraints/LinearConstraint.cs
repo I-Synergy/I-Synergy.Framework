@@ -1,12 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
 {
-    using ISynergy.Framework.Mathematics.Exceptions;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq.Expressions;
-    using System.Text.RegularExpressions;
-
     /// <summary>
     ///   Constraint type.
     /// </summary>
@@ -82,8 +75,8 @@
                 if (value.Length != NumberOfVariables)
                     throw new DimensionMismatchException("value");
 
-                this.indices = value;
-                this.grad = null;
+                indices = value;
+                grad = null;
             }
         }
 
@@ -102,8 +95,8 @@
                 if (value.Length != NumberOfVariables)
                     throw new DimensionMismatchException("value");
 
-                this.combinedAs = value;
-                this.grad = null;
+                combinedAs = value;
+                grad = null;
             }
         }
 
@@ -129,7 +122,7 @@
 
         private LinearConstraint()
         {
-            this.Tolerance = DefaultTolerance;
+            Tolerance = DefaultTolerance;
         }
 
         /// <summary>
@@ -141,10 +134,10 @@
         public LinearConstraint(int numberOfVariables)
             : this()
         {
-            this.NumberOfVariables = numberOfVariables;
-            this.indices = Vector.Range(numberOfVariables);
-            this.combinedAs = Vector.Ones(numberOfVariables);
-            this.ShouldBe = ConstraintType.GreaterThanOrEqualTo;
+            NumberOfVariables = numberOfVariables;
+            indices = Vector.Range(numberOfVariables);
+            combinedAs = Vector.Ones(numberOfVariables);
+            ShouldBe = ConstraintType.GreaterThanOrEqualTo;
         }
 
         /// <summary>
@@ -157,10 +150,10 @@
         public LinearConstraint(params double[] coefficients)
             : this()
         {
-            this.NumberOfVariables = coefficients.Length;
-            this.indices = Vector.Range(0, coefficients.Length);
-            this.CombinedAs = coefficients;
-            this.ShouldBe = ConstraintType.GreaterThanOrEqualTo;
+            NumberOfVariables = coefficients.Length;
+            indices = Vector.Range(0, coefficients.Length);
+            CombinedAs = coefficients;
+            ShouldBe = ConstraintType.GreaterThanOrEqualTo;
         }
 
         /// <summary>
@@ -169,7 +162,7 @@
         /// 
         /// <param name="function">The objective function to which
         ///   this constraint refers to.</param>
-        /// <param name="constraint">A <see cref="System.String"/> 
+        /// <param name="constraint">A <see cref="string"/> 
         ///   specifying this constraint, such as "ax + b = c".</param>
         /// <param name="format">The culture information specifying how
         ///   numbers written in the <paramref name="constraint"/> should
@@ -187,7 +180,7 @@
         /// 
         /// <param name="function">The objective function to which
         ///   this constraint refers to.</param>
-        /// <param name="constraint">A <see cref="System.String"/> 
+        /// <param name="constraint">A <see cref="string"/> 
         ///   specifying this constraint, such as "ax + b = c".</param>
         /// 
         public LinearConstraint(IObjectiveFunction function, string constraint)
@@ -212,7 +205,7 @@
 
         /// <summary>
         ///   Attempts to create a <see cref="LinearConstraint"/>
-        ///   from a <see cref="System.String"/> representation.
+        ///   from a <see cref="string"/> representation.
         /// </summary>
         /// 
         /// <param name="str">The string containing the constraint in textual form.</param>
@@ -230,7 +223,7 @@
 
         /// <summary>
         ///   Attempts to create a <see cref="LinearConstraint"/>
-        ///   from a <see cref="System.String"/> representation.
+        ///   from a <see cref="string"/> representation.
         /// </summary>
         /// 
         /// <param name="str">The string containing the constraint in textual form.</param>
@@ -318,10 +311,10 @@
 
         private void parseString(IObjectiveFunction function, string constraint, CultureInfo culture)
         {
-            if (String.IsNullOrEmpty(constraint))
+            if (string.IsNullOrEmpty(constraint))
                 throw new FormatException("Constraint is empty.");
 
-            string f = constraint.Replace("*", String.Empty).Replace(" ", String.Empty);
+            string f = constraint.Replace("*", string.Empty).Replace(" ", string.Empty);
 
             if (f[0] != '-' && f[0] != '+')
                 f = f.Insert(0, "+");
@@ -351,7 +344,7 @@
             lhs = sides[0];
             rhs = sides[2];
 
-            double value = Double.Parse(rhs, culture);
+            double value = double.Parse(rhs, culture);
 
             MatchCollection matches = r.Matches(lhs, 0);
 
@@ -359,13 +352,13 @@
             {
                 string term = m.Value;
 
-                double scalar = (term[0] == '-') ? -1 : 1;
+                double scalar = term[0] == '-' ? -1 : 1;
 
                 // Extract value
                 MatchCollection coeff = number.Matches(term);
 
                 foreach (Match c in coeff)
-                    scalar *= Double.Parse(c.Value, culture);
+                    scalar *= double.Parse(c.Value, culture);
 
                 // Extract symbols
                 MatchCollection symbols = symbol.Matches(term);
@@ -471,7 +464,7 @@
                         // This is a constant times an expression
                         double scalar = (double)a.Value;
 
-                        string term = parse(terms, (Expression)m ?? (Expression)u, ref value);
+                        string term = parse(terms, m ?? (Expression)u, ref value);
                         terms[term] = scalar;
 
                         return term;

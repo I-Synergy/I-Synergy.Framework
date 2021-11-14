@@ -1,6 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using ISynergy.Framework.Mathematics.Environments;
+﻿using ISynergy.Framework.Mathematics.Environments;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {

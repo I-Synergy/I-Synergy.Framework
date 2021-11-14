@@ -1,8 +1,8 @@
-﻿using System;
-using ISynergy.Framework.Geography.Tests;
+﻿using ISynergy.Framework.Geography.Global;
+using ISynergy.Framework.Geography.Utm;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Utm.Tests
+namespace ISynergy.Framework.Geography.Tests.Utm
 {
     /// <summary>
     /// Class UtmGridTests.
@@ -305,13 +305,13 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         {
             var g = new UtmGrid(utm, 32, 'U');
 
-            if(g.Origin is UtmCoordinate o)
+            if (g.Origin is UtmCoordinate o)
             {
                 Assert.AreEqual(o.Projection, utm);
                 Assert.AreEqual("32U", o.Grid.ToString());
                 Assert.IsTrue(Math.Abs(o.ScaleFactor - 1.0) < 0.001);
             }
-            
+
             ValidateCorners(g);
         }
 

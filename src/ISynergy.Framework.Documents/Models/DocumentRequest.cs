@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Models.Base;
-using System.Collections;
-
-namespace ISynergy.Framework.Models
+﻿namespace ISynergy.Framework.Documents.Models
 {
     /// <summary>
     /// Class DocumentRequest.
@@ -26,11 +23,11 @@ namespace ISynergy.Framework.Models
         /// <summary>
         /// Details mail-merge fields.
         /// </summary>
-        public IEnumerable<TDetails>? DocumentDetails { get; set; }
+        public IEnumerable<TDetails> DocumentDetails { get; set; }
 
         /// <summary>
         /// Alternatives mail-merge fields.
         /// </summary>
-        public IEnumerable<TDetails>? DocumentAlternatives { get; set; }
+        public IEnumerable<TDetails> DocumentAlternatives { get; set; }
     }
 }

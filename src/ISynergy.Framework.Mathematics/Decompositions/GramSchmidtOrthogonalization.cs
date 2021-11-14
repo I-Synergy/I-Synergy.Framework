@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-
-namespace ISynergy.Framework.Mathematics.Decompositions
+﻿namespace ISynergy.Framework.Mathematics.Decompositions
 {
     /// <summary>
     ///     Gram-Schmidt Orthogonalization.

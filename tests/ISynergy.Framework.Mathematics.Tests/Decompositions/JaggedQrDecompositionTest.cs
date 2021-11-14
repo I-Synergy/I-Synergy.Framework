@@ -1,8 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
     using ISynergy.Framework.Mathematics.Decompositions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ISynergy.Framework.Mathematics;
 
     [TestClass]
     public class JaggedQrDecompositionTest
@@ -510,7 +511,7 @@
             };
 
             Assert.IsTrue(expectedM.IsEqual(m, 1e-6));
-            Assert.IsTrue(expectedQ.IsEqual(q, 1e-6)); 
+            Assert.IsTrue(expectedQ.IsEqual(q, 1e-6));
         }
 
         [TestMethod]
@@ -525,7 +526,7 @@
 
             double[] b = { 1, 2, 3 };
 
-            double[][] expected = 
+            double[][] expected =
             {
                 new double[] { 0.75, 1, 0.75 },
                 new double[] { 0.50, 2, 1.50 },

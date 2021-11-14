@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Payment.Mollie.Enumerations;
+﻿using ISynergy.Framework.Payment.Mollie.Enumerations;
 using ISynergy.Framework.Payment.Mollie.Models;
 using ISynergy.Framework.Payment.Mollie.Models.List;
 using ISynergy.Framework.Payment.Mollie.Models.PaymentMethod;

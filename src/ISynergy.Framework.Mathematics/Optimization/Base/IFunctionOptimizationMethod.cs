@@ -1,7 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Base
 {
-    using System;
-
     /// <summary>
     ///   Common interface for function optimization methods.
     /// </summary>

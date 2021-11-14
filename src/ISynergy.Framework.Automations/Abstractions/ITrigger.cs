@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Events;
-using System;
-
-namespace ISynergy.Framework.Automations.Abstractions
+﻿namespace ISynergy.Framework.Automations.Abstractions
 {
     /// <summary>
     /// Public interface of a trigger.

@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
-using Windows.Storage;
-using Windows.Storage.AccessCache;
-using System.IO;
-using Windows.System;
-using System.Linq;
+﻿using Windows.System;
 
 #if WinUI
 using System.Runtime.InteropServices;
@@ -75,7 +64,7 @@ namespace ISynergy.Framework.UI.Services
         {
             _dialogService = dialogService;
             _languageService = languageService;
-            
+
             AddExtension = true;
             CheckFileExists = false;
             CheckPathExists = true;
@@ -238,7 +227,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>System.Byte[].</returns>
         public async Task<byte[]> BrowseImageAsync(string[] filter, long maxfilesize = 0)
         {
-            if(await BrowseFileAsync(string.Join(";", filter), maxfilesize) is FileResult result)
+            if (await BrowseFileAsync(string.Join(";", filter), maxfilesize) is FileResult result)
             {
                 return result.File;
             }
@@ -266,7 +255,7 @@ namespace ISynergy.Framework.UI.Services
             };
 
 #if WinUI
-            var hwnd = Window.Current.CoreWindow.As<IWindowNative>().WindowHandle;
+            var hwnd = Microsoft.UI.Xaml.Window.Current.CoreWindow.As<IWindowNative>().WindowHandle;
             var initializeWithWindow = picker.As<IInitializeWithWindow>();
             initializeWithWindow.Initialize(hwnd);
 #endif

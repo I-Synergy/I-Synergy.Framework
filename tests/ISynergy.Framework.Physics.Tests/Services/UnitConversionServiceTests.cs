@@ -1,10 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Physics.Abstractions;
+using ISynergy.Framework.Physics.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Linq;
 
-namespace ISynergy.Framework.Physics.Services.Tests
+namespace ISynergy.Framework.Physics.Tests.Services
 {
     /// <summary>
     /// Test class for the UnitConversionService

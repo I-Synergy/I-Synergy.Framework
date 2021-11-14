@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Extensions
+﻿namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Class IntegerExtensions.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     ///   Tree enumeration method delegate.
@@ -48,7 +44,7 @@ namespace ISynergy.Framework.Core.Collections
 
             while (queue.Count != 0)
             {
-                if(queue.Dequeue() is TNode current)
+                if (queue.Dequeue() is TNode current)
                 {
                     yield return current;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace ISynergy.Framework.Mathematics.Decompositions
+﻿namespace ISynergy.Framework.Mathematics.Decompositions
 {
     /// <summary>
     ///     Singular Value Decomposition for a rectangular matrix.

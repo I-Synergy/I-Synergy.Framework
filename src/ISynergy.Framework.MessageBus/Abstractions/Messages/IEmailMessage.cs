@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ISynergy.Framework.MessageBus.Abstractions
+﻿namespace ISynergy.Framework.MessageBus.Abstractions.Messages
 {
     /// <summary>
     /// Interface IEmailMessage

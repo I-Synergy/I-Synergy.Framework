@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.AspNetCore.Extensions;
+﻿using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.AspNetCore.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

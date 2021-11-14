@@ -6,17 +6,14 @@ using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Automations.Services;
 using ISynergy.Framework.Automations.Tests.Data;
 using ISynergy.Framework.Automations.Triggers;
-using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Tests
 {
@@ -83,7 +80,7 @@ namespace ISynergy.Framework.Automations.Tests
             _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, TimeSpan.FromSeconds(1)));
 
             var stopwatch = new Stopwatch();
-            
+
             stopwatch.Start();
             var result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
             stopwatch.Stop();
@@ -199,11 +196,11 @@ namespace ISynergy.Framework.Automations.Tests
             _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, TimeSpan.FromSeconds(4)));
 
             var trigger = new IntegerTrigger(
-                _defaultAutomation.AutomationId, 
-                () => new (_defaultCustomer, (IProperty<int>)_defaultCustomer.Properties[nameof(Customer.Age)]), 
-                65, 
+                _defaultAutomation.AutomationId,
+                () => new(_defaultCustomer, (IProperty<int>)_defaultCustomer.Properties[nameof(Customer.Age)]),
+                65,
                 18,
-                async (age) => 
+                async (age) =>
                 {
                     var result = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
                     Assert.IsTrue(result.Succeeded);
@@ -249,7 +246,7 @@ namespace ISynergy.Framework.Automations.Tests
             stopwatch.Start();
             var result = await _automationService.ExecuteAsync(automation, null);
             stopwatch.Stop();
-            
+
             Assert.IsTrue(result.Succeeded);
             // Assert should succeed because condition is met and delay is applied.
             Assert.IsTrue(stopwatch.Elapsed > TimeSpan.FromSeconds(3 * 2));

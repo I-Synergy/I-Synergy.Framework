@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 #else

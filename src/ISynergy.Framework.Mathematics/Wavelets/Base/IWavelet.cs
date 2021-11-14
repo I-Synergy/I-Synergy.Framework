@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Wavelets
+﻿namespace ISynergy.Framework.Mathematics.Wavelets.Base
 {
     /// <summary>
     ///   Common interface for wavelets algorithms.

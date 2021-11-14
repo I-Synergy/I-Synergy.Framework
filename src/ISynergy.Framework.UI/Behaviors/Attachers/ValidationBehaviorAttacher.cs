@@ -1,7 +1,4 @@
-﻿using Microsoft.Xaml.Interactions.Core;
-using Microsoft.Xaml.Interactivity;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -13,7 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 #endif
 
-namespace ISynergy.Framework.UI.Behaviors
+namespace ISynergy.Framework.UI.Behaviors.Attachers
 {
     /// <summary>
     /// Class ValidationBehaviorAttacher.

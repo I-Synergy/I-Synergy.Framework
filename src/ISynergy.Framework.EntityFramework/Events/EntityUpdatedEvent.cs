@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
-
-namespace ISynergy.Framework.EntityFramework.Events
+﻿namespace ISynergy.Framework.EntityFramework.Events
 {
     /// <summary>
     /// A container for entities that are updated.

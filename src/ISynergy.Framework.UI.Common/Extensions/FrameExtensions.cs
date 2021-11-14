@@ -1,8 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-
-#if WINDOWS_UWP
+﻿#if WINDOWS_UWP
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -37,7 +33,7 @@ namespace ISynergy.Framework.UI.Extensions
                 frame.Navigated -= OnNavigated;
                 navigationalView = e.Content as IView;
 
-                if(e.Parameter is IViewModel viewModel)
+                if (e.Parameter is IViewModel viewModel)
                     navigationalView.DataContext = viewModel;
             }
 

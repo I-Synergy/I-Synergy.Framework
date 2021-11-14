@@ -1,14 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Core.Messaging.Tests
+namespace ISynergy.Framework.Core.Tests.Messaging
 {
     [TestClass]
     public class MessengerRegisterUnregisterTest
@@ -375,19 +369,19 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
-            Assert.AreEqual(default(int), ReceivedContentInt);
+            Assert.AreEqual(default, ReceivedContentInt);
 
             MessageService.Default.Send(testContentString);
 
             Assert.AreEqual(testContentString, ReceivedContentStringA1);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
-            Assert.AreEqual(default(int), ReceivedContentInt);
+            Assert.AreEqual(default, ReceivedContentInt);
 
             MessageService.Default.Send(testContentDateTime);
 
             Assert.AreEqual(testContentString, ReceivedContentStringA1);
             Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
-            Assert.AreEqual(default(int), ReceivedContentInt);
+            Assert.AreEqual(default, ReceivedContentInt);
 
             MessageService.Default.Send(testContentInt);
 
@@ -713,7 +707,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             ReceivedContentStringA1 = null;
             ReceivedContentStringA2 = null;
             ReceivedContentStringB = null;
-            ReceivedContentInt = default(int);
+            ReceivedContentInt = default;
 
             ReceivedContentDateTime1 = DateTime.MinValue;
             ReceivedContentDateTime2 = DateTime.MinValue;

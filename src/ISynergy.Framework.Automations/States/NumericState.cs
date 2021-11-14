@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Automations.States.Base;
-using System;
-
-namespace ISynergy.Framework.Automations.States
+﻿namespace ISynergy.Framework.Automations.States
 {
     /// <summary>
     /// Numeric trigger based on an integer.

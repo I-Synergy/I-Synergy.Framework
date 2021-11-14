@@ -16,4 +16,8 @@
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Monitoring.Messages"/>
+	</ItemGroup>
 </Project>

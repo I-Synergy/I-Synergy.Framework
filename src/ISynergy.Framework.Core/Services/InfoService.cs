@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using System.IO;
-using System.Reflection;
-
-namespace ISynergy.Framework.Core.Services
+﻿namespace ISynergy.Framework.Core.Services
 {
     /// <summary>
     /// Class BaseInfoService.
@@ -12,7 +8,7 @@ namespace ISynergy.Framework.Core.Services
         /// <summary>
         /// The assembly
         /// </summary>
-        private  readonly Assembly _assembly;
+        private readonly Assembly _assembly;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoService" /> class.
@@ -55,7 +51,7 @@ namespace ISynergy.Framework.Core.Services
         {
             get
             {
-                if(_assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false))
+                if (_assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false))
                 {
                     return _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
                 }

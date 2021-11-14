@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ISynergy.Framework.Payment.Extensions;
+﻿using ISynergy.Framework.Payment.Extensions;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
 using ISynergy.Framework.Payment.Mollie.Base;
 using ISynergy.Framework.Payment.Mollie.Models.Chargeback;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace ISynergy.Framework.Mathematics.Kinematics
+﻿namespace ISynergy.Framework.Mathematics.Kinematics
 {
     /// <summary>
     ///     Denavit Hartenberg model for joints.

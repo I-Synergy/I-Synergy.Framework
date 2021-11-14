@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
-
-namespace ISynergy.Framework.AspNetCore.ViewModels.Exceptions
+﻿namespace ISynergy.Framework.AspNetCore.ViewModels.Exceptions
 {
     /// <summary>
     /// Class ErrorViewModel.

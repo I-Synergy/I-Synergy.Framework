@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
-using System;
-using System.Collections.Generic;
+﻿using ISynergy.Framework.Core.Base;
 
 namespace ISynergy.Framework.Automations.Tests.Data
 {

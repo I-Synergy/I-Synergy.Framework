@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Validation;
-using System;
-
-namespace ISynergy.Framework.Automations.States
+﻿namespace ISynergy.Framework.Automations.States
 {
     /// <summary>
     /// Time state.

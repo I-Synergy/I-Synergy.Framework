@@ -3,6 +3,7 @@
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Decompositions;
     using ISynergy.Framework.Mathematics.Distances;
+    using ISynergy.Framework.Mathematics.Distances.Base;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
 

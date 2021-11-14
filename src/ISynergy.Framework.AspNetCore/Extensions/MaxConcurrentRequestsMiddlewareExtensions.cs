@@ -1,8 +1,4 @@
-﻿using System;
-using ISynergy.Framework.AspNetCore.Middleware;
-using Microsoft.AspNetCore.Builder;
-
-namespace ISynergy.Framework.AspNetCore.Extensions
+﻿namespace ISynergy.Framework.AspNetCore.Extensions
 {
     /// <summary>
     /// Class MaxConcurrentRequestsMiddlewareExtensions.

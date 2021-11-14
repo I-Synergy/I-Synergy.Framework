@@ -1,10 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Statistics
 {
-    using ISynergy.Framework.Core.Ranges;
-    using System;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-
     /// <summary>
     ///   Different methods for computing quantiles.
     /// </summary>

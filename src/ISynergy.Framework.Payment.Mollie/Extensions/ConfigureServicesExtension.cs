@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Payment.Abstractions;
+﻿using ISynergy.Framework.Payment.Abstractions.Services;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Clients;
 using ISynergy.Framework.Payment.Mollie.Abstractions.Services;
 using ISynergy.Framework.Payment.Mollie.Base;

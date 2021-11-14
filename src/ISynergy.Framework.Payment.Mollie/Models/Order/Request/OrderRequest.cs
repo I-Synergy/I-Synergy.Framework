@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ISynergy.Framework.Payment.Converters;
+﻿using ISynergy.Framework.Payment.Converters;
 using ISynergy.Framework.Payment.Mollie.Enumerations;
 using Newtonsoft.Json;
 

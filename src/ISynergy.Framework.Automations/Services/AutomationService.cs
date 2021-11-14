@@ -1,16 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.Actions;
-using ISynergy.Framework.Automations.Enumerations;
-using ISynergy.Framework.Automations.Options;
-using ISynergy.Framework.Core.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Automations.Services
+﻿namespace ISynergy.Framework.Automations.Services
 {
     /// <summary>
     /// Automation service.
@@ -93,8 +81,8 @@ namespace ISynergy.Framework.Automations.Services
                                 .ContinueWith(x => _logger.LogInformation("Task completed!"), cancellationTokenSource.Token);
                         }
                     }
-                    finally 
-                    { 
+                    finally
+                    {
                         cancellationTokenSource.Dispose();
                     }
 

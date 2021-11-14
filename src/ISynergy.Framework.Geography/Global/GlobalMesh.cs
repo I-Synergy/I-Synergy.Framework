@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ISynergy.Framework.Geography
+﻿namespace ISynergy.Framework.Geography.Global
 {
     /// <summary>
     /// This class overlays the globe with a mesh of squares.
@@ -283,7 +280,7 @@ namespace ISynergy.Framework.Geography
             {
                 var bearing = Math.Sign(y) < 0 ? 180.0 : 0.0;
 
-                var vertical = (y != 0) ?
+                var vertical = y != 0 ?
                     calc.CalculateEndingGlobalCoordinates(center, bearing, Math.Abs(y) * MeshSize)
                     : center;
 
@@ -304,7 +301,7 @@ namespace ISynergy.Framework.Geography
                         if (add)
                         {
                             bearing = Math.Sign(x) < 0 ? 270.0 : 90.0;
-                            var horizontal = (x != 0) ?
+                            var horizontal = x != 0 ?
                                 calc.CalculateEndingGlobalCoordinates(vertical, bearing, Math.Abs(x) * MeshSize)
                                 : vertical;
 

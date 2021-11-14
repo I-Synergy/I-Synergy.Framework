@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
-using ISynergy.Framework.Core.Extensions;
-
-namespace ISynergy.Framework.AspNetCore.Filters
+﻿namespace ISynergy.Framework.AspNetCore.Filters
 {
     /// <summary>
     /// Checks if there are model parameters (ActionArguments) with a null value,

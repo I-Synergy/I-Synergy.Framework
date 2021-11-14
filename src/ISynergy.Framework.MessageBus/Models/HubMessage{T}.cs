@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions;
-
-namespace ISynergy.Framework.MessageBus.Models
+﻿namespace ISynergy.Framework.MessageBus.Models
 {
     /// <summary>
     /// Class HubMessage.

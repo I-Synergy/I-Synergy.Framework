@@ -1,13 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Validation;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Automations.Triggers.Base
+﻿namespace ISynergy.Framework.Automations.Triggers.Base
 {
     /// <summary>
     /// Base trigger.

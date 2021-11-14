@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
-    using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using ISynergy.Framework.Mathematics.Random;
 
     [TestClass]
     public class BroydenFletcherGoldfarbShannoTest
@@ -82,7 +82,7 @@
             // Finally, we create a L-BFGS solver for the two variable problem:
             var lbfgs = new BroydenFletcherGoldfarbShanno(numberOfVariables: 2)
             {
-                Function = f, 
+                Function = f,
                 Gradient = g
             };
 

@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Core.Abstractions.Services;
-
-namespace ISynergy.Framework.UI.Services
+﻿namespace ISynergy.Framework.UI.Services.Base
 {
     /// <summary>
     /// Class BaseCommonService.

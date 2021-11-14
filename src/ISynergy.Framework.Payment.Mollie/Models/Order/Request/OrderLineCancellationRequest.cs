@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ISynergy.Framework.Payment.Mollie.Models.Order
+﻿namespace ISynergy.Framework.Payment.Mollie.Models.Order
 {
     /// <summary>
     /// Class OrderLineCancellationRequest.

@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ISynergy.Framework.Mathematics.Statistics
+﻿namespace ISynergy.Framework.Mathematics.Statistics
 {
     /// <summary>
     ///   Methods for operating with categorical data.

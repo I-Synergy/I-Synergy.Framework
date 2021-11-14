@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Physics.Enumerations;
-
-namespace ISynergy.Framework.Physics.Abstractions
+﻿namespace ISynergy.Framework.Physics.Abstractions
 {
     /// <summary>
     /// public interface for units and SI units.

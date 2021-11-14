@@ -18,4 +18,8 @@
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<Using Include="System"/>
+		<Using Include ="ISynergy.Framework.Core.Extensions"/>
+	</ItemGroup>
 </Project>

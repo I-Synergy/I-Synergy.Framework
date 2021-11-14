@@ -1,11 +1,12 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
     using ISynergy.Framework.Mathematics.Comparers;
+    using ISynergy.Framework.Mathematics.Statistics;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
-    using ISynergy.Framework.Mathematics.Statistics;
 
     public partial class MatrixTest
     {
@@ -562,7 +563,7 @@
             // Now, let's say we would like to sort the columns of the matrix 
             // according to the absolute value of the elements in the row vector:
 
-            double[,] sortedMatrix2 = Matrix.Sort(keys: v, values: matrix, 
+            double[,] sortedMatrix2 = Matrix.Sort(keys: v, values: matrix,
                 comparer: new GeneralComparer(ComparerDirection.Ascending, useAbsoluteValues: true));
 
             // The resulting matrix will be:

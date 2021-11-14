@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Common
 {
     /// <summary>
     ///   Extension methods for <see cref="Sparse{T}">sparse vectors</see>.
@@ -46,11 +42,11 @@ namespace ISynergy.Framework.Mathematics
             for (var i = 0; i < values.Length; i++)
             {
                 string[] element = values[i].Split(':');
-                int oneBasedindex = Int32.Parse(element[0], System.Globalization.CultureInfo.InvariantCulture);
+                int oneBasedindex = int.Parse(element[0], System.Globalization.CultureInfo.InvariantCulture);
                 if (oneBasedindex <= 0)
                     throw new FormatException("The given string contains 0 or negative indices (indices of sparse vectors in LibSVM format should begin at 1).");
                 int zeroBasedIndex = oneBasedindex - 1; // LibSVM uses 1-based array format
-                double value = Double.Parse(element[1], System.Globalization.CultureInfo.InvariantCulture);
+                double value = double.Parse(element[1], System.Globalization.CultureInfo.InvariantCulture);
 
                 result.Indices[i + offset] = zeroBasedIndex + offset;
                 result.Values[i + offset] = value;
@@ -69,7 +65,7 @@ namespace ISynergy.Framework.Mathematics
         public static T[][] ToDense<T>(this Sparse<T>[] vectors)
             where T : IEquatable<T>
         {
-            return ToDense(vectors, vectors.Columns());
+            return vectors.ToDense(vectors.Columns());
         }
 
         /// <summary>
@@ -94,7 +90,7 @@ namespace ISynergy.Framework.Mathematics
         {
             if (removeZeros)
             {
-                T zero = default(T);
+                T zero = default;
 
                 int nonZeros = 0;
                 for (var i = 0; i < dense.Length; i++)

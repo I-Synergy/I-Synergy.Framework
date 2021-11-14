@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.UI.Extensions;
-using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 
 #if WINDOWS_UWP
 using Windows.UI.Xaml.Data;
@@ -151,7 +146,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is Type type && type.IsEnum)
+            if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is Type type && type.IsEnum)
             {
                 return GetDescription(Enum.Parse(type, value.ToString()) as Enum);
             }

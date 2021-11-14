@@ -1,5 +1,8 @@
-﻿namespace ISynergy.Framework.Options
+﻿namespace ISynergy.Framework.Mail.Options
 {
+    /// <summary>
+    /// Mail service options.
+    /// </summary>
     public class MailOptions
     {
         /// <summary>

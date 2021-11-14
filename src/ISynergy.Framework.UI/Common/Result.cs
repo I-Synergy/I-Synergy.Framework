@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.UI.Common
+﻿namespace ISynergy.Framework.UI.Common
 {
     /// <summary>
     /// Class Result.

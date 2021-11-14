@@ -265,4 +265,7 @@ Save your work and restart the application.</value>
   <data name="Select" xml:space="preserve">
     <value>Select</value>
   </data>
+  <data name="Warning_MandatoryUpdateFailed" xml:space="preserve">
+    <value>Mandatory update has failed.</value>
+  </data>
 </root>

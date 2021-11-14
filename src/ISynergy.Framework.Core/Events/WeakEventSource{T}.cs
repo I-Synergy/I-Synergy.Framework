@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-
-namespace ISynergy.Framework.Core.Events
+﻿namespace ISynergy.Framework.Core.Events
 {
     /// <summary>
     /// Class WeakEventSource.

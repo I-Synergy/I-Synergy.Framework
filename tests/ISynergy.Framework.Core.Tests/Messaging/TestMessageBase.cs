@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Core.Messaging.Tests
+﻿using ISynergy.Framework.Core.Messaging;
+
+namespace ISynergy.Framework.Core.Tests.Messaging
 {
     public class TestMessageBase : Message, ITestMessage
     {

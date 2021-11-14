@@ -1,7 +1,5 @@
 ﻿namespace ISynergy.Framework.Mathematics.Distances
 {
-    using System;
-
     /// <summary>
     ///   The Minkowski distance is a metric in a normed vector space which can be 
     ///   considered as a generalization of both the <see cref="Euclidean">Euclidean 
