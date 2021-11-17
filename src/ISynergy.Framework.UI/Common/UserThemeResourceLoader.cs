@@ -1,18 +1,4 @@
-﻿#if WINDOWS_UWP
-using ISynergy;
-using ISynergy.Framework;
-using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Common;
-using ISynergy.Framework.UI.Controls;
-using Windows.UI.Xaml.Resources;
-#else
-using ISynergy;
-using ISynergy.Framework;
-using ISynergy.Framework.UI;
-using ISynergy.Framework.UI.Common;
-using ISynergy.Framework.UI.Controls;
-using Microsoft.UI.Xaml.Resources;
-#endif
+﻿using Microsoft.UI.Xaml.Resources;
 
 namespace ISynergy.Framework.UI.Common
 {

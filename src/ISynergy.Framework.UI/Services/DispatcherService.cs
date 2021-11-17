@@ -1,10 +1,5 @@
-﻿#if WINDOWS_UWP || HAS_UNO
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-#else
-using Microsoft.UI.Dispatching;
+﻿using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -20,10 +15,6 @@ namespace ISynergy.Framework.UI.Services
         /// <returns></returns>
         public Task InvokeAsync(Action action)
         {
-#if WINDOWS_UWP || HAS_UNO
-            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAndAwaitAsync(
-                CoreDispatcherPriority.Normal, action);
-#else
             if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
             {
                 return Task.Run(() =>
@@ -33,7 +24,6 @@ namespace ISynergy.Framework.UI.Services
             }
 
             return Task.CompletedTask;
-#endif
         }
     }
 }

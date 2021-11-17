@@ -1,10 +1,5 @@
-﻿#if WINDOWS_UWP
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Markup;
-#else
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Markup;
-#endif
 
 namespace ISynergy.Framework.UI.Helpers
 {

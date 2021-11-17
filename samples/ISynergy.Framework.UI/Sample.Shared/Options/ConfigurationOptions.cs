@@ -49,10 +49,18 @@
         /// <summary>
         /// Default constructor.
         /// </summary>
+        public ConfigurationOptions()
+        {
+        }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         /// <param name="applicationTitle"></param>
         /// <param name="clientId"></param>
         /// <param name="clientSecret"></param>
         public ConfigurationOptions(string applicationTitle, string clientId, string clientSecret)
+            : this()
         {
             ApplicationTitle = applicationTitle;
             ClientId = clientId;

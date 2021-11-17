@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using Microsoft.Extensions.Options;
 using Sample.Options;
 using Sample.Shared.Models;
 using System;
@@ -30,9 +31,9 @@ namespace Sample
         /// Initializes a new instance of the <see cref="Context" /> class.
         /// </summary>
         /// <param name="configurationOptions">The configuration options.</param>
-        public Context(ConfigurationOptions configurationOptions)
+        public Context(IOptions<ConfigurationOptions> configurationOptions)
         {
-            _configurationOptions = configurationOptions;
+            _configurationOptions = configurationOptions.Value;
 
             Profiles = new ObservableCollection<IProfile>() { new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();

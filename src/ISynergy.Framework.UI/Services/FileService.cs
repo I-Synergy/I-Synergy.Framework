@@ -1,44 +1,7 @@
 ﻿using Windows.System;
 
-#if WinUI
-using System.Runtime.InteropServices;
-using WinRT;
-using Microsoft.UI.Xaml;
-#endif
-
 namespace ISynergy.Framework.UI.Services
 {
-#if WinUI
-    /// <summary>
-    /// IInitializeWithWindow interface.
-    /// </summary>
-    [ComImport]
-    [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IInitializeWithWindow
-    {
-        /// <summary>
-        /// Initialize with window.
-        /// </summary>
-        /// <param name="hwnd"></param>
-        void Initialize(IntPtr hwnd);
-    }
-
-    /// <summary>
-    /// IWindowNative interface.
-    /// </summary>
-    [ComImport]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    [Guid("EECDBF0E-BAE9-4CB6-A68E-9598E1CB57BB")]
-    internal interface IWindowNative
-    {
-        /// <summary>
-        /// Get window handle.
-        /// </summary>
-        IntPtr WindowHandle { get; }
-    }
-#endif
-
     /// <summary>
     /// Base class for file services.
     /// </summary>
@@ -254,10 +217,8 @@ namespace ISynergy.Framework.UI.Services
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
             };
 
-#if WinUI
-            var hwnd = Microsoft.UI.Xaml.Window.Current.CoreWindow.As<IWindowNative>().WindowHandle;
-            var initializeWithWindow = picker.As<IInitializeWithWindow>();
-            initializeWithWindow.Initialize(hwnd);
+#if WINDOWS10_0_22000_0_OR_GREATER
+            picker.InitializeWindow();
 #endif
 
             if (allowedTypes != null)

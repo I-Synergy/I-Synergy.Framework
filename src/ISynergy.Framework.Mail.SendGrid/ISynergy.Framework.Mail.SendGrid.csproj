@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Mail.SendGrid</PackageId>
-		<Description>I-Synergy Framework Mail with SendGrid for .Net Standard 2.0 and .Net 6.0</Description>
+		<Description>I-Synergy Framework Mail with SendGrid for .Net 6.0</Description>
 		<PackageTags>I-Synergy, Framework, Mail, SendGrid</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -25,14 +25,14 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Core.Validation"/>
-		<Using Include="ISynergy.Framework.Mail.Abstractions.Services"/>
-		<Using Include="ISynergy.Framework.Mail.Models"/>
-		<Using Include="ISynergy.Framework.Mail.Options"/>
-		<Using Include="Microsoft.Extensions.Configuration"/>
-		<Using Include="Microsoft.Extensions.Logging"/>
-		<Using Include="Microsoft.Extensions.Options"/>
-		<Using Include="SendGrid"/>
-		<Using Include="SendGrid.Helpers.Mail"/>
+		<Using Include="ISynergy.Framework.Core.Validation" />
+		<Using Include="ISynergy.Framework.Mail.Abstractions.Services" />
+		<Using Include="ISynergy.Framework.Mail.Models" />
+		<Using Include="ISynergy.Framework.Mail.Options" />
+		<Using Include="Microsoft.Extensions.Configuration" />
+		<Using Include="Microsoft.Extensions.Logging" />
+		<Using Include="Microsoft.Extensions.Options" />
+		<Using Include="SendGrid" />
+		<Using Include="SendGrid.Helpers.Mail" />
 	</ItemGroup>
 </Project>

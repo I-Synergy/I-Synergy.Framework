@@ -6,7 +6,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
-using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -22,16 +21,11 @@ using System.IO;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Resources;
-
-#if HAS_UNO
-using Uno.Material;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Xaml;
-#elif WINDOWS_UWP
-using Windows.UI.Xaml;
-#else
 using Microsoft.UI.Xaml;
-#endif
+using ISynergy.Framework.UI;
+using ISynergy.Framework.Telemetry.Services;
+using Microsoft.Extensions.Configuration;
+using ISynergy.Framework.Telemetry.Options;
 
 namespace Sample
 {
@@ -94,7 +88,12 @@ namespace Sample
 
             var assembly = Assembly.GetAssembly(typeof(App));
 
-            services.AddSingleton(e => new ConfigurationOptions("I-Synergy Framework UI Sample", "client_id", "client_secret"));
+            var configurationRoot = new ConfigurationBuilder()
+               .AddJsonStream(assembly.GetManifestResourceStream("appsettings.json"))
+               .Build();
+
+            services.Configure<ConfigurationOptions>(configurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
+            services.Configure<TelemetryOptions>(configurationRoot.GetSection(nameof(TelemetryOptions)).BindWithReload);
 
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();

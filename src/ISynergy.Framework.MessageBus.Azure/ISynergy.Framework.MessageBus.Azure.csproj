@@ -4,7 +4,7 @@
     <PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
         <PackageId>I-Synergy.Framework.MessageBus.Azure</PackageId>
-        <Description>I-Synergy Framework Azure MessageBus for .Net Standard 2.0 and .Net 6.0</Description>
+        <Description>I-Synergy Framework Azure MessageBus for .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, Azure</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>

@@ -1,10 +1,5 @@
-﻿#if WINDOWS_UWP
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-#else
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-#endif
 
 namespace ISynergy.Framework.UI.Common
 {

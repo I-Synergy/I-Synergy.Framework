@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Monitoring.Client.SignalR</PackageId>
-		<Description>I-Synergy Framework SignalR Monitoring Client for .Net Standard 2.0 and .Net 6.0</Description>
+		<Description>I-Synergy Framework SignalR Monitoring Client for .Net 6.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, Client, SignalR</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -24,15 +24,15 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Core.Abstractions.Options"/>
-		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
-		<Using Include="ISynergy.Framework.Monitoring.Client.Abstractions.Services"/>
-		<Using Include="ISynergy.Framework.Monitoring.Enumerations"/>
-		<Using Include="ISynergy.Framework.Monitoring.Messages"/>
-		<Using Include="ISynergy.Framework.Mvvm.Abstractions.Services"/>
-		<Using Include="Microsoft.AspNetCore.SignalR.Client"/>
-		<Using Include="Microsoft.Extensions.Logging"/>
-		<Using Include="Microsoft.Extensions.Options"/>
-		<Using Include="Newtonsoft.Json"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Options" />
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services" />
+		<Using Include="ISynergy.Framework.Monitoring.Client.Abstractions.Services" />
+		<Using Include="ISynergy.Framework.Monitoring.Enumerations" />
+		<Using Include="ISynergy.Framework.Monitoring.Messages" />
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.Services" />
+		<Using Include="Microsoft.AspNetCore.SignalR.Client" />
+		<Using Include="Microsoft.Extensions.Logging" />
+		<Using Include="Microsoft.Extensions.Options" />
+		<Using Include="Newtonsoft.Json" />
 	</ItemGroup>
 </Project>

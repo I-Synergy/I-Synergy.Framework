@@ -40,8 +40,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\PrintingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ReportingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\TelemetryService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InfoViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SelectionTestViewModel.cs" />

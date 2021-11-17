@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Monitoring.Client</PackageId>
-		<Description>I-Synergy Framework Monitoring Client for .Net Standard 2.0 and .Net 6.0</Description>
+		<Description>I-Synergy Framework Monitoring Client for .Net 6.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, Client</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -18,6 +18,6 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Monitoring.Messages"/>
+		<Using Include="ISynergy.Framework.Monitoring.Messages" />
 	</ItemGroup>
 </Project>

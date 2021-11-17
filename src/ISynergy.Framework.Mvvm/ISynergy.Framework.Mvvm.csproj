@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+        <TargetFramework>net6.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
-        <Description>I-Synergy Framework Mvvm for .Net Standard 2.0 and .Net 6.0</Description>
+        <Description>I-Synergy Framework Mvvm for .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -38,27 +38,27 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Core.Abstractions"/>
-		<Using Include="ISynergy.Framework.Core.Abstractions.Base"/>
-		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
-		<Using Include="ISynergy.Framework.Core.Attributes"/>
-		<Using Include="ISynergy.Framework.Core.Base"/>
-		<Using Include="ISynergy.Framework.Core.Enumerations"/>
-		<Using Include="ISynergy.Framework.Core.Events"/>
-		<Using Include="ISynergy.Framework.Core.Extensions"/>
-		<Using Include="ISynergy.Framework.Core.Utilities"/>
-		<Using Include="ISynergy.Framework.Core.Validation"/>
-		<Using Include="ISynergy.Framework.Mvvm.Abstractions"/>
-		<Using Include="ISynergy.Framework.Mvvm.Abstractions.Services"/>
-		<Using Include="ISynergy.Framework.Mvvm.Abstractions.ViewModels"/>
-		<Using Include="ISynergy.Framework.Mvvm.Commands"/>
-		<Using Include="ISynergy.Framework.Mvvm.Enumerations"/>
-		<Using Include="ISynergy.Framework.Mvvm.Events"/>
-		<Using Include="ISynergy.Framework.Mvvm.Models"/>
-		<Using Include="Microsoft.Extensions.Logging"/>
-		<Using Include="System.Collections.ObjectModel"/>
-		<Using Include="System.ComponentModel"/>
-		<Using Include="System.ComponentModel.DataAnnotations"/>
-		<Using Include="System.Windows.Input"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions" />
+		<Using Include="ISynergy.Framework.Core.Abstractions.Base" />
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services" />
+		<Using Include="ISynergy.Framework.Core.Attributes" />
+		<Using Include="ISynergy.Framework.Core.Base" />
+		<Using Include="ISynergy.Framework.Core.Enumerations" />
+		<Using Include="ISynergy.Framework.Core.Events" />
+		<Using Include="ISynergy.Framework.Core.Extensions" />
+		<Using Include="ISynergy.Framework.Core.Utilities" />
+		<Using Include="ISynergy.Framework.Core.Validation" />
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions" />
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.Services" />
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.ViewModels" />
+		<Using Include="ISynergy.Framework.Mvvm.Commands" />
+		<Using Include="ISynergy.Framework.Mvvm.Enumerations" />
+		<Using Include="ISynergy.Framework.Mvvm.Events" />
+		<Using Include="ISynergy.Framework.Mvvm.Models" />
+		<Using Include="Microsoft.Extensions.Logging" />
+		<Using Include="System.Collections.ObjectModel" />
+		<Using Include="System.ComponentModel" />
+		<Using Include="System.ComponentModel.DataAnnotations" />
+		<Using Include="System.Windows.Input" />
 	</ItemGroup>
 </Project>

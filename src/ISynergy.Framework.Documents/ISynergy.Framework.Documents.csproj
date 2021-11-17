@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Documents</PackageId>
-		<Description>I-Synergy Framework Documents for .Net Standard 2.0 and .Net 6.0</Description>
+		<Description>I-Synergy Framework Documents for .Net 6.0</Description>
 		<PackageTags>I-Synergy, Framework, Documents</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -14,9 +14,9 @@
     </PropertyGroup>
 
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Documents.Models"/>
-		<Using Include="ISynergy.Framework.Documents.Enumerations"/>
-		<Using Include="ISynergy.Framework.Documents.Models.Base"/>
-		<Using Include="System.Collections"/>
+		<Using Include="ISynergy.Framework.Documents.Models" />
+		<Using Include="ISynergy.Framework.Documents.Enumerations" />
+		<Using Include="ISynergy.Framework.Documents.Models.Base" />
+		<Using Include="System.Collections" />
 	</ItemGroup>
 </Project>

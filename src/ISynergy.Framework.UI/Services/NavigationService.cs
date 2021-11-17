@@ -1,18 +1,9 @@
-﻿using Windows.System;
-
-#if WINDOWS_UWP
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media.Animation;
-using Window = Windows.UI.Xaml.Window;
-#else
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Animation;
+using Windows.System;
 using Window = Microsoft.UI.Xaml.Window;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -275,7 +266,21 @@ namespace ISynergy.Framework.UI.Services
                     await viewModel.InitializeAsync();
                 }
 
+
+/* Unmerged change from project 'ISynergy.Framework.UI (net6.0-windows10.0.22000.0)'
+Before:
                 if (TypeActivator.CreateInstance(_pages[viewModelKey]) is ISynergy.Framework.UI.Controls.View view)
+After:
+                if (TypeActivator.CreateInstance(_pages[viewModelKey]) is Controls.View view)
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.UI (net6.0-windows)'
+Before:
+                if (TypeActivator.CreateInstance(_pages[viewModelKey]) is ISynergy.Framework.UI.Controls.View view)
+After:
+                if (TypeActivator.CreateInstance(_pages[viewModelKey]) is Controls.View view)
+*/
+                if (TypeActivator.CreateInstance(_pages[viewModelKey]) is View view)
                 {
                     var datacontextBinding = new Binding
                     {

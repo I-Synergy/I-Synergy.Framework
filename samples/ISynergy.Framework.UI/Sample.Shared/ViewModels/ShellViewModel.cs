@@ -9,11 +9,6 @@ using ISynergy.Framework.UI.Navigation;
 using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
-
-#if WINDOWS_UWP || HAS_UNO
-using Windows.UI.Xaml;
-#endif
-
 using Microsoft.UI.Xaml;
 
 namespace Sample.ViewModels

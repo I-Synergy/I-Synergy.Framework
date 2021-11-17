@@ -1,14 +1,6 @@
-﻿#if WINDOWS_UWP
-using Windows.UI.Xaml.Controls;
-using Application = Windows.UI.Xaml.Application;
-using Setter = Windows.UI.Xaml.Setter;
-using Style = Windows.UI.Xaml.Style;
-#else
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Application = Microsoft.UI.Xaml.Application;
-using Setter = Microsoft.UI.Xaml.Setter;
 using Style = Microsoft.UI.Xaml.Style;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {

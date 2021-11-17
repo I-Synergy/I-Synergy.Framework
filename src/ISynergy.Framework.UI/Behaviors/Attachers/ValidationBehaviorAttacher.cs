@@ -1,14 +1,7 @@
-﻿#if WINDOWS_UWP
-using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-#else
-using Microsoft.UI;
+﻿using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-#endif
 
 namespace ISynergy.Framework.UI.Behaviors.Attachers
 {

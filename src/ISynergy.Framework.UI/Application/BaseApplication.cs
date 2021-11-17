@@ -1,20 +1,14 @@
-#if (WINDOWS_UWP)
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using LaunchActivatedEventArgs = Windows.ApplicationModel.Activation.LaunchActivatedEventArgs;
-using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
-using Window = Windows.UI.Xaml.Window;
-#else
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+
+#if WINDOWS
+using Windows.UI.ViewManagement;
+#endif
+
 using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
 using Window = Microsoft.UI.Xaml.Window;
-#endif
 
 namespace ISynergy.Framework.UI
 {
@@ -109,7 +103,7 @@ namespace ISynergy.Framework.UI
                 RequestedTheme = ApplicationTheme.Light;
             }
 
-            _themeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IBaseSettingsService>().Color.ToEnum(Mvvm.Enumerations.ThemeColors.Default));
+            _themeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IBaseSettingsService>().Color.ToEnum(ThemeColors.Default));
 
 #if HAS_UNO || WINDOWS_UWP
             Suspending += OnSuspending;
@@ -403,11 +397,6 @@ namespace ISynergy.Framework.UI
         {
             assemblies.Add(Assembly.GetAssembly(typeof(MvvmAssemblyIdentifier)));
             assemblies.Add(Assembly.GetAssembly(typeof(UIAssemblyIdentifier)));
-            assemblies.Add(Assembly.GetAssembly(typeof(CommonAssemblyIdentifier)));
-
-#if WinUI || WINDOWS_UWP
-            assemblies.Add(Assembly.GetAssembly(typeof(WinUIAssemblyIdentifier)));
-#endif
 
             ViewTypes = new List<Type>();
             WindowTypes = new List<Type>();
@@ -432,7 +421,7 @@ namespace ISynergy.Framework.UI
                         q.Name.EndsWith(GenericConstants.View)
                         || q.Name.EndsWith(GenericConstants.Page))
                         && q.Name != GenericConstants.View
-                        && q.Name != nameof(Controls.View)
+                        && q.Name != nameof(View)
                         && q.Name != GenericConstants.Page
                         && !q.IsAbstract
                         && !q.IsInterface)

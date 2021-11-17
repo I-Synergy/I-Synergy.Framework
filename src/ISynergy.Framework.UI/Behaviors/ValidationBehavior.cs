@@ -1,8 +1,4 @@
-﻿#if WINDOWS_UWP
-using Windows.UI.Xaml;
-#else
-using Microsoft.UI.Xaml;
-#endif
+﻿using Microsoft.UI.Xaml;
 
 namespace ISynergy.Framework.UI.Behaviors
 {

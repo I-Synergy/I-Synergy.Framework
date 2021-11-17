@@ -1,9 +1,11 @@
-﻿namespace ISynergy.Framework.Options
+﻿using ISynergy.Framework.Telemetry.Abstractions.Options;
+
+namespace ISynergy.Framework.Telemetry.Options
 {
     /// <summary>
     /// Telemetry options.
     /// </summary>
-    public class TelemetryOptions
+    public abstract class TelemetryOptions : ITelemetryOptions
     {
         /// <summary>
         /// Telemetry Api key.

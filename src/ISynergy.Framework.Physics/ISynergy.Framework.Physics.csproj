@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Physics</PackageId>
-		<Description>I-Synergy Framework Physics for .Net Standard 2.0 and .Net 6.0</Description>
+		<Description>I-Synergy Framework Physics for .Net 6.0</Description>
 		<PackageTags>I-Synergy, Framework, Physics</PackageTags>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -30,15 +30,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
-		<Using Include="ISynergy.Framework.Core.Attributes"/>
-		<Using Include="ISynergy.Framework.Core.Extensions"/>
-		<Using Include="ISynergy.Framework.Core.Validation"/>
-		<Using Include="ISynergy.Framework.Physics.Abstractions"/>
-		<Using Include="ISynergy.Framework.Physics.Enumerations"/>
-		<Using Include="ISynergy.Framework.Physics.Extensions"/>
-		<Using Include="ISynergy.Framework.Physics"/>
-		<Using Include="ISynergy.Framework.Physics.Base"/>
-		<Using Include="System.Reflection"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services" />
+		<Using Include="ISynergy.Framework.Core.Attributes" />
+		<Using Include="ISynergy.Framework.Core.Extensions" />
+		<Using Include="ISynergy.Framework.Core.Validation" />
+		<Using Include="ISynergy.Framework.Physics.Abstractions" />
+		<Using Include="ISynergy.Framework.Physics.Enumerations" />
+		<Using Include="ISynergy.Framework.Physics.Extensions" />
+		<Using Include="ISynergy.Framework.Physics" />
+		<Using Include="ISynergy.Framework.Physics.Base" />
+		<Using Include="System.Reflection" />
 	</ItemGroup>
 </Project>

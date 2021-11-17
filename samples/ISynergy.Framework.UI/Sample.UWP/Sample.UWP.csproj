@@ -151,14 +151,6 @@
       <Project>{3828a883-b771-4e6b-b004-e521b6d7ad52}</Project>
       <Name>ISynergy.Framework.Mvvm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.Common\ISynergy.Framework.UI.Common.csproj">
-      <Project>{fd597031-9185-40f3-9a44-bf34f499ab42}</Project>
-      <Name>ISynergy.Framework.UI.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj">
-      <Project>{8337114e-ba20-438b-99b6-40189ce06248}</Project>
-      <Name>ISynergy.Framework.UI.WinUI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj">
       <Project>{a3883daa-4632-4be2-94e6-b123b3af1121}</Project>
       <Name>ISynergy.Framework.UI</Name>

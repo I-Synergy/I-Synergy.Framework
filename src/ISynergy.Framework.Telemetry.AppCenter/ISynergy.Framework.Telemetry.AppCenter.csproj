@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Telemetry.AppCenter</PackageId>
 		<Description>I-Synergy Framework Telemetry library for AppCenter</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter</PackageTags>

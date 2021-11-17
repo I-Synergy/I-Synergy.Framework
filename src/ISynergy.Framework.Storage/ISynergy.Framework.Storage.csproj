@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Storage</PackageId>
-        <Description>I-Synergy Framework Storage for .Net Standard 2.0 and .Net 6.0</Description>
+        <Description>I-Synergy Framework Storage for .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, Storage</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>

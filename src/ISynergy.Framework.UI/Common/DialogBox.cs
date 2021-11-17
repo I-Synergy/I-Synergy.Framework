@@ -1,8 +1,4 @@
-﻿#if WINDOWS_UWP
-using Windows.UI.Xaml.Controls;
-#else
-using Microsoft.UI.Xaml.Controls;
-#endif
+﻿using Microsoft.UI.Xaml.Controls;
 
 namespace ISynergy.Framework.UI.Common
 {

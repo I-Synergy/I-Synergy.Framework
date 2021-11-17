@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Mathematics</PackageId>
-        <Description>I-Synergy Mathematics Framework for .Net Standard 2.0 and .Net 6.0</Description>
+        <Description>I-Synergy Mathematics Framework for .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, Mathematics</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -26,51 +26,51 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Core.Abstractions.Async"/>
-		<Using Include="ISynergy.Framework.Core.Collections"/>
-		<Using Include="ISynergy.Framework.Core.Extensions"/>
-		<Using Include="ISynergy.Framework.Core.Points"/>
-		<Using Include="ISynergy.Framework.Core.Ranges"/>
-		<Using Include="ISynergy.Framework.Mathematics"/>
-		<Using Include="ISynergy.Framework.Mathematics.Common"/>
-		<Using Include="ISynergy.Framework.Mathematics.Comparers"/>
-		<Using Include="ISynergy.Framework.Mathematics.Convergence"/>
-		<Using Include="ISynergy.Framework.Mathematics.Convergence.Base"/>
-		<Using Include="ISynergy.Framework.Mathematics.Decompositions"/>
-		<Using Include="ISynergy.Framework.Mathematics.Decompositions.Base"/>
-		<Using Include="ISynergy.Framework.Mathematics.Differentiation"/>
-		<Using Include="ISynergy.Framework.Mathematics.Distances"/>
-		<Using Include="ISynergy.Framework.Mathematics.Distances.Base"/>
-		<Using Include="ISynergy.Framework.Mathematics.Enumerations"/>
-		<Using Include="ISynergy.Framework.Mathematics.Exceptions"/>
-		<Using Include="ISynergy.Framework.Mathematics.Formats"/>
-		<Using Include="ISynergy.Framework.Mathematics.Formats.Base"/>
-		<Using Include="ISynergy.Framework.Mathematics.Functions"/>
-		<Using Include="ISynergy.Framework.Mathematics.Integration.Base"/>
-		<Using Include="ISynergy.Framework.Mathematics.IO.NumPy"/>
-		<Using Include="ISynergy.Framework.Mathematics.MachineLearning"/>
-		<Using Include="ISynergy.Framework.Mathematics.Optimization.Base"/>
-		<Using Include="ISynergy.Framework.Mathematics.Optimization.Constrained"/>
-		<Using Include="ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints"/>
-		<Using Include="ISynergy.Framework.Mathematics.Optimization.Unconstrained"/>
-		<Using Include="ISynergy.Framework.Mathematics.Random"/>
-		<Using Include="ISynergy.Framework.Mathematics.Statistics"/>
-		<Using Include="ISynergy.Framework.Mathematics.Wavelets.Base"/>
-		<Using Include="System.Collections"/>
-		<Using Include="System.Collections.ObjectModel"/>
-		<Using Include="System.ComponentModel"/>
-		<Using Include="System.Data"/>
-		<Using Include="System.Diagnostics"/>
-		<Using Include="System.Diagnostics.CodeAnalysis"/>
-		<Using Include="System.Globalization"/>
-		<Using Include="System.IO.Compression"/>
-		<Using Include="System.Linq.Expressions"/>
-		<Using Include="System.Numerics"/>
-		<Using Include="System.Reflection"/>
-		<Using Include="System.Runtime.CompilerServices"/>
-		<Using Include="System.Runtime.InteropServices"/>
-		<Using Include="System.Runtime.Serialization"/>
-		<Using Include="System.Text"/>
-		<Using Include="System.Text.RegularExpressions"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Async" />
+		<Using Include="ISynergy.Framework.Core.Collections" />
+		<Using Include="ISynergy.Framework.Core.Extensions" />
+		<Using Include="ISynergy.Framework.Core.Points" />
+		<Using Include="ISynergy.Framework.Core.Ranges" />
+		<Using Include="ISynergy.Framework.Mathematics" />
+		<Using Include="ISynergy.Framework.Mathematics.Common" />
+		<Using Include="ISynergy.Framework.Mathematics.Comparers" />
+		<Using Include="ISynergy.Framework.Mathematics.Convergence" />
+		<Using Include="ISynergy.Framework.Mathematics.Convergence.Base" />
+		<Using Include="ISynergy.Framework.Mathematics.Decompositions" />
+		<Using Include="ISynergy.Framework.Mathematics.Decompositions.Base" />
+		<Using Include="ISynergy.Framework.Mathematics.Differentiation" />
+		<Using Include="ISynergy.Framework.Mathematics.Distances" />
+		<Using Include="ISynergy.Framework.Mathematics.Distances.Base" />
+		<Using Include="ISynergy.Framework.Mathematics.Enumerations" />
+		<Using Include="ISynergy.Framework.Mathematics.Exceptions" />
+		<Using Include="ISynergy.Framework.Mathematics.Formats" />
+		<Using Include="ISynergy.Framework.Mathematics.Formats.Base" />
+		<Using Include="ISynergy.Framework.Mathematics.Functions" />
+		<Using Include="ISynergy.Framework.Mathematics.Integration.Base" />
+		<Using Include="ISynergy.Framework.Mathematics.IO.NumPy" />
+		<Using Include="ISynergy.Framework.Mathematics.MachineLearning" />
+		<Using Include="ISynergy.Framework.Mathematics.Optimization.Base" />
+		<Using Include="ISynergy.Framework.Mathematics.Optimization.Constrained" />
+		<Using Include="ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints" />
+		<Using Include="ISynergy.Framework.Mathematics.Optimization.Unconstrained" />
+		<Using Include="ISynergy.Framework.Mathematics.Random" />
+		<Using Include="ISynergy.Framework.Mathematics.Statistics" />
+		<Using Include="ISynergy.Framework.Mathematics.Wavelets.Base" />
+		<Using Include="System.Collections" />
+		<Using Include="System.Collections.ObjectModel" />
+		<Using Include="System.ComponentModel" />
+		<Using Include="System.Data" />
+		<Using Include="System.Diagnostics" />
+		<Using Include="System.Diagnostics.CodeAnalysis" />
+		<Using Include="System.Globalization" />
+		<Using Include="System.IO.Compression" />
+		<Using Include="System.Linq.Expressions" />
+		<Using Include="System.Numerics" />
+		<Using Include="System.Reflection" />
+		<Using Include="System.Runtime.CompilerServices" />
+		<Using Include="System.Runtime.InteropServices" />
+		<Using Include="System.Runtime.Serialization" />
+		<Using Include="System.Text" />
+		<Using Include="System.Text.RegularExpressions" />
 	</ItemGroup>
 </Project>
