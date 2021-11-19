@@ -1,20 +1,20 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Threading;
-using ISynergy.Framework.Core.Data;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mvvm.Enumerations;
-using Microsoft.Extensions.Logging;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Mvvm
+namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class ViewModelBladeView.
@@ -137,7 +137,7 @@ namespace ISynergy.Framework.Mvvm
             IBaseCommonServices commonServices,
             ILogger logger,
             bool refreshOnInitialization = true,
-            bool automaticValidation = false) 
+            bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation)
         {
             RefreshOnInitialization = refreshOnInitialization;
@@ -178,7 +178,7 @@ namespace ISynergy.Framework.Mvvm
             {
                 await base.InitializeAsync();
 
-                if(RefreshOnInitialization)
+                if (RefreshOnInitialization)
                     IsInitialized = await RefreshAsync();
             }
         }

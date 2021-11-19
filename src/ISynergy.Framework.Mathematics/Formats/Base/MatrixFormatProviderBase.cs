@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Formats.Base
 {
     /// <summary>
     ///     Base class for IMatrixFormatProvider implementers.

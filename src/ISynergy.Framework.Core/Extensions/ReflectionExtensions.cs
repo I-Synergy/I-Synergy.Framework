@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Data;
-using Newtonsoft.Json.Linq;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Base;
 using System;
 using System.Linq;
 using System.Linq.Expressions;

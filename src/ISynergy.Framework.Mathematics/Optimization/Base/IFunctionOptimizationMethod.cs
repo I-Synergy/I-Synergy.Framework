@@ -1,5 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Base
 {
+    using ISynergy.Framework.Mathematics.Optimization.Constrained;
+    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
     using System;
 
     /// <summary>

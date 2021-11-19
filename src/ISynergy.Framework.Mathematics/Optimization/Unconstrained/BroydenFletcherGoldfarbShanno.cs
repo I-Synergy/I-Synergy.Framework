@@ -25,10 +25,11 @@
 // THE SOFTWARE.
 //
 
+using ISynergy.Framework.Mathematics.Optimization.Base;
 using System;
 using System.ComponentModel;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
     ///     Status codes for the <see cref="BroydenFletcherGoldfarbShanno" />
@@ -570,8 +571,8 @@ namespace ISynergy.Framework.Mathematics.Optimization
         /// </summary>
         /// <remarks>
         ///     This parameter is valid only when the backtracking line-search algorithm is used
-        ///     with the Wolfe condition, <see cref="ISynergy.Framework.Mathematics.Optimization.LineSearch.StrongWolfe" />
-        ///     or <see cref="ISynergy.Framework.Mathematics.Optimization.LineSearch.RegularWolfe" />. The default value
+        ///     with the Wolfe condition, <see cref="LineSearch.StrongWolfe" />
+        ///     or <see cref="LineSearch.RegularWolfe" />. The default value
         ///     is <c>0.9</c>. This parameter should be greater the <see cref="ParameterTolerance" />
         ///     and smaller than <c>1.0</c>.
         /// </remarks>

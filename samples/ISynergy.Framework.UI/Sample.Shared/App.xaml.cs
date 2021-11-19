@@ -7,7 +7,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
-using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -20,10 +19,16 @@ using Sample.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Resources;
+using ISynergy.Framework.Telemetry.Options;
+using ISynergy.Framework.Telemetry.Services;
+using ISynergy.Framework.UI.Options;
+
+#if WINDOWS || WINDOWS_UWP
+using ISynergy.Framework.Clipboard.Services;
+#endif
 
 #if HAS_UNO
 using Uno.Material;
@@ -46,7 +51,8 @@ namespace Sample
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        public App() : base() 
+        public App()
+            : base()
         {
             InitializeComponent();
         }
@@ -78,9 +84,9 @@ namespace Sample
             // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
             Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
 
-            Application.Current.Resources["MaterialPrimaryColor"] = _themeSelector.AccentColor;
-            Application.Current.Resources["MaterialPrimaryVariantLightColor"] = _themeSelector.LightAccentColor;
-            Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = _themeSelector.DarkAccentColor;
+            //Application.Current.Resources["MaterialPrimaryColor"] = _themeSelector.AccentColor;
+            //Application.Current.Resources["MaterialPrimaryVariantLightColor"] = _themeSelector.LightAccentColor;
+            //Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = _themeSelector.DarkAccentColor;
 
             base.OnLaunched(args);
         }
@@ -96,7 +102,12 @@ namespace Sample
 
             var assembly = Assembly.GetAssembly(typeof(App));
 
-            services.AddSingleton(e => new ConfigurationOptions("I-Synergy Framework UI Sample", "client_id", "client_secret"));
+            var configurationRoot = new ConfigurationBuilder()
+                .AddJsonStream(assembly.GetManifestResourceStream("appsettings.json"))
+                .Build();
+
+            services.Configure<ConfigurationOptions>(configurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
+            services.Configure<ApplicationInsightsOptions>(configurationRoot.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
 
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();
@@ -113,13 +124,10 @@ namespace Sample
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
             services.AddSingleton<ITelemetryService, TelemetryService>();
-            services.AddSingleton<IMasterDataService, MasterDataService>();
-            services.AddSingleton<IClientMonitorService, ClientMonitorService>();
-            services.AddSingleton<ICameraService, CameraService>();
+
+#if WINDOWS || WINDOWS_UWP
             services.AddSingleton<IClipboardService, ClipboardService>();
-            services.AddSingleton<IDownloadFileService, DownloadFileService>();
-            services.AddSingleton<IReportingService, ReportingService>();
-            services.AddSingleton<IPrintingService, PrintingService>();
+#endif
 
             services.AddSingleton<IShellViewModel, ShellViewModel>();
             services.AddSingleton<IShellView, ShellView>();

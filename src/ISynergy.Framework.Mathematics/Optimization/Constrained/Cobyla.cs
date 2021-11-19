@@ -1,6 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained
 {
     using ISynergy.Framework.Mathematics.Exceptions;
+    using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Optimization.Base;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
     using System;
     using System.Collections.Generic;
 
@@ -197,7 +200,7 @@
         public Cobyla(int numberOfVariables)
             : base(numberOfVariables)
         {
-            this.constraints = new NonlinearConstraint[0];
+            constraints = new NonlinearConstraint[0];
         }
 
         /// <summary>
@@ -210,7 +213,7 @@
         public Cobyla(int numberOfVariables, Func<double[], double> function)
             : base(numberOfVariables, function)
         {
-            this.constraints = new NonlinearConstraint[0];
+            constraints = new NonlinearConstraint[0];
         }
 
         /// <summary>
@@ -222,7 +225,7 @@
         public Cobyla(NonlinearObjectiveFunction function)
             : base(function.NumberOfVariables, function.Function)
         {
-            this.constraints = new NonlinearConstraint[0];
+            constraints = new NonlinearConstraint[0];
         }
 
         /// <summary>
@@ -409,7 +412,7 @@
             resmax = 0.0;
 
             for (var k = 1; k <= m; ++k)
-                resmax = System.Math.Max(resmax, -con[k]);
+                resmax = Math.Max(resmax, -con[k]);
 
             con[mp] = f;
             con[mpp] = resmax;
@@ -529,7 +532,7 @@
 
                     if (i == j)
                         temp -= 1.0;
-                    error = System.Math.Max(error, System.Math.Abs(temp));
+                    error = Math.Max(error, Math.Abs(temp));
                 }
             }
 
@@ -575,8 +578,8 @@
                 var weta = 0.0; for (var k = 1; k <= n; ++k)
                     weta += sim[k, j] * sim[k, j];
 
-                vsig[j] = 1.0 / System.Math.Sqrt(wsig);
-                veta[j] = System.Math.Sqrt(weta);
+                vsig[j] = 1.0 / Math.Sqrt(wsig);
+                veta[j] = Math.Sqrt(weta);
 
                 if (vsig[j] < parsig || veta[j] > pareta)
                     iflag = false;
@@ -627,8 +630,8 @@
                     if (k < mp)
                     {
                         temp = datmat[k, np];
-                        cvmaxp = System.Math.Max(cvmaxp, -total - temp);
-                        cvmaxm = System.Math.Max(cvmaxm, total - temp);
+                        cvmaxp = Math.Max(cvmaxp, -total - temp);
+                        cvmaxm = Math.Max(cvmaxm, total - temp);
                     }
                 }
 
@@ -698,7 +701,7 @@
                 total = con[k] - total;
 
                 if (k < mp)
-                    resnew = System.Math.Max(resnew, total);
+                    resnew = Math.Max(resnew, total);
             }
 
             //     Increase PARMU if necessary and branch back if this change alters the
@@ -719,7 +722,7 @@
                 {
                     temp = datmat[mp, j] + parmu * datmat[mpp, j];
                     if (temp < phi ||
-                        (temp == phi && parmu == 0.0 && datmat[mpp, j] < datmat[mpp, np]))
+                        temp == phi && parmu == 0.0 && datmat[mpp, j] < datmat[mpp, np])
                         goto L_140;
                 }
             }
@@ -761,7 +764,7 @@
                 for (var ii = 1; ii <= n; ii++)
                     temp += simi[j, ii] * dx[ii];
 
-                temp = System.Math.Abs(temp);
+                temp = Math.Abs(temp);
 
                 if (temp > ratio)
                 {
@@ -786,8 +789,8 @@
                     if (trured > 0.0)
                     {
                         temp = 0.0; for (var k = 1; k <= n; ++k)
-                            temp += System.Math.Pow(dx[k] - sim[k, j], 2.0);
-                        temp = System.Math.Sqrt(temp);
+                            temp += Math.Pow(dx[k] - sim[k, j], 2.0);
+                        temp = Math.Sqrt(temp);
                     }
 
                     if (temp > edgmax)
@@ -866,14 +869,14 @@
 
                         for (var i = 1; i <= n; ++i)
                         {
-                            cmin = System.Math.Min(cmin, datmat[k, i]);
-                            cmax = System.Math.Max(cmax, datmat[k, i]);
+                            cmin = Math.Min(cmin, datmat[k, i]);
+                            cmax = Math.Max(cmax, datmat[k, i]);
                         }
 
                         if (k <= m && cmin < 0.5 * cmax)
                         {
-                            temp = System.Math.Max(cmax, 0.0) - cmin;
-                            denom = denom <= 0.0 ? temp : System.Math.Min(denom, temp);
+                            temp = Math.Max(cmax, 0.0) - cmin;
+                            denom = denom <= 0.0 ? temp : Math.Min(denom, temp);
                         }
                     }
 
@@ -1081,10 +1084,10 @@
                     {
                         temp = z[i, k] * dxnew[i];
                         sp += temp;
-                        spabs += System.Math.Abs(temp);
+                        spabs += Math.Abs(temp);
                     }
-                    var acca = spabs + 0.1 * System.Math.Abs(sp);
-                    var accb = spabs + 0.2 * System.Math.Abs(sp);
+                    var acca = spabs + 0.1 * Math.Abs(sp);
+                    var accb = spabs + 0.2 * Math.Abs(sp);
                     if (spabs >= acca || acca >= accb) sp = 0.0;
 
                     if (tot == 0.0)
@@ -1094,7 +1097,7 @@
                     else
                     {
                         var kp = k + 1;
-                        temp = System.Math.Sqrt(sp * sp + tot * tot);
+                        temp = Math.Sqrt(sp * sp + tot * tot);
                         var alpha = sp / temp;
                         var beta = tot / temp;
                         tot = temp;
@@ -1140,11 +1143,11 @@
                     {
                         temp = z[i, k] * dxnew[i];
                         zdotv = zdotv + temp;
-                        zdvabs = zdvabs + System.Math.Abs(temp);
+                        zdvabs = zdvabs + Math.Abs(temp);
                     }
 
-                    var acca = zdvabs + 0.1 * System.Math.Abs(zdotv);
-                    var accb = zdvabs + 0.2 * System.Math.Abs(zdotv);
+                    var acca = zdvabs + 0.1 * Math.Abs(zdotv);
+                    var accb = zdvabs + 0.2 * Math.Abs(zdotv);
 
                     if (zdvabs < acca && acca < accb)
                     {
@@ -1178,7 +1181,7 @@
             //     new value of ZDOTA(NACT) and branch if it is not acceptable.
 
             for (var k = 1; k <= nact; ++k)
-                vmultc[k] = System.Math.Max(0.0, vmultc[k] - ratio * vmultd[k]);
+                vmultc[k] = Math.Max(0.0, vmultc[k] - ratio * vmultd[k]);
 
             if (icon < nact)
             {
@@ -1194,7 +1197,7 @@
                     for (var ii = 1; ii <= n; ii++)
                         sp += z[ii, k] * a[ii, kw];
 
-                    temp = System.Math.Sqrt(sp * sp + zdota[kp] * zdota[kp]);
+                    temp = Math.Sqrt(sp * sp + zdota[kp] * zdota[kp]);
 
                     var alpha = zdota[kp] / temp;
                     var beta = sp / temp;
@@ -1241,7 +1244,7 @@
                 for (var ii = 1; ii <= n; ii++)
                     sp += z[ii, k] * a[ii, kk];
 
-                temp = System.Math.Sqrt(sp * sp + zdota[nact] * zdota[nact]);
+                temp = Math.Sqrt(sp * sp + zdota[nact] * zdota[nact]);
 
                 var alpha = zdota[nact] / temp;
                 var beta = sp / temp;
@@ -1297,7 +1300,7 @@
                     for (var ii = 1; ii <= n; ii++)
                         sp += z[ii, k] * a[ii, kk];
 
-                    temp = System.Math.Sqrt(sp * sp + zdota[kp] * zdota[kp]);
+                    temp = Math.Sqrt(sp * sp + zdota[kp] * zdota[kp]);
 
                     var alpha = zdota[kp] / temp;
                     var beta = sp / temp;
@@ -1357,7 +1360,7 @@
 
             for (var i = 1; i <= n; ++i)
             {
-                if (System.Math.Abs(dx[i]) >= 1.0E-6 * rho)
+                if (Math.Abs(dx[i]) >= 1.0E-6 * rho)
                     dd -= dx[i] * dx[i];
 
                 sd += dx[i] * sdirn[i];
@@ -1367,10 +1370,10 @@
             if (dd <= 0.0)
                 goto L_490;
 
-            temp = System.Math.Sqrt(ss * dd);
+            temp = Math.Sqrt(ss * dd);
 
-            if (System.Math.Abs(sd) >= 1.0E-6 * temp)
-                temp = System.Math.Sqrt(ss * dd + sd * sd);
+            if (Math.Abs(sd) >= 1.0E-6 * temp)
+                temp = Math.Sqrt(ss * dd + sd * sd);
 
             var stpful = dd / (temp + sd);
             var step = stpful;
@@ -1383,7 +1386,7 @@
                 if (step >= acca || acca >= accb)
                     goto L_480;
 
-                step = System.Math.Min(step, resmax);
+                step = Math.Min(step, resmax);
             }
 
             //     Set DXNEW to the new variables if STEP is the steplength, and reduce
@@ -1407,7 +1410,7 @@
                         temp += a[ii, kk] * dxnew[ii];
 
                     temp = b[kk] - temp;
-                    resmax = System.Math.Max(resmax, temp);
+                    resmax = Math.Max(resmax, temp);
                 }
             }
 
@@ -1426,11 +1429,11 @@
                 {
                     temp = z[i, k] * dxnew[i];
                     zdotw += temp;
-                    zdwabs += System.Math.Abs(temp);
+                    zdwabs += Math.Abs(temp);
                 }
 
-                var acca = zdwabs + 0.1 * System.Math.Abs(zdotw);
-                var accb = zdwabs + 0.2 * System.Math.Abs(zdotw);
+                var acca = zdwabs + 0.1 * Math.Abs(zdotw);
+                var accb = zdwabs + 0.2 * Math.Abs(zdotw);
 
                 if (zdwabs >= acca || acca >= accb)
                     zdotw = 0.0;
@@ -1447,7 +1450,7 @@
                 }
 
                 if (mcon > m)
-                    vmultd[nact] = System.Math.Max(0.0, vmultd[nact]);
+                    vmultd[nact] = Math.Max(0.0, vmultd[nact]);
             }
 
             //     Complete VMULTC by finding the new constraint residuals.
@@ -1463,17 +1466,17 @@
                 {
                     kk = iact[k];
                     var total = resmax - b[kk];
-                    var sumabs = resmax + System.Math.Abs(b[kk]);
+                    var sumabs = resmax + Math.Abs(b[kk]);
 
                     for (var i = 1; i <= n; ++i)
                     {
                         temp = a[i, kk] * dxnew[i];
                         total += temp;
-                        sumabs += System.Math.Abs(temp);
+                        sumabs += Math.Abs(temp);
                     }
 
-                    var acca = sumabs + 0.1 * System.Math.Abs(total);
-                    var accb = sumabs + 0.2 * System.Math.Abs(total);
+                    var acca = sumabs + 0.1 * Math.Abs(total);
+                    var accb = sumabs + 0.2 * Math.Abs(total);
 
                     if (sumabs >= acca || acca >= accb)
                         total = 0.0;
@@ -1506,7 +1509,7 @@
                 dx[k] = temp * dx[k] + ratio * dxnew[k];
 
             for (var k = 1; k <= mcon; ++k)
-                vmultc[k] = System.Math.Max(0.0, temp * vmultc[k] + ratio * vmultd[k]);
+                vmultc[k] = Math.Max(0.0, temp * vmultc[k] + ratio * vmultd[k]);
 
             if (mcon == m)
                 resmax = resold + ratio * (resmax - resold);

@@ -6,6 +6,10 @@
     using System;
     using System.Collections.Generic;
     using ISynergy.Framework.Mathematics.Random;
+    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
+    using ISynergy.Framework.Mathematics.Optimization.Base;
 
     [TestClass]
     public class AugmentedLagrangianTest
@@ -701,7 +705,7 @@
             var innerSolverTest = new ResilientBackpropagation(nVariablesTest);
             innerSolverTest.Tolerance = constraintsTolerance;
             innerSolverTest.Iterations = 1000;
-            var solverTest = new ISynergy.Framework.Mathematics.Optimization.AugmentedLagrangian(innerSolverTest, fTest, nonlinearConstraintsTest);
+            var solverTest = new AugmentedLagrangian(innerSolverTest, fTest, nonlinearConstraintsTest);
             solverTest.MaxEvaluations = 0;
             bool didMinimise = solverTest.Minimize();
 

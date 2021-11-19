@@ -1,5 +1,17 @@
-﻿namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Formats
 {
+    using ISynergy.Framework.Mathematics.Formats.Base;
+
+    /* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
+    Before:
+        using System;
+    After:
+        using ISynergy;
+        using ISynergy.Framework;
+        using ISynergy.Framework.Mathematics;
+        using ISynergy.Framework.Mathematics.Formats;
+        using System;
+    */
     using System;
     using System.Globalization;
 
@@ -54,7 +66,7 @@
     /// </code>
     /// </example>
     /// 
-    /// <seealso cref="ISynergy.Framework.Mathematics.Matrix"/>
+    /// <seealso cref="Mathematics.Matrix"/>
     /// <seealso cref="CSharpMatrixFormatProvider"/>
     /// 
     /// <seealso cref="CSharpJaggedMatrixFormatProvider"/>
@@ -75,19 +87,19 @@
         {
             FormatMatrixStart = "[";
             FormatMatrixEnd = "]";
-            FormatRowStart = String.Empty;
-            FormatRowEnd = String.Empty;
-            FormatColStart = String.Empty;
-            FormatColEnd = String.Empty;
+            FormatRowStart = string.Empty;
+            FormatRowEnd = string.Empty;
+            FormatColStart = string.Empty;
+            FormatColEnd = string.Empty;
             FormatRowDelimiter = "; ";
             FormatColDelimiter = " ";
 
             ParseMatrixStart = "[";
             ParseMatrixEnd = "]";
-            ParseRowStart = String.Empty;
-            ParseRowEnd = String.Empty;
-            ParseColStart = String.Empty;
-            ParseColEnd = String.Empty;
+            ParseRowStart = string.Empty;
+            ParseRowEnd = string.Empty;
+            ParseColStart = string.Empty;
+            ParseColEnd = string.Empty;
             ParseRowDelimiter = "; ";
             ParseColDelimiter = " ";
         }

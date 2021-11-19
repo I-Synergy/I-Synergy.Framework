@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.Options;
 using ISynergy.Framework.AspNetCore.Proxy.Sample.Middleware;
+using ISynergy.Framework.AspNetCore.Startup;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

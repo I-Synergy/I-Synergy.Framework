@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Decompositions
+﻿namespace ISynergy.Framework.Mathematics.Decompositions.Base
 {
     /// <summary>
     ///     Common interface for matrix decompositions which

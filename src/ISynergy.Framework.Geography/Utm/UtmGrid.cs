@@ -1,7 +1,10 @@
-﻿using System;
+﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Global;
+using ISynergy.Framework.Geography.Projection;
+using System;
 using System.Globalization;
 
-namespace ISynergy.Framework.Geography
+namespace ISynergy.Framework.Geography.Utm
 {
     /// <summary>
     /// The globe is partioned into Grids by the UTM projection.
@@ -413,7 +416,7 @@ namespace ISynergy.Framework.Geography
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void SetZoneAndBandInConstructor(int zone, int band, bool noGridException = false)
         {
-            if (!noGridException && (band == MaxBand) && (zone == 32 || zone == 34 || zone == 36))
+            if (!noGridException && band == MaxBand && (zone == 32 || zone == 34 || zone == 36))
                 throw new ArgumentOutOfRangeException(Properties.Resources.GRID_EXCEPTION);
 
             if (zone < MinZone || zone > MaxZone)
@@ -462,14 +465,14 @@ namespace ISynergy.Framework.Geography
         public bool Equals(UtmGrid other)
         {
             return other.Projection.Equals(Projection) &&
-                    (_band == other._band) && (_zone == other._zone);
+                    _band == other._band && _zone == other._zone;
         }
 
         /// <summary>
         /// Compare these coordinates to another object for equality.
         /// </summary>
         /// <param name="obj">The object to compare with the current instance.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             if (obj is null || !(obj is UtmGrid))
@@ -624,8 +627,8 @@ namespace ISynergy.Framework.Geography
         {
             get
             {
-                if ((Band == 'U' && _zone == 31) ||
-                    ((Band == 'W') && (_zone == 32 || _zone == 34 || _zone == 36)))
+                if (Band == 'U' && _zone == 31 ||
+                    Band == 'W' && (_zone == 32 || _zone == 34 || _zone == 36))
                     throw new Exception(Properties.Resources.NO_UNIQUE_NORTH_NEIGHBOR);
 
                 var newBand = _band + 1;
@@ -646,7 +649,7 @@ namespace ISynergy.Framework.Geography
         {
             get
             {
-                if ((Band == 'W' && _zone == 31) || ((Band == 'X') && _zone >= 31 && _zone <= 37))
+                if (Band == 'W' && _zone == 31 || Band == 'X' && _zone >= 31 && _zone <= 37)
                     throw new Exception(Properties.Resources.NO_UNIQUE_SOUTH_NEIGHBOR);
 
                 var newBand = _band - 1;

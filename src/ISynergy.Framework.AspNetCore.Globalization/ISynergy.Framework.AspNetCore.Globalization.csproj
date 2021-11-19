@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\project.props" />
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+		<PackageId>I-Synergy.Framework.AspNetCore.Globalization</PackageId>
+		<Description>I-Synergy Framework Globalization for .Net 6.0</Description>
+		<PackageTags>I-Synergy, Framework, Globalization</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+        <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
+		<Using Include="Microsoft.AspNetCore.Http"/>
+		<Using Include="System.Globalization"/>
+		<Using Include="System.Resources"/>
+	</ItemGroup>
+</Project>

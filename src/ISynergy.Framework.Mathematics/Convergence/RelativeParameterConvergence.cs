@@ -1,6 +1,7 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Convergence.Base;
+using System;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Convergence
 {
     /// <summary>
     ///     Relative parameter change convergence criteria.

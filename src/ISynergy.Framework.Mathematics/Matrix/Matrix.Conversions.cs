@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 namespace ISynergy.Framework.Mathematics
 {
     using ISynergy.Framework.Core.Extensions;
+    using ISynergy.Framework.Mathematics.Common;
     using System.Data;
 
     public static partial class Matrix

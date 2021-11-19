@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace ISynergy.Framework.AspNetCore.Controllers.Base
+namespace ISynergy.Framework.AspNetCore.Controllers.Home
 {
     /// <summary>
     /// Class BaseHomeController.

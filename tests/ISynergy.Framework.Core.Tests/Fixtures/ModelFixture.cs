@@ -1,15 +1,15 @@
 ﻿using System;
-using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Base;
 
 namespace ISynergy.Framework.Core.Fixtures
 {
     /// <summary>
     /// Class ModelFixture.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// Implements the <see cref="Base.ModelBase" />
     /// Implements the <see cref="System.IDisposable" />
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ModelBase" />
+    /// <seealso cref="Base.ModelBase" />
     /// <seealso cref="System.IDisposable" />
     public class ModelFixture<T> : ModelBase, IDisposable
     {

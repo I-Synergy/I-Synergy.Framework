@@ -93,7 +93,7 @@
                     {
                         var sub = rref[j, lead];
                         for (var k = 0; k < cols; k++)
-                            rref[j, k] -= (sub * rref[r, k]);
+                            rref[j, k] -= sub * rref[r, k];
                     }
                 }
 

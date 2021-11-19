@@ -1,7 +1,8 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Formats.Base;
+using System;
 using System.Globalization;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Formats
 {
     /// <summary>
     ///     Gets the default matrix representation, where each row
@@ -47,7 +48,7 @@ namespace ISynergy.Framework.Mathematics
     ///   // matrix representation of the given string.
     /// </code>
     /// </example>
-    /// <seealso cref="ISynergy.Framework.Mathematics.Matrix" />
+    /// <seealso cref="Mathematics.Matrix" />
     /// <seealso cref="CSharpMatrixFormatProvider" />
     /// <seealso cref="CSharpJaggedMatrixFormatProvider" />
     /// <seealso cref="CSharpArrayFormatProvider" />

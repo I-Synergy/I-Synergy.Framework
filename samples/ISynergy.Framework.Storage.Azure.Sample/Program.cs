@@ -1,11 +1,11 @@
-﻿using System;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Storage.Abstractions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Storage.Abstractions.Services;
 using ISynergy.Framework.Storage.Azure.Sample.Options;
 using ISynergy.Framework.Storage.Azure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System;
 
 namespace ISynergy.Framework.Storage.Azure.Sample
 {
@@ -20,7 +20,6 @@ namespace ISynergy.Framework.Storage.Azure.Sample
                 var config = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", false)
                     .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables()
                     .Build();
 
                 var options = new AzureBlobOptions()

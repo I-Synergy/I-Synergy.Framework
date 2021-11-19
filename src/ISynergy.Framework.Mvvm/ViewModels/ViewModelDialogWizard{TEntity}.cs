@@ -1,11 +1,11 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
-namespace ISynergy.Framework.Mvvm
+namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class ViewModelDialogWizard.
@@ -90,7 +90,7 @@ namespace ISynergy.Framework.Mvvm
             IContext context,
             IBaseCommonServices commonServices,
             ILogger logger,
-            bool automaticValidation = false) 
+            bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation)
         {
             Back_Command = new Command(PerformBackAction);

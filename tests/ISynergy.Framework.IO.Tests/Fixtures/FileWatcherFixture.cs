@@ -4,6 +4,8 @@ using System.IO;
 using ISynergy.Framework.IO.Events;
 using ISynergy.Framework.IO.Models.Tests;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.IO.Watchers;
+using ISynergy.Framework.IO.Models;
 
 namespace ISynergy.Framework.IO.Tests.Fixtures
 {

@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Extensions;
-using System;
+using ISynergy.Framework.Mathematics;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Common
 {
     /// <summary>
     ///   Common mathematical constants.
@@ -104,7 +104,7 @@ namespace ISynergy.Framework.Mathematics
         ///   Fixed-precision small value.
         /// </summary>
         /// 
-        public const decimal DecimalSmall = Decimal.MinValue;
+        public const decimal DecimalSmall = decimal.MinValue;
 
         /// <summary>
         ///   Maximum log on the machine.

@@ -1,6 +1,7 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Common;
+using System;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Transforms
 {
     /// <summary>
     ///     Discrete Cosine Transformation.

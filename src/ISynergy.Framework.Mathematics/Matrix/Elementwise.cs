@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
+﻿using ISynergy.Framework.Mathematics.Enumerations;
+using ISynergy.Framework.Mathematics.Exceptions;
 using System;
 using System.Diagnostics;
 

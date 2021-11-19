@@ -1,4 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Wavelets
+﻿using ISynergy.Framework.Mathematics.Common;
+using ISynergy.Framework.Mathematics.Wavelets.Base;
+
+namespace ISynergy.Framework.Mathematics.Wavelets
 {
     /// <summary>
     ///     Haar Wavelet Transform.

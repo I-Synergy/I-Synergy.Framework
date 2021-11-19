@@ -1,6 +1,7 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Enumerations;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public partial class MatrixTest

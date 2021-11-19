@@ -34,10 +34,11 @@
 //    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+using ISynergy.Framework.Mathematics.Optimization.Base;
 using System;
 using System.Diagnostics;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
     ///     Simplified Trust Region Newton Method (TRON) for non-linear optimization.

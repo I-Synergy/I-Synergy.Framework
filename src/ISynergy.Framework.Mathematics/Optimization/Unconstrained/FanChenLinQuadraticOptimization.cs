@@ -35,12 +35,13 @@
 //
 
 using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Optimization.Base;
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     using QFunc = Func<int, int[], int, double[], double[]>;
 
@@ -71,7 +72,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
     ///     <para>
     ///         The <c>Q</c>, <c>p</c> and <c>y</c> parameters can be given as arguments of its
     ///         <see
-    ///             cref="FanChenLinQuadraticOptimization.FanChenLinQuadraticOptimization(int, System.Func{int, int[], int, double[], double[]})">
+    ///             cref="FanChenLinQuadraticOptimization(int, QFunc)">
     ///             class consstructor
     ///         </see>
     ///         . The C parameters can be set using in the <see cref="UpperBounds" />

@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Data;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;

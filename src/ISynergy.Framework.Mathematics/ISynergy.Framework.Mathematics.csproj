@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Mathematics</PackageId>
-        <Description>I-Synergy Mathematics Framework for .Net Standard 2.0 and .Net 5.0</Description>
+        <Description>I-Synergy Mathematics Framework for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
         <PackageTags>I-Synergy, Framework, Mathematics</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>

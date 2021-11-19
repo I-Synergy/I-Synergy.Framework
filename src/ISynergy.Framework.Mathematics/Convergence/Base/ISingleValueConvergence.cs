@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Convergence.Base
 {
     /// <summary>
     ///     Common interface for convergence detection algorithms that

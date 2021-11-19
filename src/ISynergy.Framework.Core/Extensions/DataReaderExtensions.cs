@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
-using ISynergy.Framework.Core.Utilities;
 
 namespace ISynergy.Framework.Core.Extensions
 {

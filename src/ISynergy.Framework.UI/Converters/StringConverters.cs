@@ -1,4 +1,6 @@
 ﻿using System;
+using ISynergy.Framework.UI.Helpers;
+using ISynergy.Framework.UI.Extensions;
 
 #if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
@@ -392,6 +394,80 @@ namespace ISynergy.Framework.UI.Converters
         /// <param name="parameter">The parameter.</param>
         /// <param name="language">The language.</param>
         /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// Converts hex string to color.
+    /// </summary>
+    public class StringToColorConverter : IValueConverter
+    {
+        /// <summary>
+        /// Convert
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is string color && string.IsNullOrEmpty(color))
+                return ColorHelper.HexStringToColor(color);
+
+            return null;
+        }
+
+        /// <summary>
+        /// Convert back
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// Converts hex string to color.
+    /// </summary>
+    public class StringToColorBrushConverter : IValueConverter
+    {
+        /// <summary>
+        /// Convert
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is string color && string.IsNullOrEmpty(color))
+            {
+                return new SolidColorBrush(ColorHelper.HexStringToColor(color));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Convert back
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="language"></param>
+        /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {

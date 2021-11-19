@@ -1,19 +1,19 @@
-﻿using System;
-using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mvvm;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Models;
+using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
     /// <summary>
     /// Class ThemeViewModel.
     /// </summary>
-    public class ThemeViewModel : ViewModelDialog<ThemeColors>
+    public class ThemeViewModel : ViewModelDialog<Style>
     {
         /// <summary>
         /// Gets the title.
@@ -24,48 +24,46 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <summary>
         /// The settings service.
         /// </summary>
-        private readonly IBaseSettingsService _settingsService;
+        private readonly IThemeService _themeService;
 
         /// <summary>
-        /// Gets or sets the color command.
+        /// Gets or sets the Items property value.
         /// </summary>
-        /// <value>The color command.</value>
-        public Command<string> Color_Command { get; set; }
+        public ThemeColors ThemeColors
+        {
+            get => GetValue<ThemeColors>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the Themes property value.
+        /// </summary>
+        public Themes Themes
+        {
+            get => GetValue<Themes>();
+            set => SetValue(value);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="settingsService">The settings services.</param>
+        /// <param name="themeService">The settings services.</param>
         /// <param name="logger">The logger factory.</param>
         public ThemeViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            IBaseSettingsService settingsService,
+            IThemeService themeService,
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            _settingsService = settingsService;
+            _themeService = themeService;
 
-            Color_Command = new Command<string>((e) => SelectedItem = SetColor(e));
-            SelectedItem = _settingsService.Color.ToEnum(ThemeColors.Default);
-        }
+            ThemeColors = new ThemeColors();
 
-        /// <summary>
-        /// Sets the color.
-        /// </summary>
-        /// <param name="e">The e.</param>
-        private static ThemeColors SetColor(string e)
-        {
-            if (Enum.TryParse(e, out ThemeColors color))
-            {
-                return color;
-            }
-            else
-            {
-                return ThemeColors.Default;
-            }
+            SelectedItem.Color = _themeService.Style.Color;
+            SelectedItem.Theme = _themeService.Style.Theme;
         }
 
         /// <summary>
@@ -73,9 +71,9 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="e">if set to <c>true</c> [e].</param>
         /// <returns>Task.</returns>
-        public override Task SubmitAsync(ThemeColors e)
+        public override Task SubmitAsync(Style e)
         {
-            _settingsService.Color = e.ToString();
+            _themeService.SetStyle(e);
             return base.SubmitAsync(e);
         }
     }

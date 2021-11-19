@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Converters="using:ISynergy.Framework.UI.Converters"
+    xmlns:converters="using:ISynergy.Framework.UI.Converters"
+    xmlns:enumerations="using:ISynergy.Framework.Core.Enumerations"
     mc:Ignorable="d"
     Title="{Binding Title}"
     PrimaryButtonCommand="{Binding Submit_Command}"
@@ -14,51 +15,32 @@
     SecondaryButtonStyle="{ThemeResource DefaultDialogButtonStyle}">
 
     <c:Window.Resources>
-        <Converters:StringToBooleanConverter x:Key="StringToBooleanConverter" />
-        <Converters:SolidColorBrushToHexStringConverter x:Key="SolidColorBrushToHexStringConverter"/>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ISynergy.Framework.Core.Enumerations.Themes, ISynergy.Framework.Core"/>
     </c:Window.Resources>
-
+    
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="Button_Color_Default" Command="{Binding Color_Command}" CommandParameter="Default" GroupName="Color" MinWidth="0" IsChecked="True" />
-            <Border x:Name="Color_Default" Height="32" Width="32" CornerRadius="16" Background="DeepSkyBlue" Margin="2" />
-            <TextBlock Text="Default" Margin="10"/>
+            <RadioButton GroupName="Theme" Content="Default" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <RadioButton GroupName="Theme" Content="Light" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <RadioButton GroupName="Theme" Content="Dark" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
-
-        <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="Button_Color_RoyalBlue" Command="{Binding Color_Command}" CommandParameter="RoyalBlue" GroupName="Color" MinWidth="0" />
-            <Border x:Name="Color_RoyalBlue" Height="32" Width="32" CornerRadius="16" Background="RoyalBlue" Margin="2" />
-            <TextBlock Text="Royal Blue" Margin="10"/>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="Button_Color_Maroon" Command="{Binding Color_Command}" CommandParameter="Maroon" GroupName="Color" MinWidth="0"/>
-            <Border x:Name="Color_Maroon" Height="32" Width="32" CornerRadius="16" Background="Maroon" Margin="2" />
-            <TextBlock Text="Maroon" Margin="10"/>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="Button_Color_OrangeRed" Command="{Binding Color_Command}" CommandParameter="OrangeRed" GroupName="Color" MinWidth="0"/>
-            <Border x:Name="Color_OrangeRed" Height="32" Width="32" CornerRadius="16" Background="OrangeRed" Margin="2" />
-            <TextBlock Text="Orange Red" Margin="10"/>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="Button_Color_Gold" Command="{Binding Color_Command}" CommandParameter="Gold" GroupName="Color" MinWidth="0"/>
-            <Border x:Name="Color_Gold" Height="32" Width="32" CornerRadius="16" Background="Gold" Margin="2" />
-            <TextBlock Text="Gold" Margin="10"/>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="Button_Color_Lime" Command="{Binding Color_Command}" CommandParameter="Lime" GroupName="Color" MinWidth="0"/>
-            <Border x:Name="Color_Lime" Height="32" Width="32" CornerRadius="16" Background="Lime" Margin="2" />
-            <TextBlock Text="Lime" Margin="10"/>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal">
-            <RadioButton x:Name="Button_Color_Magenta" Command="{Binding Color_Command}" CommandParameter="Magenta" GroupName="Color" MinWidth="0"/>
-            <Border x:Name="Color_Magenta" Height="32" Width="32" CornerRadius="16" Background="Magenta" Margin="2" />
-            <TextBlock Text="Magenta" Margin="10"/>
-        </StackPanel>
+        <GridView ItemsSource="{Binding ThemeColors.Colors}"
+                  HorizontalAlignment="Center"
+                  SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="8" />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="{Binding}" 
+                        Height="28" 
+                        Width="28" 
+                        CornerRadius="14"
+                        ToolTipService.ToolTip="{Binding}"/>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </StackPanel>
 </c:Window>

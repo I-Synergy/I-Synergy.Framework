@@ -1,0 +1,25 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Clipboard</PackageId>
+		<Description>I-Synergy Framework Clipboard for WinUI and UWP</Description>
+		<PackageTags>I-Synergy, Framework, Clipboard, WinUI, UWP, UAP</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362.0'">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	</ItemGroup>
+</Project>

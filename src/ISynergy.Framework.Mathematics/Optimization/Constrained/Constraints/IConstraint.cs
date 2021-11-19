@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
 {
     /// <summary>
     /// Defines an interface for an optimization constraint.

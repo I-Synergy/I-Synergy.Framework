@@ -19,8 +19,9 @@
 //   moshier@na-net.ornl.gov
 //
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Functions
 {
+    using ISynergy.Framework.Mathematics.Common;
     using System;
 
     /// <summary>
@@ -112,7 +113,7 @@ namespace ISynergy.Framework.Mathematics
             if (b <= 0.0)
                 throw new ArgumentOutOfRangeException("b", "Upper limit must be greater than zero.");
 
-            if ((x <= 0.0) || (x >= 1.0))
+            if (x <= 0.0 || x >= 1.0)
             {
                 if (x == 0.0)
                     return 0.0;
@@ -122,7 +123,7 @@ namespace ISynergy.Framework.Mathematics
             }
 
             flag = false;
-            if ((b * x) <= 1.0 && x <= 0.95)
+            if (b * x <= 1.0 && x <= 0.95)
             {
                 t = PowerSeries(a, b, x);
                 return t;
@@ -130,7 +131,7 @@ namespace ISynergy.Framework.Mathematics
 
             w = 1.0 - x;
 
-            if (x > (a / (a + b)))
+            if (x > a / (a + b))
             {
                 flag = true;
                 aa = b;
@@ -146,7 +147,7 @@ namespace ISynergy.Framework.Mathematics
                 xx = x;
             }
 
-            if (flag && (bb * xx) <= 1.0 && xx <= 0.95)
+            if (flag && bb * xx <= 1.0 && xx <= 0.95)
             {
                 t = PowerSeries(aa, bb, xx);
                 if (t <= Constants.DoubleEpsilon) t = 1.0 - Constants.DoubleEpsilon;
@@ -159,12 +160,12 @@ namespace ISynergy.Framework.Mathematics
                 w = Incbcf(aa, bb, xx);
             else
                 w = Incbd(aa, bb, xx) / xc;
-            y = aa * System.Math.Log(xx);
-            t = bb * System.Math.Log(xc);
-            if ((aa + bb) < Gamma.GammaMax && System.Math.Abs(y) < Constants.LogMax && System.Math.Abs(t) < Constants.LogMax)
+            y = aa * Math.Log(xx);
+            t = bb * Math.Log(xc);
+            if (aa + bb < Gamma.GammaMax && Math.Abs(y) < Constants.LogMax && Math.Abs(t) < Constants.LogMax)
             {
-                t = System.Math.Pow(xc, bb);
-                t *= System.Math.Pow(xx, aa);
+                t = Math.Pow(xc, bb);
+                t *= Math.Pow(xx, aa);
                 t /= aa;
                 t *= w;
                 t *= Gamma.Function(aa + bb) / (Gamma.Function(aa) * Gamma.Function(bb));
@@ -177,11 +178,11 @@ namespace ISynergy.Framework.Mathematics
             }
 
             y += t + Gamma.Log(aa + bb) - Gamma.Log(aa) - Gamma.Log(bb);
-            y += System.Math.Log(w / aa);
+            y += Math.Log(w / aa);
             if (y < Constants.LogMin)
                 t = 0.0;
             else
-                t = System.Math.Exp(y);
+                t = Math.Exp(y);
 
             if (flag)
             {
@@ -236,7 +237,7 @@ namespace ISynergy.Framework.Mathematics
                 qkm2 = qkm1;
                 qkm1 = qk;
 
-                xk = (x * k5 * k6) / (k7 * k8);
+                xk = x * k5 * k6 / (k7 * k8);
                 pk = pkm1 + pkm2 * xk;
                 qk = qkm1 + qkm2 * xk;
                 pkm2 = pkm1;
@@ -247,7 +248,7 @@ namespace ISynergy.Framework.Mathematics
                 if (qk != 0) r = pk / qk;
                 if (r != 0)
                 {
-                    t = System.Math.Abs((ans - r) / r);
+                    t = Math.Abs((ans - r) / r);
                     ans = r;
                 }
                 else
@@ -264,14 +265,14 @@ namespace ISynergy.Framework.Mathematics
                 k7 += 2.0;
                 k8 += 2.0;
 
-                if ((System.Math.Abs(qk) + System.Math.Abs(pk)) > big)
+                if (Math.Abs(qk) + Math.Abs(pk) > big)
                 {
                     pkm2 *= biginv;
                     pkm1 *= biginv;
                     qkm2 *= biginv;
                     qkm1 *= biginv;
                 }
-                if ((System.Math.Abs(qk) < biginv) || (System.Math.Abs(pk) < biginv))
+                if (Math.Abs(qk) < biginv || Math.Abs(pk) < biginv)
                 {
                     pkm2 *= big;
                     pkm1 *= big;
@@ -329,7 +330,7 @@ namespace ISynergy.Framework.Mathematics
                 qkm2 = qkm1;
                 qkm1 = qk;
 
-                xk = (z * k5 * k6) / (k7 * k8);
+                xk = z * k5 * k6 / (k7 * k8);
                 pk = pkm1 + pkm2 * xk;
                 qk = qkm1 + qkm2 * xk;
                 pkm2 = pkm1;
@@ -340,7 +341,7 @@ namespace ISynergy.Framework.Mathematics
                 if (qk != 0) r = pk / qk;
                 if (r != 0)
                 {
-                    t = System.Math.Abs((ans - r) / r);
+                    t = Math.Abs((ans - r) / r);
                     ans = r;
                 }
                 else
@@ -357,14 +358,14 @@ namespace ISynergy.Framework.Mathematics
                 k7 += 2.0;
                 k8 += 2.0;
 
-                if ((System.Math.Abs(qk) + System.Math.Abs(pk)) > big)
+                if (Math.Abs(qk) + Math.Abs(pk) > big)
                 {
                     pkm2 *= biginv;
                     pkm1 *= biginv;
                     qkm2 *= biginv;
                     qkm1 *= biginv;
                 }
-                if ((System.Math.Abs(qk) < biginv) || (System.Math.Abs(pk) < biginv))
+                if (Math.Abs(qk) < biginv || Math.Abs(pk) < biginv)
                 {
                     pkm2 *= big;
                     pkm1 *= big;
@@ -392,9 +393,9 @@ namespace ISynergy.Framework.Mathematics
             bool nflg;
             bool rflg;
             if (yy0 <= 0)
-                return (0.0);
+                return 0.0;
             if (yy0 >= 1.0)
-                return (1.0);
+                return 1.0;
 
             if (aa <= 1.0 || bb <= 1.0)
             {
@@ -589,12 +590,12 @@ namespace ISynergy.Framework.Mathematics
         done:
             if (rflg)
             {
-                if (x0 <= Double.Epsilon)
-                    x0 = 1.0 - Double.Epsilon;
+                if (x0 <= double.Epsilon)
+                    x0 = 1.0 - double.Epsilon;
                 else
                     x0 = 1.0 - x0;
             }
-            return (x0);
+            return x0;
         }
 
         /// <summary>
@@ -618,7 +619,7 @@ namespace ISynergy.Framework.Mathematics
             n = 2.0;
             s = 0.0;
             z = Constants.DoubleEpsilon * ai;
-            while (System.Math.Abs(v) > z)
+            while (Math.Abs(v) > z)
             {
                 u = (n - b) * x / n;
                 t *= u;
@@ -629,17 +630,17 @@ namespace ISynergy.Framework.Mathematics
             s += t1;
             s += ai;
 
-            u = a * System.Math.Log(x);
-            if ((a + b) < Gamma.GammaMax && System.Math.Abs(u) < Constants.LogMax)
+            u = a * Math.Log(x);
+            if (a + b < Gamma.GammaMax && Math.Abs(u) < Constants.LogMax)
             {
                 t = Gamma.Function(a + b) / (Gamma.Function(a) * Gamma.Function(b));
-                s = s * t * System.Math.Pow(x, a);
+                s = s * t * Math.Pow(x, a);
             }
             else
             {
-                t = Gamma.Log(a + b) - Gamma.Log(a) - Gamma.Log(b) + u + System.Math.Log(s);
+                t = Gamma.Log(a + b) - Gamma.Log(a) - Gamma.Log(b) + u + Math.Log(s);
                 if (t < Constants.LogMin) s = 0.0;
-                else s = System.Math.Exp(t);
+                else s = Math.Exp(t);
             }
             return s;
         }

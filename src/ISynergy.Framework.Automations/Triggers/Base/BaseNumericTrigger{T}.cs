@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;

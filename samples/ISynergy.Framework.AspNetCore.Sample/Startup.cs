@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ISynergy.Framework.AspNetCore.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

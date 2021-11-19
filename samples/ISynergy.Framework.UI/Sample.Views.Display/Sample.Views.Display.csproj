@@ -2,24 +2,24 @@
 	<Import Project="..\..\..\project.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net5.0-windows10.0.18362.0;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0;netstandard2.0</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<Description>Sample View for Display</Description>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 	</PropertyGroup>
 
 	<Choose>
-		<When Condition="'$(TargetFramework)' == 'net5.0-windows10.0.18362.0'">
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362.0'">
 			<PropertyGroup>
-				<DefineConstants>NET5_0;WINDOWS</DefineConstants>
+				<DefineConstants>WinUI;WINDOWS</DefineConstants>
 				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
 				<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 				<UseWinUI>true</UseWinUI>
 			</PropertyGroup>
 			<ItemGroup>
-				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.3" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.4" />
-				<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" />
+				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
+				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
+				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
@@ -29,13 +29,13 @@
 			<ItemGroup>
 				<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.0" />
 				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
-				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.1" />
+				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.2" />
 			</ItemGroup>
 		</When>
 		<Otherwise>
 			<ItemGroup>
 				<PackageReference Include="Uno.Core" Version="3.0.0" />
-				<PackageReference Include="Uno.UI" Version="3.11.0" />
+				<PackageReference Include="Uno.UI" Version="3.11.6" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.0.0" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.5" />
 			</ItemGroup>

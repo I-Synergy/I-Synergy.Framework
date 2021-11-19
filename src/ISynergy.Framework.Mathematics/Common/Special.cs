@@ -19,9 +19,10 @@
 //   moshier@na-net.ornl.gov
 //
 
+using ISynergy.Framework.Mathematics.Functions;
 using System;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Common
 {
     /// <summary>
     ///     Set of special mathematic functions.

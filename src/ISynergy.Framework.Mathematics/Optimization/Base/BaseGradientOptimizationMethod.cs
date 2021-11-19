@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Mathematics.Differentiation;
 using System;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Base
 {
     /// <summary>
     ///     Base class for gradient-based optimization methods.

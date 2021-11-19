@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using ISynergy.Framework.Storage.Abstractions;
+using ISynergy.Framework.Storage.Abstractions.Services;
 using ISynergy.Framework.Storage.Azure.Sample.Options;
 
 namespace ISynergy.Framework.Storage.Azure.Sample

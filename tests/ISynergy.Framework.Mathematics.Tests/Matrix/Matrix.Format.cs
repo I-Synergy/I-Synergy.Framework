@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System;
     using System.IO;
+    using ISynergy.Framework.Mathematics.Formats;
 
     [TestClass]
     public class MatrixFormatTest

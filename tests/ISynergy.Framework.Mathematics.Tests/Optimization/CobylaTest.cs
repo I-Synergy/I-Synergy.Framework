@@ -1,6 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
 
@@ -338,8 +340,8 @@
         [TestMethod]
         public void ConstructorTest6_1()
         {
-            /// This problem is taken from Fletcher's book Practical Methods of
-            /// Optimization and has the equation number (9.1.15).
+            // This problem is taken from Fletcher's book Practical Methods of
+            // Optimization and has the equation number (9.1.15).
             var function = new NonlinearObjectiveFunction(2, x => -x[0] - x[1]);
 
             NonlinearConstraint[] constraints =
@@ -366,8 +368,8 @@
         [TestMethod]
         public void ConstructorTest6_2()
         {
-            /// This problem is taken from Fletcher's book Practical Methods of
-            /// Optimization and has the equation number (9.1.15).
+            // This problem is taken from Fletcher's book Practical Methods of
+            // Optimization and has the equation number (9.1.15).
             var function = new NonlinearObjectiveFunction(2, x => -x[0] - x[1]);
 
             NonlinearConstraint[] constraints =
@@ -424,8 +426,8 @@
         {
             ISynergy.Framework.Mathematics.Random.Generator.Seed = 0;
 
-            /// This problem is taken from Fletcher's book Practical Methods of
-            /// Optimization and has the equation number (14.4.2).
+            // This problem is taken from Fletcher's book Practical Methods of
+            // Optimization and has the equation number (14.4.2).
             var function = new NonlinearObjectiveFunction(3, x => x[2]);
 
             NonlinearConstraint[] constraints =
@@ -455,9 +457,9 @@
         [TestMethod]
         public void ConstructorTest8()
         {
-            /// This problem is taken from page 66 of Hock and Schittkowski's book Test
-            /// Examples for Nonlinear Programming Codes. It is their test problem Number
-            /// 43, and has the name Rosen-Suzuki.
+            // This problem is taken from page 66 of Hock and Schittkowski's book Test
+            // Examples for Nonlinear Programming Codes. It is their test problem Number
+            // 43, and has the name Rosen-Suzuki.
             var function = new NonlinearObjectiveFunction(4, x => x[0] * x[0]
                 + x[1] * x[1] + 2.0 * x[2] * x[2]
                 + x[3] * x[3] - 5.0 * x[0] - 5.0 * x[1]
@@ -497,10 +499,10 @@
         [TestMethod]
         public void ConstructorTest9()
         {
-            /// This problem is taken from page 111 of Hock and Schittkowski's
-            /// book Test Examples for Nonlinear Programming Codes. It is their
-            /// test problem Number 100.
-            /// 
+            // This problem is taken from page 111 of Hock and Schittkowski's
+            // book Test Examples for Nonlinear Programming Codes. It is their
+            // test problem Number 100.
+            // 
             var function = new NonlinearObjectiveFunction(7, x =>
                 Math.Pow(x[0] - 10.0, 2.0) + 5.0 * Math.Pow(x[1] - 12.0, 2.0) + Math.Pow(x[2], 4.0) +
                 3.0 * Math.Pow(x[3] - 11.0, 2.0) + 10.0 * Math.Pow(x[4], 6.0) + 7.0 * x[5] * x[5] + Math.Pow(x[6], 4.0) -
@@ -538,10 +540,10 @@
         [TestMethod]
         public void ConstructorTest10()
         {
-            /// This problem is taken from page 415 of Luenberger's book Applied
-            /// Nonlinear Programming. It is to maximize the area of a hexagon of
-            /// unit diameter.
-            /// 
+            // This problem is taken from page 415 of Luenberger's book Applied
+            // Nonlinear Programming. It is to maximize the area of a hexagon of
+            // unit diameter.
+            // 
             var function = new NonlinearObjectiveFunction(9, x =>
                 -0.5 * (x[0] * x[3] - x[1] * x[2] + x[2] * x[8]
                 - x[4] * x[8] + x[4] * x[7] - x[5] * x[6]));

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.IO.Watchers;
 
 namespace ISynergy.Framework.IO.Events
 {

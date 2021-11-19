@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using ISynergy.Framework.Core.Base;
 using Newtonsoft.Json;
-using ISynergy.Framework.Core.Data;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.Core.Models.Accounts
 {

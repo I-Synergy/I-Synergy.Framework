@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using System;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {

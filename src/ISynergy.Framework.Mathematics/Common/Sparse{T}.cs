@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Common
 {
     /// <summary>
     ///   Sparse vector representation (in LibSVM format).
@@ -59,8 +59,8 @@ namespace ISynergy.Framework.Mathematics
         ///   
         public Sparse(int length)
         {
-            this.indices = new int[length];
-            this.values = new T[length];
+            indices = new int[length];
+            values = new T[length];
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace ISynergy.Framework.Mathematics
             T[] result = new T[Indices.Length * 2];
             for (var i = 0; i < Indices.Length; i++)
             {
-                result[2 * i + 0] = (T)System.Convert.ChangeType(Indices[i], typeof(T));
+                result[2 * i + 0] = (T)Convert.ChangeType(Indices[i], typeof(T));
                 result[2 * i + 1] = Values[i];
             }
 
@@ -125,7 +125,7 @@ namespace ISynergy.Framework.Mathematics
                 int j = Array.IndexOf(Indices, i);
                 if (j >= 0)
                     return Values[j];
-                return default(T);
+                return default;
             }
             set
             {
@@ -154,8 +154,8 @@ namespace ISynergy.Framework.Mathematics
                     newValues[k] = values[k - 1];
                 }
 
-                this.indices = newIndices;
-                this.values = newValues;
+                indices = newIndices;
+                values = newValues;
             }
         }
 
@@ -189,7 +189,7 @@ namespace ISynergy.Framework.Mathematics
         {
             get
             {
-                T zero = default(T);
+                T zero = default;
 
                 for (var i = Indices.Length - 1; i >= 0; i--)
                 {
@@ -348,10 +348,10 @@ namespace ISynergy.Framework.Mathematics
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="string" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -359,12 +359,12 @@ namespace ISynergy.Framework.Mathematics
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="formatProvider">The format provider.</param>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="string" /> that represents this instance.
         /// </returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {

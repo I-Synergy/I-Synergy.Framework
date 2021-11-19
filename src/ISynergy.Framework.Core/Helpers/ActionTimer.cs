@@ -1,5 +1,5 @@
-﻿using System;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions.Timers;
+using System;
 
 namespace ISynergy.Framework.Core.Helpers
 {

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.MessageBus.Abstractions
+﻿namespace ISynergy.Framework.MessageBus.Abstractions.Options
 {
     /// <summary>
     /// Interface IQueueOption

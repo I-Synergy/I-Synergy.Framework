@@ -1,6 +1,7 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Formats;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Globalization;

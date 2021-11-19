@@ -19,9 +19,10 @@
 //   moshier@na-net.ornl.gov
 //
 
+using ISynergy.Framework.Mathematics.Common;
 using System;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Functions
 {
     /// <summary>
     ///     Gamma Γ(x) functions.
@@ -299,7 +300,7 @@ namespace ISynergy.Framework.Mathematics
                 x = 1.0 - x;
             }
 
-            if ((x <= 10.0) && (x == Math.Floor(x)))
+            if (x <= 10.0 && x == Math.Floor(x))
             {
                 y = 0.0;
                 var n = (int)Math.Floor(x);

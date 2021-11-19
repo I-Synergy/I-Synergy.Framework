@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.UI.Navigation;
 using Windows.System;
-using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
@@ -15,7 +14,11 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Functions;
+using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Helpers;
+using Style = ISynergy.Framework.Core.Models.Style;
 
 #if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
@@ -42,6 +45,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// The set application color
         /// </summary>
         protected const string SetApplicationColor = "Set Application Color";
+
         /// <summary>
         /// The set application wallpaper
         /// </summary>
@@ -51,18 +55,22 @@ namespace ISynergy.Framework.UI.ViewModels
         /// The panoramic state name
         /// </summary>
         protected const string PanoramicStateName = "PanoramicState";
+
         /// <summary>
         /// The wide state name
         /// </summary>
         protected const string WideStateName = "WideState";
+        
         /// <summary>
         /// The narrow state name
         /// </summary>
         protected const string NarrowStateName = "NarrowState";
+        
         /// <summary>
         /// The wide state minimum window width
         /// </summary>
         protected const double WideStateMinWindowWidth = 640;
+        
         /// <summary>
         /// The panoramic state minimum window width
         /// </summary>
@@ -103,41 +111,49 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <value>The restart update command.</value>
         public Command RestartUpdate_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the login command.
         /// </summary>
         /// <value>The login command.</value>
         public Command Login_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the language command.
         /// </summary>
         /// <value>The language command.</value>
         public Command Language_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
         public Command Color_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the help command.
         /// </summary>
         /// <value>The help command.</value>
         public Command Help_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the settings command.
         /// </summary>
         /// <value>The settings command.</value>
         public Command Settings_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the background command.
         /// </summary>
         /// <value>The background command.</value>
         public Command Background_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the feedback command.
         /// </summary>
         /// <value>The feedback command.</value>
         public Command Feedback_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the state changed command.
         /// </summary>
@@ -148,10 +164,12 @@ namespace ISynergy.Framework.UI.ViewModels
         /// The settings service.
         /// </summary>
         private readonly IBaseSettingsService _settingsService;
+
         /// <summary>
         /// The theme selector
         /// </summary>
-        private readonly IThemeSelectorService _themeSelector;
+        private readonly IThemeService _themeService;
+
         /// <summary>
         /// The localization functions
         /// </summary>
@@ -164,20 +182,22 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="commonServices">The common services.</param>
         /// <param name="settingsService">The settings services.</param>
         /// <param name="logger">The logger factory.</param>
-        /// <param name="themeSelectorService">The theme selector service.</param>
+        /// <param name="themeService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         protected ShellViewModelBase(
             IContext context,
             IBaseCommonServices commonServices,
             IBaseSettingsService settingsService,
             ILogger logger,
-            IThemeSelectorService themeSelectorService,
+            IThemeService themeService,
             LocalizationFunctions localizationFunctions)
             : base(context, commonServices, logger)
         {
             _settingsService = settingsService;
-            _themeSelector = themeSelectorService;
-            _themeSelector.OnThemeChanged += ThemeSelector_OnThemeChanged;
+            _themeService = themeService;
+
+            ForegroundColor = new SolidColorBrush(ColorHelper.HexStringToColor(_themeService.Style.Color));
+            
             _localizationFunctions = localizationFunctions;
 
             PrimaryItems = new ObservableCollection<NavigationItem>();
@@ -194,16 +214,6 @@ namespace ISynergy.Framework.UI.ViewModels
         }
 
         /// <summary>
-        /// Themes the selector on theme changed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The e.</param>
-        private void ThemeSelector_OnThemeChanged(object sender, object e)
-        {
-            ForegroundColor = GetStandardTextColorBrush();
-        }
-
-        /// <summary>
         /// Gets the standard text color brush.
         /// </summary>
         /// <returns>SolidColorBrush.</returns>
@@ -211,7 +221,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             var brush = Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;
 
-            if (!_themeSelector.IsLightThemeEnabled)
+            if (!_themeService.IsLightThemeEnabled)
             {
                 brush = Application.Current.Resources["SystemControlForegroundAltHighBrush"] as SolidColorBrush;
             }
@@ -224,6 +234,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <returns>Task.</returns>
         protected abstract Task CreateFeedbackAsync();
+
         /// <summary>
         /// Opens the settings asynchronous.
         /// </summary>
@@ -445,9 +456,9 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenColorsAsync()
         {
-            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _settingsService, Logger);
+            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _themeService, Logger);
             themeVM.Submitted += ThemeVM_Submitted;
-            return BaseCommonServices.DialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ThemeColors>(themeVM);
+            return BaseCommonServices.DialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, Style>(themeVM);
         }
 
         /// <summary>
@@ -455,20 +466,10 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private async void ThemeVM_Submitted(object sender, SubmitEventArgs<ThemeColors> e)
+        private void ThemeVM_Submitted(object sender, SubmitEventArgs<Style> e)
         {
             if (sender is ThemeViewModel vm)
                 vm.Submitted -= ThemeVM_Submitted;
-
-            if (await BaseCommonServices.DialogService.ShowMessageAsync(
-                        BaseCommonServices.LanguageService.GetString("WarningColorChange") +
-                        Environment.NewLine +
-                        BaseCommonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                        BaseCommonServices.LanguageService.GetString("TitleQuestion"),
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                await RestartApplicationAsync();
-            }
         }
 
         /// <summary>

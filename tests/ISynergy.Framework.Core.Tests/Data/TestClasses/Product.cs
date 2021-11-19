@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Base;
 
 namespace ISynergy.Framework.Core.Data.Tests.TestClasses
 {
     /// <summary>
     /// Class Product.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ObservableClass" />
+    /// Implements the <see cref="Base.ObservableClass" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ObservableClass" />
+    /// <seealso cref="Base.ObservableClass" />
     public class Product : ObservableClass
     {
         /// <summary>

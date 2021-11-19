@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Common
 {
     /// <summary>
     ///     Extension methods for sorting operations.
@@ -275,7 +275,7 @@ namespace ISynergy.Framework.Mathematics
         public static void Partial<T>(T[] items, int n, bool asc = true)
             where T : IComparable<T>
         {
-            NthElement(items, n, asc);
+            items.NthElement(n, asc);
 
             Array.Sort(items, 0, n);
 
@@ -300,7 +300,7 @@ namespace ISynergy.Framework.Mathematics
         public static void Partial<TKey, TValue>(TKey[] keys, TValue[] items, int n, bool asc = true)
             where TKey : IComparable<TKey>
         {
-            NthElement(keys, items, n, asc);
+            keys.NthElement(items, n, asc);
 
             Array.Sort(keys, items, 0, n);
 
@@ -540,7 +540,7 @@ namespace ISynergy.Framework.Mathematics
         {
             while (last - first >= INTROSORT_THRESHOLD)
             {
-                var pivotIndex = Partition(keys, items, first, last, compare, asc);
+                var pivotIndex = keys.Partition(items, first, last, compare, asc);
 
                 if (n == pivotIndex)
                     return keys[n];
@@ -583,7 +583,7 @@ namespace ISynergy.Framework.Mathematics
         {
             while (last - first >= INTROSORT_THRESHOLD)
             {
-                var pivotIndex = Partition(items, first, last, compare, asc);
+                var pivotIndex = items.Partition(first, last, compare, asc);
 
                 if (n == pivotIndex)
                     return items[n];
@@ -628,7 +628,7 @@ namespace ISynergy.Framework.Mathematics
         {
             while (last - first >= INTROSORT_THRESHOLD)
             {
-                var pivotIndex = Partition(keys, items, first, last, asc);
+                var pivotIndex = keys.Partition(items, first, last, asc);
 
                 if (n == pivotIndex)
                     return keys[n];
@@ -666,7 +666,7 @@ namespace ISynergy.Framework.Mathematics
         public static T NthElement<T>(this T[] items, int n, bool asc = true)
             where T : IComparable<T>
         {
-            return NthElement(items, 0, items.Length, n, asc);
+            return items.NthElement(0, items.Length, n, asc);
         }
 
         /// <summary>
@@ -694,7 +694,7 @@ namespace ISynergy.Framework.Mathematics
         public static TKey NthElement<TKey, TValue>(this TKey[] keys, TValue[] items, int n, bool asc = true)
             where TKey : IComparable<TKey>
         {
-            return NthElement(keys, items, 0, keys.Length, n, asc);
+            return keys.NthElement(items, 0, keys.Length, n, asc);
         }
 
         /// <summary>
@@ -724,7 +724,7 @@ namespace ISynergy.Framework.Mathematics
         {
             while (last - first >= INTROSORT_THRESHOLD)
             {
-                var pivotIndex = Partition(items, first, last, asc);
+                var pivotIndex = items.Partition(first, last, asc);
 
                 if (n == pivotIndex)
                     return items[n];

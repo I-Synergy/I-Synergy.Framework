@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Base;
 
 namespace ISynergy.Framework.EntityFramework.Abstractions
 {

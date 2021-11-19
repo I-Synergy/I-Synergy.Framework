@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,7 +7,6 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.Core.Utilities
 {

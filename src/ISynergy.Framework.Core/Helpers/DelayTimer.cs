@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Abstractions.Timers;
+using System;
 using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions;
 
 namespace ISynergy.Framework.Core.Helpers
 {

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics.Distances
+﻿namespace ISynergy.Framework.Mathematics.Distances.Base
 {
 
     /// <summary>

@@ -1,7 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.IO
+﻿namespace ISynergy.Framework.Mathematics.IO.Mat
 {
-
-    using System;
     using System.Runtime.InteropServices;
 
     /*
@@ -33,10 +31,10 @@
         public MatDataType DataType;
 
         [FieldOffset(4)]
-        public Int32 NumberOfBytes;
+        public int NumberOfBytes;
 
         [FieldOffset(2)]
-        public Int16 SmallData_NumberOfBytes;
+        public short SmallData_NumberOfBytes;
 
         [FieldOffset(0)]
         public MatDataType SmallData_Type;

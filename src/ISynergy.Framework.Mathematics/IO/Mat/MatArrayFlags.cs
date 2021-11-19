@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace ISynergy.Framework.Mathematics.IO
+namespace ISynergy.Framework.Mathematics.IO.Mat
 {
     [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 8)]
     internal struct ArrayFlags

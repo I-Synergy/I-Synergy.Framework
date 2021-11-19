@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Models;
+using System;
 using System.Collections.Generic;
-using ISynergy.Framework.Core.Models;
 
 namespace ISynergy.Framework.Core.Abstractions
 {

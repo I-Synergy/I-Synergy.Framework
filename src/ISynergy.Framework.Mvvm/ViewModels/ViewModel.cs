@@ -1,16 +1,37 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
+﻿using ISynergy.Framework.Core.Abstractions;
+/* Unmerged change from project 'ISynergy.Framework.Mvvm (net6.0)'
+Before:
+using ISynergy.Framework.Core.Base;
+After:
+using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy;
+using ISynergy.Framework;
+using ISynergy.Framework.Mvvm;
+*/
+
+/* Unmerged change from project 'ISynergy.Framework.Mvvm (net5.0)'
+Before:
+using ISynergy.Framework.Core.Base;
+After:
+using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy;
+using ISynergy.Framework;
+using ISynergy.Framework.Mvvm;
+*/
+using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
+using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using System.ComponentModel;
-using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Validation;
-using Microsoft.Extensions.Logging;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 
-namespace ISynergy.Framework.Mvvm
+namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class ViewModel.
@@ -219,7 +240,7 @@ namespace ISynergy.Framework.Mvvm
             PropertyChanged -= OnPropertyChanged;
 
             Cleanup();
-            
+
             base.Dispose(disposing);
         }
 

@@ -26,10 +26,11 @@
 
 using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mathematics.Convergence;
+using ISynergy.Framework.Mathematics.Optimization.Base;
 using System;
 using System.Collections.Generic;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
     ///     <see cref="NelderMead" /> exit codes.
@@ -204,14 +205,14 @@ namespace ISynergy.Framework.Mathematics.Optimization
         /// <summary>
         ///     Gets the lower bounds that should be respected in this
         ///     optimization problem. Default is to initialize this vector
-        ///     with <see cref="Double.NegativeInfinity" />.
+        ///     with <see cref="double.NegativeInfinity" />.
         /// </summary>
         public double[] LowerBounds { get; private set; }
 
         /// <summary>
         ///     Gets the upper bounds that should be respected in this
         ///     optimization problem. Default is to initialize this vector
-        ///     with <see cref="Double.PositiveInfinity" />.
+        ///     with <see cref="double.PositiveInfinity" />.
         /// </summary>
         public double[] UpperBounds { get; private set; }
 
@@ -236,7 +237,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
         ///     optimization problem. This number can be decreased after the
         ///     algorithm has been created so it can operate on subspaces.
         /// </summary>
-        /// <exception cref="System.ArgumentOutOfRangeException" />
+        /// <exception cref="ArgumentOutOfRangeException" />
         public override int NumberOfVariables
         {
             get => base.NumberOfVariables;

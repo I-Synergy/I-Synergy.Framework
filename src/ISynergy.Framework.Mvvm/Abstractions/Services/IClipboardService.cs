@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {

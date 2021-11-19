@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Optimization.Constrained;
+using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;

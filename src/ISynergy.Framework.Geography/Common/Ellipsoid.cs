@@ -1,7 +1,7 @@
 ﻿using System;
 using ISynergy.Framework.Core.Extensions;
 
-namespace ISynergy.Framework.Geography
+namespace ISynergy.Framework.Geography.Common
 {
     /// <summary>
     /// Encapsulation of an ellipsoid, and declaration of common reference ellipsoids.
@@ -97,11 +97,11 @@ namespace ISynergy.Framework.Geography
         /// <returns>True, if the other object is an Ellipsoid with the same geometry</returns>
         public override bool Equals(object obj)
         {
-            if(obj is Ellipsoid ellipsoid)
+            if (obj is Ellipsoid ellipsoid)
             {
                 return ((IEquatable<Ellipsoid>)this).Equals(ellipsoid);
             }
-                
+
             return false;
         }
 

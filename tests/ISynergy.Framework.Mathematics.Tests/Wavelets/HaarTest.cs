@@ -1,6 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
+    using ISynergy.Framework.Mathematics.Formats;
     using ISynergy.Framework.Mathematics.Wavelets;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

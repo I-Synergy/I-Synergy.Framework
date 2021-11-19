@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Global;
+using System;
 
-namespace ISynergy.Framework.Geography
+namespace ISynergy.Framework.Geography.Projection
 {
     /// <summary>
     /// This is the Mercator projection assuming the earth is a perfect elipsoid.
@@ -54,7 +56,7 @@ namespace ISynergy.Framework.Geography
             var phi = 0.5 * Math.PI - 2.0 * Math.Atan(ts);
             var dphi = 1.0;
             var i = 0;
-            while ((Math.Abs(dphi) > 0.000000001) && (i < 15))
+            while (Math.Abs(dphi) > 0.000000001 && i < 15)
             {
                 var con = ReferenceGlobe.Eccentricity * Math.Sin(phi);
                 dphi = 0.5 * Math.PI -

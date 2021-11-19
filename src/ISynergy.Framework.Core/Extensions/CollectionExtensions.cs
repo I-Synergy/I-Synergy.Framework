@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Extensions.Base;
+using ISynergy.Framework.Core.Validation;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using ISynergy.Framework.Core.Extensions.Base;
-using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Core.Extensions
 {

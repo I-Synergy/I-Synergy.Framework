@@ -3,6 +3,7 @@
     using ISynergy.Framework.Mathematics.Decompositions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
 
     [TestClass]
     public class JaggedQrDecompositionTest

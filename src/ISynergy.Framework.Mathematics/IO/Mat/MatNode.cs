@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
-namespace ISynergy.Framework.Mathematics.IO
+namespace ISynergy.Framework.Mathematics.IO.Mat
 {
     /// <summary>
     ///     Node object contained in <see cref="MatReader">.MAT file</see>.
@@ -156,7 +156,7 @@ namespace ISynergy.Framework.Mathematics.IO
                     for (var i = 7; i < rawData.Length; i += 8)
                     {
                         var b = rawData[i];
-                        var bit = (b & (1 << 6)) != 0;
+                        var bit = (b & 1 << 6) != 0;
                         if (bit)
                             rawData[i] |= 1 << 7;
                         else
@@ -183,7 +183,7 @@ namespace ISynergy.Framework.Mathematics.IO
                     // Create a new node from the current position
                     var node = new MatNode(matReader, reader, offset, elementTag, false);
 
-                    node.Name = (cellI++).ToString();
+                    node.Name = cellI++.ToString();
 
                     Fields.Add(node.Name, node);
 
@@ -447,7 +447,7 @@ namespace ISynergy.Framework.Mathematics.IO
                 for (var i = 7; i < rawData.Length; i += 8)
                 {
                     var b = rawData[i];
-                    var bit = (b & (1 << 6)) != 0;
+                    var bit = (b & 1 << 6) != 0;
                     if (bit)
                         rawData[i] |= 1 << 7;
                     else

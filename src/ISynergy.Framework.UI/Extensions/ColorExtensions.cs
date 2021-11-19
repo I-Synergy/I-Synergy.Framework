@@ -33,5 +33,21 @@ namespace ISynergy.Framework.UI.Extensions
 
             return BitConverter.ToInt32(bytes, 0);
         }
+
+        /// <summary>
+        /// Converts Windows.UI.Color to System.Drawing.Color.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static System.Drawing.Color ToDrawingColor(this Color color) =>
+            System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
+
+        /// <summary>
+        /// /// Converts System.Drawing.Color to Windows.UI.Color.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static Color ToWindowsColor(this System.Drawing.Color color) =>
+            Color.FromArgb(color.A, color.R, color.G, color.B);
     }
 }

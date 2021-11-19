@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Common;
+using ISynergy.Framework.Mathematics.Decompositions.Base;
+using System;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Decompositions

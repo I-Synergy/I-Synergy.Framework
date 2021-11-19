@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using ISynergy.Framework.Mathematics.Statistics;
+    using ISynergy.Framework.Mathematics.Common;
 
     public partial class MatrixTest
     {

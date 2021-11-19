@@ -1,5 +1,6 @@
 ﻿namespace ISynergy.Framework.Mathematics.Distances
 {
+    using ISynergy.Framework.Mathematics.Distances.Base;
     using System;
     using System.Collections;
 

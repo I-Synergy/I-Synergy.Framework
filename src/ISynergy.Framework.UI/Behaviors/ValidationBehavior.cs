@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
 using Microsoft.Xaml.Interactivity;
 using System;
 using System.Collections.Generic;

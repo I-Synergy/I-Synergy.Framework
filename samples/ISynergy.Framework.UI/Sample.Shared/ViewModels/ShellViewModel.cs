@@ -44,26 +44,31 @@ namespace Sample.ViewModels
         /// </summary>
         /// <value>The display command.</value>
         public Command Display_Command { get; set; }
+        
         /// <summary>
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
         public Command Info_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
         public Command Browse_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the converter command.
         /// </summary>
         /// <value>The converter command.</value>
         public Command Converter_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the selection test command.
         /// </summary>
         /// <value>The selection test command.</value>
         public Command SelectionTest_Command { get; set; }
+
         /// <summary>
         /// Gets or sets the ListView test command.
         /// </summary>
@@ -82,19 +87,20 @@ namespace Sample.ViewModels
         /// <param name="commonServices">The common services.</param>
         /// <param name="settingsService">The settings services.</param>
         /// <param name="logger">The logger factory.</param>
-        /// <param name="themeSelectorService">The theme selector service.</param>
+        /// <param name="themeService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         public ShellViewModel(
             IContext context,
             ICommonServices commonServices,
             ISettingsService settingsService,
             ILogger logger,
-            IThemeSelectorService themeSelectorService,
+            IThemeService themeService,
             LocalizationFunctions localizationFunctions)
-            : base(context, commonServices, settingsService, logger, themeSelectorService, localizationFunctions)
+            : base(context, commonServices, settingsService, logger, themeService, localizationFunctions)
         {
             CommonServices = commonServices;
 
+            Title = $"{context.Title} {commonServices.InfoService.ProductVersion}";
             Version = commonServices.InfoService.ProductVersion;
             DisplayName = "User";
 
