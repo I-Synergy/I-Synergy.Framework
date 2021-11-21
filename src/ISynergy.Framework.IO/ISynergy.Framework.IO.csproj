@@ -3,7 +3,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-		<PackageId>I-Synergy.Framework.Core.IO</PackageId>
+		<PackageId>I-Synergy.Framework.IO</PackageId>
 		<Description>I-Synergy IO Framework for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
 		<PackageTags>I-Synergy, Framework, IO</PackageTags>
 		<IncludeSymbols>true</IncludeSymbols>

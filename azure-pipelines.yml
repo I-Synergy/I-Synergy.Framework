@@ -26,6 +26,7 @@ stages:
     jobs:
     - job: BuildJob
       displayName: 'Build, pack and test assemblies'
+      timeoutInMinutes: 120
       steps:
         - task: PowerShell@2
           displayName: Set the Major Version variable value
