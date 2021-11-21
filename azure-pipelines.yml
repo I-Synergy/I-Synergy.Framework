@@ -18,7 +18,7 @@ variables:
     - group: PROD
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2022'
 
 stages:
   - stage: BuildStage
@@ -58,15 +58,31 @@ stages:
               Write-Host "##vso[task.setvariable variable=VersionRevision]$revision"
 
         - task: NuGetToolInstaller@1
-          displayName: 'Use NuGet 5.8.1'
+          displayName: 'Install NuGet 6.0.0'
           inputs:
-            versionSpec: 5.8.1
+            versionSpec: 6.0.0
 
         - task: UseDotNet@2
-          displayName: 'Use .Net SDK'
+          displayName: 'Install .Net SDK 6.0.100'
           inputs:
             packageType: 'sdk'
             useGlobalJson: true
+
+        - task: PowerShell@2
+          displayName: 'Install Windows 10.0.18362 SDK'
+          inputs:
+            targetType: 'inline'
+            script: |
+              $sdkUrl = "https://isynergy.blob.core.windows.net/sdk/windows_sdk_10.0.18362.exe"
+              $sdkPath = Join-Path $env:TEMP "windows_sdk_10.0.18362.exe"
+                             
+              # Download the files to local temp folder
+              Write-Output "downloading $sdkUrl…"
+              Invoke-WebRequest -Uri $sdkUrl -OutFile $sdkPath
+                             
+              # Install the SDKs (use the "qn" flag to install silently)
+              Write-Output "installing $sdkPath…"
+              Start-Process $sdkPath -ArgumentList "/q" -Wait
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
