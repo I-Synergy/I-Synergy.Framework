@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Abstractions.Events;
+using System;
 
 namespace ISynergy.Framework.Core.Events
 {

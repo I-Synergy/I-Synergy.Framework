@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.MessageBus.Enumerations;
+﻿using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
+using ISynergy.Framework.MessageBus.Enumerations;
 
-namespace ISynergy.Framework.MessageBus.Abstractions
+namespace ISynergy.Framework.MessageBus.Abstractions.Messages
 {
     /// <summary>
     /// Queue Message.

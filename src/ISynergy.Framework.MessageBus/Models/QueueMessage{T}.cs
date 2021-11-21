@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions;
+﻿using ISynergy.Framework.MessageBus.Abstractions.Messages;
 using ISynergy.Framework.MessageBus.Enumerations;
 
-namespace ISynergy.Framework.MessageBus.Azure.Models
+namespace ISynergy.Framework.MessageBus.Models
 {
     /// <summary>
     /// Class QueueMessage.

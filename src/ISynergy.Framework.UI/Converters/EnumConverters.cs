@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml.Data;
@@ -24,7 +25,7 @@ namespace ISynergy.Framework.UI.Converters
         /// Gets or sets the type of the enum.
         /// </summary>
         /// <value>The type of the enum.</value>
-        public Type EnumType { get; set; }
+        public string EnumType { get; set; }
 
         /// <summary>
         /// Converts the specified value.
@@ -40,12 +41,14 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (parameter is string enumString)
             {
-                if (!Enum.IsDefined(EnumType, value))
+                var type = Type.GetType(EnumType);
+
+                if (!Enum.IsDefined(type, value))
                 {
                     throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum".GetLocalized());
                 }
 
-                var enumValue = Enum.Parse(EnumType, enumString);
+                var enumValue = Enum.Parse(type, enumString);
 
                 return enumValue.Equals(value);
             }
@@ -66,7 +69,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (parameter is string enumString)
             {
-                return Enum.Parse(EnumType, enumString);
+                return Enum.Parse(Type.GetType(EnumType), enumString);
             }
 
             throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());

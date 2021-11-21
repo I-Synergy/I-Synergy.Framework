@@ -10,6 +10,9 @@
     using ISynergy.Framework.Core.Ranges;
     using ISynergy.Framework.Mathematics.Exceptions;
     using ISynergy.Framework.Mathematics.Comparers;
+    using ISynergy.Framework.Mathematics.Formats;
+    using ISynergy.Framework.Mathematics.Enumerations;
+    using ISynergy.Framework.Mathematics.Common;
 
     public partial class MatrixTest
     {
@@ -746,7 +749,7 @@
 
             double[,] expected =
             {
-                { 1.7321,  ISynergy.Framework.Mathematics.Constants.Sqrt2 },
+                { 1.7321,  Constants.Sqrt2 },
                 { 1.0000, Double.NaN },
             };
 

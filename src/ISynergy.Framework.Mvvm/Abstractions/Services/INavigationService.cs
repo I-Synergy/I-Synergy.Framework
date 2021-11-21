@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using System;
 using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {

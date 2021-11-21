@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Data;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Abstractions.Services;
 using System;
 using System.Text;
+using ISynergy.Framework.Core.Abstractions.Base;
 
 #if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml.Data;

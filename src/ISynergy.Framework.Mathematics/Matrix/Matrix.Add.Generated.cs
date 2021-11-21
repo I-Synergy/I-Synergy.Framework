@@ -1,8 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics
 {
     using System;
-    using ISynergy.Framework.Mathematics;
     using System.Runtime.CompilerServices;
+    using ISynergy.Framework.Mathematics.Enumerations;
 
     public static partial class Elementwise
     {

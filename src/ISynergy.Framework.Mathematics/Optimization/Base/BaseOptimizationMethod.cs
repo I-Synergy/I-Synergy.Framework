@@ -2,7 +2,7 @@
 using System;
 using System.Threading;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Base
 {
     /// <summary>
     ///     Base class for optimization methods.

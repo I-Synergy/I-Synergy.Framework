@@ -36,10 +36,20 @@
 	</c:View.Resources>
 
 	<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="18,0">
+            <Image Source="ms-appx:///Assets/icon.png" Width="18" Height="18"/>
+            <TextBlock Text="{Binding Title}" VerticalAlignment="Center" Margin="18,0"/>
+        </StackPanel>
+
         <muxc:NavigationView x:Name="RootNavigationView"
+                             Grid.Row="1"
                              IsTitleBarAutoPaddingEnabled="False"            
 							 IsBackButtonVisible="Visible"           
-							 Header="{Binding Title}" 
 							 ExpandedModeThresholdWidth="1920"
 							 MenuItemsSource="{Binding PrimaryItems}"
                              FooterMenuItemsSource="{Binding SecondaryItems}"
@@ -57,7 +67,7 @@
 			</Frame>
 		</muxc:NavigationView>
         
-		<Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
+		<Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Grid.RowSpan="2">
 			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <muxc:ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
 				<TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>

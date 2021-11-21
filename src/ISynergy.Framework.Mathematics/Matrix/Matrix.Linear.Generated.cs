@@ -2,10 +2,11 @@
 {
     using System;
     using System.CodeDom.Compiler;
-    using ISynergy.Framework.Mathematics;
     using System.Runtime.CompilerServices;
     using ISynergy.Framework.Mathematics.Decompositions;
     using ISynergy.Framework.Mathematics.Exceptions;
+    using ISynergy.Framework.Mathematics.Decompositions.Base;
+    using ISynergy.Framework.Mathematics.Common;
 
     public static partial class Matrix
     {

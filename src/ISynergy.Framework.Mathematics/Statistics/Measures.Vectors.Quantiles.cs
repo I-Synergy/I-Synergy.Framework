@@ -1,6 +1,7 @@
 ﻿namespace ISynergy.Framework.Mathematics.Statistics
 {
     using ISynergy.Framework.Core.Ranges;
+    using ISynergy.Framework.Mathematics.Common;
     using System;
     using System.Linq;
     using System.Runtime.CompilerServices;

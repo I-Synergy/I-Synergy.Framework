@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ISynergy.Framework.Core.Abstractions.Collections;
+using System;
 
 namespace ISynergy.Framework.Core.Collections
 {

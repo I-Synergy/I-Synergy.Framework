@@ -3,7 +3,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 
-namespace ISynergy.Framework.Mvvm
+namespace ISynergy.Framework.Mvvm.Bootstrapper
 {
     /// <summary>
     /// Base bootstrapper.

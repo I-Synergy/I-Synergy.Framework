@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Core;
+﻿using ISynergy.Framework.Core.Abstractions.Async;
+using ISynergy.Framework.Mathematics.Optimization.Base;
 using System;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
     ///     Conjugate gradient direction update formula.

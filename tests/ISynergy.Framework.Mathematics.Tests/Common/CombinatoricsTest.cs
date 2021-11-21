@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
 
     [TestClass]
     public class CombinatoricsTest

@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.ViewModels;
 
 namespace ISynergy.Framework.UI.ViewModels
 {

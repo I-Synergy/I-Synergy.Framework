@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Options;
+﻿using ISynergy.Framework.MessageBus.Options.Base;
 
 namespace ISynergy.Framework.MessageBus.Sample.Subscriber.Options
 {

@@ -1,5 +1,7 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Models;
 using System;
 using System.Globalization;
 using Windows.Storage;
@@ -34,9 +36,9 @@ namespace ISynergy.Framework.UI.Services.Base
             {
                 var setting = localSettings.Values[nameof(Color)];
 
-                if (setting is null)
+                if (setting is null || setting.Equals("Default"))
                 {
-                    setting = ThemeColors.Default.ToString();
+                    setting = ThemeColors.Default;
                     localSettings.Values[nameof(Color)] = setting;
                 }
 
@@ -45,6 +47,28 @@ namespace ISynergy.Framework.UI.Services.Base
 
             set => localSettings.Values[nameof(Color)] = value;
         }
+
+        /// <summary>
+        /// Gets or sets the theme.
+        /// </summary>
+        public Themes Theme
+        {
+            get
+            {
+                var setting = localSettings.Values[nameof(Theme)];
+
+                if (setting is null)
+                {
+                    setting = Themes.Default.ToString();
+                    localSettings.Values[nameof(Theme)] = setting;
+                }
+
+                return Enum.TryParse<Themes>(setting.ToString(), true, out Themes result) ? result : Themes.Default;
+            }
+
+            set => localSettings.Values[nameof(Theme)] = value.ToString();
+        }
+
 
         /// <summary>
         /// Gets or sets the culture.

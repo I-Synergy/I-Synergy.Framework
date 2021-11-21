@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Mathematics.Exceptions;
 using System;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
 {
     /// <summary>
     ///     Constraint with only quadratic terms.

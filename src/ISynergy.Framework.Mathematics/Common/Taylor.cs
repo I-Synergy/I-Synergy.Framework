@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics.Common
 {
 
     /// <summary>
@@ -56,7 +56,7 @@
                 return x;
 
             if (nTerms == 2)
-                return x - (x * x * x) / 6D;
+                return x - x * x * x / 6D;
 
             double mult = x * x * x;
             double fact = 6;
@@ -91,7 +91,7 @@
                 return 1;
 
             if (nTerms == 2)
-                return 1 - (x * x) / 2D;
+                return 1 - x * x / 2D;
 
             double mult = x * x;
             double fact = 2;
@@ -126,7 +126,7 @@
                 return x;
 
             if (nTerms == 2)
-                return x + (x * x * x) / 6D;
+                return x + x * x * x / 6D;
 
             double mult = x * x * x;
             double fact = 6;
@@ -159,7 +159,7 @@
                 return x;
 
             if (nTerms == 2)
-                return 1 + (x * x) / 2D;
+                return 1 + x * x / 2D;
 
             double mult = x * x;
             double fact = 2;
@@ -192,7 +192,7 @@
                 return 1 + d;
 
             if (nTerms == 2)
-                return 1 + d + (d * d) / 2;
+                return 1 + d + d * d / 2;
 
             double mult = d * d;
             double fact = 2;

@@ -1,6 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.IO
+﻿namespace ISynergy.Framework.Mathematics.IO.Mat
 {
     using ISynergy.Framework.Core.Extensions;
+    using ISynergy.Framework.Mathematics;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -215,7 +216,7 @@
             if (terminator < 0)
                 terminator = title.Length;
 
-            Description = new String(title, 0, terminator).Trim();
+            Description = new string(title, 0, terminator).Trim();
             Version = version;
             BigEndian = endian[0] == 'M';
             if (BitConverter.IsLittleEndian && BigEndian)

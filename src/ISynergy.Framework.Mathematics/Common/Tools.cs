@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Points;
 using System;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Common
 {
     /// <summary>
     ///     Set of mathematical tools.
@@ -403,7 +403,7 @@ namespace ISynergy.Framework.Mathematics
         /// </returns>
         public static bool IsPowerOf2(int x)
         {
-            return x > 0 ? (x & (x - 1)) == 0 : false;
+            return x > 0 ? (x & x - 1) == 0 : false;
         }
 
         /// <summary>

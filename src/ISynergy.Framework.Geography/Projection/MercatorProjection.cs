@@ -1,6 +1,9 @@
-﻿using System;
+﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Geodetic;
+using ISynergy.Framework.Geography.Global;
+using System;
 
-namespace ISynergy.Framework.Geography
+namespace ISynergy.Framework.Geography.Projection
 {
     /// <summary>
     /// Base class for Mercator projections tranlating longitude/longitude values on the globe
@@ -72,7 +75,7 @@ namespace ISynergy.Framework.Geography
         /// <returns>True if they are equal</returns>
         public bool Equals(MercatorProjection other)
         {
-            return (null != other) && other.ReferenceGlobe.Equals(ReferenceGlobe);
+            return null != other && other.ReferenceGlobe.Equals(ReferenceGlobe);
         }
 
         #region Latitude/Longitude limits

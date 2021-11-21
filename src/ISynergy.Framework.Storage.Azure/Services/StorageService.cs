@@ -1,14 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Azure;
+﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Storage.Abstractions;
+using ISynergy.Framework.Storage.Abstractions.Options;
+using ISynergy.Framework.Storage.Abstractions.Services;
 using Microsoft.Extensions.Options;
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Storage.Azure.Services
 {

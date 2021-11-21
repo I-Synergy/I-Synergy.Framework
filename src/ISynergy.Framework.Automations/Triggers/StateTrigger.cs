@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Triggers.Base;
-using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Abstractions.Base;
 using System;
 using System.Threading.Tasks;
 

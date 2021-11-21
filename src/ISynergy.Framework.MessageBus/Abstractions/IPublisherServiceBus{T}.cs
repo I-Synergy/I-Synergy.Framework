@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
+using System;
 using System.Threading.Tasks;
 
 namespace ISynergy.Framework.MessageBus.Abstractions

@@ -19,10 +19,10 @@
 //   moshier@na-net.ornl.gov
 //
 
-namespace ISynergy.Framework.Mathematics
-{
-    using System;
+using System;
 
+namespace ISynergy.Framework.Mathematics.Functions
+{
     /// <summary>
     ///   Bessel functions.
     /// </summary>
@@ -118,11 +118,11 @@ namespace ISynergy.Framework.Mathematics
         {
             double ax;
 
-            if ((ax = System.Math.Abs(x)) < 8.0)
+            if ((ax = Math.Abs(x)) < 8.0)
             {
                 double y = x * x;
                 double ans1 = 57568490574.0 + y * (-13362590354.0 + y * (651619640.7
-                    + y * (-11214424.18 + y * (77392.33017 + y * (-184.9052456)))));
+                    + y * (-11214424.18 + y * (77392.33017 + y * -184.9052456))));
                 double ans2 = 57568490411.0 + y * (1029532985.0 + y * (9494680.718
                     + y * (59272.64853 + y * (267.8532712 + y * 1.0))));
 
@@ -139,8 +139,8 @@ namespace ISynergy.Framework.Mathematics
                     + y * (-0.6911147651e-5 + y * (0.7621095161e-6
                     - y * 0.934935152e-7)));
 
-                return System.Math.Sqrt(0.636619772 / ax) *
-                    (System.Math.Cos(xx) * ans1 - z * System.Math.Sin(xx) * ans2);
+                return Math.Sqrt(0.636619772 / ax) *
+                    (Math.Cos(xx) * ans1 - z * Math.Sin(xx) * ans2);
             }
         }
 
@@ -158,11 +158,11 @@ namespace ISynergy.Framework.Mathematics
             double y;
             double ans1, ans2;
 
-            if ((ax = System.Math.Abs(x)) < 8.0)
+            if ((ax = Math.Abs(x)) < 8.0)
             {
                 y = x * x;
                 ans1 = x * (72362614232.0 + y * (-7895059235.0 + y * (242396853.1
-                    + y * (-2972611.439 + y * (15704.48260 + y * (-30.16036606))))));
+                    + y * (-2972611.439 + y * (15704.48260 + y * -30.16036606)))));
                 ans2 = 144725228442.0 + y * (2300535178.0 + y * (18583304.74
                     + y * (99447.43394 + y * (376.9991397 + y * 1.0))));
                 return ans1 / ans2;
@@ -174,12 +174,12 @@ namespace ISynergy.Framework.Mathematics
                 y = z * z;
 
                 ans1 = 1.0 + y * (0.183105e-2 + y * (-0.3516396496e-4
-                    + y * (0.2457520174e-5 + y * (-0.240337019e-6))));
+                    + y * (0.2457520174e-5 + y * -0.240337019e-6)));
                 ans2 = 0.04687499995 + y * (-0.2002690873e-3
                     + y * (0.8449199096e-5 + y * (-0.88228987e-6
                     + y * 0.105787412e-6)));
-                double ans = System.Math.Sqrt(0.636619772 / ax) *
-                    (System.Math.Cos(xx) * ans1 - z * System.Math.Sin(xx) * ans2);
+                double ans = Math.Sqrt(0.636619772 / ax) *
+                    (Math.Cos(xx) * ans1 - z * Math.Sin(xx) * ans2);
                 if (x < 0.0) ans = -ans;
                 return ans;
             }
@@ -206,9 +206,9 @@ namespace ISynergy.Framework.Mathematics
             if (n == 0) return J0(x);
             if (n == 1) return J(x);
 
-            ax = System.Math.Abs(x);
+            ax = Math.Abs(x);
             if (ax == 0.0) return 0.0;
-            else if (ax > (double)n)
+            else if (ax > n)
             {
                 tox = 2.0 / ax;
                 bjm = J0(ax);
@@ -224,7 +224,7 @@ namespace ISynergy.Framework.Mathematics
             else
             {
                 tox = 2.0 / ax;
-                m = 2 * ((n + (int)System.Math.Sqrt(ACC * n)) / 2);
+                m = 2 * ((n + (int)Math.Sqrt(ACC * n)) / 2);
                 jsum = false;
                 bjp = ans = sum = 0.0;
                 bj = 1.0;
@@ -233,7 +233,7 @@ namespace ISynergy.Framework.Mathematics
                     bjm = j * tox * bj - bjp;
                     bjp = bj;
                     bj = bjm;
-                    if (System.Math.Abs(bj) > BIGNO)
+                    if (Math.Abs(bj) > BIGNO)
                     {
                         bj *= BIGNI;
                         bjp *= BIGNI;
@@ -270,7 +270,7 @@ namespace ISynergy.Framework.Mathematics
                 double ans2 = 40076544269.0 + y * (745249964.8 + y * (7189466.438
                     + y * (47447.26470 + y * (226.1030244 + y * 1.0))));
 
-                return (ans1 / ans2) + 0.636619772 * J0(x) * System.Math.Log(x);
+                return ans1 / ans2 + 0.636619772 * J0(x) * Math.Log(x);
             }
             else
             {
@@ -282,9 +282,9 @@ namespace ISynergy.Framework.Mathematics
                     + y * (-0.2073370639e-5 + y * 0.2093887211e-6)));
                 double ans2 = -0.1562499995e-1 + y * (0.1430488765e-3
                     + y * (-0.6911147651e-5 + y * (0.7621095161e-6
-                    + y * (-0.934945152e-7))));
-                return System.Math.Sqrt(0.636619772 / x) *
-                    (System.Math.Sin(xx) * ans1 + z * System.Math.Cos(xx) * ans2);
+                    + y * -0.934945152e-7)));
+                return Math.Sqrt(0.636619772 / x) *
+                    (Math.Sin(xx) * ans1 + z * Math.Cos(xx) * ans2);
             }
         }
 
@@ -307,7 +307,7 @@ namespace ISynergy.Framework.Mathematics
                 double ans2 = 0.2499580570e14 + y * (0.4244419664e12
                     + y * (0.3733650367e10 + y * (0.2245904002e8
                     + y * (0.1020426050e6 + y * (0.3549632885e3 + y)))));
-                return (ans1 / ans2) + 0.636619772 * (J(x) * System.Math.Log(x) - 1.0 / x);
+                return ans1 / ans2 + 0.636619772 * (J(x) * Math.Log(x) - 1.0 / x);
             }
             else
             {
@@ -315,12 +315,12 @@ namespace ISynergy.Framework.Mathematics
                 double y = z * z;
                 double xx = x - 2.356194491;
                 double ans1 = 1.0 + y * (0.183105e-2 + y * (-0.3516396496e-4
-                    + y * (0.2457520174e-5 + y * (-0.240337019e-6))));
+                    + y * (0.2457520174e-5 + y * -0.240337019e-6)));
                 double ans2 = 0.04687499995 + y * (-0.2002690873e-3
                     + y * (0.8449199096e-5 + y * (-0.88228987e-6
                     + y * 0.105787412e-6)));
-                return System.Math.Sqrt(0.636619772 / x) *
-                    (System.Math.Sin(xx) * ans1 + z * System.Math.Cos(xx) * ans2);
+                return Math.Sqrt(0.636619772 / x) *
+                    (Math.Sin(xx) * ans1 + z * Math.Cos(xx) * ans2);
             }
         }
 
@@ -374,7 +374,7 @@ namespace ISynergy.Framework.Mathematics
             else
             {
                 double y = 3.75 / ax;
-                ans = (Math.Exp(ax) / Math.Sqrt(ax)) * (0.39894228 + y * (0.1328592e-1
+                ans = Math.Exp(ax) / Math.Sqrt(ax) * (0.39894228 + y * (0.1328592e-1
                    + y * (0.225319e-2 + y * (-0.157565e-2 + y * (0.916281e-2
                    + y * (-0.2057706e-1 + y * (0.2635537e-1 + y * (-0.1647633e-1
                    + y * 0.392377e-2))))))));

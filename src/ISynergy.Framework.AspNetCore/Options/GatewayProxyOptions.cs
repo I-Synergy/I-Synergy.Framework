@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ISynergy.Framework.AspNetCore.Models;
+﻿using ISynergy.Framework.AspNetCore.Models;
+using System.Collections.Generic;
 
 namespace ISynergy.Framework.AspNetCore.Options
 {

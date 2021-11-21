@@ -1,4 +1,6 @@
 ﻿using System;
+using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

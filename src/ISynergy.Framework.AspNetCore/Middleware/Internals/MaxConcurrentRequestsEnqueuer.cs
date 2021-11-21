@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ISynergy.Framework.AspNetCore.Enumerations;
+using ISynergy.Framework.AspNetCore.Options;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Framework.AspNetCore.Enumerations;
-using ISynergy.Framework.AspNetCore.Options;
 
 namespace ISynergy.Framework.AspNetCore.Middleware.Internals
 {

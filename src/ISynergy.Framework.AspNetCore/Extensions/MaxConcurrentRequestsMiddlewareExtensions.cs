@@ -1,6 +1,6 @@
-﻿using System;
-using ISynergy.Framework.AspNetCore.Middleware;
+﻿using ISynergy.Framework.AspNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
+using System;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {

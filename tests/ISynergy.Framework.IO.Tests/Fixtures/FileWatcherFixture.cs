@@ -4,6 +4,8 @@ using System.IO;
 using ISynergy.Framework.IO.Events;
 using ISynergy.Framework.IO.Models.Tests;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.IO.Watchers;
+using ISynergy.Framework.IO.Models;
 
 namespace ISynergy.Framework.IO.Tests.Fixtures
 {
@@ -72,19 +74,19 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             Argument.IsNotNull(nameof(FileWatcher), FileWatcher);
 
-            FileWatcher.EventChangedAttribute += new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedCreationTime += new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedDirectoryName += new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedFileName += new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedLastAccess += new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedLastWrite += new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedSecurity += new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedSize += new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventCreated += new WatcherEventHandler(fileWatcher_EventCreated);
-            FileWatcher.EventDeleted += new WatcherEventHandler(fileWatcher_EventDeleted);
-            FileWatcher.EventDisposed += new WatcherEventHandler(fileWatcher_EventDisposed);
-            FileWatcher.EventError += new WatcherEventHandler(fileWatcher_EventError);
-            FileWatcher.EventRenamed += new WatcherEventHandler(fileWatcher_EventRenamed);
+            FileWatcher.EventChangedAttribute += fileWatcher_EventChanged;
+            FileWatcher.EventChangedCreationTime += fileWatcher_EventChanged;
+            FileWatcher.EventChangedDirectoryName += fileWatcher_EventChanged;
+            FileWatcher.EventChangedFileName += fileWatcher_EventChanged;
+            FileWatcher.EventChangedLastAccess += fileWatcher_EventChanged;
+            FileWatcher.EventChangedLastWrite += fileWatcher_EventChanged;
+            FileWatcher.EventChangedSecurity += fileWatcher_EventChanged;
+            FileWatcher.EventChangedSize += fileWatcher_EventChanged;
+            FileWatcher.EventCreated += fileWatcher_EventCreated;
+            FileWatcher.EventDeleted += fileWatcher_EventDeleted;
+            FileWatcher.EventDisposed += fileWatcher_EventDisposed;
+            FileWatcher.EventError += fileWatcher_EventError;
+            FileWatcher.EventRenamed += fileWatcher_EventRenamed;
         }
 
         /// <summary>
@@ -94,19 +96,19 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             Argument.IsNotNull(nameof(FileWatcher), FileWatcher);
 
-            FileWatcher.EventChangedAttribute -= new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedCreationTime -= new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedDirectoryName -= new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedFileName -= new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedLastAccess -= new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedLastWrite -= new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedSecurity -= new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventChangedSize -= new WatcherEventHandler(fileWatcher_EventChanged);
-            FileWatcher.EventCreated -= new WatcherEventHandler(fileWatcher_EventCreated);
-            FileWatcher.EventDeleted -= new WatcherEventHandler(fileWatcher_EventDeleted);
-            FileWatcher.EventDisposed -= new WatcherEventHandler(fileWatcher_EventDisposed);
-            FileWatcher.EventError -= new WatcherEventHandler(fileWatcher_EventError);
-            FileWatcher.EventRenamed -= new WatcherEventHandler(fileWatcher_EventRenamed);
+            FileWatcher.EventChangedAttribute -= fileWatcher_EventChanged;
+            FileWatcher.EventChangedCreationTime -= fileWatcher_EventChanged;
+            FileWatcher.EventChangedDirectoryName -= fileWatcher_EventChanged;
+            FileWatcher.EventChangedFileName -= fileWatcher_EventChanged;
+            FileWatcher.EventChangedLastAccess -= fileWatcher_EventChanged;
+            FileWatcher.EventChangedLastWrite -= fileWatcher_EventChanged;
+            FileWatcher.EventChangedSecurity -= fileWatcher_EventChanged;
+            FileWatcher.EventChangedSize -= fileWatcher_EventChanged;
+            FileWatcher.EventCreated -= fileWatcher_EventCreated;
+            FileWatcher.EventDeleted -= fileWatcher_EventDeleted;
+            FileWatcher.EventDisposed -= fileWatcher_EventDisposed;
+            FileWatcher.EventError -= fileWatcher_EventError;
+            FileWatcher.EventRenamed -= fileWatcher_EventRenamed;
         }
 
         /// <summary>

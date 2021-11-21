@@ -1,13 +1,14 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Base;
+using System;
 using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Data.Tests.TestClasses
 {
     /// <summary>
     /// Class ProductGroup.
-    /// Implements the <see cref="ISynergy.Framework.Core.Data.ObservableClass" />
+    /// Implements the <see cref="Base.ObservableClass" />
     /// </summary>
-    /// <seealso cref="ISynergy.Framework.Core.Data.ObservableClass" />
+    /// <seealso cref="Base.ObservableClass" />
     public class ProductGroup : ObservableClass
     {
         /// <summary>

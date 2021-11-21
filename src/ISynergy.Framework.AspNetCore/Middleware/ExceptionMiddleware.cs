@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Models;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Net;
 using System.Threading.Tasks;
-using ISynergy.Framework.Core.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace ISynergy.Framework.AspNetCore.Middleware
 {

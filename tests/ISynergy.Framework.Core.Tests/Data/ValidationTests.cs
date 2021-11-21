@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

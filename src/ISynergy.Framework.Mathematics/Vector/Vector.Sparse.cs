@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mathematics
+﻿using ISynergy.Framework.Mathematics.Common;
+
+namespace ISynergy.Framework.Mathematics
 {
     public static partial class Vector
     {

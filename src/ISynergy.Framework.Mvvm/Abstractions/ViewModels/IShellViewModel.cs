@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Commands;
+﻿using ISynergy.Framework.Mvvm.Commands;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {

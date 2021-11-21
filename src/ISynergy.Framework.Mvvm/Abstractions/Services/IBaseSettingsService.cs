@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services
+﻿using ISynergy.Framework.Core.Enumerations;
+
+namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
     /// <summary>
     /// Base class for application settings.
@@ -29,6 +31,10 @@
         /// Setting for storing the theme color.
         /// </summary>
         string Color { get; set; }
+        /// <summary>
+        /// Gets or sets the theme.
+        /// </summary>
+        Themes Theme { get; set; }
         /// <summary>
         /// If RefreshToken is available and setting is true, the application can login automatically. 
         /// </summary>

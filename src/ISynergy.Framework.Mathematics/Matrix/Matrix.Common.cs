@@ -1,6 +1,8 @@
 ﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Comparers;
 using ISynergy.Framework.Mathematics.Decompositions;
+using ISynergy.Framework.Mathematics.Enumerations;
 using ISynergy.Framework.Mathematics.Exceptions;
 using System;
 using System.Collections;

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Automations.Triggers.Base;
-using ISynergy.Framework.Core.Data;
 using ISynergy.Framework.Core.Validation;
 using System;
 using System.Threading.Tasks;

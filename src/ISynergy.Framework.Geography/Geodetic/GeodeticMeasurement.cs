@@ -2,8 +2,9 @@
 using System.Globalization;
 using System.Text;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Geography.Common;
 
-namespace ISynergy.Framework.Geography
+namespace ISynergy.Framework.Geography.Geodetic
 {
     /// <summary>
     /// This is the outcome of a three dimensional geodetic calculation.  It represents

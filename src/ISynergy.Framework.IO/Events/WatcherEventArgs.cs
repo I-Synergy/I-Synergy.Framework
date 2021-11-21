@@ -1,34 +1,14 @@
-﻿using System.IO;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.IO.Events.Base;
+using System.IO;
 
 namespace ISynergy.Framework.IO.Events
 {
     /// <summary>
     /// Class WatcherEventArgs.
     /// </summary>
-    public class WatcherEventArgs
+    public class WatcherEventArgs : BaseEventArgs<FileSystemWatcher>
     {
-        /// <summary>
-        /// Gets the watcher.
-        /// </summary>
-        /// <value>The watcher.</value>
-        public FileSystemWatcher Watcher { get; private set; }
-        /// <summary>
-        /// Gets the arguments.
-        /// </summary>
-        /// <value>The arguments.</value>
-        public object Arguments { get; private set; }
-        /// <summary>
-        /// Gets the type of the argument.
-        /// </summary>
-        /// <value>The type of the argument.</value>
-        public FileWatcherArgumentTypes ArgumentType { get; private set; }
-        /// <summary>
-        /// Gets the filter.
-        /// </summary>
-        /// <value>The filter.</value>
-        public NotifyFilters Filter { get; private set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="WatcherEventArgs"/> class.
         /// </summary>
@@ -40,11 +20,8 @@ namespace ISynergy.Framework.IO.Events
                                 object arguments,
                                 FileWatcherArgumentTypes argumentType,
                                 NotifyFilters filter)
+            : base(watcher, arguments, argumentType, filter)
         {
-            Watcher = watcher;
-            Arguments = arguments;
-            ArgumentType = argumentType;
-            Filter = filter;
         }
 
         /// <summary>
@@ -56,11 +33,8 @@ namespace ISynergy.Framework.IO.Events
         public WatcherEventArgs(FileSystemWatcher watcher,
                                 object arguments,
                                 FileWatcherArgumentTypes argumentType)
+            : base(watcher, arguments, argumentType)
         {
-            Watcher = watcher;
-            Arguments = arguments;
-            ArgumentType = argumentType;
-            Filter = NotifyFilters.Attributes;
         }
     }
 }

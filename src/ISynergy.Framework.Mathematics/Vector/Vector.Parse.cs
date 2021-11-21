@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Formats;
+using ISynergy.Framework.Mathematics.Formats.Base;
+using System;
 
 namespace ISynergy.Framework.Mathematics
 {

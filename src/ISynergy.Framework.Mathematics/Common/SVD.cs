@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ISynergy.Framework.Mathematics
+namespace ISynergy.Framework.Mathematics.Common
 {
     // Just a copy-paste of SVD algorithm from Numerical Recipes but updated for C#
     // (as authors state, the code is aimed to be machine readable, so blame them
@@ -39,7 +39,7 @@ namespace ISynergy.Framework.Mathematics
                 {
                     for (k = i; k < m; k++)
                     {
-                        scale += System.Math.Abs(a[k, i]);
+                        scale += Math.Abs(a[k, i]);
                     }
 
                     if (scale != 0.0)
@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Mathematics
                         }
 
                         f = a[i, i];
-                        g = -Sign(System.Math.Sqrt(s), f);
+                        g = -Sign(Math.Sqrt(s), f);
                         h = f * g - s;
                         a[i, i] = f - g;
 
@@ -83,11 +83,11 @@ namespace ISynergy.Framework.Mathematics
                 w[i] = scale * g;
                 g = s = scale = 0.0;
 
-                if ((i < m) && (i != n - 1))
+                if (i < m && i != n - 1)
                 {
                     for (k = l; k < n; k++)
                     {
-                        scale += System.Math.Abs(a[i, k]);
+                        scale += Math.Abs(a[i, k]);
                     }
 
                     if (scale != 0.0)
@@ -99,7 +99,7 @@ namespace ISynergy.Framework.Mathematics
                         }
 
                         f = a[i, l];
-                        g = -Sign(System.Math.Sqrt(s), f);
+                        g = -Sign(Math.Sqrt(s), f);
                         h = f * g - s;
                         a[i, l] = f - g;
 
@@ -129,7 +129,7 @@ namespace ISynergy.Framework.Mathematics
                         }
                     }
                 }
-                anorm = System.Math.Max(anorm, (System.Math.Abs(w[i]) + System.Math.Abs(rv1[i])));
+                anorm = Math.Max(anorm, Math.Abs(w[i]) + Math.Abs(rv1[i]));
             }
 
             // accumulation of right-hand transformations
@@ -141,7 +141,7 @@ namespace ISynergy.Framework.Mathematics
                     {
                         for (j = l; j < n; j++)
                         {
-                            v[j, i] = (a[i, j] / a[i, l]) / g;
+                            v[j, i] = a[i, j] / a[i, l] / g;
                         }
 
                         for (j = l; j < n; j++)
@@ -193,7 +193,7 @@ namespace ISynergy.Framework.Mathematics
                                 s += a[k, i] * a[k, j];
                             }
 
-                            f = (s / a[i, i]) * g;
+                            f = s / a[i, i] * g;
 
                             for (k = i; k < m; k++)
                             {
@@ -230,13 +230,13 @@ namespace ISynergy.Framework.Mathematics
                         // test for splitting
                         nm = l - 1;
 
-                        if (System.Math.Abs(rv1[l]) + anorm == anorm)
+                        if (Math.Abs(rv1[l]) + anorm == anorm)
                         {
                             flag = 0;
                             break;
                         }
 
-                        if (System.Math.Abs(w[nm]) + anorm == anorm)
+                        if (Math.Abs(w[nm]) + anorm == anorm)
                             break;
                     }
 
@@ -248,7 +248,7 @@ namespace ISynergy.Framework.Mathematics
                         {
                             f = s * rv1[i];
 
-                            if (System.Math.Abs(f) + anorm != anorm)
+                            if (Math.Abs(f) + anorm != anorm)
                             {
                                 g = w[i];
                                 h = Pythag(f, g);
@@ -299,7 +299,7 @@ namespace ISynergy.Framework.Mathematics
                     h = rv1[k];
                     f = ((y - z) * (y + z) + (g - h) * (g + h)) / (2.0 * h * y);
                     g = Pythag(f, 1.0);
-                    f = ((x - z) * (x + z) + h * ((y / (f + Sign(g, f))) - h)) / x;
+                    f = ((x - z) * (x + z) + h * (y / (f + Sign(g, f)) - h)) / x;
 
                     // next QR transformation
                     c = s = 1.0;
@@ -359,22 +359,22 @@ namespace ISynergy.Framework.Mathematics
 
         private static double Sign(double a, double b)
         {
-            return (b >= 0.0) ? System.Math.Abs(a) : -System.Math.Abs(a);
+            return b >= 0.0 ? Math.Abs(a) : -Math.Abs(a);
         }
 
         private static double Pythag(double a, double b)
         {
-            double at = System.Math.Abs(a), bt = System.Math.Abs(b), ct, result;
+            double at = Math.Abs(a), bt = Math.Abs(b), ct, result;
 
             if (at > bt)
             {
                 ct = bt / at;
-                result = at * System.Math.Sqrt(1.0 + ct * ct);
+                result = at * Math.Sqrt(1.0 + ct * ct);
             }
             else if (bt > 0.0)
             {
                 ct = at / bt;
-                result = bt * System.Math.Sqrt(1.0 + ct * ct);
+                result = bt * Math.Sqrt(1.0 + ct * ct);
             }
             else
             {

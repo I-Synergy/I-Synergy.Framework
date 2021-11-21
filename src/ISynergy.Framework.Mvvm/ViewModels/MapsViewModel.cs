@@ -1,7 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {

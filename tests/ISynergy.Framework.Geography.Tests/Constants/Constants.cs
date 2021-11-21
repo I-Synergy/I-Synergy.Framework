@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Geography.Tests
+﻿using ISynergy.Framework.Geography.Global;
+
+namespace ISynergy.Framework.Geography.Tests
 {
     /// <summary>
     /// Some constants used throughout the Unit Tests.

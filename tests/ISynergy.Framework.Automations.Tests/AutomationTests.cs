@@ -6,7 +6,7 @@ using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Automations.Services;
 using ISynergy.Framework.Automations.Tests.Data;
 using ISynergy.Framework.Automations.Triggers;
-using ISynergy.Framework.Core.Data;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Commands;

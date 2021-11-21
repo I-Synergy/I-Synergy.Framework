@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
+﻿using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Messaging.Base;
 using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

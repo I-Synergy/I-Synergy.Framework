@@ -1,8 +1,9 @@
-﻿using ISynergy.Framework.Mathematics.MachineLearning;
+﻿using ISynergy.Framework.Mathematics.Convergence;
+using ISynergy.Framework.Mathematics.MachineLearning;
 using ISynergy.Framework.Mathematics.Statistics;
 using System;
 
-namespace ISynergy.Framework.Mathematics.Optimization
+namespace ISynergy.Framework.Mathematics.Optimization.Base
 {
     /// <summary>
     ///     Base class for least-squares optimizers implementing the <see cref="ILeastSquaresMethod" /> interface.

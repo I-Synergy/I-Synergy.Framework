@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
-using ISynergy.Framework.Automations.States;
+﻿using ISynergy.Framework.Automations.States;
 using System;
 
 namespace ISynergy.Framework.Automations.Conditions

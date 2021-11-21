@@ -21,7 +21,6 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel;
 using Windows.UI.Core;
 using Microsoft.Extensions.DependencyInjection;
-using ISynergy.Framework.Mvvm;
 using ISynergy.Framework.Core.Abstractions.Services;
 using Windows.UI.ViewManagement;
 using System.Globalization;
@@ -31,6 +30,8 @@ using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.Core.Services;
 using System.Resources;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.Mvvm.Assembly;
+using ISynergy.Framework.Core.Enumerations;
 
 #if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
@@ -66,7 +67,7 @@ namespace ISynergy.Framework.UI
         /// Gets the theme selector.
         /// </summary>
         /// <value>The theme selector.</value>
-        protected readonly IThemeSelectorService _themeSelector;
+        private IThemeService _themeSelector;
         
         /// <summary>
         /// The services
@@ -128,20 +129,6 @@ namespace ISynergy.Framework.UI
 #if WINDOWS_UWP || WINDOWS
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
 #endif
-
-            _themeSelector = _serviceProvider.GetRequiredService<IThemeSelectorService>();
-            _themeSelector.Initialize();
-
-            if (_themeSelector.Theme is ElementTheme.Dark)
-            {
-                RequestedTheme = ApplicationTheme.Dark;
-            }
-            else if (_themeSelector.Theme is ElementTheme.Light)
-            {
-                RequestedTheme = ApplicationTheme.Light;
-            }
-
-            _themeSelector.SetThemeColor(_serviceProvider.GetRequiredService<IBaseSettingsService>().Color.ToEnum(Mvvm.Enumerations.ThemeColors.Default));
 
 #if HAS_UNO || WINDOWS_UWP
             Suspending += OnSuspending;
@@ -205,14 +192,10 @@ namespace ISynergy.Framework.UI
         {
 #if WINDOWS
             MainWindow = new Window();
-            MainWindow.Activate();
 #else
             MainWindow = Window.Current;
 #endif
-
             var rootFrame = MainWindow.Content as Frame;
-
-            Application.Current.Resources["SystemAccentColor"] = _themeSelector.AccentColor;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -220,7 +203,6 @@ namespace ISynergy.Framework.UI
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
 #if !WINDOWS
@@ -238,12 +220,12 @@ namespace ISynergy.Framework.UI
 
                 // Add custom resourcedictionaries from code.
                 var dictionary = Application.Current.Resources?.MergedDictionaries;
-                
-                if(dictionary is not null)
+
+                if (dictionary is not null)
                 {
                     foreach (var item in GetAdditionalResourceDictionaries())
                     {
-                        if(!dictionary.Any(t => t.Source == item.Source))
+                        if (!dictionary.Any(t => t.Source == item.Source))
                             Application.Current.Resources.MergedDictionaries.Add(item);
                     }
                 }
@@ -277,10 +259,12 @@ namespace ISynergy.Framework.UI
                     var view = _serviceProvider.GetRequiredService<IShellView>();
                     rootFrame.Navigate(view.GetType(), args.Arguments);
                 }
-
-                // Ensure the current window is active
-                MainWindow.Activate();
             }
+
+            _themeSelector = _serviceProvider.GetRequiredService<IThemeService>();
+            _themeSelector.InitializeMainWindow(MainWindow);
+
+            MainWindow.Activate();
         }
 
         /// <summary>
@@ -437,7 +421,7 @@ namespace ISynergy.Framework.UI
             
             services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IBusyService, BusyService>();
-            services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
+            services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IConverterService, ConverterService>();

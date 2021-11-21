@@ -1,15 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Converters="using:ISynergy.Framework.UI.Converters"
-    xmlns:Controls="using:ISynergy.Framework.UI.Controls">
+    xmlns:Converters="using:ISynergy.Framework.UI.Converters">
 
     <Color x:Key="SystemAccentColorGreen">#ff45e63d</Color>
     <Color x:Key="SystemAccentColorRed">#ffe63d3d</Color>
 
-    <SolidColorBrush x:Key="SystemAccentBrush" Color="{StaticResource SystemAccentColor}" />
-    <SolidColorBrush x:Key="SystemAccentBrushGreen" Color="{StaticResource SystemAccentColorGreen}" />
-    <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{StaticResource SystemAccentColorRed}" />
+    <SolidColorBrush x:Key="SystemAccentBrush" Color="{ThemeResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="SystemAccentBrushGreen" Color="{ThemeResource SystemAccentColorGreen}" />
+    <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{ThemeResource SystemAccentColorRed}" />
     
     <Converters:StringToGeometryConverter x:Key="StringToGeometryConverter"/>
     <Converters:CurrencyConverter x:Key="CurrencyConverter" />

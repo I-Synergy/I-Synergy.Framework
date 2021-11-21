@@ -1,5 +1,10 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization
+﻿namespace ISynergy.Framework.Mathematics.Optimization.Constrained
 {
+    using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Optimization.Base;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
+    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -233,15 +238,15 @@
                         "The number of variables must match the number of variables set in the solver.");
                 }
 
-                this.Function = function.Function;
-                this.Gradient = function.Gradient;
+                Function = function.Function;
+                Gradient = function.Gradient;
             }
 
             if (innerSolver == null)
             {
                 innerSolver = new BroydenFletcherGoldfarbShanno(NumberOfVariables)
                 {
-                    LineSearch = Optimization.LineSearch.BacktrackingArmijo,
+                    LineSearch = LineSearch.BacktrackingArmijo,
                     Corrections = 10,
                     Epsilon = 1e-10,
                     MaxIterations = 100000
@@ -270,17 +275,17 @@
                 }
             }
 
-            this.lesserThanConstraints = lesserThan.ToArray();
-            this.greaterThanConstraints = greaterThan.ToArray();
-            this.equalityConstraints = equality.ToArray();
+            lesserThanConstraints = lesserThan.ToArray();
+            greaterThanConstraints = greaterThan.ToArray();
+            equalityConstraints = equality.ToArray();
 
-            this.lambda = new double[equalityConstraints.Length];
-            this.mu = new double[lesserThanConstraints.Length];
-            this.nu = new double[greaterThanConstraints.Length];
+            lambda = new double[equalityConstraints.Length];
+            mu = new double[lesserThanConstraints.Length];
+            nu = new double[greaterThanConstraints.Length];
 
-            this.g = new double[NumberOfVariables];
+            g = new double[NumberOfVariables];
 
-            this.dualSolver = innerSolver;
+            dualSolver = innerSolver;
             dualSolver.Function = objectiveFunction;
             dualSolver.Gradient = objectiveGradient;
         }
@@ -398,10 +403,10 @@
 
         private AugmentedLagrangianStatus optimize()
         {
-            double ICM = Double.PositiveInfinity;
+            double ICM = double.PositiveInfinity;
 
-            double minPenalty = Double.PositiveInfinity;
-            double minValue = Double.PositiveInfinity;
+            double minPenalty = double.PositiveInfinity;
+            double minValue = double.PositiveInfinity;
 
             double penalty;
             double currentValue;
@@ -499,7 +504,7 @@
                         rho = rhoMax;
                 }
 
-                Debug.Assert(!Double.IsNaN(rho));
+                Debug.Assert(!double.IsNaN(rho));
             }
             while (true)
             {
@@ -517,7 +522,7 @@
                 // Retrieve the solution found
                 for (var i = 0; i < currentSolution.Length; i++)
                 {
-                    if (!Double.IsNaN(dualSolver.Solution[i]))
+                    if (!double.IsNaN(dualSolver.Solution[i]))
                         currentSolution[i] = dualSolver.Solution[i];
                 }
 
@@ -576,7 +581,7 @@
                 // Check if we should stop
                 bool a = !minFeasible || penalty < minPenalty || currentValue < minValue;
                 bool b = !minFeasible && penalty < minPenalty;
-                if ((feasible && a) || b)
+                if (feasible && a || b)
                 {
                     AugmentedLagrangianStatus? r = null;
 
@@ -630,15 +635,15 @@
 
         static bool relstop(double vold, double vnew, double reltol, double abstol)
         {
-            if (Double.IsInfinity(vold))
+            if (double.IsInfinity(vold))
                 return false;
 
-            if (Double.IsNaN(vold) || Double.IsNaN(vnew))
+            if (double.IsNaN(vold) || double.IsNaN(vnew))
                 return true;
 
-            return (Math.Abs(vnew - vold) < abstol
+            return Math.Abs(vnew - vold) < abstol
                || Math.Abs(vnew - vold) < reltol * (Math.Abs(vnew) + Math.Abs(vold)) * 0.5
-               || (reltol > 0 && vnew == vold)); // catch vnew == vold == 0 
+               || reltol > 0 && vnew == vold; // catch vnew == vold == 0 
         }
 
     }

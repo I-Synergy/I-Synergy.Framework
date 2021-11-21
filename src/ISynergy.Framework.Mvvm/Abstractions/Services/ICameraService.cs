@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Mvvm.Models;
+﻿using ISynergy.Framework.Mvvm.Models;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {

@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Ranges;
+using ISynergy.Framework.Mathematics.Integration.Base;
 using System;
 
 namespace ISynergy.Framework.Mathematics.Integration

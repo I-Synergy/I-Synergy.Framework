@@ -15,7 +15,7 @@ namespace ISynergy.Framework.UI.Helpers
     /// <summary>
     /// Class ColorConverters.
     /// </summary>
-    public static class ColorConverters
+    public static class ColorHelper
     {
         /// <summary>
         /// Convert a hex string to a .NET Color object.

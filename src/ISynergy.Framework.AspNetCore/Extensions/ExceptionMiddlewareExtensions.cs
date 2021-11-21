@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
-using ISynergy.Framework.AspNetCore.Middleware;
+﻿using ISynergy.Framework.AspNetCore.Middleware;
+using Microsoft.AspNetCore.Builder;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {

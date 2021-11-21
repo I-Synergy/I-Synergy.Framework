@@ -1,6 +1,6 @@
-﻿using System;
-using ISynergy.Framework.Core.Constants;
+﻿using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using System;
 
 namespace ISynergy.Framework.Core.Extensions
 {

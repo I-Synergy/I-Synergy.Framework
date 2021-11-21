@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
-namespace ISynergy.Framework.Mathematics.IO
+namespace ISynergy.Framework.Mathematics.IO.Mat
 {
     /// <summary>
     ///     Node object contained in <see cref="MatReader">.MAT file</see>.
@@ -149,20 +149,7 @@ namespace ISynergy.Framework.Mathematics.IO
                 length = valuesTag.NumberOfBytes / typeSize;
                 bytes = valuesTag.NumberOfBytes;
 
-                var rawData = reader.ReadBytes(bytes);
-                align(reader, rawData.Length);
-
-                if (matType == MatDataType.miINT64 || matType == MatDataType.miUINT64)
-                    for (var i = 7; i < rawData.Length; i += 8)
-                    {
-                        var b = rawData[i];
-                        var bit = (b & (1 << 6)) != 0;
-                        if (bit)
-                            rawData[i] |= 1 << 7;
-                        else
-                            rawData[i] = (byte)(b & ~(1 << 7));
-                    }
-
+                var rawData = GetBytes(reader);
                 var array = Array.CreateInstance(type, length);
                 Buffer.BlockCopy(rawData, 0, array, 0, rawData.Length);
                 value = new MatSparse(ir, ic, array);
@@ -183,7 +170,7 @@ namespace ISynergy.Framework.Mathematics.IO
                     // Create a new node from the current position
                     var node = new MatNode(matReader, reader, offset, elementTag, false);
 
-                    node.Name = (cellI++).ToString();
+                    node.Name = cellI++.ToString();
 
                     Fields.Add(node.Name, node);
 
@@ -311,6 +298,26 @@ namespace ISynergy.Framework.Mathematics.IO
             if (!compressed && lazy)
                 matrixOffset = reader.BaseStream.Position;
         }
+
+        private byte[] GetBytes(BinaryReader reader)
+        {
+            var rawData = reader.ReadBytes(bytes);
+            align(reader, rawData.Length);
+
+            if (matType == MatDataType.miINT64 || matType == MatDataType.miUINT64)
+                for (var i = 7; i < rawData.Length; i += 8)
+                {
+                    var b = rawData[i];
+                    var bit = (b & 1 << 6) != 0;
+                    if (bit)
+                        rawData[i] |= 1 << 7;
+                    else
+                        rawData[i] = (byte)(b & ~(1 << 7));
+                }
+
+            return rawData;
+        }
+
 
         /// <summary>
         ///     Gets the name of this node.
@@ -440,20 +447,7 @@ namespace ISynergy.Framework.Mathematics.IO
 
         private Array read(BinaryReader reader)
         {
-            var rawData = reader.ReadBytes(bytes);
-            align(reader, rawData.Length);
-
-            if (matType == MatDataType.miINT64 || matType == MatDataType.miUINT64)
-                for (var i = 7; i < rawData.Length; i += 8)
-                {
-                    var b = rawData[i];
-                    var bit = (b & (1 << 6)) != 0;
-                    if (bit)
-                        rawData[i] |= 1 << 7;
-                    else
-                        rawData[i] = (byte)(b & ~(1 << 7));
-                }
-
+            var rawData = GetBytes(reader);
             var array = Array.CreateInstance(type, dimensions);
             Buffer.BlockCopy(rawData, 0, array, 0, rawData.Length);
             if (matReader.Transpose)

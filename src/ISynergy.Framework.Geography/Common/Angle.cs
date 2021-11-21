@@ -2,7 +2,7 @@
 using System.Globalization;
 using ISynergy.Framework.Core.Extensions;
 
-namespace ISynergy.Framework.Geography
+namespace ISynergy.Framework.Geography.Common
 {
     /// <summary>
     /// Encapsulation of an Angle.  Angles are constructed and serialized in
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Geography
         {
             ValidateMinutesOrSeconds(minutes);
             Degrees = minutes / 60.0;
-            Degrees = (degrees < 0) ? (degrees - Degrees) : (degrees + Degrees);
+            Degrees = degrees < 0 ? degrees - Degrees : degrees + Degrees;
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace ISynergy.Framework.Geography
         {
             ValidateMinutesOrSeconds(minutes);
             ValidateMinutesOrSeconds(seconds);
-            Degrees = (seconds / 3600.0) + (minutes / 60.0);
-            Degrees = (degrees < 0) ? (degrees - Degrees) : (degrees + Degrees);
+            Degrees = seconds / 3600.0 + minutes / 60.0;
+            Degrees = degrees < 0 ? degrees - Degrees : degrees + Degrees;
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace ISynergy.Framework.Geography
         /// <returns>'true' if angles are equal</returns>
         public override bool Equals(object obj)
         {
-            if(obj is Angle angle)
+            if (obj is Angle angle)
             {
                 return ((IEquatable<Angle>)this).Equals(angle);
             }

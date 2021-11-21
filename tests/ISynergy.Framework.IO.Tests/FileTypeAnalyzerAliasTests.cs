@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.IO.Abtractions;
-using System.IO;
+﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.IO.Abtractions.Analyzers;
+using ISynergy.Framework.IO.Analyzers;
 
 namespace ISynergy.Framework.IO.Tests
 {

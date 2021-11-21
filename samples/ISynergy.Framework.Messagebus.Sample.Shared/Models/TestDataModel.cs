@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions;
-using ISynergy.Framework.MessageBus.Azure.Models;
+﻿using ISynergy.Framework.MessageBus.Abstractions.Messages;
 using ISynergy.Framework.MessageBus.Enumerations;
+using ISynergy.Framework.MessageBus.Models;
 
 namespace ISynergy.Framework.MessageBus.Sample.Models
 {

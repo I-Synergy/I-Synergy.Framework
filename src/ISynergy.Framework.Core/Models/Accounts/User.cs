@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Data;
+﻿using ISynergy.Framework.Core.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

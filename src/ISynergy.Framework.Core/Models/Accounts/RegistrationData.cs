@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ISynergy.Framework.Core.Data;
 
 namespace ISynergy.Framework.Core.Models.Accounts
 {

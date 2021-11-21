@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Global;
+using System;
 
-namespace ISynergy.Framework.Geography
+namespace ISynergy.Framework.Geography.Projection
 {
     /// <summary>
     /// This is the Mercator projection assuming the earth is a perfect sphere.

@@ -24,7 +24,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Options\AppCenterOptions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Options\ConfigurationOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
@@ -32,15 +31,8 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\AuthenticationService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CameraService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\ClientMonitorService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommonServices.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\DownloadFileService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\MasterDataService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\PrintingService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\ReportingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\TelemetryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InfoViewModel.cs" />
@@ -99,12 +91,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\icon.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-100.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-125.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-150.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-400.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\LockScreenLogo.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-100.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-125.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-150.png" />
@@ -126,6 +118,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-24.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
@@ -136,7 +129,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-400.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-16.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-24.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-256.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-32.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-48.png" />

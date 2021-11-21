@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.MessageBus.Abstractions;
+using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.MessageBus.Extensions

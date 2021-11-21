@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Ranges;
 using System;
 
-namespace ISynergy.Framework.Mathematics.Integration
+namespace ISynergy.Framework.Mathematics.Integration.Base
 {
     /// <summary>
     ///     Common interface for multidimensional integration methods.

@@ -191,12 +191,12 @@ namespace ISynergy.Framework.Mathematics
     ///         navigate through all possible options when trying to perform an operation.
     ///     </para>
     /// </example>
-    /// <seealso cref="ISynergy.Framework.Mathematics.DefaultMatrixFormatProvider" />
-    /// <seealso cref="ISynergy.Framework.Mathematics.DefaultArrayFormatProvider" />
-    /// <seealso cref="ISynergy.Framework.Mathematics.OctaveMatrixFormatProvider" />
-    /// <seealso cref="ISynergy.Framework.Mathematics.OctaveArrayFormatProvider" />
-    /// <seealso cref="ISynergy.Framework.Mathematics.CSharpMatrixFormatProvider" />
-    /// <seealso cref="ISynergy.Framework.Mathematics.CSharpArrayFormatProvider" />
+    /// <seealso cref="Formats.DefaultMatrixFormatProvider" />
+    /// <seealso cref="Formats.DefaultArrayFormatProvider" />
+    /// <seealso cref="Mathematics.Formats.OctaveMatrixFormatProvider" />
+    /// <seealso cref="Formats.OctaveArrayFormatProvider" />
+    /// <seealso cref="Formats.CSharpMatrixFormatProvider" />
+    /// <seealso cref="Formats.CSharpArrayFormatProvider" />
     public static partial class Matrix
     {
         /// <summary>

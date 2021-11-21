@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Exceptions;
+using ISynergy.Framework.Core.Extensions.Base;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using ISynergy.Framework.Core.Exceptions;
-using ISynergy.Framework.Core.Extensions.Base;
 
 namespace ISynergy.Framework.Core.Extensions
 {

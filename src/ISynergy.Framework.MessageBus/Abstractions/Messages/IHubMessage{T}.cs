@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.MessageBus.Abstractions
+﻿using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
+
+namespace ISynergy.Framework.MessageBus.Abstractions.Messages
 {
     /// <summary>
     /// Interface IHubMessage

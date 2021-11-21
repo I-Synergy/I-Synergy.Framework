@@ -1,6 +1,5 @@
-﻿namespace ISynergy.Framework.Mathematics.IO
+﻿namespace ISynergy.Framework.Mathematics.IO.Mat
 {
-    using System;
     using System.Runtime.InteropServices;
 
     /*
@@ -33,13 +32,13 @@
     internal struct MatHeader
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 124)]
-        public String TextField;
+        public string TextField;
 
-        public Int32 SubsystemDataOffset;
+        public int SubsystemDataOffset;
 
-        public Int16 Version;
+        public short Version;
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
-        public String Endian;
+        public string Endian;
     }
 }

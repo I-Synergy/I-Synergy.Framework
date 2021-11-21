@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Geography.Common;
 
-namespace ISynergy.Framework.Geography
+namespace ISynergy.Framework.Geography.Global
 {
     /// <summary>
     /// Encapsulation of latitude and longitude coordinates on a globe.  Negative
@@ -162,7 +163,7 @@ namespace ISynergy.Framework.Geography
         /// <returns>true if they are equal</returns>
         public bool Equals(GlobalCoordinates other)
         {
-            return (_mLongitude == other._mLongitude) && (_mLatitude == other._mLatitude);
+            return _mLongitude == other._mLongitude && _mLatitude == other._mLatitude;
         }
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace ISynergy.Framework.Geography
         /// <returns>True if they are the same</returns>
         public override bool Equals(object obj)
         {
-            if(obj is GlobalCoordinates coordinates)
+            if (obj is GlobalCoordinates coordinates)
             {
                 return ((IEquatable<GlobalCoordinates>)this).Equals(coordinates);
             }
@@ -189,10 +190,10 @@ namespace ISynergy.Framework.Geography
             var builder = new StringBuilder();
 
             builder.Append(_mLatitude.Abs());
-            builder.Append((_mLatitude >= Angle.Zero) ? 'N' : 'S');
+            builder.Append(_mLatitude >= Angle.Zero ? 'N' : 'S');
             builder.Append(';');
             builder.Append(_mLongitude.Abs());
-            builder.Append((_mLongitude >= Angle.Zero) ? 'E' : 'W');
+            builder.Append(_mLongitude >= Angle.Zero ? 'E' : 'W');
             builder.Append(';');
 
             return builder.ToString();

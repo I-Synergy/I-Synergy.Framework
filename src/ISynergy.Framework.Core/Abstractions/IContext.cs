@@ -35,7 +35,11 @@ namespace ISynergy.Framework.Core.Abstractions
         /// Gets or sets the title.
         /// </summary>
         /// <value>The title.</value>
-        string Title { get; set; }
+        string Title { get; }
+        /// <summary>
+        /// Gets the application icon.
+        /// </summary>
+        string Icon { get; }
         /// <summary>
         /// Gets or sets the environment.
         /// </summary>

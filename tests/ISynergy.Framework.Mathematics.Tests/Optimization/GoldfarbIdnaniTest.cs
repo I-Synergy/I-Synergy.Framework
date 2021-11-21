@@ -2,6 +2,8 @@
 {
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
@@ -993,7 +995,7 @@
             foreach (var tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst));
 
-            var classSolver = new ISynergy.Framework.Mathematics.Optimization.GoldfarbIdnani(function, cst);
+            var classSolver = new GoldfarbIdnani(function, cst);
             bool status = classSolver.Minimize();
             double result = classSolver.Value;
 
@@ -1025,7 +1027,7 @@
             foreach (var tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst, fr));
 
-            var classSolver = new ISynergy.Framework.Mathematics.Optimization.GoldfarbIdnani(function, cst);
+            var classSolver = new GoldfarbIdnani(function, cst);
             bool status = classSolver.Minimize();
             double result = classSolver.Value;
 
@@ -1053,7 +1055,7 @@
             foreach (var tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst));
 
-            var classSolver = new ISynergy.Framework.Mathematics.Optimization.GoldfarbIdnani(function, cst);
+            var classSolver = new GoldfarbIdnani(function, cst);
             bool status = classSolver.Minimize();
             double result = classSolver.Value;
 
@@ -1080,7 +1082,7 @@
             foreach (var tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst, CultureInfo.CurrentCulture));
 
-            var classSolver = new ISynergy.Framework.Mathematics.Optimization.GoldfarbIdnani(function, cst);
+            var classSolver = new GoldfarbIdnani(function, cst);
             bool status = classSolver.Minimize();
             double result = classSolver.Value;
 

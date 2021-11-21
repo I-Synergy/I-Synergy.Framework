@@ -37,7 +37,7 @@ namespace ISynergy.Framework.Mathematics
         {
             get
             {
-                return (X > Y) ? ((X > Z) ? X : Z) : ((Y > Z) ? Y : Z);
+                return X > Y ? X > Z ? X : Z : Y > Z ? Y : Z;
             }
         }
 
@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Mathematics
         {
             get
             {
-                return (X < Y) ? ((X < Z) ? X : Z) : ((Y < Z) ? Y : Z);
+                return X < Y ? X < Z ? X : Z : Y < Z ? Y : Z;
             }
         }
 
@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Mathematics
         {
             get
             {
-                return (X >= Y) ? ((X >= Z) ? 0 : 2) : ((Y >= Z) ? 1 : 2);
+                return X >= Y ? X >= Z ? 0 : 2 : Y >= Z ? 1 : 2;
             }
         }
 
@@ -89,7 +89,7 @@ namespace ISynergy.Framework.Mathematics
         {
             get
             {
-                return (X <= Y) ? ((X <= Z) ? 0 : 2) : ((Y <= Z) ? 1 : 2);
+                return X <= Y ? X <= Z ? 0 : 2 : Y <= Z ? 1 : 2;
             }
         }
 
@@ -103,7 +103,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public float Norm
         {
-            get { return (float)System.Math.Sqrt(X * X + Y * Y + Z * Z); }
+            get { return (float)Math.Sqrt(X * X + Y * Y + Z * Z); }
         }
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator ==(Vector3 vector1, Vector3 vector2)
         {
-            return ((vector1.X == vector2.X) && (vector1.Y == vector2.Y) && (vector1.Z == vector2.Z));
+            return vector1.X == vector2.X && vector1.Y == vector2.Y && vector1.Z == vector2.Z;
         }
 
         /// <summary>
@@ -425,7 +425,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator !=(Vector3 vector1, Vector3 vector2)
         {
-            return ((vector1.X != vector2.X) || (vector1.Y != vector2.Y) || (vector1.Z != vector2.Z));
+            return vector1.X != vector2.X || vector1.Y != vector2.Y || vector1.Z != vector2.Z;
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public bool Equals(Vector3 vector)
         {
-            return ((vector.X == X) && (vector.Y == Y) && (vector.Z == Z));
+            return vector.X == X && vector.Y == Y && vector.Z == Z;
         }
 
         /// <summary>
@@ -449,7 +449,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         /// <returns>Returns <see langword="true"/> if the vector equals to the specified object or <see langword="false"/> otherwise.</returns>
         /// 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if (obj is Vector3)
             {
@@ -466,7 +466,7 @@ namespace ISynergy.Framework.Mathematics
         ///
         public float Normalize()
         {
-            float norm = (float)System.Math.Sqrt(X * X + Y * Y + Z * Z);
+            float norm = (float)Math.Sqrt(X * X + Y * Y + Z * Z);
             float invNorm = 1.0f / norm;
 
             X *= invNorm;
@@ -486,9 +486,9 @@ namespace ISynergy.Framework.Mathematics
         public Vector3 Inverse()
         {
             return new Vector3(
-                (X == 0) ? 0 : 1.0f / X,
-                (Y == 0) ? 0 : 1.0f / Y,
-                (Z == 0) ? 0 : 1.0f / Z);
+                X == 0 ? 0 : 1.0f / X,
+                Y == 0 ? 0 : 1.0f / Y,
+                Z == 0 ? 0 : 1.0f / Z);
         }
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public Vector3 Abs()
         {
-            return new Vector3(System.Math.Abs(X), System.Math.Abs(Y), System.Math.Abs(Z));
+            return new Vector3(Math.Abs(X), Math.Abs(Y), Math.Abs(Z));
         }
 
         /// <summary>
