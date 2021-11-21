@@ -1,25 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-/* Unmerged change from project 'ISynergy.Framework.Mvvm (net6.0)'
-Before:
-using ISynergy.Framework.Core.Base;
-After:
-using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy;
-using ISynergy.Framework;
-using ISynergy.Framework.Mvvm;
-*/
-
-/* Unmerged change from project 'ISynergy.Framework.Mvvm (net5.0)'
-Before:
-using ISynergy.Framework.Core.Base;
-After:
-using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy;
-using ISynergy.Framework;
-using ISynergy.Framework.Mvvm;
-*/
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;

@@ -19,26 +19,10 @@
 //   moshier@na-net.ornl.gov
 //
 
+using System;
+
 namespace ISynergy.Framework.Mathematics.Functions
 {
-
-    /* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-    Before:
-        using System;
-    After:
-        using ISynergy.Framework.Mathematics.Functions;
-        using System;
-    */
-
-    /* Unmerged change from project 'ISynergy.Framework.Mathematics (net6.0)'
-    Before:
-        using System;
-    After:
-        using ISynergy.Framework.Mathematics.Functions;
-        using System;
-    */
-    using System;
-
     /// <summary>
     ///   Bessel functions.
     /// </summary>

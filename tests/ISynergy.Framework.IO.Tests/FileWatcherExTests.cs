@@ -10,7 +10,6 @@ namespace ISynergy.Framework.IO.Tests
     /// Class FileWatcherExTests.
     /// Implements the <see cref="IClassFixture{FileWatcherExFixture}" />
     /// </summary>
-    [TestClass]
     public class FileWatcherExTests
     {
         /// <summary>
@@ -29,7 +28,6 @@ namespace ISynergy.Framework.IO.Tests
         /// <summary>
         /// Files the watcher ex added test.
         /// </summary>
-        [TestMethod]
         public void FileWatcherExAddedTest()
         {
             var count = 1000;
@@ -59,7 +57,6 @@ namespace ISynergy.Framework.IO.Tests
         /// <summary>
         /// Files the watcher ex deleted test.
         /// </summary>
-        [TestMethod]
         public void FileWatcherExDeletedTest()
         {
             var count = 1000;

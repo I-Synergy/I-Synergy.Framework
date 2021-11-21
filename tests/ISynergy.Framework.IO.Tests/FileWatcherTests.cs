@@ -9,7 +9,6 @@ namespace ISynergy.Framework.IO.Tests
     /// <summary>
     /// Class FileWatcherTests.
     /// </summary>
-    [TestClass]
     public class FileWatcherTests
     {
         /// <summary>
@@ -28,7 +27,6 @@ namespace ISynergy.Framework.IO.Tests
         /// <summary>
         /// Files the watcher added test.
         /// </summary>
-        [TestMethod]
         public void FileWatcherAddedTest()
         {
             var count = 1000;
@@ -58,7 +56,6 @@ namespace ISynergy.Framework.IO.Tests
         /// <summary>
         /// Files the watcher deleted test.
         /// </summary>
-        [TestMethod]
         public void FileWatcherDeletedTest()
         {
             var count = 1000;

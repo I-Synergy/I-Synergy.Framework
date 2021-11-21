@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using ISynergy.Framework.Core.Models;
+using System.Collections.Generic;
 using System.Security.Claims;
-using ISynergy.Framework.Core.Models;
 
-namespace ISynergy.Framework.AspNetCore.Authentication.Services
+namespace ISynergy.Framework.AspNetCore.Abstractions.Services
 {
     /// <summary>
     /// Interface IJwtTokenService

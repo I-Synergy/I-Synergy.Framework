@@ -1,14 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-/* Unmerged change from project 'ISynergy.Framework.Mvvm (net6.0)'
-Before:
-using ISynergy.Framework.Core.Abstractions.Base;
-After:
-using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy;
-using ISynergy.Framework;
-using ISynergy.Framework.Mvvm;
-using ISynergy.Framework.Mvvm.ViewModels;
-*/
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;

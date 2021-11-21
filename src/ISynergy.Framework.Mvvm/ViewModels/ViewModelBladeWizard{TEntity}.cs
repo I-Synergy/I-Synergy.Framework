@@ -2,27 +2,6 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
-/* Unmerged change from project 'ISynergy.Framework.Mvvm (net6.0)'
-Before:
-using System.ComponentModel;
-After:
-using System.ComponentModel;
-using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy;
-using ISynergy.Framework;
-using ISynergy.Framework.Mvvm;
-*/
-
-/* Unmerged change from project 'ISynergy.Framework.Mvvm (net5.0)'
-Before:
-using System.ComponentModel;
-After:
-using System.ComponentModel;
-using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy;
-using ISynergy.Framework;
-using ISynergy.Framework.Mvvm;
-*/
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels

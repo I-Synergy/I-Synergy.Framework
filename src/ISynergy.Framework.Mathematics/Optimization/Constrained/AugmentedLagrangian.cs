@@ -246,13 +246,6 @@
             {
                 innerSolver = new BroydenFletcherGoldfarbShanno(NumberOfVariables)
                 {
-
-                    /* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-                    Before:
-                                        LineSearch = Optimization.LineSearch.BacktrackingArmijo,
-                    After:
-                                        LineSearch = LineSearch.BacktrackingArmijo,
-                    */
                     LineSearch = LineSearch.BacktrackingArmijo,
                     Corrections = 10,
                     Epsilon = 1e-10,

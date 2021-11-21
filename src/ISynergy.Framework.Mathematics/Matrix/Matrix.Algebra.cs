@@ -193,13 +193,6 @@ namespace ISynergy.Framework.Mathematics
     /// </example>
     /// <seealso cref="Formats.DefaultMatrixFormatProvider" />
     /// <seealso cref="Formats.DefaultArrayFormatProvider" />
-
-    /* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-    Before:
-        /// <seealso cref="ISynergy.Framework.Mathematics.OctaveMatrixFormatProvider" />
-    After:
-        /// <seealso cref="Formats.OctaveMatrixFormatProvider" />
-    */
     /// <seealso cref="Mathematics.Formats.OctaveMatrixFormatProvider" />
     /// <seealso cref="Formats.OctaveArrayFormatProvider" />
     /// <seealso cref="Formats.CSharpMatrixFormatProvider" />

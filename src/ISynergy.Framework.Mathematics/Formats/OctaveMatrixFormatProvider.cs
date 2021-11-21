@@ -1,20 +1,9 @@
-﻿namespace ISynergy.Framework.Mathematics.Formats
+﻿using ISynergy.Framework.Mathematics.Formats.Base;
+using System;
+using System.Globalization;
+
+namespace ISynergy.Framework.Mathematics.Formats
 {
-    using ISynergy.Framework.Mathematics.Formats.Base;
-
-    /* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-    Before:
-        using System;
-    After:
-        using ISynergy;
-        using ISynergy.Framework;
-        using ISynergy.Framework.Mathematics;
-        using ISynergy.Framework.Mathematics.Formats;
-        using System;
-    */
-    using System;
-    using System.Globalization;
-
     /// <summary>
     ///   Format provider for the matrix format used by Octave.
     /// </summary>

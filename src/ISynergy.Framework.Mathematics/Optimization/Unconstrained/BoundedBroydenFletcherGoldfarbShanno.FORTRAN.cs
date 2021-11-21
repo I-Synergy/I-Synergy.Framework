@@ -1866,13 +1866,6 @@ namespace ISynergy.Framework.Mathematics.Optimization
             {
                 theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
 
-
-/* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-Before:
-                s = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
-After:
-                s = Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
-*/
                 s = Common.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
 
                 gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dx / s)) * ((dp / s))))));
@@ -1908,13 +1901,6 @@ After:
             else if ((sgnd < 0.0))
             {
                 theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
-
-/* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-Before:
-                s = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
-After:
-                s = Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
-*/
                 s = Common.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
                 gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dx / s)) * ((dp / s))))));
 
@@ -1954,13 +1940,6 @@ After:
                 // c        secant step.
                 // 
                 theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
-
-/* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-Before:
-                s = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
-After:
-                s = Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
-*/
                 s = Common.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
 
                 // 
@@ -2051,13 +2030,6 @@ After:
                 if (brackt)
                 {
                     theta = ((((3.0 * ((fp - fy))) / ((sty - stp))) + dy) + dp);
-
-/* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-Before:
-                    s = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dy), System.Math.Abs(dp));
-After:
-                    s = Tools.Max(System.Math.Abs(theta), System.Math.Abs(dy), System.Math.Abs(dp));
-*/
                     s = Common.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dy), System.Math.Abs(dp));
                     gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dy / s)) * ((dp / s))))));
 
@@ -3932,14 +3904,6 @@ After:
                 goto L999;
             }
 
-            // 
-
-/* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-Before:
-            ddum = ISynergy.Framework.Mathematics.Tools.Max(System.Math.Abs(fold), System.Math.Abs(f), 1.0);
-After:
-            ddum = Tools.Max(System.Math.Abs(fold), System.Math.Abs(f), 1.0);
-*/
             ddum = Common.Tools.Max(System.Math.Abs(fold), System.Math.Abs(f), 1.0);
 
             if ((((fold - f)) <= (tol * ddum)))

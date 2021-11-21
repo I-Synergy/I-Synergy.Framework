@@ -1,23 +1,7 @@
-﻿namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
+﻿using System;
+
+namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
-
-    /* Unmerged change from project 'ISynergy.Framework.Mathematics (net5.0)'
-    Before:
-        using System;
-    After:
-        using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
-        using System;
-    */
-
-    /* Unmerged change from project 'ISynergy.Framework.Mathematics (net6.0)'
-    Before:
-        using System;
-    After:
-        using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
-        using System;
-    */
-    using System;
-
     /// <summary>
     ///   Optimization progress event arguments.
     /// </summary>
