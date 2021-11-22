@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Telemetry.Options;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
@@ -14,17 +13,8 @@ namespace ISynergy.Framework.Telemetry.Services
     /// <summary>
     /// See https://www.meziantou.net/use-application-insights-in-a-desktop-application.htm
     /// </summary>
-    public class TelemetryService : ITelemetryService
+    internal class TelemetryService : ITelemetryService
     {
-        /// <summary>
-        /// The context
-        /// </summary>
-        private readonly IContext _context;
-        /// <summary>
-        /// The information service
-        /// </summary>
-        private readonly IInfoService _infoService;
-
         /// <summary>
         /// The application insights options
         /// </summary>
@@ -38,13 +28,10 @@ namespace ISynergy.Framework.Telemetry.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryService"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
         /// <param name="infoService">The information service.</param>
         /// <param name="options"></param>
-        public TelemetryService(IContext context, IInfoService infoService, IOptions<ApplicationInsightsOptions> options)
+        public TelemetryService(IInfoService infoService, IOptions<ApplicationInsightsOptions> options)
         {
-            _context = context;
-            _infoService = infoService;
             _applicationInsightsOptions = options.Value;
 
             var config = new TelemetryConfiguration(_applicationInsightsOptions.Key);

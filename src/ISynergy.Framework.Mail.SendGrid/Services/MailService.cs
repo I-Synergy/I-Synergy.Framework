@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Mail.Services
     /// <summary>
     /// Email service to send email through SendGrid.
     /// </summary>
-    public class MailService : IMailService
+    internal class MailService : IMailService
     {
         private readonly MailOptions _mailOptions;
         private readonly SendGridOptions _sendGridOptions;
@@ -39,7 +39,7 @@ namespace ISynergy.Framework.Mail.Services
             _logger = logger;
 
             Argument.IsNotNullOrEmpty(nameof(MailOptions.EmailAddress), _mailOptions.EmailAddress);
-            Argument.IsNotNullOrEmpty(nameof(MailOptions.EmailSender), _mailOptions.EmailSender);
+            Argument.IsNotNullOrEmpty(nameof(MailOptions.Sender), _mailOptions.Sender);
             Argument.IsNotNullOrEmpty(nameof(SendGridOptions.Key), _sendGridOptions.Key);
         }
 

@@ -14,6 +14,7 @@
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="DYMO.Connect.SDK" Version="1.4.2.35" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj" />

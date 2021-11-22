@@ -33,7 +33,6 @@ ___
 | [I-Synergy.Framework.MessageBus](https://www.nuget.org/packages/I-Synergy.Framework.MessageBus/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.MessageBus) |
 | [I-Synergy.Framework.MessageBus.Azure](https://www.nuget.org/packages/I-Synergy.Framework.MessageBus.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.MessageBus.Azure) |
 | [I-Synergy.Framework.Monitoring](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring) |
-| [I-Synergy.Framework.Monitoring.Client](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Client/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.Client) |
 | [I-Synergy.Framework.Monitoring.Client.SignalR](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Client.SignalR/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.Client.SignalR) |
 | [I-Synergy.Framework.Monitoring.Common](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Common/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.Common) |
 | [I-Synergy.Framework.Monitoring.SignalR](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.SignalR/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.SignalR) |

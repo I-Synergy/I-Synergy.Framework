@@ -10,7 +10,7 @@ namespace ISynergy.Framework.Monitoring.Services
     /// Monitor hub service.
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    public class MonitorService<TEntity> : IMonitorService<TEntity> where TEntity : class
+    internal class MonitorService<TEntity> : IMonitorService<TEntity> where TEntity : class
     {
         /// <summary>
         /// The hub context

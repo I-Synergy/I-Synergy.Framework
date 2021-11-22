@@ -82,7 +82,6 @@ namespace ISynergy.Framework.AspNetCore.Startup
             AddMvc(services);
             AddRouting(services);
             AddSignalR(services);
-            AddTelemetry(services);
         }
 
         /// <summary>
@@ -263,23 +262,6 @@ namespace ISynergy.Framework.AspNetCore.Startup
                 // /api/controller/test@user.com/ <- DOES WORK
                 options.AppendTrailingSlash = true;
             });
-        }
-
-        /// <summary>
-        /// AddTelemetry
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <example>
-        ///   <code>
-        /// // Configure SnapshotCollector from application settings
-        /// services.Configure&lt;SnapshotCollectorConfiguration&gt;(_configuration.GetSection(nameof(SnapshotCollectorConfiguration)));
-        /// // Add SnapshotCollector telemetry processor.
-        /// services.AddSingleton&lt;ITelemetryInitializer, UserInfoTelemetryInitializer&gt;();
-        /// services.AddSingleton&lt;ITelemetryProcessorFactory, SnapshotCollectorTelemetryProcessorFactory&gt;();
-        /// </code>
-        /// </example>
-        protected virtual void AddTelemetry(IServiceCollection services)
-        {
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Storage.Abstractions.Options;
 using ISynergy.Framework.Storage.Abstractions.Services;
@@ -19,7 +18,7 @@ namespace ISynergy.Framework.Storage.Azure.Services
     /// </summary>
     /// <typeparam name="TStorageOptions">The type of the t azure BLOB options.</typeparam>
     /// <seealso cref="IStorageService{TStorageOptions}" />
-    public class StorageService<TStorageOptions> : IStorageService<TStorageOptions>
+    internal class StorageService<TStorageOptions> : IStorageService<TStorageOptions>
         where TStorageOptions : class, IStorageOptions, new()
     {
         /// <summary>
@@ -30,28 +29,6 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// The cloud storage account
         /// </summary>
         private readonly BlobContainerClient _blobContainer;
-        /// <summary>
-        /// The tenant service
-        /// </summary>
-        private readonly ITenantService _tenantService;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}" /> class.
-        /// </summary>
-        /// <param name="storageOptions">The azure BLOB options.</param>
-        /// <param name="tenantService">The tenant service.</param>
-        public StorageService(IOptions<TStorageOptions> storageOptions, ITenantService tenantService)
-        {
-            Argument.IsNotNull(nameof(storageOptions), storageOptions.Value);
-            Argument.IsNotNull(nameof(tenantService), tenantService);
-            Argument.IsNotNullOrEmpty(nameof(tenantService.TenantId), tenantService.TenantId);
-
-            _tenantService = tenantService;
-            _storageOptions = storageOptions.Value;
-
-            _blobContainer = new BlobContainerClient(_storageOptions.ConnectionString, _tenantService.TenantId.ToString());
-            _blobContainer.CreateIfNotExists(PublicAccessType.Blob);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StorageService{TStorageOptions}"/> class.

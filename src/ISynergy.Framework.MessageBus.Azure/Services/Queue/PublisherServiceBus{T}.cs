@@ -17,7 +17,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue
     /// </summary>
     /// <typeparam name="TQueueMessage">The type of the t queue message.</typeparam>
     /// <typeparam name="TOption">The type of the t option.</typeparam>
-    public abstract class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>
+    internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBus<TQueueMessage>
         where TQueueMessage : class, IBaseMessage
         where TOption : class, IQueueOption, new()
     {

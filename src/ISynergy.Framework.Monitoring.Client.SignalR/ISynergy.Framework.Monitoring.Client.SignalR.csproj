@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ISynergy.Framework.Monitoring.Client\ISynergy.Framework.Monitoring.Client.csproj" />
+        <ProjectReference Include="..\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj" />
         <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
     </ItemGroup>
 </Project>

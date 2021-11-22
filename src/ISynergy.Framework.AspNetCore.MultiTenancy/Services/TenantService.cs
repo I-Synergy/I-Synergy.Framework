@@ -7,7 +7,7 @@ namespace ISynergy.Framework.AspNetCore.MultiTenancy.Services
     /// Implements the <see cref="ITenantService" />
     /// </summary>
     /// <seealso cref="ITenantService" />
-    public class TenantService : ITenantService
+    internal class TenantService : ITenantService
     {
         /// <summary>
         /// The HTTP context accessor

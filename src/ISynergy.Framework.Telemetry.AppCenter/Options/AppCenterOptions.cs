@@ -3,7 +3,7 @@
     /// <summary>
     /// Telemetry options for App Center
     /// </summary>
-    public class AppCenterOptions : TelemetryOptions
+    internal class AppCenterOptions : TelemetryOptions
     {
     }
 }

@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Clipboard.Services
     /// <summary>
     /// Class ClipboardService.
     /// </summary>
-    public class ClipboardService : IClipboardService
+    internal class ClipboardService : IClipboardService
     {
         /// <summary>
         /// Gets the bitmap source from clipboard asynchronous.
