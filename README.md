@@ -18,7 +18,7 @@ ___
 | [I-Synergy.Framework.AspNetCore.Authentication](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Authentication/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Authentication) |
 | [I-Synergy.Framework.AspNetCore.Globalization](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Globalization/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Globalization) |
 | [I-Synergy.Framework.AspNetCore.MultiTenancy](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.MultiTenancy/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.MultiTenancy) |
-| [I-Synergy.Framework.Automation](https://www.nuget.org/packages/I-Synergy.Framework.Automation/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Automation) |
+| [I-Synergy.Framework.Automations](https://www.nuget.org/packages/I-Synergy.Framework.Automations/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Automations) |
 | [I-Synergy.Framework.Clipboard](https://www.nuget.org/packages/I-Synergy.Framework.Clipboard/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Clipboard) |
 | [I-Synergy.Framework.Core](https://www.nuget.org/packages/I-Synergy.Framework.Core/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Core) |
 | [I-Synergy.Framework.Documents](https://www.nuget.org/packages/I-Synergy.Framework.Documents/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Documents) |
