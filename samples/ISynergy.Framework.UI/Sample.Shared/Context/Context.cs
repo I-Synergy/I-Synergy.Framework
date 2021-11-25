@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Options;
-using Sample.Options;
 using Sample.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -35,9 +34,6 @@ namespace Sample
         public Context(IOptions<ConfigurationOptions> configurationOptions)
         {
             _configurationOptions = configurationOptions.Value;
-
-            Title = _configurationOptions.ApplicationTitle;
-            Icon = _configurationOptions.ApplicationIcon;
 
             Profiles = new ObservableCollection<IProfile>() {  new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();
@@ -97,25 +93,6 @@ namespace Sample
 
                 return TimeZoneInfo.Local;
             }
-        }
-
-        /// <summary>
-        /// Gets the application icon.
-        /// </summary>
-        public string Icon
-        {
-            get { return GetValue<string>(); }
-            private set { SetValue(value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the title.
-        /// </summary>
-        /// <value>The title.</value>
-        public string Title
-        {
-            get { return GetValue<string>(); }
-            private set { SetValue(value); }
         }
 
         /// <summary>

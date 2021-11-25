@@ -4,6 +4,7 @@ using ISynergy.Framework.Telemetry.Options;
 using ISynergy.Framework.Telemetry.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Telemetry.Extensions
 {
@@ -24,7 +25,7 @@ namespace ISynergy.Framework.Telemetry.Extensions
 
 #if UAP10_0_18362 || NET6_0_WINDOWS10_0_18362_0
             services.Configure<ApplicationInsightsOptions>(configuration.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
-            services.AddSingleton<ITelemetryService, TelemetryService>();
+            services.TryAddSingleton<ITelemetryService, TelemetryService>();
 #else
             services.AddApplicationInsightsTelemetry(configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 #endif

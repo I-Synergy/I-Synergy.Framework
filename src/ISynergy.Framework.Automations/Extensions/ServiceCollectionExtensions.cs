@@ -5,6 +5,7 @@ using ISynergy.Framework.Automations.Services;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Automations.Extensions
 {
@@ -22,8 +23,8 @@ namespace ISynergy.Framework.Automations.Extensions
         {
             services.Configure<AutomationOptions>(configuration.GetSection(nameof(AutomationOptions)).BindWithReload);
 
-            services.AddSingleton<IActionService, ActionService>();
-            services.AddSingleton<IAutomationService, AutomationService>();
+            services.TryAddSingleton<IActionService, ActionService>();
+            services.TryAddSingleton<IAutomationService, AutomationService>();
 
             services.AddHostedService<ActionQueuingBackgroundService>();
             services.AddHostedService<AutomationBackgroundService>();

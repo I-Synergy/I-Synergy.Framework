@@ -22,7 +22,6 @@ namespace ISynergy.Framework.Documents.Services
     internal class DocumentService : IDocumentService
     {
         private readonly ILanguageService _languageService;
-        private readonly SyncfusionLicenseOptions _syncfusionLicense;
 
         /// <summary>
         /// Default constructor.
@@ -32,9 +31,8 @@ namespace ISynergy.Framework.Documents.Services
         public DocumentService(ILanguageService languageService, IOptions<SyncfusionLicenseOptions> options)
         {
             _languageService = languageService;
-            _syncfusionLicense = options.Value;
 
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(_syncfusionLicense.LicenseKey);
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.MultiTenancy.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Clipboard.Extensions
 {
@@ -15,8 +16,8 @@ namespace ISynergy.Framework.Clipboard.Extensions
         /// <returns></returns>
         public static IServiceCollection AddMultiTenancyIntegration(this IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<ITenantService, TenantService>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.TryAddSingleton<ITenantService, TenantService>();
             return services;
         }
     }

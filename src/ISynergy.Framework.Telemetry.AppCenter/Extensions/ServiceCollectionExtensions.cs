@@ -4,6 +4,7 @@ using ISynergy.Framework.Telemetry.Options;
 using ISynergy.Framework.Telemetry.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Telemetry.Extensions
 {
@@ -22,7 +23,7 @@ namespace ISynergy.Framework.Telemetry.Extensions
         {
             services.AddOptions();
             services.Configure<AppCenterOptions>(configuration.GetSection(nameof(AppCenterOptions)).BindWithReload);
-            services.AddSingleton<ITelemetryService, TelemetryService>();
+            services.TryAddSingleton<ITelemetryService, TelemetryService>();
 
             return services;
         }

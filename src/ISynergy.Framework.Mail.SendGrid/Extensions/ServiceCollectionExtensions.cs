@@ -4,6 +4,7 @@ using ISynergy.Framework.Mail.Options;
 using ISynergy.Framework.Mail.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Mail.Extensions
 {
@@ -24,7 +25,7 @@ namespace ISynergy.Framework.Mail.Extensions
             services.Configure<SendGridOptions>(configuration.GetSection(nameof(SendGridOptions)).BindWithReload);
             services.Configure<MailOptions>(configuration.GetSection(nameof(MailOptions)).BindWithReload);
 
-            services.AddSingleton<IMailService, MailService>();
+            services.TryAddSingleton<IMailService, MailService>();
 
             return services;
         }

@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Clipboard.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Clipboard.Extensions
 {
@@ -16,7 +17,7 @@ namespace ISynergy.Framework.Clipboard.Extensions
         /// <returns></returns>
         public static IServiceCollection AddClipboardIntegration(this IServiceCollection services)
         {
-            services.AddSingleton<IClipboardService, ClipboardService>();
+            services.TryAddSingleton<IClipboardService, ClipboardService>();
             return services;
         }
     }

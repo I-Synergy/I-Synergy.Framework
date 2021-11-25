@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.MessageBus.Extensions
 {
@@ -20,8 +21,8 @@ namespace ISynergy.Framework.MessageBus.Extensions
             where TQueueMessage : class, IBaseMessage
             where TImplementation : class, IPublisherServiceBus<TQueueMessage>
         {
-            _self.AddSingleton<TImplementation>();
-            _self.AddSingleton<IPublisherServiceBus<TQueueMessage>, TImplementation>();
+            _self.TryAddSingleton<TImplementation>();
+            _self.TryAddSingleton<IPublisherServiceBus<TQueueMessage>, TImplementation>();
 
             return _self; 
         }
@@ -41,13 +42,13 @@ namespace ISynergy.Framework.MessageBus.Extensions
         {
             if(isScoped)
             {
-                _self.AddScoped<TImplementation>();
-                _self.AddScoped<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
+                _self.TryAddScoped<TImplementation>();
+                _self.TryAddScoped<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
             }
             else
             {
-                _self.AddSingleton<TImplementation>();
-                _self.AddSingleton<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
+                _self.TryAddSingleton<TImplementation>();
+                _self.TryAddSingleton<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
             }
 
             return _self;
@@ -64,8 +65,8 @@ namespace ISynergy.Framework.MessageBus.Extensions
             where TQueueMessage : class, IBaseMessage
             where TImplementation : class, IPublisherServiceBus<TQueueMessage>
         {
-            _self.AddSingleton<TImplementation>();
-            _self.AddSingleton<IPublisherServiceBus<TQueueMessage>, TImplementation>();
+            _self.TryAddSingleton<TImplementation>();
+            _self.TryAddSingleton<IPublisherServiceBus<TQueueMessage>, TImplementation>();
 
             return _self;
         }
@@ -84,13 +85,13 @@ namespace ISynergy.Framework.MessageBus.Extensions
         {
             if (isScoped)
             {
-                _self.AddScoped<TImplementation>();
-                _self.AddScoped<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
+                _self.TryAddScoped<TImplementation>();
+                _self.TryAddScoped<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
             }
             else
             {
-                _self.AddSingleton<TImplementation>();
-                _self.AddSingleton<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
+                _self.TryAddSingleton<TImplementation>();
+                _self.TryAddSingleton<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
             }
 
             return _self;

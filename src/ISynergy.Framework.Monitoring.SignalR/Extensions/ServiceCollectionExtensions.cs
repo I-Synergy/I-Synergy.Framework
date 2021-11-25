@@ -5,6 +5,7 @@ using ISynergy.Framework.Monitoring.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Monitoring.Extensions
 {
@@ -27,8 +28,8 @@ namespace ISynergy.Framework.Monitoring.Extensions
                 options.EnableDetailedErrors = true;
             });
 
-            services.AddSingleton<HubClaimsAccessor>();
-            services.AddSingleton<IMonitorService<TEntity>, MonitorService<TEntity>>();
+            services.TryAddSingleton<HubClaimsAccessor>();
+            services.TryAddSingleton<IMonitorService<TEntity>, MonitorService<TEntity>>();
 
             return services;
         }
