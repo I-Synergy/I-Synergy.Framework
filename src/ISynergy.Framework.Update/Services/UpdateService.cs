@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Update.Services
     /// <summary>
     /// Class UpdateService.
     /// </summary>
-    public class UpdateService : IUpdateService
+    internal class UpdateService : IUpdateService
     {
 #if NET6_0_WINDOWS10_0_22000_0 || WINDOWS_UWP
         /// <summary>

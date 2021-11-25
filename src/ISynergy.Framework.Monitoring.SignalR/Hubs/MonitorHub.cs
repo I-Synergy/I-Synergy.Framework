@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Monitoring.Hubs
     /// Monitor hub class.
     /// </summary>
     [Authorize(AuthenticationSchemes = "OpenIddict.Validation.AspNetCore")]
-    public class MonitorHub : Hub
+    internal class MonitorHub : Hub
     {
         /// <summary>
         /// The logger

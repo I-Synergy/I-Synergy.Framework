@@ -12,6 +12,8 @@ using Style = ISynergy.Framework.Core.Models.Style;
 using ColorHelper = ISynergy.Framework.UI.Helpers.ColorHelper;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Core.Validation;
+using System.IO;
+using ISynergy.Framework.Core.Abstractions.Services;
 
 #if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI;
@@ -31,7 +33,14 @@ namespace ISynergy.Framework.UI.Services
     /// <seealso cref="IThemeService" />
     public class ThemeService : IThemeService
     {
+#if WINDOWS
+        private const string _icon = "icon.ico";
+        private readonly IInfoService _infoService;
+#endif
+
         private readonly IBaseSettingsService _baseSettingsService;
+        
+
         private Style _style;
         private Window _window;
         private ConfigurationOptions _options;
@@ -68,6 +77,23 @@ namespace ISynergy.Framework.UI.Services
 
             SetStyle(_style);
         }
+
+#if WINDOWS
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="infoService"></param>
+        /// <param name="baseSettingsService"></param>
+        /// <param name="options"></param>
+        public ThemeService(
+            IInfoService infoService,
+            IBaseSettingsService baseSettingsService,
+            IOptions<ConfigurationOptions> options)
+            : this(baseSettingsService, options)
+        {
+            _infoService = infoService;
+        }
+#endif
 
         /// <summary>
         /// Ininitialize main window for service.
@@ -176,8 +202,10 @@ namespace ISynergy.Framework.UI.Services
             {
 #if WINDOWS
                 var appWindow = _window.GetAppWindow();
-                appWindow.Title = _options.ApplicationTitle;
-                appWindow.SetIcon(_options.ApplicationIcon);
+                
+                appWindow.Title = _infoService.ProductName;
+
+                if(File.Exists(_icon)) appWindow.SetIcon(_icon);
 
                 var titleBar = appWindow.TitleBar;
 

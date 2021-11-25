@@ -1,11 +1,8 @@
-﻿using System;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.MessageBus.Extensions;
+﻿using ISynergy.Framework.MessageBus.Azure.Extensions;
 using ISynergy.Framework.MessageBus.Sample.Models;
-using ISynergy.Framework.MessageBus.Sample.Publisher.Options;
-using ISynergy.Framework.MessageBus.Sample.Publisher.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace ISynergy.Framework.MessageBus.Sample.Publisher
 {
@@ -27,8 +24,7 @@ namespace ISynergy.Framework.MessageBus.Sample.Publisher
                 var serviceProvider = new ServiceCollection()
                     .AddLogging()
                     .AddOptions()
-                    .Configure<TestQueueOptions>(config.GetSection(nameof(TestQueueOptions)).BindWithReload)
-                    .AddPublishingQueueMessageBus<TestDataModel, PublishToQueueMessageBusService>()
+                    .AddMessageBusAzurePublishIntegration<TestDataModel>(config)
                     .AddSingleton<ApplicationAzure>()
                     .BuildServiceProvider();
 

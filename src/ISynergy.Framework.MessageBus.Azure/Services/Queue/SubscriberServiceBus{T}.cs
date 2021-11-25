@@ -16,7 +16,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <typeparam name="TOption">The type of the t option.</typeparam>
-    public abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
+    internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
         where TOption : class, IQueueOption, new()
     {
         /// <summary>

@@ -3,7 +3,7 @@
     /// <summary>
     /// Telemetry options for Application Insights.
     /// </summary>
-    public class ApplicationInsightsOptions : TelemetryOptions
+    internal class ApplicationInsightsOptions : TelemetryOptions
     {
     }
 }

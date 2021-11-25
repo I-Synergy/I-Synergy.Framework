@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using System;
 using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Monitoring.Client.Abstractions.Services
@@ -12,21 +13,13 @@ namespace ISynergy.Framework.Monitoring.Client.Abstractions.Services
         /// Connects the asynchronous.
         /// </summary>
         /// <param name="token">The token.</param>
+        /// <param name="connectionAction"></param>
         /// <returns>Task.</returns>
-        Task ConnectAsync(string token);
+        Task ConnectAsync(string token, Action<HubConnection> connectionAction);
         /// <summary>
         /// Disconnects the asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
         Task DisconnectAsync();
-
-        /// <summary>
-        /// Occurs when [refresh UI].
-        /// </summary>
-        event EventHandler RefreshUI;
-        /// <summary>
-        /// Occurs when [position caller identifier phone selected].
-        /// </summary>
-        event EventHandler<CallerMessage> POSCallerIdPhoneSelected;
     }
 }

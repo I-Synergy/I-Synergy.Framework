@@ -13,6 +13,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
         <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
     </ItemGroup>
@@ -21,9 +22,9 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<Using Include="ISynergy.Framework.Core.Abstractions.Services"/>
-		<Using Include="Microsoft.AspNetCore.Http"/>
-		<Using Include="System.Globalization"/>
-		<Using Include="System.Resources"/>
+		<Using Include="ISynergy.Framework.Core.Abstractions.Services" />
+		<Using Include="Microsoft.AspNetCore.Http" />
+		<Using Include="System.Globalization" />
+		<Using Include="System.Resources" />
 	</ItemGroup>
 </Project>

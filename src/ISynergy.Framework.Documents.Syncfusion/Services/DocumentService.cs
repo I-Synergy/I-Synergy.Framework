@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Models;
+using Microsoft.Extensions.Options;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.XlsIO;
@@ -18,7 +19,7 @@ namespace ISynergy.Framework.Documents.Services
     /// <summary>
     /// Reporting service.
     /// </summary>
-    public class DocumentService : IDocumentService
+    internal class DocumentService : IDocumentService
     {
         private readonly ILanguageService _languageService;
 
@@ -26,9 +27,12 @@ namespace ISynergy.Framework.Documents.Services
         /// Default constructor.
         /// </summary>
         /// <param name="languageService"></param>
-        public DocumentService(ILanguageService languageService)
+        /// <param name="options"></param>
+        public DocumentService(ILanguageService languageService, IOptions<SyncfusionLicenseOptions> options)
         {
             _languageService = languageService;
+
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
         }
 
         /// <summary>

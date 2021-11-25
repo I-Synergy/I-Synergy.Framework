@@ -8,7 +8,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Services
     /// Implements the <see cref="ILanguageService" />
     /// </summary>
     /// <seealso cref="ILanguageService" />
-    public class LanguageService : ILanguageService
+    internal class LanguageService : ILanguageService
     {
         /// <summary>
         /// The managers

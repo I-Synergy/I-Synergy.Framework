@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Telemetry.Services
     /// <summary>
     /// Telemetry with AppCenter
     /// </summary>
-    public class TelemetryService : ITelemetryService
+    internal class TelemetryService : ITelemetryService
     {
         /// <summary>
         /// The context
@@ -114,7 +114,7 @@ namespace ISynergy.Framework.Telemetry.Services
                 var metrics = GetMetrics();
                 metrics.Add("Message", message);
 
-                ///Send AppCenter exception.
+                //Send AppCenter exception.
                 Crashes.TrackError(ex, metrics);
             }
             return Task.CompletedTask;

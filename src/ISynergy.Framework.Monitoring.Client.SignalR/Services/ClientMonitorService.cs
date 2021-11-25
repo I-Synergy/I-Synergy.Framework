@@ -1,13 +1,12 @@
-﻿using ISynergy.Framework.Core.Abstractions.Options;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Monitoring.Client.Abstractions.Services;
+using ISynergy.Framework.Monitoring.Common.Options;
 using ISynergy.Framework.Monitoring.Enumerations;
 using ISynergy.Framework.Monitoring.Messages;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
@@ -16,18 +15,8 @@ namespace ISynergy.Framework.Monitoring.Client.Services
     /// <summary>
     /// Class ClientMonitorService.
     /// </summary>
-    public class ClientMonitorService : IClientMonitorService
+    internal class ClientMonitorService : IClientMonitorService
     {
-        /// <summary>
-        /// Event raised when UI is refreshed.
-        /// </summary>
-        public event EventHandler RefreshUI;
-
-        /// <summary>
-        /// Event raised when CallerId phone number is selected.
-        /// </summary>
-        public event EventHandler<CallerMessage> POSCallerIdPhoneSelected;
-
         /// <summary>
         /// The dialog service
         /// </summary>
@@ -43,7 +32,7 @@ namespace ISynergy.Framework.Monitoring.Client.Services
         /// <summary>
         /// The configuration options
         /// </summary>
-        protected readonly IConfigurationOptions _configurationOptions;
+        protected readonly ClientMonitorOptions _configurationOptions;
 
         /// <summary>
         /// The connection
@@ -60,7 +49,7 @@ namespace ISynergy.Framework.Monitoring.Client.Services
         public ClientMonitorService(
             IDialogService dialogService,
             ILanguageService languageService,
-            IOptions<IConfigurationOptions> configurationOptions,
+            IOptions<ClientMonitorOptions> configurationOptions,
             ILogger logger)
         {
             _dialogService = dialogService;
@@ -69,37 +58,22 @@ namespace ISynergy.Framework.Monitoring.Client.Services
             _logger = logger;
         }
 
-        public void OnRefreshUI()
-        {
-            RefreshUI?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void OnPOSCallerIdPhoneSelected(CallerMessage message)
-        {
-            POSCallerIdPhoneSelected?.Invoke(this, message);
-        }
-
         /// <summary>
         /// Connects the asynchronous.
         /// </summary>
         /// <param name="token">The token.</param>
+        /// <param name="connectionAction"></param>
         /// <returns>Task.</returns>
-        public virtual Task ConnectAsync(string token)
+        public virtual Task ConnectAsync(string token, Action<HubConnection> connectionAction)
         {
-            _logger.LogInformation($"Connecting to {_configurationOptions.SignalREndpoint}");
+            _logger.LogInformation($"Connecting to {_configurationOptions.EndpointUrl}");
 
             _connection = new HubConnectionBuilder()
-                .WithUrl(_configurationOptions.SignalREndpoint, options =>
+                .WithUrl(_configurationOptions.EndpointUrl, options =>
                 {
                     options.AccessTokenProvider = () => Task.FromResult(token);
                 })
                 .Build();
-
-            // Set up handler
-            _connection.On<HubMessage>(nameof(MonitorEvents.RefreshDashboard), (_) =>
-            {
-                OnRefreshUI();
-            });
 
             _connection.On<HubMessage>(nameof(MonitorEvents.Connected), async (m) =>
             {
@@ -108,20 +82,15 @@ namespace ISynergy.Framework.Monitoring.Client.Services
                     string.Format(_languageService.GetString("Warning_User_Loggedin"), m.Data.ToString()));
             });
 
-            _connection.On<HubMessage>(nameof(MonitorEvents.NotifyCallerId), (m) =>
-            {
-                var message = JsonConvert.DeserializeObject<CallerMessage>(m.Data.ToString());
-
-                if (message is not null)
-                    OnPOSCallerIdPhoneSelected(message);
-            });
-
             _connection.On<HubMessage>(nameof(MonitorEvents.Disconnected), async (m) =>
             {
                 // User has logged out. 
                 await _dialogService.ShowInformationAsync(
                     string.Format(_languageService.GetString("Warning_User_Loggedout"), m.Data.ToString()));
             });
+
+            // Set up additional handlers
+            connectionAction.Invoke(_connection);
 
             return _connection.StartAsync();
         }

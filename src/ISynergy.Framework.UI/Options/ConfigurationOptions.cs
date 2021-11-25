@@ -8,14 +8,10 @@ namespace ISynergy.Framework.UI.Options
     public class ConfigurationOptions : IConfigurationOptions
     {
         /// <summary>
-        /// Gets or sets the application title.
+        /// Gets or sets the application.
         /// </summary>
         /// <value>The application title.</value>
-        public string ApplicationTitle { get; }
-        /// <summary>
-        /// Gets the application icon.
-        /// </summary>
-        public string ApplicationIcon { get; }
+        public string Application { get; }
         /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
@@ -57,21 +53,18 @@ namespace ISynergy.Framework.UI.Options
         /// </summary>
         public ConfigurationOptions()
         {
-            ApplicationIcon = "icon.ico";
         }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="applicationTitle"></param>
-        /// <param name="applicationIcon"></param>
+        /// <param name="application"></param>
         /// <param name="clientId"></param>
         /// <param name="clientSecret"></param>
-        public ConfigurationOptions(string applicationTitle, string applicationIcon, string clientId, string clientSecret)
+        public ConfigurationOptions(string application, string clientId, string clientSecret)
             : this()
         {
-            ApplicationTitle = applicationTitle;
-            ApplicationIcon = applicationIcon;
+            Application = application;
             ClientId = clientId;
             ClientSecret = clientSecret;
         }

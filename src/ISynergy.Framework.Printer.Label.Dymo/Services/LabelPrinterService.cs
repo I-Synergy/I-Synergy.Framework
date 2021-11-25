@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Printer.Label.Dymo.Services
     /// <summary>
     /// Label printer class.
     /// </summary>
-    public class LabelPrinterService : ILabelPrinterService
+    internal class LabelPrinterService : ILabelPrinterService
     {
         private readonly IDymoLabel _label;
         private readonly IEnumerable<IPrinter> _printers;

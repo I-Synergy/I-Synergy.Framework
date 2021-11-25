@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Sample.UWP")]
+[assembly: AssemblyTitle("Sample")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TestCompany")]
-[assembly: AssemblyProduct("Sample.UWP")]
+[assembly: AssemblyProduct("Sample for UWP")]
 [assembly: AssemblyCopyright("Copyright (c) 2008-2021 International Intelligence")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

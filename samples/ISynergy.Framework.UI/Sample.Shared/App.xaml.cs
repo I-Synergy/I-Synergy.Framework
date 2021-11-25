@@ -24,10 +24,12 @@ using System.Reflection;
 using System.Resources;
 using ISynergy.Framework.Telemetry.Options;
 using ISynergy.Framework.Telemetry.Services;
+using ISynergy.Framework.Telemetry.Extensions;
 using ISynergy.Framework.UI.Options;
 
 #if WINDOWS || WINDOWS_UWP
 using ISynergy.Framework.Clipboard.Services;
+using ISynergy.Framework.Clipboard.Extensions;
 #endif
 
 #if HAS_UNO
@@ -107,7 +109,6 @@ namespace Sample
                 .Build();
 
             services.Configure<ConfigurationOptions>(configurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
-            services.Configure<ApplicationInsightsOptions>(configurationRoot.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
 
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();
@@ -123,10 +124,10 @@ namespace Sample
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
-            services.AddSingleton<ITelemetryService, TelemetryService>();
+            services.AddTelemetryApplicationInsightsIntegration(configurationRoot);
 
 #if WINDOWS || WINDOWS_UWP
-            services.AddSingleton<IClipboardService, ClipboardService>();
+            services.AddClipboardIntegration();
 #endif
 
             services.AddSingleton<IShellViewModel, ShellViewModel>();

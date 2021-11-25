@@ -1,11 +1,8 @@
-﻿using System;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.MessageBus.Extensions;
+﻿using ISynergy.Framework.MessageBus.Azure.Extensions;
 using ISynergy.Framework.MessageBus.Sample.Models;
-using ISynergy.Framework.MessageBus.Sample.Subscriber.Options;
-using ISynergy.Framework.MessageBus.Sample.Subscriber.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace ISynergy.Framework.MessageBus.Sample.Subscriber
 {
@@ -27,8 +24,7 @@ namespace ISynergy.Framework.MessageBus.Sample.Subscriber
                 var serviceProvider = new ServiceCollection()
                     .AddLogging()
                     .AddOptions()
-                    .Configure<TestQueueOptions>(config.GetSection(nameof(TestQueueOptions)).BindWithReload)
-                    .AddSubscribingQueueMessageBus<TestDataModel, SubscribeToQueueMessageBusService>()
+                    .AddMessageBusAzureSubscribeIntegration<TestDataModel>(config)
                     .AddScoped<Startup>()
                     .BuildServiceProvider();
 

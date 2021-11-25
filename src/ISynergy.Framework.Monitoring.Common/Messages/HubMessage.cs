@@ -3,7 +3,7 @@
     /// <summary>
     /// Class HubMessage.
     /// </summary>
-    public class HubMessage
+    public class HubMessage : HubMessage<object>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HubMessage" /> class.
@@ -11,20 +11,6 @@
         /// <param name="message">The message.</param>
         /// <param name="data">The data.</param>
         public HubMessage(string message, object data = null)
-        {
-            Message = message;
-            Data = data;
-        }
-
-        /// <summary>
-        /// Gets the message.
-        /// </summary>
-        /// <value>The message.</value>
-        public string Message { get; }
-        /// <summary>
-        /// Gets the data.
-        /// </summary>
-        /// <value>The data.</value>
-        public object Data { get; }
+            : base(message, data) { }
     }
 }

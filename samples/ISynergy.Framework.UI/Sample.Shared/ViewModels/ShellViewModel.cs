@@ -100,7 +100,7 @@ namespace Sample.ViewModels
         {
             CommonServices = commonServices;
 
-            Title = $"{context.Title} {commonServices.InfoService.ProductVersion}";
+            Title = commonServices.InfoService.ProductName;
             Version = commonServices.InfoService.ProductVersion;
             DisplayName = "User";
 

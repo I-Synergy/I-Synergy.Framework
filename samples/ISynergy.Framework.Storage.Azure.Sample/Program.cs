@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Storage.Abstractions.Services;
+using ISynergy.Framework.Storage.Azure.Extensions;
 using ISynergy.Framework.Storage.Azure.Sample.Options;
 using ISynergy.Framework.Storage.Azure.Services;
 using Microsoft.Extensions.Configuration;
@@ -30,10 +31,7 @@ namespace ISynergy.Framework.Storage.Azure.Sample
                 var services = new ServiceCollection()
                     .AddLogging()
                     .AddOptions()
-                    .Configure<AzureBlobOptions>(config.GetSection(nameof(AzureBlobOptions)).BindWithReload)
-                    .AddSingleton<IStorageService<AzureBlobOptions>>(e => new StorageService<AzureBlobOptions>(
-                        e.GetService<IOptions<AzureBlobOptions>>(),
-                        Guid.Parse("ECEB4346-97AD-4919-9248-3EA1012FCA47").ToString()))
+                    .AddStorageAzureIntegration<AzureBlobOptions>(config, Guid.Parse("ECEB4346-97AD-4919-9248-3EA1012FCA47").ToString())
                     .AddSingleton<Startup>()
                     .BuildServiceProvider();
 
