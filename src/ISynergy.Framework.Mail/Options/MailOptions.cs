@@ -1,12 +1,11 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ISynergy.Framework.Mail.SendGrid")]
 namespace ISynergy.Framework.Mail.Options
 {
     /// <summary>
     /// Mail service options.
     /// </summary>
-    internal class MailOptions
+    public class MailOptions
     {
         /// <summary>
         /// Gets or sets the email address.
