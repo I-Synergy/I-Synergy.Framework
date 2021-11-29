@@ -24,6 +24,7 @@ namespace ISynergy.Framework.Monitoring.Extensions
             where TEntity : class
         {
             services.AddLogging();
+            services.AddRouting();
             services.AddSignalR(options =>
             {
                 options.EnableDetailedErrors = true;
@@ -43,6 +44,7 @@ namespace ISynergy.Framework.Monitoring.Extensions
         /// <returns></returns>
         public static IApplicationBuilder UseMonitorSignalR(this IApplicationBuilder app)
         {
+            app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapHub<MonitorHub>("/monitor"));
             return app;
         }
