@@ -34,7 +34,16 @@ namespace ISynergy.Framework.Monitoring.Services
         /// <param name="data">The data.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Task.</returns>
-        public Task PublishAsync(string channel, string eventname, TEntity data, CancellationToken cancellationToken = default) =>
-            _hubContext.Clients.Group(channel).SendAsync(eventname, data, cancellationToken);
+        public Task PublishAsync(string channel, string eventname, TEntity data, CancellationToken cancellationToken = default)
+        {
+            var group = _hubContext.Clients.Group(channel);
+
+            if(group is not null)
+            {
+                return group.SendAsync(eventname, data, cancellationToken);
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }
