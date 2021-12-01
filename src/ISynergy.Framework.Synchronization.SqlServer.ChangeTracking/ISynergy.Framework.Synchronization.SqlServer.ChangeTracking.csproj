@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking</PackageId>
+		<Description>I-Synergy Framework Synchronization SQL Server change tracking for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
+		<PackageTags>I-Synergy, Framework, Synchronization, SQLServer, Change, Tracking</PackageTags>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Synchronization.SqlServer\ISynergy.Framework.Synchronization.SqlServer.csproj" />
+	</ItemGroup>
+
+</Project>

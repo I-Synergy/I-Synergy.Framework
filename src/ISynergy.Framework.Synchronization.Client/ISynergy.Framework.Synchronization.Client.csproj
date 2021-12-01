@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Synchronization.Client</PackageId>
+		<Description>I-Synergy Framework Synchronization Client for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
+		<PackageTags>I-Synergy, Framework, Synchronization, Client</PackageTags>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Synchronization.Core\ISynergy.Framework.Synchronization.Core.csproj" />
+	</ItemGroup>
+
+</Project>
