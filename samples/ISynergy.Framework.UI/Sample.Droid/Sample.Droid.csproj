@@ -77,7 +77,7 @@
     <PackageReference Include="Uno.Material">
       <Version>1.0.3</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.11.6" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="4.0.9" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.35" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
     <PackageReference Include="Xamarin.AndroidX.AppCompat.AppCompatResources">

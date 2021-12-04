@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
-using Sample.Options;
 using Sample.Services;
 using Sample.ViewModels;
 using Sample.Views;
@@ -22,8 +21,6 @@ using System.IO;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Resources;
-using ISynergy.Framework.Telemetry.Options;
-using ISynergy.Framework.Telemetry.Services;
 using ISynergy.Framework.Telemetry.Extensions;
 using ISynergy.Framework.UI.Options;
 
@@ -60,12 +57,20 @@ namespace Sample
         }
 
 #if WINDOWS_UWP || HAS_UNO
+        /// <summary>
+        /// Add additional resource dictionaries.
+        /// </summary>
+        /// <returns></returns>
         protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>()
             {
                 new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Uwp.xaml") }
             };
 #elif WINDOWS
+        /// <summary>
+        /// Add additional resource dictionaries.
+        /// </summary>
+        /// <returns></returns>
         protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>()
             {

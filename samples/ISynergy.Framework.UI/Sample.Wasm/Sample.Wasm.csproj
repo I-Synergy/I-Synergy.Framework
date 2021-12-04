@@ -4,7 +4,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <NoWarn>NU1701</NoWarn>
 		<WasmHead>true</WasmHead>
         <Product>Sample</Product>
@@ -14,6 +14,7 @@
         <AssemblyName>Sample</AssemblyName>
         <DefineConstants>__WASM__</DefineConstants>
 		<WasmShellEnableLongPathSupport>false</WasmShellEnableLongPathSupport>
+	    <WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
     </PropertyGroup>
 	
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -37,14 +38,14 @@
 	
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
 		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.1.0" />
 		<PackageReference Include="Uno.Material" Version="1.0.3" />
-        <PackageReference Include="Uno.UI.WebAssembly" Version="3.11.6" />
-        <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.0.0" />
-        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.0.0" />
-		<PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
+        <PackageReference Include="Uno.UI.WebAssembly" Version="4.0.9" />
+		<PackageReference Include="Uno.UI.RemoteControl" Version="4.0.9" Condition="'$(Configuration)'=='Debug'" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.1.2" />
+        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.1.2" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

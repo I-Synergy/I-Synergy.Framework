@@ -23,7 +23,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\QueryTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Options\AppCenterOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>

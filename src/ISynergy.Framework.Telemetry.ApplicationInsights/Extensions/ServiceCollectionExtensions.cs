@@ -22,13 +22,14 @@ namespace ISynergy.Framework.Telemetry.Extensions
         public static IServiceCollection AddTelemetryApplicationInsightsIntegration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions();
-
-#if UAP10_0_18362 || NET6_0_WINDOWS10_0_18362_0
             services.Configure<ApplicationInsightsOptions>(configuration.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
+
+//#if UAP10_0_18362 || NET6_0_WINDOWS10_0_18362_0 || NETSTANDARD2_0
+
+//#else
+//            services.AddApplicationInsightsTelemetry(configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+//#endif
             services.TryAddSingleton<ITelemetryService, TelemetryService>();
-#else
-            services.AddApplicationInsightsTelemetry(configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
-#endif
 
             return services;
         }

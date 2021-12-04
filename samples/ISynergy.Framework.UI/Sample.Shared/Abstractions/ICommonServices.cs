@@ -19,10 +19,5 @@ namespace Sample.Abstractions.Services
         /// </summary>
         /// <value>The file service.</value>
         IFileService FileService { get; }
-        /// <summary>
-        /// Gets the clipboard service.
-        /// </summary>
-        /// <value>The clipboard service.</value>
-        IClipboardService ClipboardService { get; }
     }
 }
