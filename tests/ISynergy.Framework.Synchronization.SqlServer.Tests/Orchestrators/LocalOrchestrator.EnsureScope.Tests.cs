@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 {
     public partial class LocalOrchestratorTests
     {
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_EnsureScope_ShouldNot_Fail_If_NoTables_In_Setup()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -33,7 +33,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_EnsureScope_NewScope()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_CancellationToken_ShouldInterrupt_EnsureScope_OnConnectionOpened()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_CancellationToken_ShouldInterrupt_EnsureScope_OnTransactionCommit()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");

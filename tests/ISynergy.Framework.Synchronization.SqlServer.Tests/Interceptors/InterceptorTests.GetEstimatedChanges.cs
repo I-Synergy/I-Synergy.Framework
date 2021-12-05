@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 {
     public partial class InterceptorsTests
     {
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_GetEstimatedChanges()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");
@@ -104,7 +104,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             _databaseHelper.DropDatabase(dbNameCli);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task RemoteOrchestrator_GetEstimatedChanges()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");

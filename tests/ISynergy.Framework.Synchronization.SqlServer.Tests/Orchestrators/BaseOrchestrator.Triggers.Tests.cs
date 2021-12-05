@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 {
     public partial class BaseOrchestratorTests
     {
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_ShouldCreate_Triggers()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -67,7 +67,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Trigger_ShouldCreate()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -132,7 +132,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Trigger_ShouldOverwrite()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -172,7 +172,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Trigger_ShouldNotOverwrite()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -213,7 +213,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Trigger_Exists()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -250,7 +250,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Triggers_ShouldCreate()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");

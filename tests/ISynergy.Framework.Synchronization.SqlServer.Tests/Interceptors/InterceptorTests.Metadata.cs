@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 {
     public partial class InterceptorsTests
     {
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_MetadataCleaning()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");

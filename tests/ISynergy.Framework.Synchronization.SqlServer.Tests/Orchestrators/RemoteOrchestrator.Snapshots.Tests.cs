@@ -32,7 +32,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper = new DatabaseHelper();
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task RemoteOrchestrator_CreateSnapshot_CheckInterceptors()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_srv");
@@ -144,7 +144,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task RemoteOrchestrator_CreateSnapshot_CheckBatchInfo()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -211,7 +211,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task RemoteOrchestrator_CreateSnapshot_WithParameters_CheckBatchInfo()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -309,7 +309,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
 
 
-        [TestMethod]
+        [Ignore]
         public async Task RemoteOrchestrator_CreateSnapshot_ShouldFail_If_MissingMandatoriesOptions()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");

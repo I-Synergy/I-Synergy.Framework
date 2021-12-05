@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         /// <summary>
         /// LocalOrchestrator.GetEstimatedChanges should return estimated rows to send back to the server
         /// </summary>
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_GetEstimatedChanges_AfterInitialized_ShouldReturnEstimatedRowsCount()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");
@@ -81,7 +81,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         /// <summary>
         /// LocalOrchestrator.GetEstimatedChanges should return estimated rows to send back to the server
         /// </summary>
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_GetEstimatedChanges_BeforeInitialized_ShouldThrowError()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");

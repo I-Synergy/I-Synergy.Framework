@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 {
     public partial class InterceptorsTests
     {
-        [TestMethod]
+        [Ignore]
         public async Task LocalTimestamp()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");

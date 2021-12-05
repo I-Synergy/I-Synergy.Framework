@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper = new DatabaseHelper();
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_BeginSession_ShouldIncrement_SyncStage()
         {
             var options = new SyncOptions();
@@ -57,7 +57,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             Assert.IsTrue(onSessionBegin);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_EndSession_ShouldIncrement_SyncStage()
         {
             var options = new SyncOptions();
@@ -83,7 +83,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             Assert.IsTrue(onSessionEnd);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task LocalOrchestrator_Interceptor_ShouldSerialize()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");

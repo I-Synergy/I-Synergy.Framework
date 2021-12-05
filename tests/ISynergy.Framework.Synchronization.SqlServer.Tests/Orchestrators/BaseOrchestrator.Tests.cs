@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper = new DatabaseHelper();
         }
 
-        [TestMethod]
+        [Ignore]
         public void BaseOrchestrator_Constructor()
         {
             var provider = new SqlSyncProvider();
@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
         }
 
-        [TestMethod]
+        [Ignore]
         public void BaseOrchestrator_ShouldFail_When_Args_AreNull()
         {
             var provider = new SqlSyncProvider();
@@ -67,7 +67,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(null, null, setup));
         }
 
-        [TestMethod]
+        [Ignore]
         public void BaseOrchestrator_GetContext_ShouldBeInitialized()
         {
             var options = new SyncOptions();
@@ -85,7 +85,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             Assert.IsNull(ctx.Parameters);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_GetSchema_ShouldFail_If_SetupIsEmpty()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -151,7 +151,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_GetSchema_ShouldReturnSchema()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -201,7 +201,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_GetSchema_CancellationToken_ShouldInterrupt()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -240,7 +240,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_GetSchema_SetupColumnsDefined_ShouldReturn_SchemaWithSetupColumnsOnly()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -273,7 +273,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_GetSchema_NoPrimaryKeysColumn_ShouldFail()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -304,7 +304,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_GetSchema_NonExistingColumns_ShouldFail()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -336,7 +336,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_GetSchema_NonExistingTables_ShouldFail()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -373,7 +373,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_ShouldFail_If_SetupIsEmpty()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -400,7 +400,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_SchemaCreated_If_SetupHasTables()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -431,7 +431,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_SchemaNotCreated_If_SetupHasTables_AndDbIsEmpty()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -457,7 +457,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_SchemaCreated_If_SchemaHasColumnsDefinition()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -510,7 +510,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_ShouldCreate_TrackingTable()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -566,7 +566,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
       
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_ShouldCreate_StoredProcedures()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -624,7 +624,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_ShouldCreate_Table()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -675,7 +675,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
 
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_SchemaFail_If_SchemaHasColumnsDefinitionButNoPrimaryKey()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -716,7 +716,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_Provision_ShouldFails_If_SetupTable_DoesNotExist()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");

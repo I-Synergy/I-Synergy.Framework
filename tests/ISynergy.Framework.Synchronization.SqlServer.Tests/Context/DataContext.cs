@@ -267,7 +267,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests.Context
 #if NET5_0 || NET6_0 || NETCOREAPP3_1
                     .HasDatabaseName("AK_Product_Name")
 #elif NETCOREAPP2_1
-                    .HasName("AK_Product_Name")
+                    .HasDatabaseName("AK_Product_Name")
 #endif
                     .IsUnique();
 
@@ -275,7 +275,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests.Context
 #if NET5_0 || NET6_0 || NETCOREAPP3_1
                     .HasDatabaseName("AK_Product_ProductNumber")
 #elif NETCOREAPP2_1
-                    .HasName("AK_Product_ProductNumber")
+                    .HasDatabaseName("AK_Product_ProductNumber")
 #endif
                     .IsUnique();
 
@@ -345,7 +345,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests.Context
 #if NET5_0 || NET6_0 || NETCOREAPP3_1
                     .HasDatabaseName("AK_ProductCategory_Name")
 #elif NETCOREAPP2_1
-                    .HasName("AK_ProductCategory_Name")
+                    .HasDatabaseName("AK_ProductCategory_Name")
 #endif
                     .IsUnique();
 
@@ -384,7 +384,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests.Context
 #if NET5_0 || NET6_0 || NETCOREAPP3_1
                     .HasDatabaseName("AK_ProductModel_Name")
 #elif NETCOREAPP2_1
-                    .HasName("AK_ProductModel_Name")
+                    .HasDatabaseName("AK_ProductModel_Name")
 #endif
                     .IsUnique();
 

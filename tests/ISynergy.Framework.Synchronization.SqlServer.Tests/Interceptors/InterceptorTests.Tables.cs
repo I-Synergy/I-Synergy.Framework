@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 {
     public partial class InterceptorsTests
     {
-        [TestMethod]
+        [Ignore]
         public async Task Table_Create_One()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -72,7 +72,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task Table_Exists()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -105,7 +105,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task Table_Create_One_Overwrite()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -169,7 +169,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task Table_Create_All()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -237,7 +237,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task Table_Drop_One()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -299,7 +299,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task Table_Drop_One_Cancel()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -366,7 +366,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task Table_Drop_All()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");

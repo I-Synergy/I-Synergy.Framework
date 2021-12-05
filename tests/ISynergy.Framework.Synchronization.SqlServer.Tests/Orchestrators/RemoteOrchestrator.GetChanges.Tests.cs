@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         /// <summary>
         /// RemoteOrchestrator.GetChanges() should return rows inserted on server, depending on the client scope sent
         /// </summary>
-        [TestMethod]
+        [Ignore]
         public async Task RemoteOrchestrator_GetChanges_ShouldReturnNewRowsInserted()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");
@@ -95,7 +95,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task RemoteOrchestrator_GetEstimatedChanges_AfterInitialize_ShouldReturnRowsCount()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");
@@ -158,7 +158,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             Assert.IsTrue(changes.ServerChangesSelected.TableChangesSelected.Select(tcs => tcs.TableName).ToList().Contains("ProductCategory"));
         }
 
-        [TestMethod]
+        [Ignore]
 
         public async Task RemoteOrchestrator_GetEstimatedChanges_BeforeInitialize_ShouldReturnRowsCount()
         {

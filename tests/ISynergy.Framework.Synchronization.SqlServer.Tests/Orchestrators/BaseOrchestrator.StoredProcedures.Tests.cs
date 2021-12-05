@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 {
     public partial class BaseOrchestratorTests
     {
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_StoredProcedure_ShouldCreate()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_StoredProcedure_ShouldOverwrite()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -95,7 +95,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         }
 
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_StoredProcedure_ShouldNotOverwrite()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -137,7 +137,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_StoredProcedure_Exists()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
@@ -171,7 +171,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             _databaseHelper.DropDatabase(dbName);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task BaseOrchestrator_StoredProcedures_ShouldCreate()
         {
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");

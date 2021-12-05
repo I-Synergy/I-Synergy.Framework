@@ -122,7 +122,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             _databaseHelper.DropDatabase(dbNameCli);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task RemoteOrchestrator_ApplyChanges()
         {
             var dbNameSrv = _databaseHelper.GetRandomName("tcp_lo_srv");
