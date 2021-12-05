@@ -21,9 +21,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("ISynergy.Framework.AspNetCore.Synchronization")]
-[assembly: InternalsVisibleTo("ISynergy.Framework.Synchronization.Client")]
-
 namespace ISynergy.Framework.Synchronization.Core
 {
     public abstract partial class BaseOrchestrator
@@ -67,7 +64,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Gets the scope name used by this local orchestrator
         /// </summary>
-        public virtual string ScopeName { get; internal protected set; }
+        public virtual string ScopeName { get; set; }
 
         /// <summary>
         /// Gets or Sets the start time for this orchestrator
@@ -103,21 +100,21 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Set an interceptor to get info on the current sync process
         /// </summary>
         [DebuggerStepThrough]
-        internal void On<T>(Action<T> interceptorAction) where T : ProgressArgs =>
+        public void On<T>(Action<T> interceptorAction) where T : ProgressArgs =>
             this.interceptors.GetInterceptor<T>().Set(interceptorAction);
 
         /// <summary>
         /// Set an interceptor to get info on the current sync process
         /// </summary>
         [DebuggerStepThrough]
-        internal void On<T>(Func<T, Task> interceptorAction) where T : ProgressArgs =>
+        public void On<T>(Func<T, Task> interceptorAction) where T : ProgressArgs =>
             this.interceptors.GetInterceptor<T>().Set(interceptorAction);
 
         /// <summary>
         /// Set a collection of interceptors
         /// </summary>
         [DebuggerStepThrough]
-        internal void On(Interceptor interceptors) => this.interceptors = interceptors;
+        public void On(Interceptor interceptors) => this.interceptors = interceptors;
 
         /// <summary>
         /// Returns the Task associated with given type of BaseArgs 

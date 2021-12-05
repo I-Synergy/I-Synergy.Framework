@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ISynergy.Framework.Synchronization.Core.Abstractions;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Core.Interceptors
 {
-
     /// <summary>
     /// Encapsulate 1 func to intercept one event
     /// </summary>

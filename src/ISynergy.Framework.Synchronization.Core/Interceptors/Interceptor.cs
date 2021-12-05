@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
+﻿using ISynergy.Framework.Synchronization.Core.Abstractions;
+using ISynergy.Framework.Synchronization.Core.Arguments;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;

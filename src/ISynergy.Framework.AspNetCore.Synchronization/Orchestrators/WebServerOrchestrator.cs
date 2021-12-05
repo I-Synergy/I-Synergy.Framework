@@ -36,12 +36,21 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         /// Default ctor. Using default options and schema
         /// </summary>
         /// <param name="provider"></param>
+        /// <param name="options"></param>
+        /// <param name="setup"></param>
+        /// <param name="scopeName"></param>
         public WebServerOrchestrator(CoreProvider provider, SyncOptions options, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
             : base(provider, options, setup, scopeName)
         {
             _converters = new Collection<IConverter>();
         }
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="tables"></param>
+        /// <param name="scopeName"></param>
         public WebServerOrchestrator(CoreProvider provider, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
             : this(provider, new SyncOptions(), new SyncSetup(tables), scopeName)
         {
