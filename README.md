@@ -18,6 +18,8 @@ ___
 | [I-Synergy.Framework.AspNetCore.Authentication](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Authentication/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Authentication) |
 | [I-Synergy.Framework.AspNetCore.Globalization](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Globalization/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Globalization) |
 | [I-Synergy.Framework.AspNetCore.MultiTenancy](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.MultiTenancy/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.MultiTenancy) |
+| [I-Synergy.Framework.AspNetCore.Proxy](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Proxy/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Proxy) |
+| [I-Synergy.Framework.AspNetCore.Synchronization](https://www.nuget.org/packages/I-Synergy.Framework.AspNetCore.Synchronization/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.AspNetCore.Synchronization) |
 | [I-Synergy.Framework.Automations](https://www.nuget.org/packages/I-Synergy.Framework.Automations/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Automations) |
 | [I-Synergy.Framework.Clipboard](https://www.nuget.org/packages/I-Synergy.Framework.Clipboard/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Clipboard) |
 | [I-Synergy.Framework.Core](https://www.nuget.org/packages/I-Synergy.Framework.Core/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Core) |
@@ -44,6 +46,11 @@ ___
 | [I-Synergy.Framework.Printer.Label.Dymo](https://www.nuget.org/packages/I-Synergy.Framework.Printer.Label.Dymo/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Printer.Label.Dymo) |
 | [I-Synergy.Framework.Storage](https://www.nuget.org/packages/I-Synergy.Framework.Storage/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage) |
 | [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage.Azure) |
+| [I-Synergy.Framework.Synchronization.Client](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Client/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Client) |
+| [I-Synergy.Framework.Synchronization.Core](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Core) |
+| [I-Synergy.Framework.Synchronization.SQLite](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.SQLite/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.SQLite) |
+| [I-Synergy.Framework.Synchronization.SqlServer](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.SqlServer/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.SqlServer) |
+| [I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking) |
 | [I-Synergy.Framework.Telemetry](https://www.nuget.org/packages/I-Synergy.Framework.Telemetry/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Telemetry) |
 | [I-Synergy.Framework.Telemetry.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Telemetry.AppCenter/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Telemetry.AppCenter) |
 | [I-Synergy.Framework.Telemetry.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Telemetry.ApplicationInsights/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Telemetry.ApplicationInsights) |

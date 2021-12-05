@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore.Synchronization\ISynergy.Framework.AspNetCore.Synchronization.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization.Client\ISynergy.Framework.Synchronization.Client.csproj" />
-    <ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization.SqlLite\ISynergy.Framework.Synchronization.SqlLite.csproj" />
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization.SQLite\ISynergy.Framework.Synchronization.SQLite.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.csproj" />
     <ProjectReference Include="..\Sample.Synchronization.Common\Sample.Synchronization.Common.csproj" />
   </ItemGroup>

@@ -209,7 +209,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Synchron
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Synchronization.SqlServer.Tests", "tests\ISynergy.Framework.Synchronization.SqlServer.Tests\ISynergy.Framework.Synchronization.SqlServer.Tests.csproj", "{ED453F5D-4D83-47B9-A992-FB2E58C1D281}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Synchronization.SqlLite.Tests", "tests\ISynergy.Framework.Synchronization.SqlLite.Tests\ISynergy.Framework.Synchronization.SqlLite.Tests.csproj", "{7E80D20F-1DCE-4842-AF65-DDDCDD88C89A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Synchronization.SQLite.Tests", "tests\ISynergy.Framework.Synchronization.SQLite.Tests\ISynergy.Framework.Synchronization.SQLite.Tests.csproj", "{7E80D20F-1DCE-4842-AF65-DDDCDD88C89A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.AspNetCore.Synchronization.Tests", "tests\ISynergy.Framework.AspNetCore.Synchronization.Tests\ISynergy.Framework.AspNetCore.Synchronization.Tests.csproj", "{A23C3273-DA1D-44FD-8B1D-3C143E31FFE3}"
 EndProject
@@ -217,7 +217,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISynergy.Framework.Synchron
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Synchronization.Common", "samples\Sample.Synchronization.Common\Sample.Synchronization.Common.csproj", "{ABAC7613-2852-4DFA-9582-5C2EE83F05B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.Synchronization.SqlLite", "src\ISynergy.Framework.Synchronization.SqlLite\ISynergy.Framework.Synchronization.SqlLite.csproj", "{5B7F7BD1-04AD-4E1C-9B05-0E8362029DF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.Synchronization.SQLite", "src\ISynergy.Framework.Synchronization.SQLite\ISynergy.Framework.Synchronization.SQLite.csproj", "{5B7F7BD1-04AD-4E1C-9B05-0E8362029DF4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Synchronization", "samples\Sample.Synchronization\Sample.Synchronization.csproj", "{70F2441A-47C1-4C13-84FA-C37908D1251D}"
 EndProject

@@ -6,7 +6,7 @@ using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Interceptors;
 using ISynergy.Framework.Synchronization.Core.Setup;
-using ISynergy.Framework.Synchronization.SqlLite.Providers;
+using ISynergy.Framework.Synchronization.SQLite.Providers;
 using ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Providers;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
 using Microsoft.AspNetCore.Http;

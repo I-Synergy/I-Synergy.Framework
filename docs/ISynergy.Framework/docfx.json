@@ -39,7 +39,7 @@
             "src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj",
             "src/ISynergy.Framework.Synchronization.Client/ISynergy.Framework.Synchronization.Client.csproj",
             "src/ISynergy.Framework.Synchronization.Core/ISynergy.Framework.Synchronization.Core.csproj",
-            "src/ISynergy.Framework.Synchronization.SqlLite/ISynergy.Framework.Synchronization.SqlLite.csproj",
+            "src/ISynergy.Framework.Synchronization.SQLite/ISynergy.Framework.Synchronization.SQLite.csproj",
             "src/ISynergy.Framework.Synchronization.SqlServer/ISynergy.Framework.Synchronization.SqlServer.csproj",
             "src/ISynergy.Framework.Synchronization.SqlServer.ChangeTracking/ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.csproj",
             "src/ISynergy.Framework.Telemetry/ISynergy.Framework.Telemetry.csproj",
