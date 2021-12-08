@@ -28,7 +28,7 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
         /// <summary>
         /// Set a Func{T, Task} as interceptor
         /// </summary>
-        public void Set(Func<T, Task> run) => this.wrapperAsync = run != null ? run : Empty;
+        public void Set(Func<T, Task> run) => this.wrapperAsync = run is not null ? run : Empty;
 
         /// <summary>
         /// Set an Action{T} as interceptor
@@ -36,7 +36,7 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
         [DebuggerStepThrough]
         public void Set(Action<T> run)
         {
-            this.wrapperAsync = run != null ? (t =>
+            this.wrapperAsync = run is not null ? (t =>
             {
                 run(t);
                 return Task.CompletedTask;
@@ -50,7 +50,7 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
         [DebuggerStepThrough]
         public async Task RunAsync(T args, CancellationToken cancellationToken)
         {
-            if (this.wrapperAsync != null)
+            if (this.wrapperAsync is not null)
                 await this.wrapperAsync(args);
 
             if (cancellationToken.IsCancellationRequested)

@@ -7,9 +7,9 @@ using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.SQLite.Utilities
+namespace ISynergy.Framework.Synchronization.Sqlite.Utilities
 {
-    public static class SqliteManagementUtils
+    internal static class SqliteManagementUtils
     {
         public static async Task<SyncTable> GetTableAsync(SqliteConnection connection, SqliteTransaction transaction, string unquotedTableName)
         {

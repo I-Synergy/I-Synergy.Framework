@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onLTLoading = 0;
             var onLTLoaded = 0;

@@ -19,6 +19,8 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Delete metadatas items from tracking tables
         /// </summary>
         /// <param name="timeStampStart">Timestamp start. Used to limit the delete metadatas rows from now to this timestamp</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <param name="progress">Progress args</param>
         public virtual Task<DatabaseMetadatasCleaned> DeleteMetadatasAsync(long? timeStampStart, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
@@ -53,7 +55,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 var command = await syncAdapter.GetCommandAsync(DbCommandType.DeleteMetadata, connection, transaction);
 
-                if (command != null)
+                if (command is not null)
                 {
 
                     // Set the special parameters for delete metadata
@@ -64,7 +66,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     // Check if we have a return value instead
                     var syncRowCountParam = DbSyncAdapter.GetParameter(command, "sync_row_count");
 
-                    if (syncRowCountParam != null)
+                    if (syncRowCountParam is not null)
                         rowsCleanedCount = (int)syncRowCountParam.Value;
 
                     // Only add a new table metadata stats object, if we have, at least, purged 1 or more rows
@@ -95,7 +97,7 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = await syncAdapter.GetCommandAsync(DbCommandType.UpdateMetadata, connection, transaction);
 
-            if (command == null) return false;
+            if (command is null) return false;
 
             // Set the parameters value from row
             syncAdapter.SetColumnParametersValues(command, row);
@@ -108,7 +110,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Check if we have a return value instead
             var syncRowCountParam = DbSyncAdapter.GetParameter(command, "sync_row_count");
 
-            if (syncRowCountParam != null)
+            if (syncRowCountParam is not null)
                 metadataUpdatedRowsCount = (int)syncRowCountParam.Value;
 
             return metadataUpdatedRowsCount > 0;

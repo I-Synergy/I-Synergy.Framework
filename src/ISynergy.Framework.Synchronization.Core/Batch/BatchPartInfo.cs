@@ -21,7 +21,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// </summary>
         public async Task LoadBatchAsync(SyncSet sanitizedSchema, string directoryFullPath, ISerializerFactory serializerFactory = default, BaseOrchestrator orchestrator = null)
         {
-            if (this.Data != null)
+            if (this.Data is not null)
                 return;
 
             if (string.IsNullOrEmpty(this.FileName))
@@ -44,7 +44,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// </summary>
         public void Clear()
         {
-            if (this.Data != null)
+            if (this.Data is not null)
                 this.Data.Dispose();
 
             this.Data = null;
@@ -115,7 +115,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
 
             ContainerSet set = null;
 
-            if (orchestrator != null)
+            if (orchestrator is not null)
             {
                 var interceptorArgs = new DeserializingSetArgs(orchestrator.GetContext(), fs, serializerFactory, fileName, directoryFullPath);
                 await orchestrator.InterceptAsync(interceptorArgs, default);
@@ -123,7 +123,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
             }
 
 
-            if (set == null)
+            if (set is null)
                 if (this.SerializedType == typeof(ContainerSet))
                 {
                     var serializer = serializerFactory.GetSerializer<ContainerSet>();
@@ -144,7 +144,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// </summary>
         private static async Task SerializeAsync(ContainerSet set, string fileName, string directoryFullPath, ISerializerFactory serializerFactory = default, BaseOrchestrator orchestrator = null)
         {
-            if (set == null)
+            if (set is null)
                 return;
 
             var fullPath = Path.Combine(directoryFullPath, fileName);
@@ -163,14 +163,14 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
 
             byte[] serializedBytes = null;
 
-            if (orchestrator != null)
+            if (orchestrator is not null)
             {
                 var interceptorArgs = new SerializingSetArgs(orchestrator.GetContext(), set, serializerFactory, fileName, directoryFullPath);
                 await orchestrator.InterceptAsync(interceptorArgs, default);
                 serializedBytes = interceptorArgs.Result;
             }
 
-            if (serializedBytes == null)
+            if (serializedBytes is null)
                 serializedBytes = await serializer.SerializeAsync(set);
 
 
@@ -197,7 +197,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
             bpi.IsLastBatch = isLastBatch;
 
             // Even if the set is empty (serialized on disk), we should retain the tables names
-            if (set != null)
+            if (set is not null)
             {
                 bpi.Tables = set.Tables.Select(t => new BatchPartTableInfo(t.TableName, t.SchemaName, t.Rows.Count)).ToArray();
                 bpi.RowsCount = set.Tables.Sum(t => t.Rows.Count);

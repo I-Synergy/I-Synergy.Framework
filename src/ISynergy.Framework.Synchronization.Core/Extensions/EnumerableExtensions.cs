@@ -49,19 +49,20 @@ namespace ISynergy.Framework.Synchronization.Core.Extensions
 
                 sorted.Add(item);
             }
-            else
-                if (throwOnCycle && !sorted.Contains(item))
+            else if (throwOnCycle && !sorted.Contains(item))
+            {
                 throw new Exception("Cyclic dependency found");
+            }
         }
 
         public static bool CompareWith<T>(this IEnumerable<T> source, IEnumerable<T> other, Func<T, T, bool> compare)
         {
             // checking null ref
-            if (source == null && other != null || source != null && other == null)
+            if (source is null && other is not null || source is not null && other is null)
                 return false;
 
             // If both are null, return true
-            if (source == null && other == null)
+            if (source is null && other is null)
                 return true;
 
             if (source.Count() != other.Count())
@@ -74,11 +75,11 @@ namespace ISynergy.Framework.Synchronization.Core.Extensions
         public static bool CompareWith<T>(this IEnumerable<T> source, IEnumerable<T> other) where T : class
         {
             // checking null ref
-            if (source == null && other != null || source != null && other == null)
+            if (source is null && other is not null || source is not null && other is null)
                 return false;
 
             // If both are null, return true
-            if (source == null && other == null)
+            if (source is null && other is null)
                 return true;
 
             if (source.Count() != other.Count())
@@ -90,7 +91,7 @@ namespace ISynergy.Framework.Synchronization.Core.Extensions
                 var cSourceItem = sourceItem as SyncNamedItem<T>;
                 var cOtherItem = otherItem as SyncNamedItem<T>;
 
-                if (cSourceItem != null && cOtherItem != null)
+                if (cSourceItem is not null && cOtherItem is not null)
                     return cSourceItem.EqualsByProperties(otherItem);
                 else
                     return sourceItem.Equals(otherItem);
@@ -106,7 +107,7 @@ namespace ISynergy.Framework.Synchronization.Core.Extensions
             {
                 MaxDegreeOfParallelism = maxDegreeOfParallelism
             };
-            if (scheduler != null)
+            if (scheduler is not null)
                 options.TaskScheduler = scheduler;
 
             var block = new ActionBlock<T>(body, options);

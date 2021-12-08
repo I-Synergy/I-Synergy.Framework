@@ -16,47 +16,8 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 {
-    public abstract class BaseTcpConflictsTests : IDisposable
+    public abstract class BaseTcpConflictsTests : BaseTcpTests, IDisposable
     {
-        /// <summary>
-        /// Gets the sync tables involved in the tests
-        /// </summary>
-        public abstract string[] Tables { get; }
-
-        /// <summary>
-        /// Gets the clients type we want to tests
-        /// </summary>
-        public abstract List<ProviderType> ClientsType { get; }
-
-        /// <summary>
-        /// Gets the server type we want to test
-        /// </summary>
-        public abstract ProviderType ServerType { get; }
-
-        /// <summary>
-        /// Get the server rows count
-        /// </summary>
-        public abstract int GetServerDatabaseRowsCount((string DatabaseName, ProviderType ProviderType, CoreProvider Provider) t);
-
-        /// <summary>
-        /// Create a provider
-        /// </summary>
-        public abstract CoreProvider CreateProvider(ProviderType providerType, string dbName);
-
-        /// <summary>
-        /// Create database, seed it, with or without schema
-        /// </summary>
-        /// <param name="t"></param>
-        /// <param name="useSeeding"></param>
-        /// <param name="useFallbackSchema"></param>
-        public abstract Task EnsureDatabaseSchemaAndSeedAsync((string DatabaseName,
-            ProviderType ProviderType, CoreProvider Provider) t, bool useSeeding = false, bool useFallbackSchema = false);
-
-        /// <summary>
-        /// Create an empty database
-        /// </summary>
-        public abstract Task CreateDatabaseAsync(ProviderType providerType, string dbName, bool recreateDb = true);
-
         /// <summary>
         /// Gets the remote orchestrator and its database name
         /// </summary>
@@ -159,7 +120,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             await this.CreateDatabaseAsync(client.ProviderType, client.DatabaseName, true);
 
             // Execute a sync on all clients to initialize client and server schema 
-            var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+            var agent = new SyncAgent(_versionService, client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
             // init both server and client
             await agent.SynchronizeAsync();
@@ -210,7 +171,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_InsertClient_InsertServer(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -241,7 +202,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_InsertClient_InsertServer(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -312,7 +273,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_InsertClient_InsertServer(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 agent.Options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
 
@@ -344,7 +305,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_InsertClient_InsertServer(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 agent.Options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
 
@@ -406,7 +367,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_InsertClient_InsertServer(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -479,7 +440,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             }
 
             // Execute a sync on all clients to initialize client and server schema 
-            var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+            var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
             // Init both client and server
             await agent.SynchronizeAsync();
@@ -521,7 +482,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_UC_US_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -553,7 +514,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_UC_US_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -624,7 +585,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 var id = await Generate_UC_US_Conflict(client, options);
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 agent.Options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
 
@@ -655,7 +616,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 var id = await Generate_UC_US_Conflict(client, options);
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 agent.Options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
 
@@ -715,7 +676,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 var id = await Generate_UC_US_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 agent.OnApplyChangesFailed(acf =>
                 {
@@ -758,7 +719,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 var id = await Generate_UC_US_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -848,7 +809,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             }
 
             // Execute a sync on all clients to re-initialize client and server schema 
-            await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+            await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             // Delete product category on client
             using (var ctx = new DataContext(client, this.UseFallbackSchema))
@@ -886,7 +847,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 var productId = await Generate_DC_US_Conflict(client, options);
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 agent.Options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
 
@@ -919,7 +880,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 var productId = await Generate_DC_US_Conflict(client, options);
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 agent.Options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
 
@@ -980,7 +941,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 await Generate_DC_US_Conflict(client, options);
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1008,7 +969,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 await Generate_DC_US_Conflict(client, options);
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -1070,7 +1031,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var setup = new SyncSetup(Tables);
 
             // Execute a sync to initialize client and server schema 
-            var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+            var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
             // Since we may have an Outdated situation due to previous client, go for a Reinitialize sync type
             await agent.SynchronizeAsync(SyncType.Reinitialize);
@@ -1093,7 +1054,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var s = await agent.SynchronizeAsync(SyncType.ReinitializeWithUpload);
 
             // Generation of an outdated mark on the server
-            var serverOrchestrator = new RemoteOrchestrator(Server.Provider, options, setup);
+            var serverOrchestrator = new RemoteOrchestrator(_versionService, Server.Provider, options, setup);
             var ts = await serverOrchestrator.GetLocalTimestampAsync();
             await serverOrchestrator.DeleteMetadatasAsync(ts + 1);
 
@@ -1117,7 +1078,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
                 var setup = new SyncSetup(Tables);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -1173,7 +1134,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 var setup = new SyncSetup(Tables);
 
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -1221,6 +1182,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// - RemoteExistsLocalIsDeleted from the server side POV
         /// - RemoteIsDeletedLocalExists from the client side POV
         /// </summary>
+        /// <param name="client"></param>
         /// <param name="options"></param>
         /// <returns></returns>
         private async Task<string> Generate_UC_DS_Conflict((string DatabaseName, ProviderType ProviderType, CoreProvider Provider) client, SyncOptions options)
@@ -1240,7 +1202,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             }
 
             // Execute a sync to initialize client and server schema 
-            await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+            await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             // Update product category on each client
             using (var ctx = new DataContext(client, this.UseFallbackSchema))
@@ -1274,7 +1236,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_UC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1300,7 +1262,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_UC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -1364,7 +1326,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 var productCategoryId = await Generate_UC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 // Resolution is set to client side
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
@@ -1394,7 +1356,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 var productCategoryId = await Generate_UC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 // Resolution is set to client side
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
@@ -1462,7 +1424,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             }
 
             // Execute a sync to initialize client and server schema 
-            await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+            await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             // Delete product category 
             using (var ctx = new DataContext(client, this.UseFallbackSchema))
@@ -1494,7 +1456,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_DC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1520,7 +1482,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_DC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -1578,7 +1540,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_DC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
 
@@ -1607,7 +1569,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_DC_DS_Conflict(client, options); ;
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
 
@@ -1665,7 +1627,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             await this.CreateDatabaseAsync(client.ProviderType, client.DatabaseName, true);
 
             // Execute a sync on all clients to initialize client and server schema 
-            await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+            await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
 
             // Insert a product category on all clients
@@ -1698,7 +1660,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_DC_NULLS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1723,7 +1685,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_DC_NULLS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -1771,7 +1733,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_DC_NULLS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 // Set conflict resolution to client
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
@@ -1800,7 +1762,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_DC_NULLS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 // Set conflict resolution to client
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
@@ -1852,7 +1814,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             await this.CreateDatabaseAsync(client.ProviderType, client.DatabaseName, true);
 
             // Execute a sync on all clients to initialize client and server schema 
-            await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+            await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             // Insert a product category on server
             using (var ctx = new DataContext(this.Server, this.UseFallbackSchema))
@@ -1884,7 +1846,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_NULLC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1909,7 +1871,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_NULLC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;
@@ -1958,7 +1920,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_NULLC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 // Set conflict resolution to client
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
@@ -1990,7 +1952,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             {
                 await Generate_NULLC_DS_Conflict(client, options);
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 // Set conflict resolution to client
                 options.ConflictResolutionPolicy = ConflictResolutionPolicy.ClientWins;
@@ -2052,7 +2014,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
                 var clientNameDecidedOnClientMachine = _databaseHelper.GetRandomName();
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var localOrchestrator = agent.LocalOrchestrator;
                 var remoteOrchestrator = agent.RemoteOrchestrator;

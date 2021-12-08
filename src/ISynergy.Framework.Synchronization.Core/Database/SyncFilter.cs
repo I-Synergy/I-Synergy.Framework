@@ -130,7 +130,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public override bool EqualsByProperties(SyncFilter other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             var sc = SyncGlobalization.DataSourceStringComparison;

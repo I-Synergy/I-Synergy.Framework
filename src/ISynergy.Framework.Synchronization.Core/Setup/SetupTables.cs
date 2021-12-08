@@ -50,7 +50,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public void Add(SetupTable table)
         {
-            if (this[table.TableName, table.SchemaName] != null)
+            if (this[table.TableName, table.SchemaName] is not null)
                 throw new Exception($"Table {table.TableName} already exists in the collection");
 
             InnerCollection.Add(table);
@@ -72,7 +72,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public void AddRange(IEnumerable<string> tables)
         {
-            if (tables == null)
+            if (tables is null)
                 return;
 
             foreach (var table in tables)
@@ -92,7 +92,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
                 var parser = ParserName.Parse(tableName);
                 var tblName = parser.ObjectName;
                 var schemaName = parser.SchemaName;
-                schemaName = schemaName == null ? string.Empty : schemaName;
+                schemaName = schemaName is null ? string.Empty : schemaName;
 
                 var sc = SyncGlobalization.DataSourceStringComparison;
 
@@ -116,7 +116,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
                 if (string.IsNullOrEmpty(tableName))
                     throw new ArgumentNullException("tableName");
 
-                schemaName = schemaName == null ? string.Empty : schemaName;
+                schemaName = schemaName is null ? string.Empty : schemaName;
 
                 var sc = SyncGlobalization.DataSourceStringComparison;
 
@@ -146,7 +146,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public bool IsReadOnly => false;
         SetupTable IList<SetupTable>.this[int index] { get => this.InnerCollection[index]; set => this.InnerCollection[index] = value; }
         public bool Remove(SetupTable item) => InnerCollection.Remove(item);
-        public bool Contains(SetupTable item) => this[item.TableName, item.SchemaName] != null;
+        public bool Contains(SetupTable item) => this[item.TableName, item.SchemaName] is not null;
         public void CopyTo(SetupTable[] array, int arrayIndex) => InnerCollection.CopyTo(array, arrayIndex);
         public int IndexOf(SetupTable item) => InnerCollection.IndexOf(item);
         public void RemoveAt(int index) => InnerCollection.RemoveAt(index);

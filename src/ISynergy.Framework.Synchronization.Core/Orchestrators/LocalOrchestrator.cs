@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
@@ -20,8 +21,13 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Create a local orchestrator, used to orchestrates the whole sync on the client side
         /// </summary>
-        public LocalOrchestrator(CoreProvider provider, SyncOptions options, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
-           : base(provider, options, setup, scopeName)
+        public LocalOrchestrator(
+            IVersionService versionService,
+            CoreProvider provider, 
+            SyncOptions options, 
+            SyncSetup setup, 
+            string scopeName = SyncOptions.DefaultScopeName)
+           : base(versionService, provider, options, setup, scopeName)
         {
         }
 
@@ -78,7 +84,7 @@ namespace ISynergy.Framework.Synchronization.Core
             DatabaseChangesSelected clientChangesSelected = null;
 
             // Get local scope, if not provided 
-            if (localScopeInfo == null)
+            if (localScopeInfo is null)
             {
                 var scopeBuilder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
 
@@ -91,7 +97,7 @@ namespace ISynergy.Framework.Synchronization.Core
             }
 
             // If no schema in the client scope. Maybe the client scope table does not exists, or we never get the schema from server
-            if (localScopeInfo.Schema == null)
+            if (localScopeInfo.Schema is null)
                 throw new MissingLocalOrchestratorSchemaException();
 
             // On local, we don't want to chase rows from "others" 
@@ -137,7 +143,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 DatabaseChangesSelected clientChangesSelected = null;
 
                 // Get local scope, if not provided 
-                if (localScopeInfo == null)
+                if (localScopeInfo is null)
                 {
                     var scopeBuilder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
 
@@ -150,7 +156,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 }
 
                 // If no schema in the client scope. Maybe the client scope table does not exists, or we never get the schema from server
-                if (localScopeInfo.Schema == null)
+                if (localScopeInfo.Schema is null)
                     throw new MissingLocalOrchestratorSchemaException();
 
                 // On local, we don't want to chase rows from "others" 
@@ -188,7 +194,7 @@ namespace ISynergy.Framework.Synchronization.Core
                               CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.ChangesApplying, async (ctx, connection, transaction) =>
         {
-            DatabaseChangesApplied clientChangesApplied = null;
+            var clientChangesApplied = new DatabaseChangesApplied();
 
             // lastSyncTS : apply lines only if they are not modified since last client sync
             var lastSyncTS = scope.LastSyncTimestamp;
@@ -242,7 +248,7 @@ namespace ISynergy.Framework.Synchronization.Core
         internal async Task<(DatabaseChangesApplied snapshotChangesApplied, ScopeInfo clientScopeInfo)> 
             ApplySnapshotAsync(ScopeInfo clientScopeInfo, BatchInfo serverBatchInfo, long clientTimestamp, long remoteClientTimestamp, DatabaseChangesSelected databaseChangesSelected, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            if (serverBatchInfo == null )
+            if (serverBatchInfo is null )
                 return (new DatabaseChangesApplied(), clientScopeInfo);
 
             // Get context or create a new one
@@ -254,7 +260,7 @@ namespace ISynergy.Framework.Synchronization.Core
             ctx.SyncStage = SyncStage.SnapshotApplying;
             await this.InterceptAsync(new SnapshotApplyingArgs(ctx), cancellationToken).ConfigureAwait(false);
 
-            if (clientScopeInfo.Schema == null)
+            if (clientScopeInfo.Schema is null)
                 throw new ArgumentNullException(nameof(clientScopeInfo.Schema));
 
             // Applying changes and getting the new client scope info
@@ -296,7 +302,7 @@ namespace ISynergy.Framework.Synchronization.Core
         => RunInTransactionAsync(SyncStage.Migrating, async (ctx, connection, transaction) =>
         {
             // If schema does not have any table, just return
-            if (newSchema == null || newSchema.Tables == null || !newSchema.HasTables)
+            if (newSchema is null || newSchema.Tables is null || !newSchema.HasTables)
                 throw new MissingTablesException();
 
             // Migrate the db structure

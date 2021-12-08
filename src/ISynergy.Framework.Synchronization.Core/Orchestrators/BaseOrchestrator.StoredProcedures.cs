@@ -21,6 +21,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="table">A table from your Setup instance, where you want to create the Stored Procedure</param>
         /// <param name="storedProcedureType">StoredProcedure type</param>
         /// <param name="overwrite">If true, drop the existing stored procedure then create again</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> CreateStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
         {
@@ -28,7 +32,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var (schemaTable, _) = await this.InternalGetTableSchemaAsync(ctx, this.Setup, table, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            if (schemaTable == null)
+            if (schemaTable is null)
                 throw new MissingTableException(table.GetFullName());
 
             // Create a temporary SyncSet for attaching to the schemaTable
@@ -69,6 +73,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         /// <param name="table">A table from your Setup instance, where you want to create the Stored Procedures</param>
         /// <param name="overwrite">If true, drop the existing Stored Procedures then create them all, again</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> CreateStoredProceduresAsync(SetupTable table, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
          {
@@ -76,7 +84,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
              var schemaTable = schema.Tables[table.TableName, table.SchemaName];
 
-             if (schemaTable == null)
+             if (schemaTable is null)
                  throw new MissingTableException(table.GetFullName());
 
              // Get table builder
@@ -93,6 +101,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         /// <param name="table">A table from your Setup instance, where you want to check if the Stored Procedure exists</param>
         /// <param name="storedProcedureType">StoredProcedure type</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> ExistStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
         {
@@ -124,6 +136,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         /// <param name="table">A table from your Setup instance, where you want to drop the Stored Procedure</param>
         /// <param name="storedProcedureType">Stored Procedure type</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> DropStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
             => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
             {
@@ -164,6 +180,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Drop all Stored Procedures
         /// </summary>
         /// <param name="table">A table from your Setup instance, where you want to drop all the Stored Procedures</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> DropStoredProceduresAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
             => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
             {
@@ -213,13 +233,13 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var command = await tableBuilder.GetCreateStoredProcedureCommandAsync(storedProcedureType, filter, connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var action = new StoredProcedureCreatingArgs(ctx, tableBuilder.TableDescription, storedProcedureType, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -238,13 +258,13 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var command = await tableBuilder.GetDropStoredProcedureCommandAsync(storedProcedureType, filter, connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var action = new StoredProcedureDroppingArgs(ctx, tableBuilder.TableDescription, storedProcedureType, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync();
@@ -264,7 +284,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var existsCommand = await tableBuilder.GetExistsStoredProcedureCommandAsync(storedProcedureType, filter, connection, transaction).ConfigureAwait(false);
 
-            if (existsCommand == null)
+            if (existsCommand is null)
                 return false;
 
             var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);
@@ -311,7 +331,7 @@ namespace ISynergy.Framework.Synchronization.Core
             {
                 // check with filter
                 if ((storedProcedureType is DbStoredProcedureType.SelectChangesWithFilters || storedProcedureType is DbStoredProcedureType.SelectInitializedChangesWithFilters)
-                    && tableBuilder.TableDescription.GetFilter() == null)
+                    && tableBuilder.TableDescription.GetFilter() is null)
                     continue;
 
                 var exists = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
@@ -366,7 +386,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 // check with filter
                 if ((storedProcedureType is DbStoredProcedureType.SelectChangesWithFilters || storedProcedureType is DbStoredProcedureType.SelectInitializedChangesWithFilters)
-                    && tableBuilder.TableDescription.GetFilter() == null)
+                    && tableBuilder.TableDescription.GetFilter() is null)
                     continue;
 
                 var exists = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);

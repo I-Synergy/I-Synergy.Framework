@@ -95,7 +95,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             {
                 var column = Table.Columns[columnName];
 
-                if (column == null)
+                if (column is null)
                     throw new ArgumentException("Column is null");
 
                 var index = Table.Columns.IndexOf(column);
@@ -106,7 +106,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             {
                 var column = Table.Columns[columnName];
 
-                if (column == null)
+                if (column is null)
                     throw new ArgumentException("Column is null");
 
                 var index = Table.Columns.IndexOf(column);
@@ -158,10 +158,10 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public override string ToString()
         {
-            if (buffer == null || buffer.Length == 0)
+            if (buffer is null || buffer.Length == 0)
                 return "empty row";
 
-            if (Table == null)
+            if (Table is null)
                 return buffer.ToString();
 
             var sb = new StringBuilder();
@@ -173,7 +173,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             foreach (var c in columns)
             {
                 var o = this[c.ColumnName];
-                var os = o == null ? "<NULL />" : o.ToString();
+                var os = o is null ? "<NULL />" : o.ToString();
 
                 sb.Append($", [{c.ColumnName}]:{os}");
             }

@@ -25,8 +25,6 @@ namespace Sample.Api.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            //throw new ArgumentException("Argument is incorrect.");
-
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

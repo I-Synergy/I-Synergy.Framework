@@ -107,7 +107,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 
         public override bool EqualsByProperties(SyncFilterParameter other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             if (!EqualsByName(other))

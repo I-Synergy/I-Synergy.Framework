@@ -37,18 +37,28 @@ namespace ISynergy.Framework.Synchronization.Client
         /// <summary>
         /// Process a request message with HttpClient object. 
         /// </summary>
-        public async Task<HttpResponseMessage> ProcessRequestAsync(HttpClient client, string baseUri, byte[] data, HttpStep step, Guid sessionId, string scopeName,
-            ISerializerFactory serializerFactory, IConverter converter, int batchSize, SyncPolicy policy,
-            CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        public async Task<HttpResponseMessage> ProcessRequestAsync(
+            HttpClient client, 
+            string baseUri, 
+            byte[] data, 
+            HttpStep step, 
+            Guid sessionId, 
+            string scopeName,
+            ISerializerFactory serializerFactory, 
+            IConverter converter, 
+            int batchSize, 
+            SyncPolicy policy,
+            CancellationToken cancellationToken = default, 
+            IProgress<ProgressArgs> progress = null)
         {
             if (client is null)
                 throw new ArgumentNullException(nameof(client));
 
-            if (baseUri == null)
+            if (baseUri is null)
                 throw new ArgumentException("BaseUri is not defined");
 
             HttpResponseMessage response = null;
-            //var responseMessage = default(U);
+
             try
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -72,14 +82,14 @@ namespace ISynergy.Framework.Synchronization.Client
                 }
 
                 // Check if data is null
-                data = data == null ? new byte[] { } : data;
+                data = data is null ? new byte[] { } : data;
 
                 // calculate hash
                 var hash = HashAlgorithm.SHA256.Create(data);
                 var hashString = Convert.ToBase64String(hash);
 
-
                 string contentType = null;
+
                 // If Json, specify header
                 if (serializerFactory.Key == SerializersCollection.JsonSerializer.Key)
                     contentType = "application/json";
@@ -92,20 +102,22 @@ namespace ISynergy.Framework.Synchronization.Client
                     sessionId.ToString(), scopeName, step, data, ser, converter, hashString, contentType,
                     ct), cancellationToken, progress);
 
+                if (response is not null)
+                {
+                    // try to set the cookie for http session
+                    if (response.Headers is HttpResponseHeaders headers)
+                        // Ensure we have a cookie
+                        EnsureCookie(headers);
 
-                // try to set the cookie for http session
-                var headers = response?.Headers;
+                    if (response.Content is not null)
+                    {
+                        var args2 = new HttpGettingResponseMessageArgs(response, orchestrator.GetContext());
+                        await orchestrator.InterceptAsync(args2, cancellationToken).ConfigureAwait(false);
+                        return response;
+                    }
+                }
 
-                // Ensure we have a cookie
-                EnsureCookie(headers);
-
-                if (response.Content == null)
-                    throw new HttpEmptyResponseContentException();
-
-                var args2 = new HttpGettingResponseMessageArgs(response, orchestrator.GetContext());
-                await orchestrator.InterceptAsync(args2, cancellationToken).ConfigureAwait(false);
-
-                return response;
+                throw new HttpEmptyResponseContentException();
             }
             catch (SyncException)
             {
@@ -113,20 +125,18 @@ namespace ISynergy.Framework.Synchronization.Client
             }
             catch (Exception e)
             {
-                if (response == null || response.Content == null)
+                if (response is null || response.Content is null)
                     throw new HttpResponseContentException(e.Message);
 
                 var exrror = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 throw new HttpResponseContentException(exrror);
-
             }
-
         }
 
         private void EnsureCookie(HttpResponseHeaders headers)
         {
-            if (headers == null)
+            if (headers is null)
                 return;
             if (!headers.TryGetValues("Set-Cookie", out var tmpList))
                 return;
@@ -209,8 +219,6 @@ namespace ISynergy.Framework.Synchronization.Client
         {
             try
             {
-                HttpSyncWebException syncException = null;
-
                 if (!TryGetHeaderValue(response.Headers, "dotmim-sync-error", out string syncErrorTypeName))
                 {
                     var exceptionString = await response.Content.ReadAsStringAsync();
@@ -218,7 +226,7 @@ namespace ISynergy.Framework.Synchronization.Client
                     if (string.IsNullOrEmpty(exceptionString))
                         exceptionString = response.ReasonPhrase;
 
-                    syncException = new HttpSyncWebException(exceptionString);
+                    throw new HttpSyncWebException(exceptionString, response);
                 }
                 else
                 {
@@ -230,14 +238,14 @@ namespace ISynergy.Framework.Synchronization.Client
                         var webSyncErrorSerializer = new ISynergy.Framework.Synchronization.Core.Serialization.JsonConverter<WebSyncException>();
                         var webError = await webSyncErrorSerializer.DeserializeAsync(streamResponse);
 
-                        if (webError != null)
+                        if (webError is not null)
                         {
                             var exceptionString = webError.Message;
 
                             if (string.IsNullOrEmpty(exceptionString))
                                 exceptionString = response.ReasonPhrase;
 
-                            syncException = new HttpSyncWebException(exceptionString)
+                            throw new HttpSyncWebException(exceptionString)
                             {
                                 DataSource = webError.DataSource,
                                 InitialCatalog = webError.InitialCatalog,
@@ -247,19 +255,10 @@ namespace ISynergy.Framework.Synchronization.Client
                                 TypeName = webError.TypeName
                             };
                         }
-                        else
-                        {
-                            syncException = new HttpSyncWebException(response.ReasonPhrase);
-                        }
-
                     }
-
                 }
 
-                syncException.ReasonPhrase = response.ReasonPhrase;
-                syncException.StatusCode = response.StatusCode;
-
-                throw syncException;
+                throw new HttpSyncWebException(response.ReasonPhrase, response);
             }
             catch (SyncException)
             {

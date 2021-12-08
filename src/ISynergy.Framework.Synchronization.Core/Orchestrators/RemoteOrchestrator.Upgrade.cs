@@ -23,7 +23,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public virtual Task<bool> UpgradeAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
         {
-            if (this.Setup == null)
+            if (this.Setup is null)
                 return false;
 
             // get Database builder
@@ -36,14 +36,14 @@ namespace ISynergy.Framework.Synchronization.Core
             var schema = await this.InternalGetSchemaAsync(ctx, this.Setup, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
             // If schema does not have any table, raise an exception
-            if (schema == null || schema.Tables == null || !schema.HasTables)
+            if (schema is null || schema.Tables is null || !schema.HasTables)
                 throw new MissingTablesException();
 
             var builder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
 
             var serverScopeInfos = await this.InternalGetAllScopesAsync<ServerScopeInfo>(ctx, DbScopeType.Server, this.ScopeName, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            if (serverScopeInfos == null || serverScopeInfos.Count <= 0)
+            if (serverScopeInfos is null || serverScopeInfos.Count <= 0)
                 throw new MissingServerScopeInfoException();
 
             return await this.InternalUpgradeAsync(ctx, schema, serverScopeInfos, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
@@ -72,7 +72,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var scopes = await this.InternalGetAllScopesAsync<ServerScopeInfo>(ctx, DbScopeType.Server, this.ScopeName, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            if (scopes == null || scopes.Count <= 0)
+            if (scopes is null || scopes.Count <= 0)
                 return false;
 
             return InternalNeedsToUpgrade(ctx, scopes);
@@ -81,18 +81,18 @@ namespace ISynergy.Framework.Synchronization.Core
 
         internal virtual bool InternalNeedsToUpgrade(SyncContext context, List<ServerScopeInfo> serverScopeInfos)
         {
-            var version = SyncVersion.Current;
+            var version = _versionService.ProductVersion;
 
             // get the smallest version of all scope in the scope info server tables
             foreach (var serverScopeInfo in serverScopeInfos)
             {
-                var tmpVersion = SyncVersion.EnsureVersion(serverScopeInfo.Version);
+                var tmpVersion = new Version(serverScopeInfo.Version);
 
                 if (tmpVersion < version)
                     version = tmpVersion;
             }
 
-            return version < SyncVersion.Current;
+            return version < _versionService.ProductVersion;
 
         }
 
@@ -101,12 +101,12 @@ namespace ISynergy.Framework.Synchronization.Core
                         CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
 
-            var version = SyncVersion.Current;
+            var version = _versionService.ProductVersion;
 
             // get the smallest version of all scope in the scope info server tables
             foreach (var serverScopeInfo in serverScopeInfos)
             {
-                var tmpVersion = SyncVersion.EnsureVersion(serverScopeInfo.Version);
+                var tmpVersion = new Version(serverScopeInfo.Version);
 
                 if (tmpVersion < version)
                     version = tmpVersion;
@@ -152,7 +152,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             foreach (var serverScopeInfo in serverScopeInfos)
             {
-                var oldVersion = SyncVersion.EnsureVersion(serverScopeInfo.Version);
+                var oldVersion = new Version(serverScopeInfo.Version);
                 if (oldVersion != version)
                 {
                     serverScopeInfo.Version = version.ToString();
@@ -160,7 +160,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 }
             }
 
-            return version == SyncVersion.Current;
+            return version == _versionService.ProductVersion;
 
         }
 

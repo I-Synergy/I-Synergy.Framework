@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Client.Arguments;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Synchronization.Client.Arguments;
 using ISynergy.Framework.Synchronization.Client.Providers;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Adapters;
@@ -33,10 +35,11 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
         /// </summary>
         public override SyncSide Side => SyncSide.ClientSide;
 
-        private readonly HttpRequestHandler httpRequestHandler;
+        private readonly HttpRequestHandler _httpRequestHandler;
+        private readonly IVersionService _versionService;
 
-        public Dictionary<string, string> CustomHeaders => httpRequestHandler.CustomHeaders;
-        public Dictionary<string, string> ScopeParameters => httpRequestHandler.ScopeParameters;
+        public Dictionary<string, string> CustomHeaders => _httpRequestHandler.CustomHeaders;
+        public Dictionary<string, string> ScopeParameters => _httpRequestHandler.ScopeParameters;
 
         private object locker = new object();
 
@@ -65,12 +68,10 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
 
         public string GetServiceHost()
         {
-            var uri = new Uri(ServiceUri);
-
-            if (uri == null)
+            if(string.IsNullOrEmpty(ServiceUri))
                 return "Undefined";
 
-            return uri.Host;
+            return new Uri(ServiceUri).Host;
         }
 
         /// <summary>
@@ -88,18 +89,20 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
         /// <summary>
         /// Gets a new web proxy orchestrator
         /// </summary>
-        public WebClientOrchestrator(string serviceUri,
+        public WebClientOrchestrator(
+            IVersionService versionService,
+            string serviceUri,
             IConverter customConverter = null,
             HttpClient client = null,
             SyncPolicy syncPolicy = null,
             int maxDownladingDegreeOfParallelism = 4)
-            : base(new ClientCoreProvider(), new SyncOptions(), new SyncSetup())
+            : base(versionService, new ClientCoreProvider(), new SyncOptions(), new SyncSetup())
         {
-
-            httpRequestHandler = new HttpRequestHandler(this);
+            _versionService = versionService;
+            _httpRequestHandler = new HttpRequestHandler(this);
 
             // if no HttpClient provisionned, create a new one
-            if (client == null)
+            if (client is null)
             {
                 var handler = new HttpClientHandler();
 
@@ -125,10 +128,10 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
         /// </summary>
         public void AddScopeParameter(string key, string value)
         {
-            if (httpRequestHandler.ScopeParameters.ContainsKey(key))
-                httpRequestHandler.ScopeParameters[key] = value;
+            if (_httpRequestHandler.ScopeParameters.ContainsKey(key))
+                _httpRequestHandler.ScopeParameters[key] = value;
             else
-                httpRequestHandler.ScopeParameters.Add(key, value);
+                _httpRequestHandler.ScopeParameters.Add(key, value);
 
         }
 
@@ -137,10 +140,10 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
         /// </summary>
         public void AddCustomHeader(string key, string value)
         {
-            if (httpRequestHandler.CustomHeaders.ContainsKey(key))
-                httpRequestHandler.CustomHeaders[key] = value;
+            if (_httpRequestHandler.CustomHeaders.ContainsKey(key))
+                _httpRequestHandler.CustomHeaders[key] = value;
             else
-                httpRequestHandler.CustomHeaders.Add(key, value);
+                _httpRequestHandler.CustomHeaders.Add(key, value);
 
         }
 
@@ -187,7 +190,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
             this.ReportProgress(ctx, progress, sendingRequestArgs);
 
             // No batch size submitted here, because the schema will be generated in memory and send back to the user.
-            var response = await httpRequestHandler.ProcessRequestAsync
+            var response = await _httpRequestHandler.ProcessRequestAsync
                 (HttpClient, ServiceUri, binaryData, HttpStep.EnsureScopes, ctx.SessionId, this.ScopeName,
                  this.Options.SerializerFactory, Converter, 0, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -199,10 +202,10 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                     ensureScopesResponse = await this.Options.SerializerFactory.GetSerializer<HttpMessageEnsureScopesResponse>().DeserializeAsync(streamResponse);
             }
 
-            if (ensureScopesResponse == null)
+            if (ensureScopesResponse is null)
                 throw new ArgumentException("Http Message content for Ensure scope can't be null");
 
-            if (ensureScopesResponse.ServerScopeInfo == null)
+            if (ensureScopesResponse.ServerScopeInfo is null)
                 throw new ArgumentException("Server scope from EnsureScopesAsync can't be null and may contains a server scope");
 
             // Affect local setup
@@ -245,7 +248,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
             this.ReportProgress(ctx, progress, sendingRequestArgs);
 
             // No batch size submitted here, because the schema will be generated in memory and send back to the user.
-            var response = await httpRequestHandler.ProcessRequestAsync
+            var response = await _httpRequestHandler.ProcessRequestAsync
                 (HttpClient, ServiceUri, binaryData, HttpStep.EnsureSchema, ctx.SessionId, this.ScopeName,
                  this.Options.SerializerFactory, Converter, 0, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -257,10 +260,10 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                     ensureScopesResponse = await this.Options.SerializerFactory.GetSerializer<HttpMessageEnsureSchemaResponse>().DeserializeAsync(streamResponse);
             }
 
-            if (ensureScopesResponse == null)
+            if (ensureScopesResponse is null)
                 throw new ArgumentException("Http Message content for Ensure Schema can't be null");
 
-            if (ensureScopesResponse.ServerScopeInfo == null || ensureScopesResponse.Schema == null || ensureScopesResponse.Schema.Tables.Count <= 0)
+            if (ensureScopesResponse.ServerScopeInfo is null || ensureScopesResponse.Schema is null || ensureScopesResponse.Schema.Tables.Count <= 0)
                 throw new ArgumentException("Schema from EnsureScope can't be null and may contains at least one table");
 
             ensureScopesResponse.Schema.EnsureSchema();
@@ -285,9 +288,12 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
         /// </summary>
         internal override async Task<(long RemoteClientTimestamp, BatchInfo ServerBatchInfo, ConflictResolutionPolicy ServerPolicy,
                                       DatabaseChangesApplied ClientChangesApplied, DatabaseChangesSelected ServerChangesSelected)>
-            ApplyThenGetChangesAsync(ScopeInfo scope, BatchInfo clientBatchInfo, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+            ApplyThenGetChangesAsync(
+                ScopeInfo scope, 
+                BatchInfo clientBatchInfo, 
+                CancellationToken cancellationToken = default, 
+                IProgress<ProgressArgs> progress = null)
         {
-
             SyncSet schema;
             // Get context or create a new one
             var ctx = this.GetContext();
@@ -296,7 +302,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 this.StartTime = DateTime.UtcNow;
 
             // is it something that could happens ?
-            if (scope.Schema == null)
+            if (scope.Schema is null)
             {
                 // Make a remote call to get Schema from remote provider
                 var serverScopeInfo = await EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
@@ -313,7 +319,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
 
             // if we don't have any BatchPartsInfo, just generate a new one to get, at least, something to send to the server
             // and get a response with new data from server
-            if (clientBatchInfo == null)
+            if (clientBatchInfo is null)
                 clientBatchInfo = new BatchInfo(true, schema);
 
             // Get sanitized schema, without readonly columns
@@ -324,7 +330,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
             // --------------------------------------------------------------
 
 
-            HttpResponseMessage response = null;
+            HttpResponseMessage response = new HttpResponseMessage();
 
             // If not in memory and BatchPartsInfo.Count == 0, nothing to send.
             // But we need to send something, so generate a little batch part
@@ -335,11 +341,11 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 if (Converter != null && clientBatchInfo.InMemoryData != null && clientBatchInfo.InMemoryData.HasRows)
                     this.BeforeSerializeRows(clientBatchInfo.InMemoryData);
 
-                var containerSet = clientBatchInfo.InMemoryData == null ? new ContainerSet() : clientBatchInfo.InMemoryData.GetContainerSet();
+                var containerSet = clientBatchInfo.InMemoryData is null ? new ContainerSet() : clientBatchInfo.InMemoryData.GetContainerSet();
                 changesToSend.Changes = containerSet;
                 changesToSend.IsLastBatch = true;
                 changesToSend.BatchIndex = 0;
-                changesToSend.BatchCount = clientBatchInfo.InMemoryData == null ? 0 : clientBatchInfo.BatchPartsInfo == null ? 0 : clientBatchInfo.BatchPartsInfo.Count;
+                changesToSend.BatchCount = clientBatchInfo.InMemoryData is null ? 0 : clientBatchInfo.BatchPartsInfo is null ? 0 : clientBatchInfo.BatchPartsInfo.Count;
                 var inMemoryRowsCount = changesToSend.Changes.RowsCount();
 
                 ctx.ProgressPercentage += 0.125;
@@ -352,7 +358,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 var serializer = this.Options.SerializerFactory.GetSerializer<HttpMessageSendChangesRequest>();
                 var binaryData = await serializer.SerializeAsync(changesToSend);
 
-                response = await httpRequestHandler.ProcessRequestAsync
+                response = await _httpRequestHandler.ProcessRequestAsync
                     (HttpClient, ServiceUri, binaryData, HttpStep.SendChangesInProgress, ctx.SessionId, scope.Name,
                      this.Options.SerializerFactory, Converter, this.Options.BatchSize, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -392,7 +398,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                     var serializer = this.Options.SerializerFactory.GetSerializer<HttpMessageSendChangesRequest>();
                     var binaryData = await serializer.SerializeAsync(changesToSend);
 
-                    response = await httpRequestHandler.ProcessRequestAsync
+                    response = await _httpRequestHandler.ProcessRequestAsync
                         (HttpClient, ServiceUri, binaryData, HttpStep.SendChangesInProgress, ctx.SessionId, scope.Name,
                          this.Options.SerializerFactory, Converter, this.Options.BatchSize, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
                 }
@@ -498,7 +504,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 // Raise get changes request
                 ctx.ProgressPercentage = initialPctProgress + (bpi.Index + 1) * 0.2d / serverBatchInfo.BatchPartsInfo.Count;
 
-                var response = await httpRequestHandler.ProcessRequestAsync(
+                var response = await _httpRequestHandler.ProcessRequestAsync(
                 HttpClient, ServiceUri, binaryData3, step3, ctx.SessionId, this.ScopeName,
                 this.Options.SerializerFactory, Converter, 0, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -525,7 +531,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 var serializerEndOfDownloadChanges = this.Options.SerializerFactory.GetSerializer<HttpMessageGetMoreChangesRequest>();
                 var binaryData3 = await serializerEndOfDownloadChanges.SerializeAsync(endOfDownloadChanges).ConfigureAwait(false);
 
-                await httpRequestHandler.ProcessRequestAsync(
+                await _httpRequestHandler.ProcessRequestAsync(
                     HttpClient, ServiceUri, binaryData3, HttpStep.SendEndDownloadChanges, ctx.SessionId, this.ScopeName,
                     this.Options.SerializerFactory, Converter, 0, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
             }
@@ -556,7 +562,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 this.StartTime = DateTime.UtcNow;
 
             // Make a remote call to get Schema from remote provider
-            if (schema == null)
+            if (schema is null)
             {
                 var serverScopeInfo = await EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
                 schema = serverScopeInfo.Schema;
@@ -579,7 +585,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
             var binaryData = await serializer.SerializeAsync(changesToSend);
             var step = HttpStep.GetSummary;
 
-            var response0 = await httpRequestHandler.ProcessRequestAsync(
+            var response0 = await _httpRequestHandler.ProcessRequestAsync(
               HttpClient, ServiceUri, binaryData, step, ctx.SessionId, this.ScopeName,
               this.Options.SerializerFactory, Converter, 0, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -602,11 +608,11 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
 
             }
 
-            if (summaryResponseContent == null)
+            if (summaryResponseContent is null)
                 throw new Exception("Summary can't be null");
 
             // no snapshot
-            if ((serverBatchInfo.BatchPartsInfo == null || serverBatchInfo.BatchPartsInfo.Count <= 0) && serverBatchInfo.RowsCount <= 0)
+            if ((serverBatchInfo.BatchPartsInfo is null || serverBatchInfo.BatchPartsInfo.Count <= 0) && serverBatchInfo.RowsCount <= 0)
                 return (0, null, new DatabaseChangesSelected());
 
             // If we have a snapshot we are raising the batches downloading process that will occurs
@@ -627,7 +633,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 var args2 = new HttpGettingServerChangesRequestArgs(bpi.Index, serverBatchInfo.BatchPartsInfo.Count, summaryResponseContent.SyncContext, GetServiceHost());
                 await this.InterceptAsync(args2, cancellationToken).ConfigureAwait(false);
 
-                var response = await httpRequestHandler.ProcessRequestAsync(
+                var response = await _httpRequestHandler.ProcessRequestAsync(
                   HttpClient, ServiceUri, binaryData3, step3, ctx.SessionId, this.ScopeName,
                   this.Options.SerializerFactory, Converter, 0, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -720,7 +726,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
             var serializer = this.Options.SerializerFactory.GetSerializer<HttpMessageSendChangesRequest>();
             var binaryData = await serializer.SerializeAsync(changesToSend);
 
-            var response = await httpRequestHandler.ProcessRequestAsync
+            var response = await _httpRequestHandler.ProcessRequestAsync
                 (HttpClient, ServiceUri, binaryData, HttpStep.SendChangesInProgress, ctx.SessionId, clientScope.Name,
                  this.Options.SerializerFactory, Converter, this.Options.BatchSize, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -817,7 +823,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 // Raise get changes request
                 ctx.ProgressPercentage = initialPctProgress + (bpi.Index + 1) * 0.2d / serverBatchInfo.BatchPartsInfo.Count;
 
-                var response = await httpRequestHandler.ProcessRequestAsync(
+                var response = await _httpRequestHandler.ProcessRequestAsync(
                 HttpClient, ServiceUri, binaryData3, step3, ctx.SessionId, this.ScopeName,
                 this.Options.SerializerFactory, Converter, 0, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -893,7 +899,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
             this.ReportProgress(ctx, progress, requestArgs);
 
             // response
-            var response = await httpRequestHandler.ProcessRequestAsync
+            var response = await _httpRequestHandler.ProcessRequestAsync
                     (HttpClient, ServiceUri, binaryData, HttpStep.GetEstimatedChangesCount, ctx.SessionId, clientScope.Name,
                      this.Options.SerializerFactory, Converter, this.Options.BatchSize, SyncPolicy, cancellationToken, progress).ConfigureAwait(false);
 
@@ -908,7 +914,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
 
             }
 
-            if (summaryResponseContent == null)
+            if (summaryResponseContent is null)
                 throw new Exception("Summary can't be null");
 
             // generate the new scope item
@@ -968,7 +974,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 var webEx = ex as SyncException;
 
                 // handle session lost
-                return webEx == null || webEx.TypeName != nameof(HttpSessionLostException);
+                return webEx is null || webEx.TypeName != nameof(HttpSessionLostException);
 
             }, async (ex, cpt, ts, arg) =>
             {

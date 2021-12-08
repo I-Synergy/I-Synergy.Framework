@@ -1,10 +1,12 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Orchestrators;
 using ISynergy.Framework.AspNetCore.Synchronization.Tests.TestServer;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Abstractions.Tests;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Setup;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -68,6 +70,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
         protected KestrelTestServer kestrel;
 
         protected readonly IDatabaseHelper _databaseHelper;
+        protected readonly IVersionService _versionService;
 
         /// <summary>
         /// Gets the remote orchestrator and its database name
@@ -89,6 +92,10 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
         /// </summary>
         public BaseTests()
         {
+            var versionServiceMock = new Mock<IVersionService>();
+            versionServiceMock.Setup(x => x.ProductVersion).Returns(new Version(1, 0, 0));
+            _versionService = versionServiceMock.Object;
+
             // Since we are creating a lot of databases
             // each database will have its own pool
             // Droping database will not clear the pool associated
@@ -101,7 +108,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             var serverProvider = this.CreateProvider(this.ServerType, serverDatabaseName);
 
             // create web remote orchestrator
-            this.WebServerOrchestrator = new WebServerOrchestrator(serverProvider, new SyncOptions(), new SyncSetup());
+            this.WebServerOrchestrator = new WebServerOrchestrator(_versionService, serverProvider, new SyncOptions(), new SyncSetup());
 
             // public property
             this.Server = (serverDatabaseName, this.ServerType, serverProvider);
@@ -127,7 +134,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
         /// <summary>
         /// Drop all databases used for the tests
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             _databaseHelper.DropDatabase(Server.DatabaseName);
 

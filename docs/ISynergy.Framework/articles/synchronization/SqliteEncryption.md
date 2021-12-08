@@ -4,8 +4,8 @@ Sqlite Encryption
 Overview
 --------
 
--   **SQLite** doesn\'t support encrypting database files by default.
--   Instead, we need to use a modified version of SQLite like
+-   **Sqlite** doesn\'t support encrypting database files by default.
+-   Instead, we need to use a modified version of Sqlite like
     [SEE](https://www.hwaci.com/sw/sqlite/see.html) ,
     [SQLCipher](https://www.zetetic.net/sqlcipher/) ,
     [SQLiteCrypt](http://www.sqlite-crypt.com/) , or

@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Tests.Data;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Abstractions.Tests;
 using ISynergy.Framework.Synchronization.Core.Database;
@@ -11,6 +12,7 @@ using ISynergy.Framework.Synchronization.SqlServer.Metadata;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -79,12 +81,17 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         public bool UseFallbackSchema => ServerType == ProviderType.Sql;
 
         protected readonly IDatabaseHelper _databaseHelper;
+        protected readonly IVersionService _versionService;
 
         /// <summary>
         /// For each test, Create a server database and some clients databases, depending on ProviderType provided in concrete class
         /// </summary>
         public BaseTcpTests()
         {
+            var versionServiceMock = new Mock<IVersionService>();
+            versionServiceMock.Setup(x => x.ProductVersion).Returns(new Version(1, 0, 0));
+            _versionService = versionServiceMock.Object;
+
             // Since we are creating a lot of databases
             // each database will have its own pool
             // Droping database will not clear the pool associated
@@ -139,7 +146,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options,
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options,
                     new SyncSetup(this.Tables) { StoredProceduresPrefix = "cli", StoredProceduresSuffix = "", TrackingTablesPrefix = "tr" });
 
                 var s = await agent.SynchronizeAsync();
@@ -164,7 +171,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(this.Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(this.Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -263,7 +270,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, this.Tables);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, this.Tables);
 
                 var onReconnect = new Action<ReConnectArgs>(args =>
                     Console.WriteLine($"[Retry Connection] Can't connect to database {args.Connection?.Database}. Retry N°{args.Retry}. Waiting {args.WaitingTimeSpan.Milliseconds}. Exception:{args.HandledException.Message}."));
@@ -291,7 +298,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Set a connection string that will faile everywhere (event Sqlite)
                 client.Provider.ConnectionString = $@"Data Source=D;";
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, this.Tables);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, this.Tables);
 
                 var onReconnect = new Action<ReConnectArgs>(args =>
                     Console.WriteLine($"[Retry Connection] Can't connect to database {args.Connection?.Database}. Retry N°{args.Retry}. Waiting {args.WaitingTimeSpan.Milliseconds}. Exception:{args.HandledException.Message}."));
@@ -326,7 +333,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new string[] { "TableTest" });
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new string[] { "TableTest" });
 
                 var se = await Assert.ThrowsExceptionAsync<SyncException>(async () =>
                 {
@@ -359,7 +366,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(), setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(), setup);
 
                 var se = await Assert.ThrowsExceptionAsync<SyncException>(async () =>
                 {
@@ -388,7 +395,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(), setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(), setup);
 
                 var se = await Assert.ThrowsExceptionAsync<SyncException>(async () =>
                 {
@@ -417,7 +424,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -441,7 +448,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -471,7 +478,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -506,7 +513,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -534,7 +541,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -563,7 +570,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -592,7 +599,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -622,7 +629,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -650,7 +657,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -684,7 +691,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -697,7 +704,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             // Now sync again to be sure all clients have all lines
             foreach (var client in Clients)
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             // check rows count on server and on each client
             using (var ctx = new DataContext(this.Server))
@@ -740,7 +747,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -769,7 +776,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -812,7 +819,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -847,7 +854,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -858,7 +865,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             // Now sync again to be sure all clients have all lines
             foreach (var client in Clients)
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             // get rows count
             rowsCount = this.GetServerDatabaseRowsCount(this.Server);
@@ -913,7 +920,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -944,7 +951,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -955,7 +962,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             // Now sync again to be sure all clients have all lines
             foreach (var client in Clients)
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             rowsCount = this.GetServerDatabaseRowsCount(this.Server);
 
@@ -1007,7 +1014,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1031,7 +1038,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1060,7 +1067,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1145,7 +1152,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1182,7 +1189,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Sync and check we have delete these lines on each server
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1227,7 +1234,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // create a client schema without seeding
                 await this.EnsureDatabaseSchemaAndSeedAsync(client, false, UseFallbackSchema);
 
-                var localOrchestrator = new LocalOrchestrator(client.Provider, options, setup);
+                var localOrchestrator = new LocalOrchestrator(_versionService, client.Provider, options, setup);
                 var provision = SyncProvision.ClientScope | SyncProvision.TrackingTable | SyncProvision.StoredProcedures | SyncProvision.Triggers;
 
                 // just check interceptor
@@ -1335,7 +1342,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, Tables);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, Tables);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1409,7 +1416,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1481,7 +1488,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                     return;
                 };
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 // Intercept TableChangesSelected
                 agent.LocalOrchestrator.OnTableChangesSelected(tableChangesSelected);
@@ -1503,7 +1510,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             download = 3 * (Clients.Count - 1);
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1520,7 +1527,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             download = Clients.Count - 1;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1570,7 +1577,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             // Insert one thousand lines on each client
             foreach (var client in Clients)
@@ -1596,7 +1603,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1613,7 +1620,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var rowsCount = this.GetServerDatabaseRowsCount(this.Server);
             foreach (var client in Clients)
             {
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
                 Assert.AreEqual(rowsCount, this.GetServerDatabaseRowsCount(client));
             }
         }
@@ -1648,7 +1655,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
 
             // Add a product and its product category
@@ -1675,7 +1682,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Sync all clients 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1705,7 +1712,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Sync all clients. Should not raise an error, because we disable constraint check
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1750,7 +1757,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
 
             // Add a product and its product category
@@ -1778,7 +1785,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Sync all clients 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1808,7 +1815,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Sync all clients. Should raise an error
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 //await Assert.ThrowsExceptionAsync<SyncException>(async () =>
                 //{
@@ -1937,7 +1944,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1970,7 +1977,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // inserted rows will be deleted 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync(SyncType.Reinitialize);
 
@@ -2002,7 +2009,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -2035,7 +2042,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var download = 2;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync(SyncType.ReinitializeWithUpload);
 
@@ -2048,7 +2055,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             rowsCount = this.GetServerDatabaseRowsCount(this.Server);
             foreach (var client in Clients)
             {
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync().ConfigureAwait(false);
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync().ConfigureAwait(false);
                 Assert.AreEqual(rowsCount, this.GetServerDatabaseRowsCount(client));
             }
 
@@ -2080,7 +2087,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(), setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(), setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -2240,7 +2247,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(), setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(), setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -2312,7 +2319,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(), setup); ;
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(), setup); ;
 
                 var s = await agent.SynchronizeAsync();
 
@@ -2472,7 +2479,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(), setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(), setup);
 
 
                 var s = await agent.SynchronizeAsync();
@@ -2538,7 +2545,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
             // Insert a new product category on each client
             foreach (var client in Clients)
@@ -2557,7 +2564,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var s = await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                var s = await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
                 Assert.AreEqual(download, s.TotalChangesDownloaded);
                 Assert.AreEqual(download, s.TotalChangesApplied);
@@ -2570,7 +2577,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to be sure all clients have download all others clients product
             foreach (var client in Clients)
             {
-                await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
                 Assert.AreEqual(rowsCount, this.GetServerDatabaseRowsCount(client));
             }
 
@@ -2588,7 +2595,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var cpt = 0; // first client won't have any conflicts, but others will upload their deleted rows that are ALREADY deleted
             foreach (var client in Clients)
             {
-                var s = await new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
+                var s = await new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables)).SynchronizeAsync();
 
                 // we may download deleted rows from server
                 Assert.AreEqual(cpt, s.TotalChangesDownloaded);
@@ -2647,7 +2654,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 BatchSize = 3000
             };
 
-            var remoteOrchestrator = new RemoteOrchestrator(Server.Provider, options, setup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, Server.Provider, options, setup);
 
             // ----------------------------------
             // Create a snapshot
@@ -2681,7 +2688,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -2747,7 +2754,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Defining options with Batchsize to enable serialization on disk
                 var options = new SyncOptions { BatchSize = 1000 };
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables), scopeName);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables), scopeName);
 
                 // Get the orchestrators
                 var localOrchestrator = agent.LocalOrchestrator;
@@ -2811,7 +2818,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Defining options with Batchsize to enable serialization on disk
                 var options = new SyncOptions { BatchSize = 1000 };
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables), scopeName);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables), scopeName);
 
                 // Making a first sync, will initialize everything we need
                 var s = await agent.SynchronizeAsync();
@@ -2827,7 +2834,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Defining options with Batchsize to enable serialization on disk
                 var options = new SyncOptions { BatchSize = 1000 };
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables), scopeName);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables), scopeName);
 
                 // Call a server delete metadata to update the last valid timestamp value in scope_info_server table
                 var dmc = await agent.RemoteOrchestrator.DeleteMetadatasAsync();
@@ -2913,7 +2920,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -3079,7 +3086,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -3089,12 +3096,12 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 Assert.AreEqual(0, s.TotalResolvedConflicts);
             }
 
-            var remoteOrchestrator = new RemoteOrchestrator(Server.Provider, options, setup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, Server.Provider, options, setup);
             var remoteScope = await remoteOrchestrator.GetServerScopeAsync();
 
             foreach (var client in Clients)
             {
-                var localOrchestrator = new LocalOrchestrator(client.Provider, options, setup);
+                var localOrchestrator = new LocalOrchestrator(_versionService, client.Provider, options, setup);
                 var localScope = await localOrchestrator.GetClientScopeAsync();
 
                 Assert.IsTrue(localScope.Setup.Equals(remoteScope.Setup));
@@ -3169,7 +3176,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 BatchSize = 3000
             };
 
-            var remoteOrchestrator = new RemoteOrchestrator(Server.Provider, options, setup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, Server.Provider, options, setup);
 
             // ----------------------------------
             // Create a snapshot
@@ -3223,7 +3230,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -3258,7 +3265,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -3277,7 +3284,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, new SyncSetup(Tables));
 
                 var s = await agent.SynchronizeAsync(SyncType.Reinitialize);
 
@@ -3304,7 +3311,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             var rowsCount = this.GetServerDatabaseRowsCount(this.Server);
 
             // Provision server, to be sure no clients will try to do something that could break server
-            var remoteOrchestrator = new RemoteOrchestrator(this.Server.Provider, options, new SyncSetup(Tables));
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, this.Server.Provider, options, new SyncSetup(Tables));
 
             // Ensure schema is ready on server side. Will create everything we need (triggers, tracking, stored proc, scopes)
             var scope = await remoteOrchestrator.EnsureSchemaAsync();
@@ -3333,7 +3340,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients and add the task to a list of tasks
             foreach (var clientProvider in clientProviders)
             {
-                var agent = new SyncAgent(clientProvider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,clientProvider, Server.Provider, options, new SyncSetup(Tables));
                 allTasks.Add(agent.SynchronizeAsync());
             }
 
@@ -3364,7 +3371,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to get the new server row
             foreach (var clientProvider in clientProviders)
             {
-                var agent = new SyncAgent(clientProvider, Server.Provider, options, new SyncSetup(Tables));
+                var agent = new SyncAgent(_versionService,clientProvider, Server.Provider, options, new SyncSetup(Tables));
                 allTasks.Add(agent.SynchronizeAsync());
             }
 
@@ -3418,7 +3425,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Add all columns to address except Rowguid and ModifiedDate
                 setup.Tables["Address"].Columns.AddRange(new string[] { "AddressId", "AddressLine1", "AddressLine2", "City", "StateProvince", "CountryRegion", "PostalCode" });
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -3442,7 +3449,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Add all columns to address except Rowguid and ModifiedDate
                 setup.Tables["Address"].Columns.AddRange(new string[] { "AddressId", "AddressLine1", "AddressLine2", "City", "StateProvince", "CountryRegion", "PostalCode" });
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 var s = await agent.SynchronizeAsync();
 
                 Assert.AreEqual(0, s.TotalChangesDownloaded);
@@ -3500,7 +3507,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Add all columns to address except Rowguid and ModifiedDate
                 setup.Tables["Address"].Columns.AddRange(new string[] { "AddressId", "AddressLine1", "AddressLine2", "City", "StateProvince", "CountryRegion", "PostalCode" });
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -3553,7 +3560,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Add all columns to address except Rowguid and ModifiedDate
                 setup.Tables["Address"].Columns.AddRange(new string[] { "AddressId", "AddressLine1", "AddressLine2", "City", "StateProvince", "CountryRegion", "PostalCode" });
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -3615,7 +3622,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Add all columns to address except Rowguid and ModifiedDate
                 setup.Tables["Address"].Columns.AddRange(new string[] { "AddressId", "AddressLine1", "AddressLine2", "City", "StateProvince", "CountryRegion", "PostalCode" });
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -3647,7 +3654,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // Add all columns to address except Rowguid and ModifiedDate
                 setup.Tables["Address"].Columns.AddRange(new string[] { "AddressId", "AddressLine1", "AddressLine2", "City", "StateProvince", "CountryRegion", "PostalCode" });
 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 var s = await agent.SynchronizeAsync();
 
                 // "Mimecity" change should be received from server
@@ -3691,7 +3698,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync to initialize all clients
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(),
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(),
                     new SyncSetup(this.Tables) { StoredProceduresPrefix = "cli", StoredProceduresSuffix = "", TrackingTablesPrefix = "tr" });
 
                 var s = await agent.SynchronizeAsync();
@@ -3738,14 +3745,14 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Two sync to be sure all clients have all rows from all
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(),
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(),
                     new SyncSetup(this.Tables) { StoredProceduresPrefix = "cli", StoredProceduresSuffix = "", TrackingTablesPrefix = "tr" });
 
                 await agent.SynchronizeAsync();
             }
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(),
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(),
                     new SyncSetup(this.Tables) { StoredProceduresPrefix = "cli", StoredProceduresSuffix = "", TrackingTablesPrefix = "tr" });
 
                 await agent.SynchronizeAsync();

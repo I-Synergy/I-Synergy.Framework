@@ -4,7 +4,7 @@ using System;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.SQLite.Builders
+namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 {
     public class SqliteBuilder : DbBuilder
     {

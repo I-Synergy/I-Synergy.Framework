@@ -138,7 +138,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             }
 
             // Search for deleted tables
-            var deletedTables = oldSetup.Tables.Where(oldt => newSetup.Tables[oldt.TableName, oldt.SchemaName] == null);
+            var deletedTables = oldSetup.Tables.Where(oldt => newSetup.Tables[oldt.TableName, oldt.SchemaName] is null);
 
             // We found some tables present in the old setup, but not in the new setup
             // So, we are removing all the sync elements from the table, but we do not remote the table itself
@@ -156,7 +156,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             }
 
             // Search for new tables
-            var newTables = newSetup.Tables.Where(newdt => oldSetup.Tables[newdt.TableName, newdt.SchemaName] == null);
+            var newTables = newSetup.Tables.Where(newdt => oldSetup.Tables[newdt.TableName, newdt.SchemaName] is null);
 
             // We found some tables present in the new setup, but not in the old setup
             foreach (var newTable in newTables)
@@ -180,7 +180,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
                 // We do not found the old setup table, we can conclude this "newTable" is a new table included in the new setup
                 // And therefore will be setup during the last call the EnsureSchema()
-                if (oldTable == null)
+                if (oldTable is null)
                     continue;
 
                 // SyncDirection has no impact if different form old and new setup table.
@@ -213,17 +213,17 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
             // Search for new filters
             // If we have any filter, just recreate them, just in case
-            if (newSetup.Filters != null && newSetup.Filters.Count > 0)
+            if (newSetup.Filters is not null && newSetup.Filters.Count > 0)
                 foreach (var filter in newSetup.Filters)
                 {
                     var setupTable = newSetup.Tables[filter.TableName, filter.SchemaName];
 
-                    if (setupTable == null)
+                    if (setupTable is null)
                         continue;
 
                     var migrationTable = migrationSetup.Tables.FirstOrDefault(ms => ms.SetupTable.EqualsByName(setupTable));
 
-                    if (migrationTable == null)
+                    if (migrationTable is null)
                     {
                         migrationTable = new MigrationSetupTable(setupTable)
                         {

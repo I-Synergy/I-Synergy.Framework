@@ -20,6 +20,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Create a tracking table
         /// </summary>
         /// <param name="table">A table from your Setup instance you want to create</param>
+        /// <param name="overwrite"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> CreateTrackingTableAsync(SetupTable table, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
         {
@@ -29,7 +34,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var schemaTable = schema.Tables[table.TableName, table.SchemaName];
 
-            if (schemaTable == null)
+            if (schemaTable is null)
                 throw new MissingTableException(table.GetFullName());
 
             // Get table builder
@@ -63,6 +68,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Check if a tracking table exists
         /// </summary>
         /// <param name="table">A table from your Setup instance, you want to check if the corresponding tracking table exists</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> ExistTrackingTableAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
         {
@@ -81,7 +90,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Create a tracking table
         /// </summary>
-        /// <param name="table">A table from your Setup instance you want to create</param>
+        /// <param name="overwrite"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> CreateTrackingTablesAsync(bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
         {
@@ -126,6 +139,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Drop a tracking table
         /// </summary>
         /// <param name="table">A table from your Setup instance you want to drop</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> DropTrackingTableAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
         {
@@ -149,7 +166,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Drop all tracking tables
         /// </summary>
-        /// <param name="table">A table from your Setup instance you want to create</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> DropTrackingTablesAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
         {
@@ -178,7 +198,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Rename a tracking table
         /// </summary>
-        /// <param name="table">A table from your Setup instance you want to rename the tracking table</param>
+        /// <param name="syncTable"></param>
+        /// <param name="oldTrackingTableName"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> RenameTrackingTableAsync(SyncTable syncTable, ParserName oldTrackingTableName, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
         {
@@ -204,7 +229,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var command = await tableBuilder.GetCreateTrackingTableCommandAsync(connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var (_, trackingTableName) = this.Provider.GetParsers(tableBuilder.TableDescription, setup);
@@ -213,7 +238,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -238,7 +263,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var command = await tableBuilder.GetRenameTrackingTableCommandAsync(oldTrackingTableName, connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var (_, trackingTableName) = this.Provider.GetParsers(tableBuilder.TableDescription, setup);
@@ -246,7 +271,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var action = new TrackingTableRenamingArgs(ctx, tableBuilder.TableDescription, trackingTableName, oldTrackingTableName, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -263,14 +288,14 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = await tableBuilder.GetDropTrackingTableCommandAsync(connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var (_, trackingTableName) = this.Provider.GetParsers(tableBuilder.TableDescription, setup);
             var action = new TrackingTableDroppingArgs(ctx, tableBuilder.TableDescription, trackingTableName, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -287,7 +312,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get exists command
             var existsCommand = await tableBuilder.GetExistsTrackingTableCommandAsync(connection, transaction).ConfigureAwait(false);
 
-            if (existsCommand == null)
+            if (existsCommand is null)
                 return false;
 
             var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);

@@ -326,7 +326,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Adapters
             return false;
         }
 
-
+        /// <summary>
+        /// Is unique key violation.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
         public override bool IsUniqueKeyViolation(Exception exception)
         {
             if (exception is SqlException error && error.Number == 2627)
@@ -335,6 +339,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Adapters
             return false;
         }
 
+        /// <summary>
+        /// Get command.
+        /// </summary>
+        /// <param name="nameType"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public override DbCommand GetCommand(DbCommandType nameType, SyncFilter filter)
         {
             var command = new SqlCommand();

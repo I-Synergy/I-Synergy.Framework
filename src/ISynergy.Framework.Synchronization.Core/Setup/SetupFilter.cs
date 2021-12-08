@@ -167,7 +167,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public override bool EqualsByProperties(SetupFilter other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             // Check name properties

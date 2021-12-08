@@ -19,6 +19,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="table">A table from your Setup instance, where you want to create the trigger</param>
         /// <param name="triggerType">Trigger type (Insert, Delete, Update)</param>
         /// <param name="overwrite">If true, drop the existing trriger then create again</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> CreateTriggerAsync(SetupTable table, DbTriggerType triggerType, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
             => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
             {
@@ -28,7 +32,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 var schemaTable = schema.Tables[table.TableName, table.SchemaName];
 
-                if (schemaTable == null)
+                if (schemaTable is null)
                     throw new MissingTableException(table.GetFullName());
 
                 // Get table builder
@@ -58,6 +62,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         /// <param name="table">A table from your Setup instance, where you want to create the triggers</param>
         /// <param name="overwrite">If true, drop the existing triggers then create them all, again</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> CreateTriggersAsync(SetupTable table, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
             => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
             {
@@ -65,7 +73,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 var schemaTable = schema.Tables[table.TableName, table.SchemaName];
 
-                if (schemaTable == null)
+                if (schemaTable is null)
                     throw new MissingTableException(table.GetFullName());
 
                 // Get table builder
@@ -81,6 +89,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         /// <param name="table">A table from your Setup instance, where you want to check if the trigger exists</param>
         /// <param name="triggerType">Trigger type (Insert, Delete, Update)</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> ExistTriggerAsync(SetupTable table, DbTriggerType triggerType, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
         {
@@ -101,6 +113,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         /// <param name="table">A table from your Setup instance, where you want to drop the trigger</param>
         /// <param name="triggerType">Trigger type (Insert, Delete, Update)</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> DropTriggerAsync(SetupTable table, DbTriggerType triggerType, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
         {
@@ -125,6 +141,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Drop all triggers
         /// </summary>
         /// <param name="table">A table from your Setup instance, where you want to drop all the triggers</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> DropTriggersAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Deprovisioning, (ctx, connection, transaction) =>
         {
@@ -151,13 +171,13 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var command = await tableBuilder.GetCreateTriggerCommandAsync(triggerType, connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var action = new TriggerCreatingArgs(ctx, tableBuilder.TableDescription, triggerType, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync();
@@ -204,14 +224,14 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = await tableBuilder.GetDropTriggerCommandAsync(triggerType, connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var action = new TriggerDroppingArgs(ctx, tableBuilder.TableDescription, triggerType, command, connection, transaction);
 
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync();
@@ -254,7 +274,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get exists command
             var existsCommand = await tableBuilder.GetExistsTriggerCommandAsync(triggerType, connection, transaction).ConfigureAwait(false);
 
-            if (existsCommand == null)
+            if (existsCommand is null)
                 return false;
 
             var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);

@@ -1,12 +1,14 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Extensions;
 using ISynergy.Framework.AspNetCore.Synchronization.Orchestrators;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Interceptors;
 using ISynergy.Framework.Synchronization.Core.Setup;
-using ISynergy.Framework.Synchronization.SQLite.Providers;
+using ISynergy.Framework.Synchronization.Sqlite.Providers;
 using ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Providers;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
 using Microsoft.AspNetCore.Http;
@@ -21,26 +23,26 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Net;
+using System.Reflection;
 
 namespace Sample.Synchronization.SqlServer
 {
-    internal class Program
+    internal static class Program
     {
-        public static string serverDbName = "AdventureWorks";
-        public static string serverProductCategoryDbName = "AdventureWorksProductCategory";
-        public static string clientDbName = "Client";
-        public static string[] allTables = new string[] {"ProductDescription", "ProductCategory",
+        public readonly static string serverDbName = "AdventureWorks";
+        public readonly static string serverProductCategoryDbName = "AdventureWorksProductCategory";
+        public readonly static string clientDbName = "Client";
+        public readonly static string[] allTables = new string[] {"ProductDescription", "ProductCategory",
                                                     "ProductModel", "Product",
                                                     "Address", "Customer", "CustomerAddress",
                                                     "SalesOrderHeader", "SalesOrderDetail" };
 
-        public static string[] oneTable = new string[] { "ProductCategory", "Customer" };
-
+        public readonly static string[] oneTable = new string[] { "ProductCategory", "Customer" };
+        public readonly static IVersionService versionService = new VersionService(Assembly.GetAssembly(typeof(Program)));
 
         private static async Task Main(string[] args)
         {
             await SynchronizeAsync();
-
         }
 
 
@@ -62,7 +64,7 @@ namespace Sample.Synchronization.SqlServer
             var options = new SyncOptions();
 
             // Creating an agent that will handle all the process
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            var agent = new SyncAgent(versionService, clientProvider, serverProvider, options, setup);
 
             agent.LocalOrchestrator.OnOutdated(oa =>
             {
@@ -117,11 +119,11 @@ namespace Sample.Synchronization.SqlServer
 
             var originalSetup = new SyncSetup(new string[] { "ProductCategory" });
 
-            var remoteOrchestrator = new RemoteOrchestrator(serverProvider, options, originalSetup);
-            var localOrchestrator = new LocalOrchestrator(clientProvider, options, originalSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(versionService, serverProvider, options, originalSetup);
+            var localOrchestrator = new LocalOrchestrator(versionService, clientProvider, options, originalSetup);
 
             // Creating an agent that will handle all the process
-            var agent = new SyncAgent(localOrchestrator, remoteOrchestrator);
+            var agent = new SyncAgent(versionService, localOrchestrator, remoteOrchestrator);
 
             var s = await agent.SynchronizeAsync();
             Console.WriteLine(s);
@@ -130,7 +132,7 @@ namespace Sample.Synchronization.SqlServer
             await AddNewColumn(serverProvider.CreateConnection(),
                 "ProductCategory", "CreationDate", "datetime", "default(getdate())");
 
-            // Add a new column to SQLite client provider
+            // Add a new column to Sqlite client provider
             await AddNewColumn(clientProvider.CreateConnection(),
                 "ProductCategory", "CreationDate", "datetime");
 
@@ -143,8 +145,8 @@ namespace Sample.Synchronization.SqlServer
             var newSetup = new SyncSetup(new string[] { "ProductCategory", "Product" });
 
             // re create orchestrators with new setup
-            remoteOrchestrator = new RemoteOrchestrator(serverProvider, options, newSetup);
-            localOrchestrator = new LocalOrchestrator(clientProvider, options, newSetup);
+            remoteOrchestrator = new RemoteOrchestrator(versionService, serverProvider, options, newSetup);
+            localOrchestrator = new LocalOrchestrator(versionService, clientProvider, options, newSetup);
 
             // Provision again the server 
             await remoteOrchestrator.ProvisionAsync(
@@ -159,7 +161,7 @@ namespace Sample.Synchronization.SqlServer
                 SyncProvision.StoredProcedures | SyncProvision.Triggers | SyncProvision.TrackingTable | SyncProvision.Table);
 
             // Sync with Reinitialize
-            agent = new SyncAgent(localOrchestrator, remoteOrchestrator);
+            agent = new SyncAgent(versionService, localOrchestrator, remoteOrchestrator);
 
             s = await agent.SynchronizeAsync(SyncType.Reinitialize);
             Console.WriteLine(s);
@@ -182,23 +184,9 @@ namespace Sample.Synchronization.SqlServer
 
         private static async Task SynchronizeAsync()
         {
-            // Create 2 Sql Sync providers
-            //var serverProvider = new MariaDBSyncProvider(DBHelper.GetMariadbDatabaseConnectionString(serverDbName));
-            //var clientProvider = new MariaDBSyncDownloadOnlyProvider(DBHelper.GetMariadbDatabaseConnectionString(clientDbName));
-
-            //var serverProvider = new MariaDBSyncProvider(DBHelper.GetMySqlDatabaseConnectionString(serverDbName));
-            //var clientProvider = new MariaDBSyncDownloadOnlyProvider(DBHelper.GetMySqlDatabaseConnectionString(clientDbName));
-
-            //var serverProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString("ServerWithSyncNames"));
-            //var clientProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(clientDbName));
-
-            //var clientDatabaseName = Path.GetRandomFileName().Replace(".", "").ToLowerInvariant() + ".db";
             var clientDatabaseName = clientDbName + ".db";
             var clientProvider = new SqliteSyncProvider(clientDatabaseName);
-            //var clientProvider = new SqliteSyncDownloadOnlyProvider(clientDatabaseName);
-
             var serverProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(serverDbName));
-            //var clientProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(clientDbName));
 
             var options = new SyncOptions
             {
@@ -216,7 +204,7 @@ namespace Sample.Synchronization.SqlServer
             var setup = new SyncSetup(oneTable);
 
             // Creating an agent that will handle all the process
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            var agent = new SyncAgent(versionService, clientProvider, serverProvider, options, setup);
 
             do
             {
@@ -257,7 +245,7 @@ namespace Sample.Synchronization.SqlServer
 
             Console.WriteLine($"Creating snapshot");
 
-            var remoteOrchestrator = new RemoteOrchestrator(serverProvider, options, new SyncSetup(allTables));
+            var remoteOrchestrator = new RemoteOrchestrator(versionService, serverProvider, options, new SyncSetup(allTables));
 
             await remoteOrchestrator.CreateSnapshotAsync(progress: snapshotProgress);
         }
@@ -283,7 +271,7 @@ namespace Sample.Synchronization.SqlServer
 
                 var syncSetup = new SyncSetup(tables);
 
-                services.AddSyncServer<SqlSyncChangeTrackingProvider>(serverProvider.ConnectionString, syncSetup, serverOptions);
+                services.AddSyncServer<SqlSyncChangeTrackingProvider>(versionService, serverProvider.ConnectionString, syncSetup, serverOptions);
             });
 
             var serverHandler = new RequestDelegate(async context =>
@@ -303,7 +291,7 @@ namespace Sample.Synchronization.SqlServer
 
             });
 
-            using var server = new KestrellTestServer(configureServices, false);
+            using var server = new KestrelTestServer(configureServices, false);
             var clientHandler = new ResponseDelegate(async (serviceUri) =>
             {
                 do
@@ -313,7 +301,7 @@ namespace Sample.Synchronization.SqlServer
                     {
                         var startTime = DateTime.Now;
 
-                        var localOrchestrator = new WebClientOrchestrator(serviceUri);
+                        var localOrchestrator = new WebClientOrchestrator(versionService, serviceUri);
 
                         var clientOptions = new SyncOptions();
 
@@ -328,7 +316,7 @@ namespace Sample.Synchronization.SqlServer
                             Console.ResetColor();
                         });
 
-                        var agent = new SyncAgent(clientProvider, localOrchestrator, clientOptions);
+                        var agent = new SyncAgent(versionService, clientProvider, localOrchestrator, clientOptions);
 
                         var s = await agent.SynchronizeAsync(localProgress);
                         Console.WriteLine(s);
@@ -366,7 +354,7 @@ namespace Sample.Synchronization.SqlServer
             // Using the Progress pattern to handle progession during the synchronization
             var progress = new SynchronousProgress<ProgressArgs>(s => Console.WriteLine($"{s.Source}:\t{s.Message}"));
 
-            var orchestrator = new RemoteOrchestrator(serverProvider, new SyncOptions(), syncSetup);
+            var orchestrator = new RemoteOrchestrator(versionService, serverProvider, new SyncOptions(), syncSetup);
 
             await orchestrator.DeprovisionAsync(SyncProvision.StoredProcedures | SyncProvision.Triggers, progress: progress);
             await orchestrator.ProvisionAsync(SyncProvision.StoredProcedures | SyncProvision.Triggers, progress: progress);
@@ -394,7 +382,7 @@ namespace Sample.Synchronization.SqlServer
 
                 var syncSetup = new SyncSetup(tables);
 
-                services.AddSyncServer<SqlSyncProvider>(serverProvider.ConnectionString, syncSetup, serverOptions);
+                services.AddSyncServer<SqlSyncProvider>(versionService, serverProvider.ConnectionString, syncSetup, serverOptions);
             });
 
             var serverHandler = new RequestDelegate(async context =>
@@ -414,7 +402,7 @@ namespace Sample.Synchronization.SqlServer
 
             });
 
-            using var server = new KestrellTestServer(configureServices, false);
+            using var server = new KestrelTestServer(configureServices, false);
             var clientHandler = new ResponseDelegate(async (serviceUri) =>
             {
                 do
@@ -424,7 +412,7 @@ namespace Sample.Synchronization.SqlServer
                     {
                         var startTime = DateTime.Now;
 
-                        var remoteOrchestrator = new WebClientOrchestrator(serviceUri);
+                        var remoteOrchestrator = new WebClientOrchestrator(versionService, serviceUri);
 
                         var clientOptions = new SyncOptions();
 
@@ -440,13 +428,13 @@ namespace Sample.Synchronization.SqlServer
                         });
 
 
-                        var agent = new SyncAgent(clientProvider, remoteOrchestrator, clientOptions);
+                        var agent = new SyncAgent(versionService, clientProvider, remoteOrchestrator, clientOptions);
 
                         // fake setup to deprovision one table to migrate
                         var setup = new SyncSetup(new string[] { "Customer" });
 
                         // creating a localorchestrator with this fake setup
-                        var localOrchestrator = new LocalOrchestrator(clientProvider, clientOptions, setup);
+                        var localOrchestrator = new LocalOrchestrator(versionService, clientProvider, clientOptions, setup);
 
                         // Deprovision all stored procedure for the table from the fake setup
                         await localOrchestrator.DeprovisionAsync(SyncProvision.StoredProcedures | SyncProvision.Triggers | SyncProvision.TrackingTable);
@@ -518,7 +506,7 @@ namespace Sample.Synchronization.SqlServer
 
 
             // Creating an agent that will handle all the process
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            var agent = new SyncAgent(versionService, clientProvider, serverProvider, options, setup);
 
             // Using the Progress pattern to handle progession during the synchronization
             var progress = new SynchronousProgress<ProgressArgs>(s =>
@@ -580,7 +568,7 @@ namespace Sample.Synchronization.SqlServer
                 {
                     var clientProvider = new SqliteSyncProvider(clientDatabaseName);
                     //var clientProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(clientDbName));
-                    var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+                    var agent = new SyncAgent(versionService, clientProvider, serverProvider, options, setup);
 
                     agent.LocalOrchestrator.OnTableChangesBatchApplying(args => Console.WriteLine(args.Command.CommandText));
 
@@ -616,7 +604,7 @@ namespace Sample.Synchronization.SqlServer
             var setup = new SyncSetup(new string[] { "Customer" });
 
             // Creating an agent that will handle all the process
-            var agent = new SyncAgent(clientProvider, serverProvider, setup);
+            var agent = new SyncAgent(versionService, clientProvider, serverProvider, setup);
 
             // Using the Progress pattern to handle progession during the synchronization
             var progress = new SynchronousProgress<ProgressArgs>(s =>
@@ -664,8 +652,6 @@ namespace Sample.Synchronization.SqlServer
             // Create 2 Sql Sync providers
             var serverProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString("AdvProductCategory"));
             var clientProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(clientDbName));
-            //var clientProvider = new SqliteSyncProvider("AdvHugeD.db");
-
             // ----------------------------------
             // Client & Server side
             // ----------------------------------
@@ -677,10 +663,6 @@ namespace Sample.Synchronization.SqlServer
                 BatchSize = 10000,
             };
 
-            // Create the setup used for your sync process
-            //var tables = new string[] { "Employees" };
-
-
             var localProgress = new SynchronousProgress<ProgressArgs>(s =>
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -690,7 +672,7 @@ namespace Sample.Synchronization.SqlServer
 
             var configureServices = new Action<IServiceCollection>(services =>
             {
-                services.AddSyncServer<SqlSyncProvider>(serverProvider.ConnectionString, new string[] { "ProductCategory" }, options);
+                services.AddSyncServer<SqlSyncProvider>(versionService, serverProvider.ConnectionString, new string[] { "ProductCategory" }, options);
 
             });
 
@@ -701,7 +683,7 @@ namespace Sample.Synchronization.SqlServer
                 await webServerOrchestrator.HandleRequestAsync(context);
             });
 
-            using var server = new KestrellTestServer(configureServices);
+            using var server = new KestrelTestServer(configureServices);
             var clientHandler = new ResponseDelegate(async (serviceUri) =>
             {
                 Console.WriteLine("First Sync. Web sync start");
@@ -711,9 +693,9 @@ namespace Sample.Synchronization.SqlServer
                     var localDateTime = DateTime.Now;
                     var utcDateTime = DateTime.UtcNow;
 
-                    var localOrchestrator = new WebClientOrchestrator(serviceUri);
+                    var localOrchestrator = new WebClientOrchestrator(versionService, serviceUri);
 
-                    var agent = new SyncAgent(clientProvider, localOrchestrator, options);
+                    var agent = new SyncAgent(versionService, clientProvider, localOrchestrator, options);
                     await agent.SynchronizeAsync(localProgress);
 
 
@@ -868,7 +850,7 @@ namespace Sample.Synchronization.SqlServer
             var clientProvider = new SqliteSyncProvider(clientFileName);
 
             // Creating an agent that will handle all the process
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            var agent = new SyncAgent(versionService, clientProvider, serverProvider, options, setup);
 
             Console.WriteLine();
             Console.WriteLine("----------------------");
@@ -884,7 +866,7 @@ namespace Sample.Synchronization.SqlServer
             Console.WriteLine("----------------------");
             Console.WriteLine("1 - Deprovision The Server");
 
-            var remoteOrchestrator = new RemoteOrchestrator(serverProvider, options, setup);
+            var remoteOrchestrator = new RemoteOrchestrator(versionService, serverProvider, options, setup);
 
             // We are in change tracking mode, so no need to deprovision triggers and tracking table.
             await remoteOrchestrator.DeprovisionAsync(SyncProvision.StoredProcedures, progress: progress);
@@ -907,7 +889,7 @@ namespace Sample.Synchronization.SqlServer
             setup.Tables["Customer"].SyncDirection = SyncDirection.DownloadOnly;
             setup.Tables["ProductCategory"].SyncDirection = SyncDirection.DownloadOnly;
 
-            remoteOrchestrator = new RemoteOrchestrator(serverProvider, options, setup);
+            remoteOrchestrator = new RemoteOrchestrator(versionService, serverProvider, options, setup);
 
             var newSchema = await remoteOrchestrator.ProvisionAsync(SyncProvision.StoredProcedures | SyncProvision.Triggers | SyncProvision.TrackingTable, progress: progress);
 
@@ -924,7 +906,7 @@ namespace Sample.Synchronization.SqlServer
                 BatchSize = 5000
             };
 
-            remoteOrchestrator = new RemoteOrchestrator(serverProvider, options, setup);
+            remoteOrchestrator = new RemoteOrchestrator(versionService, serverProvider, options, setup);
             // Create a snapshot
             var bi = await remoteOrchestrator.CreateSnapshotAsync(progress: progress);
 
@@ -940,7 +922,7 @@ namespace Sample.Synchronization.SqlServer
             Console.WriteLine("4 - Sync again with Reinitialize Mode");
 
 
-            agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            agent = new SyncAgent(versionService, clientProvider, serverProvider, options, setup);
 
             r = await agent.SynchronizeAsync(SyncType.Reinitialize, progress);
             Console.WriteLine(r);
@@ -977,17 +959,13 @@ namespace Sample.Synchronization.SqlServer
             var handler = new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip };
             var client = new HttpClient(handler) { Timeout = TimeSpan.FromMinutes(5) };
 
-            var proxyClientProvider = new WebClientOrchestrator("https://localhost:44313/api/Sync", client: client);
+            var proxyClientProvider = new WebClientOrchestrator(versionService, "https://localhost:44313/api/Sync", client: client);
 
             var options = new SyncOptions
             {
                 BatchDirectory = Path.Combine(SyncOptions.GetDefaultUserBatchDiretory(), "Tmp"),
                 BatchSize = 2000,
             };
-
-            // Create the setup used for your sync process
-            //var tables = new string[] { "Employees" };
-
 
             var remoteProgress = new SynchronousProgress<ProgressArgs>(pa =>
             {
@@ -1011,7 +989,7 @@ namespace Sample.Synchronization.SqlServer
             });
 
 
-            var agent = new SyncAgent(clientProvider, proxyClientProvider, options);
+            var agent = new SyncAgent(versionService, clientProvider, proxyClientProvider, options);
 
 
             Console.WriteLine("Press a key to start (be sure web api is running ...)");
@@ -1096,7 +1074,7 @@ namespace Sample.Synchronization.SqlServer
 
                 var options = new SyncOptions();
 
-                services.AddSyncServer<SqlSyncProvider>(serverProvider.ConnectionString, "Filters", setup);
+                services.AddSyncServer<SqlSyncProvider>(versionService, serverProvider.ConnectionString, "Filters", setup);
 
                 //contains only some tables with subset of columns
                 var setup2 = new SyncSetup(new string[] { "Address", "Customer", "CustomerAddress" });
@@ -1107,7 +1085,7 @@ namespace Sample.Synchronization.SqlServer
                 setup2.TrackingTablesPrefix = "t";
                 setup2.TrackingTablesSuffix = "";
 
-                services.AddSyncServer<SqlSyncProvider>(serverProvider.ConnectionString, "Restricted", setup2, options);
+                services.AddSyncServer<SqlSyncProvider>(versionService, serverProvider.ConnectionString, "Restricted", setup2, options);
 
             });
 
@@ -1126,7 +1104,7 @@ namespace Sample.Synchronization.SqlServer
             });
 
 
-            using var server = new KestrellTestServer(configureServices);
+            using var server = new KestrelTestServer(configureServices);
 
             var clientHandler = new ResponseDelegate(async (serviceUri) =>
             {
@@ -1136,8 +1114,8 @@ namespace Sample.Synchronization.SqlServer
                     Console.WriteLine("Web sync start");
                     try
                     {
-                        var webClientOrchestrator = new WebClientOrchestrator(serviceUri);
-                        var agent = new SyncAgent(clientProvider1, webClientOrchestrator, "Filters");
+                        var webClientOrchestrator = new WebClientOrchestrator(versionService, serviceUri);
+                        var agent = new SyncAgent(versionService, clientProvider1, webClientOrchestrator, "Filters");
 
                         // Launch the sync process
                         if (!agent.Parameters.Contains("CompanyName"))
@@ -1155,7 +1133,7 @@ namespace Sample.Synchronization.SqlServer
                         Console.WriteLine(s);
 
 
-                        var agent2 = new SyncAgent(clientProvider2, webClientOrchestrator, "Restricted");
+                        var agent2 = new SyncAgent(versionService, clientProvider2, webClientOrchestrator, "Restricted");
 
                         // Using the Progress pattern to handle progession during the synchronization
                         var progress2 = new SynchronousProgress<ProgressArgs>(s =>
@@ -1190,8 +1168,6 @@ namespace Sample.Synchronization.SqlServer
         {
             // Create 2 Sql Sync providers
             var serverProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(serverDbName));
-            //var clientProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(clientDbName));
-
             var clientDatabaseName = Path.GetRandomFileName().Replace(".", "").ToLowerInvariant() + ".db";
             var clientProvider = new SqliteSyncProvider(clientDatabaseName);
 
@@ -1272,7 +1248,7 @@ namespace Sample.Synchronization.SqlServer
             var options = new SyncOptions();
 
             // Creating an agent that will handle all the process
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            var agent = new SyncAgent(versionService, clientProvider, serverProvider, options, setup);
 
             // Using the Progress pattern to handle progession during the synchronization
             var progress = new SynchronousProgress<ProgressArgs>(s =>
@@ -1284,7 +1260,6 @@ namespace Sample.Synchronization.SqlServer
 
             do
             {
-                // Console.Clear();
                 Console.WriteLine("Sync Start");
                 try
                 {
@@ -1306,9 +1281,6 @@ namespace Sample.Synchronization.SqlServer
                 {
                     Console.WriteLine(e.Message);
                 }
-
-
-                //Console.WriteLine("Sync Ended. Press a key to start again, or Escapte to end");
             } while (Console.ReadKey().Key != ConsoleKey.Escape);
 
             Console.WriteLine("End");
@@ -1316,86 +1288,19 @@ namespace Sample.Synchronization.SqlServer
 
         private static async Task SynchronizeWithLoggerAsync()
         {
-
-            //docker run -it --name seq -p 5341:80 -e ACCEPT_EULA=Y datalust/seq
-
-            // Create 2 Sql Sync providers
             var serverProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(serverDbName));
             var clientProvider = new SqlSyncProvider(DBHelper.GetDatabaseConnectionString(clientDbName));
-            //var clientProvider = new SqliteSyncProvider("clientX.db");
 
             var setup = new SyncSetup(new string[] { "Address", "Customer", "CustomerAddress", "SalesOrderHeader", "SalesOrderDetail" });
-            //var setup = new SyncSetup(new string[] { "Customer" });
-            //var setup = new SyncSetup(new[] { "Customer" });
-            //setup.Tables["Customer"].Columns.AddRange(new[] { "CustomerID", "FirstName", "LastName" });
-
-
-            //Log.Logger = new LoggerConfiguration()
-            //    .Enrich.FromLogContext()
-            //    .MinimumLevel.Verbose()
-            //    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            //    .WriteTo.Console()
-            //    .CreateLogger();
-
-            // *) create a console logger
-            //var loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole().SetMinimumLevel(LogLevel.Trace); });
-            //var logger = loggerFactory.CreateLogger("Dotmim.Sync");
-            //options.Logger = logger;
-
-            // *) create a seq logger
             var loggerFactory = LoggerFactory.Create(builder => { builder.SetMinimumLevel(LogLevel.Debug); });
             var logger = loggerFactory.CreateLogger("Dotmim.Sync");
-
-
-            // *) create a serilog logger
-            //var loggerFactory = LoggerFactory.Create(builder => { builder.AddSerilog().SetMinimumLevel(LogLevel.Trace); });
-            //var logger = loggerFactory.CreateLogger("SyncAgent");
-            //options.Logger = logger;
-
-            // *) Using Serilog with Seq
-            //var serilogLogger = new LoggerConfiguration()
-            //    .Enrich.FromLogContext()
-            //    .MinimumLevel.Debug()
-            //    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            //    .WriteTo.Seq("http://localhost:5341")
-            //    .CreateLogger();
-
-
-            //var actLogging = new Action<SyncLoggerOptions>(slo =>
-            //{
-            //    slo.AddConsole();
-            //    slo.SetMinimumLevel(LogLevel.Information);
-            //});
-
-            ////var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog().AddConsole().SetMinimumLevel(LogLevel.Information));
-
-            //var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(serilogLogger));
-
-            //loggerFactory.AddSerilog(serilogLogger);
-
-            //options.Logger = loggerFactory.CreateLogger("dms");
-
-            // 2nd option to add serilog
-            //var loggerFactorySerilog = new SerilogLoggerFactory();
-            //var logger = loggerFactorySerilog.CreateLogger<SyncAgent>();
-            //options.Logger = logger;
-
-            //options.Logger = new SyncLogger().AddConsole().AddDebug().SetMinimumLevel(LogLevel.Trace);
-
-            //var snapshotDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Snapshots");
-            //options.BatchSize = 500;
-            //options.SnapshotsDirectory = snapshotDirectory;
-            //var remoteOrchestrator = new RemoteOrchestrator(serverProvider, options, setup);
-            //remoteOrchestrator.CreateSnapshotAsync().GetAwaiter().GetResult();
 
             var options = new SyncOptions();
             options.BatchSize = 500;
             options.Logger = logger;
-            //options.Logger = new SyncLogger().AddConsole().SetMinimumLevel(LogLevel.Debug);
-
 
             // Creating an agent that will handle all the process
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            var agent = new SyncAgent(versionService, clientProvider, serverProvider, options, setup);
 
             // Using the Progress pattern to handle progession during the synchronization
             var progress = new SynchronousProgress<ProgressArgs>(s =>
@@ -1407,14 +1312,9 @@ namespace Sample.Synchronization.SqlServer
 
             do
             {
-                // Console.Clear();
                 Console.WriteLine("Sync Start");
                 try
                 {
-                    // Launch the sync process
-                    //if (!agent.Parameters.Contains("CompanyName"))
-                    //    agent.Parameters.Add("CompanyName", "Professional Sales and Service");
-
                     var s1 = await agent.SynchronizeAsync(progress);
 
                     // Write results
@@ -1424,9 +1324,6 @@ namespace Sample.Synchronization.SqlServer
                 {
                     Console.WriteLine(e.Message);
                 }
-
-
-                //Console.WriteLine("Sync Ended. Press a key to start again, or Escapte to end");
             } while (Console.ReadKey().Key != ConsoleKey.Escape);
 
             Console.WriteLine("End");

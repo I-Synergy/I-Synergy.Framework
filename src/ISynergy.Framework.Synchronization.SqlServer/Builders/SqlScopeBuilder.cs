@@ -66,9 +66,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             command.Parameters.Add(p);
 
             return command;
-
-
         }
+
         public DbCommand GetAllServerScopesCommand(DbConnection connection, DbTransaction transaction)
         {
             var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server";
@@ -119,11 +118,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                         CONSTRAINT [PK_{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}] PRIMARY KEY CLUSTERED ([sync_scope_id] ASC)
                         )";
             var command = connection.CreateCommand();
-
             command.Transaction = transaction;
-
             command.CommandText = commandText;
-
             return command;
         }
 
@@ -142,11 +138,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                         )";
 
             var command = connection.CreateCommand();
-
             command.Transaction = transaction;
-
             command.CommandText = commandText;
-
             return command;
 
         }
@@ -165,13 +158,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                         )";
 
             var command = connection.CreateCommand();
-
             command.Transaction = transaction;
-
             command.CommandText = commandText;
-
             return command;
-
         }
 
         public override DbCommand GetCreateScopeInfoTableCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction)
@@ -194,9 +183,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             var command = connection.CreateCommand();
             command.Transaction = transaction;
-
             command.CommandText = $"DROP Table [dbo].[{tableName}]";
-
             return command;
         }
 
@@ -210,11 +197,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             };
 
             var command = connection.CreateCommand();
-
             command.Transaction = transaction;
-
             command.CommandText = $@"IF EXISTS (SELECT t.name FROM sys.tables t WHERE t.name = N'{tableName}') SELECT 1 ELSE SELECT 0"; ;
-
             return command;
         }
 
@@ -225,7 +209,6 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             var command = connection.CreateCommand();
             command.Transaction = transaction;
-
             command.CommandText = "SELECT CONVERT(bigint, @@DBTS) as lastTimestamp";
 
             var p = command.CreateParameter();
@@ -276,6 +259,12 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                 _ => throw new NotImplementedException($"Can't save this DbScopeType {scopeType}")
             };
 
+        /// <summary>
+        /// Get save server client scopeinfo command.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public DbCommand GetSaveClientScopeInfoCommand(DbConnection connection, DbTransaction transaction)
         {
             var commandText = $@"
@@ -372,6 +361,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             return command;
 
         }
+
+        /// <summary>
+        /// Get save server history scopeinfo command.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public DbCommand GetSaveServerHistoryScopeInfoCommand(DbConnection connection, DbTransaction transaction)
         {
             var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_history";
@@ -408,38 +404,39 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             var p = command.CreateParameter();
             p.ParameterName = "@sync_scope_name";
-            //p.Value = serverHistoryScopeInfo.Name;
             p.DbType = DbType.String;
             p.Size = 100;
             command.Parameters.Add(p);
 
             p = command.CreateParameter();
             p.ParameterName = "@sync_scope_id";
-            //p.Value = serverHistoryScopeInfo.Id;
             p.DbType = DbType.Guid;
             command.Parameters.Add(p);
 
             p = command.CreateParameter();
             p.ParameterName = "@scope_last_sync_timestamp";
-            //p.Value = serverHistoryScopeInfo.LastSyncTimestamp;
             p.DbType = DbType.Int64;
             command.Parameters.Add(p);
 
             p = command.CreateParameter();
             p.ParameterName = "@scope_last_sync";
-            //p.Value = serverHistoryScopeInfo.LastSync.HasValue ? (object)serverHistoryScopeInfo.LastSync.Value : DBNull.Value;
             p.DbType = DbType.DateTime;
             command.Parameters.Add(p);
 
             p = command.CreateParameter();
             p.ParameterName = "@scope_last_sync_duration";
-            //p.Value = serverHistoryScopeInfo.LastSyncDuration;
             p.DbType = DbType.Int64;
             command.Parameters.Add(p);
 
             return command;
-
         }
+
+        /// <summary>
+        /// Get save server scopeinfo command.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public DbCommand GetSaveServerScopeInfoCommand(DbConnection connection, DbTransaction transaction)
         {
             var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server";
@@ -472,44 +469,14 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             var command = connection.CreateCommand();
             command.Transaction = transaction;
-
             command.CommandText = commandText;
 
             var p = command.CreateParameter();
-            p.ParameterName = "@sync_scope_name";
-            //p.Value = serverScopeInfo.Name;
-            p.DbType = DbType.String;
-            p.Size = 100;
-            command.Parameters.Add(p);
-
-            p = command.CreateParameter();
-            p.ParameterName = "@sync_scope_schema";
-            //p.Value = serverScopeInfo.Schema == null ? DBNull.Value : (object)JsonConvert.SerializeObject(serverScopeInfo.Schema);
-            p.DbType = DbType.String;
-            p.Size = int.MaxValue;
-            command.Parameters.Add(p);
-
-            p = command.CreateParameter();
-            p.ParameterName = "@sync_scope_setup";
-            //p.Value = serverScopeInfo.Setup == null ? DBNull.Value : (object)JsonConvert.SerializeObject(serverScopeInfo.Setup);
-            p.DbType = DbType.String;
-            p.Size = int.MaxValue;
-            command.Parameters.Add(p);
-
-            p = command.CreateParameter();
-            p.ParameterName = "@sync_scope_version";
-            //p.Value = string.IsNullOrEmpty(serverScopeInfo.Version) ? DBNull.Value : (object)serverScopeInfo.Version;
-            p.DbType = DbType.String;
-            p.Size = 10;
-            command.Parameters.Add(p);
-
-            p = command.CreateParameter();
             p.ParameterName = "@sync_scope_last_clean_timestamp";
-            //p.Value = serverScopeInfo.LastCleanupTimestamp;
             p.DbType = DbType.Int64;
             command.Parameters.Add(p);
 
-            return command;
+            return SetScopeParameters(command);
         }
     }
 }

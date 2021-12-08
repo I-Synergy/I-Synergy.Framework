@@ -8,7 +8,7 @@ Overview
   databases.
 > **I-Synergy.Framework.Synchronization** is cross-platforms, multi-databases and based on
   **.Net Standard 2.0**.
-> Choose either **SQL Server**, **SQLite**, **MySQL**, **MariaDB** and
+> Choose either **SQL Server**, **Sqlite**, **MySQL**, **MariaDB** and
   (hopefully, I hope soon\...) Oracle or PostgreSQL !
 
 For simplicity, we can say **the synchronization framework** framework.
@@ -38,7 +38,7 @@ dotnet add package I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking
 dotnet add package I-Synergy.Framework.Synchronization.MySql
 # Adding the package required to synchronize a MariaDB database:
 dotnet add package I-Synergy.Framework.Synchronization.MariaDB
-# Adding the package required to synchronize a SQLite database:
+# Adding the package required to synchronize a Sqlite database:
 dotnet add package I-Synergy.Framework.Synchronization.Sqlite
 ```
 
@@ -47,7 +47,7 @@ only package you need to install, on both Server and Client side, is
 `I-Synergy.Framework.Synchronization.MySql`.
 
 On the other side, if you need to synchronize a SQL server database,
-with multiple SQLite client databases, install `I-Synergy.Framework.Synchronization.SqlServer`
+with multiple Sqlite client databases, install `I-Synergy.Framework.Synchronization.SqlServer`
 (or `I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking`) on the server side and then
 install `I-Synergy.Framework.Synchronization.Sqlite` on each client.
 
@@ -132,7 +132,7 @@ var serverProvider = new SqlSyncChangeTrackingProvider(serverConnectionString);
 // IF you want to try with a MySql Database, use the [MySqlSyncProvider] instead
 // var serverProvider = new MySqlSyncProvider(serverConnectionString);
 
-// Second provider on the client side, is the [SqliteSyncProvider] used for SQLite databases 
+// Second provider on the client side, is the [SqliteSyncProvider] used for Sqlite databases 
 // relying on triggers and tracking tables to create the sync environment
 var clientProvider = new SqliteSyncProvider(clientConnectionString);
 

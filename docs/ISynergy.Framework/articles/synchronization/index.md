@@ -6,7 +6,7 @@ Welcome to the I-Synergy Synchronization Framework
 > This is a fork of the **[DMS](https://github.com/Mimetis/Dotmim.Sync)** repo where we made several adjustmenst for the I-Synergy framework.
 > Big thanx to **[Sébastien Pertus](https://github.com/Mimetis)**
 >
-> In this initial version we only support SQL Server, Azure SQL, localDB and SQLite databases.
+> In this initial version we only support SQL Server, Azure SQL, localDB and Sqlite databases.
 
 
 ![icon](assets/Smallicon.png)

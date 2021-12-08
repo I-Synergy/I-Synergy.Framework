@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
             // Capture the current synchronization context.  "current" is determined by Current.
             // If there is no current context, we use a default instance targeting the ThreadPool.
             m_synchronizationContext = SynchronizationContext.Current ?? ProgressStatics.DefaultContext;
-            Contract.Assert(m_synchronizationContext != null);
+            Contract.Assert(m_synchronizationContext is not null);
             m_invokeHandlers = new SendOrPostCallback(InvokeHandlers);
         }
 
@@ -45,7 +45,7 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
         /// <exception cref="ArgumentNullException">The <paramref name="handler"/> is null (Nothing in Visual Basic).</exception>
         public SynchronousProgress(Action<T> handler) : this()
         {
-            if (handler == null) throw new ArgumentNullException("handler");
+            if (handler is null) throw new ArgumentNullException("handler");
             m_handler = handler;
         }
 
@@ -65,7 +65,7 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
             // an event handler is removed between now and then.
             var handler = m_handler;
             var changedEvent = ProgressChanged;
-            if (handler != null || changedEvent != null)
+            if (handler is not null || changedEvent is not null)
                 // Post the processing to the [....] context.
                 // (If T is a value type, it will get boxed here.)
                 m_synchronizationContext.Send(m_invokeHandlers, value);

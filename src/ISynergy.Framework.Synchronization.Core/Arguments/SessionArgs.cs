@@ -170,7 +170,7 @@ namespace ISynergy.Framework.Synchronization.Core
                         this.FinalRow.FromArray(finalRowArray);
                         finalTable.Rows.Add(this.FinalRow);
                     }
-                    else if (this.FinalRow != null)
+                    else if (this.FinalRow is not null)
                     {
                         var finalSet = this.FinalRow.Table.Schema;
                         this.FinalRow.Clear();

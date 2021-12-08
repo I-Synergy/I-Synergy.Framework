@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Extensions;
 using ISynergy.Framework.AspNetCore.Synchronization.Orchestrators;
+using ISynergy.Framework.Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.TestServer
@@ -27,6 +29,8 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.TestServer
 
         public KestrelTestServer(WebServerOrchestrator webServerOrchestrator, bool useFidller = false)
         {
+            var versionService = new VersionService(Assembly.GetAssembly(typeof(KestrelTestServer)));
+
             var hostBuilder = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://127.0.0.1:0/")
@@ -41,7 +45,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.TestServer
                     });
 
                     // add a SqlSyncProvider acting as the server hub
-                    services.AddSyncServer(webServerOrchestrator);
+                    services.AddSyncServer(versionService, webServerOrchestrator);
 
                 });
             this.builder = hostBuilder;

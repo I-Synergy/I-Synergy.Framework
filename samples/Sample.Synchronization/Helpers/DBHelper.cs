@@ -5,15 +5,13 @@ namespace Sample.Synchronization.SqlServer.Helpers
 {
     public class DBHelper
     {
-        private static IConfiguration configuration;
-
-        static DBHelper()
-        {
-            configuration = new ConfigurationBuilder()
+        private static IConfiguration configuration = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json", false, true)
               .AddJsonFile("appsettings.local.json", true, true)
               .Build();
 
+        protected DBHelper()
+        {
         }
 
         public static string GetDatabaseConnectionString(string dbName) =>

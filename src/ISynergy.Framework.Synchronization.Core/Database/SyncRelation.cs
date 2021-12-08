@@ -101,7 +101,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public SyncTable GetParentTable()
         {
-            if (Schema == null || ParentKeys.Count() <= 0)
+            if (Schema is null || ParentKeys.Count() <= 0)
                 return null;
 
             var id = ParentKeys.First();
@@ -114,7 +114,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public SyncTable GetTable()
         {
-            if (Schema == null || Keys.Count() <= 0)
+            if (Schema is null || Keys.Count() <= 0)
                 return null;
 
             var id = Keys.First();
@@ -130,7 +130,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 
         public override bool EqualsByProperties(SyncRelation other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             if (!EqualsByName(other))

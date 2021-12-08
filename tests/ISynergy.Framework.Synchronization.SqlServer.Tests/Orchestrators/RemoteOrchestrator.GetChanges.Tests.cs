@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 {
-    public partial class RemoteOrchestratorTests
+    public partial class RemoteOrchestratorTests : BaseOrchestratorTests
     {
         /// <summary>
         /// RemoteOrchestrator.GetChanges() should return rows inserted on server, depending on the client scope sent
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup();
 
             // Make a first sync to be sure everything is in place
-            var agent = new SyncAgent(clientProvider, serverProvider, this.Tables, scopeName);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, this.Tables, scopeName);
 
             // Making a first sync, will initialize everything we need
             await agent.SynchronizeAsync();
@@ -116,7 +116,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var scopeName = "scopesnap1";
 
             // Make a first sync to be sure everything is in place
-            var agent = new SyncAgent(clientProvider, serverProvider, this.Tables, scopeName);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, this.Tables, scopeName);
 
             // Making a first sync, will initialize everything we need
             await agent.SynchronizeAsync();
@@ -174,7 +174,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var syncOptions = new SyncOptions();
             var setup = new SyncSetup();
 
-            var remoteOrchestrator = new RemoteOrchestrator(serverProvider, new SyncOptions(), new SyncSetup(this.Tables), scopeName);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, serverProvider, new SyncOptions(), new SyncSetup(this.Tables), scopeName);
 
             // Server side : Create a product category and a product
             // Create a productcategory item

@@ -102,10 +102,10 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         {
             Schema = schema;
 
-            if (Columns != null)
+            if (Columns is not null)
                 Columns.EnsureColumns(this);
 
-            if (Rows != null)
+            if (Rows is not null)
                 Rows.EnsureRows(this);
         }
 
@@ -126,10 +126,10 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             // Dispose managed ressources
             if (cleanup)
             {
-                if (Rows != null)
+                if (Rows is not null)
                     Rows.Clear();
 
-                if (Columns != null)
+                if (Columns is not null)
                     Columns.Clear();
 
                 Schema = null;
@@ -176,7 +176,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 
         public IEnumerable<SyncRelation> GetRelations()
         {
-            if (Schema == null)
+            if (Schema is null)
                 return Enumerable.Empty<SyncRelation>();
 
             return Schema.Relations.Where(r => r.GetTable().EqualsByName(this));
@@ -238,15 +238,15 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public SyncFilter GetFilter()
         {
-            if (Schema == null || Schema.Filters == null || Schema.Filters.Count <= 0)
+            if (Schema is null || Schema.Filters is null || Schema.Filters.Count <= 0)
                 return null;
 
             return Schema.Filters.FirstOrDefault(sf =>
             {
                 var sc = SyncGlobalization.DataSourceStringComparison;
 
-                var sn = sf.SchemaName == null ? string.Empty : sf.SchemaName;
-                var otherSn = SchemaName == null ? string.Empty : SchemaName;
+                var sn = sf.SchemaName is null ? string.Empty : sf.SchemaName;
+                var otherSn = SchemaName is null ? string.Empty : SchemaName;
 
                 return TableName.Equals(sf.TableName, sc) && sn.Equals(otherSn, sc);
             });
@@ -297,7 +297,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// <summary>
         /// Gets a value indicating if the synctable has rows
         /// </summary>
-        public bool HasRows => Rows != null && Rows.Count > 0;
+        public bool HasRows => Rows is not null && Rows.Count > 0;
 
         public override string ToString()
         {
@@ -318,7 +318,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 
         public override bool EqualsByProperties(SyncTable other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             var sc = SyncGlobalization.DataSourceStringComparison;

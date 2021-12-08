@@ -79,7 +79,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// </summary>
         internal void SetColumnParametersValues(DbCommand command, SyncRow row)
         {
-            if (row.Table == null)
+            if (row.Table is null)
                 throw new ArgumentException("Schema table columns does not correspond to row values");
 
             var schemaTable = row.Table;
@@ -118,49 +118,46 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// </summary>
         public async Task<DbCommand> GetCommandAsync(DbCommandType commandType, DbConnection connection, DbTransaction transaction, SyncFilter filter = null)
         {
+            if (connection is null)
+                throw new MissingConnectionException();
+
             // Create the key
             var commandKey = $"{connection.DataSource}-{connection.Database}-{TableDescription.GetFullName()}-{commandType}";
 
-            var command = GetCommand(commandType, filter);
-
-            if (command == null)
-                return null;
-
-            // Add Parameters
-            await AddCommandParametersAsync(commandType, command, connection, transaction, filter).ConfigureAwait(false);
-
-            if (command == null)
-                throw new MissingCommandException(commandType.ToString());
-
-            if (connection == null)
-                throw new MissingConnectionException();
-
-            if (connection.State != ConnectionState.Open)
-                throw new ConnectionClosedException(connection);
-
-            command.Connection = connection;
-            command.Transaction = transaction;
-
-            // Get a lazy command instance
-            var lazyCommand = commands.GetOrAdd(commandKey, k => new Lazy<SyncCommand>(() =>
+            if(GetCommand(commandType, filter) is DbCommand command)
             {
-                var syncCommand = new SyncCommand(commandKey);
-                return syncCommand;
-            }));
+                // Add Parameters
+                await AddCommandParametersAsync(commandType, command, connection, transaction, filter).ConfigureAwait(false);
 
-            // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
-            if (lazyCommand.Value.IsPrepared == true)
+                if (connection.State != ConnectionState.Open)
+                    throw new ConnectionClosedException(connection);
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+
+                // Get a lazy command instance
+                var lazyCommand = commands.GetOrAdd(commandKey, k => new Lazy<SyncCommand>(() =>
+                {
+                    var syncCommand = new SyncCommand(commandKey);
+                    return syncCommand;
+                }));
+
+                // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
+                if (lazyCommand.Value.IsPrepared == true)
+                    return command;
+
+                // Testing The Prepare() performance increase
+                command.Prepare();
+
+                // Adding this command as prepared
+                lazyCommand.Value.IsPrepared = true;
+
+                commands.AddOrUpdate(commandKey, lazyCommand, (key, lc) => new Lazy<SyncCommand>(() => lc.Value));
+
                 return command;
+            }
 
-            // Testing The Prepare() performance increase
-            command.Prepare();
-
-            // Adding this command as prepared
-            lazyCommand.Value.IsPrepared = true;
-
-            commands.AddOrUpdate(commandKey, lazyCommand, (key, lc) => new Lazy<SyncCommand>(() => lc.Value));
-
-            return command;
+            throw new MissingCommandException(commandType.ToString());
         }
 
         /// <summary>
@@ -183,7 +180,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// </summary>
         public static SyncTable CreateChangesTable(SyncTable syncTable, SyncSet owner)
         {
-            if (syncTable.Schema == null)
+            if (syncTable.Schema is null)
                 throw new ArgumentException("Schema can't be null when creating a changes table");
 
             // Create an empty sync table without columns
@@ -214,7 +211,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// </summary>
         public static DbParameter GetParameter(DbCommand command, string parameterName)
         {
-            if (command == null)
+            if (command is null)
                 return null;
 
             if (command.Parameters.Contains($"@{parameterName}"))
@@ -238,10 +235,10 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         public static void SetParameterValue(DbCommand command, string parameterName, object value)
         {
             var parameter = GetParameter(command, parameterName);
-            if (parameter == null)
+            if (parameter is null)
                 return;
 
-            if (value == null || value == DBNull.Value)
+            if (value is null || value == DBNull.Value)
                 parameter.Value = DBNull.Value;
             else
                 parameter.Value = SyncTypeConverter.TryConvertFromDbType(value, parameter.DbType);
@@ -249,10 +246,16 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
 
         }
 
+        /// <summary>
+        /// Get Sync integer parameter.
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public static int GetSyncIntOutParameter(string parameter, DbCommand command)
         {
             var dbParameter = GetParameter(command, parameter);
-            if (dbParameter == null || dbParameter.Value == null || string.IsNullOrEmpty(dbParameter.Value.ToString()))
+            if (dbParameter is null || dbParameter.Value is null || string.IsNullOrEmpty(dbParameter.Value.ToString()))
                 return 0;
 
             return int.Parse(dbParameter.Value.ToString(), CultureInfo.InvariantCulture);

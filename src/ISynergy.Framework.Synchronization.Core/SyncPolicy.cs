@@ -69,7 +69,7 @@ namespace ISynergy.Framework.Synchronization.Core
             CancellationToken cancellationToken = default,
             object arg = default)
         {
-            if (operation == null)
+            if (operation is null)
                 return default;
 
             // try count
@@ -99,13 +99,13 @@ namespace ISynergy.Framework.Synchronization.Core
                             throw;
 
                         // Do we have a Func that explicitely say if we can retry or not
-                        if (this.isRetriable != null)
+                        if (this.isRetriable is not null)
                             canRetry = isRetriable(ex, arg);
 
                         if (!canRetry)
                             throw;
 
-                        if (onRetryAsync != null)
+                        if (onRetryAsync is not null)
                             handledException = ex;
                     }
 
@@ -114,7 +114,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                     var waitDuration = this.SleepDuration?.Invoke(tryCount) ?? TimeSpan.Zero;
 
-                    if (onRetryAsync != null)
+                    if (onRetryAsync is not null)
                         await onRetryAsync(handledException, tryCount, waitDuration, arg);
 
                     if (waitDuration > TimeSpan.Zero)

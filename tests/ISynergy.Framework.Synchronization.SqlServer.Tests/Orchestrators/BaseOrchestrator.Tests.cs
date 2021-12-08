@@ -1,12 +1,15 @@
-﻿using ISynergy.Framework.Synchronization.Core;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
+using ISynergy.Framework.Synchronization.SqlServer.Tests.Base;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Context;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Helpers;
 using ISynergy.Framework.Synchronization.SqlServer.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -15,29 +18,15 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 {
-    public partial class BaseOrchestratorTests
+    public partial class BaseOrchestratorTests : BaseTest
     {
-        private readonly DatabaseHelper _databaseHelper;
-
-        public string[] Tables => new string[]
-        {
-            "SalesLT.ProductCategory", "SalesLT.ProductModel", "SalesLT.Product", "Employee", "Customer", "Address", "CustomerAddress", "EmployeeAddress",
-            "SalesLT.SalesOrderHeader", "SalesLT.SalesOrderDetail",  "Posts", "Tags", "PostTag",
-            "PricesList", "PricesListCategory", "PricesListDetail"
-        };
-
-        public BaseOrchestratorTests()
-        {
-            _databaseHelper = new DatabaseHelper();
-        }
-
         [Ignore]
         public void BaseOrchestrator_Constructor()
         {
             var provider = new SqlSyncProvider();
             var options = new SyncOptions();
             var setup = new SyncSetup();
-            var orchestrator = new LocalOrchestrator(provider, options, setup);
+            var orchestrator = new LocalOrchestrator(_versionService, provider, options, setup);
 
             Assert.IsNotNull(orchestrator.Options);
             Assert.AreSame(options, orchestrator.Options);
@@ -60,11 +49,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(null, null, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(provider, null, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(provider, options, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(null, options, setup));
-            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(null, null, setup));
+            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(_versionService, null, null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(_versionService, provider, null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(_versionService, provider, options, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(_versionService, null, options, setup));
+            Assert.ThrowsException<ArgumentNullException>(() => new LocalOrchestrator(_versionService, null, null, setup));
         }
 
         [Ignore]
@@ -74,7 +63,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup();
             var provider = new SqlSyncProvider();
 
-            var localOrchestrator = new LocalOrchestrator(provider, options, setup, "scope1");
+            var localOrchestrator = new LocalOrchestrator(_versionService, provider, options, setup, "scope1");
 
             var ctx = localOrchestrator.GetContext();
 
@@ -96,7 +85,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup();
             var provider = new SqlSyncProvider(cs);
 
-            var orchestrator = new RemoteOrchestrator(provider, options, setup);
+            var orchestrator = new RemoteOrchestrator(_versionService, provider, options, setup);
 
             var se = await Assert.ThrowsExceptionAsync<SyncException>(async () => await orchestrator.GetSchemaAsync());
 
@@ -168,7 +157,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var onSchemaRead = false;
             var onSchemaReading = false;
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             localOrchestrator.OnSchemaLoading(args =>
             {
@@ -214,7 +203,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(this.Tables);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
             using var cts = new CancellationTokenSource();
 
             localOrchestrator.OnConnectionOpen(args =>
@@ -257,7 +246,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup(tables);
             setup.Tables["Customer"].Columns.AddRange(new string[] { "CustomerID", "FirstName", "LastName", "CompanyName" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var schema = await localOrchestrator.GetSchemaAsync();
 
@@ -290,7 +279,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup(tables);
             setup.Tables["Customer"].Columns.AddRange(new string[] { "FirstName", "LastName", "CompanyName" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var se = await Assert.ThrowsExceptionAsync<SyncException>(async () =>
             {
@@ -321,7 +310,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup(tables);
             setup.Tables["Customer"].Columns.AddRange(new string[] { "FirstName", "LastName", "CompanyName", "BADCOLUMN" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var se = await Assert.ThrowsExceptionAsync<SyncException>(async () =>
             {
@@ -357,7 +346,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             };
             var setup = new SyncSetup(tables);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var se = await Assert.ThrowsExceptionAsync<SyncException>(async () =>
             {
@@ -387,7 +376,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup();
 
-            var orchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var orchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var provision = SyncProvision.Table | SyncProvision.TrackingTable | SyncProvision.StoredProcedures | SyncProvision.Triggers;
 
@@ -414,7 +403,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var provision = SyncProvision.Table | SyncProvision.TrackingTable | SyncProvision.StoredProcedures | SyncProvision.Triggers;
 
@@ -444,7 +433,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var provision = SyncProvision.Table | SyncProvision.TrackingTable | SyncProvision.StoredProcedures | SyncProvision.Triggers;
 
@@ -482,7 +471,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
             schema.Tables.Add(table);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var provision = SyncProvision.Table | SyncProvision.TrackingTable | SyncProvision.StoredProcedures | SyncProvision.Triggers;
 
@@ -541,7 +530,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             // trackign table name is composed with prefix and suffix from setup
             var trackingTableName = $"{setup.TrackingTablesPrefix}{table.TableName}{setup.TrackingTablesSuffix}";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var provision = SyncProvision.TrackingTable;
 
@@ -596,7 +585,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var selectrow = $"SalesLT.{setup.StoredProceduresPrefix}Product{setup.StoredProceduresSuffix}_selectrow";
             var update = $"SalesLT.{setup.StoredProceduresPrefix}Product{setup.StoredProceduresSuffix}_update";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             // Needs the tracking table to be able to create stored procedures
             var provision = SyncProvision.TrackingTable | SyncProvision.StoredProcedures;
@@ -649,7 +638,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
             schema.Tables.Add(table);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var provision = SyncProvision.Table;
 
@@ -699,7 +688,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
             schema.Tables.Add(table);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var provision = SyncProvision.Table | SyncProvision.TrackingTable | SyncProvision.StoredProcedures | SyncProvision.Triggers;
 
@@ -730,7 +719,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.badTable" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var provision = SyncProvision.Table | SyncProvision.TrackingTable | SyncProvision.StoredProcedures | SyncProvision.Triggers;
 

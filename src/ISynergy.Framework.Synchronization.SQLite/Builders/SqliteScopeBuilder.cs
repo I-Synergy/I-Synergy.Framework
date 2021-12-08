@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Text;
 
-namespace ISynergy.Framework.Synchronization.SQLite.Builders
+namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 {
     public class SqliteScopeBuilder : DbScopeBuilder
     {
@@ -185,30 +185,6 @@ namespace ISynergy.Framework.Synchronization.SQLite.Builders
             var command = new SqliteCommand(stmtText.ToString(), (SqliteConnection)connection, (SqliteTransaction)transaction);
 
             var p = command.CreateParameter();
-            p.ParameterName = "@sync_scope_name";
-            p.DbType = DbType.String;
-            p.Size = 100;
-            command.Parameters.Add(p);
-
-            p = command.CreateParameter();
-            p.ParameterName = "@sync_scope_schema";
-            p.DbType = DbType.String;
-            p.Size = -1;
-            command.Parameters.Add(p);
-
-            p = command.CreateParameter();
-            p.ParameterName = "@sync_scope_setup";
-            p.DbType = DbType.String;
-            p.Size = -1;
-            command.Parameters.Add(p);
-
-            p = command.CreateParameter();
-            p.ParameterName = "@sync_scope_version";
-            p.DbType = DbType.String;
-            p.Size = 10;
-            command.Parameters.Add(p);
-
-            p = command.CreateParameter();
             p.ParameterName = "@scope_last_sync";
             p.DbType = DbType.DateTime;
             command.Parameters.Add(p);
@@ -234,7 +210,7 @@ namespace ISynergy.Framework.Synchronization.SQLite.Builders
             p.Size = -1;
             command.Parameters.Add(p);
 
-            return command;
+            return SetScopeParameters(command);
         }
     }
 }

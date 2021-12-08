@@ -105,7 +105,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public override bool EqualsByProperties(SetupTable other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             var sc = SyncGlobalization.DataSourceStringComparison;

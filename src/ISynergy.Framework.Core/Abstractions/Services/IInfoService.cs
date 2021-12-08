@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface IInfoService
     /// </summary>
-    public interface IInfoService
+    public interface IInfoService : IVersionService
     {
         /// <summary>
         /// Gets the application path.
@@ -15,11 +15,6 @@
         /// </summary>
         /// <value>The name of the company.</value>
         string CompanyName { get; }
-        /// <summary>
-        /// Gets the product version.
-        /// </summary>
-        /// <value>The product version.</value>
-        string ProductVersion { get; }
         /// <summary>
         /// Gets the name of the product.
         /// </summary>

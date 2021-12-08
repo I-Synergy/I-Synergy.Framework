@@ -95,7 +95,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public bool HasSameOptions(SyncSetup otherSetup)
         {
-            if (otherSetup == null)
+            if (otherSetup is null)
                 return false;
 
             var sc = SyncGlobalization.DataSourceStringComparison;
@@ -116,7 +116,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public bool HasSameStructure(SyncSetup otherSetup)
         {
-            if (otherSetup == null)
+            if (otherSetup is null)
                 return false;
 
             // Checking inner lists
@@ -131,7 +131,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
         public bool EqualsByProperties(SyncSetup otherSetup)
         {
-            if (otherSetup == null)
+            if (otherSetup is null)
                 return false;
 
             if (!HasSameOptions(otherSetup))

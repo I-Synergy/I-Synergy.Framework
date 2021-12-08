@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Synchronization.Core
     {
         public static T TryConvertTo<T>(dynamic value, CultureInfo provider = default)
         {
-            if (value == null)
+            if (value is null)
                 return default;
 
             provider = provider ?? CultureInfo.InvariantCulture;

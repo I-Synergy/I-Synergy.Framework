@@ -28,15 +28,22 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         private SqlBuilderTrackingTable sqlBuilderTrackingTable;
         private SqlBuilderTrigger sqlBuilderTrigger;
 
-        public SqlTableBuilder(SyncTable tableDescription, ParserName tableName, ParserName trackingTableName, SyncSetup setup) : base(tableDescription, tableName, trackingTableName, setup)
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="tableDescription"></param>
+        /// <param name="tableName"></param>
+        /// <param name="trackingTableName"></param>
+        /// <param name="setup"></param>
+        public SqlTableBuilder(SyncTable tableDescription, ParserName tableName, ParserName trackingTableName, SyncSetup setup) 
+            : base(tableDescription, tableName, trackingTableName, setup)
         {
-            this.SqlObjectNames = new SqlObjectNames(tableDescription, tableName, trackingTableName, setup);
-            this.SqlDbMetadata = new SqlDbMetadata();
-
-            this.sqlBuilderProcedure = new SqlBuilderProcedure(tableDescription, tableName, trackingTableName, Setup);
-            this.sqlBuilderTable = new SqlBuilderTable(tableDescription, tableName, trackingTableName, Setup);
-            this.sqlBuilderTrackingTable = new SqlBuilderTrackingTable(tableDescription, tableName, trackingTableName, Setup);
-            this.sqlBuilderTrigger = new SqlBuilderTrigger(tableDescription, tableName, trackingTableName, Setup);
+            SqlObjectNames = new SqlObjectNames(tableDescription, tableName, trackingTableName, setup);
+            SqlDbMetadata = new SqlDbMetadata();
+            sqlBuilderProcedure = new SqlBuilderProcedure(tableDescription, tableName, trackingTableName, Setup);
+            sqlBuilderTable = new SqlBuilderTable(tableDescription, tableName, trackingTableName, Setup);
+            sqlBuilderTrackingTable = new SqlBuilderTrackingTable(tableDescription, tableName, trackingTableName, Setup);
+            sqlBuilderTrigger = new SqlBuilderTrigger(tableDescription, tableName, trackingTableName, Setup);
         }
 
         public override Task<DbCommand> GetCreateSchemaCommandAsync(DbConnection connection, DbTransaction transaction)

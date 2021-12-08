@@ -115,6 +115,7 @@ namespace Sample
 
             services.Configure<ConfigurationOptions>(configurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
+            services.AddSingleton<IVersionService>((s) => new VersionService(assembly));
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();

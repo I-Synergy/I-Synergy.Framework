@@ -39,7 +39,7 @@ namespace ISynergy.Framework.Synchronization.Core
             {
                 var (schemaTable, _) = await this.InternalGetTableSchemaAsync(ctx, this.Setup, table, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                if (schemaTable == null)
+                if (schemaTable is null)
                     throw new MissingTableException(table.GetFullName());
 
                 // Create a temporary SyncSet for attaching to the schemaTable
@@ -63,7 +63,7 @@ namespace ISynergy.Framework.Synchronization.Core
         internal async Task<SyncSet> InternalGetSchemaAsync(SyncContext context, SyncSetup setup, DbConnection connection, DbTransaction transaction,
                                                            CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            if (setup == null || setup.Tables.Count <= 0)
+            if (setup is null || setup.Tables.Count <= 0)
                 throw new MissingTablesException();
 
             await this.InterceptAsync(new SchemaLoadingArgs(context, setup, connection, transaction), cancellationToken).ConfigureAwait(false);
@@ -146,7 +146,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var ordinal = 0;
 
             // Eventually, do not raise exception here, just we don't have any columns
-            if (columns == null || columns.Any() == false)
+            if (columns is null || columns.Any() == false)
                 return;
 
             // Delete all existing columns
@@ -159,7 +159,7 @@ namespace ISynergy.Framework.Synchronization.Core
             IEnumerable<SyncColumn> lstColumns;
 
             // Validate columns list from setup table if any
-            if (setupTable.Columns != null && setupTable.Columns.Count > 1)
+            if (setupTable.Columns is not null && setupTable.Columns.Count > 1)
             {
                 lstColumns = new List<SyncColumn>();
 
@@ -168,7 +168,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     // Check if the columns list contains the column name we specified in the setup
                     var column = columns.FirstOrDefault(c => c.ColumnName.Equals(setupColumn, SyncGlobalization.DataSourceStringComparison));
 
-                    if (column == null)
+                    if (column is null)
                         throw new MissingColumnException(setupColumn, schemaTable.TableName);
                     else
                         ((List<SyncColumn>)lstColumns).Add(column);
@@ -242,7 +242,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 // if setup table has no columns, we add all columns from db
                 // otherwise check if columns exist in the data source
-                if (setupTable.Columns == null || setupTable.Columns.Count <= 0 || setupTable.Columns.Contains(column.ColumnName))
+                if (setupTable.Columns is null || setupTable.Columns.Count <= 0 || setupTable.Columns.Contains(column.ColumnName))
                     schemaTable.Columns.Add(column);
 
                 // If column does not allow null value and is not compute
@@ -261,7 +261,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get PrimaryKey
             var schemaPrimaryKeys = await tableBuilder.GetPrimaryKeysAsync(connection, transaction).ConfigureAwait(false);
 
-            if (schemaPrimaryKeys == null || schemaPrimaryKeys.Any() == false)
+            if (schemaPrimaryKeys is null || schemaPrimaryKeys.Any() == false)
                 throw new MissingPrimaryKeyException(schemaTable.TableName);
 
             // Set the primary Key
@@ -270,7 +270,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 // Find the column in the schema columns
                 var columnKey = schemaTable.Columns.FirstOrDefault(sc => sc.EqualsByName(rowColumn));
 
-                if (columnKey == null)
+                if (columnKey is null)
                     throw new MissingPrimaryKeyColumnException(rowColumn.ColumnName, schemaTable.TableName);
 
                 var columnNameLower = columnKey.ColumnName.ToLowerInvariant();
@@ -292,7 +292,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         private void SetRelations(List<DbRelationDefinition> relations, SyncSet schema)
         {
-            if (relations == null || relations.Count <= 0)
+            if (relations is null || relations.Count <= 0)
                 return;
 
             foreach (var r in relations)
@@ -306,16 +306,16 @@ namespace ISynergy.Framework.Synchronization.Core
                     {
                         var schemaColumn = schemaTable.Columns[kc.KeyColumnName];
 
-                        if (schemaColumn == null)
+                        if (schemaColumn is null)
                             return null;
 
                         return new SyncColumnIdentifier(schemaColumn.ColumnName, schemaTable.TableName, schemaTable.SchemaName);
                     })
-                    .Where(sc => sc != null)
+                    .Where(sc => sc is not null)
                     .ToList();
 
                 // if we don't find the column, maybe we just dont have this column in our setup def
-                if (schemaColumns == null || schemaColumns.Count == 0)
+                if (schemaColumns is null || schemaColumns.Count == 0)
                     continue;
 
                 // then Get the foreign table as well
@@ -323,21 +323,21 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 // Since we can have a table with a foreign key but not the parent table
                 // It's not a problem, just forget it
-                if (foreignTable == null || foreignTable.Columns.Count == 0)
+                if (foreignTable is null || foreignTable.Columns.Count == 0)
                     continue;
 
                 var foreignColumns = r.Columns.OrderBy(kc => kc.Order)
                      .Select(fc =>
                      {
                          var schemaColumn = foreignTable.Columns[fc.ReferenceColumnName];
-                         if (schemaColumn == null)
+                         if (schemaColumn is null)
                              return null;
                          return new SyncColumnIdentifier(schemaColumn.ColumnName, foreignTable.TableName, foreignTable.SchemaName);
                      })
-                     .Where(sc => sc != null)
+                     .Where(sc => sc is not null)
                      .ToList();
 
-                if (foreignColumns == null || foreignColumns.Count == 0)
+                if (foreignColumns is null || foreignColumns.Count == 0)
                     continue;
 
                 var schemaRelation = new SyncRelation(r.ForeignKey, schemaColumns, foreignColumns);

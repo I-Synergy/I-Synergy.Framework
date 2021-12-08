@@ -9,8 +9,12 @@ namespace Sample.MessageBus.Subscriber
     /// <summary>
     /// Class Program.
     /// </summary>
-    class Program
+    internal class Program
     {
+        protected Program()
+        {
+        }
+
         static int Main(string[] args)
         {
             try

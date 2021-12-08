@@ -12,9 +12,9 @@ namespace Sample.Serializers
 
     public class CustomMessagePackSerializer<T> : ISerializer<T>
     {
-        private MessagePackSerializerOptions options;
+        private readonly MessagePackSerializerOptions options;
 
-        public CustomMessagePackSerializer() => this.options = MessagePack.Resolvers.ContractlessStandardResolver.Options;
+        public CustomMessagePackSerializer() => options = MessagePack.Resolvers.ContractlessStandardResolver.Options;
 
         public async Task<T> DeserializeAsync(Stream ms)
         {

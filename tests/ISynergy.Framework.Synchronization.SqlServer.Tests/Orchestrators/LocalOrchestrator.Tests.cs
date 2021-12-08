@@ -3,6 +3,7 @@ using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Core.Tests.Models;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
+using ISynergy.Framework.Synchronization.SqlServer.Tests.Base;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Context;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,22 +15,8 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 {
-    public partial class LocalOrchestratorTests
+    public partial class LocalOrchestratorTests : BaseTest
     {
-        private readonly DatabaseHelper _databaseHelper;
-
-        public string[] Tables => new string[]
-         {
-            "SalesLT.ProductCategory", "SalesLT.ProductModel", "SalesLT.Product", "Employee", "Customer", "Address", "CustomerAddress", "EmployeeAddress",
-            "SalesLT.SalesOrderHeader", "SalesLT.SalesOrderDetail", "Posts", "Tags", "PostTag",
-            "PricesList", "PricesListCategory", "PricesListDetail"
-         };
-
-        public LocalOrchestratorTests()
-        {
-            _databaseHelper = new DatabaseHelper();
-        }
-
         [Ignore]
         public async Task LocalOrchestrator_BeginSession_ShouldIncrement_SyncStage()
         {
@@ -39,7 +26,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var onSessionBegin = false;
 
 
-            var localOrchestrator = new LocalOrchestrator(provider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, provider, options, setup);
             var ctx = localOrchestrator.GetContext();
 
             localOrchestrator.OnSessionBegin(args =>
@@ -65,7 +52,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var provider = new SqlSyncProvider();
             var onSessionEnd = false;
 
-            var localOrchestrator = new LocalOrchestrator(provider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, provider, options, setup);
             var ctx = localOrchestrator.GetContext();
 
             localOrchestrator.OnSessionEnd(args =>
@@ -104,7 +91,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var scopeName = "scopesnap1";
 
             // Make a first sync to be sure everything is in place
-            var agent = new SyncAgent(clientProvider, serverProvider, this.Tables, scopeName);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, this.Tables, scopeName);
 
             // Making a first sync, will initialize everything we need
             var r = await agent.SynchronizeAsync();

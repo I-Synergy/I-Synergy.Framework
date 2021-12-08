@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             options.Logger = LoggerFactory.Create(builder => { builder.SetMinimumLevel(LogLevel.Debug); }).CreateLogger(nameof(InterceptorsTests)); ;
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = 0;
             var onCreated = 0;
@@ -79,7 +79,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var isCreated = await localOrchestrator.CreateTriggerAsync(setup.Tables["Product", "SalesLT"], DbTriggerType.Insert);
 
@@ -107,7 +107,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = 0;
             var onCreated = 0;
@@ -160,13 +160,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var isCreated = await localOrchestrator.CreateTriggerAsync(setup.Tables["Product", "SalesLT"], DbTriggerType.Insert);
             Assert.IsTrue(isCreated);
 
             // Ensuring we have a clean new instance
-            localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = 0;
             var onCreated = 0;
@@ -219,13 +219,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var isCreated = await localOrchestrator.CreateTriggerAsync(setup.Tables["Product", "SalesLT"], DbTriggerType.Insert);
             Assert.IsTrue(isCreated);
 
             // Ensuring we have a clean new instance
-            localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = 0;
             var onCreated = 0;
@@ -278,7 +278,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = 0;
             var onCreated = 0;
@@ -339,7 +339,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.Product" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = 0;
             var onCreated = 0;

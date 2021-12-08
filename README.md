@@ -48,7 +48,7 @@ ___
 | [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage.Azure) |
 | [I-Synergy.Framework.Synchronization.Client](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Client/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Client) |
 | [I-Synergy.Framework.Synchronization.Core](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Core) |
-| [I-Synergy.Framework.Synchronization.SQLite](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.SQLite/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.SQLite) |
+| [I-Synergy.Framework.Synchronization.Sqlite](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Sqlite/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Sqlite) |
 | [I-Synergy.Framework.Synchronization.SqlServer](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.SqlServer/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.SqlServer) |
 | [I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking) |
 | [I-Synergy.Framework.Telemetry](https://www.nuget.org/packages/I-Synergy.Framework.Telemetry/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Telemetry) |

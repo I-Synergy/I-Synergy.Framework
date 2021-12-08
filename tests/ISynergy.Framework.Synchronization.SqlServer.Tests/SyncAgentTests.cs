@@ -2,11 +2,12 @@
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
+using ISynergy.Framework.Synchronization.SqlServer.Tests.Base;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Tests
 {
-    public class SyncAgentTests
+    public class SyncAgentTests : BaseTest
     {
        private void CheckConstructor(SyncAgent agent)
         {
@@ -30,7 +31,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var serverProvider = new SqlSyncProvider();
             var tables = new string[] { "Customer" };
 
-            var agent = new SyncAgent(clientProvider, serverProvider, tables);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, tables);
 
             CheckConstructor(agent);
 
@@ -50,7 +51,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var serverProvider = new SqlSyncProvider();
             string[] tables = null;
 
-            var agent = new SyncAgent(clientProvider, serverProvider, tables);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, tables);
 
             CheckConstructor(agent);
             Assert.AreEqual(SyncOptions.DefaultScopeName, agent.ScopeName);
@@ -68,7 +69,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var serverProvider = new SqlSyncProvider();
             var tables = new string[] { "Customer" };
 
-            var agent = new SyncAgent(clientProvider, serverProvider, tables, "CustomerScope");
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, tables, "CustomerScope");
 
             CheckConstructor(agent);
 
@@ -87,7 +88,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var clientProvider = new SqlSyncProvider();
             var serverProvider = new SqlSyncProvider();
 
-            var agent = new SyncAgent(clientProvider, serverProvider);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider);
 
             CheckConstructor(agent);
 
@@ -104,7 +105,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var clientProvider = new SqlSyncProvider();
             var serverProvider = new SqlSyncProvider();
 
-            var agent = new SyncAgent(clientProvider, serverProvider, "CustomerScope");
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, "CustomerScope");
 
             CheckConstructor(agent);
 
@@ -123,7 +124,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var options = new SyncOptions();
             var tables = new string[] { "Customer" };
 
-            var agent = new SyncAgent(clientProvider, serverProvider, options, tables);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, options, tables);
 
             CheckConstructor(agent);
             Assert.AreSame(options, agent.LocalOrchestrator.Options);
@@ -145,7 +146,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "Customer" });
 
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, options, setup);
 
             CheckConstructor(agent);
             Assert.AreSame(options, agent.LocalOrchestrator.Options);
@@ -169,7 +170,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup();
 
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, options, setup);
 
             CheckConstructor(agent);
             Assert.AreSame(options, agent.LocalOrchestrator.Options);
@@ -193,9 +194,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var remoteOptions = new SyncOptions();
             var remoteSetup = new SyncSetup(new string[] { "Product", "ProductCategory" });
 
-            var remoteOrchestrator = new RemoteOrchestrator(new SqlSyncProvider(), remoteOptions, remoteSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, new SqlSyncProvider(), remoteOptions, remoteSetup);
 
-            var agent = new SyncAgent(clientProvider, remoteOrchestrator, new string[] { "Customer" });
+            var agent = new SyncAgent(_versionService, clientProvider, remoteOrchestrator, new string[] { "Customer" });
 
             CheckConstructor(agent);
             Assert.AreEqual(SyncOptions.DefaultScopeName, agent.ScopeName);
@@ -234,9 +235,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             // this options and setup will be overriden by the constructor
             var remoteOptions = new SyncOptions();
             var remoteSetup = new SyncSetup(new string[] { "Product", "ProductCategory" });
-            var remoteOrchestrator = new RemoteOrchestrator(new SqlSyncProvider(), remoteOptions, remoteSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, new SqlSyncProvider(), remoteOptions, remoteSetup);
 
-            var agent = new SyncAgent(clientProvider, remoteOrchestrator, new string[] { "Customer" }, "CustomerScope");
+            var agent = new SyncAgent(_versionService, clientProvider, remoteOrchestrator, new string[] { "Customer" }, "CustomerScope");
 
             CheckConstructor(agent);
             Assert.AreEqual("CustomerScope", agent.ScopeName);
@@ -278,9 +279,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var remoteOptions = new SyncOptions();
             var remoteSetup = new SyncSetup(new string[] { "Product", "ProductCategory" });
 
-            var remoteOrchestrator = new RemoteOrchestrator(new SqlSyncProvider(), remoteOptions, remoteSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, new SqlSyncProvider(), remoteOptions, remoteSetup);
 
-            var agent = new SyncAgent(clientProvider, remoteOrchestrator);
+            var agent = new SyncAgent(_versionService, clientProvider, remoteOrchestrator);
 
             CheckConstructor(agent);
             Assert.AreEqual(SyncOptions.DefaultScopeName, agent.ScopeName);
@@ -315,9 +316,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             // this options and setup will be overriden by the constructor
             var remoteOptions = new SyncOptions();
             var remoteSetup = new SyncSetup(new string[] { "Product", "ProductCategory" });
-            var remoteOrchestrator = new RemoteOrchestrator(new SqlSyncProvider(), remoteOptions, remoteSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, new SqlSyncProvider(), remoteOptions, remoteSetup);
 
-            var agent = new SyncAgent(clientProvider, remoteOrchestrator, "CustomerScope");
+            var agent = new SyncAgent(_versionService, clientProvider, remoteOrchestrator, "CustomerScope");
 
             CheckConstructor(agent);
             Assert.AreEqual("CustomerScope", agent.ScopeName);
@@ -357,9 +358,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var remoteOptions = new SyncOptions();
             var remoteSetup = new SyncSetup(new string[] { "Product", "ProductCategory" });
 
-            var remoteOrchestrator = new RemoteOrchestrator(new SqlSyncProvider(), remoteOptions, remoteSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, new SqlSyncProvider(), remoteOptions, remoteSetup);
 
-            var agent = new SyncAgent(clientProvider, remoteOrchestrator, options, new string[] { "Customer" });
+            var agent = new SyncAgent(_versionService, clientProvider, remoteOrchestrator, options, new string[] { "Customer" });
 
             CheckConstructor(agent);
             Assert.AreSame(options, agent.LocalOrchestrator.Options);
@@ -409,9 +410,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var remoteOptions = new SyncOptions();
             var remoteSetup = new SyncSetup(new string[] { "Product", "ProductCategory" });
 
-            var remoteOrchestrator = new RemoteOrchestrator(new SqlSyncProvider(), remoteOptions, remoteSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, new SqlSyncProvider(), remoteOptions, remoteSetup);
 
-            var agent = new SyncAgent(clientProvider, remoteOrchestrator, options, new string[] { "Customer" }, "CustomerScope");
+            var agent = new SyncAgent(_versionService, clientProvider, remoteOrchestrator, options, new string[] { "Customer" }, "CustomerScope");
 
             CheckConstructor(agent);
             Assert.AreSame(options, agent.LocalOrchestrator.Options);
@@ -462,9 +463,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var remoteOptions = new SyncOptions();
             var remoteSetup = new SyncSetup(new string[] { "Product", "ProductCategory" });
 
-            var remoteOrchestrator = new RemoteOrchestrator(new SqlSyncProvider(), remoteOptions, remoteSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, new SqlSyncProvider(), remoteOptions, remoteSetup);
 
-            var agent = new SyncAgent(clientProvider, remoteOrchestrator, options, setup);
+            var agent = new SyncAgent(_versionService, clientProvider, remoteOrchestrator, options, setup);
 
             CheckConstructor(agent);
             Assert.AreSame(options, agent.LocalOrchestrator.Options);
@@ -520,9 +521,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tests
             var remoteOptions = new SyncOptions();
             var remoteSetup = new SyncSetup(new string[] { "Product", "ProductCategory" });
 
-            var remoteOrchestrator = new RemoteOrchestrator(new SqlSyncProvider(), remoteOptions, remoteSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, new SqlSyncProvider(), remoteOptions, remoteSetup);
 
-            var agent = new SyncAgent(clientProvider, remoteOrchestrator, options, setup, "CustomerScope");
+            var agent = new SyncAgent(_versionService, clientProvider, remoteOrchestrator, options, setup, "CustomerScope");
 
             CheckConstructor(agent);
             Assert.AreSame(options, agent.LocalOrchestrator.Options);

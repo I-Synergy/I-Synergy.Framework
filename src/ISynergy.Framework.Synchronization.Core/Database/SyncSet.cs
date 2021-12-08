@@ -59,13 +59,13 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public void EnsureSchema()
         {
-            if (Tables != null)
+            if (Tables is not null)
                 Tables.EnsureTables(this);
 
-            if (Relations != null)
+            if (Relations is not null)
                 Relations.EnsureRelations(this);
 
-            if (Filters != null)
+            if (Filters is not null)
                 Filters.EnsureFilters(this);
         }
 
@@ -105,7 +105,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             {
                 var syncTable = Tables[table.TableName, table.SchemaName];
 
-                if (syncTable == null)
+                if (syncTable is null)
                     throw new ArgumentNullException($"Table {table.TableName} does not exist in the SyncSet");
 
                 syncTable.Rows.ImportContainerTable(table, checkType);
@@ -147,11 +147,11 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public void Dispose()
         {
             Dispose(true);
-            if (Tables != null)
+            if (Tables is not null)
                 Tables.Schema = null;
-            if (Relations != null)
+            if (Relations is not null)
                 Relations.Schema = null;
-            if (Filters != null)
+            if (Filters is not null)
                 Filters.Schema = null;
 
             GC.SuppressFinalize(this);
@@ -162,13 +162,13 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             // Dispose managed ressources
             if (cleanup)
             {
-                if (Tables != null)
+                if (Tables is not null)
                     Tables.Clear();
 
-                if (Relations != null)
+                if (Relations is not null)
                     Relations.Clear();
 
-                if (Filters != null)
+                if (Filters is not null)
                     Filters.Clear();
             }
 
@@ -178,7 +178,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 
         public bool EqualsByProperties(SyncSet otherSet)
         {
-            if (otherSet == null)
+            if (otherSet is null)
                 return false;
 
             // Checking inner lists
@@ -217,7 +217,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
                     return false;
 
                 // Check if any of the tables has rows inside
-                return Tables.Any(t => t.Rows != null && t.Rows.Count > 0);
+                return Tables.Any(t => t.Rows is not null && t.Rows.Count > 0);
             }
         }
 

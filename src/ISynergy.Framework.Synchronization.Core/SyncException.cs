@@ -13,19 +13,25 @@ namespace ISynergy.Framework.Synchronization.Core
     /// </summary>
     public class SyncException : Exception
     {
-        public SyncException(string message) : base(message)
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="message"></param>
+        public SyncException(string message) 
+            : base(message)
         {
-
         }
 
-        public SyncException(Exception exception, SyncStage stage = SyncStage.None) : base(exception.Message, exception)
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="stage"></param>
+        public SyncException(Exception exception, SyncStage stage = SyncStage.None) 
+            : base(exception.Message, exception)
         {
-            this.SyncStage = stage;
-
-            if (exception is null)
-                return;
-
-            this.TypeName = exception.GetType().Name;
+            SyncStage = stage;
+            TypeName = exception.GetType().Name;
         }
 
         /// <summary>

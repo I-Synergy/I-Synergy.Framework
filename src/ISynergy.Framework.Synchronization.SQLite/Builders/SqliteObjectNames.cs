@@ -2,13 +2,13 @@
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Model.Parsers;
 using ISynergy.Framework.Synchronization.Core.Setup;
-using ISynergy.Framework.Synchronization.SQLite.Utilities;
+using ISynergy.Framework.Synchronization.Sqlite.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ISynergy.Framework.Synchronization.SQLite.Builders
+namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 {
     public class SqliteObjectNames
     {
@@ -258,10 +258,10 @@ namespace ISynergy.Framework.Synchronization.SQLite.Builders
 
             stringBuilder.AppendLine($"INSERT INTO {tableName.Quoted().ToString()}");
             stringBuilder.AppendLine($"({stringBuilderArguments.ToString()})");
-            // use CTE here. The CTE is required in order to make the "ON CONFLICT" statement work. Otherwise SQLite cannot parse it
-            // Note, that we have to add the pseudo WHERE TRUE clause here, as otherwise the SQLite parser may confuse the following ON
+            // use CTE here. The CTE is required in order to make the "ON CONFLICT" statement work. Otherwise Sqlite cannot parse it
+            // Note, that we have to add the pseudo WHERE TRUE clause here, as otherwise the Sqlite parser may confuse the following ON
             // with a join clause, thus, throwing a parsing error
-            // See a detailed explanation here at the official SQLite documentation: "Parsing Ambiguity" on page https://www.sqlite.org/lang_UPSERT.html
+            // See a detailed explanation here at the official Sqlite documentation: "Parsing Ambiguity" on page https://www.sqlite.org/lang_UPSERT.html
             stringBuilder.AppendLine($" SELECT * from CHANGESET WHERE TRUE");
             if (columnsToUpdate)
             {

@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Utilities
 {
-    public static class SqlManagementUtils
+    internal static class SqlManagementUtils
     {
         /// <summary>
         /// Get Table
         /// </summary>
         public static async Task<SyncTable> GetTableAsync(SqlConnection connection, SqlTransaction transaction, string tableName, string schemaName)
         {
-            var command = $"Select top 1 tbl.name as TableName, " +
-                          $"sch.name as SchemaName " +
-                          $"  from sys.tables as tbl  " +
-                          $"  Inner join sys.schemas as sch on tbl.schema_id = sch.schema_id " +
-                          $"  Where tbl.name = @tableName and sch.name = @schemaName ";
+            var command = $"Select top 1 tbl.name as TableName," +
+                          $" sch.name as SchemaName " +
+                          $" from sys.tables as tbl  " +
+                          $" Inner join sys.schemas as sch on tbl.schema_id = sch.schema_id " +
+                          $" Where tbl.name = @tableName and sch.name = @schemaName ";
 
             var tableNameNormalized = ParserName.Parse(tableName).Unquoted().Normalized().ToString();
             var tableNameString = ParserName.Parse(tableName).ToString();

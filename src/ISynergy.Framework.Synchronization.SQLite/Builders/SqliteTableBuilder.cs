@@ -5,8 +5,8 @@ using ISynergy.Framework.Synchronization.Core.Definitions;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Model.Parsers;
 using ISynergy.Framework.Synchronization.Core.Setup;
-using ISynergy.Framework.Synchronization.SQLite.Metadata;
-using ISynergy.Framework.Synchronization.SQLite.Utilities;
+using ISynergy.Framework.Synchronization.Sqlite.Metadata;
+using ISynergy.Framework.Synchronization.Sqlite.Utilities;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.SQLite.Builders
+namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 {
     /// <summary>
     /// The SqlBuilder class is the Sql implementation of DbBuilder class.
@@ -584,7 +584,7 @@ namespace ISynergy.Framework.Synchronization.SQLite.Builders
                     AllowDBNull = !Convert.ToBoolean(c["notnull"]),
                     DefaultValue = c["dflt_value"].ToString(),
 
-                    // No unsigned type in SQLite
+                    // No unsigned type in Sqlite
                     IsUnsigned = false
                 };
 

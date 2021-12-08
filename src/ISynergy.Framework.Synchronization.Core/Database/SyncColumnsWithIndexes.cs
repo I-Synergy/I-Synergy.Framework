@@ -143,7 +143,7 @@
 //            get => this.InnerCollection[index];
 //            set
 //            {
-//                if (value == null)
+//                if (value is null)
 //                    throw new Exception("Can't be null");
 
 //                this.InnerCollection[index] = value;

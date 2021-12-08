@@ -67,7 +67,7 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = await syncAdapter.GetCommandAsync(DbCommandType.DisableConstraints, connection, transaction).ConfigureAwait(false);
 
-            if (command == null) return;
+            if (command is null) return;
 
             await command.ExecuteNonQueryAsync().ConfigureAwait(false);
         }
@@ -79,7 +79,7 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = await syncAdapter.GetCommandAsync(DbCommandType.EnableConstraints, connection, transaction).ConfigureAwait(false);
 
-            if (command == null) return;
+            if (command is null) return;
 
             await command.ExecuteNonQueryAsync().ConfigureAwait(false);
         }
@@ -91,7 +91,7 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = await syncAdapter.GetCommandAsync(DbCommandType.Reset, connection, transaction);
 
-            if (command != null)
+            if (command is not null)
             {
                 var rowCount = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
                 return rowCount > 0;

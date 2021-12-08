@@ -86,7 +86,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 // Get Command
                 var selectIncrementalChangesCommand = await this.GetSelectChangesCommandAsync(context, syncTable, message.Setup, message.IsNew, connection, transaction);
 
-                if (selectIncrementalChangesCommand == null) continue;
+                if (selectIncrementalChangesCommand is null) continue;
 
                 // Set parameters
                 this.SetSelectChangesCommonParameters(context, syncTable, message.ExcludingScopeId, message.IsNew, message.LastTimestamp, selectIncrementalChangesCommand);
@@ -95,7 +95,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 var args = new TableChangesSelectingArgs(context, syncTable, selectIncrementalChangesCommand, connection, transaction);
                 await this.InterceptAsync(args, cancellationToken).ConfigureAwait(false);
 
-                if (!args.Cancel && args.Command != null)
+                if (!args.Cancel && args.Command is not null)
                 {
                     // Statistics
                     var tableChangesSelected = new TableChangesSelected(syncTable.TableName, syncTable.SchemaName);
@@ -183,7 +183,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             // We are in batch mode, and we are at the last batchpart info
             // Even if we don't have rows inside, we return the changesSet, since it contains at least schema
-            if (changesSet != null && changesSet.HasTables && changesSet.HasRows)
+            if (changesSet is not null && changesSet.HasTables && changesSet.HasRows)
             {
                 await batchInfo.AddChangesAsync(changesSet, batchIndex, true, message.SerializerFactory, this).ConfigureAwait(false);
             }
@@ -242,7 +242,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 // Get Command
                 var command = await this.GetSelectChangesCommandAsync(context, syncTable, message.Setup, message.IsNew, connection, transaction);
 
-                if (command == null) continue;
+                if (command is null) continue;
 
                 // Set parameters
                 this.SetSelectChangesCommonParameters(context, syncTable, message.ExcludingScopeId, message.IsNew, message.LastTimestamp, command);
@@ -251,7 +251,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 var args = new TableChangesSelectingArgs(context, syncTable, command, connection, transaction);
                 await this.InterceptAsync(args, cancellationToken).ConfigureAwait(false);
 
-                if (args.Cancel || args.Command == null)
+                if (args.Cancel || args.Command is null)
                     continue;
 
                 // Statistics
@@ -337,7 +337,7 @@ namespace ISynergy.Framework.Synchronization.Core
             if (this.Provider.CanBeServerProvider)
                 tableFilter = syncTable.GetFilter();
 
-            var hasFilters = tableFilter != null;
+            var hasFilters = tableFilter is not null;
 
             // Determing the correct DbCommandType
             if (isNew && hasFilters)
@@ -371,7 +371,7 @@ namespace ISynergy.Framework.Synchronization.Core
             if (this.Provider.CanBeServerProvider)
                 tableFilter = syncTable.GetFilter();
 
-            var hasFilters = tableFilter != null;
+            var hasFilters = tableFilter is not null;
 
             if (!hasFilters)
                 return;

@@ -79,7 +79,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 var syncTable = schema.Tables[migrationTable.SetupTable.TableName, migrationTable.SetupTable.SchemaName];
                 var oldTable = oldSetup.Tables[migrationTable.SetupTable.TableName, migrationTable.SetupTable.SchemaName];
 
-                if (syncTable == null)
+                if (syncTable is null)
                     continue;
 
                 var tableBuilder = this.GetTableBuilder(syncTable, newSetup);
@@ -108,12 +108,12 @@ namespace ISynergy.Framework.Synchronization.Core
                     {
                         await InternalCreateTableAsync(context, newSetup, tableBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                     }
-                    else if (oldTable != null)
+                    else if (oldTable is not null)
                     {
                         //get new columns to add
                         var newColumns = syncTable.Columns.Where(c => !oldTable.Columns.Any(oldC => string.Equals(oldC, c.ColumnName, SyncGlobalization.DataSourceStringComparison)));
 
-                        if (newColumns != null)
+                        if (newColumns is not null)
                         {
                             foreach (var newColumn in newColumns)
                             {
@@ -126,7 +126,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 }
 
                 // Re provision tracking table
-                if (migrationTable.TrackingTable == MigrationAction.Rename && oldTable != null)
+                if (migrationTable.TrackingTable == MigrationAction.Rename && oldTable is not null)
                 {
                     var (_, oldTableName) = this.Provider.GetParsers(new SyncTable(oldTable.TableName, oldTable.SchemaName), oldSetup);
 

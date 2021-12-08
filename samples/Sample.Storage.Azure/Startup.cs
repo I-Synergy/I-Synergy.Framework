@@ -104,7 +104,7 @@ namespace Sample.Storage.Azure
         /// <param name="extension">An optional file extension.</param>
         /// <returns>A temporary path for creating files.</returns>
         public string CreateTempPath(string extension = ".txt") =>
-            Path.ChangeExtension(Path.GetTempFileName(), extension);
+            Path.ChangeExtension(Path.GetRandomFileName(), extension);
 
         /// <summary>
         /// Create a temporary file on disk.

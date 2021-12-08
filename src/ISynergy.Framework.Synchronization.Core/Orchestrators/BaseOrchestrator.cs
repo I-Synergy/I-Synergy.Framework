@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Adapters;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Builders;
@@ -29,17 +31,7 @@ namespace ISynergy.Framework.Synchronization.Core
         private Interceptor interceptors = new Interceptor();
         internal SyncContext syncContext;
 
-        //// Internal table builder cache
-        //private static ConcurrentDictionary<string, Lazy<DbTableBuilder>> tableBuilders
-        //    = new ConcurrentDictionary<string, Lazy<DbTableBuilder>>();
-
-        //// Internal scope builder cache
-        //private static ConcurrentDictionary<string, Lazy<DbScopeBuilder>> scopeBuilders
-        //    = new ConcurrentDictionary<string, Lazy<DbScopeBuilder>>();
-
-        // Internal sync adapter cache
-        //private static ConcurrentDictionary<string, Lazy<DbSyncAdapter>> syncAdapters
-        //    = new ConcurrentDictionary<string, Lazy<DbSyncAdapter>>();
+        protected readonly IVersionService _versionService;
 
         /// <summary>
         /// Gets or Sets orchestrator side
@@ -49,51 +41,64 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Gets or Sets the provider used by this local orchestrator
         /// </summary>
-        public virtual CoreProvider Provider { get; set; }
+        public CoreProvider Provider { get; internal set; }
 
         /// <summary>
         /// Gets the options used by this local orchestrator
         /// </summary>
-        public virtual SyncOptions Options { get; internal set; }
+        public SyncOptions Options { get; internal set; }
 
         /// <summary>
         /// Gets the Setup used by this local orchestrator
         /// </summary>
-        public virtual SyncSetup Setup { get; set; }
+        public SyncSetup Setup { get; internal set; }
 
         /// <summary>
         /// Gets the scope name used by this local orchestrator
         /// </summary>
-        public virtual string ScopeName { get; set; }
+        public string ScopeName { get; internal set; }
 
         /// <summary>
         /// Gets or Sets the start time for this orchestrator
         /// </summary>
-        public virtual DateTime? StartTime { get; set; }
+        public DateTime? StartTime { get; internal set; }
 
         /// <summary>
         /// Gets or Sets the end time for this orchestrator
         /// </summary>
-        public virtual DateTime? CompleteTime { get; set; }
+        public DateTime? CompleteTime { get; internal set; }
 
         /// <summary>
         /// Gets or Sets the logger used by this orchestrator
         /// </summary>
-        public virtual ILogger Logger { get; set; }
+        public ILogger Logger { get; internal set; }
 
 
         /// <summary>
         /// Create a local orchestrator, used to orchestrates the whole sync on the client side
         /// </summary>
-        public BaseOrchestrator(CoreProvider provider, SyncOptions options, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
+        public BaseOrchestrator(
+            IVersionService versionService,
+            CoreProvider provider, 
+            SyncOptions options, 
+            SyncSetup setup, 
+            string scopeName = SyncOptions.DefaultScopeName)
         {
-            this.ScopeName = scopeName ?? throw new ArgumentNullException(nameof(scopeName));
-            this.Provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            this.Options = options ?? throw new ArgumentNullException(nameof(options));
-            this.Setup = setup ?? throw new ArgumentNullException(nameof(setup));
+            Argument.IsNotNull(nameof(versionService), versionService);
+            Argument.IsNotNull(nameof(scopeName), scopeName);
+            Argument.IsNotNull(nameof(provider), provider);
+            Argument.IsNotNull(nameof(options), options);   
+            Argument.IsNotNull(nameof(setup), setup);
 
-            this.Provider.Orchestrator = this;
-            this.Logger = options.Logger;
+            _versionService = versionService;
+
+            ScopeName = scopeName;
+            Provider = provider;
+            Options = options;
+            Setup = setup;
+
+            Provider.Orchestrator = this;
+            Logger = options.Logger;
         }
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         internal async Task InterceptAsync<T>(T args, CancellationToken cancellationToken) where T : ProgressArgs
         {
-            if (this.interceptors == null)
+            if (this.interceptors is null)
                 return;
 
             var interceptor = this.interceptors.GetInterceptor<T>();
@@ -172,19 +177,19 @@ namespace ISynergy.Framework.Synchronization.Core
                     this.Logger.LogInformation(new EventId(args.EventId, argsTypeName), null, args);
             }
 
-            if (progress == null)
+            if (progress is null)
                 return;
 
-            if (connection == null && args.Connection != null)
+            if (connection is null && args.Connection is not null)
                 connection = args.Connection;
 
-            if (transaction == null && args.Transaction != null)
+            if (transaction is null && args.Transaction is not null)
                 transaction = args.Transaction;
 
-            if (args.Connection == null || args.Connection != connection)
+            if (args.Connection is null || args.Connection != connection)
                 args.Connection = connection;
 
-            if (args.Transaction== null || args.Transaction != transaction)
+            if (args.Transaction is null || args.Transaction != transaction)
                 args.Transaction = transaction;
 
             progress.Report(args);
@@ -193,7 +198,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Open a connection
         /// </summary>
-        //[DebuggerStepThrough]
+        [DebuggerStepThrough]
         internal async Task OpenConnectionAsync(DbConnection connection, CancellationToken cancellationToken)
         {
             // Make an interceptor when retrying to connect
@@ -222,10 +227,10 @@ namespace ISynergy.Framework.Synchronization.Core
         [DebuggerStepThrough]
         internal async Task CloseConnectionAsync(DbConnection connection, CancellationToken cancellationToken)
         {
-            if (connection != null && connection.State == ConnectionState.Closed)
+            if (connection is not null && connection.State == ConnectionState.Closed)
                 return;
 
-            if (connection != null && connection.State == ConnectionState.Open)
+            if (connection is not null && connection.State == ConnectionState.Open)
             {
                 connection.Close();
                 connection.Dispose();
@@ -342,7 +347,7 @@ namespace ISynergy.Framework.Synchronization.Core
         [DebuggerStepThrough]
         public virtual SyncContext GetContext()
         {
-            if (this.syncContext != null)
+            if (this.syncContext is not null)
                 return this.syncContext;
 
             this.syncContext = new SyncContext(Guid.NewGuid(), this.ScopeName); ;
@@ -354,7 +359,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Check if the orchestrator database is outdated
         /// </summary>
-        /// <param name="timeStampStart">Timestamp start. Used to limit the delete metadatas rows from now to this timestamp</param>
+        /// <param name="clientScopeInfo"></param>
+        /// <param name="serverScopeInfo"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public virtual async Task<bool> IsOutDatedAsync(ScopeInfo clientScopeInfo, ServerScopeInfo serverScopeInfo, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
             if (!this.StartTime.HasValue)
@@ -428,7 +436,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                     using (var t = c.BeginTransaction(this.Provider.IsolationLevel))
                     {
-                        if (actionTask != null)
+                        if (actionTask is not null)
                             result = await actionTask(ctx, c, t);
 
                         t.Commit();
@@ -461,11 +469,11 @@ namespace ISynergy.Framework.Synchronization.Core
 
             T result = default;
 
-            if (connection == null)
+            if (connection is null)
                 connection = this.Provider.CreateConnection();
 
             var alreadyOpened = connection.State == ConnectionState.Open;
-            var alreadyInTransaction = transaction != null && transaction.Connection == connection;
+            var alreadyInTransaction = transaction is not null && transaction.Connection == connection;
 
             try
             {
@@ -483,7 +491,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     await this.InterceptAsync(new TransactionOpenedArgs(ctx, connection, transaction), cancellationToken).ConfigureAwait(false);
                 }
 
-                if (actionTask != null)
+                if (actionTask is not null)
                     result = await actionTask(ctx, connection, transaction);
 
                 if (!alreadyInTransaction)
@@ -521,7 +529,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             // check parameters
             // If context has no parameters specified, and user specifies a parameter collection we switch them
-            if ((ctx.Parameters == null || ctx.Parameters.Count <= 0) && syncParameters != null && syncParameters.Count > 0)
+            if ((ctx.Parameters is null || ctx.Parameters.Count <= 0) && syncParameters is not null && syncParameters.Count > 0)
                 ctx.Parameters = syncParameters;
 
             return this.InternalGetSnapshotDirectoryAsync(ctx, cancellationToken, progress);
@@ -572,7 +580,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var sb = new StringBuilder();
             var underscore = "";
 
-            if (context.Parameters != null)
+            if (context.Parameters is not null)
             {
                 foreach (var p in context.Parameters.OrderBy(p => p.Name))
                 {

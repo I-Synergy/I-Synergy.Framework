@@ -1,9 +1,11 @@
-﻿using ISynergy.Framework.Synchronization.Core;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Context;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +25,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup();
             var provider = new SqlSyncProvider(cs);
 
-            var localOrchestrator = new LocalOrchestrator(provider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, provider, options, setup);
 
             var scope = await localOrchestrator.GetClientScopeAsync();
 
@@ -36,6 +38,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         [Ignore]
         public async Task LocalOrchestrator_EnsureScope_NewScope()
         {
+            var versionServiceMock = new Mock<IVersionService>();
+            versionServiceMock.Setup(x => x.ProductVersion).Returns(new Version(1, 0, 0));
+
             var dbName = _databaseHelper.GetRandomName("tcp_lo_");
             await _databaseHelper.CreateDatabaseAsync(dbName, true);
             var cs = _databaseHelper.GetConnectionString(dbName);
@@ -47,7 +52,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(this.Tables);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var localScopeInfo = await localOrchestrator.GetClientScopeAsync();
 
@@ -60,7 +65,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             Assert.AreEqual(0, localScopeInfo.LastSyncDuration);
             Assert.IsNull(localScopeInfo.LastSyncTimestamp);
             Assert.IsNull(localScopeInfo.Schema);
-            Assert.AreEqual(SyncVersion.Current, new Version(localScopeInfo.Version));
+            Assert.AreEqual(versionServiceMock.Object.ProductVersion, new Version(localScopeInfo.Version));
 
             // Check context
             SyncContext syncContext = localOrchestrator.GetContext();
@@ -89,7 +94,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(this.Tables);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
             using var cts = new CancellationTokenSource();
 
             localOrchestrator.OnConnectionOpen(args => cts.Cancel());
@@ -115,7 +120,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(this.Tables);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
             using var cts = new CancellationTokenSource();
 
             localOrchestrator.OnTransactionCommit(args => cts.Cancel());

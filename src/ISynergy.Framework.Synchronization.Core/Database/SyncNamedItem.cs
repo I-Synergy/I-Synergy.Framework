@@ -22,12 +22,12 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public virtual bool EqualsByName(T otherInstance)
         {
             // If one instance is null, should returns false, always
-            if (otherInstance == null)
+            if (otherInstance is null)
                 return false;
 
             var namedOhterInstance = otherInstance as SyncNamedItem<T>;
 
-            if (namedOhterInstance == null)
+            if (namedOhterInstance is null)
                 return false;
 
             var sc = SyncGlobalization.DataSourceStringComparison;
@@ -76,7 +76,10 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public override bool Equals(object obj) => EqualsByProperties(obj as T);
 
+        /// <summary>
+        /// Gets a hash code.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode() => base.GetHashCode();
-
     }
 }

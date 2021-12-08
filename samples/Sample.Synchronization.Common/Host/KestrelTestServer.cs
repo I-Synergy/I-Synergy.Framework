@@ -13,13 +13,13 @@ namespace Sample.Synchronization.Common.Host
     /// Actually we can use Microsoft.AspNetCore.TestHost
     /// But I can't manage to find a way to perform through Fiddler
     /// </summary>
-    public class KestrellTestServer : IDisposable
+    public class KestrelTestServer : IDisposable
     {
-        IWebHostBuilder builder;
-        IWebHost host;
-        bool useFiddler;
+        private readonly IWebHostBuilder _builder;
+        private IWebHost _host;
+        private readonly bool _useFiddler;
 
-        public KestrellTestServer(Action<IServiceCollection> configureServices = null, bool useFidller = false)
+        public KestrelTestServer(Action<IServiceCollection>? configureServices = null, bool useFidller = false)
         {
             var hostBuilder = new WebHostBuilder()
                 .UseKestrel()
@@ -38,39 +38,38 @@ namespace Sample.Synchronization.Common.Host
                     configureServices?.Invoke(services);
 
                 });
-            this.builder = hostBuilder;
-
-            this.useFiddler = useFidller;
+            _builder = hostBuilder;
+            _useFiddler = useFidller;
         }
 
         public async Task Run(RequestDelegate serverHandler, ResponseDelegate clientHandler)
         {
-            this.builder.Configure(app =>
+            _builder.Configure(app =>
             {
                 app.UseSession();
                 app.Run(async context => await serverHandler(context));
 
             });
 
-            var fiddler = useFiddler ? ".fiddler" : "";
-            this.host = this.builder.Build();
-            this.host.Start();
-            var serviceUrl = $"http://localhost{fiddler}:{this.host.GetPort()}/";
+            var fiddler = _useFiddler ? ".fiddler" : "";
+            _host = _builder.Build();
+            _host.Start();
+            var serviceUrl = $"http://localhost{fiddler}:{_host.GetPort()}/";
             await clientHandler(serviceUrl);
         }
 
         public async void Dispose()
         {
-            await this.Dispose(true);
+            await Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual async Task Dispose(bool cleanup)
         {
-            if (this.host != null)
+            if (_host != null)
             {
-                await this.host.StopAsync();
-                this.host.Dispose();
+                await _host.StopAsync();
+                _host.Dispose();
             }
         }
     }
@@ -102,8 +101,7 @@ namespace Sample.Synchronization.Common.Host
 
         public static IEnumerable<Uri> GetUris(this IWebHost host)
         {
-            return host.ServerFeatures.Get<IServerAddressesFeature>().Addresses
-                .Select(a => new Uri(a));
+            return host.ServerFeatures.Get<IServerAddressesFeature>().Addresses.Select(a => new Uri(a));
         }
 
         public static Uri GetUri(this IWebHost host, bool isHttps = false)

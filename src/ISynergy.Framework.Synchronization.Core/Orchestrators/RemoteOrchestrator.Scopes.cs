@@ -61,7 +61,7 @@ namespace ISynergy.Framework.Synchronization.Core
             serverScopeInfo = await this.InternalGetScopeAsync<ServerScopeInfo>(ctx, DbScopeType.Server, this.ScopeName, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
             // if serverscopeinfo is a new, because we never run any sync before, grab schema and affect setup
-            if (serverScopeInfo.Setup == null && serverScopeInfo.Schema == null)
+            if (serverScopeInfo.Setup is null && serverScopeInfo.Schema is null)
             {
                 // 1) Get Schema from remote provider
                 var schema = await this.InternalGetSchemaAsync(ctx, this.Setup, connection, transaction, cancellationToken, progress).ConfigureAwait(false);

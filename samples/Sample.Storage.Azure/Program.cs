@@ -6,8 +6,12 @@ using System;
 
 namespace Sample.Storage.Azure
 {
-    class Program
+    internal class Program
     {
+        protected Program()
+        {
+        }
+
         static int Main(string[] args)
         {
             try

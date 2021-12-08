@@ -6,15 +6,15 @@ using ISynergy.Framework.Synchronization.Core.Metadata;
 using ISynergy.Framework.Synchronization.Core.Model.Parsers;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Setup;
-using ISynergy.Framework.Synchronization.SQLite.Adapters;
-using ISynergy.Framework.Synchronization.SQLite.Builders;
-using ISynergy.Framework.Synchronization.SQLite.Metadata;
+using ISynergy.Framework.Synchronization.Sqlite.Adapters;
+using ISynergy.Framework.Synchronization.Sqlite.Builders;
+using ISynergy.Framework.Synchronization.Sqlite.Metadata;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Data.Common;
 using System.IO;
 
-namespace ISynergy.Framework.Synchronization.SQLite.Providers
+namespace ISynergy.Framework.Synchronization.Sqlite.Providers
 {
     public class SqliteSyncProvider : CoreProvider
     {

@@ -377,7 +377,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 
         public override bool EqualsByProperties(SyncColumn column)
         {
-            if (column == null)
+            if (column is null)
                 return false;
 
             if (!EqualsByName(column))

@@ -19,7 +19,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Create a table
         /// </summary>
-        /// <param name="table">A table from your Setup instance you want to create</param>
+        /// <param name="syncTable"></param>
+        /// <param name="overwrite"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> CreateTableAsync(SyncTable syncTable, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
         {
@@ -55,6 +60,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Create all tables
         /// </summary>
         /// <param name="schema">A complete schema you want to create, containing table, primary keys and relations</param>
+        /// <param name="overwrite"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> CreateTablesAsync(SyncSet schema, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
         {
@@ -113,6 +123,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Check if a table exists
         /// </summary>
         /// <param name="table">A table from your Setup instance, you want to check if it exists</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> ExistTableAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
         {
@@ -132,6 +146,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Drop a table
         /// </summary>
         /// <param name="table">A table from your Setup instance you want to drop</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public Task<bool> DropTableAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
         {
@@ -141,7 +159,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var schemaTable = schema.Tables[table.TableName, table.SchemaName];
 
-            if (schemaTable == null)
+            if (schemaTable is null)
                 throw new MissingTableException(table.GetFullName());
 
             // Get table builder
@@ -198,7 +216,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var command = await tableBuilder.GetAddColumnCommandAsync(addedColumnName, connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var (tableName, _) = this.Provider.GetParsers(tableBuilder.TableDescription, setup);
@@ -207,7 +225,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -231,7 +249,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var command = await tableBuilder.GetDropColumnCommandAsync(droppedColumnName, connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var (tableName, _) = this.Provider.GetParsers(tableBuilder.TableDescription, setup);
@@ -240,7 +258,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -263,7 +281,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var command = await tableBuilder.GetCreateTableCommandAsync(connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var (tableName, _) = this.Provider.GetParsers(tableBuilder.TableDescription, setup);
@@ -272,7 +290,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -289,13 +307,13 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = await tableBuilder.GetCreateSchemaCommandAsync(connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var action = new SchemaNameCreatingArgs(ctx, tableBuilder.TableDescription, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -312,14 +330,14 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = await tableBuilder.GetDropTableCommandAsync(connection, transaction).ConfigureAwait(false);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var (tableName, _) = this.Provider.GetParsers(tableBuilder.TableDescription, setup);
             var action = new TableDroppingArgs(ctx, tableBuilder.TableDescription, tableName, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -338,7 +356,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get exists command
             var existsCommand = await tableBuilder.GetExistsTableCommandAsync(connection, transaction).ConfigureAwait(false);
 
-            if (existsCommand == null)
+            if (existsCommand is null)
                 return false;
 
             var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);
@@ -358,7 +376,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get exists command
             var existsCommand = await tableBuilder.GetExistsSchemaCommandAsync(connection, transaction).ConfigureAwait(false);
 
-            if (existsCommand == null)
+            if (existsCommand is null)
                 return false;
 
             var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);
@@ -375,7 +393,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get exists command
             var existsCommand = await tableBuilder.GetExistsColumnCommandAsync(columnName,connection, transaction).ConfigureAwait(false);
 
-            if (existsCommand == null)
+            if (existsCommand is null)
                 return false;
 
             var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);

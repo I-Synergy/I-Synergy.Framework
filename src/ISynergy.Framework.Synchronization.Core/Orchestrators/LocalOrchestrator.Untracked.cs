@@ -19,7 +19,7 @@ namespace ISynergy.Framework.Synchronization.Core
         => RunInTransactionAsync(SyncStage.ChangesApplying, async (ctx, connection, transaction) =>
         {
             // If schema does not have any table, just return
-            if (schema == null || schema.Tables == null || !schema.HasTables)
+            if (schema is null || schema.Tables is null || !schema.HasTables)
                 throw new MissingTablesException();
 
             // Update untracked rows
@@ -65,7 +65,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get correct Select incremental changes command 
             var command = await syncAdapter.GetCommandAsync(DbCommandType.UpdateUntrackedRows, connection, transaction);
             
-            if (command == null) return 0;
+            if (command is null) return 0;
 
             // Execute
             var rowAffected = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -73,7 +73,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Check if we have a return value instead
             var syncRowCountParam = DbSyncAdapter.GetParameter(command, "sync_row_count");
 
-            if (syncRowCountParam != null)
+            if (syncRowCountParam is not null)
                 rowAffected = (int)syncRowCountParam.Value;
 
             return rowAffected;

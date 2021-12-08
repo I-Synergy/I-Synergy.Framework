@@ -7,23 +7,23 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
 
     public class ParserName
     {
-        private string key;
+        private string _key;
 
-        private bool withDatabase = false;
-        private bool withSchema = false;
-        private bool withQuotes = false;
-        private bool withNormalized = false;
+        private bool _withDatabase = false;
+        private bool _withSchema = false;
+        private bool _withQuotes = false;
+        private bool _withNormalized = false;
 
-        public string SchemaName => GlobalParser.GetParserString(key).SchemaName;
-        public string ObjectName => GlobalParser.GetParserString(key).ObjectName;
-        public string DatabaseName => GlobalParser.GetParserString(key).DatabaseName;
+        public string SchemaName => GlobalParser.GetParserString(_key).SchemaName;
+        public string ObjectName => GlobalParser.GetParserString(_key).ObjectName;
+        public string DatabaseName => GlobalParser.GetParserString(_key).DatabaseName;
 
         /// <summary>
         /// Add database name if available to the final string
         /// </summary>
         public ParserName Database()
         {
-            withDatabase = true;
+            _withDatabase = true;
             return this;
 
         }
@@ -33,7 +33,7 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         /// </summary>
         public ParserName Schema()
         {
-            withSchema = true;
+            _withSchema = true;
             return this;
 
         }
@@ -44,19 +44,19 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         /// <returns></returns>
         public ParserName Quoted()
         {
-            withQuotes = true;
+            _withQuotes = true;
             return this;
         }
 
         public ParserName Unquoted()
         {
-            withQuotes = false;
+            _withQuotes = false;
             return this;
         }
 
         public ParserName Normalized()
         {
-            withNormalized = true;
+            _withNormalized = true;
             return this;
         }
 
@@ -76,8 +76,6 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
             ParseString(input, leftQuote, rightQuote);
         }
 
-
-
         /// <summary>
         /// Parse the input string and Get a non bracket object name :
         ///   "[Client] ==> Client "
@@ -87,15 +85,15 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         /// </summary>
         private void ParseString(string input, string leftQuote = null, string rightQuote = null)
         {
-            input = input == null ? string.Empty : input.Trim();
-            key = input;
+            input = input is null ? string.Empty : input.Trim();
+            _key = input;
 
             if (!string.IsNullOrEmpty(leftQuote) && !string.IsNullOrEmpty(rightQuote))
-                key = $"{leftQuote}^{rightQuote}^{input}";
+                _key = $"{leftQuote}^{rightQuote}^{input}";
             else if (!string.IsNullOrEmpty(leftQuote))
-                key = $"{leftQuote}^{leftQuote}^{input}";
+                _key = $"{leftQuote}^{leftQuote}^{input}";
 
-            GlobalParser.GetParserString(key);
+            GlobalParser.GetParserString(_key);
 
         }
 
@@ -103,60 +101,31 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         {
             var sb = new StringBuilder();
 
-            var parsedName = GlobalParser.GetParserString(key);
+            var parsedName = GlobalParser.GetParserString(_key);
 
 
-            if (withDatabase && !string.IsNullOrEmpty(DatabaseName))
+            if (_withDatabase && !string.IsNullOrEmpty(DatabaseName))
             {
-                sb.Append(withQuotes ? parsedName.QuotedDatabaseName : DatabaseName);
-                sb.Append(withNormalized ? "_" : ".");
+                sb.Append(_withQuotes ? parsedName.QuotedDatabaseName : DatabaseName);
+                sb.Append(_withNormalized ? "_" : ".");
             }
-            if (withSchema && !string.IsNullOrEmpty(SchemaName))
+            if (_withSchema && !string.IsNullOrEmpty(SchemaName))
             {
-                sb.Append(withQuotes ? parsedName.QuotedSchemaName : SchemaName);
-                sb.Append(withNormalized ? "_" : ".");
+                sb.Append(_withQuotes ? parsedName.QuotedSchemaName : SchemaName);
+                sb.Append(_withNormalized ? "_" : ".");
             }
 
-            var name = withQuotes ? parsedName.QuotedObjectName : ObjectName;
-            name = withNormalized ? name.Replace(" ", "_").Replace(".", "_") : name;
+            var name = _withQuotes ? parsedName.QuotedObjectName : ObjectName;
+            name = _withNormalized ? name.Replace(" ", "_").Replace(".", "_") : name;
             sb.Append(name);
 
             // now we have the correct string, reset options for the next time we call the same instance
-            withDatabase = false;
-            withSchema = false;
-            withQuotes = false;
-            withNormalized = false;
+            _withDatabase = false;
+            _withSchema = false;
+            _withQuotes = false;
+            _withNormalized = false;
 
             return sb.ToString();
-
-
         }
-
-        //public string ToString(bool addQuote = false, bool addSchema = false, bool isNormalized = false, bool addDatabase = false)
-        //{
-        //    var sb = new StringBuilder();
-
-        //    var parsedName = GlobalParser.GetParserString(this.key);
-
-
-        //    if (addDatabase && !string.IsNullOrEmpty(this.DatabaseName))
-        //    {
-        //        sb.Append(addQuote ? parsedName.QuotedDatabaseName : this.DatabaseName);
-        //        sb.Append(isNormalized ? "_" : ".");
-        //    }
-        //    if (addSchema && !string.IsNullOrEmpty(this.SchemaName))
-        //    {
-        //        sb.Append(addQuote ? parsedName.QuotedSchemaName : this.SchemaName);
-        //        sb.Append(isNormalized ? "_" : ".");
-        //    }
-
-        //    var name = addQuote ? parsedName.QuotedObjectName : this.ObjectName;
-        //    name = isNormalized ? name.Replace(" ", "_").Replace(".", "_") : name;
-        //    sb.Append(name);
-
-        //    return sb.ToString();
-
-        //}
     }
-
 }

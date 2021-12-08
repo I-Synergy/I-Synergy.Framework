@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             table.Columns.Add("Number", typeof(int));
             table.PrimaryKeys.Add("ID");
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = false;
             var onCreated = false;
@@ -93,7 +93,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             table.Columns.Add("Number", typeof(int));
             table.PrimaryKeys.Add("ID");
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             await localOrchestrator.CreateTableAsync(table);
 
@@ -127,13 +127,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             table.Columns.Add("Number", typeof(int));
             table.PrimaryKeys.Add("ID");
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             // Call create a first time to have an existing table
             var isCreated = await localOrchestrator.CreateTableAsync(table);
 
             // Ensuring we have a clean new instance
-            localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = false;
             var onCreated = false;
@@ -184,7 +184,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(new string[] { "SalesLT.ProductCategory", "SalesLT.ProductModel", "SalesLT.Product", "Posts" });
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var schema = await localOrchestrator.GetSchemaAsync();
 
@@ -195,7 +195,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             cs = _databaseHelper.GetConnectionString(dbName);
             sqlProvider = new SqlSyncProvider(cs);
 
-            localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
 
             var onCreating = 0;
@@ -259,7 +259,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             table.Columns.Add("Number", typeof(int));
             table.PrimaryKeys.Add("ID");
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             // Call create a first time to have an existing table
             var isCreated = await localOrchestrator.CreateTableAsync(table);
@@ -267,7 +267,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             Assert.IsTrue(isCreated);
 
             // Ensuring we have a clean new instance
-            localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = false;
             var onCreated = false;
@@ -321,7 +321,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             table.Columns.Add("Number", typeof(int));
             table.PrimaryKeys.Add("ID");
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             // Call create a first time to have an existing table
             var isCreated = await localOrchestrator.CreateTableAsync(table);
@@ -329,7 +329,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             Assert.IsTrue(isCreated);
 
             // Ensuring we have a clean new instance
-            localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = false;
             var onCreated = false;
@@ -381,7 +381,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(this.Tables);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onDropping = 0;
             var onDropped = 0;

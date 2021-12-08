@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 {
-    public abstract class BaseTcpFilterTests : IDisposable
+    public abstract class BaseTcpFilterTests : BaseTcpTests, IDisposable
     {
         /// <summary>
         /// Gets the sync filtered tables involved in the tests
@@ -29,35 +29,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// Gets the filter parameter value
         /// </summary>
         public abstract SyncParameters FilterParameters { get; }
-
-        /// <summary>
-        /// Gets the clients type we want to tests
-        /// </summary>
-        public abstract List<ProviderType> ClientsType { get; }
-
-        /// <summary>
-        /// Gets the server type we want to test
-        /// </summary>
-        public abstract ProviderType ServerType { get; }
-
-        /// <summary>
-        /// Get the server rows count
-        /// </summary>
-        public abstract int GetServerDatabaseRowsCount((string DatabaseName, ProviderType ProviderType, CoreProvider Provider) t);
-
-        /// <summary>
-        /// Create a provider
-        /// </summary>
-        public abstract CoreProvider CreateProvider(ProviderType providerType, string dbName);
-
-        /// <summary>
-        /// Create database, seed it, with or without schema
-        /// </summary>
-        /// <param name="t"></param>
-        /// <param name="useSeeding"></param>
-        /// <param name="useFallbackSchema"></param>
-        public abstract Task EnsureDatabaseSchemaAndSeedAsync((string DatabaseName,
-            ProviderType ProviderType, CoreProvider Provider) t, bool useSeeding = false, bool useFallbackSchema = false);
 
         /// <summary>
         /// Gets the remote orchestrator and its database name
@@ -73,12 +44,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// Gets a bool indicating if we should generate the schema for tables
         /// </summary>
         public bool UseFallbackSchema => ServerType == ProviderType.Sql;
-
-
-        /// <summary>
-        /// Create an empty database
-        /// </summary>
-        public abstract Task CreateDatabaseAsync(ProviderType providerType, string dbName, bool recreateDb = true);
 
         protected readonly IDatabaseHelper _databaseHelper;
 
@@ -141,7 +106,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, new SyncOptions(), this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, new SyncOptions(), this.FilterSetup);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var s = await agent.SynchronizeAsync();
@@ -215,7 +180,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in this.Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var s = await agent.SynchronizeAsync();
@@ -249,7 +214,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -286,7 +251,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -323,7 +288,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -378,7 +343,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -394,7 +359,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -428,7 +393,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -479,7 +444,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -494,7 +459,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -517,7 +482,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -557,7 +522,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // ----------------------------------
             // Create a snapshot
             // ----------------------------------
-            var remoteOrchestrator = new RemoteOrchestrator(Server.Provider, options, this.FilterSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, Server.Provider, options, this.FilterSetup);
             await remoteOrchestrator.CreateSnapshotAsync(this.FilterParameters);
 
             // ----------------------------------
@@ -591,7 +556,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 var snapshotApplying = 0;
                 var snapshotApplied = 0;
@@ -633,7 +598,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -688,7 +653,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -717,7 +682,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // create a client schema without seeding
                 await this.EnsureDatabaseSchemaAndSeedAsync(client, false, UseFallbackSchema);
 
-                var localOrchestrator = new LocalOrchestrator(client.Provider, options, this.FilterSetup);
+                var localOrchestrator = new LocalOrchestrator(_versionService, client.Provider, options, this.FilterSetup);
 
                 // just check interceptor
                 var onTableCreatedCount = 0;
@@ -846,7 +811,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync();
@@ -881,7 +846,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync();
@@ -896,7 +861,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync(SyncType.Reinitialize);
@@ -931,7 +896,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync();
@@ -947,7 +912,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 // create agent with filtered tables and parameter
                 agent.Parameters.Add("EmployeeID", 1);
@@ -984,7 +949,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync();
@@ -1000,7 +965,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1034,7 +999,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync();
@@ -1096,7 +1061,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync();
@@ -1111,7 +1076,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync(SyncType.Reinitialize);
@@ -1146,7 +1111,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync();
@@ -1161,7 +1126,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create an agent 
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
 
                 // ON SERVER : When trying to get changes from the server, just replace the command with the Initialize command
                 // and get ALL the rows for the migrated new table
@@ -1263,7 +1228,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // ----------------------------------
             // Create a snapshot
             // ----------------------------------
-            var remoteOrchestrator = new RemoteOrchestrator(Server.Provider, options, this.FilterSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, Server.Provider, options, this.FilterSetup);
 
             // getting snapshot directory names
             var (rootDirectory, nameDirectory) = await remoteOrchestrator.GetSnapshotDirectoryAsync(this.FilterParameters).ConfigureAwait(false);
@@ -1305,7 +1270,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -1341,7 +1306,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 BatchSize = 200
             };
 
-            var remoteOrchestrator = new RemoteOrchestrator(Server.Provider, options, this.FilterSetup);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, Server.Provider, options, this.FilterSetup);
 
             await remoteOrchestrator.CreateSnapshotAsync(this.FilterParameters);
 
@@ -1391,7 +1356,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -1426,7 +1391,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -1448,7 +1413,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, this.FilterSetup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, this.FilterSetup);
 
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -1486,7 +1451,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync();
@@ -1497,7 +1462,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             foreach (var client in Clients)
             {
                 // Deprovision everything
-                var localOrchestrator = new LocalOrchestrator(client.Provider, options, setup);
+                var localOrchestrator = new LocalOrchestrator(_versionService, client.Provider, options, setup);
                 await localOrchestrator.DeprovisionAsync();
 
             }
@@ -1515,7 +1480,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(client.Provider, Server.Provider, options, setup);
+                var agent = new SyncAgent(_versionService,client.Provider, Server.Provider, options, setup);
                 agent.Parameters.Add("EmployeeID", 1);
 
                 var s = await agent.SynchronizeAsync(SyncType.Reinitialize);

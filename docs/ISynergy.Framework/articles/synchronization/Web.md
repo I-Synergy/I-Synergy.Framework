@@ -44,7 +44,7 @@ To be able to *proxify* everything, we should:
     [I-Synergy.Framework.Synchronization.Client](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Client)
     nuget package to the client application:
 -   Add the client provider. For example the
-    [I-Synergy.Framework.Synchronization.SQLite](I-Synergy.Framework.Synchronization.SQLite)
+    [I-Synergy.Framework.Synchronization.Sqlite](I-Synergy.Framework.Synchronization.Sqlite)
 -   Create a new `SyncAgent` using a local orchestrator with the
     `SqliteSyncProvider` and a remote `WebClientOrchestrator`
     orchestrator.

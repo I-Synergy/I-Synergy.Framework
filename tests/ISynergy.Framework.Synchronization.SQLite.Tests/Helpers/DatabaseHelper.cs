@@ -105,6 +105,10 @@ namespace ISynergy.Framework.Synchronization.SqlLite.Tests.Helpers
             }
         }
 
+        public override void ClearAllPools()
+        {
+            SqliteConnection.ClearAllPools();
+        }
 
         #region MariaDB
         ///// <summary>

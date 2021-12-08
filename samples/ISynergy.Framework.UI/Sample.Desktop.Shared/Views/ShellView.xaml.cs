@@ -23,6 +23,7 @@ namespace Sample.Views
         /// <param name="e"></param>
         private void RootNavigationViewLoaded(object sender, RoutedEventArgs e)
         {
+            // By default does nothing.
         }
 
         /// <summary>

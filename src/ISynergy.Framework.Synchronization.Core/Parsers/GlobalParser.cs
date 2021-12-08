@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Synchronization.Core.Parsers
 
                 var quotedGroup = match.Groups["quoted"];
 
-                if (quotedGroup == null || string.IsNullOrEmpty(quotedGroup.Value))
+                if (quotedGroup is null || string.IsNullOrEmpty(quotedGroup.Value))
                     continue;
 
                 strMatches[matchCounts] = quotedGroup.Value.Trim();

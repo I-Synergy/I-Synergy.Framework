@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(this.Tables);
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
 
             var scopeTableCreating = 0;
@@ -122,7 +122,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var options = new SyncOptions();
             var setup = new SyncSetup(this.Tables);
 
-            var remoteOrchestrator = new RemoteOrchestrator(sqlProvider, options, setup, scopeName);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var scopeTableCreating = 0;
             var scopeTableCreated = 0;

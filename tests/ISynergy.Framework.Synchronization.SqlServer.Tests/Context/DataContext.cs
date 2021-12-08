@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Synchronization.Core.Providers;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Tests.Base;
 using ISynergy.Framework.Synchronization.Core.Tests.Models;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Helpers;
 using Microsoft.EntityFrameworkCore;
-using ISynergy.Framework.Synchronization.Core.Tests.Base;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Tests.Context
 {

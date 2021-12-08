@@ -9,17 +9,39 @@ using System.Runtime.Serialization;
 
 namespace ISynergy.Framework.Synchronization.Client
 {
+    /// <summary>
+    /// HttpMessage send changes response class.
+    /// </summary>
     [DataContract(Name = "changesres"), Serializable]
-    public class HttpMessageSendChangesResponse
+    public class HttpMessageSendChangesResponse : ISerializable
     {
-
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public HttpMessageSendChangesResponse()
         {
-
         }
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public HttpMessageSendChangesResponse(SyncContext context)
             => SyncContext = context ?? throw new ArgumentNullException(nameof(context));
+
+        /// <summary>
+        /// special constructor used during deserialization.
+        /// </summary>
+        protected HttpMessageSendChangesResponse(SerializationInfo info, StreamingContext context)
+        {
+            SyncContext = (SyncContext)info.GetValue(nameof(SyncContext), typeof(SyncContext)) ?? throw new ArgumentNullException(nameof(SyncContext));
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(SyncContext), SyncContext);
+        }
 
         /// <summary>
         /// Gets or Sets the Server HttpStep
@@ -87,7 +109,7 @@ namespace ISynergy.Framework.Synchronization.Client
     }
 
     [DataContract(Name = "morechangesreq"), Serializable]
-    public class HttpMessageGetMoreChangesRequest
+    public class HttpMessageGetMoreChangesRequest : ISerializable
     {
         public HttpMessageGetMoreChangesRequest() { }
 
@@ -95,8 +117,24 @@ namespace ISynergy.Framework.Synchronization.Client
         {
             BatchIndexRequested = batchIndexRequested;
             SyncContext = context ?? throw new ArgumentNullException(nameof(context));
-
         }
+
+        /// <summary>
+        /// special constructor used during deserialization.
+        /// </summary>
+        protected HttpMessageGetMoreChangesRequest(SerializationInfo info, StreamingContext context)
+        {
+            BatchIndexRequested = (int)info.GetValue(nameof(BatchIndexRequested), typeof(int));
+            SyncContext = (SyncContext)info.GetValue(nameof(SyncContext), typeof(SyncContext)) ?? throw new ArgumentNullException(nameof(SyncContext));
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(BatchIndexRequested), BatchIndexRequested);
+            info.AddValue(nameof(SyncContext), SyncContext);
+        }
+
+
         [DataMember(Name = "sc", IsRequired = true, Order = 1)]
         public SyncContext SyncContext { get; set; }
 
@@ -105,17 +143,31 @@ namespace ISynergy.Framework.Synchronization.Client
     }
 
     [DataContract(Name = "changesreq"), Serializable]
-    public class HttpMessageSendChangesRequest
+    public class HttpMessageSendChangesRequest : ISerializable
     {
         public HttpMessageSendChangesRequest()
-        {
-
+        { 
         }
 
         public HttpMessageSendChangesRequest(SyncContext context, ScopeInfo scope)
         {
             SyncContext = context;
             Scope = scope;
+        }
+
+        /// <summary>
+        /// special constructor used during deserialization.
+        /// </summary>
+        protected HttpMessageSendChangesRequest(SerializationInfo info, StreamingContext context)
+        {
+            SyncContext = (SyncContext)info.GetValue(nameof(SyncContext), typeof(SyncContext));
+            Scope = (ScopeInfo)info.GetValue(nameof(Scope), typeof(ScopeInfo));
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(SyncContext), SyncContext);
+            info.AddValue(nameof(Scope), Scope);
         }
 
         [DataMember(Name = "sc", IsRequired = true, Order = 1)]
@@ -153,7 +205,7 @@ namespace ISynergy.Framework.Synchronization.Client
     }
 
     [DataContract(Name = "ensureschemares"), Serializable]
-    public class HttpMessageEnsureSchemaResponse
+    public class HttpMessageEnsureSchemaResponse : ISerializable
     {
         public HttpMessageEnsureSchemaResponse()
         {
@@ -164,6 +216,23 @@ namespace ISynergy.Framework.Synchronization.Client
             SyncContext = context ?? throw new ArgumentNullException(nameof(context));
             ServerScopeInfo = serverScopeInfo ?? throw new ArgumentNullException(nameof(serverScopeInfo));
             Schema = serverScopeInfo.Schema;
+        }
+
+        /// <summary>
+        /// special constructor used during deserialization.
+        /// </summary>
+        protected HttpMessageEnsureSchemaResponse(SerializationInfo info, StreamingContext context)
+        {
+            SyncContext = (SyncContext)info.GetValue(nameof(SyncContext), typeof(SyncContext)) ?? throw new ArgumentNullException(nameof(SyncContext));
+            ServerScopeInfo = (ServerScopeInfo)info.GetValue(nameof(ServerScopeInfo), typeof(SyncContext)) ?? throw new ArgumentNullException(nameof(ServerScopeInfo));
+            Schema = (SyncSet)info.GetValue(nameof(Schema), typeof(SyncSet)) ?? throw new ArgumentNullException(nameof(Schema));
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(SyncContext), SyncContext);
+            info.AddValue(nameof(ServerScopeInfo), ServerScopeInfo);
+            info.AddValue(nameof(Schema), Schema);
         }
 
         [DataMember(Name = "sc", IsRequired = true, Order = 1)]
@@ -180,12 +249,11 @@ namespace ISynergy.Framework.Synchronization.Client
         /// </summary>
         [DataMember(Name = "ssi", IsRequired = true, Order = 3)]
         public ServerScopeInfo ServerScopeInfo { get; set; }
-
     }
 
 
     [DataContract(Name = "ensurescopesres"), Serializable]
-    public class HttpMessageEnsureScopesResponse
+    public class HttpMessageEnsureScopesResponse : ISerializable
     {
         public HttpMessageEnsureScopesResponse()
         {
@@ -195,6 +263,21 @@ namespace ISynergy.Framework.Synchronization.Client
         {
             SyncContext = context ?? throw new ArgumentNullException(nameof(context));
             ServerScopeInfo = serverScopeInfo ?? throw new ArgumentNullException(nameof(serverScopeInfo));
+        }
+
+        /// <summary>
+        /// special constructor used during deserialization.
+        /// </summary>
+        protected HttpMessageEnsureScopesResponse(SerializationInfo info, StreamingContext context)
+        {
+            SyncContext = (SyncContext)info.GetValue(nameof(SyncContext), typeof(SyncContext)) ?? throw new ArgumentNullException(nameof(SyncContext));
+            ServerScopeInfo = (ServerScopeInfo)info.GetValue(nameof(ServerScopeInfo), typeof(SyncContext)) ?? throw new ArgumentNullException(nameof(ServerScopeInfo));
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(SyncContext), SyncContext);
+            info.AddValue(nameof(ServerScopeInfo), ServerScopeInfo);
         }
 
         [DataMember(Name = "sc", IsRequired = true, Order = 1)]
@@ -209,7 +292,7 @@ namespace ISynergy.Framework.Synchronization.Client
 
 
     [DataContract(Name = "ensurereq"), Serializable]
-    public class HttpMessageEnsureScopesRequest
+    public class HttpMessageEnsureScopesRequest : ISerializable
     {
         public HttpMessageEnsureScopesRequest() { }
 
@@ -222,23 +305,46 @@ namespace ISynergy.Framework.Synchronization.Client
             SyncContext = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        /// <summary>
+        /// special constructor used during deserialization.
+        /// </summary>
+        protected HttpMessageEnsureScopesRequest(SerializationInfo info, StreamingContext context)
+        {
+            SyncContext = (SyncContext)info.GetValue(nameof(SyncContext), typeof(SyncContext)) ?? throw new ArgumentNullException(nameof(SyncContext));
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(SyncContext), SyncContext);
+        }
+
         [DataMember(Name = "sc", IsRequired = true, Order = 1)]
         public SyncContext SyncContext { get; set; }
-
-
     }
 
 
     [DataContract(Name = "summary"), Serializable]
-    public class HttpMessageSummaryResponse
+    public class HttpMessageSummaryResponse : ISerializable
     {
         public HttpMessageSummaryResponse()
         {
-
         }
 
         public HttpMessageSummaryResponse(SyncContext context)
             => SyncContext = context ?? throw new ArgumentNullException(nameof(context));
+
+        /// <summary>
+        /// special constructor used during deserialization.
+        /// </summary>
+        protected HttpMessageSummaryResponse(SerializationInfo info, StreamingContext context)
+        {
+            SyncContext = (SyncContext)info.GetValue(nameof(SyncContext), typeof(SyncContext)) ?? throw new ArgumentNullException(nameof(SyncContext));
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(SyncContext), SyncContext);
+        }
 
         /// <summary>
         /// Gets or Sets the SyncContext

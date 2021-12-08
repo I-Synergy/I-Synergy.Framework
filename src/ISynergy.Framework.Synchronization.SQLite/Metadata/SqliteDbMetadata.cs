@@ -1,11 +1,11 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Metadata;
-using ISynergy.Framework.Synchronization.SQLite.Providers;
+using ISynergy.Framework.Synchronization.Sqlite.Providers;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Data;
 
-namespace ISynergy.Framework.Synchronization.SQLite.Metadata
+namespace ISynergy.Framework.Synchronization.Sqlite.Metadata
 {
     public class SqliteDbMetadata : DbMetadata
     {

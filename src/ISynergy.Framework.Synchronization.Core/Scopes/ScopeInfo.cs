@@ -16,8 +16,8 @@ namespace ISynergy.Framework.Synchronization.Core.Scopes
         /// </summary>
         public ScopeInfo()
         {
-
         }
+
         /// <summary>
         /// Scope name. Shared by all clients and the server
         /// </summary>

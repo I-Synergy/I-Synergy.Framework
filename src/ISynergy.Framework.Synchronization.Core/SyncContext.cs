@@ -103,7 +103,7 @@ namespace ISynergy.Framework.Synchronization.Core
             otherSyncContext.SyncWay = this.SyncWay;
             otherSyncContext.ProgressPercentage = this.ProgressPercentage;
 
-            if (this.AdditionalProperties != null)
+            if (this.AdditionalProperties is not null)
             {
                 otherSyncContext.AdditionalProperties = new Dictionary<string, string>();
                 foreach (var p in this.AdditionalProperties)

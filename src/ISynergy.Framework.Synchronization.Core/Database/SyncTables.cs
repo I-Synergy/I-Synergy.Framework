@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public void EnsureTables(SyncSet schema)
         {
             Schema = schema;
-            if (InnerCollection != null)
+            if (InnerCollection is not null)
                 foreach (var table in this)
                     table.EnsureTable(schema);
         }
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
                 var parser = ParserName.Parse(tableName);
                 var tblName = parser.ObjectName;
                 var schemaName = parser.SchemaName;
-                schemaName = schemaName == null ? string.Empty : schemaName;
+                schemaName = schemaName is null ? string.Empty : schemaName;
 
                 var sc = SyncGlobalization.DataSourceStringComparison;
 
@@ -86,7 +86,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
                 var parser = ParserName.Parse(tableName);
                 var tblName = parser.ObjectName;
 
-                schemaName = schemaName == null ? string.Empty : schemaName;
+                schemaName = schemaName is null ? string.Empty : schemaName;
 
                 var sc = SyncGlobalization.DataSourceStringComparison;
 

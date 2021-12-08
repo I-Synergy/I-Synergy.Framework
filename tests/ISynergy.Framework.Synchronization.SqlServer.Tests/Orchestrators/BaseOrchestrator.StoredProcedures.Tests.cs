@@ -33,7 +33,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
                 StoredProceduresSuffix = "_sp"
             };
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             await localOrchestrator.CreateStoredProcedureAsync(setup.Tables["Product", "SalesLT"], DbStoredProcedureType.SelectChanges, false);
 
@@ -74,7 +74,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
                 StoredProceduresSuffix = "_sp"
             };
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var storedProcedureSelectChanges = $"SalesLT.{setup.StoredProceduresPrefix}Product{setup.StoredProceduresSuffix}_changes";
 
@@ -117,7 +117,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
                 StoredProceduresSuffix = "_sp"
             };
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var storedProcedureSelectChanges = $"SalesLT.{setup.StoredProceduresPrefix}Product{setup.StoredProceduresSuffix}_changes";
 
@@ -159,7 +159,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
                 StoredProceduresSuffix = "_sp"
             };
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var storedProcedureSelectChanges = $"SalesLT.{setup.StoredProceduresPrefix}Product{setup.StoredProceduresSuffix}_changes";
 
@@ -193,7 +193,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
                 StoredProceduresSuffix = "_sp"
             };
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             await localOrchestrator.CreateStoredProceduresAsync(setup.Tables["Product", "SalesLT"]);
 

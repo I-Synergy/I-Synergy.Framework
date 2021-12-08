@@ -56,7 +56,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             {
                 var objType = obj?.GetType();
 
-                if (obj == null)
+                if (obj is null)
                     byteCount += 5;
                 else if (obj is DBNull)
                     byteCount += 5;
@@ -68,7 +68,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
                     byteCount += GetSizeForType(obj.GetType());
 
                 // Size for the type
-                if (objType != null)
+                if (objType is not null)
                     byteCount += Encoding.UTF8.GetBytes(objType.GetAssemblyQualifiedName()).Length;
 
                 // State

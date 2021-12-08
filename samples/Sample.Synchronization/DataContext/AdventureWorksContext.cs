@@ -8,7 +8,7 @@ namespace Sample.Synchronization
         internal bool useSeeding = true;
         public string ConnectionString { get; }
 
-        public static Guid CustomerIdForFilter = Guid.NewGuid();
+        public readonly Guid CustomerIdForFilter = Guid.NewGuid();
 
         public AdventureWorksContext(DbContextOptions<AdventureWorksContext> options)
             : base(options)
@@ -17,14 +17,14 @@ namespace Sample.Synchronization
 
         public AdventureWorksContext(string connectionString, bool useSeeding)
         {
-            this.ConnectionString = connectionString;
+            ConnectionString = connectionString;
             this.useSeeding = useSeeding;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseSqlServer(this.ConnectionString);
+                optionsBuilder.UseSqlServer(ConnectionString);
 
         }
 
@@ -58,8 +58,6 @@ namespace Sample.Synchronization
                     .HasColumnType("datetime")
                     .ValueGeneratedOnAdd()
                     .HasDefaultValue(DateTime.Now);
-
-                //entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.PostalCode)
                     .IsRequired()
@@ -108,9 +106,6 @@ namespace Sample.Synchronization
                     .ValueGeneratedOnAdd()
                     .HasDefaultValue(DateTime.Now);
 
-                //entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(getdate())");
-
-
                 entity.Property(e => e.PasswordHash)
                     .IsRequired()
                     .HasMaxLength(128)
@@ -157,8 +152,6 @@ namespace Sample.Synchronization
                     .ValueGeneratedOnAdd()
                     .HasDefaultValue(DateTime.Now);
 
-                //entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(getdate())");
-
                 entity.Property(e => e.Rowguid)
                     .HasColumnName("rowguid");
 
@@ -201,9 +194,6 @@ namespace Sample.Synchronization
                     .HasColumnType("datetime")
                     .ValueGeneratedOnAdd()
                     .HasDefaultValue(DateTime.Now);
-
-                //entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(getdate())");
-
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -262,8 +252,6 @@ namespace Sample.Synchronization
                     .ValueGeneratedOnAdd()
                     .HasDefaultValue(DateTime.Now);
 
-                //entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(getdate())");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("Name")
@@ -290,8 +278,6 @@ namespace Sample.Synchronization
                     .HasColumnType("datetime")
                     .ValueGeneratedOnAdd()
                     .HasDefaultValue(DateTime.Now);
-
-                //entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -324,8 +310,6 @@ namespace Sample.Synchronization
                     .HasColumnType("datetime")
                     .ValueGeneratedOnAdd()
                     .HasDefaultValue(DateTime.Now);
-
-                //entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.ProductId)
                     .HasColumnName("ProductID")
@@ -381,8 +365,6 @@ namespace Sample.Synchronization
                     .HasColumnType("datetime")
                     .ValueGeneratedOnAdd()
                     .HasDefaultValue(DateTime.Now);
-
-                //entity.Property(e => e.ModifiedDate).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.OnlineOrderFlag)
                     .IsRequired()
@@ -451,8 +433,8 @@ namespace Sample.Synchronization
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
-            if (this.useSeeding)
-                this.OnSeeding(modelBuilder);
+            if (useSeeding)
+                OnSeeding(modelBuilder);
         }
 
         /// <summary>

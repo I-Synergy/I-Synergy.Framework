@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             setup.TrackingTablesPrefix = "t_";
             setup.TrackingTablesSuffix = "_t";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = false;
             var onCreated = false;
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             setup.TrackingTablesPrefix = "t_";
             setup.TrackingTablesSuffix = "_t";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             await localOrchestrator.CreateTrackingTableAsync(setup.Tables[0]);
 
@@ -112,7 +112,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             setup.TrackingTablesPrefix = "t_";
             setup.TrackingTablesSuffix = "_t";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onCreating = 0;
             var onCreated = 0;
@@ -175,7 +175,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             setup.TrackingTablesPrefix = "t_";
             setup.TrackingTablesSuffix = "_t";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onDropping = false;
             var onDropped = false;
@@ -229,7 +229,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             setup.TrackingTablesPrefix = "t_";
             setup.TrackingTablesSuffix = "_t";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onDropping = false;
             var onDropped = false;
@@ -283,7 +283,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             setup.TrackingTablesPrefix = "t_";
             setup.TrackingTablesSuffix = "_t";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup);
 
             var onDropping = 0;
             var onDropped = 0;

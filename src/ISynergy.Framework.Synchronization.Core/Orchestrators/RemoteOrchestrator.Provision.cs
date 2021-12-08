@@ -17,6 +17,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Provision the remote database 
         /// </summary>
         /// <param name="overwrite">Overwrite existing objects</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public virtual Task<SyncSet> ProvisionAsync(bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
             var provision = SyncProvision.ServerScope | SyncProvision.ServerHistoryScope |
@@ -29,7 +33,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Provision the remote database based on the Setup parameter, and the provision enumeration
         /// </summary>
         /// <param name="provision">Provision enumeration to determine which components to apply</param>
+        /// <param name="overwrite"></param>
         /// <param name="serverScopeInfo">server scope. Will be saved once provision is done</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         /// <returns>Full schema with table and columns properties</returns>
         public virtual Task<SyncSet> ProvisionAsync(SyncProvision provision, bool overwrite = false, ServerScopeInfo serverScopeInfo = null, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
             => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
@@ -39,7 +48,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     throw new InvalidProvisionForRemoteOrchestratorException();
 
                 // Get server scope if not supplied
-                if (serverScopeInfo == null)
+                if (serverScopeInfo is null)
                 {
                     var scopeBuilder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
 
@@ -61,7 +70,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Deprovision the remote database 
         /// </summary>
-        /// <param name="overwrite">Overwrite existing objects</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public virtual Task DeprovisionAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
             var provision = SyncProvision.ServerScope | SyncProvision.ServerHistoryScope |
@@ -73,13 +85,17 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Deprovision the orchestrator database based on the schema argument, and the provision enumeration
         /// </summary>
-        /// <param name="schema">Schema to be deprovisioned from the database managed by the orchestrator, through the provider.</param>
         /// <param name="provision">Provision enumeration to determine which components to deprovision</param>
+        /// <param name="serverScopeInfo"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public virtual Task DeprovisionAsync(SyncProvision provision, ServerScopeInfo serverScopeInfo = null, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
         {
             // Get server scope if not supplied
-            if (serverScopeInfo == null)
+            if (serverScopeInfo is null)
             {
                 var scopeBuilder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
 

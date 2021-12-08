@@ -19,24 +19,27 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 {
     public class SqlBuilderTable
     {
-        private ParserName tableName;
-        private ParserName trackingName;
-        private SyncTable tableDescription;
-        private readonly SyncSetup setup;
-        private SqlDbMetadata sqlDbMetadata;
+        private ParserName _tableName;
+        private ParserName _trackingName;
+        private SyncTable _tableDescription;
+        private readonly SyncSetup _setup;
+        private SqlDbMetadata _sqlDbMetadata;
 
-
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="tableDescription"></param>
+        /// <param name="tableName"></param>
+        /// <param name="trackingName"></param>
+        /// <param name="setup"></param>
         public SqlBuilderTable(SyncTable tableDescription, ParserName tableName, ParserName trackingName, SyncSetup setup)
         {
-            this.tableDescription = tableDescription;
-            this.setup = setup;
-            this.tableName = tableName;
-            this.trackingName = trackingName;
-            sqlDbMetadata = new SqlDbMetadata();
+            _tableDescription = tableDescription;
+            _setup = setup;
+            _tableName = tableName;
+            _trackingName = trackingName;
+            _sqlDbMetadata = new SqlDbMetadata();
         }
-
-
-
 
         private Dictionary<string, string> createdRelationNames = new Dictionary<string, string>();
 
@@ -67,16 +70,16 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
         private SqlCommand BuildCreateTableCommand(DbConnection connection, DbTransaction transaction)
         {
             var stringBuilder = new StringBuilder();
-            var tbl = tableName.ToString();
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(tableName);
+            var tbl = _tableName.ToString();
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_tableName);
 
-            stringBuilder.AppendLine($"CREATE TABLE {tableName.Schema().Quoted().ToString()} (");
+            stringBuilder.AppendLine($"CREATE TABLE {_tableName.Schema().Quoted().ToString()} (");
             var empty = string.Empty;
             stringBuilder.AppendLine();
-            foreach (var column in tableDescription.Columns)
+            foreach (var column in _tableDescription.Columns)
             {
                 var columnName = ParserName.Parse(column).Quoted().ToString();
-                var columnType = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(column, tableDescription.OriginalProvider);
+                var columnType = _sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(column, _tableDescription.OriginalProvider);
                 var identity = string.Empty;
 
                 if (column.IsAutoIncrement)
@@ -91,7 +94,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
                     nullString = "NULL";
 
                 var defaultValue = string.Empty;
-                if (tableDescription.OriginalProvider == SqlSyncProvider.ProviderType)
+                if (_tableDescription.OriginalProvider == SqlSyncProvider.ProviderType)
                     if (!string.IsNullOrEmpty(column.DefaultValue))
                         defaultValue = "DEFAULT " + column.DefaultValue;
 
@@ -101,21 +104,21 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
             stringBuilder.AppendLine(");");
 
             // Primary Keys
-            var primaryKeyNameString = tableName.Schema().Unquoted().Normalized().ToString();
-            stringBuilder.AppendLine($"ALTER TABLE {tableName.Schema().Quoted().ToString()} ADD CONSTRAINT [PK_{primaryKeyNameString}] PRIMARY KEY(");
-            for (var i = 0; i < tableDescription.PrimaryKeys.Count; i++)
+            var primaryKeyNameString = _tableName.Schema().Unquoted().Normalized().ToString();
+            stringBuilder.AppendLine($"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ADD CONSTRAINT [PK_{primaryKeyNameString}] PRIMARY KEY(");
+            for (var i = 0; i < _tableDescription.PrimaryKeys.Count; i++)
             {
-                var pkColumn = tableDescription.PrimaryKeys[i];
+                var pkColumn = _tableDescription.PrimaryKeys[i];
                 var quotedColumnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.Append(quotedColumnName);
 
-                if (i < tableDescription.PrimaryKeys.Count - 1)
+                if (i < _tableDescription.PrimaryKeys.Count - 1)
                     stringBuilder.Append(", ");
             }
             stringBuilder.AppendLine(");");
 
             // Foreign Keys
-            foreach (var constraint in tableDescription.GetRelations())
+            foreach (var constraint in _tableDescription.GetRelations())
             {
                 var tableName = ParserName.Parse(constraint.GetTable()).Quoted().Schema().ToString();
                 var parentTableName = ParserName.Parse(constraint.GetParentTable()).Quoted().Schema().ToString();
@@ -169,8 +172,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 
         internal async Task<IEnumerable<SyncColumn>> GetPrimaryKeysAsync(DbConnection connection, DbTransaction transaction)
         {
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(tableName);
-            var syncTableKeys = await SqlManagementUtils.GetPrimaryKeysForTableAsync((SqlConnection)connection, (SqlTransaction)transaction, tableName.ToString(), schema).ConfigureAwait(false);
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_tableName);
+            var syncTableKeys = await SqlManagementUtils.GetPrimaryKeysForTableAsync((SqlConnection)connection, (SqlTransaction)transaction, _tableName.ToString(), schema).ConfigureAwait(false);
 
             var lstKeys = new List<SyncColumn>();
 
@@ -186,9 +189,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
         }
         internal async Task<IEnumerable<DbRelationDefinition>> GetRelationsAsync(DbConnection connection, DbTransaction transaction)
         {
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(tableName);
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_tableName);
             var relations = new List<DbRelationDefinition>();
-            var tableRelations = await SqlManagementUtils.GetRelationsForTableAsync((SqlConnection)connection, (SqlTransaction)transaction, tableName.ToString(), schema).ConfigureAwait(false);
+            var tableRelations = await SqlManagementUtils.GetRelationsForTableAsync((SqlConnection)connection, (SqlTransaction)transaction, _tableName.ToString(), schema).ConfigureAwait(false);
 
             if (tableRelations != null && tableRelations.Rows.Count > 0)
                 foreach (var fk in tableRelations.Rows.GroupBy(row =>
@@ -225,10 +228,10 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
         }
         internal async Task<IEnumerable<SyncColumn>> GetColumnsAsync(DbConnection connection, DbTransaction transaction)
         {
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(tableName);
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_tableName);
             var columns = new List<SyncColumn>();
             // Get the columns definition
-            var syncTableColumnsList = await SqlManagementUtils.GetColumnsForTableAsync((SqlConnection)connection, (SqlTransaction)transaction, tableName.ToString(), schema).ConfigureAwait(false);
+            var syncTableColumnsList = await SqlManagementUtils.GetColumnsForTableAsync((SqlConnection)connection, (SqlTransaction)transaction, _tableName.ToString(), schema).ConfigureAwait(false);
 
             foreach (var c in syncTableColumnsList.Rows.OrderBy(r => (int)r["column_id"]))
             {
@@ -282,12 +285,19 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 
             return columns;
         }
+
+        /// <summary>
+        /// Get create schema command.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public Task<DbCommand> GetCreateSchemaCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(tableName);
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_tableName);
 
             if (schema == "dbo")
-                return null;
+                return Task.FromResult<DbCommand>(null);
 
             var command = connection.CreateCommand();
 
@@ -297,15 +307,17 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 
             return Task.FromResult(command);
         }
+
         public Task<DbCommand> GetCreateTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
             var command = BuildCreateTableCommand(connection, transaction);
             return Task.FromResult((DbCommand)command);
         }
+        
         public Task<DbCommand> GetExistsTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var tbl = tableName.ToString();
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(tableName);
+            var tbl = _tableName.ToString();
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_tableName);
 
             var command = connection.CreateCommand();
 
@@ -327,7 +339,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
         }
         public Task<DbCommand> GetExistsSchemaCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(tableName);
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_tableName);
 
             var command = connection.CreateCommand();
 
@@ -348,7 +360,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 
             command.Connection = connection;
             command.Transaction = transaction;
-            command.CommandText = $"ALTER TABLE {tableName.Schema().Quoted().ToString()} NOCHECK CONSTRAINT ALL; DROP TABLE {tableName.Schema().Quoted().ToString()};";
+            command.CommandText = $"ALTER TABLE {_tableName.Schema().Quoted().ToString()} NOCHECK CONSTRAINT ALL; DROP TABLE {_tableName.Schema().Quoted().ToString()};";
 
             return Task.FromResult(command);
         }
@@ -360,11 +372,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
             command.Connection = connection;
             command.Transaction = transaction;
 
-            var stringBuilder = new StringBuilder($"ALTER TABLE {tableName.Schema().Quoted().ToString()} WITH NOCHECK ");
+            var stringBuilder = new StringBuilder($"ALTER TABLE {_tableName.Schema().Quoted().ToString()} WITH NOCHECK ");
 
-            var column = tableDescription.Columns[columnName];
+            var column = _tableDescription.Columns[columnName];
             var columnNameString = ParserName.Parse(column).Quoted().ToString();
-            var columnType = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(column, tableDescription.OriginalProvider);
+            var columnType = _sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(column, _tableDescription.OriginalProvider);
 
             var identity = string.Empty;
 
@@ -380,7 +392,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
                 nullString = "NULL";
 
             var defaultValue = string.Empty;
-            if (tableDescription.OriginalProvider == SqlSyncProvider.ProviderType)
+            if (_tableDescription.OriginalProvider == SqlSyncProvider.ProviderType)
                 if (!string.IsNullOrEmpty(column.DefaultValue))
                     defaultValue = "DEFAULT " + column.DefaultValue;
 
@@ -397,15 +409,15 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 
             command.Connection = connection;
             command.Transaction = transaction;
-            command.CommandText = $"ALTER TABLE {tableName.Schema().Quoted().ToString()} WITH NOCHECK DROP COLUMN {columnName};";
+            command.CommandText = $"ALTER TABLE {_tableName.Schema().Quoted().ToString()} WITH NOCHECK DROP COLUMN {columnName};";
 
             return Task.FromResult(command);
         }
 
         public Task<DbCommand> GetExistsColumnCommandAsync(string columnName, DbConnection connection, DbTransaction transaction)
         {
-            var tbl = tableName.ToString();
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(tableName);
+            var tbl = _tableName.ToString();
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_tableName);
 
             var command = connection.CreateCommand();
 

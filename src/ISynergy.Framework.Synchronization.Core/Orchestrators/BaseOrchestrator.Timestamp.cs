@@ -35,14 +35,14 @@ namespace ISynergy.Framework.Synchronization.Core
             // we don't care about DbScopeType. That's why we are using a random value DbScopeType.Client...
             var command = scopeBuilder.GetCommandAsync(DbScopeCommandType.GetLocalTimestamp, DbScopeType.Client, connection, transaction);
 
-            if (command == null)
+            if (command is null)
                 return 0L;
 
             var action = new LocalTimestampLoadingArgs(context, command, connection, transaction);
 
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return 0L;
 
             long result = Convert.ToInt64(await action.Command.ExecuteScalarAsync().ConfigureAwait(false));

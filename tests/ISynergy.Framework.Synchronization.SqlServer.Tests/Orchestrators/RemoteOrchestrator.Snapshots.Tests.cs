@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 {
-    public partial class RemoteOrchestratorTests
+    public partial class RemoteOrchestratorTests 
     {
         private readonly DatabaseHelper _databaseHelper;
 
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
             var setup = new SyncSetup(Tables);
 
-            var remoteOrchestrator = new RemoteOrchestrator(serverProvider, options, setup, scopeName);
+            var remoteOrchestrator = new RemoteOrchestrator(_versionService, serverProvider, options, setup, scopeName);
 
             // Assert on connection and transaction interceptors
             BaseOrchestratorTests.AssertConnectionAndTransaction(remoteOrchestrator, SyncStage.SnapshotCreating);
@@ -114,7 +114,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
 
 
             // Make a first sync to be sure everything is in place
-            var agent = new SyncAgent(clientProvider, serverProvider, options, setup, scopeName);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, options, setup, scopeName);
 
             var onSnapshotApplying = false;
             var onSnapshotApplied = false;
@@ -171,7 +171,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup(Tables);
             var provider = new SqlSyncProvider(cs);
 
-            var orchestrator = new RemoteOrchestrator(provider, options, setup, scopeName);
+            var orchestrator = new RemoteOrchestrator(_versionService, provider, options, setup, scopeName);
 
             var bi = await orchestrator.CreateSnapshotAsync();
 
@@ -265,7 +265,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             setup.Filters.Add(orderDetailsFilter);
 
 
-            var orchestrator = new RemoteOrchestrator(provider, options, setup);
+            var orchestrator = new RemoteOrchestrator(_versionService, provider, options, setup);
 
             var parameters = new SyncParameters();
             var p1 = new SyncParameter("CompanyName", "A Bike Store");
@@ -330,7 +330,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var setup = new SyncSetup(Tables);
             var provider = new SqlSyncProvider(cs);
 
-            var orchestrator = new RemoteOrchestrator(provider, options, setup, scopeName);
+            var orchestrator = new RemoteOrchestrator(_versionService, provider, options, setup, scopeName);
             var se = await Assert.ThrowsExceptionAsync<SyncException>(() => orchestrator.CreateSnapshotAsync());
 
             Assert.AreEqual(SyncStage.SnapshotCreating, se.SyncStage);
@@ -338,7 +338,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             Assert.AreEqual("SnapshotMissingMandatariesOptionsException", se.TypeName);
 
             options = new SyncOptions { BatchSize = 2000 };
-            orchestrator = new RemoteOrchestrator(provider, options, setup, scopeName);
+            orchestrator = new RemoteOrchestrator(_versionService, provider, options, setup, scopeName);
             se = await Assert.ThrowsExceptionAsync<SyncException>(() => orchestrator.CreateSnapshotAsync());
 
             Assert.AreEqual(SyncStage.SnapshotCreating, se.SyncStage);
@@ -346,7 +346,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             Assert.AreEqual("SnapshotMissingMandatariesOptionsException", se.TypeName);
 
             options = new SyncOptions { };
-            orchestrator = new RemoteOrchestrator(provider, options, setup, scopeName);
+            orchestrator = new RemoteOrchestrator(_versionService, provider, options, setup, scopeName);
             se = await Assert.ThrowsExceptionAsync<SyncException>(() => orchestrator.CreateSnapshotAsync());
 
             Assert.AreEqual(SyncStage.SnapshotCreating, se.SyncStage);

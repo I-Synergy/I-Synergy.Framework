@@ -67,7 +67,6 @@ namespace ISynergy.Framework.Synchronization.Core
                 // -----------------------------------------------------
                 if (hasChanges)
                 {
-                    doneTables.Clear();
                     foreach (var table in schemaTables)
                     {
                         await this.InternalApplyTableChangesAsync(context, table, message, doneTables, connection,
@@ -124,7 +123,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get the row in the local repository
             var command = await syncAdapter.GetCommandAsync(DbCommandType.SelectRow, connection, transaction);
 
-            if (command == null) return null;
+            if (command is null) return null;
 
             // set the primary keys columns as parameters
             syncAdapter.SetColumnParametersValues(command, primaryKeyRow);
@@ -164,7 +163,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
 
             // if syncRow is not a deleted row, we can check for which kind of row it is.
-            if (syncRow != null && syncRow.RowState == DataRowState.Unchanged)
+            if (syncRow is not null && syncRow.RowState == DataRowState.Unchanged)
                 syncRow.RowState = DataRowState.Modified;
 
             dataReader.Close();
@@ -177,12 +176,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         private async Task<bool> InternalApplyConflictDeleteAsync(SyncContext context, DbSyncAdapter syncAdapter, SyncRow row, long? lastTimestamp, Guid? senderScopeId, bool forceWrite, DbConnection connection, DbTransaction transaction)
         {
-            if (row.Table == null)
+            if (row.Table is null)
                 throw new ArgumentException("Schema table is not present in the row");
 
             var command = await syncAdapter.GetCommandAsync(DbCommandType.DeleteRow, connection, transaction);
 
-            if (command == null) return false;
+            if (command is null) return false;
 
             // Set the parameters value from row
             syncAdapter.SetColumnParametersValues(command, row);
@@ -195,7 +194,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Check if we have a return value instead
             var syncRowCountParam = DbSyncAdapter.GetParameter(command, "sync_row_count");
 
-            if (syncRowCountParam != null)
+            if (syncRowCountParam is not null)
                 rowDeletedCount = (int)syncRowCountParam.Value;
 
             return rowDeletedCount > 0;
@@ -206,12 +205,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         private async Task<bool> InternalApplyConflictUpdateAsync(SyncContext context, DbSyncAdapter syncAdapter, SyncRow row, long? lastTimestamp, Guid? senderScopeId, bool forceWrite, DbConnection connection, DbTransaction transaction)
         {
-            if (row.Table == null)
+            if (row.Table is null)
                 throw new ArgumentException("Schema table is not present in the row");
 
             var command = await syncAdapter.GetCommandAsync(DbCommandType.UpdateRow, connection, transaction);
 
-            if (command == null) return false;
+            if (command is null) return false;
 
             // Set the parameters value from row
             syncAdapter.SetColumnParametersValues(command, row);
@@ -224,7 +223,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Check if we have a return value instead
             var syncRowCountParam = DbSyncAdapter.GetParameter(command, "sync_row_count");
 
-            if (syncRowCountParam != null)
+            if (syncRowCountParam is not null)
                 rowUpdatedCount = (int)syncRowCountParam.Value;
 
             return rowUpdatedCount > 0;
@@ -278,10 +277,10 @@ namespace ISynergy.Framework.Synchronization.Core
                     var syncTable = enumeratorOfTable.Current.SyncTable;
 
                     // add curent batch part info 
-                    if (enumeratorOfTable.Current.BatchPartInfo != null)
+                    if (enumeratorOfTable.Current.BatchPartInfo is not null)
                         batchPartinfos.Add(enumeratorOfTable.Current.BatchPartInfo);
 
-                    if (syncTable == null || syncTable.Rows == null || syncTable.Rows.Count == 0)
+                    if (syncTable is null || syncTable.Rows is null || syncTable.Rows.Count == 0)
                         continue;
 
                     // Creating a filtered view of my rows with the correct applyType
@@ -314,15 +313,15 @@ namespace ISynergy.Framework.Synchronization.Core
                     {
                         var sc = SyncGlobalization.DataSourceStringComparison;
 
-                        var sn = tca.SchemaName == null ? string.Empty : tca.SchemaName;
-                        var otherSn = schemaTable.SchemaName == null ? string.Empty : schemaTable.SchemaName;
+                        var sn = tca.SchemaName is null ? string.Empty : tca.SchemaName;
+                        var otherSn = schemaTable.SchemaName is null ? string.Empty : schemaTable.SchemaName;
 
                         return tca.TableName.Equals(schemaTable.TableName, sc) &&
                                sn.Equals(otherSn, sc) &&
                                tca.State == applyType;
                     });
 
-                    if (tableChangesApplied == null)
+                    if (tableChangesApplied is null)
                     {
                         tableChangesApplied = new TableChangesApplied
                         {
@@ -399,7 +398,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
 
                 // Report the overall changes applied for the current table
-                if (tableChangesApplied != null)
+                if (tableChangesApplied is not null)
                 {
                     var tableChangesAppliedArgs = new TableChangesAppliedArgs(context, tableChangesApplied, connection, transaction);
 
@@ -449,13 +448,13 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get command
             var command = await syncAdapter.GetCommandAsync(dbCommandType, connection, transaction);
 
-            if (command == null) return (0, 0);
+            if (command is null) return (0, 0);
 
             // Launch any interceptor if available
             var args = new TableChangesBatchApplyingArgs(context, changesTable, applyType, command, connection, transaction);
             await this.InterceptAsync(args, cancellationToken).ConfigureAwait(false);
 
-            if (args.Cancel || args.Command == null)
+            if (args.Cancel || args.Command is null)
                 return (0, 0);
 
             // get the correct pointer to the command from the interceptor in case user change the whole instance
@@ -509,7 +508,7 @@ namespace ISynergy.Framework.Synchronization.Core
                         // Check if we have a return value instead
                         var syncRowCountParam = DbSyncAdapter.GetParameter(command, "sync_row_count");
 
-                        if (syncRowCountParam != null)
+                        if (syncRowCountParam is not null)
                             rowAppliedCount = (int)syncRowCountParam.Value;
 
                         if (rowAppliedCount > 0)
@@ -576,11 +575,11 @@ namespace ISynergy.Framework.Synchronization.Core
             // Local provider wins, update metadata
             if (conflictApplyAction == ApplyAction.Continue)
             {
-                var isMergeAction = finalRow != null;
+                var isMergeAction = finalRow is not null;
                 var row = isMergeAction ? finalRow : localRow;
 
                 // Conflict on a line that is not present on the datasource
-                if (row == null)
+                if (row is null)
                     return (conflictResolvedCount: 1, finalRow, rowAppliedCount: 0);
 
                 // if we have a merge action, we apply the row on the server
@@ -607,7 +606,7 @@ namespace ISynergy.Framework.Synchronization.Core
             if (conflictApplyAction == ApplyAction.RetryWithForceWrite)
             {
                 // TODO : Should Raise an error ?
-                if (conflictRow == null)
+                if (conflictRow is null)
                     return (0, finalRow, 0);
 
                 bool operationComplete = false;
@@ -746,20 +745,20 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var dbConflictType = ConflictType.ErrorsOccurred;
 
-            if (remoteConflictRow == null)
+            if (remoteConflictRow is null)
                 throw new UnknownException("THAT can't happen...");
 
 
             // local row is null
-            if (localConflictRow == null && remoteConflictRow.RowState == DataRowState.Modified)
+            if (localConflictRow is null && remoteConflictRow.RowState == DataRowState.Modified)
                 dbConflictType = ConflictType.RemoteExistsLocalNotExists;
-            else if (localConflictRow == null && remoteConflictRow.RowState == DataRowState.Deleted)
+            else if (localConflictRow is null && remoteConflictRow.RowState == DataRowState.Deleted)
                 dbConflictType = ConflictType.RemoteIsDeletedLocalNotExists;
 
             //// remote row is null. Can't happen
-            //else if (remoteConflictRow == null && localConflictRow.RowState == DataRowState.Modified)
+            //else if (remoteConflictRow is null && localConflictRow.RowState == DataRowState.Modified)
             //    dbConflictType = ConflictType.RemoteNotExistsLocalExists;
-            //else if (remoteConflictRow == null && localConflictRow.RowState == DataRowState.Deleted)
+            //else if (remoteConflictRow is null && localConflictRow.RowState == DataRowState.Deleted)
             //    dbConflictType = ConflictType.RemoteNotExistsLocalIsDeleted;
 
             else if (remoteConflictRow.RowState == DataRowState.Deleted && localConflictRow.RowState == DataRowState.Deleted)
@@ -775,7 +774,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var conflict = new SyncConflict(dbConflictType);
             conflict.AddRemoteRow(remoteConflictRow);
 
-            if (localConflictRow != null)
+            if (localConflictRow is not null)
                 conflict.AddLocalRow(localConflictRow);
 
             return conflict;

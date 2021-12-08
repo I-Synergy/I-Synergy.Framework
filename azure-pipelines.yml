@@ -138,7 +138,7 @@ stages:
              src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
              src\ISynergy.Framework.Synchronization.Client\ISynergy.Framework.Synchronization.Client.csproj
              src\ISynergy.Framework.Synchronization.Core\ISynergy.Framework.Synchronization.Core.csproj
-             src\ISynergy.Framework.Synchronization.SQLite\ISynergy.Framework.Synchronization.SQLite.csproj
+             src\ISynergy.Framework.Synchronization.Sqlite\ISynergy.Framework.Synchronization.Sqlite.csproj
              src\ISynergy.Framework.Synchronization.SqlServer\ISynergy.Framework.Synchronization.SqlServer.csproj
              src\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.csproj
              src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj
@@ -715,17 +715,17 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Synchronization.SQLite'
+          displayName: 'Dotnet build: I-Synergy.Framework.Synchronization.Sqlite'
           inputs:
             command: build
-            projects: 'src\ISynergy.Framework.Synchronization.SQLite\ISynergy.Framework.Synchronization.SQLite.csproj'
+            projects: 'src\ISynergy.Framework.Synchronization.Sqlite\ISynergy.Framework.Synchronization.Sqlite.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Synchronization.SQLite'
+          displayName: 'Dotnet pack: I-Synergy.Framework.Synchronization.Sqlite'
           inputs:
             command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.Synchronization.SQLite\ISynergy.Framework.Synchronization.SQLite.csproj'
+            packagesToPack: 'src\ISynergy.Framework.Synchronization.Sqlite\ISynergy.Framework.Synchronization.Sqlite.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'

@@ -21,7 +21,7 @@ namespace ISynergy.Framework.Synchronization.Core
         internal async Task<SyncSet> InternalProvisionAsync(SyncContext ctx, bool overwrite, SyncSet schema, SyncSetup setup, SyncProvision provision, object scope, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
             // If schema does not have any table, raise an exception
-            if (schema == null || schema.Tables == null || !schema.HasTables)
+            if (schema is null || schema.Tables is null || !schema.HasTables)
                 throw new MissingTablesException();
 
             await this.InterceptAsync(new ProvisioningArgs(ctx, provision, schema, connection, transaction), cancellationToken).ConfigureAwait(false);
@@ -43,26 +43,26 @@ namespace ISynergy.Framework.Synchronization.Core
 
             // Shoudl we create scope
             // if scope is not null, so obviously we have create the table before, so no need to test
-            if (provision.HasFlag(SyncProvision.ClientScope) && scope == null)
+            if (provision.HasFlag(SyncProvision.ClientScope) && scope is null)
             {
                 var exists = await this.InternalExistsScopeInfoTableAsync(ctx, DbScopeType.Client, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 if (!exists)
                     await this.InternalCreateScopeInfoTableAsync(ctx, DbScopeType.Client, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                if (scope == null)
+                if (scope is null)
                     scope = await this.InternalGetScopeAsync<ScopeInfo>(ctx, DbScopeType.Client, this.ScopeName, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
             }
 
             // if scope is not null, so obviously we have create the table before, so no need to test
-            if (provision.HasFlag(SyncProvision.ServerScope) && scope == null)
+            if (provision.HasFlag(SyncProvision.ServerScope) && scope is null)
             {
                 var exists = await this.InternalExistsScopeInfoTableAsync(ctx, DbScopeType.Server, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 if (!exists)
                     await this.InternalCreateScopeInfoTableAsync(ctx, DbScopeType.Server, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                if (scope == null)
+                if (scope is null)
                     scope = await this.InternalGetScopeAsync<ServerScopeInfo>(ctx, DbScopeType.Server, this.ScopeName, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
             }
 
@@ -114,7 +114,7 @@ namespace ISynergy.Framework.Synchronization.Core
             }
 
             // save scope
-            if (this is LocalOrchestrator && scope != null)
+            if (this is LocalOrchestrator && scope is not null)
             {
                 var clientScopeInfo = scope as ScopeInfo;
                 clientScopeInfo.Schema = schema;
@@ -122,7 +122,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 await this.InternalSaveScopeAsync(ctx, DbScopeType.Client, clientScopeInfo, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
             }
-            else if (this is RemoteOrchestrator && scope != null)
+            else if (this is RemoteOrchestrator && scope is not null)
             {
                 var serverScopeInfo = scope as ServerScopeInfo;
                 serverScopeInfo.Schema = schema;
@@ -266,7 +266,7 @@ namespace ISynergy.Framework.Synchronization.Core
             }
 
             // save scope
-            if (this is LocalOrchestrator && !hasDeleteClientScopeTable && scope != null)
+            if (this is LocalOrchestrator && !hasDeleteClientScopeTable && scope is not null)
             {
                 var clientScopeInfo = scope as ScopeInfo;
                 clientScopeInfo.Schema = null;
@@ -277,7 +277,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 if (exists)
                     await this.InternalSaveScopeAsync(ctx, DbScopeType.Client, clientScopeInfo, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
             }
-            else if (this is RemoteOrchestrator && !hasDeleteServerScopeTable && scope != null)
+            else if (this is RemoteOrchestrator && !hasDeleteServerScopeTable && scope is not null)
             {
                 var serverScopeInfo = scope as ServerScopeInfo;
                 serverScopeInfo.Schema = schema;

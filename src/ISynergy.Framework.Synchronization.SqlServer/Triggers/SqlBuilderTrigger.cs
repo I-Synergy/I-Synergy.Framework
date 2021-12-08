@@ -13,188 +13,101 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Triggers
 {
+    /// <summary>
+    /// SQL builder trigger.
+    /// </summary>
     public class SqlBuilderTrigger
     {
-        private ParserName tableName;
-        private ParserName trackingName;
-        private readonly SyncTable tableDescription;
-        private readonly SyncSetup setup;
-        private readonly SqlObjectNames sqlObjectNames;
+        private ParserName _tableName;
+        private ParserName _trackingName;
+        private readonly SyncTable _tableDescription;
+        private readonly SyncSetup _setup;
+        private readonly SqlObjectNames _sqlObjectNames;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="tableDescription"></param>
+        /// <param name="tableName"></param>
+        /// <param name="trackingName"></param>
+        /// <param name="setup"></param>
         public SqlBuilderTrigger(SyncTable tableDescription, ParserName tableName, ParserName trackingName, SyncSetup setup)
         {
-            this.tableDescription = tableDescription;
-            this.setup = setup;
-            this.tableName = tableName;
-            this.trackingName = trackingName;
-            sqlObjectNames = new SqlObjectNames(this.tableDescription, tableName, trackingName, this.setup);
-
+            _tableDescription = tableDescription;
+            _setup = setup;
+            _tableName = tableName;
+            _trackingName = trackingName;
+            _sqlObjectNames = new SqlObjectNames(tableDescription, tableName, trackingName, setup);
         }
 
-        private string CreateDeleteTriggerAsync()
+        private string CreateTrigger(DbCommandType commandType)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
             stringBuilder.AppendLine("SET NOCOUNT ON;");
             stringBuilder.AppendLine();
             stringBuilder.AppendLine("UPDATE [side] ");
-            stringBuilder.AppendLine("SET  [sync_row_is_tombstone] = 1");
+
+            if(commandType == DbCommandType.DeleteTrigger){
+                stringBuilder.AppendLine("SET [sync_row_is_tombstone] = 1");
+            }
+            else if(commandType == DbCommandType.InsertTrigger){
+                stringBuilder.AppendLine("SET [sync_row_is_tombstone] = 0");
+            }
+
             stringBuilder.AppendLine("\t,[update_scope_id] = NULL -- scope id is always NULL when update is made locally");
-            stringBuilder.AppendLine("\t,[last_change_datetime] = GetUtcDate()");
-            stringBuilder.AppendLine($"FROM {trackingName.Schema().Quoted().ToString()} [side]");
-            stringBuilder.Append($"JOIN DELETED AS [d] ON ");
-            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[side]", "[d]"));
-            stringBuilder.AppendLine();
-
-            stringBuilder.AppendLine($"INSERT INTO {trackingName.Schema().Quoted().ToString()} (");
-
-            var stringBuilderArguments = new StringBuilder();
-            var stringBuilderArguments2 = new StringBuilder();
-            var stringPkAreNull = new StringBuilder();
-
-            var argComma = " ";
-            var argAnd = string.Empty;
-            var primaryKeys = tableDescription.GetPrimaryKeysColumns();
-
-            foreach (var mutableColumn in primaryKeys.Where(c => !c.IsReadOnly))
-            {
-                var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
-                stringBuilderArguments.AppendLine($"\t{argComma}[d].{columnName}");
-                stringBuilderArguments2.AppendLine($"\t{argComma}{columnName}");
-                stringPkAreNull.Append($"{argAnd}[side].{columnName} IS NULL");
-                argComma = ",";
-                argAnd = " AND ";
+            stringBuilder.AppendLine("\t,[last_change_datetime] = GetUtcDate() ");
+            stringBuilder.AppendLine($" FROM {_trackingName.Schema().Quoted().ToString()} [side] ");
+            
+            if(commandType == DbCommandType.DeleteTrigger){
+                stringBuilder.Append($" JOIN DELETED AS [a] ON ");
+            }
+            else if(commandType == DbCommandType.InsertTrigger || commandType == DbCommandType.UpdateTrigger){
+                stringBuilder.Append($" JOIN INSERTED AS [a] ON ");
             }
 
-            stringBuilder.Append(stringBuilderArguments2.ToString());
-            stringBuilder.AppendLine("\t,[update_scope_id]");
-            stringBuilder.AppendLine("\t,[sync_row_is_tombstone]");
-            stringBuilder.AppendLine("\t,[last_change_datetime]");
-            stringBuilder.AppendLine(") ");
-            stringBuilder.AppendLine("SELECT");
-            stringBuilder.Append(stringBuilderArguments.ToString());
-            stringBuilder.AppendLine("\t,NULL");
-            stringBuilder.AppendLine("\t,1");
-            stringBuilder.AppendLine("\t,GetUtcDate()");
-            stringBuilder.AppendLine("FROM DELETED [d]");
-            stringBuilder.Append($"LEFT JOIN {trackingName.Schema().Quoted().ToString()} [side] ON ");
-            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[d]", "[side]"));
-            stringBuilder.Append("WHERE ");
-            stringBuilder.AppendLine(stringPkAreNull.ToString());
-
-            return stringBuilder.ToString();
-
-        }
-
-        private string CreateInsertTriggerAsync()
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine("SET NOCOUNT ON;");
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine("-- If row was deleted before, it already exists, so just make an update");
-            stringBuilder.AppendLine("UPDATE [side] ");
-            stringBuilder.AppendLine("SET  [sync_row_is_tombstone] = 0");
-            stringBuilder.AppendLine("\t,[update_scope_id] = NULL -- scope id is always NULL when update is made locally");
-            stringBuilder.AppendLine("\t,[last_change_datetime] = GetUtcDate()");
-            stringBuilder.AppendLine($"FROM {trackingName.Schema().Quoted().ToString()} [side]");
-            stringBuilder.Append($"JOIN INSERTED AS [i] ON ");
-            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[side]", "[i]"));
+            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[side]", "[a]"));
             stringBuilder.AppendLine();
 
-            stringBuilder.AppendLine($"INSERT INTO {trackingName.Schema().Quoted().ToString()} (");
-
-            var stringBuilderArguments = new StringBuilder();
-            var stringBuilderArguments2 = new StringBuilder();
-            var stringPkAreNull = new StringBuilder();
-
-            var argComma = " ";
-            var argAnd = string.Empty;
-            var primaryKeys = tableDescription.GetPrimaryKeysColumns();
-
-            foreach (var mutableColumn in primaryKeys.Where(c => !c.IsReadOnly))
-            {
-                var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
-                stringBuilderArguments.AppendLine($"\t{argComma}[i].{columnName}");
-                stringBuilderArguments2.AppendLine($"\t{argComma}{columnName}");
-                stringPkAreNull.Append($"{argAnd}[side].{columnName} IS NULL");
-                argComma = ",";
-                argAnd = " AND ";
-            }
-
-            stringBuilder.Append(stringBuilderArguments2.ToString());
-            stringBuilder.AppendLine("\t,[update_scope_id]");
-            stringBuilder.AppendLine("\t,[sync_row_is_tombstone]");
-            stringBuilder.AppendLine("\t,[last_change_datetime]");
-            stringBuilder.AppendLine(") ");
-            stringBuilder.AppendLine("SELECT");
-            stringBuilder.Append(stringBuilderArguments.ToString());
-            stringBuilder.AppendLine("\t,NULL");
-            stringBuilder.AppendLine("\t,0");
-            stringBuilder.AppendLine("\t,GetUtcDate()");
-            stringBuilder.AppendLine("FROM INSERTED [i]");
-            stringBuilder.Append($"LEFT JOIN {trackingName.Schema().Quoted().ToString()} [side] ON ");
-            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[i]", "[side]"));
-            stringBuilder.Append("WHERE ");
-            stringBuilder.AppendLine(stringPkAreNull.ToString());
-
-
-            return stringBuilder.ToString();
-
-        }
-
-        private string CreateUpdateTriggerAsync()
-        {
-
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine("SET NOCOUNT ON;");
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine("UPDATE [side] ");
-            stringBuilder.AppendLine("SET \t[update_scope_id] = NULL -- since the update if from local, it's a NULL");
-            stringBuilder.AppendLine("\t,[last_change_datetime] = GetUtcDate()");
-            stringBuilder.AppendLine();
-
-            stringBuilder.AppendLine($"FROM {trackingName.Schema().Quoted().ToString()} [side]");
-            stringBuilder.Append($"JOIN INSERTED AS [i] ON ");
-            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[side]", "[i]"));
-
-            if (tableDescription.GetMutableColumns().Count() > 0)
-            {
-                stringBuilder.Append($"JOIN DELETED AS [d] ON ");
-                stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[d]", "[i]"));
-
-                stringBuilder.AppendLine("WHERE (");
-                var or = "";
-                foreach (var column in tableDescription.GetMutableColumns())
+            if(commandType == DbCommandType.UpdateTrigger){
+                if (_tableDescription.GetMutableColumns().Count() > 0)
                 {
-                    var quotedColumn = ParserName.Parse(column).Quoted().ToString();
+                    stringBuilder.Append($" JOIN DELETED AS [b] ON ");
+                    stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[b]", "[a]"));
 
-                    stringBuilder.Append("\t");
-                    stringBuilder.Append(or);
-                    stringBuilder.Append("ISNULL(");
-                    stringBuilder.Append("NULLIF(");
-                    stringBuilder.Append("[d].");
-                    stringBuilder.Append(quotedColumn);
-                    stringBuilder.Append(", ");
-                    stringBuilder.Append("[i].");
-                    stringBuilder.Append(quotedColumn);
-                    stringBuilder.Append(")");
-                    stringBuilder.Append(", ");
-                    stringBuilder.Append("NULLIF(");
-                    stringBuilder.Append("[i].");
-                    stringBuilder.Append(quotedColumn);
-                    stringBuilder.Append(", ");
-                    stringBuilder.Append("[d].");
-                    stringBuilder.Append(quotedColumn);
-                    stringBuilder.Append(")");
-                    stringBuilder.AppendLine(") IS NOT NULL");
+                    stringBuilder.AppendLine(" WHERE (");
+                    var or = "";
+                    foreach (var column in _tableDescription.GetMutableColumns())
+                    {
+                        var quotedColumn = ParserName.Parse(column).Quoted().ToString();
 
-                    or = " OR ";
+                        stringBuilder.Append("\t");
+                        stringBuilder.Append(or);
+                        stringBuilder.Append("ISNULL(");
+                        stringBuilder.Append("NULLIF(");
+                        stringBuilder.Append("[b].");
+                        stringBuilder.Append(quotedColumn);
+                        stringBuilder.Append(", ");
+                        stringBuilder.Append("[a].");
+                        stringBuilder.Append(quotedColumn);
+                        stringBuilder.Append(")");
+                        stringBuilder.Append(", ");
+                        stringBuilder.Append("NULLIF(");
+                        stringBuilder.Append("[a].");
+                        stringBuilder.Append(quotedColumn);
+                        stringBuilder.Append(", ");
+                        stringBuilder.Append("[b].");
+                        stringBuilder.Append(quotedColumn);
+                        stringBuilder.Append(")");
+                        stringBuilder.AppendLine(") IS NOT NULL");
+
+                        or = " OR ";
+                    }
+                    stringBuilder.AppendLine(") ");
                 }
-                stringBuilder.AppendLine(") ");
             }
 
-            stringBuilder.AppendLine($"INSERT INTO {trackingName.Schema().Quoted().ToString()} (");
+            stringBuilder.AppendLine($"INSERT INTO {_trackingName.Schema().Quoted().ToString()} (");
 
             var stringBuilderArguments = new StringBuilder();
             var stringBuilderArguments2 = new StringBuilder();
@@ -202,12 +115,12 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Triggers
 
             var argComma = " ";
             var argAnd = string.Empty;
-            var primaryKeys = tableDescription.GetPrimaryKeysColumns();
+            var primaryKeys = _tableDescription.GetPrimaryKeysColumns();
 
             foreach (var mutableColumn in primaryKeys.Where(c => !c.IsReadOnly))
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
-                stringBuilderArguments.AppendLine($"\t{argComma}[i].{columnName}");
+                stringBuilderArguments.AppendLine($"\t{argComma}[a].{columnName}");
                 stringBuilderArguments2.AppendLine($"\t{argComma}{columnName}");
                 stringPkAreNull.Append($"{argAnd}[side].{columnName} IS NULL");
                 argComma = ",";
@@ -222,57 +135,84 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Triggers
             stringBuilder.AppendLine("SELECT");
             stringBuilder.Append(stringBuilderArguments.ToString());
             stringBuilder.AppendLine("\t,NULL");
-            stringBuilder.AppendLine("\t,0");
+            
+            if(commandType == DbCommandType.DeleteTrigger){
+                stringBuilder.AppendLine("\t,1");
+            }
+            else if(commandType == DbCommandType.InsertTrigger || commandType == DbCommandType.UpdateTrigger){
+                stringBuilder.AppendLine("\t,0");
+            }
+            
             stringBuilder.AppendLine("\t,GetUtcDate()");
-            stringBuilder.AppendLine("FROM INSERTED [i]");
-            stringBuilder.Append($"JOIN DELETED AS [d] ON ");
-            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[d]", "[i]"));
-            stringBuilder.Append($"LEFT JOIN {trackingName.Schema().Quoted().ToString()} [side] ON ");
-            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[i]", "[side]"));
+
+            if(commandType == DbCommandType.DeleteTrigger){
+                stringBuilder.AppendLine("FROM DELETED [a]");
+            }
+            else if(commandType == DbCommandType.InsertTrigger || commandType == DbCommandType.UpdateTrigger){
+                stringBuilder.AppendLine("FROM INSERTED [a]");
+            }
+            
+            if(commandType == DbCommandType.UpdateTrigger){
+                stringBuilder.Append($"JOIN DELETED AS [b] ON ");
+                stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[b]", "[a]"));
+            }
+
+            stringBuilder.Append($"LEFT JOIN {_trackingName.Schema().Quoted().ToString()} [side] ON ");
+            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[a]", "[side]"));
             stringBuilder.Append("WHERE ");
             stringBuilder.AppendLine(stringPkAreNull.ToString());
 
-            if (tableDescription.GetMutableColumns().Count() > 0)
-            {
-                stringBuilder.AppendLine("AND (");
-                var or = "";
-                foreach (var column in tableDescription.GetMutableColumns())
+            if(commandType == DbCommandType.UpdateTrigger){
+                if (_tableDescription.GetMutableColumns().Count() > 0)
                 {
-                    var quotedColumn = ParserName.Parse(column).Quoted().ToString();
+                    stringBuilder.AppendLine("AND (");
+                    var or = "";
+                    foreach (var column in _tableDescription.GetMutableColumns())
+                    {
+                        var quotedColumn = ParserName.Parse(column).Quoted().ToString();
 
-                    stringBuilder.Append("\t");
-                    stringBuilder.Append(or);
-                    stringBuilder.Append("ISNULL(");
-                    stringBuilder.Append("NULLIF(");
-                    stringBuilder.Append("[d].");
-                    stringBuilder.Append(quotedColumn);
-                    stringBuilder.Append(", ");
-                    stringBuilder.Append("[i].");
-                    stringBuilder.Append(quotedColumn);
-                    stringBuilder.Append(")");
-                    stringBuilder.Append(", ");
-                    stringBuilder.Append("NULLIF(");
-                    stringBuilder.Append("[i].");
-                    stringBuilder.Append(quotedColumn);
-                    stringBuilder.Append(", ");
-                    stringBuilder.Append("[d].");
-                    stringBuilder.Append(quotedColumn);
-                    stringBuilder.Append(")");
-                    stringBuilder.AppendLine(") IS NOT NULL");
+                        stringBuilder.Append("\t");
+                        stringBuilder.Append(or);
+                        stringBuilder.Append("ISNULL(");
+                        stringBuilder.Append("NULLIF(");
+                        stringBuilder.Append("[b].");
+                        stringBuilder.Append(quotedColumn);
+                        stringBuilder.Append(", ");
+                        stringBuilder.Append("[a].");
+                        stringBuilder.Append(quotedColumn);
+                        stringBuilder.Append(")");
+                        stringBuilder.Append(", ");
+                        stringBuilder.Append("NULLIF(");
+                        stringBuilder.Append("[a].");
+                        stringBuilder.Append(quotedColumn);
+                        stringBuilder.Append(", ");
+                        stringBuilder.Append("[b].");
+                        stringBuilder.Append(quotedColumn);
+                        stringBuilder.Append(")");
+                        stringBuilder.AppendLine(") IS NOT NULL");
 
-                    or = " OR ";
+                        or = " OR ";
+                    }
+                    stringBuilder.AppendLine(") ");
                 }
-                stringBuilder.AppendLine(") ");
             }
 
             return stringBuilder.ToString();
-
         }
+
+        private string CreateDeleteTriggerAsync() =>
+            CreateTrigger(DbCommandType.DeleteTrigger);
+
+        private string CreateInsertTriggerAsync() =>
+            CreateTrigger(DbCommandType.InsertTrigger);
+
+        private string CreateUpdateTriggerAsync() =>
+            CreateTrigger(DbCommandType.UpdateTrigger);
 
         public virtual Task<DbCommand> GetExistsTriggerCommandAsync(DbTriggerType triggerType, DbConnection connection, DbTransaction transaction)
         {
 
-            var commandTriggerName = sqlObjectNames.GetTriggerCommandName(triggerType);
+            var commandTriggerName = _sqlObjectNames.GetTriggerCommandName(triggerType);
             var triggerName = ParserName.Parse(commandTriggerName).ToString();
 
             var commandText = $@"IF EXISTS (SELECT tr.name FROM sys.triggers tr  
@@ -302,7 +242,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Triggers
         public virtual Task<DbCommand> GetDropTriggerCommandAsync(DbTriggerType triggerType, DbConnection connection, DbTransaction transaction)
         {
 
-            var commandTriggerName = sqlObjectNames.GetTriggerCommandName(triggerType);
+            var commandTriggerName = _sqlObjectNames.GetTriggerCommandName(triggerType);
 
             var commandText = $@"DROP TRIGGER {commandTriggerName}";
 
@@ -314,6 +254,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Triggers
 
             return Task.FromResult(command);
         }
+
         public virtual Task<DbCommand> GetCreateTriggerCommandAsync(DbTriggerType triggerType, DbConnection connection, DbTransaction transaction)
         {
 
@@ -328,10 +269,10 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Triggers
                               : triggerType == DbTriggerType.Update ? "UPDATE"
                               : "INSERT";
 
-            var commandTriggerName = sqlObjectNames.GetTriggerCommandName(triggerType);
+            var commandTriggerName = _sqlObjectNames.GetTriggerCommandName(triggerType);
 
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"CREATE TRIGGER {commandTriggerName} ON {tableName.Schema().Quoted().ToString()} FOR {triggerFor} AS");
+            stringBuilder.AppendLine($"CREATE TRIGGER {commandTriggerName} ON {_tableName.Schema().Quoted().ToString()} FOR {triggerFor} AS");
             stringBuilder.AppendLine(commandTriggerCommandString);
 
             var command = connection.CreateCommand();
@@ -342,6 +283,5 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Triggers
 
             return Task.FromResult(command);
         }
-
     }
 }

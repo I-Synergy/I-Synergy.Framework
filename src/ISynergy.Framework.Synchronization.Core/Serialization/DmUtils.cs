@@ -43,7 +43,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
                 var count = groupedMember.Count();
                 var member = groupedMember.FirstOrDefault();
 
-                if (member == null)
+                if (member is null)
                     continue;
 
                 distinctMembers.Add(member);
@@ -60,11 +60,11 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         {
 
             var fi = member as FieldInfo;
-            if (fi != null)
+            if (fi is not null)
                 return fi.GetValue(obj);
 
             var pi = member as PropertyInfo;
-            if (pi != null)
+            if (pi is not null)
                 return pi.GetValue(obj);
 
             // .net standard 1.6 only
@@ -90,11 +90,11 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         {
 
             var fi = member as FieldInfo;
-            if (fi != null)
+            if (fi is not null)
                 fi.SetValue(obj, value);
 
             var pi = member as PropertyInfo;
-            if (pi != null)
+            if (pi is not null)
                 pi.SetValue(obj, value);
 
             //if (member.MemberType == MemberTypes.Field)
@@ -117,7 +117,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         {
             var propertyInfo = member as PropertyInfo;
 
-            return propertyInfo != null ? propertyInfo.GetIndexParameters().Length > 0 : false;
+            return propertyInfo is not null ? propertyInfo.GetIndexParameters().Length > 0 : false;
         }
 
         /// <summary>
@@ -129,11 +129,11 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             //return member.GetType();
 
             var fi = member as FieldInfo;
-            if (fi != null)
+            if (fi is not null)
                 return fi.FieldType;
 
             var pi = member as PropertyInfo;
-            if (pi != null)
+            if (pi is not null)
                 return pi.PropertyType;
 
 
@@ -357,7 +357,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
                 return t;
 
             var gga = objectTypeInfo.GenericTypeArguments;  // GetGenericArguments();
-            if (gga == null || gga.Length <= 0)
+            if (gga is null || gga.Length <= 0)
                 throw new ArgumentException("type not valid");
 
             return gga[0];
@@ -387,7 +387,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             var typeInfo = t.GetTypeInfo();
 
-            if (typeInfo.ImplementedInterfaces == null || typeInfo.ImplementedInterfaces.Count() == 0)
+            if (typeInfo.ImplementedInterfaces is null || typeInfo.ImplementedInterfaces.Count() == 0)
                 return false;
 
             foreach (var interf in typeInfo.ImplementedInterfaces)
@@ -433,7 +433,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             var converter = TypeDescriptor.GetConverter(type);
 
             // Every object could use a TypeConverter, so we exclude it
-            if (converter != null && converter.GetType() != typeof(TypeConverter) && converter.CanConvertTo(typeof(string)))
+            if (converter is not null && converter.GetType() != typeof(TypeConverter) && converter.CanConvertTo(typeof(string)))
                 return converter;
 
             return null;
@@ -446,7 +446,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             var constructorInfo = type.GetParameterizedConstructor(true);
 
-            if (constructorInfo == null)
+            if (constructorInfo is null)
                 return null;
 
             return constructorInfo.Invoke(parameters);
@@ -466,7 +466,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             var constructorInfo = type.GetDefaultConstructor(true);
 
-            if (constructorInfo == null)
+            if (constructorInfo is null)
             {
                 // try to create an uninitialized object when we have a parameters constructor
                 // since we don't know what kind of parameters values we need to pass, we can try this method
@@ -486,13 +486,13 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             var ci = type.GetDefaultConstructor(nonPublic);
 
-            if (ci != null)
+            if (ci is not null)
                 return null;
 
 
             ci = type.GetParameterizedConstructor(nonPublic);
 
-            if (ci == null)
+            if (ci is null)
                 return null;
 
             return ci.GetParameters();

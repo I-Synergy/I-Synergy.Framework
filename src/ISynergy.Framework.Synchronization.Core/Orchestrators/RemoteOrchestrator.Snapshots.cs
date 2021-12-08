@@ -25,6 +25,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Create a snapshot, based on the Setup object. 
         /// </summary>
         /// <param name="syncParameters">if not parameters are found in the SyncContext instance, will use thes sync parameters instead</param>
+        /// <param name="serializerFactory"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         /// <returns>Instance containing all information regarding the snapshot</returns>
         public virtual Task<BatchInfo> CreateSnapshotAsync(SyncParameters syncParameters = null, 
             ISerializerFactory serializerFactory = default,
@@ -40,7 +45,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             // check parameters
             // If context has no parameters specified, and user specifies a parameter collection we switch them
-            if ((ctx.Parameters == null || ctx.Parameters.Count <= 0) && syncParameters != null && syncParameters.Count > 0)
+            if ((ctx.Parameters is null || ctx.Parameters.Count <= 0) && syncParameters is not null && syncParameters.Count > 0)
                 ctx.Parameters = syncParameters;
 
             // 1) Get Schema from remote provider
@@ -102,7 +107,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     cancellationToken.ThrowIfCancellationRequested();
 
                 // Get Schema from remote provider if no schema passed from args
-                if (schema == null)
+                if (schema is null)
                 {
                     var serverScopeInfo = await this.EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
                     schema = serverScopeInfo.Schema;
@@ -143,14 +148,14 @@ namespace ISynergy.Framework.Synchronization.Core
                             {
                                 var sc = SyncGlobalization.DataSourceStringComparison;
 
-                                var sn = t.SchemaName == null ? string.Empty : t.SchemaName;
-                                var otherSn = table.SchemaName == null ? string.Empty : table.SchemaName;
+                                var sn = t.SchemaName is null ? string.Empty : t.SchemaName;
+                                var otherSn = table.SchemaName is null ? string.Empty : table.SchemaName;
 
                                 return table.TableName.Equals(t.TableName, sc) && sn.Equals(otherSn, sc);
 
                             }));
 
-                            if (bptis != null)
+                            if (bptis is not null)
                             {
                                 // Statistics
                                 var tableChangesSelected = new TableChangesSelected(table.TableName, table.SchemaName);
@@ -173,7 +178,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 RaiseError(ex);
             }
 
-            if (serverBatchInfo == null)
+            if (serverBatchInfo is null)
                 return (0, null, changesSelected);
 
             return (serverBatchInfo.Timestamp, serverBatchInfo, changesSelected);
@@ -232,7 +237,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 // Get Select initialize changes command
                 var selectIncrementalChangesCommand = await this.GetSelectChangesCommandAsync(context, table, setup, true, connection, transaction);
 
-                if (selectIncrementalChangesCommand == null) continue;
+                if (selectIncrementalChangesCommand is null) continue;
 
                 // Set parameters
                 this.SetSelectChangesCommonParameters(context, table, null, true, null, selectIncrementalChangesCommand);
@@ -241,7 +246,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 var args = new TableChangesSelectingArgs(context, table, selectIncrementalChangesCommand, connection, transaction);
                 await this.InterceptAsync(args, cancellationToken).ConfigureAwait(false);
 
-                if (!args.Cancel && args.Command != null)
+                if (!args.Cancel && args.Command is not null)
                 {
                     // Statistics
                     var tableChangesSelected = new TableChangesSelected(table.TableName, table.SchemaName);
@@ -321,7 +326,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 }
             }
 
-            if (changesSet != null && changesSet.HasTables)
+            if (changesSet is not null && changesSet.HasTables)
             {
                 await batchInfo.AddChangesAsync(changesSet, batchIndex, true, serializerFactory, this).ConfigureAwait(false);
             }

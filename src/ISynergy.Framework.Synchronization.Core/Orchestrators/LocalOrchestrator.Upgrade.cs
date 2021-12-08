@@ -32,14 +32,14 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var builder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
 
-            if (scopeInfo == null || !scopeInfo.Schema.HasTables)
+            if (scopeInfo is null || !scopeInfo.Schema.HasTables)
             {
                 var exists = await this.InternalExistsScopeInfoTableAsync(ctx, DbScopeType.Client, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 if (exists)
                     scopeInfo = await this.InternalGetScopeAsync<ScopeInfo>(ctx, DbScopeType.Client, this.ScopeName, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                if (scopeInfo == null)
+                if (scopeInfo is null)
                     throw new MissingClientScopeInfoException();
             }
 
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var schema = scopeInfo.Schema ?? await this.InternalGetSchemaAsync(ctx, setup, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
             // If schema does not have any table, raise an exception
-            if (schema == null || schema.Tables == null || !schema.HasTables)
+            if (schema is null || schema.Tables is null || !schema.HasTables)
                 throw new MissingTablesException();
 
 
@@ -65,38 +65,40 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var builder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
 
-            if (scopeInfo == null || !scopeInfo.Schema.HasTables)
+            if (scopeInfo is null || !scopeInfo.Schema.HasTables)
             {
                 var exists = await this.InternalExistsScopeInfoTableAsync(ctx, DbScopeType.Client, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 if (exists)
                     scopeInfo = await this.InternalGetScopeAsync<ScopeInfo>(ctx, DbScopeType.Client, this.ScopeName, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                if (scopeInfo == null)
+                if (scopeInfo is null)
                     throw new MissingClientScopeInfoException();
             }
 
-            if (scopeInfo == null)
+            if (scopeInfo is null)
                 return false;
 
             return InternalNeedsToUpgrade(scopeInfo);
 
         }, connection, transaction, cancellationToken);
 
-        internal virtual bool InternalNeedsToUpgrade(ScopeInfo scopeInfo)
+        internal virtual bool InternalNeedsToUpgrade(ScopeInfo scopeInfo) =>
+            new Version(scopeInfo.Version) < _versionService.ProductVersion;
+
+        internal virtual async Task<ScopeInfo> InternalUpgradeAsync(
+            SyncContext context, 
+            SyncSet schema, 
+            SyncSetup setup, 
+            ScopeInfo scopeInfo, 
+            DbScopeBuilder builder, 
+            DbConnection connection, 
+            DbTransaction transaction,
+            CancellationToken cancellationToken, 
+            IProgress<ProgressArgs> progress)
         {
 
-            var version = SyncVersion.EnsureVersion(scopeInfo.Version);
-
-            return version < SyncVersion.Current;
-
-        }
-
-        internal virtual async Task<ScopeInfo> InternalUpgradeAsync(SyncContext context, SyncSet schema, SyncSetup setup, ScopeInfo scopeInfo, DbScopeBuilder builder, DbConnection connection, DbTransaction transaction,
-                        CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
-        {
-
-            var version = SyncVersion.EnsureVersion(scopeInfo.Version);
+            var version = new Version(scopeInfo.Version);
             var oldVersion = version.Clone() as Version;
 
             // beta version
@@ -174,7 +176,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 this.ReportProgress(context, progress, args, connection, transaction);
 
                 // Upgrade Select Initial Changes With Filter
-                if (tableBuilder.TableDescription.GetFilter() != null)
+                if (tableBuilder.TableDescription.GetFilter() is not null)
                 {
                     var existsWithFilter = await InternalExistsStoredProcedureAsync(context, tableBuilder, DbStoredProcedureType.SelectInitializedChangesWithFilters, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                     if (existsWithFilter)

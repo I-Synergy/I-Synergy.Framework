@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var setup = new SyncSetup();
 
             // Make a first sync to be sure everything is in place
-            var agent = new SyncAgent(clientProvider, serverProvider, Tables, scopeName);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, Tables, scopeName);
 
             // Making a first sync, will initialize everything we need
             var s = await agent.SynchronizeAsync();
@@ -133,7 +133,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var setup = new SyncSetup();
 
             // Make a first sync to be sure everything is in place
-            var agent = new SyncAgent(clientProvider, serverProvider, syncOptions, this.Tables, scopeName);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, syncOptions, this.Tables, scopeName);
 
             // Making a first sync, will initialize everything we need
             var s = await agent.SynchronizeAsync();
@@ -237,7 +237,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var setup = new SyncSetup();
 
             // Make a first sync to be sure everything is in place
-            var agent = new SyncAgent(clientProvider, serverProvider, this.Tables, scopeName);
+            var agent = new SyncAgent(_versionService, clientProvider, serverProvider, this.Tables, scopeName);
 
             // Making a first sync, will initialize everything we need
             var s = await agent.SynchronizeAsync();

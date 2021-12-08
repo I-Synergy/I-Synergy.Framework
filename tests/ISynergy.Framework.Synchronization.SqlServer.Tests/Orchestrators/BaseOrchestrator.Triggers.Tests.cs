@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             var triggerInsert = $"{setup.TriggersPrefix}Product{setup.TriggersSuffix}_insert_trigger";
             var triggerUpdate = $"{setup.TriggersPrefix}Product{setup.TriggersSuffix}_update_trigger";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             // Needs the tracking table to be able to create triggers
             var provision = SyncProvision.TrackingTable | SyncProvision.Triggers;
@@ -88,7 +88,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             setup.TriggersPrefix = "trg_";
             setup.TriggersSuffix = "_trg";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var triggerInsert = $"{setup.TriggersPrefix}Product{setup.TriggersSuffix}_insert_trigger";
             await localOrchestrator.CreateTriggerAsync(setup.Tables["Product", "SalesLT"], DbTriggerType.Insert, false);
@@ -154,7 +154,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
                 TriggersSuffix = "_trg"
             };
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var triggerInsert = $"{setup.TriggersPrefix}Product{setup.TriggersSuffix}_insert_trigger";
             await localOrchestrator.CreateTriggerAsync(setup.Tables["Product", "SalesLT"], DbTriggerType.Insert, false);
@@ -194,7 +194,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
                 TriggersSuffix = "_trg"
             };
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var triggerInsert = $"{setup.TriggersPrefix}Product{setup.TriggersSuffix}_insert_trigger";
             await localOrchestrator.CreateTriggerAsync(setup.Tables["Product", "SalesLT"], DbTriggerType.Insert, false);
@@ -235,7 +235,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
                 TriggersSuffix = "_trg"
             };
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var productTable = setup.Tables["Product", "SalesLT"];
 
@@ -271,7 +271,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             setup.TriggersPrefix = "trg_";
             setup.TriggersSuffix = "_trg";
 
-            var localOrchestrator = new LocalOrchestrator(sqlProvider, options, setup, scopeName);
+            var localOrchestrator = new LocalOrchestrator(_versionService, sqlProvider, options, setup, scopeName);
 
             var triggerInsert = $"{setup.TriggersPrefix}Product{setup.TriggersSuffix}_insert_trigger";
             var triggerUpdate = $"{setup.TriggersPrefix}Product{setup.TriggersSuffix}_update_trigger";

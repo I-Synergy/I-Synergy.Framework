@@ -74,7 +74,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Get exists command
             var existsCommand = scopeBuilder.GetCommandAsync(DbScopeCommandType.ExistsScopeTable, scopeType, connection, transaction);
 
-            if (existsCommand == null)
+            if (existsCommand is null)
                 return false;
 
             var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);
@@ -87,22 +87,19 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         internal async Task<bool> InternalExistsScopeInfoAsync(SyncContext ctx, DbScopeType scopeType, string scopeId, DbScopeBuilder scopeBuilder, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            // Get exists command
-            var existsCommand = scopeBuilder.GetCommandAsync(DbScopeCommandType.ExistScope, scopeType, connection, transaction);
+            if(scopeBuilder.GetCommandAsync(DbScopeCommandType.ExistScope, scopeType, connection, transaction) is DbCommand command)
+            {
+                // Just in case, in older version we may have sync_scope_name as primary key;
+                DbSyncAdapter.SetParameterValue(command, "sync_scope_name", scopeId);
+                // Set primary key value
+                DbSyncAdapter.SetParameterValue(command, "sync_scope_id", scopeId);
 
-            if (existsCommand == null) return false;
+                var existsResultObject = await command.ExecuteScalarAsync().ConfigureAwait(false);
+                var exists = Convert.ToInt32(existsResultObject) > 0;
+                return exists;
+            }
 
-            // Just in case, in older version we may have sync_scope_name as primary key;
-            DbSyncAdapter.SetParameterValue(existsCommand, "sync_scope_name", scopeId);
-            // Set primary key value
-            DbSyncAdapter.SetParameterValue(existsCommand, "sync_scope_id", scopeId);
-
-            if (existsCommand == null)
-                return false;
-
-            var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);
-            var exists = Convert.ToInt32(existsResultObject) > 0;
-            return exists;
+            return false;   
         }
 
         /// <summary>
@@ -112,12 +109,12 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = scopeBuilder.GetCommandAsync(DbScopeCommandType.DropScopeTable, scopeType, connection, transaction);
 
-            if (command == null) return false;
+            if (command is null) return false;
 
             var action = new ScopeTableDroppingArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
@@ -134,13 +131,13 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = scopeBuilder.GetCommandAsync(DbScopeCommandType.CreateScopeTable, scopeType, connection, transaction);
 
-            if (command == null)
+            if (command is null)
                 return false;
 
             var action = new ScopeTableCreatingArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return false;
 
             await action.Command.ExecuteNonQueryAsync();
@@ -157,14 +154,14 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var command = scopeBuilder.GetCommandAsync(DbScopeCommandType.GetScopes, scopeType, connection, transaction);
 
-            if (command == null) return null;
+            if (command is null) return null;
 
             DbSyncAdapter.SetParameterValue(command, "sync_scope_name", scopeName);
 
             var action = new ScopeLoadingArgs(ctx, scopeName, scopeType, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return null;
 
             var scopes = new List<T>();
@@ -181,7 +178,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     _ => throw new NotImplementedException($"Can't get {scopeType} from the reader ")
                 };
 
-                if (scopeInfo != null)
+                if (scopeInfo is not null)
                     scopes.Add(scopeInfo);
             }
 
@@ -200,15 +197,15 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var scopes = await InternalGetAllScopesAsync<T>(ctx, scopeType, scopeName, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            if (scopes == null || scopes.Count <= 0)
+            if (scopes is null || scopes.Count <= 0)
             {
                 scopes = new List<T>();
 
                 // create a new scope id for the current owner (could be server or client as well)
                 T scope = scopeType switch
                 {
-                    DbScopeType.Client => new ScopeInfo { Id = Guid.NewGuid(), Name = scopeName, IsNewScope = true, LastSync = null, LastServerSyncTimestamp= null, LastSyncTimestamp = null, Version = SyncVersion.Current.ToString() } as T,
-                    DbScopeType.Server => new ServerScopeInfo { Name = scopeName, LastCleanupTimestamp = 0, Version = SyncVersion.Current.ToString() } as T,
+                    DbScopeType.Client => new ScopeInfo { Id = Guid.NewGuid(), Name = scopeName, IsNewScope = true, LastSync = null, LastServerSyncTimestamp= null, LastSyncTimestamp = null, Version = _versionService.ProductVersion.ToString() } as T,
+                    DbScopeType.Server => new ServerScopeInfo { Name = scopeName, LastCleanupTimestamp = 0, Version = _versionService.ProductVersion.ToString() } as T,
                     _ => throw new NotImplementedException($"Type {typeof(T).Name} is not implemented when trying to get a single instance")
                 };
 
@@ -223,11 +220,11 @@ namespace ISynergy.Framework.Synchronization.Core
             if (typeof(T) == typeof(ScopeInfo))
             {
                 //check if we have already a good last sync. if no, treat it as new
-                scopes.ForEach(sc => (sc as ScopeInfo).IsNewScope = (sc as ScopeInfo).LastSync == null);
+                scopes.ForEach(sc => (sc as ScopeInfo).IsNewScope = (sc as ScopeInfo).LastSync is null);
 
                 var scopeInfo = localScope as ScopeInfo;
 
-                if (scopeInfo?.Schema != null)
+                if (scopeInfo?.Schema is not null)
                     scopeInfo.Schema.EnsureSchema();
 
                 var scopeLoadedArgs = new ScopeLoadedArgs<ScopeInfo>(ctx, scopeName, scopeType, scopeInfo, connection, transaction);
@@ -237,7 +234,7 @@ namespace ISynergy.Framework.Synchronization.Core
             {
                 var scopeInfo = localScope as ServerScopeInfo;
 
-                if (scopeInfo?.Schema != null)
+                if (scopeInfo?.Schema is not null)
                     scopeInfo.Schema.EnsureSchema();
 
                 var scopeLoadedArgs = new ScopeLoadedArgs<ServerScopeInfo>(ctx, scopeName, scopeType, scopeInfo, connection, transaction);
@@ -270,7 +267,7 @@ namespace ISynergy.Framework.Synchronization.Core
             else
                 command = scopeBuilder.GetCommandAsync(DbScopeCommandType.InsertScope, scopeType, connection, transaction);
 
-            if (command == null) return null;
+            if (command is null) return null;
 
             command = scopeType switch
             {
@@ -283,7 +280,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var action = new ScopeSavingArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, scopeInfo, command, connection, transaction);
             await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command == null)
+            if (action.Cancel || action.Command is null)
                 return default;
 
             using DbDataReader reader = await action.Command.ExecuteReaderAsync().ConfigureAwait(false);
@@ -308,8 +305,8 @@ namespace ISynergy.Framework.Synchronization.Core
         private DbCommand SetSaveScopeParameters(ScopeInfo scopeInfo, DbCommand command)
         {
             DbSyncAdapter.SetParameterValue(command, "sync_scope_name", scopeInfo.Name);
-            DbSyncAdapter.SetParameterValue(command, "sync_scope_schema", scopeInfo.Schema == null ? DBNull.Value : (object)JsonConvert.SerializeObject(scopeInfo.Schema));
-            DbSyncAdapter.SetParameterValue(command, "sync_scope_setup", scopeInfo.Setup == null ? DBNull.Value : (object)JsonConvert.SerializeObject(scopeInfo.Setup));
+            DbSyncAdapter.SetParameterValue(command, "sync_scope_schema", scopeInfo.Schema is null ? DBNull.Value : (object)JsonConvert.SerializeObject(scopeInfo.Schema));
+            DbSyncAdapter.SetParameterValue(command, "sync_scope_setup", scopeInfo.Setup is null ? DBNull.Value : (object)JsonConvert.SerializeObject(scopeInfo.Setup));
             DbSyncAdapter.SetParameterValue(command, "sync_scope_version", scopeInfo.Version);
             DbSyncAdapter.SetParameterValue(command, "scope_last_sync", scopeInfo.LastSync.HasValue ? (object)scopeInfo.LastSync.Value : DBNull.Value);
             DbSyncAdapter.SetParameterValue(command, "scope_last_sync_timestamp", scopeInfo.LastSyncTimestamp);
@@ -332,8 +329,8 @@ namespace ISynergy.Framework.Synchronization.Core
         private DbCommand SetSaveScopeParameters(ServerScopeInfo serverScopeInfo, DbCommand command)
         {
             DbSyncAdapter.SetParameterValue(command, "sync_scope_name", serverScopeInfo.Name);
-            DbSyncAdapter.SetParameterValue(command, "sync_scope_schema", serverScopeInfo.Schema == null ? DBNull.Value : (object)JsonConvert.SerializeObject(serverScopeInfo.Schema));
-            DbSyncAdapter.SetParameterValue(command, "sync_scope_setup", serverScopeInfo.Setup == null ? DBNull.Value : (object)JsonConvert.SerializeObject(serverScopeInfo.Setup));
+            DbSyncAdapter.SetParameterValue(command, "sync_scope_schema", serverScopeInfo.Schema is null ? DBNull.Value : (object)JsonConvert.SerializeObject(serverScopeInfo.Schema));
+            DbSyncAdapter.SetParameterValue(command, "sync_scope_setup", serverScopeInfo.Setup is null ? DBNull.Value : (object)JsonConvert.SerializeObject(serverScopeInfo.Setup));
             DbSyncAdapter.SetParameterValue(command, "sync_scope_version", serverScopeInfo.Version);
             DbSyncAdapter.SetParameterValue(command, "sync_scope_last_clean_timestamp", serverScopeInfo.LastCleanupTimestamp);
 

@@ -84,7 +84,7 @@ namespace Sample.ViewModels
             Regex = @"\d\d\d\d[A-Z]";
             Description = commonServices.LanguageService.GetString("ValidationDescription");
 
-            this.Validator = new Action<IObservableClass>(_ =>
+            Validator = new Action<IObservableClass>(_ =>
             {
                 if(string.IsNullOrEmpty(Test))
                 {

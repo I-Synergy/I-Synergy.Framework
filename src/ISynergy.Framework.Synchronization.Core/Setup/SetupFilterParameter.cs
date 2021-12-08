@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
         public override bool EqualsByProperties(SetupFilterParameter other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             // Check names properties

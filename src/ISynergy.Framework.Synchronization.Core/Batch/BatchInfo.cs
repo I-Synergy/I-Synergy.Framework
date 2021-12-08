@@ -122,13 +122,13 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// </summary>
         public bool HasData()
         {
-            if (this.SanitizedSchema == null)
+            if (this.SanitizedSchema is null)
                 throw new NullReferenceException("Batch info schema should not be null");
 
-            if (InMemory && InMemoryData != null && InMemoryData.HasTables && InMemoryData.HasRows)
+            if (InMemory && InMemoryData is not null && InMemoryData.HasTables && InMemoryData.HasRows)
                 return true;
 
-            if (!InMemory && BatchPartsInfo != null && BatchPartsInfo.Count > 0)
+            if (!InMemory && BatchPartsInfo is not null && BatchPartsInfo.Count > 0)
             {
                 var rowsCount = BatchPartsInfo.Sum(bpi => bpi.RowsCount);
 
@@ -145,25 +145,25 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// </summary>
         public bool HasData(string tableName, string schemaName)
         {
-            if (this.SanitizedSchema == null)
+            if (this.SanitizedSchema is null)
                 throw new NullReferenceException("Batch info schema should not be null");
 
-            if (InMemory && InMemoryData != null && InMemoryData.HasTables)
+            if (InMemory && InMemoryData is not null && InMemoryData.HasTables)
             {
                 var table = InMemoryData.Tables[tableName, schemaName];
-                if (table == null)
+                if (table is null)
                     return false;
 
                 return table.HasRows;
             }
 
-            if (!InMemory && BatchPartsInfo != null && BatchPartsInfo.Count > 0)
+            if (!InMemory && BatchPartsInfo is not null && BatchPartsInfo.Count > 0)
             {
                 var tableInfo = new BatchPartTableInfo(tableName, schemaName);
 
                 var bptis = BatchPartsInfo.SelectMany(bpi => bpi.Tables.Where(t => t.EqualsByName(tableInfo)));
 
-                if (bptis == null)
+                if (bptis is null)
                     return false;
 
 
@@ -175,7 +175,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
 
         public async IAsyncEnumerable<(SyncTable SyncTable, BatchPartInfo BatchPartInfo)> GetTableAsync(string tableName, string schemaName, ISerializerFactory serializerFactory = default, BaseOrchestrator orchestrator = null)
         {
-            if (this.SanitizedSchema == null)
+            if (this.SanitizedSchema is null)
                 throw new NullReferenceException("Batch info schema should not be null");
 
             var tableInfo = new BatchPartTableInfo(tableName, schemaName);
@@ -184,7 +184,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
             {
                 this.SerializerFactoryKey = null;
 
-                if (this.InMemoryData != null && this.InMemoryData.HasTables)
+                if (this.InMemoryData is not null && this.InMemoryData.HasTables)
                     yield return (this.InMemoryData.Tables[tableName, schemaName], null);
             }
             else
@@ -193,18 +193,18 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
 
                 var bpiTables = BatchPartsInfo.Where(bpi => bpi.RowsCount > 0 && bpi.Tables.Any(t => t.EqualsByName(tableInfo))).OrderBy(t => t.Index);
 
-                if (bpiTables != null)
+                if (bpiTables is not null)
                     foreach (var batchPartinInfo in bpiTables)
                     {
                         // load only if not already loaded in memory
-                        if (batchPartinInfo.Data == null)
+                        if (batchPartinInfo.Data is null)
                             await batchPartinInfo.LoadBatchAsync(this.SanitizedSchema, GetDirectoryFullPath(), serializerFactory, orchestrator).ConfigureAwait(false);
 
                         // Get the table from the batchPartInfo
                         // generate a tmp SyncTable for 
                         var batchTable = batchPartinInfo.Data.Tables.FirstOrDefault(bt => bt.EqualsByName(new SyncTable(tableName, schemaName)));
 
-                        if (batchTable != null)
+                        if (batchTable is not null)
                             yield return (batchTable, batchPartinInfo);
                     }
             }
@@ -280,7 +280,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
             {
                 var tmpDirectory = new DirectoryInfo(this.GetDirectoryFullPath());
 
-                if (tmpDirectory == null || !tmpDirectory.Exists)
+                if (tmpDirectory is null || !tmpDirectory.Exists)
                     return;
 
                 try
@@ -298,7 +298,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// </summary>
         public void Clear(bool deleteFolder)
         {
-            if (this.InMemory && this.InMemoryData != null)
+            if (this.InMemory && this.InMemoryData is not null)
             {
                 this.InMemoryData.Dispose();
                 return;
@@ -308,7 +308,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
             if (deleteFolder)
                 this.TryRemoveDirectory();
 
-            if (this.BatchPartsInfo != null)
+            if (this.BatchPartsInfo is not null)
             {
                 foreach (var bpi in this.BatchPartsInfo)
                     bpi.Clear();

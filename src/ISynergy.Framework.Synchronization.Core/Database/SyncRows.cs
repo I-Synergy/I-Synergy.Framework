@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         {
             Table = table;
 
-            if (rows != null)
+            if (rows is not null)
                 foreach (var row in this)
                     row.Table = table;
         }
@@ -73,6 +73,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// Import a containerTable
         /// </summary>
         /// <param name="containerTable"></param>
+        /// <param name="checkType"></param>
         internal void ImportContainerTable(ContainerTable containerTable, bool checkType)
         {
             foreach (var row in containerTable.Rows)
@@ -92,7 +93,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
                         var val = row[col.Ordinal + 1];
                         var colDataType = col.GetDataType();
 
-                        if (val == null)
+                        if (val is null)
                             itemArray[col.Ordinal] = null;
                         else if (val.GetType() != colDataType)
                             itemArray[col.Ordinal] = SyncTypeConverter.TryConvertTo(val, col.GetDataType());
@@ -172,7 +173,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
                 var cell = row[i];
 
                 // we can't check the value with the column type, so that's life, go next
-                if (cell == null)
+                if (cell is null)
                     continue;
 
                 var column = Table.Columns[i];
@@ -192,7 +193,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 
                 var converter = GetConverter(columnType);
 
-                if (converter != null && converter.CanConvertFrom(cellType))
+                if (converter is not null && converter.CanConvertFrom(cellType))
                     continue;
 
                 throw new Exception($"The type of column {columnType.Name} is not compatible with type of row index cell {cellType.Name}");
@@ -210,7 +211,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             var converter = TypeDescriptor.GetConverter(type);
 
             // Every object could use a TypeConverter, so we exclude it
-            if (converter != null && converter.GetType() != typeof(TypeConverter) && converter.CanConvertTo(typeof(string)))
+            if (converter is not null && converter.GetType() != typeof(TypeConverter) && converter.CanConvertTo(typeof(string)))
                 return converter;
 
             return null;

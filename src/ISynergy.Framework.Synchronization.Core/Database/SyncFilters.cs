@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         {
             Schema = schema;
 
-            if (InnerCollection != null)
+            if (InnerCollection is not null)
                 foreach (var item in this)
                     item.EnsureFilter(schema);
         }

@@ -7,20 +7,15 @@ namespace ISynergy.Framework.Core.Services
     /// <summary>
     /// Class BaseInfoService.
     /// </summary>
-    public class InfoService : IInfoService
+    public class InfoService : VersionService, IInfoService
     {
-        /// <summary>
-        /// The assembly
-        /// </summary>
-        private  readonly Assembly _assembly;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoService" /> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         public InfoService(Assembly assembly)
+            : base(assembly)
         {
-            _assembly = assembly;
         }
 
         /// <summary>
@@ -44,31 +39,6 @@ namespace ISynergy.Framework.Core.Services
             get
             {
                 return _assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
-            }
-        }
-
-        /// <summary>
-        /// Gets the product version.
-        /// </summary>
-        /// <value>The product version.</value>
-        public string ProductVersion
-        {
-            get
-            {
-                if(_assembly.IsDefined(typeof(AssemblyInformationalVersionAttribute), false))
-                {
-                    return _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-                }
-                else if (_assembly.IsDefined(typeof(AssemblyVersionAttribute), false))
-                {
-                    return _assembly.GetCustomAttribute<AssemblyVersionAttribute>().Version;
-                }
-                else if (_assembly.IsDefined(typeof(AssemblyFileVersionAttribute), false))
-                {
-                    return _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
-                }
-
-                return "0.0.0";
             }
         }
 

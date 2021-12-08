@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
@@ -26,8 +27,13 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Create a remote orchestrator, used to orchestrates the whole sync on the server side
         /// </summary>
-        public RemoteOrchestrator(CoreProvider provider, SyncOptions options, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
-           : base(provider, options, setup, scopeName)
+        public RemoteOrchestrator(
+            IVersionService versionService, 
+            CoreProvider provider, 
+            SyncOptions options, 
+            SyncSetup setup, 
+            string scopeName = SyncOptions.DefaultScopeName)
+           : base(versionService, provider, options, setup, scopeName)
         {
             if (!this.Provider.CanBeServerProvider)
                 throw new UnsupportedServerProviderException(this.Provider.GetProviderTypeName());
@@ -69,7 +75,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // - Compare saved setup with current setup
             // - If not equals:
             // - Read schema from database based on this.Setup
-            if (serverScopeInfo.Schema == null)
+            if (serverScopeInfo.Schema is null)
             {
                 // So far, we don't have already a database provisionned
                 ctx.SyncStage = SyncStage.Provisioning;
@@ -194,7 +200,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     var serverScopeInfo = await this.InternalGetScopeAsync<ServerScopeInfo>(ctx, DbScopeType.Server, clientScope.Name, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
                     // Should we ?
-                    if (serverScopeInfo.Schema == null)
+                    if (serverScopeInfo.Schema is null)
                         throw new MissingRemoteOrchestratorSchemaException();
 
                     // Deserialiaze schema
@@ -301,7 +307,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var serverScope = await this.EnsureSchemaAsync(connection, transaction, cancellationToken, progress);
 
             // Should we ?
-            if (serverScope.Schema == null)
+            if (serverScope.Schema is null)
                 throw new MissingRemoteOrchestratorSchemaException();
 
 
@@ -341,7 +347,7 @@ namespace ISynergy.Framework.Synchronization.Core
               var serverScope = await this.EnsureSchemaAsync(connection, transaction, cancellationToken, progress);
 
               // Should we ?
-              if (serverScope.Schema == null)
+              if (serverScope.Schema is null)
                   throw new MissingRemoteOrchestratorSchemaException();
 
               //Direction set to Download
@@ -390,7 +396,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 // Get the min timestamp, where we can without any problem, delete metadatas
                 var histories = await this.GetServerHistoryScopesAsync(connection, transaction, cancellationToken, progress);
 
-                if (histories == null || histories.Count == 0)
+                if (histories is null || histories.Count == 0)
                     return new DatabaseMetadatasCleaned();
 
                 var minTimestamp = histories.Min(shsi => shsi.LastSyncTimestamp);
@@ -405,6 +411,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Delete metadatas items from tracking tables
         /// </summary>
         /// <param name="timeStampStart">Timestamp start. Used to limit the delete metadatas rows from now to this timestamp</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         public override Task<DatabaseMetadatasCleaned> DeleteMetadatasAsync(long? timeStampStart, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
           => RunInTransactionAsync(SyncStage.MetadataCleaning, async (ctx, connection, transaction) =>
           {
