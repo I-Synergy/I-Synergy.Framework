@@ -144,8 +144,10 @@ namespace ISynergy.Framework.Geography.Projection
         {
             if (point1 is null || point2 is null)
                 throw new ArgumentNullException();
+
             if (!(point1.Projection.Equals(this) && point2.Projection.Equals(this)))
                 throw new ArgumentException(Properties.Resources.POINT_NOT_OWNED);
+
             return point1.DistanceTo(point2);
         }
 

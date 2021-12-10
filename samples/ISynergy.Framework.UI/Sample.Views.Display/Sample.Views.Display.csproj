@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\..\..\project.props" />
 	
 	<PropertyGroup>
@@ -6,6 +6,7 @@
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<Description>Sample View for Display</Description>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<Choose>
@@ -34,8 +35,8 @@
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Uno.Core" Version="3.0.0" />
-				<PackageReference Include="Uno.UI" Version="3.11.6" />
+				<PackageReference Include="Uno.Core" Version="4.0.1" />
+				<PackageReference Include="Uno.UI" Version="4.0.9" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.0.0" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.5" />
 			</ItemGroup>
@@ -44,6 +45,10 @@
 
 	<ItemGroup>
 	  <None Remove="SlideShowView.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
 	<ItemGroup>

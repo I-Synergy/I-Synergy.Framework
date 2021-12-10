@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.UI.Services;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Services;
 using Sample.Abstractions.Services;
 
 namespace Sample.Services
@@ -20,11 +20,6 @@ namespace Sample.Services
         /// </summary>
         /// <value>The file service.</value>
         public IFileService FileService { get; }
-        /// <summary>
-        /// Gets the clipboard service.
-        /// </summary>
-        /// <value>The clipboard service.</value>
-        public IClipboardService ClipboardService { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommonServices" /> class.
@@ -40,7 +35,6 @@ namespace Sample.Services
         /// <param name="converterService">The converter service.</param>
         /// <param name="dispatcherService">The dispatcher service.</param>
         /// <param name="authenticationService">The authentication service.</param>
-        /// <param name="clipboardService">The clipboard service.</param>
         public CommonServices(
             IBusyService busyService,
             IMessageService messageService,
@@ -52,8 +46,7 @@ namespace Sample.Services
             IInfoService infoService,
             IConverterService converterService,
             IDispatcherService dispatcherService,
-            IAuthenticationService authenticationService,
-            IClipboardService clipboardService)
+            IAuthenticationService authenticationService)
             :base(busyService,
                  messageService,
                  languageService, 
@@ -66,7 +59,6 @@ namespace Sample.Services
         {
             AuthenticationService = authenticationService;
             FileService = fileService;
-            ClipboardService = clipboardService;
         }
     }
 }

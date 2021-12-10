@@ -330,3 +330,5 @@ ASALocalRun/
 .mfractor/
 /samples/ISynergy.Framework.Storage.Azure.Sample/appsettings.Development.json
 /nuget.exe
+
+*.db

@@ -10,12 +10,14 @@
 		<UseWinUI>true</UseWinUI>
 		<SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Remove="icon.ico" />
 	</ItemGroup>
 	<ItemGroup>
+		<AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 		<Content Include="icon.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>

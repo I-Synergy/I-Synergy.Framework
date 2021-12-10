@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.MessageBus.Models;
-using ISynergy.Framework.Monitoring.Accessors;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.MessageBus.Models;
 using ISynergy.Framework.Monitoring.Enumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -15,9 +15,6 @@ namespace ISynergy.Framework.Monitoring.Hubs
     [Authorize(AuthenticationSchemes = "OpenIddict.Validation.AspNetCore")]
     internal class MonitorHub : Hub
     {
-        /// <summary>
-        /// The logger
-        /// </summary>
         private readonly ILogger _logger;
 
         /// <summary>
@@ -41,10 +38,9 @@ namespace ISynergy.Framework.Monitoring.Hubs
         {
             _logger.LogInformation($"Client connected: {Context.ConnectionId}");
 
-            var claimsAccessor = new HubClaimsAccessor(Context);
-            var accountId = claimsAccessor.GetAccountId();
-            var userId = claimsAccessor.GetAccountId();
-            var userName = claimsAccessor.GetUserName();
+            var accountId = Context.User.GetAccountId();
+            var userId = Context.User.GetAccountId();
+            var userName = Context.User.GetUserName();
 
             // add user to own Group
             await Groups.AddToGroupAsync(Context.ConnectionId, userId.ToString());
@@ -65,10 +61,9 @@ namespace ISynergy.Framework.Monitoring.Hubs
         {
             _logger.LogInformation($"Client disconnected: {Context.ConnectionId}");
 
-            var claimsAccessor = new HubClaimsAccessor(Context);
-            var accountId = claimsAccessor.GetAccountId();
-            var userId = claimsAccessor.GetAccountId();
-            var userName = claimsAccessor.GetUserName();
+            var accountId = Context.User.GetAccountId();
+            var userId = Context.User.GetAccountId();
+            var userName = Context.User.GetUserName();
 
             // remove user own Group
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId.ToString());

@@ -1,0 +1,83 @@
+﻿using ISynergy.Framework.Synchronization.Core.Adapters;
+using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
+using System;
+using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
+
+
+namespace ISynergy.Framework.Synchronization.Core
+{
+    public partial class LocalOrchestrator : BaseOrchestrator
+    {
+        /// <summary>
+        /// Update all untracked rows from the client database
+        /// </summary>
+        public virtual Task<bool> UpdateUntrackedRowsAsync(SyncSet schema, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        => RunInTransactionAsync(SyncStage.ChangesApplying, async (ctx, connection, transaction) =>
+        {
+            // If schema does not have any table, just return
+            if (schema is null || schema.Tables is null || !schema.HasTables)
+                throw new MissingTablesException();
+
+            // Update untracked rows
+            foreach (var table in schema.Tables)
+            {
+                var syncAdapter = this.GetSyncAdapter(table, this.Setup);
+                await this.InternalUpdateUntrackedRowsAsync(ctx, syncAdapter, connection, transaction).ConfigureAwait(false);
+            }
+
+            return true;
+
+        }, connection, transaction, cancellationToken);
+
+        /// <summary>
+        /// Update all untracked rows from the client database
+        /// </summary>
+        public virtual Task<bool> UpdateUntrackedRowsAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+            => RunInTransactionAsync(SyncStage.ChangesApplying, async (ctx, connection, transaction) =>
+            {
+
+                var schema = await this.GetSchemaAsync(connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                return await this.UpdateUntrackedRowsAsync(schema, connection, transaction, cancellationToken).ConfigureAwait(false); 
+
+            }, connection, transaction, cancellationToken);
+
+
+
+        /// <summary>
+        /// Internal update untracked rows routine
+        /// </summary>
+        internal async Task<int> InternalUpdateUntrackedRowsAsync(SyncContext ctx, DbSyncAdapter syncAdapter, DbConnection connection, DbTransaction transaction)
+        {
+
+            // Get table builder
+            var tableBuilder = this.GetTableBuilder(syncAdapter.TableDescription, syncAdapter.Setup);
+
+            // Check if tracking table exists
+            var trackingTableExists = await this.InternalExistsTrackingTableAsync(ctx, tableBuilder, connection, transaction, CancellationToken.None, null).ConfigureAwait(false);
+
+            if (!trackingTableExists)
+                throw new MissingTrackingTableException(tableBuilder.TableDescription.GetFullName());
+
+            // Get correct Select incremental changes command 
+            var command = await syncAdapter.GetCommandAsync(DbCommandType.UpdateUntrackedRows, connection, transaction);
+            
+            if (command is null) return 0;
+
+            // Execute
+            var rowAffected = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+
+            // Check if we have a return value instead
+            var syncRowCountParam = DbSyncAdapter.GetParameter(command, "sync_row_count");
+
+            if (syncRowCountParam is not null)
+                rowAffected = (int)syncRowCountParam.Value;
+
+            return rowAffected;
+        }
+
+    }
+}

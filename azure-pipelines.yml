@@ -78,11 +78,11 @@ stages:
               $sdkPath = Join-Path $env:TEMP "windows_sdk_10.0.18362.exe"
                              
               # Download the files to local temp folder
-              Write-Output "downloading $sdkUrl…"
+              Write-Output "downloading $sdkUrlï¿½"
               Invoke-WebRequest -Uri $sdkUrl -OutFile $sdkPath
                              
               # Install the SDKs (use the "qn" flag to install silently)
-              Write-Output "installing $sdkPath…"
+              Write-Output "installing $sdkPathï¿½"
               Start-Process $sdkPath -ArgumentList "/q" -Wait
 
         - task: DownloadSecureFile@1
@@ -110,6 +110,8 @@ stages:
              src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj
              src\ISynergy.Framework.AspNetCore.Globalization\ISynergy.Framework.AspNetCore.Globalization.csproj
              src\ISynergy.Framework.AspNetCore.MultiTenancy\ISynergy.Framework.AspNetCore.MultiTenancy.csproj
+             src\ISynergy.Framework.AspNetCore.Proxy\ISynergy.Framework.AspNetCore.Proxy.csproj
+             src\ISynergy.Framework.AspNetCore.Synchronization\ISynergy.Framework.AspNetCore.Synchronization.csproj
              src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
              src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj
              src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj
@@ -118,8 +120,6 @@ stages:
              src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj
              src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj
              src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj
-             src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj
-             src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
              src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
              src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
              src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
@@ -134,6 +134,13 @@ stages:
              src\ISynergy.Framework.Monitoring.SignalR\ISynergy.Framework.Monitoring.SignalR.csproj
              src\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj
              src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj
+             src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj
+             src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
+             src\ISynergy.Framework.Synchronization.Client\ISynergy.Framework.Synchronization.Client.csproj
+             src\ISynergy.Framework.Synchronization.Core\ISynergy.Framework.Synchronization.Core.csproj
+             src\ISynergy.Framework.Synchronization.Sqlite\ISynergy.Framework.Synchronization.Sqlite.csproj
+             src\ISynergy.Framework.Synchronization.SqlServer\ISynergy.Framework.Synchronization.SqlServer.csproj
+             src\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.csproj
              src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj
              src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj
              src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj
@@ -260,6 +267,23 @@ stages:
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.AspNetCore.MultiTenancy\ISynergy.Framework.AspNetCore.MultiTenancy.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Proxy'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.AspNetCore.Proxy\ISynergy.Framework.AspNetCore.Proxy.csproj'
+            arguments: '-c $(BuildConfiguration)'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.AspNetCore.Proxy'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.AspNetCore.Proxy\ISynergy.Framework.AspNetCore.Proxy.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
@@ -640,6 +664,108 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Synchronization'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.AspNetCore.Synchronization\ISynergy.Framework.AspNetCore.Synchronization.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.AspNetCore.Synchronization'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.AspNetCore.Synchronization\ISynergy.Framework.AspNetCore.Synchronization.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Synchronization.Client'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Synchronization.Client\ISynergy.Framework.Synchronization.Client.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Synchronization.Client'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Synchronization.Client\ISynergy.Framework.Synchronization.Client.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Synchronization.Core'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Synchronization.Core\ISynergy.Framework.Synchronization.Core.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Synchronization.Core'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Synchronization.Core\ISynergy.Framework.Synchronization.Core.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Synchronization.Sqlite'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Synchronization.Sqlite\ISynergy.Framework.Synchronization.Sqlite.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Synchronization.Sqlite'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Synchronization.Sqlite\ISynergy.Framework.Synchronization.Sqlite.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Synchronization.SqlServer'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Synchronization.SqlServer\ISynergy.Framework.Synchronization.SqlServer.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Synchronization.SqlServer'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Synchronization.SqlServer\ISynergy.Framework.Synchronization.SqlServer.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking\ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Telemetry'
           inputs:
             command: build
@@ -812,6 +938,13 @@ stages:
             projects: 'tests\ISynergy.Framework.Payment.Tests\ISynergy.Framework.Payment.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Test: I-Synergy.Framework.Synchronization.Core'
+          inputs:
+            command: test
+            projects: 'tests\ISynergy.Framework.Synchronization.Core.Tests\ISynergy.Framework.Synchronization.Core.Tests.csproj'
+            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+
         - task: SonarCloudAnalyze@1
 
   - stage: DocStage
@@ -823,9 +956,9 @@ stages:
       displayName: 'Create API Documentation'
       steps:
         - task: NuGetToolInstaller@1
-          displayName: 'Use NuGet 5.8.1'
+          displayName: 'Use NuGet 6.0.0'
           inputs:
-            versionSpec: 5.8.1
+            versionSpec: 6.0.0
 
         - task: ChocolateyToolInstaller@0
           inputs:

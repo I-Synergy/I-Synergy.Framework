@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.AspNetCore.Abstractions.Services;
-using ISynergy.Framework.AspNetCore.Authentication.Extensions;
 using ISynergy.Framework.AspNetCore.Authentication.Options;
 using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
