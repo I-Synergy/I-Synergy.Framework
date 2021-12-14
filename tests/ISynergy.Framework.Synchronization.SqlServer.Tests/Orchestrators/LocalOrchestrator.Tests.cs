@@ -33,7 +33,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             {
                 Assert.AreEqual(SyncStage.BeginSession, args.Context.SyncStage);
                 Assert.IsInstanceOfType(args, typeof(SessionBeginArgs));
-                Assert.IsNull(args.Connection);
+                Assert.IsNotNull(args.Connection);
                 Assert.IsNull(args.Transaction);
                 onSessionBegin = true;
             });
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             {
                 Assert.AreEqual(SyncStage.EndSession, args.Context.SyncStage);
                 Assert.IsInstanceOfType(args, typeof(SessionEndArgs));
-                Assert.IsNull(args.Connection);
+                Assert.IsNotNull(args.Connection);
                 Assert.IsNull(args.Transaction);
                 onSessionEnd = true;
             });

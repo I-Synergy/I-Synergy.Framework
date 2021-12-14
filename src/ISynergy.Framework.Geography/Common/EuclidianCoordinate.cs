@@ -77,7 +77,7 @@ namespace ISynergy.Framework.Geography.Common
         /// <returns>True if they belong to the same projection, false otherwise</returns>
         public virtual bool IsSameProjection(EuclidianCoordinate other)
         {
-            return other != null && other.Projection.Equals(Projection);
+            return other is not null && other.Projection.Equals(Projection);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace ISynergy.Framework.Geography.Common
             if (!IsSameProjection(other))
                 return false;
 
-            return other != null && other.Projection.Equals(Projection) &&
+            return other is not null && other.Projection.Equals(Projection) &&
                     other.X.IsApproximatelyEqual(X, precision) &&
                     other.Y.IsApproximatelyEqual(Y, precision);
         }
@@ -119,7 +119,7 @@ namespace ISynergy.Framework.Geography.Common
         /// <returns>True if this is the same coordinate</returns>
         public bool Equals(EuclidianCoordinate other)
         {
-            return other != null && IsApproximatelyEqual(other);
+            return other is not null && IsApproximatelyEqual(other);
         }
 
         /// <summary>

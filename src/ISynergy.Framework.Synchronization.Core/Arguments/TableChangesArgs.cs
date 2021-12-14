@@ -1,8 +1,11 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Messages;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -15,26 +18,27 @@ namespace ISynergy.Framework.Synchronization.Core
     /// </summary>
     public class TableChangesSelectedArgs : ProgressArgs
     {
-        public TableChangesSelectedArgs(SyncContext context, SyncTable changes, TableChangesSelected changesSelected, DbConnection connection, DbTransaction transaction)
-            : base(context, connection, transaction)
+        public TableChangesSelectedArgs(SyncContext context, List<BatchPartInfo> batchPartInfos, TableChangesSelected changesSelected, DbConnection connection, DbTransaction transaction)
+           : base(context, connection, transaction)
         {
-            this.Changes = changes;
-            this.TableChangesSelected = changesSelected;
+            BatchPartInfos = batchPartInfos;
+            TableChangesSelected = changesSelected;
         }
 
         /// <summary>
         /// Gets the SyncTable instances containing all changes selected.
         /// If you get this instance from a call from GetEstimatedChangesCount, this property is always null
         /// </summary>
-        public SyncTable Changes { get; }
+        public List<BatchPartInfo> BatchPartInfos { get; }
 
         /// <summary>
         /// Gets the incremental summary of changes selected
         /// </summary>
         public TableChangesSelected TableChangesSelected { get; }
 
+        public override SyncProgressLevel ProgressLevel => TableChangesSelected.TotalChanges > 0 ? SyncProgressLevel.Information : SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TableChangesSelected.TableName}] [Total] Upserts:{this.TableChangesSelected.Upserts}. Deletes:{this.TableChangesSelected.Deletes}. Total:{this.TableChangesSelected.TotalChanges}.";
+        public override string Message => $"[{TableChangesSelected.TableName}] [Total] Upserts:{TableChangesSelected.Upserts}. Deletes:{TableChangesSelected.Deletes}. Total:{TableChangesSelected.TotalChanges}.";
         public override int EventId => SyncEventsId.TableChangesSelected.Id;
     }
 
@@ -50,8 +54,8 @@ namespace ISynergy.Framework.Synchronization.Core
         public TableChangesSelectingArgs(SyncContext context, SyncTable schemaTable, DbCommand command, DbConnection connection, DbTransaction transaction)
             : base(context, connection, transaction)
         {
-            this.Table = schemaTable;
-            this.Command = command;
+            Table = schemaTable;
+            Command = command;
         }
 
         /// <summary>
@@ -60,8 +64,8 @@ namespace ISynergy.Framework.Synchronization.Core
         public SyncTable Table { get; }
 
         public override string Source => Connection.Database;
-        public override string Message => $"Getting Changes [{this.Table.GetFullName()}].";
-
+        public override string Message => $"[{Table.GetFullName()}] Getting Changes.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => SyncEventsId.TableChangesSelecting.Id;
     }
 
@@ -73,7 +77,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public TableChangesBatchAppliedArgs(SyncContext context, TableChangesApplied tableChangesApplied, DbConnection connection, DbTransaction transaction)
             : base(context, connection, transaction)
         {
-            this.TableChangesApplied = tableChangesApplied;
+            TableChangesApplied = tableChangesApplied;
         }
 
 
@@ -82,9 +86,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public TableChangesApplied TableChangesApplied { get; set; }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TableChangesApplied.TableName}] [{this.TableChangesApplied.State}] " +
-                                          $"Applied:({this.TableChangesApplied.Applied}) Total:({this.TableChangesApplied.TotalAppliedCount}/{this.TableChangesApplied.TotalRowsCount}).";
+        public override string Message => $"[{TableChangesApplied.TableName}] [{TableChangesApplied.State}] " +
+                                          $"Applied:({TableChangesApplied.Applied}) Total:({TableChangesApplied.TotalAppliedCount}/{TableChangesApplied.TotalRowsCount}).";
 
         public override int EventId => SyncEventsId.TableChangesApplied.Id;
     }
@@ -97,12 +102,12 @@ namespace ISynergy.Framework.Synchronization.Core
         public bool Cancel { get; set; } = false;
         public DbCommand Command { get; set; }
 
-        public TableChangesBatchApplyingArgs(SyncContext context, SyncTable changes, DataRowState state, DbCommand command, DbConnection connection, DbTransaction transaction)
+        public TableChangesBatchApplyingArgs(SyncContext context, BatchPartInfo part, DataRowState state, DbCommand command, DbConnection connection, DbTransaction transaction)
             : base(context, connection, transaction)
         {
-            this.State = state;
-            this.Command = command;
-            this.Changes = changes;
+            State = state;
+            Command = command;
+            BatchPartInfo = part;
         }
 
         /// <summary>
@@ -113,11 +118,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Gets the changes to be applied into the database
         /// </summary>
-        public SyncTable Changes { get; }
+        public BatchPartInfo BatchPartInfo { get; }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
-        public override string Message => $"Applying [{this.Changes.TableName}] Batch. State:{this.State}.";
-
+        public override string Message => $"Applying [{BatchPartInfo.FileName}] Batch. State:{State}.";
         public override int EventId => SyncEventsId.TableChangesApplying.Id;
     }
 
@@ -129,13 +134,14 @@ namespace ISynergy.Framework.Synchronization.Core
         public TableChangesAppliedArgs(SyncContext context, TableChangesApplied tableChangesApplied, DbConnection connection, DbTransaction transaction)
             : base(context, connection, transaction)
         {
-            this.TableChangesApplied = tableChangesApplied;
+            TableChangesApplied = tableChangesApplied;
         }
 
         public TableChangesApplied TableChangesApplied { get; set; }
 
+        public override SyncProgressLevel ProgressLevel => TableChangesApplied.Applied > 0 ? SyncProgressLevel.Information : SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TableChangesApplied.TableName}] Changes {this.TableChangesApplied.State} Applied:{this.TableChangesApplied.Applied}. Resolved Conflicts:{this.TableChangesApplied.ResolvedConflicts}.";
+        public override string Message => $"[{TableChangesApplied.TableName}] Changes {TableChangesApplied.State} Applied:{TableChangesApplied.Applied}. Resolved Conflicts:{TableChangesApplied.ResolvedConflicts}.";
         public override int EventId => SyncEventsId.TableChangesApplied.Id;
     }
 
@@ -150,8 +156,8 @@ namespace ISynergy.Framework.Synchronization.Core
         public TableChangesApplyingArgs(SyncContext context, SyncTable schemaTable, DataRowState state, DbConnection connection, DbTransaction transaction)
             : base(context, connection, transaction)
         {
-            this.Table = schemaTable;
-            this.State = state;
+            Table = schemaTable;
+            State = state;
         }
 
         /// <summary>
@@ -164,9 +170,9 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public SyncTable Table { get; }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
-        public override string Message => $"Applying Changes To {this.Table.GetFullName()}.";
-
+        public override string Message => $"Applying Changes To {Table.GetFullName()}.";
         public override int EventId => SyncEventsId.TableChangesApplying.Id;
     }
 

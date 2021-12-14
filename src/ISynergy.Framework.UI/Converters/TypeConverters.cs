@@ -59,7 +59,7 @@ namespace ISynergy.Framework.UI.Converters
             string contentControlXaml = string.Format(CultureInfo.InvariantCulture, TypeConverters.ContentControlFormatString, scope, type, value);
 
             ContentControl contentControl = XamlReader.Load(contentControlXaml) as ContentControl;
-            if (contentControl != null)
+            if (contentControl is not null)
             {
                 return contentControl.Content;
             }

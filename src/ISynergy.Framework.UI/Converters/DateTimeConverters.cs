@@ -171,7 +171,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is DateTime datetime)
             {
-                if (parameter != null)
+                if (parameter is not null)
                 {
                     return datetime.ToLocalTime().ToString(parameter.ToString());
                 }

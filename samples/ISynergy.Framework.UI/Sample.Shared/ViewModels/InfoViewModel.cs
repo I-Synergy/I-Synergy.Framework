@@ -2,6 +2,7 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Sample.ViewModels
 {
@@ -42,9 +43,9 @@ namespace Sample.ViewModels
         /// Gets or sets the Version property value.
         /// </summary>
         /// <value>The version.</value>
-        public string Version
+        public Version Version
         {
-            get { return GetValue<string>(); }
+            get { return GetValue<Version>(); }
             set { SetValue(value); }
         }
 

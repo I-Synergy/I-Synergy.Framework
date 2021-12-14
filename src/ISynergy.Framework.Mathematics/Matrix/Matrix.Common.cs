@@ -413,7 +413,7 @@ namespace ISynergy.Framework.Mathematics
             if (objB is DBNull)
                 objB = null;
 
-            if ((objA == null) ^ (objB == null))
+            if ((objA is null) ^ (objB is null))
                 return false;
 
             try
@@ -442,10 +442,10 @@ namespace ISynergy.Framework.Mathematics
             if (objA == objB)
                 return true;
 
-            if (objA == null)
+            if (objA is null)
                 throw new ArgumentNullException("objA");
 
-            if (objB == null)
+            if (objB is null)
                 throw new ArgumentNullException("objB");
 
             if (!objA.GetLength().IsEqual(objB.GetLength()))
@@ -484,7 +484,7 @@ namespace ISynergy.Framework.Mathematics
 
                     var arrA = a.Current as Array;
                     var arrB = b.Current as Array;
-                    if (arrA != null && arrB != null && IsEqual(arrA, arrB, atol, rtol))
+                    if (arrA is not null && arrB is not null && IsEqual(arrA, arrB, atol, rtol))
                         continue;
 
                     if (!IsEqual(a.Current, b.Current, (decimal)atol, (decimal)rtol))
@@ -801,7 +801,7 @@ namespace ISynergy.Framework.Mathematics
         {
             var arr = array as Array;
 
-            if (arr == null)
+            if (arr is null)
                 throw new ArgumentException("The given object must inherit from System.Array.", "array");
 
             return transpose(arr, order) as T;
@@ -999,7 +999,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsSquare<T>(this T[][] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             return matrix.Rows() == matrix.Columns(true);
@@ -1010,7 +1010,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsSquare<T>(this T[,] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             return matrix.Rows() == matrix.Columns();
@@ -1020,7 +1020,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsUpperTriangular<T>(this T[,] matrix) where T : IComparable
         {
-            if (matrix == null) throw new ArgumentNullException("matrix");
+            if (matrix is null) throw new ArgumentNullException("matrix");
 
             var zero = default(T);
 
@@ -1040,7 +1040,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsLowerTriangular<T>(this T[,] matrix) where T : IComparable
         {
-            if (matrix == null) throw new ArgumentNullException("matrix");
+            if (matrix is null) throw new ArgumentNullException("matrix");
 
             var zero = default(T);
 
@@ -1060,7 +1060,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] ToLowerTriangular<T>(this T[,] matrix, MatrixType from, T[,] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = Matrix.CreateAs(matrix);
             matrix.CopyTo(result);
 
@@ -1088,7 +1088,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] ToUpperTriangular<T>(this T[,] matrix, MatrixType from, T[,] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = Matrix.CreateAs(matrix);
             matrix.CopyTo(result);
 
@@ -1116,7 +1116,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] ToLowerTriangular<T>(this T[][] matrix, MatrixType from, T[][] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = Jagged.CreateAs(matrix);
             matrix.CopyTo(result);
 
@@ -1144,7 +1144,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] ToUpperTriangular<T>(this T[][] matrix, MatrixType from, T[][] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = Jagged.CreateAs(matrix);
             matrix.CopyTo(result);
 
@@ -1201,7 +1201,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] GetSymmetric<T>(this T[,] matrix, MatrixType type, T[,] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = Matrix.CreateAs(matrix);
 
             switch (type)
@@ -1228,7 +1228,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsDiagonal<T>(this T[,] matrix) where T : IComparable
         {
-            if (matrix == null) throw new ArgumentNullException("matrix");
+            if (matrix is null) throw new ArgumentNullException("matrix");
 
             var zero = default(T);
 
@@ -1253,7 +1253,7 @@ namespace ISynergy.Framework.Mathematics
         /// </remarks>
         public static double Trace(this double[,] matrix)
         {
-            if (matrix == null) throw new ArgumentNullException("matrix");
+            if (matrix is null) throw new ArgumentNullException("matrix");
 
             var rows = matrix.GetLength(0);
 
@@ -1299,7 +1299,7 @@ namespace ISynergy.Framework.Mathematics
         /// </remarks>
         public static int Trace(this int[,] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var rows = matrix.GetLength(0);
@@ -1320,7 +1320,7 @@ namespace ISynergy.Framework.Mathematics
         /// </remarks>
         public static float Trace(this float[,] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var rows = matrix.GetLength(0);
@@ -1338,7 +1338,7 @@ namespace ISynergy.Framework.Mathematics
         /// <returns>The diagonal vector from the given matrix.</returns>
         public static T[] Diagonal<T>(this T[,] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var r = new T[matrix.GetLength(0)];
@@ -1362,7 +1362,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double Determinant(this double[,] matrix, bool symmetric)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             if (symmetric) // Use faster robust Cholesky decomposition
@@ -1394,7 +1394,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double LogDeterminant(this double[,] matrix, bool symmetric)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             if (symmetric) // Use faster robust Cholesky decomposition
@@ -1417,7 +1417,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double PseudoDeterminant(this double[,] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             return new SingularValueDecomposition(matrix,
@@ -1430,7 +1430,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double PseudoDeterminant(this double[][] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             return new JaggedSingularValueDecomposition(matrix,
@@ -1443,7 +1443,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double LogPseudoDeterminant(this double[,] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             return new SingularValueDecomposition(matrix,
@@ -1456,7 +1456,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double LogPseudoDeterminant(this double[][] matrix)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             return new JaggedSingularValueDecomposition(matrix,
@@ -1478,7 +1478,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsSingular(this double[,] matrix)
         {
-            if (matrix == null) throw new ArgumentNullException("matrix");
+            if (matrix is null) throw new ArgumentNullException("matrix");
             return new SingularValueDecomposition(matrix).IsSingular;
         }
 
@@ -1487,7 +1487,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsPositiveDefinite(this double[,] matrix)
         {
-            if (matrix == null) throw new ArgumentNullException("matrix");
+            if (matrix is null) throw new ArgumentNullException("matrix");
 
             return new CholeskyDecomposition(matrix).IsPositiveDefinite;
         }
@@ -1601,7 +1601,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double[,] Round(this double[,] matrix, int decimals = 0)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var rows = matrix.GetLength(0);
@@ -1621,7 +1621,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double[] Round(double[] vector, int decimals = 0)
         {
-            if (vector == null)
+            if (vector is null)
                 throw new ArgumentNullException("vector");
 
             var result = new double[vector.Length];

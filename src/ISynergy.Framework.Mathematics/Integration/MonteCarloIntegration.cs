@@ -75,7 +75,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         public MonteCarloIntegration(int parameters, Func<double[], double> function)
             : this(parameters)
         {
-            if (function == null)
+            if (function is null)
                 throw new ArgumentNullException("function");
 
             Function = function;

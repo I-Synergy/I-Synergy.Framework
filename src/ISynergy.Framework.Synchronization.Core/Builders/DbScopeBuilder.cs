@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
     {
         public ParserName ScopeInfoTableName { get; protected set; }
 
-        public DbScopeBuilder(string scopeInfoTableName) => this.ScopeInfoTableName = ParserName.Parse(scopeInfoTableName);
+        public DbScopeBuilder(string scopeInfoTableName) => ScopeInfoTableName = ParserName.Parse(scopeInfoTableName);
 
         public abstract DbCommand GetExistsScopeInfoTableCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction);
         public abstract DbCommand GetCreateScopeInfoTableCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction);
@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
         /// <summary>
         /// Remove a Command from internal shared dictionary
         /// </summary>
-        internal void RemoveCommands() => this.commands.Clear();
+        internal void RemoveCommands() => commands.Clear();
 
         /// <summary>
         /// Get the command from provider, check connection is opened, affect connection and transaction
@@ -43,7 +43,7 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
                 throw new MissingConnectionException();
 
             // Create the key
-            var commandKey = $"{connection.DataSource}-{connection.Database}-{this.ScopeInfoTableName.ToString()}-{commandType}-{scopeType}";
+            var commandKey = $"{connection.DataSource}-{connection.Database}-{ScopeInfoTableName.ToString()}-{commandType}-{scopeType}";
 
             var command = commandType switch
             {

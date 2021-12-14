@@ -563,7 +563,7 @@
         /// 
         public static double[] Quartiles(double[][] matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Rows();
@@ -593,7 +593,7 @@
         /// 
         public static double[] Quartiles(double[,] matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             int rows = matrix.Rows();

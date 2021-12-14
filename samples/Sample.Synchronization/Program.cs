@@ -241,7 +241,7 @@ namespace Sample.Synchronization.SqlServer
             });
             var snapshotDirectory = Path.Combine(SyncOptions.GetDefaultUserBatchDiretory(), "Snapshots");
 
-            var options = new SyncOptions() { BatchSize = 500, SnapshotsDirectory = snapshotDirectory, SerializerFactory = new CustomMessagePackSerializerFactory() };
+            var options = new SyncOptions() { BatchSize = 500, SnapshotsDirectory = snapshotDirectory };
 
             Console.WriteLine($"Creating snapshot");
 
@@ -1293,7 +1293,7 @@ namespace Sample.Synchronization.SqlServer
 
             var setup = new SyncSetup(new string[] { "Address", "Customer", "CustomerAddress", "SalesOrderHeader", "SalesOrderDetail" });
             var loggerFactory = LoggerFactory.Create(builder => { builder.SetMinimumLevel(LogLevel.Debug); });
-            var logger = loggerFactory.CreateLogger("Dotmim.Sync");
+            var logger = loggerFactory.CreateLogger("Synchronization");
 
             var options = new SyncOptions();
             options.BatchSize = 500;

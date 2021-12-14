@@ -68,7 +68,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             var commandName = storedProceduresNames[storedProcedureType];
 
             // concat filter name
-            if (filter != null && (storedProcedureType == DbStoredProcedureType.SelectChangesWithFilters || storedProcedureType == DbStoredProcedureType.SelectInitializedChangesWithFilters))
+            if (filter is not null && (storedProcedureType == DbStoredProcedureType.SelectChangesWithFilters || storedProcedureType == DbStoredProcedureType.SelectInitializedChangesWithFilters))
                 commandName = string.Format(commandName, filter.GetFilterName());
 
             return commandName;
@@ -89,7 +89,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             var commandName = triggersNames[objectType];
 
             // concat filter name
-            if (filter != null)
+            if (filter is not null)
                 commandName = string.Format(commandName, filter.GetFilterName());
 
             return commandName;
@@ -109,7 +109,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             var commandName = commandNames[objectType];
 
             // concat filter name
-            if (filter != null)
+            if (filter is not null)
                 commandName = string.Format(commandName, filter.GetFilterName());
 
             return commandName;
@@ -117,10 +117,10 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public SqlObjectNames(SyncTable tableDescription, ParserName tableName, ParserName trackingName, SyncSetup setup)
         {
-            this.TableDescription = tableDescription;
-            this.tableName = tableName;
-            this.trackingName = trackingName;
-            this.Setup = setup;
+            TableDescription = tableDescription;
+            tableName = tableName;
+            trackingName = trackingName;
+            Setup = setup;
             SetDefaultNames();
         }
 
@@ -129,40 +129,40 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         /// </summary>
         private void SetDefaultNames()
         {
-            var pref = this.Setup.StoredProceduresPrefix;
-            var suf = this.Setup.StoredProceduresSuffix;
-            var tpref = this.Setup.TriggersPrefix;
-            var tsuf = this.Setup.TriggersSuffix;
+            var pref = Setup.StoredProceduresPrefix;
+            var suf = Setup.StoredProceduresSuffix;
+            var tpref = Setup.TriggersPrefix;
+            var tsuf = Setup.TriggersSuffix;
 
             var tableName = ParserName.Parse(TableDescription);
 
             var schema = string.IsNullOrEmpty(tableName.SchemaName) ? "dbo" : tableName.SchemaName;
 
-            this.AddStoredProcedureName(DbStoredProcedureType.SelectChanges, string.Format(selectChangesProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
-            this.AddStoredProcedureName(DbStoredProcedureType.SelectChangesWithFilters, string.Format(selectChangesProcNameWithFilters, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}", "{0}"));
+            AddStoredProcedureName(DbStoredProcedureType.SelectChanges, string.Format(selectChangesProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.SelectChangesWithFilters, string.Format(selectChangesProcNameWithFilters, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}", "{0}"));
 
-            this.AddStoredProcedureName(DbStoredProcedureType.SelectInitializedChanges, string.Format(initializeChangesProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
-            this.AddStoredProcedureName(DbStoredProcedureType.SelectInitializedChangesWithFilters, string.Format(initializeChangesProcNameWithFilters, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}", "{0}"));
+            AddStoredProcedureName(DbStoredProcedureType.SelectInitializedChanges, string.Format(initializeChangesProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.SelectInitializedChangesWithFilters, string.Format(initializeChangesProcNameWithFilters, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}", "{0}"));
 
-            this.AddStoredProcedureName(DbStoredProcedureType.SelectRow, string.Format(selectRowProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
-            this.AddStoredProcedureName(DbStoredProcedureType.UpdateRow, string.Format(updateProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
-            this.AddStoredProcedureName(DbStoredProcedureType.DeleteRow, string.Format(deleteProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
-            this.AddStoredProcedureName(DbStoredProcedureType.DeleteMetadata, string.Format(deleteMetadataProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
-            this.AddStoredProcedureName(DbStoredProcedureType.Reset, string.Format(resetMetadataProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.SelectRow, string.Format(selectRowProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.UpdateRow, string.Format(updateProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.DeleteRow, string.Format(deleteProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.DeleteMetadata, string.Format(deleteMetadataProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.Reset, string.Format(resetMetadataProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
 
-            this.AddTriggerName(DbTriggerType.Insert, string.Format(insertTriggerName, schema, $"{tpref}{tableName.Unquoted().Normalized().ToString()}{tsuf}"));
-            this.AddTriggerName(DbTriggerType.Update, string.Format(updateTriggerName, schema, $"{tpref}{tableName.Unquoted().Normalized().ToString()}{tsuf}"));
-            this.AddTriggerName(DbTriggerType.Delete, string.Format(deleteTriggerName, schema, $"{tpref}{tableName.Unquoted().Normalized().ToString()}{tsuf}"));
+            AddTriggerName(DbTriggerType.Insert, string.Format(insertTriggerName, schema, $"{tpref}{tableName.Unquoted().Normalized().ToString()}{tsuf}"));
+            AddTriggerName(DbTriggerType.Update, string.Format(updateTriggerName, schema, $"{tpref}{tableName.Unquoted().Normalized().ToString()}{tsuf}"));
+            AddTriggerName(DbTriggerType.Delete, string.Format(deleteTriggerName, schema, $"{tpref}{tableName.Unquoted().Normalized().ToString()}{tsuf}"));
 
-            this.AddStoredProcedureName(DbStoredProcedureType.BulkTableType, string.Format(bulkTableTypeName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
-            this.AddStoredProcedureName(DbStoredProcedureType.BulkUpdateRows, string.Format(bulkUpdateProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
-            this.AddStoredProcedureName(DbStoredProcedureType.BulkDeleteRows, string.Format(bulkDeleteProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.BulkTableType, string.Format(bulkTableTypeName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.BulkUpdateRows, string.Format(bulkUpdateProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
+            AddStoredProcedureName(DbStoredProcedureType.BulkDeleteRows, string.Format(bulkDeleteProcName, schema, $"{pref}{tableName.Unquoted().Normalized().ToString()}{suf}"));
 
-            this.AddCommandName(DbCommandType.DisableConstraints, string.Format(disableConstraintsText, ParserName.Parse(TableDescription).Schema().Quoted().ToString()));
-            this.AddCommandName(DbCommandType.EnableConstraints, string.Format(enableConstraintsText, ParserName.Parse(TableDescription).Schema().Quoted().ToString()));
+            AddCommandName(DbCommandType.DisableConstraints, string.Format(disableConstraintsText, ParserName.Parse(TableDescription).Schema().Quoted().ToString()));
+            AddCommandName(DbCommandType.EnableConstraints, string.Format(enableConstraintsText, ParserName.Parse(TableDescription).Schema().Quoted().ToString()));
 
-            this.AddCommandName(DbCommandType.UpdateUntrackedRows, CreateUpdateUntrackedRowsCommand());
-            this.AddCommandName(DbCommandType.UpdateMetadata, CreateUpdateMetadataCommand());
+            AddCommandName(DbCommandType.UpdateUntrackedRows, CreateUpdateUntrackedRowsCommand());
+            AddCommandName(DbCommandType.UpdateMetadata, CreateUpdateMetadataCommand());
         }
 
 
@@ -227,7 +227,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             var str1 = new StringBuilder();
             var str2 = new StringBuilder();
             var str3 = new StringBuilder();
-            var str4 = SqlManagementUtils.JoinTwoTablesOnClause(this.TableDescription.PrimaryKeys, "[side]", "[base]");
+            var str4 = SqlManagementUtils.JoinTwoTablesOnClause(TableDescription.PrimaryKeys, "[side]", "[base]");
 
             stringBuilder.AppendLine($"INSERT INTO {trackingName.Schema().Quoted().ToString()} (");
 

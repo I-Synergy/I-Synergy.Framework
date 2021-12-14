@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Extensions;
 using System;
 using System.Data.Common;
 using System.Threading;
@@ -14,14 +15,18 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Get the last timestamp from the orchestrator database
         /// </summary>
-        public virtual Task<long> GetLocalTimestampAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
+        public async virtual Task<long> GetLocalTimestampAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            var timestamp = await this.InternalGetLocalTimestampAsync(ctx, connection, transaction, cancellationToken, progress);
-
-            return timestamp;
-
-        }, connection, transaction, cancellationToken);
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.None, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                return await InternalGetLocalTimestampAsync(GetContext(), runner.Connection, runner.Transaction, cancellationToken, progress);
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
         /// <summary>
         /// Read a scope info
@@ -30,7 +35,7 @@ namespace ISynergy.Framework.Synchronization.Core
                              DbConnection connection, DbTransaction transaction,
                              CancellationToken cancellationToken, IProgress<ProgressArgs> progress = null)
         {
-            var scopeBuilder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
+            var scopeBuilder = GetScopeBuilder(Options.ScopeInfoTableName);
 
             // we don't care about DbScopeType. That's why we are using a random value DbScopeType.Client...
             var command = scopeBuilder.GetCommandAsync(DbScopeCommandType.GetLocalTimestamp, DbScopeType.Client, connection, transaction);
@@ -38,17 +43,16 @@ namespace ISynergy.Framework.Synchronization.Core
             if (command is null)
                 return 0L;
 
-            var action = new LocalTimestampLoadingArgs(context, command, connection, transaction);
-
-            await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
+            var action = await InterceptAsync(new LocalTimestampLoadingArgs(context, command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
             if (action.Cancel || action.Command is null)
                 return 0L;
 
+            await InterceptAsync(new DbCommandArgs(context, action.Command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+
             long result = Convert.ToInt64(await action.Command.ExecuteScalarAsync().ConfigureAwait(false));
 
-            var loadedArgs = new LocalTimestampLoadedArgs(context, result, connection, transaction);
-            await this.InterceptAsync(loadedArgs, cancellationToken).ConfigureAwait(false);
+            var loadedArgs = await InterceptAsync(new LocalTimestampLoadedArgs(context, result, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
             return loadedArgs.LocalTimestamp;
         }

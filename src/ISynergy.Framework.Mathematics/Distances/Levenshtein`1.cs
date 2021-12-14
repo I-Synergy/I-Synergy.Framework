@@ -50,15 +50,15 @@
         /// 
         public double Distance(T[] x, T[] y)
         {
-            if (x == null || x.Length == 0)
+            if (x is null || x.Length == 0)
             {
-                if (y == null || y.Length == 0)
+                if (y is null || y.Length == 0)
                     return 0;
                 return y.Length;
             }
             else
             {
-                if (y == null || y.Length == 0)
+                if (y is null || y.Length == 0)
                     return x.Length;
             }
 

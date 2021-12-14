@@ -8,7 +8,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 {
     public class SqlScopeBuilder : DbScopeBuilder
     {
-        public SqlScopeBuilder(string scopeInfoTableName) : base(scopeInfoTableName)
+        public SqlScopeBuilder(string scopeInfoTableName) 
+            : base(scopeInfoTableName)
         {
         }
 
@@ -24,7 +25,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                            , [scope_last_server_sync_timestamp]
                            , [scope_last_sync_timestamp]
                            , [scope_last_sync_duration]
-                    FROM  {this.ScopeInfoTableName.Quoted().ToString()}
+                    FROM  {ScopeInfoTableName.Quoted().ToString()}
                     WHERE [sync_scope_name] = @sync_scope_name";
 
             var command = connection.CreateCommand();
@@ -43,20 +44,18 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public DbCommand GetAllServerHistoryScopesCommand(DbConnection connection, DbTransaction transaction)
         {
-            var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_history";
             var commandText =
                 $@"SELECT [sync_scope_id]
                            , [sync_scope_name]
                            , [scope_last_sync_timestamp]
                            , [scope_last_sync_duration]
                            , [scope_last_sync]
-                    FROM  [{tableName}]
+                    FROM  [{ScopeInfoTableName.Unquoted().Normalized().ToString()}_history]
                     WHERE [sync_scope_name] = @sync_scope_name";
 
 
             var command = connection.CreateCommand();
             command.Transaction = transaction;
-
             command.CommandText = commandText;
 
             var p = command.CreateParameter();
@@ -70,19 +69,17 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public DbCommand GetAllServerScopesCommand(DbConnection connection, DbTransaction transaction)
         {
-            var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server";
             var commandText =
                 $@"SELECT [sync_scope_name]
                            , [sync_scope_schema]
                            , [sync_scope_setup]
                            , [sync_scope_version]
                            , [sync_scope_last_clean_timestamp]
-                    FROM  [{tableName}]
+                    FROM  [{ScopeInfoTableName.Unquoted().Normalized().ToString()}_server]
                     WHERE [sync_scope_name] = @sync_scope_name";
 
             var command = connection.CreateCommand();
             command.Transaction = transaction;
-
             command.CommandText = commandText;
 
             var p = command.CreateParameter();
@@ -94,18 +91,18 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             return command;
         }
 
-        public override DbCommand GetAllScopesCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction)
-        => scopeType switch
-        {
-            DbScopeType.Server => GetAllServerScopesCommand(connection, transaction),
-            DbScopeType.ServerHistory => GetAllServerHistoryScopesCommand(connection, transaction),
-            _ => GetAllClientScopesCommand(connection, transaction)
-        };
+        public override DbCommand GetAllScopesCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction) => 
+            scopeType switch
+            {
+                DbScopeType.Server => GetAllServerScopesCommand(connection, transaction),
+                DbScopeType.ServerHistory => GetAllServerHistoryScopesCommand(connection, transaction),
+                _ => GetAllClientScopesCommand(connection, transaction)
+            };
 
         public DbCommand GetCreateClientScopeInfoTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
             var commandText =
-                $@"CREATE TABLE [dbo].{this.ScopeInfoTableName.Quoted().ToString()}(
+                $@"CREATE TABLE [dbo].{ScopeInfoTableName.Quoted().ToString()}(
                         [sync_scope_id] [uniqueidentifier] NOT NULL,
 	                    [sync_scope_name] [nvarchar](100) NOT NULL,
 	                    [sync_scope_schema] [nvarchar](max) NULL,
@@ -115,8 +112,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                         [scope_last_sync_timestamp] [bigint] NULL,
                         [scope_last_sync_duration] [bigint] NULL,
                         [scope_last_sync] [datetime] NULL
-                        CONSTRAINT [PK_{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}] PRIMARY KEY CLUSTERED ([sync_scope_id] ASC)
+                        CONSTRAINT [PK_{ScopeInfoTableName.Unquoted().Normalized().ToString()}] PRIMARY KEY CLUSTERED ([sync_scope_id] ASC)
                         )";
+
             var command = connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText = commandText;
@@ -125,7 +123,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public DbCommand GetCreateServerHistoryScopeInfoTableCommand(DbConnection connection, DbTransaction transaction)
         {
-            var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_history";
+            var tableName = $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}_history";
 
             var commandText =
                 $@"CREATE TABLE [dbo].[{tableName}](
@@ -145,7 +143,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         }
         public DbCommand GetCreateServerScopeInfoTableCommand(DbConnection connection, DbTransaction transaction)
         {
-            var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server";
+            var tableName = $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}_server";
 
             var commandText =
                 $@"CREATE TABLE [dbo].[{tableName}] (
@@ -154,7 +152,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 	                    [sync_scope_setup] [nvarchar](max) NULL,
 	                    [sync_scope_version] [nvarchar](10) NULL,
                         [sync_scope_last_clean_timestamp] [bigint] NULL,
-                        CONSTRAINT [PK_{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server] PRIMARY KEY CLUSTERED ([sync_scope_name] ASC)
+                        CONSTRAINT [PK_{tableName}] PRIMARY KEY CLUSTERED ([sync_scope_name] ASC)
                         )";
 
             var command = connection.CreateCommand();
@@ -176,9 +174,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         {
             var tableName = scopeType switch
             {
-                DbScopeType.Server => $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server",
-                DbScopeType.ServerHistory => $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_history",
-                _ => this.ScopeInfoTableName.Unquoted().ToString(),
+                DbScopeType.Server => $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}_server",
+                DbScopeType.ServerHistory => $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}_history",
+                _ => ScopeInfoTableName.Unquoted().ToString(),
             };
 
             var command = connection.CreateCommand();
@@ -191,9 +189,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         {
             var tableName = scopeType switch
             {
-                DbScopeType.Server => $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server",
-                DbScopeType.ServerHistory => $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_history",
-                _ => this.ScopeInfoTableName.Unquoted().Normalized().ToString(),
+                DbScopeType.Server => $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}_server",
+                DbScopeType.ServerHistory => $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}_history",
+                _ => ScopeInfoTableName.Unquoted().Normalized().ToString(),
             };
 
             var command = connection.CreateCommand();
@@ -228,9 +226,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             var tableName = scopeType switch
             {
-                DbScopeType.Client => $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}",
-                DbScopeType.Server => $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server",
-                DbScopeType.ServerHistory => $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_history",
+                DbScopeType.Client => $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}",
+                DbScopeType.Server => $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}_server",
+                DbScopeType.ServerHistory => $"{ScopeInfoTableName.Unquoted().Normalized().ToString()}_history",
                 _ => throw new NotImplementedException($"Can't get scope name from this DbScopeType {scopeType}")
             };
 
@@ -247,11 +245,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             return command;
         }
-        public override DbCommand GetUpdateScopeInfoCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction)
-            => GetInsertScopeInfoCommand(scopeType, connection, transaction);
+        public override DbCommand GetUpdateScopeInfoCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction) => 
+            GetInsertScopeInfoCommand(scopeType, connection, transaction);
 
-        public override DbCommand GetInsertScopeInfoCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction)
-            => scopeType switch
+        public override DbCommand GetInsertScopeInfoCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction) => 
+            scopeType switch
             {
                 DbScopeType.Client => GetSaveClientScopeInfoCommand(connection, transaction),
                 DbScopeType.ServerHistory => GetSaveServerHistoryScopeInfoCommand(connection, transaction),
@@ -268,7 +266,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         public DbCommand GetSaveClientScopeInfoCommand(DbConnection connection, DbTransaction transaction)
         {
             var commandText = $@"
-                    MERGE {this.ScopeInfoTableName.Quoted().ToString()} AS [base] 
+                    MERGE {ScopeInfoTableName.Quoted().ToString()} AS [base] 
                     USING (
                                SELECT  @sync_scope_id AS sync_scope_id,  
 	                                   @sync_scope_name AS sync_scope_name,  
@@ -370,10 +368,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         /// <returns></returns>
         public DbCommand GetSaveServerHistoryScopeInfoCommand(DbConnection connection, DbTransaction transaction)
         {
-            var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_history";
-
             var commandText = $@"
-                    MERGE [{tableName}] AS [base] 
+                    MERGE [{ScopeInfoTableName.Unquoted().Normalized().ToString()}_history] AS [base] 
                     USING (
                                SELECT  @sync_scope_id AS sync_scope_id,  
 	                                   @sync_scope_name AS sync_scope_name,  
@@ -397,7 +393,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                             INSERTED.[scope_last_sync_duration];";
 
             var command = connection.CreateCommand();
-            if (transaction != null)
+            if (transaction is not null)
                 command.Transaction = transaction;
 
             command.CommandText = commandText;
@@ -439,10 +435,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         /// <returns></returns>
         public DbCommand GetSaveServerScopeInfoCommand(DbConnection connection, DbTransaction transaction)
         {
-            var tableName = $"{this.ScopeInfoTableName.Unquoted().Normalized().ToString()}_server";
-
             var commandText = $@"
-                    MERGE {tableName} AS [base] 
+                    MERGE {ScopeInfoTableName.Unquoted().Normalized().ToString()}_server AS [base] 
                     USING (
                                SELECT  @sync_scope_name AS sync_scope_name,  
 	                                   @sync_scope_schema AS sync_scope_schema,  

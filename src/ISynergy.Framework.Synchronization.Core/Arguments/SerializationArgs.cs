@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Serialization;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,10 +16,10 @@ namespace ISynergy.Framework.Synchronization.Core
     {
         public SerializingSetArgs(SyncContext context, ContainerSet set, ISerializerFactory serializerFactory, string fileName, string directoryPath) : base(context, null, null)
         {
-            this.Set = set;
-            this.SerializerFactory = serializerFactory;
-            this.FileName = fileName;
-            this.DirectoryPath = directoryPath;
+            Set = set;
+            SerializerFactory = serializerFactory;
+            FileName = fileName;
+            DirectoryPath = directoryPath;
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
         public override string Source => String.IsNullOrEmpty(DirectoryPath) ? "" : new DirectoryInfo(DirectoryPath).Name;
         public override string Message => $"[{FileName}] Serializing Set.";
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
     }
 
     /// <summary>
@@ -59,10 +60,10 @@ namespace ISynergy.Framework.Synchronization.Core
     {
         public DeserializingSetArgs(SyncContext context, FileStream fileStream, ISerializerFactory serializerFactory, string fileName, string directoryPath) : base(context, null, null)
         {
-            this.FileStream = fileStream;
-            this.SerializerFactory = serializerFactory;
-            this.FileName = fileName;
-            this.DirectoryPath = directoryPath;
+            FileStream = fileStream;
+            SerializerFactory = serializerFactory;
+            FileName = fileName;
+            DirectoryPath = directoryPath;
         }
 
         /// <summary>
@@ -94,6 +95,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public ContainerSet Result { get; set; }
 
         public override int EventId => SyncEventsId.DeserializingSet.Id;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
     }
 
 

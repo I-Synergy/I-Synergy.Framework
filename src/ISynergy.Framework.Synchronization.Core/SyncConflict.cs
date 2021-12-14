@@ -42,18 +42,18 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public SyncConflict(ConflictType type)
         {
-            this.Type = type;
+            Type = type;
         }
 
 
         /// <summary>
         /// add a local row
         /// </summary>
-        internal void AddLocalRow(SyncRow row) => this.LocalRow = row;
+        internal void AddLocalRow(SyncRow row) => LocalRow = row;
 
         /// <summary>
         /// add a remote row
         /// </summary>
-        internal void AddRemoteRow(SyncRow row) => this.RemoteRow = row;
+        internal void AddRemoteRow(SyncRow row) => RemoteRow = row;
     }
 }

@@ -122,7 +122,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
             if ((int)ret < 0)
                 fx = fn(start);
 
-            if (progress != null)
+            if (progress is not null)
                 progress(null, new OptimizationProgressEventArgs(0, 0, null, 0, start, 0, fx, 0, false));
 
             //lbfgs_free(x);
@@ -133,7 +133,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
         {
             lbfgs_progress_t target = (instance, x, g, fx, xnorm, gnorm, step, n, k, ls) =>
             {
-                if (progress != null)
+                if (progress is not null)
                     progress(null,
                         new OptimizationProgressEventArgs(0, 0,
                             (double[])g.Clone(),
@@ -276,7 +276,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
             double step;
 
             /* ant parameters and their default values. */
-            var param = _param != null ? _param : _defparam;
+            var param = _param is not null ? _param : _defparam;
             var m = param.m;
 
             double[] xp = null;
@@ -339,7 +339,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
             gp = vecalloc(n * sizeof(double));
             d = vecalloc(n * sizeof(double));
             w = vecalloc(n * sizeof(double));
-            if (xp == null || g == null || gp == null || d == null || w == null)
+            if (xp is null || g is null || gp is null || d is null || w is null)
             {
                 ret = Code.LBFGSERR_OUTOFMEMORY;
                 goto lbfgs_exit;
@@ -349,7 +349,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
             {
                 /* Allocate working space for OW-LQN. */
                 pg = vecalloc(n * sizeof(double));
-                if (pg == null)
+                if (pg is null)
                 {
                     ret = Code.LBFGSERR_OUTOFMEMORY;
                     goto lbfgs_exit;
@@ -359,7 +359,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
             /* Allocate limited memory storage. */
             lm = new iteration_data_t[m];
 
-            if (lm == null)
+            if (lm is null)
             {
                 ret = Code.LBFGSERR_OUTOFMEMORY;
                 goto lbfgs_exit;
@@ -373,7 +373,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
                 it.ys = 0;
                 it.s = vecalloc(n * sizeof(double));
                 it.y = vecalloc(n * sizeof(double));
-                if (it.s == null || it.y == null)
+                if (it.s is null || it.y is null)
                 {
                     ret = Code.LBFGSERR_OUTOFMEMORY;
                     goto lbfgs_exit;
@@ -397,7 +397,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
             }
 
             /* Store the initial value of the objective function. */
-            if (pf != null) pf[0] = fx;
+            if (pf is not null) pf[0] = fx;
 
             /*
                 Compute the direction;
@@ -469,7 +469,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
                     vec2norm(out gnorm, pg, n);
 
                 /* Report the progress. */
-                if (cd.proc_progress != null)
+                if (cd.proc_progress is not null)
                     if ((ret = cd.proc_progress(cd.instance, x, g, fx, xnorm,
                         gnorm, step, cd.n, k, ls)) != 0)
                         goto lbfgs_exit;
@@ -500,7 +500,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
                     The criterion is given by the following formula:
                         (f(past_x) - f(x)) / f(x) < \delta
                  */
-                if (pf != null)
+                if (pf is not null)
                 {
                     /* We don't test the stopping criterion while k < past. */
                     if (param.past <= k)

@@ -17,7 +17,7 @@ namespace ISynergy.Framework.AspNetCore.Conventions
             {
                 var controller = application.Controllers[i];
 
-                if (controller.ControllerType.Namespace != null
+                if (controller.ControllerType.Namespace is not null
                     && controller.ControllerType.Namespace.EndsWith(".Disabled"))
                     application.Controllers.Remove(controller);
             }

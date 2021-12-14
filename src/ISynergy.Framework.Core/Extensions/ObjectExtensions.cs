@@ -27,7 +27,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="self">The self.</param>
         /// <returns><c>true</c> if [is nullable type] [the specified self]; otherwise, <c>false</c>.</returns>
         public static bool IsNullableType<T>(this T self) where T : Type =>
-            !self.IsValueType || Nullable.GetUnderlyingType(self) != null;
+            !self.IsValueType || Nullable.GetUnderlyingType(self) is not null;
 
         /// <summary>
         ///   Converts an object into another type, irrespective of whether
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// 
         public static object To(this object value, Type type)
         {
-            if (value == null)
+            if (value is null)
                 return System.Convert.ChangeType(null, type);
 
             if (type.IsInstanceOfType(value))
@@ -108,7 +108,7 @@ namespace ISynergy.Framework.Core.Extensions
             try
             {
                 var type = obj.GetType();
-                return type.GetMethod(methodName) != null;
+                return type.GetMethod(methodName) is not null;
             }
             catch (AmbiguousMatchException)
             {

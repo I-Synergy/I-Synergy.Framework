@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Model.Parsers;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,13 +17,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TrackingTableCreatedArgs(SyncContext context, SyncTable table, ParserName trackingTableName, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TrackingTableName = trackingTableName;
+            Table = table;
+            TrackingTableName = trackingTableName;
         }
 
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TrackingTableName}] tracking table created.";
-
+        public override string Message => $"[{TrackingTableName}] tracking table created.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TrackingTableCreated.Id;
     }
 
@@ -36,12 +37,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TrackingTableCreatingArgs(SyncContext context, SyncTable table, ParserName trackingTableName, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TrackingTableName = trackingTableName;
-            this.Command = command;
+            Table = table;
+            TrackingTableName = trackingTableName;
+            Command = command;
         }
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TrackingTableName}] tracking table creating.";
+        public override string Message => $"[{TrackingTableName}] tracking table creating.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TrackingTableCreating.Id;
 
     }
@@ -54,13 +56,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TrackingTableDroppedArgs(SyncContext context, SyncTable table, ParserName trackingTableName, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TrackingTableName = trackingTableName;
+            Table = table;
+            TrackingTableName = trackingTableName;
         }
 
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TrackingTableName}] Tracking Table Dropped.";
-
+        public override string Message => $"[{TrackingTableName}] Tracking Table Dropped.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TrackingTableDropped.Id;
     }
 
@@ -74,12 +76,14 @@ namespace ISynergy.Framework.Synchronization.Core
         public TrackingTableDroppingArgs(SyncContext context, SyncTable table, ParserName trackingTableName, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TrackingTableName = trackingTableName;
-            this.Command = command;
+            Table = table;
+            TrackingTableName = trackingTableName;
+            Command = command;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TrackingTableName}] Tracking Table Dropping.";
+        public override string Message => $"[{TrackingTableName}] Tracking Table Dropping.";
         public override int EventId => SyncEventsId.TrackingTableDropping.Id;
 
     }
@@ -92,13 +96,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TrackingTableRenamedArgs(SyncContext context, SyncTable table, ParserName trackingTableName, ParserName oldTrackingTableName, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.TrackingTableName = trackingTableName;
-            this.OldTrackingTableName = oldTrackingTableName;
+            TrackingTableName = trackingTableName;
+            OldTrackingTableName = oldTrackingTableName;
         }
 
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TrackingTableName}] Tracking Table Renamed.";
-
+        public override string Message => $"[{TrackingTableName}] Tracking Table Renamed.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TrackingTableRenamed.Id;
     }
 
@@ -113,14 +117,16 @@ namespace ISynergy.Framework.Synchronization.Core
         public TrackingTableRenamingArgs(SyncContext context, SyncTable table, ParserName trackingTableName, ParserName oldTrackingTableName, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TrackingTableName = trackingTableName;
-            this.Command = command;
-            this.OldTrackingTableName = oldTrackingTableName;
+            Table = table;
+            TrackingTableName = trackingTableName;
+            Command = command;
+            OldTrackingTableName = oldTrackingTableName;
 
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.TrackingTableName}] Tracking Table Renaming.";
+        public override string Message => $"[{TrackingTableName}] Tracking Table Renaming.";
         public override int EventId => SyncEventsId.TrackingTableRenaming.Id;
 
     }

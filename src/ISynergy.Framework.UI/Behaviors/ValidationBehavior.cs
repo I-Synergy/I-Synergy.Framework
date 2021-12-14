@@ -42,7 +42,7 @@ namespace ISynergy.Framework.UI.Behaviors
             AssociatedObject = associatedObject;
             Control.DataContextChanged += Control_DataContextChanged;
 
-            if (Control.DataContext != null)
+            if (Control.DataContext is not null)
             {
                 Setup();
             }
@@ -79,12 +79,12 @@ namespace ISynergy.Framework.UI.Behaviors
         /// </summary>
         private void TearDown()
         {
-            if(GetProperty(false) != null)
+            if(GetProperty(false) is not null)
             {
                 GetProperty(false).PropertyChanged -= Property_PropertyChanged;
             }
 
-            if(Control != null)
+            if(Control is not null)
             {
                 Control.DataContextChanged -= Control_DataContextChanged;
             }
@@ -130,7 +130,7 @@ namespace ISynergy.Framework.UI.Behaviors
         /// <exception cref="KeyNotFoundException">PropertyName is not found</exception>
         IProperty GetProperty(bool throwException = true)
         {
-            if (_property != null)
+            if (_property is not null)
                 return _property;
             var context = (AssociatedObject as FrameworkElement)?.DataContext;
             if (context is null)

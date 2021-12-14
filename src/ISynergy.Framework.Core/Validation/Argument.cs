@@ -20,7 +20,7 @@ namespace ISynergy.Framework.Core.Validation
         [DebuggerNonUserCode, DebuggerStepThrough]
         public static void IsNotNull(string paramName, object paramValue)
         {
-            if (paramName != null)
+            if (paramName is not null)
             {
                 if (paramValue is null)
                 {

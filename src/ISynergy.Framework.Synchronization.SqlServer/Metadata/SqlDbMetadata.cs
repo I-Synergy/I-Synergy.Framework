@@ -188,7 +188,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Metadata
         }
 
         public override (byte precision, byte scale) GetPrecisionAndScale(SyncColumn columnDefinition)
-            => CoercePrecisionAndScale(columnDefinition.Precision, columnDefinition.Scale);
+        {
+            if (columnDefinition.DbType == (int)DbType.Single && columnDefinition.Precision == 0 && columnDefinition.Scale == 0)
+                return (PRECISION_MAX, 8);
+
+            return CoercePrecisionAndScale(columnDefinition.Precision, columnDefinition.Scale);
+
+        }
 
         public override byte GetPrecision(SyncColumn columnDefinition)
         {
@@ -224,7 +230,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Metadata
         /// </summary>
         public string GetCompatibleColumnTypeDeclarationString(SyncColumn column, string fromProviderType)
         {
-            var argument = string.Empty;
+            string argument = string.Empty;
 
             // We get the sql db type from the original provider otherwise fallback on sql db type extract from simple db type
             var sqlDbType = fromProviderType == SqlSyncProvider.ProviderType ?
@@ -255,7 +261,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Metadata
                 case SqlDbType.Decimal:
                     var (p, s) = GetPrecisionAndScale(column);
 
-                    if (p > 0 && s <= 0)
+                    if (column.DbType == (int)DbType.Single && column.Precision == 0 && column.Scale == 0)
+                        argument = $"({PRECISION_MAX}, 8)";
+                    else if (p > 0 && s <= 0)
                         argument = $"({p})";
                     else if (p > 0 && s > 0)
                         argument = $"({p}, {s})";
@@ -265,7 +273,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Metadata
                     break;
             }
 
-            var typeName = fromProviderType == SqlSyncProvider.ProviderType ? column.OriginalTypeName.ToLowerInvariant() : sqlDbType.ToString().ToLowerInvariant();
+            string typeName = fromProviderType == SqlSyncProvider.ProviderType ? column.OriginalTypeName.ToLowerInvariant() : sqlDbType.ToString().ToLowerInvariant();
             typeName = typeName == "variant" ? "sql_variant" : typeName;
 
             return string.IsNullOrEmpty(argument) ? typeName : $"{typeName} {argument}";
@@ -306,8 +314,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Metadata
         /// </summary>
         public static (byte p, byte s) CoercePrecisionAndScale(int precision, int scale)
         {
-            var p = Convert.ToByte(precision);
-            var s = Convert.ToByte(scale);
+            byte p = Convert.ToByte(precision);
+            byte s = Convert.ToByte(scale);
             if (p > PRECISION_MAX)
                 p = PRECISION_MAX;
 
@@ -315,13 +323,12 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Metadata
                 s = SCALE_MAX;
 
             // scale should always be lesser than precision
-            if (s >= p)
+            if (s >= p && p > 1)
                 s = (byte)(p - 1);
 
             return (p, s);
         }
 
     }
-
 }
 

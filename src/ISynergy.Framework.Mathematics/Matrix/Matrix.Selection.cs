@@ -16,10 +16,10 @@ namespace ISynergy.Framework.Mathematics
         /// <param name="columnIndexes">Array of column indices. Pass null to select all indices.</param>
         public static T[,] Remove<T>(this T[,] data, int[] rowIndexes, int[] columnIndexes)
         {
-            if (rowIndexes == null)
+            if (rowIndexes is null)
                 rowIndexes = new int[0];
 
-            if (columnIndexes == null)
+            if (columnIndexes is null)
                 columnIndexes = new int[0];
             var srcRows = data.GetLength(0);
             var srcCols = data.GetLength(1);
@@ -379,7 +379,7 @@ namespace ISynergy.Framework.Mathematics
             var cols = m.Columns();
             var depth = m.Depth();
 
-            if (result == null)
+            if (result is null)
                 result = new T[rows, cols];
 
             index = Matrix.index(index, depth);
@@ -395,7 +395,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[] GetColumn<T>(this T[,] m, int index, T[] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = new T[m.Rows()];
 
             index = Matrix.index(index, m.Columns());
@@ -410,7 +410,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[] GetColumn<T>(this T[][] m, int index, T[] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = new T[m.Length];
 
             index = Matrix.index(index, m.Columns());
@@ -433,12 +433,12 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] GetColumns<T>(this T[][] m, int[] index, T[][] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = new T[m.Length][];
 
             for (var i = 0; i < result.Length; i++)
             {
-                if (result[i] == null)
+                if (result[i] is null)
                     result[i] = new T[index.Length];
                 for (var j = 0; j < index.Length; j++)
                     result[i][j] = m[i][index[j]];
@@ -454,7 +454,7 @@ namespace ISynergy.Framework.Mathematics
         {
             index = Matrix.index(index, m.Rows());
 
-            if (result == null) return (T[])m[index].Clone();
+            if (result is null) return (T[])m[index].Clone();
 
             m[index].CopyTo(result, 0);
             return result;
@@ -465,7 +465,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[] GetRow<T>(this T[,] m, int index, T[] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = new T[m.GetLength(1)];
 
             index = Matrix.index(index, m.Rows());
@@ -488,7 +488,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] GetRows<T>(this T[][] m, int[] index, T[][] result)
         {
-            if (result == null)
+            if (result is null)
             {
                 result = new T[index.Length][];
                 for (var i = 0; i < index.Length; i++)
@@ -518,7 +518,7 @@ namespace ISynergy.Framework.Mathematics
         {
             var rows = m.GetLength(0);
 
-            if (result == null)
+            if (result is null)
                 result = new T[rows, index.Length];
 
             for (var i = 0; i < rows; i++)
@@ -728,10 +728,10 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] InsertColumn<T, TSource>(this T[,] matrix, TSource[] column, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
-            if (column == null)
+            if (column is null)
                 throw new ArgumentNullException("column");
 
             var rows = matrix.GetLength(0);
@@ -762,7 +762,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] InsertColumn<T, TSource>(this T[,] matrix, TSource value, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var rows = matrix.GetLength(0);
@@ -791,9 +791,9 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] InsertColumn<T, TSource>(this T[][] matrix, TSource[] column, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
-            if (column == null)
+            if (column is null)
                 throw new ArgumentNullException("column");
 
             var rows = matrix.Length;
@@ -827,7 +827,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] InsertColumn<T, TSource>(this T[][] matrix, TSource value, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var rows = matrix.Length;
@@ -859,7 +859,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] InsertRow<T, TSource>(this T[][] matrix, TSource value, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var rows = matrix.Length;
@@ -891,9 +891,9 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] InsertRow<T, TSource>(this T[,] matrix, TSource[] row, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
-            if (row == null)
+            if (row is null)
                 throw new ArgumentNullException("row");
 
             var rows = matrix.GetLength(0);
@@ -925,7 +925,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] InsertRow<T, TSource>(this T[,] matrix, TSource value, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var rows = matrix.GetLength(0);
@@ -955,9 +955,9 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] InsertRow<T, TSource>(this T[][] matrix, TSource[] row, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
-            if (row == null)
+            if (row is null)
                 throw new ArgumentNullException("row");
 
             var rows = matrix.Length;
@@ -991,7 +991,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] RemoveRow<T>(this T[,] matrix, int index)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var rows = matrix.GetLength(0);
@@ -1017,7 +1017,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[] RemoveAt<T>(this T[] array, int index)
         {
-            if (array == null)
+            if (array is null)
                 throw new ArgumentNullException("array");
 
             var r = new T[array.Length - 1];

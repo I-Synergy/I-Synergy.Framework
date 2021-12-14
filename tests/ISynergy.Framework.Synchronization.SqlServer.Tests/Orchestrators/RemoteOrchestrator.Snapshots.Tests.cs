@@ -1,4 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Parameters;
 using ISynergy.Framework.Synchronization.Core.Providers;
@@ -12,6 +14,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
@@ -19,6 +22,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
     public partial class RemoteOrchestratorTests 
     {
         private readonly DatabaseHelper _databaseHelper;
+        private readonly IVersionService _versionService;
 
         public string[] Tables => new string[]
         {
@@ -30,6 +34,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
         public RemoteOrchestratorTests()
         {
             _databaseHelper = new DatabaseHelper();
+            _versionService = new VersionService(Assembly.GetAssembly(typeof(RemoteOrchestrator)));
         }
 
         [Ignore]

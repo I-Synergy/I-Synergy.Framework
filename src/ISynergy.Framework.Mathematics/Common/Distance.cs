@@ -87,7 +87,7 @@ namespace ISynergy.Framework.Mathematics
                 {
                     var t = Type.GetType("ISynergy.Framework.Mathematics.Distances." + method.Name);
 
-                    if (t == null)
+                    if (t is null)
                         // TODO: Remove the following special case, as it is needed only
                         // for preserving compatibility for a few next releases more.
                         if (methodInfo.Name == "BitwiseHamming")

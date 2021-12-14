@@ -9,20 +9,27 @@ namespace ISynergy.Framework.Synchronization.Core.Tests.Converters
     {
         public string Key => "cuscom";
 
-        public void BeforeSerialize(SyncRow row)
+        public void BeforeSerialize(object[] row, SyncTable schemaTable)
         {
             // Convert all DateTime columns to ticks
-            foreach (var col in row.Table.Columns.Where(c => c.GetDataType() == typeof(DateTime)))
-                if (row[col.ColumnName] != null)
-                    row[col.ColumnName] = ((DateTime)row[col.ColumnName]).Ticks;
+            foreach (var col in schemaTable.Columns.Where(c => c.GetDataType() == typeof(DateTime)))
+            {
+                var index = schemaTable.Columns.IndexOf(col);
+
+                if (row[index] != null)
+                    row[index] = ((DateTime)row[index]).Ticks;
+            }
         }
 
-        public void AfterDeserialized(SyncRow row)
+        public void AfterDeserialized(object[] row, SyncTable schemaTable)
         {
             // Convert all DateTime back from ticks
-            foreach (var col in row.Table.Columns.Where(c => c.GetDataType() == typeof(DateTime)))
-                if (row[col.ColumnName] != null)
-                    row[col.ColumnName] = new DateTime(Convert.ToInt64(row[col.ColumnName]));
+            foreach (var col in schemaTable.Columns.Where(c => c.GetDataType() == typeof(DateTime)))
+            {
+                var index = schemaTable.Columns.IndexOf(col);
+                if (row[index] != null)
+                    row[index] = new DateTime(Convert.ToInt64(row[index]));
+            }
         }
     }
 }

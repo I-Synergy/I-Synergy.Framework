@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Messages;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,14 +16,10 @@ namespace ISynergy.Framework.Synchronization.Core
     public class DatabaseChangesSelectingArgs : ProgressArgs
     {
         public DatabaseChangesSelectingArgs(SyncContext context, MessageGetChangesBatch changesRequest, DbConnection connection, DbTransaction transaction)
-            : base(context, connection, transaction)
-        {
-            this.ChangesRequest = changesRequest;
-        }
-
+            : base(context, connection, transaction) => ChangesRequest = changesRequest;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
-        public override string Message => $"Getting Changes.";
-
+        public override string Message => $"[{Connection.Database}] Getting Changes. [{ChangesRequest.BatchDirectory}]. Batch size:{ChangesRequest.BatchSize}. IsNew:{ChangesRequest.IsNew}. LastTimestamp:{ChangesRequest.LastTimestamp}. ";
         public MessageGetChangesBatch ChangesRequest { get; }
         public override int EventId => SyncEventsId.DatabaseChangesSelecting.Id;
     }
@@ -35,14 +32,14 @@ namespace ISynergy.Framework.Synchronization.Core
         public DatabaseChangesSelectedArgs(SyncContext context, long? timestamp, BatchInfo clientBatchInfo, DatabaseChangesSelected changesSelected, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Timestamp = timestamp;
-            this.BatchInfo = clientBatchInfo;
-            this.ChangesSelected = changesSelected;
+            Timestamp = timestamp;
+            BatchInfo = clientBatchInfo;
+            ChangesSelected = changesSelected;
         }
 
-        public override string Source => Connection.Database;
-        public override string Message => $"[Total] Upserts:{this.ChangesSelected.TotalChangesSelectedUpdates}. Deletes:{this.ChangesSelected.TotalChangesSelectedDeletes}. Total:{this.ChangesSelected.TotalChangesSelected}";
-
+        public override string Source => Connection?.Database;
+        public override string Message => $"[Total] Upserts:{ChangesSelected.TotalChangesSelectedUpdates}. Deletes:{ChangesSelected.TotalChangesSelectedDeletes}. Total:{ChangesSelected.TotalChangesSelected}. [{BatchInfo.GetDirectoryFullPath()}]";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
         public long? Timestamp { get; }
 
         /// <summary>
@@ -61,7 +58,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public DatabaseChangesApplyingArgs(SyncContext context, MessageApplyChanges applyChanges, DbConnection connection, DbTransaction transaction)
             : base(context, connection, transaction)
         {
-            this.ApplyChanges = applyChanges;
+            ApplyChanges = applyChanges;
         }
 
         public override string Source => Connection.Database;
@@ -71,8 +68,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// All parameters that will be used to apply changes
         /// </summary>
         public MessageApplyChanges ApplyChanges { get; }
-
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => SyncEventsId.DatabaseChangesApplying.Id;
     }
 
@@ -84,11 +80,11 @@ namespace ISynergy.Framework.Synchronization.Core
         public DatabaseChangesAppliedArgs(SyncContext context, DatabaseChangesApplied changesApplied, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.ChangesApplied = changesApplied;
+            ChangesApplied = changesApplied;
         }
 
         public DatabaseChangesApplied ChangesApplied { get; set; }
-
+        public override SyncProgressLevel ProgressLevel => ChangesApplied.TotalAppliedChanges > 0 ? SyncProgressLevel.Information : SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"[Total] Applied:{ChangesApplied.TotalAppliedChanges}. Conflicts:{ChangesApplied.TotalResolvedConflicts}.";
 

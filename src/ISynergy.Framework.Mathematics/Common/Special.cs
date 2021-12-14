@@ -362,7 +362,7 @@ namespace ISynergy.Framework.Mathematics.Common
         /// </summary>
         public static double LogFactorial(int n)
         {
-            if (lnfcache == null)
+            if (lnfcache is null)
                 lnfcache = new double[101];
 
             if (n < 0)
@@ -383,7 +383,7 @@ namespace ISynergy.Framework.Mathematics.Common
         /// </summary>
         public static double Factorial(int n)
         {
-            if (fcache == null)
+            if (fcache is null)
             {
                 // Initialize factorial cache
                 fcache = new double[33];

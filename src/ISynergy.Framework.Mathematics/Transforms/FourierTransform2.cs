@@ -599,7 +599,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// </summary>
         public static double[] GetMagnitudeSpectrum(Complex[] fft)
         {
-            if (fft == null)
+            if (fft is null)
                 throw new ArgumentNullException("fft");
 
             // assumes fft is symmetric
@@ -624,7 +624,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// </summary>
         public static double[] GetPowerSpectrum(Complex[] fft)
         {
-            if (fft == null)
+            if (fft is null)
                 throw new ArgumentNullException("fft");
 
             var n = (int)Math.Ceiling((fft.Length + 1) / 2.0);
@@ -644,7 +644,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// </summary>
         public static double[] GetPhaseSpectrum(Complex[] fft)
         {
-            if (fft == null) throw new ArgumentNullException("fft");
+            if (fft is null) throw new ArgumentNullException("fft");
 
             var n = (int)Math.Ceiling((fft.Length + 1) / 2.0);
 
@@ -683,7 +683,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
         /// </summary>
         public static double[] GetPowerCepstrum(Complex[] signal)
         {
-            if (signal == null)
+            if (signal is null)
                 throw new ArgumentNullException("signal");
 
             FourierTransform.FFT(signal, FourierTransform.Direction.Backward);
@@ -704,7 +704,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
         private static double[] CosTable(int sampleCount)
         {
             // Return table from memory if period matches.
-            if (cosTable != null && sampleCount == cosTable.Length)
+            if (cosTable is not null && sampleCount == cosTable.Length)
                 return cosTable;
 
             // Create a new table and keep in memory.
@@ -720,7 +720,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
         private static double[] SinTable(int sampleCount)
         {
             // Return table from memory if period matches.
-            if (sinTable != null && sampleCount == sinTable.Length)
+            if (sinTable is not null && sampleCount == sinTable.Length)
                 return sinTable;
 
             // Create a new table and keep in memory.
@@ -736,7 +736,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
         private static double[] ExpCosTable(int sampleCount)
         {
             // Return table from memory if period matches.
-            if (expCosTable != null && sampleCount == expCosTable.Length)
+            if (expCosTable is not null && sampleCount == expCosTable.Length)
                 return expCosTable;
 
             // Create a new table and keep in memory.
@@ -757,7 +757,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
         private static double[] ExpSinTable(int sampleCount)
         {
             // Return table from memory if period matches.
-            if (expSinTable != null && sampleCount == expSinTable.Length)
+            if (expSinTable is not null && sampleCount == expSinTable.Length)
                 return expSinTable;
 
             // Create a new table and keep in memory.

@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
             get
             {
                 var conflicts = 0;
-                foreach (var tableProgress in this.TableChangesApplied)
+                foreach (var tableProgress in TableChangesApplied)
                     conflicts = conflicts + tableProgress.ResolvedConflicts;
                 return conflicts;
             }
@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
             get
             {
                 var changesApplied = 0;
-                foreach (var tableProgress in this.TableChangesApplied)
+                foreach (var tableProgress in TableChangesApplied)
                     changesApplied += tableProgress.Applied;
                 return changesApplied;
             }
@@ -66,14 +66,14 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
             get
             {
                 var changesFailed = 0;
-                foreach (var tableProgress in this.TableChangesApplied)
+                foreach (var tableProgress in TableChangesApplied)
                     changesFailed += tableProgress.Failed;
 
                 return changesFailed;
             }
         }
 
-        public override string ToString() => $"{this.TotalAppliedChanges} changes applied for {this.TableChangesApplied.Count} tables";
+        public override string ToString() => $"{TotalAppliedChanges} changes applied for {TableChangesApplied.Count} tables";
     }
 
 }

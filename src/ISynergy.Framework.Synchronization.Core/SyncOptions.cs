@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
         /// <summary>
         /// Gets or Sets the size used (approximatively in kb, depending on the serializer) for each batch file, in batch mode. 
-        /// Default is 0 (no batch mode)
+        /// Default is 1000 
         /// </summary>
         public int BatchSize { get; set; }
 
@@ -43,12 +43,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Gets or Sets the log level for sync operations. Default value is false.
         /// </summary>
         public bool UseVerboseErrors { get; set; }
-
-        /// <summary>
-        /// Gets or Sets if we should use the bulk operations. Default is true.
-        /// If provider does not support bulk operations, this option is overrided to false.
-        /// </summary>
-        public bool UseBulkOperations { get; set; }
 
         /// <summary>
         /// Gets or Sets if we should clean tracking table metadatas.
@@ -65,7 +59,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Default value is false
         /// </summary>
 
-        // trying false by default : https://github.com/Mimetis/ISynergy.Framework.Synchronization.Core/discussions/453#discussioncomment-380530
+        // trying false by default : https://github.com/Mimetis/Dotmim.Sync/discussions/453#discussioncomment-380530
         public bool DisableConstraintsOnApplyChanges { get; set; }
 
         /// <summary>
@@ -85,9 +79,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Gets or Sets the serializer used when batch mode is enabled. Default is Json
+        /// Gets or Sets the local serializer used to buffer rows on disk
         /// </summary>
-        public ISerializerFactory SerializerFactory { get; set; }
+        public ILocalSerializerFactory LocalSerializerFactory { get; set; }
+
+        /// <summary>
+        /// Gets the Progress Level
+        /// </summary>
+        public SyncProgressLevel ProgressLevel { get; set; }
+
 
         /// <summary>
         /// Create a new instance of options with default values
@@ -95,16 +95,16 @@ namespace ISynergy.Framework.Synchronization.Core
         public SyncOptions()
         {
             BatchDirectory = GetDefaultUserBatchDiretory();
-            BatchSize = 0;
+            BatchSize = 5000;
             CleanMetadatas = true;
             CleanFolder = true;
-            UseBulkOperations = true;
             UseVerboseErrors = false;
             DisableConstraintsOnApplyChanges = false;
             ScopeInfoTableName = DefaultScopeInfoTableName;
             ConflictResolutionPolicy = ConflictResolutionPolicy.ServerWins;
-            Logger = new LoggerFactory().CreateLogger(nameof(SyncOptions));
-            SerializerFactory = SerializersCollection.JsonSerializer;
+            Logger = new LoggerFactory().CreateLogger("Synchronization");
+            ProgressLevel = SyncProgressLevel.Information;
+            LocalSerializerFactory = new LocalJsonSerializerFactory();
         }
 
 

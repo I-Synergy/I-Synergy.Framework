@@ -489,7 +489,7 @@ namespace ISynergy.Framework.UI
             {
                 ViewModelTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
-                        q.GetInterface(nameof(IViewModel), false) != null
+                        q.GetInterface(nameof(IViewModel), false) is not null
                         && !q.Name.Equals(GenericConstants.ShellViewModel)
                         && (q.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(q.Name, GenericConstants.ViewModelTRegex))
                         && q.Name != GenericConstants.ViewModel
@@ -499,7 +499,7 @@ namespace ISynergy.Framework.UI
 
                 ViewTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
-                        q.GetInterface(nameof(IView), false) != null && (
+                        q.GetInterface(nameof(IView), false) is not null && (
                         q.Name.EndsWith(GenericConstants.View)
                         || q.Name.EndsWith(GenericConstants.Page))
                         && q.Name != GenericConstants.View
@@ -511,7 +511,7 @@ namespace ISynergy.Framework.UI
 
                 WindowTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
-                        q.GetInterface(nameof(IWindow), false) != null
+                        q.GetInterface(nameof(IWindow), false) is not null
                         && q.Name.EndsWith(GenericConstants.Window)
                         && q.Name != GenericConstants.Window
                         && q.Name != nameof(ISynergy.Framework.UI.Controls.Window)
@@ -521,7 +521,7 @@ namespace ISynergy.Framework.UI
 
                 BootstrapperTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
-                        q.GetInterface(nameof(IBootstrap), false) != null
+                        q.GetInterface(nameof(IBootstrap), false) is not null
                         && !q.IsAbstract
                         && !q.IsInterface)
                     .ToList());
@@ -531,7 +531,7 @@ namespace ISynergy.Framework.UI
             {
                 var abstraction = viewmodel.GetInterfaces(false).FirstOrDefault();
 
-                if (abstraction != null && !viewmodel.IsGenericType)
+                if (abstraction is not null && !viewmodel.IsGenericType)
                 {
                     _services.AddSingleton(abstraction, viewmodel);
                 }
@@ -549,7 +549,7 @@ namespace ISynergy.Framework.UI
                         q.GetInterfaces().Contains(typeof(IView))
                         && q.Name != nameof(IView));
 
-                if (abstraction != null)
+                if (abstraction is not null)
                 {
                     _services.AddSingleton(abstraction, view);
                 }
@@ -564,7 +564,7 @@ namespace ISynergy.Framework.UI
                     return q.GetViewModelName().Equals(name) || q.Name.Equals(name);
                 });
 
-                if (viewmodel != null)
+                if (viewmodel is not null)
                 {
                     _navigationService.Configure(viewmodel.GetViewModelFullName(), view);
                 }
@@ -578,7 +578,7 @@ namespace ISynergy.Framework.UI
                         q.GetInterfaces().Contains(typeof(IWindow))
                         && q.Name != nameof(IWindow));
 
-                if (abstraction != null)
+                if (abstraction is not null)
                 {
                     _services.AddSingleton(abstraction, window);
                 }

@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Model.Parsers;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,8 +9,6 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Core
 {
-
-
     public class SchemaNameCreatedArgs : ProgressArgs
     {
         public SyncTable Table { get; }
@@ -17,11 +16,12 @@ namespace ISynergy.Framework.Synchronization.Core
         public SchemaNameCreatedArgs(SyncContext context, SyncTable table, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
+            Table = table;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.Table.SchemaName}] Schema Created.";
+        public override string Message => $"[{Table.SchemaName}] Schema Created.";
 
         public override int EventId => SyncEventsId.SchemaNameCreated.Id;
     }
@@ -35,11 +35,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public SchemaNameCreatingArgs(SyncContext context, SyncTable table, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.Command = command;
+            Table = table;
+            Command = command;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.Table.SchemaName}] Schema Creating.";
+        public override string Message => $"[{Table.SchemaName}] Schema Creating.";
         public override int EventId => SyncEventsId.SchemaNameCreating.Id;
     }
 
@@ -51,13 +53,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TableCreatedArgs(SyncContext context, SyncTable table, ParserName tableName, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.TableName = tableName;
-            this.Table = table;
+            TableName = tableName;
+            Table = table;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.Table.GetFullName()}] Table Created.";
-
+        public override string Message => $"[{Table.GetFullName()}] Table Created.";
         public override int EventId => SyncEventsId.TableCreated.Id;
     }
 
@@ -71,15 +73,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public TableCreatingArgs(SyncContext context, SyncTable table, ParserName tableName, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TableName = tableName;
-            this.Command = command;
+            Table = table;
+            TableName = tableName;
+            Command = command;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Table Creating.";
         public override int EventId => SyncEventsId.TableCreating.Id;
-
     }
 
     public class TableDroppedArgs : ProgressArgs
@@ -90,13 +92,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TableDroppedArgs(SyncContext context, SyncTable table, ParserName tableName, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.TableName = tableName;
-            this.Table = table;
+            TableName = tableName;
+            Table = table;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Table Dropped.";
-
         public override int EventId => SyncEventsId.TableDropped.Id;
     }
 
@@ -110,16 +112,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public TableDroppingArgs(SyncContext context, SyncTable table, ParserName tableName, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context,  connection, transaction)
         {
-            this.Command = command;
-            this.TableName = tableName;
-            this.Table = table;
+            Command = command;
+            TableName = tableName;
+            Table = table;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Table Dropping.";
-
         public override int EventId => SyncEventsId.TableDropping.Id;
-
     }
 
 
@@ -128,7 +129,6 @@ namespace ISynergy.Framework.Synchronization.Core
     /// </summary>
     public static partial class InterceptorsExtensions
     {
-
         /// <summary>
         /// Intercept the provider when database schema is created (works only on SQL Server)
         /// </summary>

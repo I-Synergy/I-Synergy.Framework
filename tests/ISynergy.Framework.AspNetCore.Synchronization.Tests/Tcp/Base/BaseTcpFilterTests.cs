@@ -1132,7 +1132,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // and get ALL the rows for the migrated new table
                 agent.RemoteOrchestrator.OnTableChangesSelecting(async tcs =>
                 {
-                    if (tcs.Context.AdditionalProperties == null || tcs.Context.AdditionalProperties.Count <= 0)
+                    if (tcs.Context.AdditionalProperties is null || tcs.Context.AdditionalProperties.Count <= 0)
                         return;
 
                     if (tcs.Context.AdditionalProperties.ContainsKey(tcs.Table.GetFullName()))
@@ -1141,7 +1141,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                         if (addProp == "Reinitialize")
                         {
                             var adapter = agent.RemoteOrchestrator.GetSyncAdapter(tcs.Table, setup);
-                            var command = await adapter.GetCommandAsync(DbCommandType.SelectInitializedChanges, tcs.Connection, tcs.Transaction, tcs.Table.GetFilter());
+                            var (command, isBatch) = await adapter.GetCommandAsync(DbCommandType.SelectInitializedChanges, tcs.Connection, tcs.Transaction, tcs.Table.GetFilter());
                             tcs.Command = command;
                         }
                     }
@@ -1159,7 +1159,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
                         if (migratedTable.Table == MigrationAction.Create)
                         {
-                            if (ma.Context.AdditionalProperties == null)
+                            if (ma.Context.AdditionalProperties is null)
                                 ma.Context.AdditionalProperties = new Dictionary<string, string>();
 
                             ma.Context.AdditionalProperties.Add(tableName, "Reinitialize");
@@ -1171,7 +1171,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 // And all rows will be re-applied 
                 agent.LocalOrchestrator.OnTableChangesApplying(async tca =>
                 {
-                    if (tca.Context.AdditionalProperties == null || tca.Context.AdditionalProperties.Count <= 0)
+                    if (tca.Context.AdditionalProperties is null || tca.Context.AdditionalProperties.Count <= 0)
                         return;
 
                     if (tca.State != DataRowState.Modified)

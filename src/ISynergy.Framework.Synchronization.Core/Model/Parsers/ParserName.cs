@@ -4,26 +4,25 @@ using System.Text;
 
 namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
 {
-
     public class ParserName
     {
-        private string _key;
+        private string key;
 
-        private bool _withDatabase = false;
-        private bool _withSchema = false;
-        private bool _withQuotes = false;
-        private bool _withNormalized = false;
+        private bool withDatabase = false;
+        private bool withSchema = false;
+        private bool withQuotes = false;
+        private bool withNormalized = false;
 
-        public string SchemaName => GlobalParser.GetParserString(_key).SchemaName;
-        public string ObjectName => GlobalParser.GetParserString(_key).ObjectName;
-        public string DatabaseName => GlobalParser.GetParserString(_key).DatabaseName;
+        public string SchemaName => GlobalParser.GetParserString(key).SchemaName;
+        public string ObjectName => GlobalParser.GetParserString(key).ObjectName;
+        public string DatabaseName => GlobalParser.GetParserString(key).DatabaseName;
 
         /// <summary>
         /// Add database name if available to the final string
         /// </summary>
         public ParserName Database()
         {
-            _withDatabase = true;
+            withDatabase = true;
             return this;
 
         }
@@ -33,7 +32,7 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         /// </summary>
         public ParserName Schema()
         {
-            _withSchema = true;
+            withSchema = true;
             return this;
 
         }
@@ -44,19 +43,19 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         /// <returns></returns>
         public ParserName Quoted()
         {
-            _withQuotes = true;
+            withQuotes = true;
             return this;
         }
 
         public ParserName Unquoted()
         {
-            _withQuotes = false;
+            withQuotes = false;
             return this;
         }
 
         public ParserName Normalized()
         {
-            _withNormalized = true;
+            withNormalized = true;
             return this;
         }
 
@@ -72,9 +71,11 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         private ParserName(SyncColumn column, string leftQuote = null, string rightQuote = null) => ParseString(column.ColumnName, leftQuote, rightQuote);
         private ParserName(SyncTable table, string leftQuote = null, string rightQuote = null)
         {
-            var input = string.IsNullOrEmpty(table.SchemaName) ? table.TableName : $"{table.SchemaName}.{table.TableName}";
+            string input = string.IsNullOrEmpty(table.SchemaName) ? table.TableName : $"{table.SchemaName}.{table.TableName}";
             ParseString(input, leftQuote, rightQuote);
         }
+
+
 
         /// <summary>
         /// Parse the input string and Get a non bracket object name :
@@ -86,14 +87,14 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         private void ParseString(string input, string leftQuote = null, string rightQuote = null)
         {
             input = input is null ? string.Empty : input.Trim();
-            _key = input;
+            key = input;
 
             if (!string.IsNullOrEmpty(leftQuote) && !string.IsNullOrEmpty(rightQuote))
-                _key = $"{leftQuote}^{rightQuote}^{input}";
+                key = $"{leftQuote}^{rightQuote}^{input}";
             else if (!string.IsNullOrEmpty(leftQuote))
-                _key = $"{leftQuote}^{leftQuote}^{input}";
+                key = $"{leftQuote}^{leftQuote}^{input}";
 
-            GlobalParser.GetParserString(_key);
+            GlobalParser.GetParserString(key);
 
         }
 
@@ -101,31 +102,33 @@ namespace ISynergy.Framework.Synchronization.Core.Model.Parsers
         {
             var sb = new StringBuilder();
 
-            var parsedName = GlobalParser.GetParserString(_key);
+            var parsedName = GlobalParser.GetParserString(key);
 
 
-            if (_withDatabase && !string.IsNullOrEmpty(DatabaseName))
+            if (withDatabase && !string.IsNullOrEmpty(DatabaseName))
             {
-                sb.Append(_withQuotes ? parsedName.QuotedDatabaseName : DatabaseName);
-                sb.Append(_withNormalized ? "_" : ".");
+                sb.Append(withQuotes ? parsedName.QuotedDatabaseName : DatabaseName);
+                sb.Append(withNormalized ? "_" : ".");
             }
-            if (_withSchema && !string.IsNullOrEmpty(SchemaName))
+            if (withSchema && !string.IsNullOrEmpty(SchemaName))
             {
-                sb.Append(_withQuotes ? parsedName.QuotedSchemaName : SchemaName);
-                sb.Append(_withNormalized ? "_" : ".");
+                sb.Append(withQuotes ? parsedName.QuotedSchemaName : SchemaName);
+                sb.Append(withNormalized ? "_" : ".");
             }
 
-            var name = _withQuotes ? parsedName.QuotedObjectName : ObjectName;
-            name = _withNormalized ? name.Replace(" ", "_").Replace(".", "_") : name;
+            var name = withQuotes ? parsedName.QuotedObjectName : ObjectName;
+            name = withNormalized ? name.Replace(" ", "_").Replace(".", "_").Replace("-", "_") : name;
             sb.Append(name);
 
             // now we have the correct string, reset options for the next time we call the same instance
-            _withDatabase = false;
-            _withSchema = false;
-            _withQuotes = false;
-            _withNormalized = false;
+            withDatabase = false;
+            withSchema = false;
+            withQuotes = false;
+            withNormalized = false;
 
             return sb.ToString();
+
+
         }
     }
 }

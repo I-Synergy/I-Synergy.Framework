@@ -47,7 +47,7 @@ namespace ISynergy.Framework.Core.Extensions
             Func<TSource, TSource> nextItem)
             where TSource : class
         {
-            return FromHierarchy(source, nextItem, s => s != null);
+            return FromHierarchy(source, nextItem, s => s is not null);
         }
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace ISynergy.Framework.Core.Extensions
         {
             Argument.IsNotNull(nameof(elementType), elementType);
 
-            var internalList = new List<object>(collection != null ? collection.Cast<object>() : Array.Empty<object>());
+            var internalList = new List<object>(collection is not null ? collection.Cast<object>() : Array.Empty<object>());
             var array = Array.CreateInstance(elementType, internalList.Count);
 
             var index = 0;

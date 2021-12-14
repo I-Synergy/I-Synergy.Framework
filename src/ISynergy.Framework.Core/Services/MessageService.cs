@@ -27,11 +27,11 @@ namespace ISynergy.Framework.Core.Services
         {
             get
             {
-                if (_defaultInstance == null)
+                if (_defaultInstance is null)
                 {
                     lock (_creationLock)
                     {
-                        if (_defaultInstance == null)
+                        if (_defaultInstance is null)
                         {
                             _defaultInstance = new MessageService();
                         }
@@ -153,7 +153,7 @@ namespace ISynergy.Framework.Core.Services
 
                 if (receiveDerivedMessagesToo)
                 {
-                    if (_recipientsOfSubclassesAction == null)
+                    if (_recipientsOfSubclassesAction is null)
                     {
                         _recipientsOfSubclassesAction = new Dictionary<Type, List<WeakActionAndToken>>();
                     }
@@ -162,7 +162,7 @@ namespace ISynergy.Framework.Core.Services
                 }
                 else
                 {
-                    if (_recipientsStrictAction == null)
+                    if (_recipientsStrictAction is null)
                     {
                         _recipientsStrictAction = new Dictionary<Type, List<WeakActionAndToken>>();
                     }
@@ -392,7 +392,7 @@ namespace ISynergy.Framework.Core.Services
 
         private static void CleanupList(IDictionary<Type, List<WeakActionAndToken>> lists)
         {
-            if (lists == null)
+            if (lists is null)
             {
                 return;
             }
@@ -403,7 +403,7 @@ namespace ISynergy.Framework.Core.Services
                 foreach (var list in lists)
                 {
                     var recipientsToRemove = list.Value
-                        .Where(item => item.Action == null || !item.Action.IsAlive)
+                        .Where(item => item.Action is null || !item.Action.IsAlive)
                         .ToList();
 
                     foreach (var recipient in recipientsToRemove)
@@ -430,7 +430,7 @@ namespace ISynergy.Framework.Core.Services
             Type messageTargetType,
             object token)
         {
-            if (weakActionsAndTokens != null)
+            if (weakActionsAndTokens is not null)
             {
                 // Clone to protect from people registering in a "receive message" method
                 // Correction Messaging BL0004.007
@@ -441,14 +441,14 @@ namespace ISynergy.Framework.Core.Services
                 {
                     var executeAction = item.Action as IExecuteWithObject;
 
-                    if (executeAction != null
+                    if (executeAction is not null
                         && item.Action.IsAlive
-                        && item.Action.Target != null
-                        && (messageTargetType == null
+                        && item.Action.Target is not null
+                        && (messageTargetType is null
                             || item.Action.Target.GetType() == messageTargetType
                             || messageTargetType.IsAssignableFrom(item.Action.Target.GetType()))
-                        && ((item.Token == null && token == null)
-                            || item.Token != null && item.Token.Equals(token)))
+                        && ((item.Token is null && token is null)
+                            || item.Token is not null && item.Token.Equals(token)))
                     {
                         executeAction.ExecuteWithObject(message);
                     }
@@ -458,8 +458,8 @@ namespace ISynergy.Framework.Core.Services
 
         private static void UnregisterFromLists(object recipient, Dictionary<Type, List<WeakActionAndToken>> lists)
         {
-            if (recipient == null
-                || lists == null
+            if (recipient is null
+                || lists is null
                 || lists.Count == 0)
             {
                 return;
@@ -473,7 +473,7 @@ namespace ISynergy.Framework.Core.Services
                     {
                         var weakAction = (IExecuteWithObject)item.Action;
 
-                        if (weakAction != null
+                        if (weakAction is not null
                             && recipient == weakAction.Target)
                         {
                             weakAction.MarkForDeletion();
@@ -491,8 +491,8 @@ namespace ISynergy.Framework.Core.Services
         {
             var messageType = typeof(TMessage);
 
-            if (recipient == null
-                || lists == null
+            if (recipient is null
+                || lists is null
                 || lists.Count == 0
                 || !lists.ContainsKey(messageType))
             {
@@ -505,11 +505,11 @@ namespace ISynergy.Framework.Core.Services
                 {
                     var weakActionCasted = item.Action as WeakAction<TMessage>;
 
-                    if (weakActionCasted != null
+                    if (weakActionCasted is not null
                         && recipient == weakActionCasted.Target
-                        && (action == null
+                        && (action is null
                             || action.Method.Name == weakActionCasted.MethodName)
-                        && (token == null
+                        && (token is null
                             || token.Equals(item.Token)))
                     {
                         item.Action.MarkForDeletion();
@@ -562,7 +562,7 @@ namespace ISynergy.Framework.Core.Services
         {
             var messageType = typeof(TMessage);
 
-            if (_recipientsOfSubclassesAction != null)
+            if (_recipientsOfSubclassesAction is not null)
             {
                 // Clone to protect from people registering in a "receive message" method
                 // Correction Messaging BL0008.002
@@ -587,7 +587,7 @@ namespace ISynergy.Framework.Core.Services
                 }
             }
 
-            if (_recipientsStrictAction != null)
+            if (_recipientsStrictAction is not null)
             {
                 List<WeakActionAndToken> list = null;
 
@@ -601,7 +601,7 @@ namespace ISynergy.Framework.Core.Services
                     }
                 }
 
-                if (list != null)
+                if (list is not null)
                 {
                     SendToList(message, list, messageTargetType, token);
                 }

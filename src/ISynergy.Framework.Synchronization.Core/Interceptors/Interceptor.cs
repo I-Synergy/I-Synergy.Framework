@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
         /// <summary>
         /// Gets a boolean returning true if an interceptor of type T, exists
         /// </summary>
-        public bool Contains<T>() where T : ProgressArgs => this.dictionary.ContainsKey(typeof(T));
+        public bool Contains<T>() where T : ProgressArgs => dictionary.ContainsKey(typeof(T));
 
     }
 

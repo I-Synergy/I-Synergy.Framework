@@ -120,7 +120,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             lock (ObservedFiles)
             {
-                ObservedFiles.Add(new ObservedFile("Renamed", "N/A", (e.Arguments == null) ? "Null argument object" : ((RenamedEventArgs)(e.Arguments)).FullPath));
+                ObservedFiles.Add(new ObservedFile("Renamed", "N/A", (e.Arguments is null) ? "Null argument object" : ((RenamedEventArgs)(e.Arguments)).FullPath));
             }
         }
 
@@ -133,7 +133,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             lock (ObservedFiles)
             {
-                ObservedFiles.Add(new ObservedFile("Error", "N/A", (e.Arguments == null) ? "Null argument object" : ((EventArgs)(e.Arguments)).ToString()));
+                ObservedFiles.Add(new ObservedFile("Error", "N/A", (e.Arguments is null) ? "Null argument object" : ((EventArgs)(e.Arguments)).ToString()));
             }
         }
 
@@ -146,7 +146,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             lock (ObservedFiles)
             {
-                ObservedFiles.Add(new ObservedFile("Disposed", "N/A", (e.Arguments == null) ? "Null argument object" : ((EventArgs)(e.Arguments)).ToString()));
+                ObservedFiles.Add(new ObservedFile("Disposed", "N/A", (e.Arguments is null) ? "Null argument object" : ((EventArgs)(e.Arguments)).ToString()));
             }
         }
 
@@ -159,7 +159,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             lock (ObservedFiles)
             {
-                ObservedFiles.Add(new ObservedFile("Deleted", "N/A", (e.Arguments == null) ? "Null argument object" : ((FileSystemEventArgs)(e.Arguments)).FullPath));
+                ObservedFiles.Add(new ObservedFile("Deleted", "N/A", (e.Arguments is null) ? "Null argument object" : ((FileSystemEventArgs)(e.Arguments)).FullPath));
             }
         }
 
@@ -172,7 +172,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             lock (ObservedFiles)
             {
-                ObservedFiles.Add(new ObservedFile("Created", "N/A", (e.Arguments == null) ? "Null argument object" : ((FileSystemEventArgs)(e.Arguments)).FullPath));
+                ObservedFiles.Add(new ObservedFile("Created", "N/A", (e.Arguments is null) ? "Null argument object" : ((FileSystemEventArgs)(e.Arguments)).FullPath));
             }
         }
 
@@ -185,7 +185,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         {
             lock (ObservedFiles)
             {
-                ObservedFiles.Add(new ObservedFile("Change", e.Filter.ToString(), (e.Arguments == null) ? "Null argument object" : ((FileSystemEventArgs)(e.Arguments)).FullPath));
+                ObservedFiles.Add(new ObservedFile("Change", e.Filter.ToString(), (e.Arguments is null) ? "Null argument object" : ((FileSystemEventArgs)(e.Arguments)).FullPath));
             }
         }
     }

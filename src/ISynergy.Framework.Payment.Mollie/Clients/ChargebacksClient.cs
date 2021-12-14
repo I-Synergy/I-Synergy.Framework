@@ -58,7 +58,7 @@ namespace ISynergy.Framework.Payment.Mollie.Clients
         /// <returns>Task&lt;ListResponse&lt;ChargebackResponse&gt;&gt;.</returns>
         public Task<ListResponse<ChargebackResponse>> GetChargebacksListAsync(string profileId = null, bool? testmode = null)
         {
-            if (profileId != null || testmode != null)
+            if (profileId is not null || testmode is not null)
             {
                 ValidateApiKeyIsOauthAccesstoken();
             }

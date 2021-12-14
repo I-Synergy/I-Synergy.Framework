@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
@@ -60,12 +60,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Gets the setup used for this sync
         /// </summary>
-        public SyncSetup Setup => this.LocalOrchestrator?.Setup;
+        public SyncSetup Setup => LocalOrchestrator?.Setup;
 
         /// <summary>
         /// Gets the options used on this sync process.
         /// </summary>
-        public SyncOptions Options => this.LocalOrchestrator?.Options;
+        public SyncOptions Options => LocalOrchestrator?.Options;
 
         /// <summary>
         /// Get or sets schema.
@@ -75,7 +75,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Set interceptors on the LocalOrchestrator
         /// </summary>
-        public void SetInterceptors(Interceptor interceptors) => this.LocalOrchestrator.On(interceptors);
+        public void SetInterceptors(Interceptor interceptors) => LocalOrchestrator.On(interceptors);
 
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public void OnApplyChangesFailed(Action<ApplyChangesFailedArgs> action)
         {
-            if (this.RemoteOrchestrator is null)
+            if (RemoteOrchestrator is null)
                 throw new InvalidRemoteOrchestratorException();
 
-            this.RemoteOrchestrator.OnApplyChangesFailed(action);
+            RemoteOrchestrator.OnApplyChangesFailed(action);
 
         }
 
@@ -119,7 +119,7 @@ namespace ISynergy.Framework.Synchronization.Core
         private SyncAgent(IVersionService versionService, string scopeName)
         {
             _versionService = versionService;
-            this.ScopeName = scopeName;
+            ScopeName = scopeName;
         }
 
         // 1
@@ -189,11 +189,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="setup">Sync Setup containing the definition of your tables, columns, filters and naming conventions.</param>
         /// <param name="scopeName">scope name</param>
         public SyncAgent(
-            IVersionService versionService, 
-            CoreProvider clientProvider, 
-            CoreProvider serverProvider, 
-            SyncOptions options, 
-            SyncSetup setup, 
+            IVersionService versionService,
+            CoreProvider clientProvider,
+            CoreProvider serverProvider,
+            SyncOptions options,
+            SyncSetup setup,
             string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, scopeName)
         {
@@ -207,10 +207,10 @@ namespace ISynergy.Framework.Synchronization.Core
                 throw new ArgumentNullException(nameof(setup));
 
             // Affect local and remote orchestrators
-            this.LocalOrchestrator = new LocalOrchestrator(versionService, clientProvider, options, setup, scopeName);
-            this.RemoteOrchestrator = new RemoteOrchestrator(versionService, serverProvider, options, setup, scopeName);
+            LocalOrchestrator = new LocalOrchestrator(versionService, clientProvider, options, setup, scopeName);
+            RemoteOrchestrator = new RemoteOrchestrator(versionService, serverProvider, options, setup, scopeName);
 
-            this.EnsureOptionsAndSetupInstances();
+            EnsureOptionsAndSetupInstances();
         }
 
         // 5
@@ -315,10 +315,10 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var localOrchestrator = new LocalOrchestrator(versionService, clientProvider, options, setup, scopeName);
 
-            this.LocalOrchestrator = localOrchestrator;
-            this.RemoteOrchestrator = remoteOrchestrator;
+            LocalOrchestrator = localOrchestrator;
+            RemoteOrchestrator = remoteOrchestrator;
 
-            this.EnsureOptionsAndSetupInstances();
+            EnsureOptionsAndSetupInstances();
         }
 
         // 10
@@ -337,10 +337,10 @@ namespace ISynergy.Framework.Synchronization.Core
             if (remoteOrchestrator is null)
                 throw new ArgumentNullException(nameof(remoteOrchestrator));
 
-            this.LocalOrchestrator = localOrchestrator;
-            this.RemoteOrchestrator = remoteOrchestrator;
+            LocalOrchestrator = localOrchestrator;
+            RemoteOrchestrator = remoteOrchestrator;
 
-            this.EnsureOptionsAndSetupInstances();
+            EnsureOptionsAndSetupInstances();
         }
 
 
@@ -351,16 +351,16 @@ namespace ISynergy.Framework.Synchronization.Core
         private void EnsureOptionsAndSetupInstances()
         {
             // if we have a remote orchestrator with different options, raise an error
-            if (this.RemoteOrchestrator.Options is not null && this.RemoteOrchestrator.Options != this.LocalOrchestrator.Options)
+            if (RemoteOrchestrator.Options is not null && RemoteOrchestrator.Options != LocalOrchestrator.Options)
                 throw new OptionsReferencesAreNotSameExecption();
-            else if (this.RemoteOrchestrator.Options is null)
-                this.RemoteOrchestrator.Options = this.LocalOrchestrator.Options;
+            else if (RemoteOrchestrator.Options is null)
+                RemoteOrchestrator.Options = LocalOrchestrator.Options;
 
             // if we have a remote orchestrator with different options, raise an error
-            if (this.RemoteOrchestrator.Setup is not null && !this.RemoteOrchestrator.Setup.EqualsByProperties(this.LocalOrchestrator.Setup))
+            if (RemoteOrchestrator.Setup is not null && !RemoteOrchestrator.Setup.EqualsByProperties(LocalOrchestrator.Setup))
                 throw new SetupReferencesAreNotSameExecption();
-            else if (this.RemoteOrchestrator.Setup is null)
-                this.RemoteOrchestrator.Setup = this.LocalOrchestrator.Setup;
+            else if (RemoteOrchestrator.Setup is null)
+                RemoteOrchestrator.Setup = LocalOrchestrator.Setup;
 
         }
 
@@ -389,16 +389,16 @@ namespace ISynergy.Framework.Synchronization.Core
             var completeTime = DateTime.UtcNow;
 
             // Create a logger
-            var logger = this.Options.Logger ?? new LoggerFactory().CreateLogger(nameof(SyncAgent));
+            var logger = Options.Logger ?? new LoggerFactory().CreateLogger(nameof(SyncAgent));
 
             // Lock sync to prevent multi call to sync at the same time
             LockSync();
 
             // Context, used to back and forth data between servers
-            var context = new SyncContext(Guid.NewGuid(), this.ScopeName)
+            var context = new SyncContext(Guid.NewGuid(), ScopeName)
             {
                 // if any parameters, set in context
-                Parameters = this.Parameters,
+                Parameters = Parameters,
                 // set sync type (Normal, Reinitialize, ReinitializeWithUpload)
                 SyncType = syncType
             };
@@ -411,8 +411,8 @@ namespace ISynergy.Framework.Synchronization.Core
                 CompleteTime = completeTime,
             };
 
-            this.SessionState = SyncSessionState.Synchronizing;
-            this.SessionStateChanged?.Invoke(this, this.SessionState);
+            SessionState = SyncSessionState.Synchronizing;
+            SessionStateChanged?.Invoke(this, SessionState);
             await Task.Run(async () =>
             {
                 try
@@ -423,19 +423,19 @@ namespace ISynergy.Framework.Synchronization.Core
                     ServerScopeInfo serverScopeInfo = null;
 
                     // Internal set the good reference. Don't use the SetContext method here
-                    this.LocalOrchestrator.syncContext = context;
-                    this.RemoteOrchestrator.syncContext = context;
-                    this.LocalOrchestrator.StartTime = startTime;
-                    this.RemoteOrchestrator.StartTime = startTime;
+                    LocalOrchestrator.syncContext = context;
+                    RemoteOrchestrator.syncContext = context;
+                    LocalOrchestrator.StartTime = startTime;
+                    RemoteOrchestrator.StartTime = startTime;
 
                     // Begin session
-                    await this.LocalOrchestrator.BeginSessionAsync(cancellationToken, progress).ConfigureAwait(false);
+                    await LocalOrchestrator.BeginSessionAsync(cancellationToken, progress).ConfigureAwait(false);
 
                     if (cancellationToken.IsCancellationRequested)
                         cancellationToken.ThrowIfCancellationRequested();
 
                     // On local orchestrator, get scope info
-                    var clientScopeInfo = await this.LocalOrchestrator.GetClientScopeAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
+                    var clientScopeInfo = await LocalOrchestrator.GetClientScopeAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
 
                     // Register local scope id
                     context.ClientScopeId = clientScopeInfo.Id;
@@ -448,43 +448,43 @@ namespace ISynergy.Framework.Synchronization.Core
                         // This action will create schema on server if needed
                         // if schema already exists on server, then the server setup will be compared with this one
                         // if setup is different, it will be migrated.
-                        // so serverScopeInfo.Setup MUST be equal to this.Setup
-                        serverScopeInfo = await this.RemoteOrchestrator.EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
+                        // so serverScopeInfo.Setup MUST be equal to Setup
+                        serverScopeInfo = await RemoteOrchestrator.EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
 
                         // Affect local setup since the setup could potentially comes from Web server
-                        // Affect local setup (equivalent to this.Setup)
-                        if (!this.Setup.EqualsByProperties(serverScopeInfo.Setup) && !this.Setup.HasTables)
-                            this.LocalOrchestrator.Setup = serverScopeInfo.Setup;
+                        // Affect local setup (equivalent to Setup)
+                        if (!Setup.EqualsByProperties(serverScopeInfo.Setup) && !Setup.HasTables)
+                            LocalOrchestrator.Setup = serverScopeInfo.Setup;
 
                         // Provision local database
                         var provision = SyncProvision.Table | SyncProvision.TrackingTable | SyncProvision.StoredProcedures | SyncProvision.Triggers;
-                        await this.LocalOrchestrator.ProvisionAsync(serverScopeInfo.Schema, provision, false, clientScopeInfo, default, default, cancellationToken, progress).ConfigureAwait(false);
+                        await LocalOrchestrator.ProvisionAsync(serverScopeInfo.Schema, provision, false, clientScopeInfo, default, default, cancellationToken, progress).ConfigureAwait(false);
 
                         // Set schema for agent, just to let the opportunity to user to use it.
-                        this.Schema = serverScopeInfo.Schema;
+                        Schema = serverScopeInfo.Schema;
                     }
                     else
                     {
                         // Affect local setup since the setup could potentially comes from Web server
-                        // Affect local setup (equivalent to this.Setup)
-                        if (!this.Setup.EqualsByProperties(clientScopeInfo.Setup) && !this.Setup.HasTables)
-                            this.LocalOrchestrator.Setup = clientScopeInfo.Setup;
+                        // Affect local setup (equivalent to Setup)
+                        if (!Setup.EqualsByProperties(clientScopeInfo.Setup) && !Setup.HasTables)
+                            LocalOrchestrator.Setup = clientScopeInfo.Setup;
 
                         // Do we need to upgrade ?
-                        if (this.LocalOrchestrator.InternalNeedsToUpgrade(clientScopeInfo))
+                        if (LocalOrchestrator.InternalNeedsToUpgrade(clientScopeInfo))
                         {
-                            var newScope = await this.LocalOrchestrator.UpgradeAsync(clientScopeInfo, default, default, cancellationToken, progress).ConfigureAwait(false);
+                            var newScope = await LocalOrchestrator.UpgradeAsync(clientScopeInfo, default, default, cancellationToken, progress).ConfigureAwait(false);
                             if (newScope is not null)
                                 clientScopeInfo = newScope;
                         }
 
                         // on remote orchestrator get scope info as well
                         // if setup is different, it will be migrated.
-                        // so serverScopeInfo.Setup MUST be equal to this.Setup
-                        serverScopeInfo = await this.RemoteOrchestrator.GetServerScopeAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
+                        // so serverScopeInfo.Setup MUST be equal to Setup
+                        serverScopeInfo = await RemoteOrchestrator.GetServerScopeAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
 
                         // compare local setup options with setup provided on SyncAgent constructor (check if pref / suf have changed)
-                        var hasSameOptions = clientScopeInfo.Setup.HasSameOptions(this.Setup);
+                        var hasSameOptions = clientScopeInfo.Setup.HasSameOptions(Setup);
 
                         // compare local setup strucutre with remote structure
                         var hasSameStructure = clientScopeInfo.Setup.HasSameStructure(serverScopeInfo.Setup);
@@ -492,7 +492,7 @@ namespace ISynergy.Framework.Synchronization.Core
                         if (hasSameStructure)
                         {
                             // Set schema & setup
-                            this.Schema = clientScopeInfo.Schema;
+                            Schema = clientScopeInfo.Schema;
 
                             // Schema could be null if from web server 
                             if (serverScopeInfo.Schema is null)
@@ -501,18 +501,18 @@ namespace ISynergy.Framework.Synchronization.Core
                         else
                         {
                             // Get full schema from server
-                            serverScopeInfo = await this.RemoteOrchestrator.EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
+                            serverScopeInfo = await RemoteOrchestrator.EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
 
                             // Set the correct schema
-                            this.Schema = serverScopeInfo.Schema;
+                            Schema = serverScopeInfo.Schema;
                         }
 
                         // If one of the comparison is false, we make a migration
                         if (!hasSameOptions || !hasSameStructure)
-                            clientScopeInfo = await this.LocalOrchestrator.MigrationAsync(clientScopeInfo.Setup, serverScopeInfo.Setup, serverScopeInfo.Schema, cancellationToken, progress).ConfigureAwait(false);
+                            clientScopeInfo = await LocalOrchestrator.MigrationAsync(clientScopeInfo.Setup, serverScopeInfo.Setup, serverScopeInfo.Schema, default, default, cancellationToken, progress).ConfigureAwait(false);
 
-                        // Affect local setup (equivalent to this.Setup)
-                        this.LocalOrchestrator.Setup = serverScopeInfo.Setup;
+                        // Affect local setup (equivalent to Setup)
+                        LocalOrchestrator.Setup = serverScopeInfo.Setup;
                     }
 
                     if (cancellationToken.IsCancellationRequested)
@@ -521,7 +521,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     // Before call the changes from localorchestrator, check if we are outdated
                     if (serverScopeInfo is not null && context.SyncType != SyncType.Reinitialize && context.SyncType != SyncType.ReinitializeWithUpload)
                     {
-                        var isOutDated = await this.LocalOrchestrator.IsOutDatedAsync(clientScopeInfo, serverScopeInfo).ConfigureAwait(false);
+                        var isOutDated = await LocalOrchestrator.IsOutDatedAsync(clientScopeInfo, serverScopeInfo).ConfigureAwait(false);
 
                         // if client does not change SyncType to Reinitialize / ReinitializeWithUpload on SyncInterceptor, we raise an error
                         // otherwise, we are outdated, but we can continue, because we have a new mode.
@@ -532,7 +532,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     context.ProgressPercentage = 0.1;
 
                     // On local orchestrator, get local changes
-                    var clientChanges = await this.LocalOrchestrator.GetChangesAsync(clientScopeInfo, default, default, cancellationToken, progress).ConfigureAwait(false);
+                    var clientChanges = await LocalOrchestrator.GetChangesAsync(clientScopeInfo, default, default, cancellationToken, progress).ConfigureAwait(false);
 
                     if (cancellationToken.IsCancellationRequested)
                         cancellationToken.ThrowIfCancellationRequested();
@@ -548,17 +548,20 @@ namespace ISynergy.Framework.Synchronization.Core
                     if (fromScratch)
                     {
                         // Get snapshot files
-                        var serverSnapshotChanges = await this.RemoteOrchestrator.GetSnapshotAsync(this.Schema, cancellationToken, progress).ConfigureAwait(false);
+                        var serverSnapshotChanges = await RemoteOrchestrator.GetSnapshotAsync(Schema, default, default, cancellationToken, progress).ConfigureAwait(false);
 
                         // Apply snapshot
                         if (serverSnapshotChanges.ServerBatchInfo is not null)
-                            (result.SnapshotChangesAppliedOnClient, clientScopeInfo) = await this.LocalOrchestrator.ApplySnapshotAsync(
-                                clientScopeInfo, serverSnapshotChanges.ServerBatchInfo, clientChanges.ClientTimestamp, serverSnapshotChanges.RemoteClientTimestamp, serverSnapshotChanges.DatabaseChangesSelected, cancellationToken, progress).ConfigureAwait(false);
+                            (result.SnapshotChangesAppliedOnClient, clientScopeInfo) = await LocalOrchestrator.ApplySnapshotAsync(
+                                clientScopeInfo, serverSnapshotChanges.ServerBatchInfo, clientChanges.ClientTimestamp, serverSnapshotChanges.RemoteClientTimestamp, serverSnapshotChanges.DatabaseChangesSelected, default, default, cancellationToken, progress).ConfigureAwait(false);
                     }
+
+                    // Get if we have already applied a snapshot, so far we don't need to reset table even if we are i Reinitialize Mode
+                    var snapshotApplied = result.SnapshotChangesAppliedOnClient is not null;
 
                     context.ProgressPercentage = 0.3;
                     // apply is 25%, get changes is 20%
-                    var serverChanges = await this.RemoteOrchestrator.ApplyThenGetChangesAsync(clientScopeInfo, clientChanges.ClientBatchInfo, cancellationToken, progress).ConfigureAwait(false);
+                    var serverChanges = await RemoteOrchestrator.ApplyThenGetChangesAsync(clientScopeInfo, clientChanges.ClientBatchInfo, default, default, cancellationToken, progress).ConfigureAwait(false);
 
                     if (cancellationToken.IsCancellationRequested)
                         cancellationToken.ThrowIfCancellationRequested();
@@ -566,19 +569,16 @@ namespace ISynergy.Framework.Synchronization.Core
                     // Policy is always Server policy, so reverse this policy to get the client policy
                     var reverseConflictResolutionPolicy = serverChanges.ServerPolicy == ConflictResolutionPolicy.ServerWins ? ConflictResolutionPolicy.ClientWins : ConflictResolutionPolicy.ServerWins;
 
-                    // Get if we have already applied a snapshot, so far we don't need to reset table even if we are i Reinitialize Mode
-                    var snapshotApplied = result.SnapshotChangesAppliedOnClient is not null;
-
                     // apply is 25%
                     context.ProgressPercentage = 0.75;
-                    var clientChangesApplied = await this.LocalOrchestrator.ApplyChangesAsync(
-                        clientScopeInfo, this.Schema, serverChanges.ServerBatchInfo,
+                    var clientChangesApplied = await LocalOrchestrator.ApplyChangesAsync(
+                        clientScopeInfo, Schema, serverChanges.ServerBatchInfo,
                         clientChanges.ClientTimestamp, serverChanges.RemoteClientTimestamp, reverseConflictResolutionPolicy, snapshotApplied,
-                        serverChanges.ServerChangesSelected, cancellationToken, progress).ConfigureAwait(false);
+                        serverChanges.ServerChangesSelected, default, default, cancellationToken, progress).ConfigureAwait(false);
 
                     completeTime = DateTime.UtcNow;
-                    this.LocalOrchestrator.CompleteTime = completeTime;
-                    this.RemoteOrchestrator.CompleteTime = completeTime;
+                    LocalOrchestrator.CompleteTime = completeTime;
+                    RemoteOrchestrator.CompleteTime = completeTime;
 
                     result.CompleteTime = completeTime;
 
@@ -590,7 +590,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                     // Begin session
                     context.ProgressPercentage = 1;
-                    await this.LocalOrchestrator.EndSessionAsync(cancellationToken, progress).ConfigureAwait(false);
+                    await LocalOrchestrator.EndSessionAsync(cancellationToken, progress).ConfigureAwait(false);
 
                     if (cancellationToken.IsCancellationRequested)
                         cancellationToken.ThrowIfCancellationRequested();
@@ -599,19 +599,19 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 catch (SyncException se)
                 {
-                    this.Options.Logger.LogError(SyncEventsId.Exception, se, se.TypeName);
+                    Options.Logger.LogError(SyncEventsId.Exception, se, se.TypeName);
                     throw;
                 }
                 catch (Exception ex)
                 {
-                    this.Options.Logger.LogCritical(SyncEventsId.Exception, ex, ex.Message);
+                    Options.Logger.LogCritical(SyncEventsId.Exception, ex, ex.Message);
                     throw new SyncException(ex, SyncStage.None);
                 }
                 finally
                 {
                     // End the current session
-                    this.SessionState = SyncSessionState.Ready;
-                    this.SessionStateChanged?.Invoke(this, this.SessionState);
+                    SessionState = SyncSessionState.Ready;
+                    SessionStateChanged?.Invoke(this, SessionState);
                     // unlock sync since it's over
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
@@ -622,12 +622,12 @@ namespace ISynergy.Framework.Synchronization.Core
             return result;
         }
 
-        #region IDisposable
-        // Dispose() calls Dispose(true)
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
+    #region IDisposable
+    // Dispose() calls Dispose(true)
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

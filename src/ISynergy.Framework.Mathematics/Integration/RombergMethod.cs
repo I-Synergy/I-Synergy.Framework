@@ -124,7 +124,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         /// <param name="function">The unidimensional function whose integral should be computed.</param>
         public RombergMethod(int steps, Func<double, double> function)
         {
-            if (function == null)
+            if (function is null)
                 throw new ArgumentNullException("function");
 
             Range = new NumericRange(0, 1);

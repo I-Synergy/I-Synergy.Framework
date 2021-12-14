@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Methods
 
         internal static async Task<SqlParameter[]> DeriveParametersAsync(this SqlConnection connection, SqlCommand cmd, bool includeReturnValueParameter = false, SqlTransaction transaction = null)
         {
-            if (cmd == null) throw new ArgumentNullException("SqlCommand");
+            if (cmd is null) throw new ArgumentNullException("SqlCommand");
 
             var textParser = ParserName.Parse(cmd.CommandText);
 

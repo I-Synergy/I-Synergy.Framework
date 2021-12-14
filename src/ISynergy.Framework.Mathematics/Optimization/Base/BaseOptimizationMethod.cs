@@ -39,7 +39,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         /// <param name="function">The objective function whose optimum values should be found.</param>
         protected BaseOptimizationMethod(int numberOfVariables, Func<double[], double> function)
         {
-            if (function == null)
+            if (function is null)
                 throw new ArgumentNullException("function");
 
             NumberOfVariables = numberOfVariables;
@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         /// <param name="function">The objective function whose optimum values should be found.</param>
         protected BaseOptimizationMethod(NonlinearObjectiveFunction function)
         {
-            if (function == null)
+            if (function is null)
                 throw new ArgumentNullException("function");
 
             NumberOfVariables = function.NumberOfVariables;
@@ -96,7 +96,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
             get => x;
             set
             {
-                if (value == null)
+                if (value is null)
                     throw new ArgumentNullException("value");
 
                 if (value.Length != NumberOfVariables)
@@ -116,7 +116,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         /// </summary>
         protected virtual void OnNumberOfVariablesChanged(int numberOfVariables)
         {
-            if (Solution == null || Solution.Length != numberOfVariables)
+            if (Solution is null || Solution.Length != numberOfVariables)
             {
                 Solution = new double[numberOfVariables];
                 for (var i = 0; i < Solution.Length; i++)
@@ -166,7 +166,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         /// </returns>
         public virtual bool Maximize()
         {
-            if (Function == null)
+            if (Function is null)
                 throw new InvalidOperationException("function");
 
             var f = Function;
@@ -192,7 +192,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         /// </returns>
         public virtual bool Minimize()
         {
-            if (Function == null)
+            if (Function is null)
                 throw new InvalidOperationException("function");
 
             var success = Optimize();

@@ -130,10 +130,10 @@
         /// 
         public static Double[] Solve(this Double[,] matrix, Double[] rightSide, bool leastSquares = false)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
-            if (rightSide == null)
+            if (rightSide is null)
                 throw new ArgumentNullException("rightSide");
 
             int rows = matrix.GetLength(0);

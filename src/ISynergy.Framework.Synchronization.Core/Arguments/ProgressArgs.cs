@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using System.Data.Common;
 
 namespace ISynergy.Framework.Synchronization.Core.Arguments
 {
@@ -20,26 +21,41 @@ namespace ISynergy.Framework.Synchronization.Core.Arguments
         public SyncContext Context { get; }
 
         /// <summary>
-        /// Gets or Sets an arbitrary args you can use for you own purpose
+        /// Gets the Progress Level
         /// </summary>
-        public string Hint { get; set; }
+        public virtual SyncProgressLevel ProgressLevel { get; }
 
         /// <summary>
-        /// Constructor
+        /// Gets or Sets an arbitrary args you can use for you own purpose
         /// </summary>
+        public virtual string Hint { get; set; }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
         public ProgressArgs(SyncContext context, DbConnection connection, DbTransaction transaction)
         {
             Context = context;
             Connection = connection;
             Transaction = transaction;
             Message = GetType().Name;
+            ProgressLevel = SyncProgressLevel.Information;
         }
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="connection"></param>
         public ProgressArgs(SyncContext context, DbConnection connection)
         {
             Context = context;
             Connection = connection;
             Message = GetType().Name;
+            ProgressLevel = SyncProgressLevel.Information;
         }
 
 

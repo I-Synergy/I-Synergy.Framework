@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Payment.Mollie.Services
         {
             var httpRequest = CreateHttpRequest(httpMethod, relativeUri);
 
-            if (data != null)
+            if (data is not null)
             {
                 var jsonData = _jsonConverterService.Serialize(data);
                 var content = new StringContent(jsonData, Encoding.UTF8, "application/json");

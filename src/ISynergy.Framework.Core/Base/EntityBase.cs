@@ -60,7 +60,7 @@ namespace ISynergy.Framework.Core.Base
         {
             try
             {
-                return obj.GetType().GetRuntimeProperty(propertyName) != null;
+                return obj.GetType().GetRuntimeProperty(propertyName) is not null;
             }
             catch (AmbiguousMatchException)
             {

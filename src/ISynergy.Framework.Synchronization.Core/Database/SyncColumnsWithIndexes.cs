@@ -38,14 +38,14 @@
 //        /// <summary>
 //        /// Create a new collection of tables for a SyncSchema
 //        /// </summary>
-//        public SyncColumns(SyncTable table) => this.Table = table;
+//        public SyncColumns(SyncTable table) => Table = table;
 
 //        /// <summary>
 //        /// Since we don't serializer the reference to the schema, this method will reaffect the correct schema
 //        /// </summary>
 //        public void EnsureColumns(SyncTable table)
 //        {
-//            this.Table = table;
+//            Table = table;
 //        }
 
 //        /// <summary>
@@ -99,29 +99,29 @@
 //        /// </summary>
 //        public void Reorder(SyncColumn column, int newPosition)
 //        {
-//            if (newPosition < 0 || newPosition > this.InnerCollection.Count - 1)
+//            if (newPosition < 0 || newPosition > InnerCollection.Count - 1)
 //                throw new Exception($"InvalidOrdinal(ordinal, {newPosition}");
 
 //            // Remove column from collection
-//            this.InnerCollection.Remove(column);
+//            InnerCollection.Remove(column);
 
 //            // Add at the end or insert in new positions
-//            if (newPosition > this.InnerCollection.Count - 1)
-//                this.InnerCollection.Add(column);
+//            if (newPosition > InnerCollection.Count - 1)
+//                InnerCollection.Add(column);
 //            else
-//                this.InnerCollection.Insert(newPosition, column);
+//                InnerCollection.Insert(newPosition, column);
 
 //            AffectOrder();
 //        }
 //        private void AffectOrder()
 //        {
-//            this.InnerIndexes.Clear();
+//            InnerIndexes.Clear();
 //            // now reordered correctly, affect new Ordinal property
-//            for (int i = 0; i < this.InnerCollection.Count; i++)
+//            for (int i = 0; i < InnerCollection.Count; i++)
 //            {
-//                var c = this.InnerCollection[i];
+//                var c = InnerCollection[i];
 //                c.Ordinal = i;
-//                this.InnerIndexes[c.ColumnName.ToLowerInvariant()] = i;
+//                InnerIndexes[c.ColumnName.ToLowerInvariant()] = i;
 //            }
 
 //        }
@@ -131,8 +131,8 @@
 //        /// </summary>
 //        public void Clear()
 //        {
-//            this.InnerCollection.Clear();
-//            this.InnerIndexes.Clear();
+//            InnerCollection.Clear();
+//            InnerIndexes.Clear();
 //        }
 
 //        public SyncColumn this[int index] => InnerCollection[index];
@@ -140,14 +140,14 @@
 //        public bool IsReadOnly => false;
 //        SyncColumn IList<SyncColumn>.this[int index]
 //        {
-//            get => this.InnerCollection[index];
+//            get => InnerCollection[index];
 //            set
 //            {
 //                if (value is null)
 //                    throw new Exception("Can't be null");
 
-//                this.InnerCollection[index] = value;
-//                this.InnerIndexes[value.ColumnName.ToLowerInvariant()] = index;
+//                InnerCollection[index] = value;
+//                InnerIndexes[value.ColumnName.ToLowerInvariant()] = index;
 //            }
 //        }
 //        public bool Remove(SyncColumn item)
@@ -170,11 +170,11 @@
 //        }
 //        IEnumerator IEnumerable.GetEnumerator() => InnerCollection.GetEnumerator();
 //        public IEnumerator<SyncColumn> GetEnumerator() => InnerCollection.GetEnumerator();
-//        public override string ToString() => this.InnerCollection.Count.ToString();
+//        public override string ToString() => InnerCollection.Count.ToString();
 //        public void Insert(int index, SyncColumn item)
 //        {
-//            this.InnerIndexes[item.ColumnName.ToLowerInvariant()] = index;
-//            this.InnerCollection.Insert(index, item);
+//            InnerIndexes[item.ColumnName.ToLowerInvariant()] = index;
+//            InnerCollection.Insert(index, item);
 //        }
 //    }
 

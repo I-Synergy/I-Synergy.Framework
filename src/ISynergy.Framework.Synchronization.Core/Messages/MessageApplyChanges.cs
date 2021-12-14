@@ -18,8 +18,8 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// Be careful policy could be differente from the schema (especially on client side, it's the reverse one, by default)
         /// </summary>
         public MessageApplyChanges(Guid localScopeId, Guid senderScopeId, bool isNew, long? lastTimestamp, SyncSet schema, SyncSetup setup,
-                                    ConflictResolutionPolicy policy, bool disableConstraintsOnApplyChanges,
-                                    bool useBulkOperations, bool cleanMetadatas, bool cleanFolder, bool snapshotApplied, BatchInfo changes, ISerializerFactory serializerFactory)
+                                    ConflictResolutionPolicy policy, bool disableConstraintsOnApplyChanges, bool cleanMetadatas,
+                                    bool cleanFolder, bool snapshotApplied, BatchInfo changes, ILocalSerializerFactory localSerializerFactory)
         {
             LocalScopeId = localScopeId;
             SenderScopeId = senderScopeId;
@@ -29,11 +29,10 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
             Setup = setup ?? throw new ArgumentNullException(nameof(setup));
             Policy = policy;
             DisableConstraintsOnApplyChanges = disableConstraintsOnApplyChanges;
-            UseBulkOperations = useBulkOperations;
             CleanMetadatas = cleanMetadatas;
             CleanFolder = cleanFolder;
             Changes = changes ?? throw new ArgumentNullException(nameof(changes));
-            SerializerFactory = serializerFactory;
+            LocalSerializerFactory = localSerializerFactory;
             SnapshoteApplied = snapshotApplied;
         }
 
@@ -100,9 +99,9 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         public BatchInfo Changes { get; set; }
 
         /// <summary>
-        /// Gets or Sets the Serializer factory used when batch mode is enabled
+        /// Gets or Sets the local Serializer used to buffer rows on disk
         /// </summary>
-        public ISerializerFactory SerializerFactory { get; set; }
+        public ILocalSerializerFactory LocalSerializerFactory { get; set; }
 
         /// <summary>
         /// Gets or Sets if we have already applied a snapshot. So far, we don't reset the tables, even if we are in reinit mode.

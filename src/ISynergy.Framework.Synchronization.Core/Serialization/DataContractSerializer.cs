@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using ISynergy.Framework.Synchronization.Core.Database;
+using System;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -22,6 +24,10 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         {
         }
 
+        public string Extension => "bin";
+
+        public Task CloseFileAsync(string path, SyncTable shemaTable) => throw new NotImplementedException();
+
         public async Task<T> DeserializeAsync(Stream ms)
         {
             using (var ims = new MemoryStream())
@@ -43,6 +49,8 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
         }
 
+        public Task<long> GetCurrentFileSizeAsync() => throw new NotImplementedException();
+        public Task OpenFileAsync(string path, SyncTable shemaTable) => throw new NotImplementedException();
 
         public async Task<byte[]> SerializeAsync(T obj)
         {
@@ -56,6 +64,8 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             return a;
         }
+
+        public Task WriteRowToFileAsync(object[] row, SyncTable shemaTable) => throw new NotImplementedException();
     }
 }
 

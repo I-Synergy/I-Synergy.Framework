@@ -145,7 +145,7 @@
             for (int i = 0; i < keys.Length; i++)
             {
                 var l = values[keys[i]];
-                if (ex == null)
+                if (ex is null)
                     ex = l[0];
                 else
                     Assert.AreEqual(ex.Value, l[0]);

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Extensions;
+using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Linq;
@@ -96,43 +96,43 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 
 
 
-        /// <summary>
-        /// Import a container set in a SyncSet instance
-        /// </summary>
-        public void ImportContainerSet(ContainerSet containerSet, bool checkType)
-        {
-            foreach (var table in containerSet.Tables)
-            {
-                var syncTable = Tables[table.TableName, table.SchemaName];
+        ///// <summary>
+        ///// Import a container set in a SyncSet instance
+        ///// </summary>
+        //public void ImportContainerSet(ContainerSet containerSet, bool checkType)
+        //{
+        //    foreach (var table in containerSet.Tables)
+        //    {
+        //        var syncTable = Tables[table.TableName, table.SchemaName];
 
-                if (syncTable is null)
-                    throw new ArgumentNullException($"Table {table.TableName} does not exist in the SyncSet");
+        //        if (syncTable is null)
+        //            throw new ArgumentNullException($"Table {table.TableName} does not exist in the SyncSet");
 
-                syncTable.Rows.ImportContainerTable(table, checkType);
-            }
+        //        syncTable.Rows.ImportContainerTable(table, checkType);
+        //    }
 
-        }
+        //}
 
-        /// <summary>
-        /// Get the rows inside a container.
-        /// ContainerSet is a serialization container for rows
-        /// </summary>
-        public ContainerSet GetContainerSet()
-        {
-            var containerSet = new ContainerSet();
-            foreach (var table in Tables)
-            {
-                var containerTable = new ContainerTable(table)
-                {
-                    Rows = table.Rows.ExportToContainerTable().ToList()
-                };
+        ///// <summary>
+        ///// Get the rows inside a container.
+        ///// ContainerSet is a serialization container for rows
+        ///// </summary>
+        //public ContainerSet GetContainerSet()
+        //{
+        //    var containerSet = new ContainerSet();
+        //    foreach (var table in Tables)
+        //    {
+        //        var containerTable = new ContainerTable(table)
+        //        {
+        //            Rows = table.Rows.ExportToContainerTable().ToList()
+        //        };
 
-                if (containerTable.Rows.Count > 0)
-                    containerSet.Tables.Add(containerTable);
-            }
+        //        if (containerTable.Rows.Count > 0)
+        //            containerSet.Tables.Add(containerTable);
+        //    }
 
-            return containerSet;
-        }
+        //    return containerSet;
+        //}
 
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             if (Filters is not null)
                 Filters.Schema = null;
 
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool cleanup)
@@ -163,13 +163,22 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             if (cleanup)
             {
                 if (Tables is not null)
+                {
                     Tables.Clear();
+                    Tables = null;
+                }
 
                 if (Relations is not null)
+                {
                     Relations.Clear();
+                    Relations = null;
+                }
 
                 if (Filters is not null)
+                {
                     Filters.Clear();
+                    Filters = null;
+                }
             }
 
             // Dispose unmanaged ressources

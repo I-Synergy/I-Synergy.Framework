@@ -20,99 +20,72 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
     /// </summary>
     public class SqliteSyncAdapter : DbSyncAdapter
     {
-        private readonly SqliteObjectNames _sqliteObjectNames;
-        private readonly SqliteDbMetadata _sqliteDbMetadata;
+        private SqliteObjectNames sqliteObjectNames;
+        private SqliteDbMetadata sqliteDbMetadata;
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="tableDescription"></param>
-        /// <param name="tableName"></param>
-        /// <param name="trackingName"></param>
-        /// <param name="setup"></param>
-        public SqliteSyncAdapter(SyncTable tableDescription, ParserName tableName, ParserName trackingName, SyncSetup setup) 
-            : base(tableDescription, setup)
+        public SqliteSyncAdapter(SyncTable tableDescription, ParserName tableName, ParserName trackingName, SyncSetup setup) : base(tableDescription, setup)
         {
-            _sqliteObjectNames = new SqliteObjectNames(tableDescription, tableName, trackingName, setup);
-            _sqliteDbMetadata = new SqliteDbMetadata();
+
+            sqliteObjectNames = new SqliteObjectNames(TableDescription, tableName, trackingName, Setup);
+            sqliteDbMetadata = new SqliteDbMetadata();
         }
 
-        /// <summary>
-        /// Gets true if primary key is violated.
-        /// </summary>
-        /// <param name="Error"></param>
-        /// <returns></returns>
-        public override bool IsPrimaryKeyViolation(Exception Error) => false;
+        public override bool IsPrimaryKeyViolation(Exception Error)
+        {
+            return false;
+        }
 
-        /// <summary>
-        /// Gets true if unique key is violated.
-        /// </summary>
-        /// <param name="exception"></param>
-        /// <returns></returns>
-        public override bool IsUniqueKeyViolation(Exception exception) => false;
-
-        /// <summary>
-        /// Gets command.
-        /// </summary>
-        /// <param name="commandType"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public override DbCommand GetCommand(DbCommandType commandType, SyncFilter filter = null)
+        public override (DbCommand, bool) GetCommand(DbCommandType commandType, SyncFilter filter = null)
         {
             var command = new SqliteCommand();
-            var text = _sqliteObjectNames.GetCommandName(commandType, filter);
+            string text;
+            text = sqliteObjectNames.GetCommandName(commandType, filter);
 
             // on Sqlite, everything is text :)
             command.CommandType = CommandType.Text;
             command.CommandText = text;
 
-            return command;
+            return (command, false);
         }
 
-        /// <summary>
-        /// Adds parameters to command.
-        /// </summary>
-        /// <param name="commandType"></param>
-        /// <param name="command"></param>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
         public override Task AddCommandParametersAsync(DbCommandType commandType, DbCommand command, DbConnection connection, DbTransaction transaction = null, SyncFilter filter = null)
         {
 
-            if (command == null)
+            if (command is null)
                 return Task.CompletedTask;
 
-            if (command.Parameters != null && command.Parameters.Count > 0)
+            if (command.Parameters is not null && command.Parameters.Count > 0)
                 return Task.CompletedTask;
 
             switch (commandType)
             {
                 case DbCommandType.SelectChanges:
                 case DbCommandType.SelectChangesWithFilters:
-                    this.SetSelecteChangesParameters(command);
+                    SetSelecteChangesParameters(command);
                     break;
                 case DbCommandType.SelectRow:
-                    this.SetSelectRowParameters(command);
+                    SetSelectRowParameters(command);
                     break;
                 case DbCommandType.DeleteMetadata:
-                    this.SetDeleteMetadataParameters(command);
+                    SetDeleteMetadataParameters(command);
                     break;
                 case DbCommandType.DeleteRow:
-                    this.SetDeleteRowParameters(command);
+                case DbCommandType.DeleteRows:
+                    SetDeleteRowParameters(command);
                     break;
                 case DbCommandType.UpdateRow:
-                    this.SetUpdateRowParameters(command);
+                case DbCommandType.UpdateRows:
+                    SetUpdateRowParameters(command);
                     break;
-                case DbCommandType.InitializeRow:
-                    this.SetInitializeRowParameters(command);
+                case DbCommandType.InsertRow:
+                case DbCommandType.InsertRows:
+                    SetInitializeRowParameters(command);
                     break;
                 case DbCommandType.Reset:
-                    this.SetResetParameters(command);
+                    SetResetParameters(command);
                     break;
                 case DbCommandType.UpdateMetadata:
-                    this.SetUpdateMetadataParameters(command);
+                    SetUpdateMetadataParameters(command);
                     break;
                 default:
                     break;
@@ -137,9 +110,21 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
             return dbType;
         }
 
-        private void SetRowParameters(DbCommand command)
+        private void SetUpdateRowParameters(DbCommand command)
         {
-            var p = command.CreateParameter();
+            DbParameter p;
+
+            foreach (var column in TableDescription.Columns.Where(c => !c.IsReadOnly))
+            {
+                var unquotedColumn = ParserName.Parse(column).Normalized().Unquoted().ToString();
+                p = command.CreateParameter();
+                p.ParameterName = $"@{unquotedColumn}";
+                p.DbType = GetValidDbType(column.GetDbType());
+                p.SourceColumn = column.ColumnName;
+                command.Parameters.Add(p);
+            }
+
+            p = command.CreateParameter();
             p.ParameterName = "@sync_force_write";
             p.DbType = DbType.Int64;
             command.Parameters.Add(p);
@@ -153,55 +138,116 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
             p.ParameterName = "@sync_scope_id";
             p.DbType = DbType.Guid;
             command.Parameters.Add(p);
-        }
 
-        private void SetUpdateRowParameters(DbCommand command) =>
-            SetInitializeRowParameters(command);
+
+
+        }
 
         private void SetInitializeRowParameters(DbCommand command)
         {
-            foreach (var column in this.TableDescription.Columns.Where(c => !c.IsReadOnly))
+            DbParameter p;
+
+            foreach (var column in TableDescription.Columns.Where(c => !c.IsReadOnly))
             {
                 var unquotedColumn = ParserName.Parse(column).Normalized().Unquoted().ToString();
-                var p = command.CreateParameter();
+                p = command.CreateParameter();
                 p.ParameterName = $"@{unquotedColumn}";
                 p.DbType = GetValidDbType(column.GetDbType());
                 p.SourceColumn = column.ColumnName;
                 command.Parameters.Add(p);
             }
 
-            SetRowParameters(command);
+            p = command.CreateParameter();
+            p.ParameterName = "@sync_force_write";
+            p.DbType = DbType.Int64;
+            command.Parameters.Add(p);
+
+            p = command.CreateParameter();
+            p.ParameterName = "@sync_min_timestamp";
+            p.DbType = DbType.Int64;
+            command.Parameters.Add(p);
+
+            p = command.CreateParameter();
+            p.ParameterName = "@sync_scope_id";
+            p.DbType = DbType.Guid;
+            command.Parameters.Add(p);
+
+
+
         }
 
         private void SetDeleteRowParameters(DbCommand command)
         {
-            SetSelectRowParameters(command);    
-            SetRowParameters(command);
-        }
+            DbParameter p;
 
-        private void SetSelectRowParameters(DbCommand command)
-        {
-            foreach (var column in this.TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
+            foreach (var column in TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
             {
                 var unquotedColumn = ParserName.Parse(column).Normalized().Unquoted().ToString();
-                var p = command.CreateParameter();
+                p = command.CreateParameter();
                 p.ParameterName = $"@{unquotedColumn}";
                 p.DbType = GetValidDbType(column.GetDbType());
                 p.SourceColumn = column.ColumnName;
                 command.Parameters.Add(p);
             }
 
-            var param = command.CreateParameter();
-            param.ParameterName = "@sync_scope_id";
-            param.DbType = DbType.Guid;
-            command.Parameters.Add(param);
+            p = command.CreateParameter();
+            p.ParameterName = "@sync_force_write";
+            p.DbType = DbType.Int64;
+            command.Parameters.Add(p);
+
+            p = command.CreateParameter();
+            p.ParameterName = "@sync_min_timestamp";
+            p.DbType = DbType.Int64;
+            command.Parameters.Add(p);
+
+            p = command.CreateParameter();
+            p.ParameterName = "@sync_scope_id";
+            p.DbType = DbType.Guid;
+            command.Parameters.Add(p);
+
+        }
+
+        private void SetSelectRowParameters(DbCommand command)
+        {
+            DbParameter p;
+
+            foreach (var column in TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
+            {
+                var unquotedColumn = ParserName.Parse(column).Normalized().Unquoted().ToString();
+                p = command.CreateParameter();
+                p.ParameterName = $"@{unquotedColumn}";
+                p.DbType = GetValidDbType(column.GetDbType());
+                p.SourceColumn = column.ColumnName;
+                command.Parameters.Add(p);
+            }
+
+            p = command.CreateParameter();
+            p.ParameterName = "@sync_scope_id";
+            p.DbType = DbType.Guid;
+            command.Parameters.Add(p);
+
         }
 
         private void SetUpdateMetadataParameters(DbCommand command)
         {
-            SetSelectRowParameters(command);
+            DbParameter p;
 
-            var p = command.CreateParameter();
+            foreach (var column in TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
+            {
+                var unquotedColumn = ParserName.Parse(column).Normalized().Unquoted().ToString();
+                p = command.CreateParameter();
+                p.ParameterName = $"@{unquotedColumn}";
+                p.DbType = GetValidDbType(column.GetDbType());
+                p.SourceColumn = column.ColumnName;
+                command.Parameters.Add(p);
+            }
+
+            p = command.CreateParameter();
+            p.ParameterName = "@sync_scope_id";
+            p.DbType = DbType.Guid;
+            command.Parameters.Add(p);
+
+            p = command.CreateParameter();
             p.ParameterName = "@sync_row_is_tombstone";
             p.DbType = DbType.Boolean;
             command.Parameters.Add(p);
@@ -228,20 +274,12 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
             command.Parameters.Add(p);
         }
 
-        /// <summary>
-        /// Execute batch command.
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <param name="senderScopeId"></param>
-        /// <param name="applyRows"></param>
-        /// <param name="schemaChangesTable"></param>
-        /// <param name="failedRows"></param>
-        /// <param name="lastTimestamp"></param>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public override Task ExecuteBatchCommandAsync(DbCommand cmd, Guid senderScopeId, IEnumerable<SyncRow> applyRows, SyncTable schemaChangesTable, SyncTable failedRows, long? lastTimestamp, DbConnection connection, DbTransaction transaction = null)
             => throw new NotImplementedException();
+
+        public override bool IsUniqueKeyViolation(Exception exception)
+        {
+            return false;
+        }
     }
 }

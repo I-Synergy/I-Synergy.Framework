@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// Check if SetupTable has columns. If not columns specified, all the columns from server database are retrieved
         /// </summary>
         [IgnoreDataMember]
-        public bool HasColumns => this.Columns?.Count > 0;
+        public bool HasColumns => Columns?.Count > 0;
 
         /// <summary>
         /// Specify a table to add to the sync process
@@ -56,12 +56,12 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public SetupTable(string tableName, string schemaName = null)
         {
-            this.TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
 
             // Potentially user can pass something like [SalesLT].[Product]
             // or SalesLT.Product or Product. ParserName will handle it
-            var parserTableName = ParserName.Parse(this.TableName);
-            this.TableName = parserTableName.ObjectName;
+            var parserTableName = ParserName.Parse(TableName);
+            TableName = parserTableName.ObjectName;
 
             // Check Schema
             if (string.IsNullOrEmpty(schemaName))
@@ -74,8 +74,8 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             }
 
             // https://github.com/Mimetis/ISynergy.Framework.Synchronization.Core/issues/621#issuecomment-968369322
-            this.SchemaName = string.IsNullOrEmpty(schemaName) ? string.Empty : schemaName;
-            this.Columns = new SetupColumns();
+            SchemaName = string.IsNullOrEmpty(schemaName) ? string.Empty : schemaName;
+            Columns = new SetupColumns();
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public SetupTable(string tableName, IEnumerable<string> columnsName, string schemaName = null)
             : this(tableName, schemaName)
         {
-            this.Columns.AddRange(columnsName);
+            Columns.AddRange(columnsName);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         /// <returns></returns>
         public string GetFullName()
-            => string.IsNullOrEmpty(this.SchemaName) ? this.TableName : $"{this.SchemaName}.{this.TableName}";
+            => string.IsNullOrEmpty(SchemaName) ? TableName : $"{SchemaName}.{TableName}";
 
         /// <summary>
         /// Compare 2 SetupTable instances. Assuming table name and schema name are equals, we have two conflicting setup tables
@@ -110,14 +110,14 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
             var sc = SyncGlobalization.DataSourceStringComparison;
 
-            if (!this.EqualsByName(other))
+            if (!EqualsByName(other))
                 return false;
 
             // checking properties
-            if (this.SyncDirection != other.SyncDirection)
+            if (SyncDirection != other.SyncDirection)
                 return false;
 
-            if (!this.Columns.CompareWith(other.Columns, (c, oc) => string.Equals(c, oc, sc)))
+            if (!Columns.CompareWith(other.Columns, (c, oc) => string.Equals(c, oc, sc)))
                 return false;
 
             return true;
@@ -127,8 +127,8 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public override IEnumerable<string> GetAllNamesProperties()
         {
-            yield return this.TableName;
-            yield return this.SchemaName;
+            yield return TableName;
+            yield return SchemaName;
         }
     }
 }

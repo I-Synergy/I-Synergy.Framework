@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Metadata
             _ => throw new Exception($"In Column {columnDefinition.ColumnName}, the type {columnDefinition.GetDbType()} is not supported"),
         };
 
-        public SqliteType GetSqliteType(SyncColumn column) => (SqliteType)this.GetOwnerDbType(column);
+        public SqliteType GetSqliteType(SyncColumn column) => (SqliteType)GetOwnerDbType(column);
 
         public override Type GetType(SyncColumn columnDefinition)
         {
@@ -133,7 +133,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Metadata
                 return column.OriginalTypeName;
 
             // Fallback on my sql db type extract from simple db type
-            var sqliteType = this.GetOwnerDbTypeFromDbType(column);
+            var sqliteType = GetOwnerDbTypeFromDbType(column);
 
             return sqliteType switch
             {

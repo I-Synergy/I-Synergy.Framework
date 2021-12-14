@@ -838,7 +838,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Assert if datetime are correctly converted to long
             this.WebServerOrchestrator.OnHttpSendingChanges(sra =>
             {
-                if (sra.Response.Changes == null)
+                if (sra.Response.Changes is null)
                     return;
 
                 // check we have rows
@@ -847,7 +847,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
                 // getting a table where we know we have date time
                 var table = sra.Response.Changes.Tables.FirstOrDefault(t => t.TableName == "Employee");
 
-                if (table != null)
+                if (table is not null)
                 {
                     Assert.IsTrue(table.Rows.Count > 0);
 

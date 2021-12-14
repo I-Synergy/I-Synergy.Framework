@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using System;
 using System.Collections.Generic;
@@ -118,7 +118,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool cleanup)
@@ -127,10 +127,16 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             if (cleanup)
             {
                 if (Rows is not null)
+                {
                     Rows.Clear();
+                    Rows = null;
+                }
 
                 if (Columns is not null)
+                {
                     Columns.Clear();
+                    Columns = null;
+                }
 
                 Schema = null;
             }
@@ -165,13 +171,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public SyncRow NewRow(DataRowState state = DataRowState.Unchanged)
         {
-            var row = new SyncRow(Columns.Count)
-            {
-                RowState = state,
-                Table = this
-            };
-
-            return row;
+            return new SyncRow(this, state);
         }
 
         public IEnumerable<SyncRelation> GetRelations()
@@ -197,15 +197,17 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public IEnumerable<SyncColumn> GetMutableColumns(bool includeAutoIncrement = true, bool includePrimaryKeys = false)
         {
             foreach (var column in Columns.OrderBy(c => c.Ordinal))
+            {
                 if (!column.IsCompute && !column.IsReadOnly)
                 {
                     var isPrimaryKey = PrimaryKeys.Any(pkey => column.ColumnName.Equals(pkey, SyncGlobalization.DataSourceStringComparison));
 
                     if (includePrimaryKeys && isPrimaryKey)
                         yield return column;
-                    else if (!isPrimaryKey && (includeAutoIncrement || !includeAutoIncrement && !column.IsAutoIncrement))
+                    else if (!isPrimaryKey && (includeAutoIncrement || (!includeAutoIncrement && !column.IsAutoIncrement)))
                         yield return column;
                 }
+            }
         }
 
         /// <summary>
@@ -214,8 +216,10 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public IEnumerable<SyncColumn> GetMutableColumnsWithPrimaryKeys()
         {
             foreach (var column in Columns.OrderBy(c => c.Ordinal))
+            {
                 if (!column.IsCompute && !column.IsReadOnly)
                     yield return column;
+            }
         }
 
         /// <summary>
@@ -260,12 +264,14 @@ namespace ISynergy.Framework.Synchronization.Core.Database
                 return;
 
             if (Columns.Count == 0)
-                for (var i = 0; i < reader.FieldCount; i++)
+            {
+                for (int i = 0; i < reader.FieldCount; i++)
                 {
                     var columnName = reader.GetName(i);
                     var columnType = reader.GetFieldType(i);
                     Columns.Add(columnName, columnType);
                 }
+            }
 
             while (reader.Read())
             {

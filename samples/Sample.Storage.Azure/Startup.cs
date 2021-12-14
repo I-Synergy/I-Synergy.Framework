@@ -35,7 +35,7 @@ namespace Sample.Storage.Azure
             Console.WriteLine("Download started...");
             var fileBytes = await DownloadAsync(fileName).ConfigureAwait(false);
 
-            if (fileBytes != null)
+            if (fileBytes is not null)
             {
                 Console.WriteLine($"Download completed with {fileBytes.Length} bits.");
 

@@ -111,7 +111,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value != null)
+            if (value is not null)
             {
                 return value.ToString();
             }
@@ -133,7 +133,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             var result = 0;
 
-            if (value != null)
+            if (value is not null)
             {
                 int.TryParse(value.ToString(), out result);
             }

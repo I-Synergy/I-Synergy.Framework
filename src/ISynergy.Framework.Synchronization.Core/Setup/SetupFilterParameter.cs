@@ -63,9 +63,9 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
         public override IEnumerable<string> GetAllNamesProperties()
         {
-            yield return this.TableName;
-            yield return this.SchemaName;
-            yield return this.Name;
+            yield return TableName;
+            yield return SchemaName;
+            yield return Name;
         }
 
         public override bool EqualsByProperties(SetupFilterParameter other)
@@ -74,19 +74,19 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
                 return false;
 
             // Check names properties
-            if (!this.EqualsByName(other))
+            if (!EqualsByName(other))
                 return false;
 
             var sc = SyncGlobalization.DataSourceStringComparison;
 
             // Can be null since it'as a nullable value
-            var sameDbType = this.DbType.HasValue && other.DbType.HasValue && this.DbType.Equals(other.DbType)
-                            || !this.DbType.HasValue && !other.DbType.HasValue;
+            var sameDbType = DbType.HasValue && other.DbType.HasValue && DbType.Equals(other.DbType)
+                            || !DbType.HasValue && !other.DbType.HasValue;
 
             return sameDbType
-                && this.AllowNull.Equals(other.AllowNull)
-                && this.MaxLength.Equals(other.MaxLength)
-                && string.Equals(this.DefaultValue, other.DefaultValue, sc);
+                && AllowNull.Equals(other.AllowNull)
+                && MaxLength.Equals(other.MaxLength)
+                && string.Equals(DefaultValue, other.DefaultValue, sc);
         }
     }
 }

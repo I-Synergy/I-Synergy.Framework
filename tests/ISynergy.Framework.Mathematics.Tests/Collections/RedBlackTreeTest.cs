@@ -200,8 +200,8 @@
 
                 var node = t.Min();
 
-                double lek = le != null ? le.Value : int.MinValue;
-                double gtk = gt != null ? gt.Value : int.MaxValue;
+                double lek = le is not null ? le.Value : int.MinValue;
+                double gtk = gt is not null ? gt.Value : int.MaxValue;
 
 
                 if (node.Value > kd)
@@ -217,7 +217,7 @@
                     {
                         node = succ;
                         succ = t.GetNextNode(node);
-                    } while (succ != null && succ.Value <= kd);
+                    } while (succ is not null && succ.Value <= kd);
 
                     Assert.AreEqual(node, le);
                     Assert.AreEqual(succ, gt);

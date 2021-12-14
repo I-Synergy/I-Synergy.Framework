@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Messages;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.Extensions.Logging;
@@ -17,9 +18,10 @@ namespace ISynergy.Framework.Synchronization.Core
         : base(context, connection, transaction)
 
         {
-            this.Setup = setup;
-            this.TimeStampStart = timeStampStart;
+            Setup = setup;
+            TimeStampStart = timeStampStart;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"Cleaning Metadatas.";
 
@@ -31,7 +33,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public MetadataCleanedArgs(SyncContext context, DatabaseMetadatasCleaned databaseMetadatasCleaned, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.DatabaseMetadatasCleaned = databaseMetadatasCleaned;
+            DatabaseMetadatasCleaned = databaseMetadatasCleaned;
         }
 
         /// <summary>
@@ -39,6 +41,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public DatabaseMetadatasCleaned DatabaseMetadatasCleaned { get; set; }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"Tables Cleaned:{DatabaseMetadatasCleaned.Tables.Count}. Rows Cleaned:{DatabaseMetadatasCleaned.RowsCleanedCount}.";
 

@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
             Value = value;
             Tolerance = withinTolerance;
 
-            if (gradient != null)
+            if (gradient is not null)
             {
                 var grad = ExpressionParser.Replace(gradient, objective.Variables);
                 this.gradient = grad.Compile();
@@ -276,7 +276,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
             Func<double[], double> function, ConstraintType shouldBe, double value,
             Func<double[], double[]> gradient, double tolerance)
         {
-            if (gradient != null)
+            if (gradient is not null)
             {
                 var probe = new double[numberOfVariables];
                 var g = gradient(probe);
@@ -329,7 +329,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
             var rightSideParsed = false;
 
             var right = expression.Right as ConstantExpression;
-            if (right != null)
+            if (right is not null)
             {
                 // Right side is a constant
                 value = (double)right.Value;
@@ -339,11 +339,11 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
             {
                 // Right side is not a constant, try to determine what it is
                 var variableRight = expression.Right as MemberExpression;
-                if (variableRight != null)
+                if (variableRight is not null)
                 {
                     // Right side is a member variable: a field, a property or something else
                     var field = variableRight.Member as FieldInfo;
-                    if (field != null)
+                    if (field is not null)
                     {
                         // Right side is a field
                         var constant = variableRight.Expression as ConstantExpression;
@@ -354,7 +354,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
                     {
                         // Right side is not a field, try to determine what it is
                         var prop = variableRight.Member as PropertyInfo;
-                        if (prop != null)
+                        if (prop is not null)
                         {
                             // Right side is a property
                             var constant = variableRight.Expression as ConstantExpression;

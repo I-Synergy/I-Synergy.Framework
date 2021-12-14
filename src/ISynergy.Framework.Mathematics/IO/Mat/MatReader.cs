@@ -317,7 +317,7 @@
             if (disposing)
             {
                 // free managed resources
-                if (reader != null)
+                if (reader is not null)
                 {
 #if !NETSTANDARD1_4
                     reader.Close();

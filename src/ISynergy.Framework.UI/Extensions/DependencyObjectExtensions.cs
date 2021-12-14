@@ -77,7 +77,7 @@ namespace ISynergy.Framework.UI.Extensions
             for (var i = 0; i < count && child is null; i++)
             {
                 var current = (FrameworkElement)VisualTreeHelper.GetChild(root, i);
-                if (current != null && current.Name != null && current.Name == name)
+                if (current is not null && current.Name is not null && current.Name == name)
                 {
                     child = current;
                     break;
@@ -273,7 +273,7 @@ namespace ISynergy.Framework.UI.Extensions
         {
             var parent = VisualTreeHelper.GetParent(element);
 
-            if (parent == null)
+            if (parent is null)
             {
                 return null;
             }

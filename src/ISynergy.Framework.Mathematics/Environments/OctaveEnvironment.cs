@@ -496,7 +496,7 @@ namespace ISynergy.Framework.Mathematics.Environments
             /// 
             public static implicit operator string(mat m)
             {
-                if ((Object)m == null)
+                if ((Object)m is null)
                     return String.Empty;
                 return Matrix.ToString(m.matrix, "e");
             }
@@ -526,7 +526,7 @@ namespace ISynergy.Framework.Mathematics.Environments
             public override bool Equals(object obj)
             {
                 mat m = obj as mat;
-                if (m != null)
+                if (m is not null)
                     return this.matrix == m.matrix;
 
                 return matrix.Equals(obj);

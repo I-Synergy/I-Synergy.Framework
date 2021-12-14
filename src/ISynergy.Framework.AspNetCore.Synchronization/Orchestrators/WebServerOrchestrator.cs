@@ -11,6 +11,7 @@ using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Encryption;
 using ISynergy.Framework.Synchronization.Core.Messages;
+using ISynergy.Framework.Synchronization.Core.Model.Parsers;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Serialization;
 using ISynergy.Framework.Synchronization.Core.Setup;
@@ -31,7 +32,8 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
 {
     public class WebServerOrchestrator : RemoteOrchestrator
     {
-        private readonly Collection<IConverter> _converters;
+        public readonly Collection<IConverter> Converters;
+        public readonly Collection<ISerializerFactory> SerializerFactories;
 
         /// <summary>
         /// Default ctor. Using default options and schema
@@ -49,7 +51,12 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             string scopeName = SyncOptions.DefaultScopeName)
             : base(versionService, provider, options, setup, scopeName)
         {
-            _converters = new Collection<IConverter>();
+            Converters = new Collection<IConverter>();
+
+            SerializerFactories = new Collection<ISerializerFactory>
+            {
+                SerializersCollection.JsonSerializerFactory
+            };
         }
 
         /// <summary>
@@ -85,20 +92,20 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             var serAndsizeString = string.Empty;
             var cliConverterKey = string.Empty;
 
-            if (TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-serialization-format", out var vs))
+            if (TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-serialization-format", out var vs))
                 serAndsizeString = vs.ToLowerInvariant();
 
-            if (TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-converter", out var cs))
+            if (TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-converter", out var cs))
                 cliConverterKey = cs.ToLowerInvariant();
 
-            if (!TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-session-id", out var sessionId))
-                throw new HttpHeaderMissingException("dotmim-sync-session-id");
+            if (!TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-session-id", out var sessionId))
+                throw new HttpHeaderMissingException("isynergy-sync-session-id");
 
-            if (!TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-scope-name", out var scopeName))
-                throw new HttpHeaderMissingException("dotmim-sync-scope-name");
+            if (!TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-scope-name", out var scopeName))
+                throw new HttpHeaderMissingException("isynergy-sync-scope-name");
 
-            if (!TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-step", out string iStep))
-                throw new HttpHeaderMissingException("dotmim-sync-step");
+            if (!TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-step", out string iStep))
+                throw new HttpHeaderMissingException("isynergy-sync-step");
 
             var step = (HttpStep)Convert.ToInt32(iStep);
             var readableStream = new MemoryStream();
@@ -112,7 +119,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 httpRequest.Body.Dispose();
 
                 // if Hash is present in header, check hash
-                if (TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-hash", out string hashStringRequest))
+                if (TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-hash", out string hashStringRequest))
                     HashAlgorithm.SHA256.EnsureHash(readableStream, hashStringRequest);
                 else
                     readableStream.Seek(0, SeekOrigin.Begin);
@@ -127,7 +134,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 // HttpStep.EnsureSchema is the first call from client when client is new
                 // HttpStep.EnsureScopes is the first call from client when client is not new
                 // This is the only moment where we are initializing the sessionCache and store it in session
-                if (sessionCache == null && (step == HttpStep.EnsureSchema || step == HttpStep.EnsureScopes))
+                if (sessionCache is null && (step == HttpStep.EnsureSchema || step == HttpStep.EnsureScopes))
                 {
                     sessionCache = new SessionCache();
                     httpContext.Session.Set(sessionId, sessionCache);
@@ -136,7 +143,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
 
                 // if sessionCache is still null, then we are in a step where it should not be null.
                 // Probably because of a weird server restart or something...
-                if (sessionCache == null)
+                if (sessionCache is null)
                     throw new HttpSessionLostException();
 
                 // check session id
@@ -146,9 +153,9 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                     throw new HttpSessionLostException();
 
                 // Check if sanitized schema is still there
-                if (sessionCache.ClientBatchInfo != null
-                    && sessionCache.ClientBatchInfo.SanitizedSchema != null && sessionCache.ClientBatchInfo.SanitizedSchema.Tables.Count == 0
-                    && schema != null && schema.Tables.Count > 0)
+                if (sessionCache.ClientBatchInfo is not null
+                    && sessionCache.ClientBatchInfo.SanitizedSchema is not null && sessionCache.ClientBatchInfo.SanitizedSchema.Tables.Count == 0
+                    && schema is not null && schema.Tables.Count > 0)
                     foreach (var table in schema.Tables)
                         DbSyncAdapter.CreateChangesTable(schema.Tables[table.TableName, table.SchemaName], sessionCache.ClientBatchInfo.SanitizedSchema);
 
@@ -168,82 +175,74 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 {
                     case HttpStep.EnsureScopes:
                         var m1 = await clientSerializerFactory.GetSerializer<HttpMessageEnsureScopesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m1.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        var s1 = await this.EnsureScopesAsync(httpContext, m1, sessionCache, cancellationToken, progress).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m1.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        var s1 = await EnsureScopesAsync(httpContext, m1, sessionCache, cancellationToken, progress).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageEnsureScopesResponse>().SerializeAsync(s1);
                         break;
                     case HttpStep.EnsureSchema:
                         var m11 = await clientSerializerFactory.GetSerializer<HttpMessageEnsureScopesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m11.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        var s11 = await this.EnsureSchemaAsync(httpContext, m11, sessionCache, cancellationToken, progress).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m11.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        var s11 = await EnsureSchemaAsync(httpContext, m11, sessionCache, cancellationToken, progress).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageEnsureSchemaResponse>().SerializeAsync(s11);
-                        break;
-
-                    // version < 0.8    
-                    case HttpStep.SendChanges:
-                        var m2 = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m2.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        await this.InterceptAsync(new HttpGettingClientChangesArgs(m2, httpContext.Request.Host.Host, sessionCache), cancellationToken).ConfigureAwait(false);
-                        var s2 = await this.ApplyThenGetChangesAsync(httpContext, m2, sessionCache, clientBatchSize, cancellationToken, progress).ConfigureAwait(false);
-                        await this.InterceptAsync(new HttpSendingServerChangesArgs(s2, httpContext.Request.Host.Host, sessionCache, false), cancellationToken).ConfigureAwait(false);
-                        binaryData = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesResponse>().SerializeAsync(s2);
                         break;
 
                     // version >= 0.8    
                     case HttpStep.SendChangesInProgress:
                         var m22 = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m22.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        await this.InterceptAsync(new HttpGettingClientChangesArgs(m22, httpContext.Request.Host.Host, sessionCache), cancellationToken).ConfigureAwait(false);
-                        var s22 = await this.ApplyThenGetChangesAsync2(httpContext, m22, sessionCache, clientBatchSize, cancellationToken, progress).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m22.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingClientChangesArgs(m22, httpContext.Request.Host.Host, sessionCache), progress, cancellationToken).ConfigureAwait(false);
+                        var s22 = await ApplyThenGetChangesAsync2(httpContext, m22, sessionCache, clientBatchSize, cancellationToken, progress).ConfigureAwait(false);
+                        //await InterceptAsync(new HttpSendingServerChangesArgs(s22.HttpMessageSendChangesResponse, context.Request.Host.Host, sessionCache, false), cancellationToken).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageSummaryResponse>().SerializeAsync(s22);
                         break;
 
                     case HttpStep.GetChanges:
                         var m3 = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m3.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        await this.InterceptAsync(new HttpGettingClientChangesArgs(m3, httpContext.Request.Host.Host, sessionCache), cancellationToken).ConfigureAwait(false);
-                        var s3 = await this.GetChangesAsync(httpContext, m3, sessionCache, clientBatchSize, cancellationToken, progress);
-                        await this.InterceptAsync(new HttpSendingServerChangesArgs(s3, httpContext.Request.Host.Host, sessionCache, false), cancellationToken).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m3.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingClientChangesArgs(m3, httpContext.Request.Host.Host, sessionCache), progress, cancellationToken).ConfigureAwait(false);
+                        var s3 = await GetChangesAsync(httpContext, m3, sessionCache, clientBatchSize, cancellationToken, progress);
+                        await InterceptAsync(new HttpSendingServerChangesArgs(s3, httpContext.Request.Host.Host, sessionCache, false), progress, cancellationToken).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesResponse>().SerializeAsync(s3);
                         break;
 
                     case HttpStep.GetMoreChanges:
                         var m4 = await clientSerializerFactory.GetSerializer<HttpMessageGetMoreChangesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m4.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        var s4 = await this.GetMoreChangesAsync(httpContext, m4, sessionCache, cancellationToken, progress);
-                        await this.InterceptAsync(new HttpSendingServerChangesArgs(s4, httpContext.Request.Host.Host, sessionCache, false), cancellationToken).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m4.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        var s4 = await GetMoreChangesAsync(httpContext, m4, sessionCache, cancellationToken, progress);
+                        await InterceptAsync(new HttpSendingServerChangesArgs(s4, httpContext.Request.Host.Host, sessionCache, false), progress, cancellationToken).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesResponse>().SerializeAsync(s4);
                         break;
 
                     case HttpStep.GetSnapshot:
                         var m5 = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m5.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        var s5 = await this.GetSnapshotAsync(httpContext, m5, sessionCache, cancellationToken, progress);
-                        await this.InterceptAsync(new HttpSendingServerChangesArgs(s5, httpContext.Request.Host.Host, sessionCache, true), cancellationToken).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m5.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        var s5 = await GetSnapshotAsync(httpContext, m5, sessionCache, cancellationToken, progress);
+                        await InterceptAsync(new HttpSendingServerChangesArgs(s5, httpContext.Request.Host.Host, sessionCache, true), progress, cancellationToken).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesResponse>().SerializeAsync(s5);
                         break;
 
                     // version >= 0.8    
                     case HttpStep.GetSummary:
                         var m55 = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m55.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        var s55 = await this.GetSnapshotSummaryAsync(httpContext, m55, sessionCache, cancellationToken, progress);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m55.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        var s55 = await GetSnapshotSummaryAsync(httpContext, m55, sessionCache, cancellationToken, progress);
+                        //await InterceptAsync(new HttpSendingServerChangesArgs(s5.HttpMessageSendChangesResponse, context.Request.Host.Host, sessionCache, true), cancellationToken).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageSummaryResponse>().SerializeAsync(s55);
 
                         break;
                     case HttpStep.SendEndDownloadChanges:
                         var m56 = await clientSerializerFactory.GetSerializer<HttpMessageGetMoreChangesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m56.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        var s56 = await this.SendEndDownloadChangesAsync(httpContext, m56, sessionCache, cancellationToken, progress);
-                        await this.InterceptAsync(new HttpSendingServerChangesArgs(s56, httpContext.Request.Host.Host, sessionCache, false), cancellationToken).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m56.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        var s56 = await SendEndDownloadChangesAsync(httpContext, m56, sessionCache, cancellationToken, progress);
+                        await InterceptAsync(new HttpSendingServerChangesArgs(s56, httpContext.Request.Host.Host, sessionCache, false), progress, cancellationToken).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesResponse>().SerializeAsync(s56);
                         break;
 
                     case HttpStep.GetEstimatedChangesCount:
                         var m6 = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesRequest>().DeserializeAsync(readableStream);
-                        await this.InterceptAsync(new HttpGettingRequestArgs(httpContext, m6.SyncContext, sessionCache, step), cancellationToken).ConfigureAwait(false);
-                        var s6 = await this.GetEstimatedChangesCountAsync(httpContext, m6, cancellationToken, progress);
-                        await this.InterceptAsync(new HttpSendingServerChangesArgs(s6, httpContext.Request.Host.Host, sessionCache, false), cancellationToken).ConfigureAwait(false);
+                        await InterceptAsync(new HttpGettingRequestArgs(httpContext, m6.SyncContext, sessionCache, step), progress, cancellationToken).ConfigureAwait(false);
+                        var s6 = await GetEstimatedChangesCountAsync(httpContext, m6, cancellationToken, progress);
+                        await InterceptAsync(new HttpSendingServerChangesArgs(s6, httpContext.Request.Host.Host, sessionCache, false), progress, cancellationToken).ConfigureAwait(false);
                         binaryData = await clientSerializerFactory.GetSerializer<HttpMessageSendChangesResponse>().SerializeAsync(s6);
                         break;
                 }
@@ -253,22 +252,22 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 await httpContext.Session.CommitAsync(cancellationToken);
 
                 // Adding the serialization format used and session id
-                httpResponse.Headers.Add("dotmim-sync-session-id", sessionId.ToString());
-                httpResponse.Headers.Add("dotmim-sync-serialization-format", clientSerializerFactory.Key);
+                httpResponse.Headers.Add("isynergy-sync-session-id", sessionId.ToString());
+                httpResponse.Headers.Add("isynergy-sync-serialization-format", clientSerializerFactory.Key);
 
                 // calculate hash
                 var hash = HashAlgorithm.SHA256.Create(binaryData);
                 var hashString = Convert.ToBase64String(hash);
                 // Add hash to header
-                httpResponse.Headers.Add("dotmim-sync-hash", hashString);
+                httpResponse.Headers.Add("isynergy-sync-hash", hashString);
 
                 // data to send back, as the response
-                byte[] data = this.EnsureCompression(httpRequest, httpResponse, binaryData);
+                byte[] data = EnsureCompression(httpRequest, httpResponse, binaryData);
 
                 // save session
                 await httpContext.Session.CommitAsync(cancellationToken);
 
-                await this.InterceptAsync(new HttpSendingResponseArgs(httpContext, this.GetContext(), sessionCache, data, step), cancellationToken).ConfigureAwait(false);
+                await InterceptAsync(new HttpSendingResponseArgs(httpContext, GetContext(), sessionCache, data, step), progress, cancellationToken).ConfigureAwait(false);
 
                 await httpResponse.Body.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
             }
@@ -321,13 +320,18 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                     throw new Exception("Serializer header is null, coming from http header");
 
                 var serAndsize = JsonConvert.DeserializeAnonymousType(serAndsizeString, new { f = "", s = 0 });
+
                 var clientBatchSize = serAndsize.s;
 
-                return (clientBatchSize, this.Options.SerializerFactory);
+                var clientSerializerFactory = SerializerFactories.FirstOrDefault(sf => sf.Key == serAndsize.f);
+                if (clientSerializerFactory is null) clientSerializerFactory = SerializersCollection.JsonSerializerFactory;
+
+                return (clientBatchSize, clientSerializerFactory);
             }
             catch
             {
                 throw new Exception("Serializer header is incorrect, coming from http header");
+                //throw new HttpSerializerNotConfiguredException(WebServerOptions.Serializers.Select(sf => sf.Key));
             }
         }
 
@@ -338,13 +342,13 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 if (string.IsNullOrEmpty(cliConverterKey))
                     return null;
 
-                var clientConverter = _converters.First(c => c.Key.ToLowerInvariant() == cliConverterKey);
+                var clientConverter = Converters.First(c => c.Key.ToLowerInvariant() == cliConverterKey);
 
                 return clientConverter;
             }
             catch
             {
-                throw new HttpConverterNotConfiguredException(_converters.Select(sf => sf.Key));
+                throw new HttpConverterNotConfiguredException(Converters.Select(sf => sf.Key));
             }
         }
 
@@ -352,17 +356,17 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         /// <summary>
         /// Get Scope Name sent by the client
         /// </summary>
-        public static string GetScopeName(HttpContext httpContext) => TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-scope-name", out var val) ? val : null;
+        public static string GetScopeName(HttpContext httpContext) => TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-scope-name", out var val) ? val : null;
 
         /// <summary>
         /// Get the current client session id
         /// </summary>
-        public static string GetClientSessionId(HttpContext httpContext) => TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-session-id", out var val) ? val : null;
+        public static string GetClientSessionId(HttpContext httpContext) => TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-session-id", out var val) ? val : null;
 
         /// <summary>
         /// Get the current Step
         /// </summary>
-        public static HttpStep GetCurrentStep(HttpContext httpContext) => TryGetHeaderValue(httpContext.Request.Headers, "dotmim-sync-step", out var val) ? (HttpStep)Convert.ToInt32(val) : HttpStep.None;
+        public static HttpStep GetCurrentStep(HttpContext httpContext) => TryGetHeaderValue(httpContext.Request.Headers, "isynergy-sync-step", out var val) ? (HttpStep)Convert.ToInt32(val) : HttpStep.None;
 
         public static bool TryGetHeaderValue(IHeaderDictionary n, string key, out string header)
         {
@@ -376,27 +380,23 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             return false;
         }
 
-        internal async Task<HttpMessageEnsureScopesResponse> EnsureScopesAsync(
-            HttpContext httpContext, 
-            HttpMessageEnsureScopesRequest httpMessage, 
-            SessionCache sessionCache,
-            CancellationToken cancellationToken, 
-            IProgress<ProgressArgs> progress = null)
+        internal async Task<HttpMessageEnsureScopesResponse> EnsureScopesAsync(HttpContext httpContext, HttpMessageEnsureScopesRequest httpMessage, SessionCache sessionCache,
+                                            CancellationToken cancellationToken, IProgress<ProgressArgs> progress = null)
         {
-            if (httpMessage == null)
+            if (httpMessage is null)
                 throw new ArgumentException("EnsureScopesAsync message could not be null");
 
-            if (this.Setup == null)
+            if (Setup is null)
                 throw new ArgumentException("You need to set the tables to sync on server side");
 
             // Get context from request message
             var ctx = httpMessage.SyncContext;
 
             // Set the context coming from the client
-            this.SetContext(ctx);
+            SetContext(ctx);
 
             // Get schema
-            var serverScopeInfo = await this.GetServerScopeAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
+            var serverScopeInfo = await GetServerScopeAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
 
             // Create http response
             var httpResponse = new HttpMessageEnsureScopesResponse(ctx, serverScopeInfo);
@@ -409,20 +409,20 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             CancellationToken cancellationToken, IProgress<ProgressArgs> progress = null)
         {
 
-            if (httpMessage == null)
+            if (httpMessage is null)
                 throw new ArgumentException("EnsureScopesAsync message could not be null");
 
-            if (this.Setup == null)
+            if (Setup is null)
                 throw new ArgumentException("You need to set the tables to sync on server side");
 
             // Get context from request message
             var ctx = httpMessage.SyncContext;
 
             // Set the context coming from the client
-            this.SetContext(ctx);
+            SetContext(ctx);
 
             // Get schema
-            var serverScopeInfo = await base.EnsureSchemaAsync(connection: default, default, cancellationToken, progress).ConfigureAwait(false);
+            var serverScopeInfo = await base.EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
 
             var schema = serverScopeInfo.Schema;
             schema.EnsureSchema();
@@ -442,16 +442,13 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             // Overriding batch size options value, coming from client
             // having changes from server in batch size or not is decided by the client.
             // Basically this options is not used on the server, since it's always overriden by the client
-            this.Options.BatchSize = clientBatchSize;
-
-            // Get if we need to serialize data or making everything in memory
-            var clientWorkInMemory = clientBatchSize == 0;
+            Options.BatchSize = clientBatchSize;
 
             // Get context from request message
             var ctx = httpMessage.SyncContext;
 
             // Set the context coming from the client
-            this.SetContext(ctx);
+            SetContext(ctx);
 
             var changes = await base.GetChangesAsync(httpMessage.Scope, default, default, cancellationToken, progress);
 
@@ -459,13 +456,10 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             var clientChangesApplied = new DatabaseChangesApplied();
 
             // Save the server batch info object to cache if not working in memory
-            if (!clientWorkInMemory)
-            {
-                sessionCache.RemoteClientTimestamp = changes.RemoteClientTimestamp;
-                sessionCache.ServerBatchInfo = changes.ServerBatchInfo;
-                sessionCache.ServerChangesSelected = changes.ServerChangesSelected;
-                sessionCache.ClientChangesApplied = clientChangesApplied;
-            }
+            sessionCache.RemoteClientTimestamp = changes.RemoteClientTimestamp;
+            sessionCache.ServerBatchInfo = changes.ServerBatchInfo;
+            sessionCache.ServerChangesSelected = changes.ServerChangesSelected;
+            sessionCache.ClientChangesApplied = clientChangesApplied;
 
             // Get the firt response to send back to client
             return await GetChangesResponseAsync(httpContext, ctx, changes.RemoteClientTimestamp, changes.ServerBatchInfo, clientChangesApplied, changes.ServerChangesSelected, 0);
@@ -478,7 +472,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             var ctx = httpMessage.SyncContext;
 
             // Set the context coming from the client
-            this.SetContext(ctx);
+            SetContext(ctx);
 
             var changes = await base.GetEstimatedChangesCountAsync(httpMessage.Scope, default, default, cancellationToken, progress);
 
@@ -487,7 +481,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 ServerChangesSelected = changes.ServerChangesSelected,
                 ClientChangesApplied = new DatabaseChangesApplied(),
                 ServerStep = HttpStep.GetMoreChanges,
-                ConflictResolutionPolicy = this.Options.ConflictResolutionPolicy,
+                ConflictResolutionPolicy = Options.ConflictResolutionPolicy,
                 IsLastBatch = true,
                 RemoteClientTimestamp = changes.RemoteClientTimestamp
             };
@@ -506,10 +500,10 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             var ctx = httpMessage.SyncContext;
 
             // Set the context coming from the client
-            this.SetContext(ctx);
+            SetContext(ctx);
 
             // get changes
-            var snap = await this.GetSnapshotAsync(schema, cancellationToken, progress).ConfigureAwait(false);
+            var snap = await GetSnapshotAsync(schema, default, default, cancellationToken, progress).ConfigureAwait(false);
 
             var summaryResponse = new HttpMessageSummaryResponse(ctx)
             {
@@ -517,7 +511,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 RemoteClientTimestamp = snap.RemoteClientTimestamp,
                 ClientChangesApplied = new DatabaseChangesApplied(),
                 ServerChangesSelected = snap.DatabaseChangesSelected,
-                ConflictResolutionPolicy = this.Options.ConflictResolutionPolicy,
+                ConflictResolutionPolicy = Options.ConflictResolutionPolicy,
                 Step = HttpStep.GetSummary,
             };
 
@@ -533,7 +527,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         {
             var schema = httpContext.Session.Get<SyncSet>(scopeName);
 
-            if (schema == null || !schema.HasTables || !schema.HasColumns)
+            if (schema is null || !schema.HasTables || !schema.HasColumns)
             {
                 var serverScopeInfo = await base.EnsureSchemaAsync(default, default, cancellationToken, progress).ConfigureAwait(false);
 
@@ -555,10 +549,10 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             var ctx = httpMessage.SyncContext;
 
             // Set the context coming from the client
-            this.SetContext(ctx);
+            SetContext(ctx);
 
             // get changes
-            var snap = await this.GetSnapshotAsync(schema, cancellationToken, progress).ConfigureAwait(false);
+            var snap = await GetSnapshotAsync(schema, default, default, cancellationToken, progress).ConfigureAwait(false);
 
             // Save the server batch info object to cache
             sessionCache.RemoteClientTimestamp = snap.RemoteClientTimestamp;
@@ -567,7 +561,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             //httpContext.Session.Set(sessionId, sessionCache);
 
             // if no snapshot, return empty response
-            if (snap.ServerBatchInfo == null)
+            if (snap.ServerBatchInfo is null)
             {
                 var changesResponse = new HttpMessageSendChangesResponse(ctx)
                 {
@@ -591,114 +585,19 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         /// <summary>
         /// Get changes from 
         /// </summary>
-        internal async Task<HttpMessageSendChangesResponse> ApplyThenGetChangesAsync(HttpContext httpContext, HttpMessageSendChangesRequest httpMessage, SessionCache sessionCache,
-                        int clientBatchSize, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        {
-            // Overriding batch size options value, coming from client
-            // having changes from server in batch size or not is decided by the client.
-            // Basically this options is not used on the server, since it's always overriden by the client
-            this.Options.BatchSize = clientBatchSize;
-
-            // Get if we need to serialize data or making everything in memory
-            var clientWorkInMemory = clientBatchSize == 0;
-
-            // Get context from request message
-            var ctx = httpMessage.SyncContext;
-
-            // Set the context coming from the client
-            this.SetContext(ctx);
-
-            // Check schema.
-            var schema = await EnsureSchemaFromSessionAsync(httpContext, httpMessage.SyncContext.ScopeName, progress, cancellationToken).ConfigureAwait(false);
-
-            // ------------------------------------------------------------
-            // FIRST STEP : receive client changes
-            // ------------------------------------------------------------
-
-            // We are receiving changes from client
-            // BatchInfo containing all BatchPartInfo objects
-            // Retrieve batchinfo instance if exists
-            // Get batch info from session cache if exists, otherwise create it
-            if (sessionCache.ClientBatchInfo == null)
-            {
-                sessionCache.ClientBatchInfo = new BatchInfo(clientWorkInMemory, schema, this.Options.BatchDirectory);
-            }
-
-            // create the in memory changes set
-            var changesSet = new SyncSet();
-
-            foreach (var table in httpMessage.Changes.Tables)
-                DbSyncAdapter.CreateChangesTable(schema.Tables[table.TableName, table.SchemaName], changesSet);
-
-            changesSet.ImportContainerSet(httpMessage.Changes, false);
-
-            // If client has made a conversion on each line, apply the reverse side of it
-            if (ClientConverter != null && changesSet.HasRows)
-                AfterDeserializedRows(changesSet, ClientConverter);
-
-            // add changes to the batch info
-            await sessionCache.ClientBatchInfo.AddChangesAsync(changesSet, httpMessage.BatchIndex, httpMessage.IsLastBatch, this.Options.SerializerFactory, this);
-
-            // Clear the httpMessage set
-            if (!clientWorkInMemory && httpMessage.Changes != null)
-                httpMessage.Changes.Clear();
-
-            // Until we don't have received all the batches, wait for more
-            if (!httpMessage.IsLastBatch)
-                return new HttpMessageSendChangesResponse(httpMessage.SyncContext) { ServerStep = HttpStep.SendChangesInProgress };
-
-            // ------------------------------------------------------------
-            // SECOND STEP : apply then return server changes
-            // ------------------------------------------------------------
-
-            // get changes
-            var (remoteClientTimestamp, serverBatchInfo, _, clientChangesApplied, serverChangesSelected) =
-                   await base.ApplyThenGetChangesAsync(httpMessage.Scope, sessionCache.ClientBatchInfo, cancellationToken, progress).ConfigureAwait(false);
-
-
-            // Save the server batch info object to cache if not working in memory
-            if (!clientWorkInMemory)
-            {
-                sessionCache.RemoteClientTimestamp = remoteClientTimestamp;
-                sessionCache.ServerBatchInfo = serverBatchInfo;
-                sessionCache.ServerChangesSelected = serverChangesSelected;
-                sessionCache.ClientChangesApplied = clientChangesApplied;
-                //httpContext.Session.Set(sessionId, sessionCache);
-            }
-
-            // delete the folder (not the BatchPartInfo, because we have a reference on it)
-            var cleanFolder = this.Options.CleanFolder;
-
-            if (cleanFolder)
-                cleanFolder = await this.InternalCanCleanFolderAsync(ctx, sessionCache.ClientBatchInfo, default).ConfigureAwait(false);
-
-            if (cleanFolder)
-                sessionCache.ClientBatchInfo.TryRemoveDirectory();
-
-            // Get the firt response to send back to client
-            return await GetChangesResponseAsync(httpContext, ctx, remoteClientTimestamp, serverBatchInfo, clientChangesApplied, serverChangesSelected, 0);
-
-        }
-
-        /// <summary>
-        /// Get changes from 
-        /// </summary>
         internal async Task<HttpMessageSummaryResponse> ApplyThenGetChangesAsync2(HttpContext httpContext, HttpMessageSendChangesRequest httpMessage, SessionCache sessionCache,
                         int clientBatchSize, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
             // Overriding batch size options value, coming from client
             // having changes from server in batch size or not is decided by the client.
             // Basically this options is not used on the server, since it's always overriden by the client
-            this.Options.BatchSize = clientBatchSize;
-
-            // Get if we need to serialize data or making everything in memory
-            var clientWorkInMemory = clientBatchSize == 0;
+            Options.BatchSize = clientBatchSize;
 
             // Get context from request message
             var ctx = httpMessage.SyncContext;
 
             // Set the context coming from the client
-            this.SetContext(ctx);
+            SetContext(ctx);
 
             // Check schema.
             var schema = await EnsureSchemaFromSessionAsync(httpContext, httpMessage.SyncContext.ScopeName, progress, cancellationToken).ConfigureAwait(false);
@@ -711,28 +610,56 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             // BatchInfo containing all BatchPartInfo objects
             // Retrieve batchinfo instance if exists
             // Get batch info from session cache if exists, otherwise create it
-            if (sessionCache.ClientBatchInfo == null)
+            if (sessionCache.ClientBatchInfo is null)
             {
-                sessionCache.ClientBatchInfo = new BatchInfo(clientWorkInMemory, schema, this.Options.BatchDirectory);
+                sessionCache.ClientBatchInfo = new BatchInfo(schema, Options.BatchDirectory);
+                sessionCache.ClientBatchInfo.CreateDirectory();
             }
 
-            // create the in memory changes set
-            var changesSet = new SyncSet();
+            if (httpMessage.Changes is not null && httpMessage.Changes.HasRows)
+            {
+                // we have only one table here
+                var localSerializer = Options.LocalSerializerFactory.GetLocalSerializer();
+                var containerTable = httpMessage.Changes.Tables[0];
+                var schemaTable = DbSyncAdapter.CreateChangesTable(schema.Tables[containerTable.TableName, containerTable.SchemaName]);
+                var tableName = ParserName.Parse(new SyncTable(containerTable.TableName, containerTable.SchemaName)).Unquoted().Schema().Normalized().ToString();
+                var fileName = BatchInfo.GenerateNewFileName(httpMessage.BatchIndex.ToString(), tableName, localSerializer.Extension);
+                var fullPath = Path.Combine(sessionCache.ClientBatchInfo.GetDirectoryFullPath(), fileName);
 
-            foreach (var table in httpMessage.Changes.Tables)
-                DbSyncAdapter.CreateChangesTable(schema.Tables[table.TableName, table.SchemaName], changesSet);
+                // If client has made a conversion on each line, apply the reverse side of it
+                if (ClientConverter is not null)
+                    AfterDeserializedRows(containerTable, schemaTable, ClientConverter);
 
-            changesSet.ImportContainerSet(httpMessage.Changes, false);
+                // open the file and write table header
+                await localSerializer.OpenFileAsync(fullPath, schemaTable).ConfigureAwait(false);
 
-            // If client has made a conversion on each line, apply the reverse side of it
-            if (ClientConverter != null && changesSet.HasRows)
-                AfterDeserializedRows(changesSet, ClientConverter);
+                foreach (var row in containerTable.Rows)
+                    await localSerializer.WriteRowToFileAsync(new SyncRow(schemaTable, row), schemaTable).ConfigureAwait(false);
 
-            // add changes to the batch info
-            await sessionCache.ClientBatchInfo.AddChangesAsync(changesSet, httpMessage.BatchIndex, httpMessage.IsLastBatch, this.Options.SerializerFactory, this);
+                // Close file
+                await localSerializer.CloseFileAsync(fullPath, schemaTable).ConfigureAwait(false);
+
+                // Create the info on the batch part
+                BatchPartTableInfo tableInfo = new BatchPartTableInfo
+                {
+                    TableName = containerTable.TableName,
+                    SchemaName = containerTable.SchemaName,
+                    RowsCount = containerTable.Rows.Count
+
+                };
+                var bpi = new BatchPartInfo { FileName = fileName };
+                bpi.Tables = new BatchPartTableInfo[] { tableInfo };
+                bpi.RowsCount = tableInfo.RowsCount;
+                bpi.IsLastBatch = httpMessage.IsLastBatch;
+                bpi.Index = httpMessage.BatchIndex;
+                sessionCache.ClientBatchInfo.RowsCount += bpi.RowsCount;
+                sessionCache.ClientBatchInfo.BatchPartsInfo.Add(bpi);
+
+
+            }
 
             // Clear the httpMessage set
-            if (!clientWorkInMemory && httpMessage.Changes != null)
+            if (httpMessage.Changes is not null)
                 httpMessage.Changes.Clear();
 
             // Until we don't have received all the batches, wait for more
@@ -745,26 +672,27 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
 
             // get changes
             var (remoteClientTimestamp, serverBatchInfo, _, clientChangesApplied, serverChangesSelected) =
-                   await base.ApplyThenGetChangesAsync(httpMessage.Scope, sessionCache.ClientBatchInfo, cancellationToken, progress).ConfigureAwait(false);
+                   await base.ApplyThenGetChangesAsync(httpMessage.Scope, sessionCache.ClientBatchInfo, default, default, cancellationToken, progress).ConfigureAwait(false);
 
-            // Save the server batch info object to cache if not working in memory
-            if (!clientWorkInMemory)
-            {
-                sessionCache.RemoteClientTimestamp = remoteClientTimestamp;
-                sessionCache.ServerBatchInfo = serverBatchInfo;
-                sessionCache.ServerChangesSelected = serverChangesSelected;
-                sessionCache.ClientChangesApplied = clientChangesApplied;
-                //httpContext.Session.Set(sessionId, sessionCache);
-            }
+            // Set session cache infos
+            sessionCache.RemoteClientTimestamp = remoteClientTimestamp;
+            sessionCache.ServerBatchInfo = serverBatchInfo;
+            sessionCache.ServerChangesSelected = serverChangesSelected;
+            sessionCache.ClientChangesApplied = clientChangesApplied;
 
             // delete the folder (not the BatchPartInfo, because we have a reference on it)
-            var cleanFolder = this.Options.CleanFolder;
+            var cleanFolder = Options.CleanFolder;
 
             if (cleanFolder)
-                cleanFolder = await this.InternalCanCleanFolderAsync(ctx, sessionCache.ClientBatchInfo, default).ConfigureAwait(false);
+                cleanFolder = await InternalCanCleanFolderAsync(ctx, sessionCache.ClientBatchInfo, default).ConfigureAwait(false);
 
             if (cleanFolder)
                 sessionCache.ClientBatchInfo.TryRemoveDirectory();
+
+            // Retro compatiblité to version < 0.9.3
+            if (serverBatchInfo.BatchPartsInfo is null)
+                serverBatchInfo.BatchPartsInfo = new List<BatchPartInfo>();
+
 
             var summaryResponse = new HttpMessageSummaryResponse(ctx)
             {
@@ -773,17 +701,37 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 RemoteClientTimestamp = remoteClientTimestamp,
                 ClientChangesApplied = clientChangesApplied,
                 ServerChangesSelected = serverChangesSelected,
-                ConflictResolutionPolicy = this.Options.ConflictResolutionPolicy,
+                ConflictResolutionPolicy = Options.ConflictResolutionPolicy,
             };
 
-            if (clientWorkInMemory)
-            {
-                if (ClientConverter != null && serverBatchInfo.InMemoryData != null && serverBatchInfo.InMemoryData.HasRows)
-                    BeforeSerializeRows(serverBatchInfo.InMemoryData, ClientConverter);
 
-                summaryResponse.Changes = serverBatchInfo.InMemoryData == null ? new ContainerSet() : serverBatchInfo.InMemoryData.GetContainerSet();
+            // Compatibility with last versions where InMemory is set
+            if (clientBatchSize <= 0)
+            {
+                var containerSet = new ContainerSet();
+                foreach (var table in serverBatchInfo.SanitizedSchema.Tables)
+                {
+                    var containerTable = new ContainerTable(table);
+                    foreach (var part in serverBatchInfo.GetBatchPartsInfo(table))
+                    {
+                        var paths = serverBatchInfo.GetBatchPartInfoPath(part);
+                        var localSerializer = Options.LocalSerializerFactory.GetLocalSerializer();
+                        foreach (var syncRow in localSerializer.ReadRowsFromFile(paths.FullPath, table))
+                        {
+                            containerTable.Rows.Add(syncRow.ToArray());
+                        }
+                    }
+                    if (containerTable.Rows.Count > 0)
+                        containerSet.Tables.Add(containerTable);
+                }
+
+                summaryResponse.Changes = containerSet;
+                summaryResponse.BatchInfo.BatchPartsInfo.Clear();
+                summaryResponse.BatchInfo.BatchPartsInfo = null;
 
             }
+
+
             // Get the firt response to send back to client
             return summaryResponse;
 
@@ -801,6 +749,70 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         }
 
         /// <summary>
+        /// Create a response message content based on a requested index in a server batch info
+        /// </summary>
+        private async Task<HttpMessageSendChangesResponse> GetChangesResponseAsync(HttpContext httpContext, SyncContext syncContext, long remoteClientTimestamp, BatchInfo serverBatchInfo,
+                              DatabaseChangesApplied clientChangesApplied, DatabaseChangesSelected serverChangesSelected, int batchIndexRequested)
+        {
+            var schema = await EnsureSchemaFromSessionAsync(httpContext, syncContext.ScopeName, default, default).ConfigureAwait(false);
+
+            // 1) Create the http message content response
+            var changesResponse = new HttpMessageSendChangesResponse(syncContext)
+            {
+                ServerChangesSelected = serverChangesSelected,
+                ClientChangesApplied = clientChangesApplied,
+                ServerStep = HttpStep.GetMoreChanges,
+                ConflictResolutionPolicy = Options.ConflictResolutionPolicy
+            };
+
+            if (serverBatchInfo is null)
+                throw new Exception("serverBatchInfo is Null and should not be ....");
+
+            // If nothing to do, just send back
+            if (serverBatchInfo.BatchPartsInfo is null || serverBatchInfo.BatchPartsInfo.Count <= 0)
+            {
+                changesResponse.Changes = new ContainerSet();
+                changesResponse.BatchIndex = 0;
+                changesResponse.BatchCount = serverBatchInfo.BatchPartsInfo is null ? 0 : serverBatchInfo.BatchPartsInfo.Count;
+                changesResponse.IsLastBatch = true;
+                changesResponse.RemoteClientTimestamp = remoteClientTimestamp;
+                return changesResponse;
+            }
+
+            // Get the batch part index requested
+            var batchPartInfo = serverBatchInfo.BatchPartsInfo.First(d => d.Index == batchIndexRequested);
+
+            // Get the updatable schema for the only table contained in the batchpartinfo
+            var schemaTable = DbSyncAdapter.CreateChangesTable(schema.Tables[batchPartInfo.Tables[0].TableName, batchPartInfo.Tables[0].SchemaName]);
+
+            // Generate the ContainerSet containing rows to send to the user
+            var containerSet = new ContainerSet();
+            var containerTable = new ContainerTable(schemaTable);
+            var fullPath = Path.Combine(serverBatchInfo.GetDirectoryFullPath(), batchPartInfo.FileName);
+            containerSet.Tables.Add(containerTable);
+
+            // read rows from file
+            var localSerializer = Options.LocalSerializerFactory.GetLocalSerializer();
+            foreach (var row in localSerializer.ReadRowsFromFile(fullPath, schemaTable))
+                containerTable.Rows.Add(row.ToArray());
+
+            // if client request a conversion on each row, apply the conversion
+            if (ClientConverter is not null && containerTable.HasRows)
+                BeforeSerializeRows(containerTable, schemaTable, ClientConverter);
+
+            // generate the response
+            changesResponse.Changes = containerSet;
+            changesResponse.BatchIndex = batchIndexRequested;
+            changesResponse.BatchCount = serverBatchInfo.BatchPartsInfo.Count;
+            changesResponse.IsLastBatch = batchPartInfo.IsLastBatch;
+            changesResponse.RemoteClientTimestamp = remoteClientTimestamp;
+            changesResponse.ServerStep = batchPartInfo.IsLastBatch ? HttpStep.GetMoreChanges : HttpStep.GetChangesInProgress;
+
+            return changesResponse;
+        }
+
+
+        /// <summary>
         /// This method is only used when batch mode is enabled on server and we need send to the server the order to delete tmp folder 
         /// </summary>
         internal async Task<HttpMessageSendChangesResponse> SendEndDownloadChangesAsync(HttpContext httpContext, HttpMessageGetMoreChangesRequest httpMessage,
@@ -812,10 +824,10 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             if (batchPartInfo.IsLastBatch)
             {
                 // delete the folder (not the BatchPartInfo, because we have a reference on it)
-                var cleanFolder = this.Options.CleanFolder;
+                var cleanFolder = Options.CleanFolder;
 
                 if (cleanFolder)
-                    cleanFolder = await this.InternalCanCleanFolderAsync(httpMessage.SyncContext, sessionCache.ServerBatchInfo, default).ConfigureAwait(false);
+                    cleanFolder = await InternalCanCleanFolderAsync(httpMessage.SyncContext, sessionCache.ServerBatchInfo, default).ConfigureAwait(false);
 
                 if (cleanFolder)
                     sessionCache.ServerBatchInfo.TryRemoveDirectory();
@@ -825,126 +837,27 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
 
 
         /// <summary>
-        /// Create a response message content based on a requested index in a server batch info
-        /// </summary>
-        private async Task<HttpMessageSendChangesResponse> GetChangesResponseAsync(HttpContext httpContext, SyncContext syncContext, long remoteClientTimestamp, BatchInfo serverBatchInfo,
-                              DatabaseChangesApplied clientChangesApplied, DatabaseChangesSelected serverChangesSelected, int batchIndexRequested)
-        {
-            var serverBatchInfoStr = "Null";
-            if (serverBatchInfo != null)
-            {
-                var serverBatchPartsCountStr = serverBatchInfo.BatchPartsInfo == null ? "Null" : serverBatchInfo.BatchPartsInfo.Count.ToString();
-                var serverBatchTablesCountStr = serverBatchInfo.SanitizedSchema == null ? "Null" : serverBatchInfo.SanitizedSchema.Tables.Count.ToString();
-                serverBatchInfoStr = $"Parts:{serverBatchPartsCountStr}. Rows Count:{serverBatchInfo.RowsCount}. Tables:{serverBatchTablesCountStr}";
-            }
-            var schema = await EnsureSchemaFromSessionAsync(httpContext, syncContext.ScopeName, default, default).ConfigureAwait(false);
-
-            // 1) Create the http message content response
-            var changesResponse = new HttpMessageSendChangesResponse(syncContext)
-            {
-                ServerChangesSelected = serverChangesSelected,
-                ClientChangesApplied = clientChangesApplied,
-                ServerStep = HttpStep.GetMoreChanges,
-                ConflictResolutionPolicy = this.Options.ConflictResolutionPolicy
-            };
-
-            if (serverBatchInfo == null)
-                throw new Exception("serverBatchInfo is Null and should not be ....");
-
-            // If nothing to do, just send back
-            if (serverBatchInfo.InMemory || serverBatchInfo.BatchPartsInfo == null || serverBatchInfo.BatchPartsInfo.Count == 0)
-            {
-                if (ClientConverter != null && serverBatchInfo.InMemoryData != null && serverBatchInfo.InMemoryData.HasRows)
-                    BeforeSerializeRows(serverBatchInfo.InMemoryData, ClientConverter);
-
-                changesResponse.Changes = serverBatchInfo.InMemoryData == null ? new ContainerSet() : serverBatchInfo.InMemoryData.GetContainerSet();
-                changesResponse.BatchIndex = 0;
-                changesResponse.BatchCount = serverBatchInfo.InMemoryData == null ? 0 : serverBatchInfo.BatchPartsInfo == null ? 0 : serverBatchInfo.BatchPartsInfo.Count;
-                changesResponse.IsLastBatch = true;
-                changesResponse.RemoteClientTimestamp = remoteClientTimestamp;
-
-                serverBatchInfoStr = "Null";
-                if (serverBatchInfo != null)
-                {
-                    var serverBatchPartsCountStr = serverBatchInfo.BatchPartsInfo == null ? "Null" : serverBatchInfo.BatchPartsInfo.Count.ToString();
-                    var serverBatchTablesCountStr = serverBatchInfo.SanitizedSchema == null ? "Null" : serverBatchInfo.SanitizedSchema.Tables.Count.ToString();
-                    serverBatchInfoStr = $"Parts:{serverBatchPartsCountStr}. Rows Count:{serverBatchInfo.RowsCount}. Tables:{serverBatchTablesCountStr}";
-                }
-            }
-
-            // Get the batch part index requested
-            var batchPartInfo = serverBatchInfo.BatchPartsInfo.First(d => d.Index == batchIndexRequested);
-
-            // if we are not in memory, we set the BI in session, to be able to get it back on next request
-
-            // create the in memory changes set
-            var changesSet = new SyncSet();
-
-            foreach (var table in schema.Tables)
-                DbSyncAdapter.CreateChangesTable(schema.Tables[table.TableName, table.SchemaName], changesSet);
-
-            // Backward compatibility for client < v0.8.0
-            var serializerFactory = this.Options.SerializerFactory;
-            if (this.Options.SerializerFactory.Key != SerializersCollection.JsonSerializer.Key && (string.IsNullOrEmpty(serverBatchInfo.SerializerFactoryKey) || serverBatchInfo.SerializerFactoryKey == SerializersCollection.JsonSerializer.Key))
-                serializerFactory = SerializersCollection.JsonSerializer;
-
-            await batchPartInfo.LoadBatchAsync(changesSet, serverBatchInfo.GetDirectoryFullPath(), serializerFactory, this);
-
-            // if client request a conversion on each row, apply the conversion
-            if (ClientConverter != null && batchPartInfo.Data.HasRows)
-                BeforeSerializeRows(batchPartInfo.Data, ClientConverter);
-
-            changesResponse.Changes = batchPartInfo.Data.GetContainerSet();
-            changesResponse.BatchIndex = batchIndexRequested;
-            changesResponse.BatchCount = serverBatchInfo.BatchPartsInfo.Count;
-            changesResponse.IsLastBatch = batchPartInfo.IsLastBatch;
-            changesResponse.RemoteClientTimestamp = remoteClientTimestamp;
-            changesResponse.ServerStep = batchPartInfo.IsLastBatch ? HttpStep.GetMoreChanges : HttpStep.GetChangesInProgress;
-
-            batchPartInfo.Clear();
-
-            serverBatchInfoStr = "Null";
-            if (serverBatchInfo != null)
-            {
-                var serverBatchPartsCountStr = serverBatchInfo.BatchPartsInfo == null ? "Null" : serverBatchInfo.BatchPartsInfo.Count.ToString();
-                var serverBatchTablesCountStr = serverBatchInfo.SanitizedSchema == null ? "Null" : serverBatchInfo.SanitizedSchema.Tables.Count.ToString();
-                serverBatchInfoStr = $"Parts:{serverBatchPartsCountStr}. Rows Count:{serverBatchInfo.RowsCount}. Tables:{serverBatchTablesCountStr}";
-            }
-            return changesResponse;
-        }
-
-
-        /// <summary>
         /// Before serializing all rows, call the converter for each row
         /// </summary>
-        public void BeforeSerializeRows(SyncSet data, IConverter converter)
+        public void BeforeSerializeRows(ContainerTable table, SyncTable schemaTable, IConverter converter)
         {
-            foreach (var table in data.Tables)
+            if (table.Rows.Count > 0)
             {
-                if (table.Rows.Count > 0)
-                {
-                    foreach (var row in table.Rows)
-                        converter.BeforeSerialize(row);
-
-                }
+                foreach (var row in table.Rows)
+                    converter.BeforeSerialize(row, schemaTable);
             }
         }
 
         /// <summary>
         /// After deserializing all rows, call the converter for each row
         /// </summary>
-        public void AfterDeserializedRows(SyncSet data, IConverter converter)
+        public void AfterDeserializedRows(ContainerTable table, SyncTable schemaTable, IConverter converter)
         {
-            foreach (var table in data.Tables)
+            if (table.Rows.Count > 0)
             {
-                if (table.Rows.Count > 0)
-                {
-                    foreach (var row in table.Rows)
-                        converter.AfterDeserialized(row);
-
-                }
+                foreach (var row in table.Rows)
+                    converter.AfterDeserialized(row, schemaTable);
             }
-
         }
 
 
@@ -962,7 +875,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             message.AppendLine("-----------------------");
             message.AppendLine(syncException.StackTrace);
             message.AppendLine("-----------------------");
-            if (syncException.InnerException != null)
+            if (syncException.InnerException is not null)
             {
                 message.AppendLine("-----------------------");
                 message.AppendLine("INNER EXCEPTION");
@@ -1013,7 +926,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             // data to send back, as the response
             byte[] compressedData = EnsureCompression(httpRequest, httpResponse, data);
 
-            httpResponse.Headers.Add("dotmim-sync-error", syncException.TypeName);
+            httpResponse.Headers.Add("isynergy-sync-error", syncException.TypeName);
             httpResponse.StatusCode = StatusCodes.Status400BadRequest;
             httpResponse.ContentLength = compressedData.Length;
             await httpResponse.Body.WriteAsync(compressedData, 0, compressedData.Length, default).ConfigureAwait(false);
@@ -1047,13 +960,14 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             foreach (var webOrchestrator in orchestrators)
             {
 
+                SyncContext ctx = null;
                 string dbName = null;
                 string version = null;
                 string exceptionMessage = null;
                 bool hasException = false;
                 try
                 {
-                    (dbName, version) = await webOrchestrator.GetHelloAsync();
+                    (ctx, dbName, version) = await webOrchestrator.GetHelloAsync();
                 }
                 catch (Exception ex)
                 {

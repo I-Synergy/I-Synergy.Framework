@@ -14,31 +14,31 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 {
     public class SqlBuilderTrackingTable
     {
-        private ParserName trackingName;
-        private readonly SyncTable tableDescription;
-        private readonly SyncSetup setup;
-        private readonly SqlDbMetadata sqlDbMetadata;
+        private ParserName _trackingName;
+        private readonly SyncTable _tableDescription;
+        private readonly SyncSetup _setup;
+        private readonly SqlDbMetadata _sqlDbMetadata;
 
         public SqlBuilderTrackingTable(SyncTable tableDescription, ParserName tableName, ParserName trackingName, SyncSetup setup)
         {
-            this.tableDescription = tableDescription;
-            this.setup = setup;
-            this.trackingName = trackingName;
-            sqlDbMetadata = new SqlDbMetadata();
+            _tableDescription = tableDescription;
+            _setup = setup;
+            _trackingName = trackingName;
+            _sqlDbMetadata = new SqlDbMetadata();
         }
 
         public Task<DbCommand> GetCreateTrackingTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
             var stringBuilder = new StringBuilder();
-            var tbl = trackingName.ToString();
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(trackingName);
-            stringBuilder.AppendLine($"CREATE TABLE {trackingName.Schema().Quoted().ToString()} (");
+            var tbl = _trackingName.ToString();
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_trackingName);
+            stringBuilder.AppendLine($"CREATE TABLE {_trackingName.Schema().Quoted().ToString()} (");
 
             // Adding the primary key
-            foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
+            foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
             {
                 var quotedColumnName = ParserName.Parse(pkColumn).Quoted().ToString();
-                var columnType = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(pkColumn, tableDescription.OriginalProvider);
+                var columnType = _sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(pkColumn, _tableDescription.OriginalProvider);
 
                 var nullableColumn = pkColumn.AllowDBNull ? "NULL" : "NOT NULL";
                 stringBuilder.AppendLine($"{quotedColumnName} {columnType} {nullableColumn}, ");
@@ -53,9 +53,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
             stringBuilder.AppendLine(");");
 
             // Primary Keys
-            stringBuilder.Append($"ALTER TABLE {trackingName.Schema().Quoted().ToString()} ADD CONSTRAINT [PK_{trackingName.Schema().Unquoted().Normalized().ToString()}] PRIMARY KEY (");
+            stringBuilder.Append($"ALTER TABLE {_trackingName.Schema().Quoted().ToString()} ADD CONSTRAINT [PK_{_trackingName.Schema().Unquoted().Normalized().ToString()}] PRIMARY KEY (");
 
-            var primaryKeysColumns = tableDescription.GetPrimaryKeysColumns().ToList();
+            var primaryKeysColumns = _tableDescription.GetPrimaryKeysColumns().ToList();
             for (var i = 0; i < primaryKeysColumns.Count; i++)
             {
                 var pkColumn = primaryKeysColumns[i];
@@ -69,13 +69,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 
 
             // Index
-            var indexName = trackingName.Schema().Unquoted().Normalized().ToString();
+            var indexName = _trackingName.Schema().Unquoted().Normalized().ToString();
 
-            stringBuilder.AppendLine($"CREATE NONCLUSTERED INDEX [{indexName}_timestamp_index] ON {trackingName.Schema().Quoted().ToString()} (");
+            stringBuilder.AppendLine($"CREATE NONCLUSTERED INDEX [{indexName}_timestamp_index] ON {_trackingName.Schema().Quoted().ToString()} (");
             stringBuilder.AppendLine($"\t  [timestamp_bigint] ASC");
             stringBuilder.AppendLine($"\t, [update_scope_id] ASC");
             stringBuilder.AppendLine($"\t, [sync_row_is_tombstone] ASC");
-            foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
+            foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.AppendLine($"\t,{columnName} ASC");
@@ -102,11 +102,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
 
         public Task<DbCommand> GetDropTrackingTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var tbl = trackingName.ToString();
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(trackingName);
+            var tbl = _trackingName.ToString();
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_trackingName);
 
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"ALTER TABLE {trackingName.Schema().Quoted().ToString()} NOCHECK CONSTRAINT ALL; DROP TABLE {trackingName.Schema().Quoted().ToString()};");
+            stringBuilder.AppendLine($"ALTER TABLE {_trackingName.Schema().Quoted().ToString()} NOCHECK CONSTRAINT ALL; DROP TABLE {_trackingName.Schema().Quoted().ToString()};");
 
             var command = new SqlCommand(stringBuilder.ToString(), (SqlConnection)connection, (SqlTransaction)transaction);
 
@@ -130,8 +130,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
         {
             var stringBuilder = new StringBuilder();
 
-            var schemaName = trackingName.SchemaName;
-            var tableName = trackingName.ObjectName;
+            var schemaName = _trackingName.SchemaName;
+            var tableName = _trackingName.ObjectName;
 
             schemaName = string.IsNullOrEmpty(schemaName) ? "dbo" : schemaName;
             var oldSchemaNameString = string.IsNullOrEmpty(oldTableName.SchemaName) ? "dbo" : oldTableName.SchemaName;
@@ -153,8 +153,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
         }
         public Task<DbCommand> GetExistsTrackingTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var tbl = trackingName.ToString();
-            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(trackingName);
+            var tbl = _trackingName.ToString();
+            var schema = SqlManagementUtils.GetUnquotedSqlSchemaName(_trackingName);
 
             var command = connection.CreateCommand();
 

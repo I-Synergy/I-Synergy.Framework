@@ -136,7 +136,7 @@ namespace ISynergy.Framework.Mathematics.Kinematics
         /// <remarks>This function assumes the parent model has already been calculated.</remarks>
         public void Compute(DenavitHartenbergModel parent)
         {
-            if (parent == null)
+            if (parent is null)
                 throw new ArgumentNullException("parent", "Parent cannot be null.");
             // The model position will be the position
             // of the last joint in the parent model:

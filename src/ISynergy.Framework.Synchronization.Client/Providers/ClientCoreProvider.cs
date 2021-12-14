@@ -20,8 +20,6 @@ namespace ISynergy.Framework.Synchronization.Client.Providers
 
         public override string GetProviderTypeName() => "Fancy";
 
-        public override bool SupportBulkOperations => throw new NotImplementedException();
-
         public override bool CanBeServerProvider => true;
 
         public override DbConnection CreateConnection() => throw new NotImplementedException();

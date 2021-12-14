@@ -46,7 +46,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
         public MigrationSetupTable(SetupTable table)
         {
-            this.SetupTable = table;
+            SetupTable = table;
         }
 
         /// <summary>
@@ -73,10 +73,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Gets a value indicating if the table should be migrated
         /// </summary>
-        public bool ShouldMigrate => this.TrackingTable != MigrationAction.None ||
-                                        this.Triggers != MigrationAction.None ||
-                                        this.StoredProcedures != MigrationAction.None ||
-                                        this.Table != MigrationAction.None;
+        public bool ShouldMigrate => TrackingTable != MigrationAction.None ||
+                                        Triggers != MigrationAction.None ||
+                                        StoredProcedures != MigrationAction.None ||
+                                        Table != MigrationAction.None;
 
 
         /// <summary>
@@ -98,39 +98,37 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
     public class Migration
     {
-        private readonly SyncSetup newSetup;
-        private readonly SyncSetup oldSetup;
-
-
+        private readonly SyncSetup _newSetup;
+        private readonly SyncSetup _oldSetup;
 
         public Migration(SyncSetup newSetup, SyncSetup oldSetup)
         {
-            this.newSetup = newSetup;
-            this.oldSetup = oldSetup;
+            _newSetup = newSetup;
+            _oldSetup = oldSetup;
         }
 
         public MigrationResults Compare()
         {
             var migrationSetup = new MigrationResults();
 
-            if (newSetup.EqualsByProperties(oldSetup))
+            if (_newSetup.EqualsByProperties(_oldSetup))
                 return migrationSetup;
 
             var sc = SyncGlobalization.DataSourceStringComparison;
 
             // if we change the prefix / suffix, we should recreate all stored procedures
-            if (!string.Equals(newSetup.StoredProceduresPrefix, oldSetup.StoredProceduresPrefix, sc) || !string.Equals(newSetup.StoredProceduresSuffix, oldSetup.StoredProceduresSuffix, sc))
+            if (!string.Equals(_newSetup.StoredProceduresPrefix, _oldSetup.StoredProceduresPrefix, sc) || !string.Equals(_newSetup.StoredProceduresSuffix, _oldSetup.StoredProceduresSuffix, sc))
                 migrationSetup.AllStoredProcedures = MigrationAction.Create;
 
             // if we change the prefix / suffix, we should recreate all triggers
-            if (!string.Equals(newSetup.TriggersPrefix, oldSetup.TriggersPrefix, sc) || !string.Equals(newSetup.TriggersSuffix, oldSetup.TriggersSuffix, sc))
+            if (!string.Equals(_newSetup.TriggersPrefix, _oldSetup.TriggersPrefix, sc) || !string.Equals(_newSetup.TriggersSuffix, _oldSetup.TriggersSuffix, sc))
                 migrationSetup.AllTriggers = MigrationAction.Create;
 
             // If we change tracking tables prefix and suffix, we should:
             // - RENAME the tracking tables (and keep the rows)
             // - RECREATE the stored procedure
             // - RECREATE the triggers
-            if (!string.Equals(newSetup.TrackingTablesPrefix, oldSetup.TrackingTablesPrefix, sc) || !string.Equals(newSetup.TrackingTablesSuffix, oldSetup.TrackingTablesSuffix, sc))
+            if (!string.Equals(_newSetup.TrackingTablesPrefix, _oldSetup.TrackingTablesPrefix, sc) || !string.Equals(_newSetup.TrackingTablesSuffix, _oldSetup.TrackingTablesSuffix, sc))
             {
                 migrationSetup.AllStoredProcedures = MigrationAction.Create;
                 migrationSetup.AllTriggers = MigrationAction.Create;
@@ -138,7 +136,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             }
 
             // Search for deleted tables
-            var deletedTables = oldSetup.Tables.Where(oldt => newSetup.Tables[oldt.TableName, oldt.SchemaName] is null);
+            var deletedTables = _oldSetup.Tables.Where(oldt => _newSetup.Tables[oldt.TableName, oldt.SchemaName] is null);
 
             // We found some tables present in the old setup, but not in the new setup
             // So, we are removing all the sync elements from the table, but we do not remote the table itself
@@ -156,7 +154,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             }
 
             // Search for new tables
-            var newTables = newSetup.Tables.Where(newdt => oldSetup.Tables[newdt.TableName, newdt.SchemaName] is null);
+            var newTables = _newSetup.Tables.Where(newdt => _oldSetup.Tables[newdt.TableName, newdt.SchemaName] is null);
 
             // We found some tables present in the new setup, but not in the old setup
             foreach (var newTable in newTables)
@@ -173,10 +171,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             }
 
             // Compare existing tables
-            foreach (var newTable in newSetup.Tables)
+            foreach (var newTable in _newSetup.Tables)
             {
                 // Getting corresponding table in old setup
-                var oldTable = oldSetup.Tables[newTable.TableName, newTable.SchemaName];
+                var oldTable = _oldSetup.Tables[newTable.TableName, newTable.SchemaName];
 
                 // We do not found the old setup table, we can conclude this "newTable" is a new table included in the new setup
                 // And therefore will be setup during the last call the EnsureSchema()
@@ -213,10 +211,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
             // Search for new filters
             // If we have any filter, just recreate them, just in case
-            if (newSetup.Filters is not null && newSetup.Filters.Count > 0)
-                foreach (var filter in newSetup.Filters)
+            if (_newSetup.Filters is not null && _newSetup.Filters.Count > 0)
+                foreach (var filter in _newSetup.Filters)
                 {
-                    var setupTable = newSetup.Tables[filter.TableName, filter.SchemaName];
+                    var setupTable = _newSetup.Tables[filter.TableName, filter.SchemaName];
 
                     if (setupTable is null)
                         continue;

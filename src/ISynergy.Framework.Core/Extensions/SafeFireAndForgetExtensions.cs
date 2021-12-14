@@ -87,7 +87,7 @@ namespace ISynergy.Framework.Core.Extensions
             {
                 await valueTask.ConfigureAwait(continueOnCapturedContext);
             }
-            catch (TException ex) when (_onException != null || onException != null)
+            catch (TException ex) when (_onException is not null || onException is not null)
             {
                 HandleException(ex, onException);
 
@@ -103,7 +103,7 @@ namespace ISynergy.Framework.Core.Extensions
             {
                 await task.ConfigureAwait(continueOnCapturedContext);
             }
-            catch (TException ex) when (_onException != null || onException != null)
+            catch (TException ex) when (_onException is not null || onException is not null)
             {
                 HandleException(ex, onException);
 

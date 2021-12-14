@@ -11,17 +11,19 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
     public class MessageGetChangesBatch
     {
         public MessageGetChangesBatch(Guid? excludingScopeId, Guid localScopeId, bool isNew, long? lastTimestamp, SyncSet schema, SyncSetup setup,
-                                      int batchSize, string batchDirectory, ISerializerFactory serializerFactory)
+                                      int batchSize, string batchDirectory, bool supportsMultiActiveResultSets, ILocalSerializerFactory localSerializerFactory)
         {
-            this.Schema = schema ?? throw new ArgumentNullException(nameof(schema));
-            this.Setup = setup ?? throw new ArgumentNullException(nameof(setup));
-            this.BatchDirectory = batchDirectory ?? throw new ArgumentNullException(nameof(batchDirectory));
-            this.SerializerFactory = serializerFactory;
-            this.ExcludingScopeId = excludingScopeId;
-            this.LocalScopeId = localScopeId;
-            this.IsNew = isNew;
-            this.LastTimestamp = lastTimestamp;
-            this.BatchSize = batchSize;
+            Schema = schema ?? throw new ArgumentNullException(nameof(schema));
+            Setup = setup ?? throw new ArgumentNullException(nameof(setup));
+            BatchDirectory = batchDirectory ?? throw new ArgumentNullException(nameof(batchDirectory));
+            SupportsMultiActiveResultSets = supportsMultiActiveResultSets;
+            //SerializerFactory = serializerFactory;
+            LocalSerializerFactory = localSerializerFactory;
+            ExcludingScopeId = excludingScopeId;
+            LocalScopeId = localScopeId;
+            IsNew = isNew;
+            LastTimestamp = lastTimestamp;
+            BatchSize = batchSize;
         }
 
         /// <summary>
@@ -31,7 +33,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         public Guid? ExcludingScopeId { get; set; }
 
         /// <summary>
-        /// Gets or Sets the local Scope Id that will replace null values when creating the row
+        /// Gets or Sets the local Scope Id that will replace NULL values when creating the row
         /// </summary>
         public Guid LocalScopeId { get; set; }
 
@@ -66,11 +68,16 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// Gets or Sets the batch directory used to serialize the datas
         /// </summary>
         public string BatchDirectory { get; set; }
+        public bool SupportsMultiActiveResultSets { get; }
+
+        ///// <summary>
+        ///// Gets or Sets the Serializer used to serialize rows
+        ///// </summary>
+        //public ISerializerFactory SerializerFactory { get; set; }
 
         /// <summary>
-        /// Gets or Sets the Serializer factory used when batch mode is enabled
+        /// Gets or Sets the Local Serializer factory, used to buffer rows when reading from datasource
         /// </summary>
-        public ISerializerFactory SerializerFactory { get; set; }
-
+        public ILocalSerializerFactory LocalSerializerFactory { get; set; }
     }
 }

@@ -125,7 +125,7 @@ namespace ISynergy.Framework.UI.Services
                 var page = _pages[viewModelKey];
 
                 // Check if actual page is the same as destination page.
-                if (((Frame)Frame).Content != null && ((Frame)Frame).Content.GetType().Equals(page))
+                if (((Frame)Frame).Content is not null && ((Frame)Frame).Content.GetType().Equals(page))
                 {
                     return ((Frame)Frame).Content as IView;
                 }
@@ -140,7 +140,7 @@ namespace ISynergy.Framework.UI.Services
                 {
                     if (page.GetInterfaces(true).Any(q => q == typeof(IView)))
                     {
-                        if (parameter != null && !string.IsNullOrEmpty(parameter.ToString()))
+                        if (parameter is not null && !string.IsNullOrEmpty(parameter.ToString()))
                         {
                             Type genericPropertyType = null;
 
@@ -156,7 +156,7 @@ namespace ISynergy.Framework.UI.Services
                                 genericPropertyType = baseType.GetGenericArguments().First();
                             }
 
-                            if (genericPropertyType != null && parameter.GetType() == genericPropertyType)
+                            if (genericPropertyType is not null && parameter.GetType() == genericPropertyType)
                             {
                                 var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
 
@@ -240,7 +240,7 @@ namespace ISynergy.Framework.UI.Services
         {
             Argument.IsNotNull(nameof(owner), owner);
 
-            if (owner.Blades != null)
+            if (owner.Blades is not null)
             {
                 if (owner.Blades.Remove(
                     owner.Blades

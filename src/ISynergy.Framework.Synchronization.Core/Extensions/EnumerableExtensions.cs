@@ -25,7 +25,9 @@ namespace ISynergy.Framework.Synchronization.Core.Extensions
         {
 
             if (source is ICollection<T>)
+            {
                 defaultCapacity = ((ICollection<T>)source).Count + 1;
+            }
             var sorted = new List<T>(defaultCapacity);
             var visited = new HashSet<T>();
 
@@ -49,16 +51,17 @@ namespace ISynergy.Framework.Synchronization.Core.Extensions
 
                 sorted.Add(item);
             }
-            else if (throwOnCycle && !sorted.Contains(item))
+            else
             {
-                throw new Exception("Cyclic dependency found");
+                if (throwOnCycle && !sorted.Contains(item))
+                    throw new Exception("Cyclic dependency found");
             }
         }
 
         public static bool CompareWith<T>(this IEnumerable<T> source, IEnumerable<T> other, Func<T, T, bool> compare)
         {
             // checking null ref
-            if (source is null && other is not null || source is not null && other is null)
+            if ((source is null && other is not null) || (source is not null && other is null))
                 return false;
 
             // If both are null, return true
@@ -75,7 +78,7 @@ namespace ISynergy.Framework.Synchronization.Core.Extensions
         public static bool CompareWith<T>(this IEnumerable<T> source, IEnumerable<T> other) where T : class
         {
             // checking null ref
-            if (source is null && other is not null || source is not null && other is null)
+            if ((source is null && other is not null) || (source is not null && other is null))
                 return false;
 
             // If both are null, return true
@@ -99,7 +102,6 @@ namespace ISynergy.Framework.Synchronization.Core.Extensions
             }));
 
         }
-
 
         public static Task ForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> body, int maxDegreeOfParallelism = DataflowBlockOptions.Unbounded, TaskScheduler scheduler = null)
         {

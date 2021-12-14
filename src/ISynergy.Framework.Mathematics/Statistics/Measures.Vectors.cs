@@ -707,7 +707,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         public static double PooledVariance(bool unbiased, params double[][] samples)
         {
-            if (samples == null)
+            if (samples is null)
                 throw new ArgumentNullException("samples");
 
             double sum = 0;
@@ -745,10 +745,10 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         public static double PooledVariance(int[] sizes, double[] variances, bool unbiased = true)
         {
-            if (sizes == null)
+            if (sizes is null)
                 throw new ArgumentNullException("sizes");
 
-            if (variances == null)
+            if (variances is null)
                 throw new ArgumentNullException("variances");
 
             if (sizes.Length != variances.Length)
@@ -982,10 +982,10 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// 
         public static double Covariance(this double[] vector1, double mean1, double[] vector2, double mean2, bool unbiased = true)
         {
-            if (vector1 == null)
+            if (vector1 is null)
                 throw new ArgumentNullException("vector1");
 
-            if (vector2 == null)
+            if (vector2 is null)
                 throw new ArgumentNullException("vector2");
 
             if (vector1.Length != vector2.Length)

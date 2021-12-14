@@ -45,7 +45,7 @@ namespace ISynergy.Framework.Mvvm.Commands
 
             _execute = new WeakAction(execute, keepTargetAlive);
 
-            if (canExecute != null)
+            if (canExecute is not null)
             {
                 _canExecute = new WeakFunc<bool>(canExecute, keepTargetAlive);
             }
@@ -83,7 +83,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         public virtual void Execute(object parameter)
         {
             if (CanExecute(parameter)
-                && _execute != null
+                && _execute is not null
                 && (_execute.IsStatic || _execute.IsAlive))
             {
                 _execute.Execute();

@@ -142,7 +142,7 @@ namespace ISynergy.Framework.Core.Events
             /// <param name="handler">The handler.</param>
             public WeakDelegate(Delegate handler)
             {
-                _weakTarget = handler.Target != null ? new WeakReference(handler.Target) : null;
+                _weakTarget = handler.Target is not null ? new WeakReference(handler.Target) : null;
                 _method = handler.GetMethodInfo();
                 _openHandler = _openHandlerCache.GetOrAdd(_method, CreateOpenHandler);
             }
@@ -156,7 +156,7 @@ namespace ISynergy.Framework.Core.Events
             public bool Invoke(object sender, TEventArgs e)
             {
                 object target = null;
-                if (_weakTarget != null)
+                if (_weakTarget is not null)
                 {
                     target = _weakTarget.Target;
                     if (target is null)

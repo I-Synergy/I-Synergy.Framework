@@ -99,7 +99,7 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
 
         private byte[] SerializeToByteArray(object obj)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return null;
             }
@@ -113,7 +113,7 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
 
         private T Deserialize<T>(byte[] byteArray) where T : class
         {
-            if (byteArray == null)
+            if (byteArray is null)
             {
                 return null;
             }

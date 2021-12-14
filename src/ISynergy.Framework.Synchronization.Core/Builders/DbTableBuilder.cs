@@ -37,10 +37,10 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
         /// </summary>
         public DbTableBuilder(SyncTable tableDescription, ParserName tableName, ParserName trackingTableName, SyncSetup setup)
         {
-            this.TableDescription = tableDescription;
-            this.Setup = setup;
-            this.TableName = tableName;
-            this.TrackingTableName = trackingTableName;
+            TableDescription = tableDescription;
+            Setup = setup;
+            TableName = tableName;
+            TrackingTableName = trackingTableName;
         }
 
         public abstract Task<DbCommand> GetCreateSchemaCommandAsync(DbConnection connection, DbTransaction transaction);

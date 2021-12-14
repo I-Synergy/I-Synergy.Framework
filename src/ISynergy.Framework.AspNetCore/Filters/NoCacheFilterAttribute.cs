@@ -17,7 +17,7 @@ namespace ISynergy.Framework.AspNetCore.Filters
         /// <param name="context">The context.</param>
         public override void OnActionExecuted(ActionExecutedContext context)
         {
-            if (context.HttpContext.Response != null)
+            if (context.HttpContext.Response is not null)
                 context.HttpContext.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue() { NoCache = true };
         }
     }

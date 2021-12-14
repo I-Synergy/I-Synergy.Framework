@@ -293,10 +293,10 @@
         /// 
         public static void Set<T>(this T[] destination, T value, int[] indices)
         {
-            if (destination == null)
+            if (destination is null)
                 throw new ArgumentNullException("source");
 
-            if (indices == null)
+            if (indices is null)
                 throw new ArgumentNullException("Indices");
 
             for (var i = 0; i < indices.Length; i++)
@@ -329,7 +329,7 @@
         /// 
         public static void Set<T>(this T[] destination, T value, int index)
         {
-            if (destination == null)
+            if (destination is null)
                 throw new ArgumentNullException("source");
 
             if (index >= destination.Length)
@@ -350,10 +350,10 @@
         /// 
         public static void Set<T>(this List<T> destination, T value, int[] indices)
         {
-            if (destination == null)
+            if (destination is null)
                 throw new ArgumentNullException("source");
 
-            if (indices == null)
+            if (indices is null)
                 throw new ArgumentNullException("Indices");
 
             for (var i = 0; i < indices.Length; i++)
@@ -364,21 +364,21 @@
             T[,] dst, int[] dstRowIndices, int[] dstColumnIndices,
             T[,] src, int[] srcRowIndices, int[] srcColumnIndices)
         {
-            if (src == null)
+            if (src is null)
                 throw new ArgumentNullException("source");
 
-            if (dst == null)
+            if (dst is null)
                 throw new ArgumentNullException("destination");
 
-            if (srcRowIndices == null)
+            if (srcRowIndices is null)
                 srcRowIndices = Vector.Range(0, src.Rows());
 
-            if (srcColumnIndices == null)
+            if (srcColumnIndices is null)
                 srcColumnIndices = Vector.Range(0, src.Columns());
 
-            if (dstRowIndices == null)
+            if (dstRowIndices is null)
                 dstRowIndices = Vector.Range(0, dst.Rows());
-            if (dstColumnIndices == null)
+            if (dstColumnIndices is null)
                 dstColumnIndices = Vector.Range(0, dst.Columns());
 
             for (var i = 0; i < srcRowIndices.Length; i++)
@@ -399,20 +399,20 @@
             T[][] dst, int[] dstRowIndices, int[] dstColumnIndices,
             T[][] src, int[] srcRowIndices, int[] srcColumnIndices)
         {
-            if (src == null)
+            if (src is null)
                 throw new ArgumentNullException("source");
 
-            if (dst == null)
+            if (dst is null)
                 throw new ArgumentNullException("destination");
 
-            if (srcRowIndices == null)
+            if (srcRowIndices is null)
                 srcRowIndices = Vector.Range(0, src.Rows());
-            if (srcColumnIndices == null)
+            if (srcColumnIndices is null)
                 srcColumnIndices = Vector.Range(0, src.Columns());
 
-            if (dstRowIndices == null)
+            if (dstRowIndices is null)
                 dstRowIndices = Vector.Range(0, dst.Rows());
-            if (dstColumnIndices == null)
+            if (dstColumnIndices is null)
                 dstColumnIndices = Vector.Range(0, dst.Columns());
 
             for (var i = 0; i < srcRowIndices.Length; i++)

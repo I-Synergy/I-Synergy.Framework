@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
         {
             var n = objective.NumberOfVariables;
 
-            if (quadraticTerms == null)
+            if (quadraticTerms is null)
                 throw new ArgumentNullException("quadraticTerms");
 
             if (quadraticTerms.GetLength(0) != quadraticTerms.GetLength(1))
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
                 throw new DimensionMismatchException("quadraticTerms",
                     "Matrix rows must match the number of variables in the objective function.");
 
-            if (linearTerms != null)
+            if (linearTerms is not null)
             {
                 if (linearTerms.Length != n)
                     throw new DimensionMismatchException("linearTerms",

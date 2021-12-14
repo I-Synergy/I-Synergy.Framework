@@ -85,7 +85,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             localOrchestrator.OnTableChangesBatchApplying(action =>
             {
-                Assert.IsNotNull(action.Changes);
+                Assert.IsNotNull(action.BatchPartInfo);
                 Assert.IsNotNull(action.Command);
                 onBatchApplying++;
             });
@@ -194,7 +194,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             remoteOrchestrator.OnTableChangesBatchApplying(action =>
             {
-                Assert.IsNotNull(action.Changes);
+                Assert.IsNotNull(action.BatchPartInfo);
                 Assert.IsNotNull(action.Command);
                 onApplying++;
             });

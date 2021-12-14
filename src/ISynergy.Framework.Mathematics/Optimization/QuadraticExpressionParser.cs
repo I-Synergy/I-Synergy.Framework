@@ -67,21 +67,21 @@ namespace ISynergy.Framework.Mathematics.Optimization
         {
             scalar = 0;
 
-            if (expr == null)
+            if (expr is null)
                 return null;
 
             var eb = expr as BinaryExpression;
             var em = expr as MemberExpression;
             var eu = expr as UnaryExpression;
 
-            if (em != null) // member expression
+            if (em is not null) // member expression
             {
                 var term = Tuple.Create(em.Member.Name, (string)null);
                 terms[term] = 1;
                 return term;
             }
 
-            if (eb != null) // binary expression
+            if (eb is not null) // binary expression
             {
                 if (expr.NodeType == ExpressionType.Multiply)
                 {
@@ -95,19 +95,19 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     var rm = eb.Right as MemberExpression;
                     var rb = eb.Right as BinaryExpression;
                     var ru = eb.Right as UnaryExpression;
-                    if (c != null)
+                    if (c is not null)
                     {
                         // This is constant*expression or expression*constant
                         scalar = (double)c.Value;
 
-                        if ((lm ?? rm) != null)
+                        if ((lm ?? rm) is not null)
                         {
                             var term = Tuple.Create((lm ?? rm).Member.Name, (string)null);
                             if (!dontAdd) terms[term] = scalar;
                             return term;
                         }
 
-                        if ((lb ?? rb ?? (Expression)lm ?? lu) != null)
+                        if ((lb ?? rb ?? (Expression)lm ?? lu) is not null)
                         {
                             double n;
                             var term = ParseExpression(terms, lb ?? lu ?? (Expression)rb ?? ru, out n);
@@ -119,13 +119,13 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     }
 
                     // This is x * x
-                    if (lm != null && rm != null)
+                    if (lm is not null && rm is not null)
                     {
                         scalar = 1;
                         return addTuple(terms, scalar, lm.Member.Name, rm.Member.Name);
                     }
 
-                    if ((lb ?? rb ?? lu ?? (Expression)ru) != null && (lm ?? rm) != null)
+                    if ((lb ?? rb ?? lu ?? (Expression)ru) is not null && (lm ?? rm) is not null)
                     {
                         // This is expression * x
                         var term = ParseExpression(terms, lb ?? rb ?? lu ?? (Expression)ru, out scalar, true);
@@ -147,17 +147,17 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     var rc = eb.Right as ConstantExpression;
 
                     scalar = 1;
-                    if (lb != null)
+                    if (lb is not null)
                     {
                         ParseExpression(terms, lb, out scalar);
                     }
-                    else if (lm != null)
+                    else if (lm is not null)
                     {
                         var term = Tuple.Create(lm.Member.Name, (string)null);
                         if (!dontAdd)
                             terms[term] = scalar;
                     }
-                    else if (lu != null)
+                    else if (lu is not null)
                     {
                         ParseExpression(terms, lu, out scalar);
                     }
@@ -167,17 +167,17 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     }
 
                     scalar = 1;
-                    if (rb != null)
+                    if (rb is not null)
                     {
                         ParseExpression(terms, rb, out scalar);
                     }
-                    else if (rm != null)
+                    else if (rm is not null)
                     {
                         var term = Tuple.Create(rm.Member.Name, (string)null);
                         if (!dontAdd)
                             terms[term] = scalar;
                     }
-                    else if (rc != null)
+                    else if (rc is not null)
                     {
                         scalar = (double)rc.Value;
                         var term = Tuple.Create((string)null, (string)null);
@@ -200,17 +200,17 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     var rm = eb.Right as MemberExpression;
 
                     var rc = eb.Right as ConstantExpression;
-                    if (lb != null)
+                    if (lb is not null)
                     {
                         ParseExpression(terms, lb, out scalar);
                     }
-                    else if (lm != null)
+                    else if (lm is not null)
                     {
                         scalar = 1;
                         var term = Tuple.Create(lm.Member.Name, (string)null);
                         if (!dontAdd) terms[term] = scalar;
                     }
-                    else if (lu != null)
+                    else if (lu is not null)
                     {
                         ParseExpression(terms, lu, out scalar);
                     }
@@ -219,18 +219,18 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         throw new FormatException("Unexpected expression.");
                     }
 
-                    if (rb != null)
+                    if (rb is not null)
                     {
                         var term = ParseExpression(terms, rb, out scalar);
                         terms[term] = -scalar;
                     }
-                    else if (rm != null)
+                    else if (rm is not null)
                     {
                         scalar = -1;
                         var term = Tuple.Create(rm.Member.Name, (string)null);
                         if (!dontAdd) terms[term] = scalar;
                     }
-                    else if (rc != null)
+                    else if (rc is not null)
                     {
                         scalar = (double)rc.Value;
                         var term = Tuple.Create((string)null, (string)null);
@@ -242,14 +242,14 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     }
                 }
             }
-            else if (eu != null) // unary expression
+            else if (eu is not null) // unary expression
             {
                 if (expr.NodeType == ExpressionType.UnaryPlus)
                 {
                     var lb = eu.Operand as BinaryExpression;
                     var lm = eu.Operand as MemberExpression;
 
-                    if (lm != null)
+                    if (lm is not null)
                     {
                         scalar = 1;
                         var term = Tuple.Create(lm.Member.Name, (string)null);
@@ -257,7 +257,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         return term;
                     }
 
-                    if (lb != null)
+                    if (lb is not null)
                     {
                         var term = ParseExpression(terms, lb, out scalar);
                         if (!dontAdd) terms[term] = scalar;
@@ -272,7 +272,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
                     var lb = eu.Operand as BinaryExpression;
                     var lm = eu.Operand as MemberExpression;
 
-                    if (lm != null)
+                    if (lm is not null)
                     {
                         scalar = -1;
                         var term = Tuple.Create(lm.Member.Name, (string)null);
@@ -280,7 +280,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
                         return term;
                     }
 
-                    if (lb != null)
+                    if (lb is not null)
                     {
                         var term = ParseExpression(terms, lb, out scalar);
                         terms[term] = -scalar;

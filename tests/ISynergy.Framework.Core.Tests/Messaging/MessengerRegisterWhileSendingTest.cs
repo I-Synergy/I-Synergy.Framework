@@ -189,7 +189,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             public virtual void ReceiveString(Message m)
             {
                 var message = m as Message<string>;
-                if (message != null)
+                if (message is not null)
                 {
                     MessageService.Default.Register<Message>(this, true, ReceiveStringNested);
                 }
@@ -198,7 +198,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             public void ReceiveStringNested(Message m)
             {
                 var message = m as Message<string>;
-                if (message != null)
+                if (message is not null)
                 {
                     ReceivedStringMessages++;
                     LastReceivedString = message.Content;

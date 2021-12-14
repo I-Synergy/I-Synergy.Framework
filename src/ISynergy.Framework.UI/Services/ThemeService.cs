@@ -129,7 +129,7 @@ namespace ISynergy.Framework.UI.Services
             {
                 var palette = FindColorPaletteResourcesForTheme(_style.Theme.ToString());
 
-                if (palette != null)
+                if (palette is not null)
                 {
                     palette.Accent = ColorHelper.HexStringToColor(style.Color);
                 }
@@ -209,7 +209,7 @@ namespace ISynergy.Framework.UI.Services
 
                 var titleBar = appWindow.TitleBar;
 
-                if (titleBar != null)
+                if (titleBar is not null)
                 {
                     titleBar.ExtendsContentIntoTitleBar = true;
                     titleBar.ButtonBackgroundColor = Colors.Transparent;
@@ -220,7 +220,7 @@ namespace ISynergy.Framework.UI.Services
                 coreTitleBra.ExtendViewIntoTitleBar = true;
                 var titleBar = ApplicationView.GetForCurrentView().TitleBar;
 
-                if (titleBar != null)
+                if (titleBar is not null)
                 {
                     titleBar.ButtonBackgroundColor = Colors.Transparent;
 

@@ -67,27 +67,27 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Create a list of tables to be added to the sync process
         /// </summary>
-        public SyncSetup(IEnumerable<string> tables) : this() => this.Tables.AddRange(tables);
+        public SyncSetup(IEnumerable<string> tables) : this() => Tables.AddRange(tables);
 
         /// <summary>
         /// ctor
         /// </summary>
         public SyncSetup()
         {
-            this.Tables = new SetupTables();
-            this.Filters = new SetupFilters();
-            //this.Version = SyncVersion.Current.ToString();
+            Tables = new SetupTables();
+            Filters = new SetupFilters();
+            //Version = _versionService.ProductVersion.ToString();
         }
 
         /// <summary>
         /// Check if Setup has tables
         /// </summary>
-        public bool HasTables => this.Tables?.Count > 0;
+        public bool HasTables => Tables?.Count > 0;
 
         /// <summary>
         /// Check if Setup has at least one table with columns
         /// </summary>
-        public bool HasColumns => this.Tables?.SelectMany(t => t.Columns).Count() > 0;  // using SelectMany to get columns and not Collection<Column>
+        public bool HasColumns => Tables?.SelectMany(t => t.Columns).Count() > 0;  // using SelectMany to get columns and not Collection<Column>
 
 
         /// <summary>
@@ -100,12 +100,12 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
             var sc = SyncGlobalization.DataSourceStringComparison;
 
-            if (!string.Equals(this.StoredProceduresPrefix, otherSetup.StoredProceduresPrefix, sc) ||
-                !string.Equals(this.StoredProceduresSuffix, otherSetup.StoredProceduresSuffix, sc) ||
-                !string.Equals(this.TrackingTablesPrefix, otherSetup.TrackingTablesPrefix, sc) ||
-                !string.Equals(this.TrackingTablesSuffix, otherSetup.TrackingTablesSuffix, sc) ||
-                !string.Equals(this.TriggersPrefix, otherSetup.TriggersPrefix, sc) ||
-                !string.Equals(this.TriggersSuffix, otherSetup.TriggersSuffix, sc))
+            if (!string.Equals(StoredProceduresPrefix, otherSetup.StoredProceduresPrefix, sc) ||
+                !string.Equals(StoredProceduresSuffix, otherSetup.StoredProceduresSuffix, sc) ||
+                !string.Equals(TrackingTablesPrefix, otherSetup.TrackingTablesPrefix, sc) ||
+                !string.Equals(TrackingTablesSuffix, otherSetup.TrackingTablesSuffix, sc) ||
+                !string.Equals(TriggersPrefix, otherSetup.TriggersPrefix, sc) ||
+                !string.Equals(TriggersSuffix, otherSetup.TriggersSuffix, sc))
                 return false;
 
             return true;
@@ -120,10 +120,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
                 return false;
 
             // Checking inner lists
-            if (!this.Tables.CompareWith(otherSetup.Tables))
+            if (!Tables.CompareWith(otherSetup.Tables))
                 return false;
 
-            if (!this.Filters.CompareWith(otherSetup.Filters))
+            if (!Filters.CompareWith(otherSetup.Filters))
                 return false;
 
             return true;
@@ -143,17 +143,17 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             return true;
         }
 
-        public override string ToString() => $"{this.Tables.Count} tables";
+        public override string ToString() => $"{Tables.Count} tables";
 
         /// <summary>
         /// Gets a true boolean if other instance is defined as same based on all properties
         /// </summary>
-        public bool Equals(SyncSetup other) => this.EqualsByProperties(other);
+        public bool Equals(SyncSetup other) => EqualsByProperties(other);
 
         /// <summary>
         /// Gets a true boolean if other instance is defined as same based on all properties
         /// </summary>
-        public override bool Equals(object obj) => this.EqualsByProperties(obj as SyncSetup);
+        public override bool Equals(object obj) => EqualsByProperties(obj as SyncSetup);
 
         public override int GetHashCode() => base.GetHashCode();
     }

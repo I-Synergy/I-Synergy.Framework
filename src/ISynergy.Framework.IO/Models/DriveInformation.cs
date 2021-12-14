@@ -61,7 +61,7 @@ namespace ISynergy.Framework.IO.Models
 
             var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
 
-            if (drive != null && drive.DriveType == DriveType.Network)
+            if (drive is not null && drive.DriveType == DriveType.Network)
             {
                 return true;
             }
@@ -117,7 +117,7 @@ namespace ISynergy.Framework.IO.Models
 
             var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
 
-            if (drive != null && drive.DriveType == DriveType.Network)
+            if (drive is not null && drive.DriveType == DriveType.Network)
             {
                 return drive.RootDirectory.ToString();
             }

@@ -16,13 +16,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TriggerCreatedArgs(SyncContext context, SyncTable table, DbTriggerType triggerType, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TriggerType = triggerType;
+            Table = table;
+            TriggerType = triggerType;
         }
 
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.Table.GetFullName()}] Trigger [{this.TriggerType}] Created.";
-
+        public override string Message => $"[{Table.GetFullName()}] Trigger [{TriggerType}] Created.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TriggerCreated.Id;
     }
 
@@ -36,13 +36,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TriggerCreatingArgs(SyncContext context, SyncTable table, DbTriggerType triggerType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TriggerType = triggerType;
-            this.Command = command;
+            Table = table;
+            TriggerType = triggerType;
+            Command = command;
         }
         public override string Source => Connection.Database;
-        public override string Message => $"[{Table.GetFullName()}] Trigger [{this.TriggerType}] Creating.";
-
+        public override string Message => $"[{Table.GetFullName()}] Trigger [{TriggerType}] Creating.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TriggerCreating.Id;
     }
 
@@ -54,13 +54,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TriggerDroppedArgs(SyncContext context, SyncTable table, DbTriggerType triggerType, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TriggerType = triggerType;
+            Table = table;
+            TriggerType = triggerType;
         }
 
         public override string Source => Connection.Database;
-        public override string Message => $"[{Table.GetFullName()}] Trigger [{this.TriggerType}] Dropped.";
-
+        public override string Message => $"[{Table.GetFullName()}] Trigger [{TriggerType}] Dropped.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TriggerDropped.Id;
     }
 
@@ -75,13 +75,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public TriggerDroppingArgs(SyncContext context, SyncTable table, DbTriggerType triggerType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.TriggerType = triggerType;
-            this.Command = command;
+            Table = table;
+            TriggerType = triggerType;
+            Command = command;
         }
         public override string Source => Connection.Database;
-        public override string Message => $"[{Table.GetFullName()}] Trigger [{this.TriggerType}] Dropping.";
-
+        public override string Message => $"[{Table.GetFullName()}] Trigger [{TriggerType}] Dropping.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TriggerDropping.Id;
     }
 
@@ -133,7 +133,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public static void OnTriggerDropped(this BaseOrchestrator orchestrator, Func<TriggerDroppedArgs, Task> action)
             => orchestrator.SetInterceptor(action);
-
     }
 
     public static partial class SyncEventsId

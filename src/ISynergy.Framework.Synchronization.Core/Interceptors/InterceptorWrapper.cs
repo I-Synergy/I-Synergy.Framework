@@ -18,17 +18,17 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
         /// <summary>
         /// Create a new empty interceptor
         /// </summary>
-        public InterceptorWrapper() => this.wrapperAsync = Empty;
+        public InterceptorWrapper() => wrapperAsync = Empty;
 
         /// <summary>
         /// Gets a boolean indicating if the interceptor is not used by user (ie : is Empty)
         /// </summary>
-        public bool IsEmpty => this.wrapperAsync == Empty;
+        public bool IsEmpty => wrapperAsync == Empty;
 
         /// <summary>
         /// Set a Func{T, Task} as interceptor
         /// </summary>
-        public void Set(Func<T, Task> run) => this.wrapperAsync = run is not null ? run : Empty;
+        public void Set(Func<T, Task> run) => wrapperAsync = run is not null ? run : Empty;
 
         /// <summary>
         /// Set an Action{T} as interceptor
@@ -36,7 +36,7 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
         [DebuggerStepThrough]
         public void Set(Action<T> run)
         {
-            this.wrapperAsync = run is not null ? (t =>
+            wrapperAsync = run is not null ? (t =>
             {
                 run(t);
                 return Task.CompletedTask;
@@ -50,8 +50,8 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
         [DebuggerStepThrough]
         public async Task RunAsync(T args, CancellationToken cancellationToken)
         {
-            if (this.wrapperAsync is not null)
-                await this.wrapperAsync(args);
+            if (wrapperAsync is not null)
+                await wrapperAsync(args);
 
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
@@ -59,11 +59,11 @@ namespace ISynergy.Framework.Synchronization.Core.Interceptors
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool cleanup) => this.wrapperAsync = null;
+        protected virtual void Dispose(bool cleanup) => wrapperAsync = null;
     }
 }
 

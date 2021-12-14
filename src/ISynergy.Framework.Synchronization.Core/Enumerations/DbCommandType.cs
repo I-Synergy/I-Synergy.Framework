@@ -8,7 +8,7 @@
         SelectChangesWithFilters,
         SelectRow,
         UpdateRow,
-        InitializeRow,
+        InsertRow,
         DeleteRow,
         DisableConstraints,
         EnableConstraints,
@@ -17,10 +17,10 @@
         InsertTrigger,
         UpdateTrigger,
         DeleteTrigger,
+        UpdateRows,
+        InsertRows,
+        DeleteRows,
         BulkTableType,
-        BulkUpdateRows,
-        BulkInitializeRows,
-        BulkDeleteRows,
         UpdateUntrackedRows,
         Reset
     }

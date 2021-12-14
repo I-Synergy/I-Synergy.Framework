@@ -33,23 +33,23 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Gets the number of changes applied on the client
         /// </summary>
-        public int TotalChangesApplied => (this.ChangesAppliedOnClient?.TotalAppliedChanges ?? 0) + (this.SnapshotChangesAppliedOnClient?.TotalAppliedChanges ?? 0);
+        public int TotalChangesApplied => (ChangesAppliedOnClient?.TotalAppliedChanges ?? 0) + (SnapshotChangesAppliedOnClient?.TotalAppliedChanges ?? 0);
 
         /// <summary>
         /// Gets total number of changes downloaded from server. 
         /// </summary>
-        public int TotalChangesDownloaded => (this.ServerChangesSelected?.TotalChangesSelected ?? 0) + (this.SnapshotChangesAppliedOnClient?.TotalAppliedChanges ?? 0);
+        public int TotalChangesDownloaded => (ServerChangesSelected?.TotalChangesSelected ?? 0) + (SnapshotChangesAppliedOnClient?.TotalAppliedChanges ?? 0);
 
         /// <summary>
         /// Gets the number of change uploaded to the server
         /// </summary>
-        public int TotalChangesUploaded => this.ClientChangesSelected?.TotalChangesSelected ?? 0;
+        public int TotalChangesUploaded => ClientChangesSelected?.TotalChangesSelected ?? 0;
 
         /// <summary>
         /// Gets the number of conflicts resolved
         /// </summary>
         public int TotalResolvedConflicts =>
-            Math.Max(this.ChangesAppliedOnClient?.TotalResolvedConflicts ?? 0, this.ChangesAppliedOnServer?.TotalResolvedConflicts ?? 0);
+            Math.Max(ChangesAppliedOnClient?.TotalResolvedConflicts ?? 0, ChangesAppliedOnServer?.TotalResolvedConflicts ?? 0);
 
         /// <summary>
         /// Gets the number of sync errors
@@ -95,7 +95,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public SyncResult(Guid sessionId)
         {
-            this.SessionId = sessionId;
+            SessionId = sessionId;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public override string ToString()
         {
-            if (this.CompleteTime != this.StartTime && this.CompleteTime > this.StartTime)
+            if (CompleteTime != StartTime && CompleteTime > StartTime)
             {
                 var tsEnded = TimeSpan.FromTicks(CompleteTime.Ticks);
                 var tsStarted = TimeSpan.FromTicks(StartTime.Ticks);

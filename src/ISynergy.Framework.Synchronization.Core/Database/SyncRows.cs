@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Linq;
 
 namespace ISynergy.Framework.Synchronization.Core.Database
@@ -11,40 +10,42 @@ namespace ISynergy.Framework.Synchronization.Core.Database
     public class SyncRows : ICollection<SyncRow>, IList<SyncRow>
     {
         public SyncTable Table { get; set; }
-        private List<SyncRow> rows = new List<SyncRow>();
+        private List<SyncRow> _rows = new List<SyncRow>();
 
         public SyncRows(SyncTable table) => Table = table;
+
 
         /// <summary>
         /// Since we don't serializer the reference to the schema, this method will reaffect the correct schema
         /// </summary>
+        /// <param name="table"></param>
         public void EnsureRows(SyncTable table)
         {
             Table = table;
 
-            if (rows is not null)
+            if (_rows is not null)
                 foreach (var row in this)
-                    row.Table = table;
+                    row.SchemaTable = table;
         }
 
         /// <summary>
-        /// Add a new buffer row
+        /// Add a new buffer row. Be careful, row should include state in first index
         /// </summary>
-        public void Add(object[] row, DataRowState state = DataRowState.Unchanged)
+        public void Add(object[] row)
         {
-            var schemaRow = new SyncRow(Table, row, state);
-            rows.Add(schemaRow);
+            var schemaRow = new SyncRow(Table, row);
+            _rows.Add(schemaRow);
         }
 
         /// <summary>
-        /// Add a rows
+        /// Add a rows. Be careful, row should include state in first index
         /// </summary>
-        public void AddRange(IEnumerable<object[]> rows, DataRowState state = DataRowState.Unchanged)
+        public void AddRange(IEnumerable<object[]> rows)
         {
             foreach (var row in rows)
             {
-                var schemaRow = new SyncRow(Table, row, state);
-                this.rows.Add(schemaRow);
+                var schemaRow = new SyncRow(Table, row);
+                _rows.Add(schemaRow);
             }
         }
 
@@ -53,8 +54,8 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             foreach (var item in rows)
             {
                 // TryEnsureData(item);
-                item.Table = Table;
-                this.rows.Add(item);
+                item.SchemaTable = Table;
+                rows.Add(item);
 
             }
         }
@@ -64,64 +65,9 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public void Add(SyncRow item)
         {
             // TryEnsureData(item);
-            item.Table = Table;
-            rows.Add(item);
+            item.SchemaTable = Table;
+            _rows.Add(item);
         }
-
-
-        /// <summary>
-        /// Import a containerTable
-        /// </summary>
-        /// <param name="containerTable"></param>
-        /// <param name="checkType"></param>
-        internal void ImportContainerTable(ContainerTable containerTable, bool checkType)
-        {
-            foreach (var row in containerTable.Rows)
-            {
-                var length = Table.Columns.Count;
-                var itemArray = new object[length];
-
-                if (!checkType)
-                    Array.Copy(row, 1, itemArray, 0, length);
-                else
-                {
-                    // Get only writable columns
-                    var columns = Table.GetMutableColumnsWithPrimaryKeys();
-
-                    foreach (var col in columns)
-                    {
-                        var val = row[col.Ordinal + 1];
-                        var colDataType = col.GetDataType();
-
-                        if (val is null)
-                            itemArray[col.Ordinal] = null;
-                        else if (val.GetType() != colDataType)
-                            itemArray[col.Ordinal] = SyncTypeConverter.TryConvertTo(val, col.GetDataType());
-                        else
-                            itemArray[col.Ordinal] = val;
-
-                    }
-                }
-
-                //Array.Copy(row, 1, itemArray, 0, length);
-                var state = (DataRowState)Convert.ToInt32(row[0]);
-
-                var schemaRow = new SyncRow(Table, itemArray, state);
-                rows.Add(schemaRow);
-            }
-        }
-
-        /// <summary>
-        /// Gets the inner rows for serialization
-        /// </summary>
-        internal IEnumerable<object[]> ExportToContainerTable()
-        {
-            foreach (var row in rows)
-                yield return row.ToArray();
-        }
-
-
-
 
         /// <summary>
         /// Make a filter on primarykeys
@@ -130,20 +76,19 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         {
             // Get the primarykeys to get the ordinal
             var primaryKeysColumn = Table.GetPrimaryKeysColumns().ToList();
-            var criteriaKeysColumn = criteria.Table.GetPrimaryKeysColumns().ToList();
+            var criteriaKeysColumn = criteria.SchemaTable.GetPrimaryKeysColumns().ToList();
 
             if (primaryKeysColumn.Count != criteriaKeysColumn.Count)
                 throw new ArgumentOutOfRangeException($"Can't make a query on primary keys since number of primary keys columns in criterias is not matching the number of primary keys columns in this table");
 
-
-            var filteredRow = rows.FirstOrDefault(itemRow =>
+            var filteredRow = _rows.FirstOrDefault(itemRow =>
             {
-                for (var i = 0; i < primaryKeysColumn.Count; i++)
+                for (int i = 0; i < primaryKeysColumn.Count; i++)
                 {
                     var syncColumn = primaryKeysColumn[i];
 
-                    var critValue = SyncTypeConverter.TryConvertTo(criteria[syncColumn.ColumnName], syncColumn.GetDataType());
-                    var itemValue = SyncTypeConverter.TryConvertTo(itemRow[syncColumn.ColumnName], syncColumn.GetDataType());
+                    object critValue = SyncTypeConverter.TryConvertTo(criteria[syncColumn.ColumnName], syncColumn.GetDataType());
+                    object itemValue = SyncTypeConverter.TryConvertTo(itemRow[syncColumn.ColumnName], syncColumn.GetDataType());
 
                     if (!critValue.Equals(itemValue))
                         return false;
@@ -159,6 +104,40 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         }
 
 
+        /// <summary>
+        /// Make a filter on primarykeys
+        /// </summary>
+        public static SyncRow GetRowByPrimaryKeys(SyncRow criteria, List<SyncRow> rows, SyncTable schemaTable)
+        {
+            // Get the primarykeys to get the ordinal
+            var primaryKeysColumn = schemaTable.GetPrimaryKeysColumns().ToList();
+            var criteriaKeysColumn = criteria.SchemaTable.GetPrimaryKeysColumns().ToList();
+
+            if (primaryKeysColumn.Count != criteriaKeysColumn.Count)
+                throw new ArgumentOutOfRangeException($"Can't make a query on primary keys since number of primary keys columns in criterias is not matching the number of primary keys columns in this table");
+
+            var filteredRow = rows.FirstOrDefault(itemRow =>
+            {
+                for (int i = 0; i < primaryKeysColumn.Count; i++)
+                {
+                    var syncColumn = primaryKeysColumn[i];
+
+                    object critValue = SyncTypeConverter.TryConvertTo(criteria[syncColumn.ColumnName], syncColumn.GetDataType());
+                    object itemValue = SyncTypeConverter.TryConvertTo(itemRow[syncColumn.ColumnName], syncColumn.GetDataType());
+
+                    if (!critValue.Equals(itemValue))
+                        return false;
+
+                    //if (!criteria[syncColumn.ColumnName].Equals(itemRow[syncColumn.ColumnName]))
+                    //    return false;
+
+                }
+                return true;
+            });
+
+            return filteredRow;
+        }
+
 
         /// <summary>
         /// Ensure schema and data are correctly related
@@ -168,7 +147,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             if (row.Length != Table.Columns.Count)
                 throw new Exception("The row length does not fit with the DataTable columns count");
 
-            for (var i = 0; i < row.Length; i++)
+            for (int i = 0; i < row.Length; i++)
             {
                 var cell = row[i];
 
@@ -222,35 +201,35 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public void Clear()
         {
-            foreach (var row in rows)
+            foreach (var row in _rows)
                 row.Clear();
 
-            rows.Clear();
+            _rows.Clear();
         }
 
 
-        public SyncRow this[int index] => rows[index];
-        public int Count => rows.Count;
+        public SyncRow this[int index] => _rows[index];
+        public int Count => _rows.Count;
         public bool IsReadOnly => false;
         SyncRow IList<SyncRow>.this[int index]
         {
-            get => rows[index];
-            set => rows[index] = value;
+            get => _rows[index];
+            set => _rows[index] = value;
         }
-        public bool Remove(SyncRow item) => rows.Remove(item);
-        public bool Contains(SyncRow item) => rows.Contains(item);
-        public void CopyTo(SyncRow[] array, int arrayIndex) => rows.CopyTo(array, arrayIndex);
-        public int IndexOf(SyncRow item) => rows.IndexOf(item);
-        public void RemoveAt(int index) => rows.RemoveAt(index);
-        public override string ToString() => rows.Count.ToString();
+        public bool Remove(SyncRow item) => _rows.Remove(item);
+        public bool Contains(SyncRow item) => _rows.Contains(item);
+        public void CopyTo(SyncRow[] array, int arrayIndex) => _rows.CopyTo(array, arrayIndex);
+        public int IndexOf(SyncRow item) => _rows.IndexOf(item);
+        public void RemoveAt(int index) => _rows.RemoveAt(index);
+        public override string ToString() => _rows.Count.ToString();
         public void Insert(int index, SyncRow item)
         {
-            item.Table = Table;
-            rows.Insert(index, item);
+            item.SchemaTable = Table;
+            _rows.Insert(index, item);
         }
-        public IEnumerator<SyncRow> GetEnumerator() => rows.GetEnumerator();
-        IEnumerator<SyncRow> IEnumerable<SyncRow>.GetEnumerator() => rows.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => rows.GetEnumerator();
+        public IEnumerator<SyncRow> GetEnumerator() => _rows.GetEnumerator();
+        IEnumerator<SyncRow> IEnumerable<SyncRow>.GetEnumerator() => _rows.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _rows.GetEnumerator();
 
 
     }

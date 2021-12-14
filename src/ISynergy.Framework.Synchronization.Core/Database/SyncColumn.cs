@@ -6,8 +6,6 @@ using System.Runtime.Serialization;
 
 namespace ISynergy.Framework.Synchronization.Core.Database
 {
-
-
     [DataContract(Name = "sc"), Serializable]
     public class SyncColumn : SyncNamedItem<SyncColumn>
     {

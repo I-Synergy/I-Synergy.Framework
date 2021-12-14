@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Extensions;
+using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Model.Parsers;
 using System;
 using System.Collections.Generic;
@@ -167,7 +167,6 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool cleanup)

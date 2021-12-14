@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Payment.Mollie.Clients
         /// <returns>Task&lt;PaymentResponse&gt;.</returns>
         public Task<PaymentResponse> CreatePaymentAsync(PaymentRequest paymentRequest)
         {
-            if (!string.IsNullOrWhiteSpace(paymentRequest.ProfileId) || paymentRequest.Testmode.HasValue || paymentRequest.ApplicationFee != null)
+            if (!string.IsNullOrWhiteSpace(paymentRequest.ProfileId) || paymentRequest.Testmode.HasValue || paymentRequest.ApplicationFee is not null)
             {
                 ValidateApiKeyIsOauthAccesstoken();
             }

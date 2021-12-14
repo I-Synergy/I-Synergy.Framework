@@ -49,7 +49,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                     var exceptionMessage =
                         m as PropertyChangedMessage<InvalidOperationException>;
 
-                    if (exceptionMessage != null && exceptionMessage.PropertyName == nameof(TestViewModel.MyException))
+                    if (exceptionMessage is not null && exceptionMessage.PropertyName == nameof(TestViewModel.MyException))
                     {
                         receivedPreviousException =
                             exceptionMessage.OldValue;
@@ -60,7 +60,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
                     var dateMessage = m as PropertyChangedMessage<DateTime>;
 
-                    if (dateMessage != null && dateMessage.PropertyName == nameof(TestViewModel.MyDate))
+                    if (dateMessage is not null && dateMessage.PropertyName == nameof(TestViewModel.MyDate))
                     {
                         receivedPreviousDateTime =
                             dateMessage.OldValue;
@@ -272,14 +272,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             PropertyChangedMessage<string> propertyMessage1;
             PropertyChangedMessage<string> propertyMessage2;
 
-            if (sender == null)
+            if (sender is null)
             {
                 propertyMessage1 = new PropertyChangedMessage<string>(TestOldContent1, TestNewContent1, PropertyName1);
                 propertyMessage2 = new PropertyChangedMessage<string>(TestOldContent2, TestNewContent2, PropertyName2);
             }
             else
             {
-                if (target == null)
+                if (target is null)
                 {
                     propertyMessage1 = new PropertyChangedMessage<string>(sender,
                                                                           TestOldContent1,

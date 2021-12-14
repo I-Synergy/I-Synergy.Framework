@@ -77,8 +77,8 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public SyncContext(Guid sessionId, string scopeName)
         {
-            this.SessionId = sessionId;
-            this.ScopeName = scopeName;
+            SessionId = sessionId;
+            ScopeName = scopeName;
         }
 
         /// <summary>
@@ -95,18 +95,18 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="otherSyncContext"></param>
         public void CopyTo(SyncContext otherSyncContext)
         {
-            otherSyncContext.Parameters = this.Parameters;
-            otherSyncContext.ScopeName = this.ScopeName;
-            otherSyncContext.SessionId = this.SessionId;
-            otherSyncContext.SyncStage = this.SyncStage;
-            otherSyncContext.SyncType = this.SyncType;
-            otherSyncContext.SyncWay = this.SyncWay;
-            otherSyncContext.ProgressPercentage = this.ProgressPercentage;
+            otherSyncContext.Parameters = Parameters;
+            otherSyncContext.ScopeName = ScopeName;
+            otherSyncContext.SessionId = SessionId;
+            otherSyncContext.SyncStage = SyncStage;
+            otherSyncContext.SyncType = SyncType;
+            otherSyncContext.SyncWay = SyncWay;
+            otherSyncContext.ProgressPercentage = ProgressPercentage;
 
-            if (this.AdditionalProperties is not null)
+            if (AdditionalProperties is not null)
             {
                 otherSyncContext.AdditionalProperties = new Dictionary<string, string>();
-                foreach (var p in this.AdditionalProperties)
+                foreach (var p in AdditionalProperties)
                     otherSyncContext.AdditionalProperties.Add(p.Key, p.Value);
             }
 
@@ -115,6 +115,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Get the result if sync session is ended
         /// </summary>
-        public override string ToString() => this.ScopeName;
+        public override string ToString() => ScopeName;
     }
 }

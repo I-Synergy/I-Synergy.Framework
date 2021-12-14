@@ -86,7 +86,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.TestServer
 
         protected virtual async Task Dispose(bool cleanup)
         {
-            if (this.host != null)
+            if (this.host is not null)
             {
                 await this.host.StopAsync();
                 this.host.Dispose();

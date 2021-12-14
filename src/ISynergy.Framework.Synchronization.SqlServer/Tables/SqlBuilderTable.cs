@@ -193,7 +193,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
             var relations = new List<DbRelationDefinition>();
             var tableRelations = await SqlManagementUtils.GetRelationsForTableAsync((SqlConnection)connection, (SqlTransaction)transaction, _tableName.ToString(), schema).ConfigureAwait(false);
 
-            if (tableRelations != null && tableRelations.Rows.Count > 0)
+            if (tableRelations is not null && tableRelations.Rows.Count > 0)
                 foreach (var fk in tableRelations.Rows.GroupBy(row =>
                 new
                 {

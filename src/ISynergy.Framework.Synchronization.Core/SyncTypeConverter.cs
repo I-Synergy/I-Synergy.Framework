@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Synchronization.Core
             if (value is null)
                 return default;
 
-            provider = provider ?? CultureInfo.InvariantCulture;
+            provider ??= CultureInfo.InvariantCulture;
 
             var typeOfT = typeof(T);
             var typeOfU = value.GetType();

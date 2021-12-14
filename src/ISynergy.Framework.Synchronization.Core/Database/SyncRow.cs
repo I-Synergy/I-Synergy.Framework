@@ -6,66 +6,64 @@ namespace ISynergy.Framework.Synchronization.Core.Database
 {
     public class SyncRow
     {
-
         // all the values for this line
         private object[] buffer;
 
         /// <summary>
         /// Gets or Sets the row's table
         /// </summary>
-        public SyncTable Table { get; set; }
-
-        /// <summary>
-        /// Creates an instance, in which data can be written to,
-        /// with the default initial capacity.
-        /// </summary>
-        public SyncRow(int bufferSize)
-        {
-            buffer = new object[bufferSize];
-            Length = bufferSize;
-        }
+        public SyncTable SchemaTable { get; set; }
 
         /// <summary>
         /// Add a new buffer row
         /// </summary>
-        public SyncRow(SyncTable table, DataRowState state = DataRowState.Unchanged)
+        public SyncRow(SyncTable schemaTable, DataRowState state = DataRowState.Unchanged)
         {
-            buffer = new object[table.Columns.Count];
+            // Buffer is +1 to store state
+            buffer = new object[schemaTable.Columns.Count + 1];
 
             // set correct length
-            Length = table.Columns.Count;
+            Length = schemaTable.Columns.Count;
 
             // Get a ref
-            Table = table;
+            SchemaTable = schemaTable;
 
             // Affect new state
-            RowState = state;
+            buffer[0] = (int)state;
+
         }
 
 
         /// <summary>
         /// Add a new buffer row. This ctor does not make a copy
         /// </summary>
-        public SyncRow(SyncTable table, object[] row, DataRowState state = DataRowState.Unchanged)
+        public SyncRow(SyncTable schemaTable, object[] row)
         {
+            if (row.Length <= schemaTable.Columns.Count)
+                throw new ArgumentException("row array must have one more item to store state");
+
+            if (row.Length > schemaTable.Columns.Count + 1)
+                throw new ArgumentException("row array has too many items");
+
             // Direct set of the buffer
             buffer = row;
 
-            // set correct length
-            Length = row.Length;
+            // set columns count as length
+            Length = schemaTable.Columns.Count;
 
             // Get a ref
-            Table = table;
-
-            // Affect new state
-            RowState = state;
+            SchemaTable = schemaTable;
 
         }
 
         /// <summary>
-        /// Gets or Sets the state of the row
+        /// Gets the state of the row
         /// </summary>
-        public DataRowState RowState { get; set; }
+        public DataRowState RowState
+        {
+            get => (DataRowState)Convert.ToInt32(buffer[0]);
+            set => buffer[0] = (int)value;
+        }
 
         /// <summary>
         /// Gets the row Length
@@ -77,8 +75,8 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// </summary>
         public object this[int index]
         {
-            get => buffer[index];
-            set => buffer[index] = value;
+            get => buffer[index + 1];
+            set => buffer[index + 1] = value;
         }
 
         /// <summary>
@@ -93,64 +91,39 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         {
             get
             {
-                var column = Table.Columns[columnName];
+                var column = SchemaTable.Columns[columnName];
 
                 if (column is null)
                     throw new ArgumentException("Column is null");
 
-                var index = Table.Columns.IndexOf(column);
+                var index = SchemaTable.Columns.IndexOf(column);
 
                 return this[index];
             }
             set
             {
-                var column = Table.Columns[columnName];
+                var column = SchemaTable.Columns[columnName];
 
                 if (column is null)
                     throw new ArgumentException("Column is null");
 
-                var index = Table.Columns.IndexOf(column);
+                var index = SchemaTable.Columns.IndexOf(column);
 
                 this[index] = value;
             }
         }
 
         /// <summary>
-        /// Get the inner array with state on Index 0. Need to replace with ReadOnlySpan{object} !!!!
+        /// Get the inner copy array
         /// </summary>
-        public object[] ToArray()
-        {
-            var array = new object[Length + 1];
-            Array.Copy(buffer, 0, array, 1, Length);
+        /// <returns></returns>
+        public object[] ToArray() => buffer;
 
-            // set row state on index 0 of my buffer
-            array[0] = (int)RowState;
-
-            return array;
-        }
-
-        /// <summary>
-        /// Import a raw array, containing state on Index 0
-        /// </summary>
-        public void FromArray(object[] row)
-        {
-            var length = Table.Columns.Count;
-
-            if (row.Length != length + 1)
-                throw new Exception("row must contains State on position 0 and UpdateScopeId on position 1");
-
-            Array.Copy(row, 1, buffer, 0, length);
-            RowState = (DataRowState)Convert.ToInt32(row[0]);
-        }
 
         /// <summary>
         /// Clear the data in the buffer
         /// </summary>
-        public void Clear()
-        {
-            Array.Clear(buffer, 0, buffer.Length);
-            Table = null;
-        }
+        public void Clear() => Array.Clear(buffer, 0, buffer.Length);
 
 
         /// <summary>
@@ -161,14 +134,14 @@ namespace ISynergy.Framework.Synchronization.Core.Database
             if (buffer is null || buffer.Length == 0)
                 return "empty row";
 
-            if (Table is null)
+            if (SchemaTable is null)
                 return buffer.ToString();
 
             var sb = new StringBuilder();
 
             sb.Append($"[Sync state]:{RowState}");
 
-            var columns = RowState == DataRowState.Deleted ? Table.GetPrimaryKeysColumns() : Table.Columns;
+            var columns = RowState == DataRowState.Deleted ? SchemaTable.GetPrimaryKeysColumns() : SchemaTable.Columns;
 
             foreach (var c in columns)
             {

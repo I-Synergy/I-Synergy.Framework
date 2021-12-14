@@ -81,7 +81,7 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
             IWebHostBuilder webHostBuilder = new WebHostBuilder()
                 .UseStartup<StartupFixture>();
 
-            if (configuration != null)
+            if (configuration is not null)
             {
                 ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
                 configurationBuilder.AddInMemoryCollection(configuration);

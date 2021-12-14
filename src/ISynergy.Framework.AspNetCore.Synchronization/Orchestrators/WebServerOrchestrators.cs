@@ -73,7 +73,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         public bool Remove(WebServerOrchestrator item) => InnerCollection.Remove(item);
         public bool Remove(string name) => InnerCollection.Remove(this[name]);
         public bool Contains(WebServerOrchestrator item) => InnerCollection.Contains(item);
-        public bool Contains(string name) => this[name] != null;
+        public bool Contains(string name) => this[name] is not null;
         public void CopyTo(WebServerOrchestrator[] array, int arrayIndex) => InnerCollection.CopyTo(array, arrayIndex);
         public int IndexOf(WebServerOrchestrator item) => InnerCollection.IndexOf(item);
         public void RemoveAt(int index) => InnerCollection.RemoveAt(index);

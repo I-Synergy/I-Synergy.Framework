@@ -9,27 +9,27 @@
     {
         public static void Parse(SortedSet<string> list, Expression expr)
         {
-            if (expr == null)
+            if (expr is null)
                 return;
 
             BinaryExpression eb = expr as BinaryExpression;
             MemberExpression em = expr as MemberExpression;
             UnaryExpression eu = expr as UnaryExpression;
             MethodCallExpression ec = expr as MethodCallExpression;
-            if (em != null) // member expression
+            if (em is not null) // member expression
             {
                 list.Add(em.Member.Name);
             }
-            else if (eb != null) // binary expression
+            else if (eb is not null) // binary expression
             {
                 Parse(list, eb.Left);
                 Parse(list, eb.Right);
             }
-            else if (eu != null) // unary expression
+            else if (eu is not null) // unary expression
             {
                 Parse(list, eu.Operand);
             }
-            else if (ec != null) // call expression
+            else if (ec is not null) // call expression
             {
                 foreach (var a in ec.Arguments)
                     Parse(list, a);
@@ -65,7 +65,7 @@
             Expression expr, IDictionary<string, int> variables)
         {
 
-            if (expr == null)
+            if (expr is null)
                 return null;
 
             BinaryExpression eb = expr as BinaryExpression;
@@ -74,25 +74,25 @@
             MethodCallExpression ec = expr as MethodCallExpression;
             NewArrayExpression ea = expr as NewArrayExpression;
 
-            if (em != null) // member expression
+            if (em is not null) // member expression
             {
                 string varName = em.Member.Name;
                 int index = variables[varName];
                 ConstantExpression indexExpression = Expression.Constant(index);
                 return Expression.ArrayAccess(parameter, indexExpression);
             }
-            else if (eb != null) // binary expression
+            else if (eb is not null) // binary expression
             {
                 var left = Replace(parameter, eb.Left, variables);
                 var right = Replace(parameter, eb.Right, variables);
                 return eb.Update(left, eb.Conversion, right);
             }
-            else if (eu != null) // unary expression
+            else if (eu is not null) // unary expression
             {
                 var op = Replace(parameter, eu.Operand, variables);
                 return eu.Update(op);
             }
-            else if (ec != null) // call expression
+            else if (ec is not null) // call expression
             {
                 List<Expression> args = new List<Expression>();
 
@@ -101,7 +101,7 @@
 
                 return ec.Update(ec.Object, args);
             }
-            else if (ea != null) // new array expression
+            else if (ea is not null) // new array expression
             {
                 List<Expression> values = new List<Expression>();
 

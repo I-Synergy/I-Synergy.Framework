@@ -229,7 +229,7 @@
         private void init(NonlinearObjectiveFunction function,
             IEnumerable<IConstraint> constraints, IGradientOptimizationMethod innerSolver)
         {
-            if (function != null)
+            if (function is not null)
             {
                 if (function.NumberOfVariables != NumberOfVariables)
                 {
@@ -242,7 +242,7 @@
                 Gradient = function.Gradient;
             }
 
-            if (innerSolver == null)
+            if (innerSolver is null)
             {
                 innerSolver = new BroydenFletcherGoldfarbShanno(NumberOfVariables)
                 {

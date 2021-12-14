@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Runtime.Serialization;
 
 namespace ISynergy.Framework.Synchronization.Core.Database
@@ -10,12 +9,22 @@ namespace ISynergy.Framework.Synchronization.Core.Database
     [CollectionDataContract(Name = "cols", ItemName = "col"), Serializable]
     public class SyncColumns : ICollection<SyncColumn>, IList<SyncColumn>
     {
+        private Dictionary<string, int> indexes = new();
+        private Collection<SyncColumn> innerCollection = new Collection<SyncColumn>();
+
         /// <summary>
         /// Exposing the InnerCollection for serialization purpose
         /// </summary>
         [DataMember(Name = "c", IsRequired = true, Order = 1)]
-        public Collection<SyncColumn> InnerCollection { get; set; } = new Collection<SyncColumn>();
-
+        public Collection<SyncColumn> InnerCollection
+        {
+            get => innerCollection;
+            set
+            {
+                innerCollection = value;
+                AffectOrder();
+            }
+        }
         /// <summary>
         /// Column's schema
         /// </summary>
@@ -37,17 +46,22 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         /// <summary>
         /// Since we don't serializer the reference to the schema, this method will reaffect the correct schema
         /// </summary>
-        public void EnsureColumns(SyncTable table)
-        {
-            Table = table;
-        }
+        public void EnsureColumns(SyncTable table) => Table = table;
 
         /// <summary>
         /// Get a Column by its name
         /// </summary>
-        public SyncColumn this[string columnName] =>
-            InnerCollection.FirstOrDefault(c => string.Equals(c.ColumnName, columnName, SyncGlobalization.DataSourceStringComparison));
+        public SyncColumn this[string columnName]
+        {
+            get
+            {
+                //InnerCollection.FirstOrDefault(c => string.Equals(c.ColumnName, columnName, SyncGlobalization.DataSourceStringComparison));
+                if (indexes.ContainsKey(columnName.ToLowerInvariant()))
+                    return InnerCollection[indexes[columnName.ToLowerInvariant()]];
 
+                return null;
+            }
+        }
 
         /// <summary>
         /// Add a new Column to the Schema Column collection
@@ -103,15 +117,23 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         private void AffectOrder()
         {
             // now reordered correctly, affect new Ordinal property
-            for (var i = 0; i < InnerCollection.Count; i++)
-                InnerCollection[i].Ordinal = i;
+            for (int i = 0; i < InnerCollection.Count; i++)
+            {
+                var column = InnerCollection[i];
+                indexes[column.ColumnName.ToLowerInvariant()] = i;
+                column.Ordinal = i;
+            }
 
         }
 
         /// <summary>
         /// Clear all the relations
         /// </summary>
-        public void Clear() => InnerCollection.Clear();
+        public void Clear()
+        {
+            InnerCollection.Clear();
+            indexes.Clear();
+        }
 
         public SyncColumn this[int index] => InnerCollection[index];
         public int Count => InnerCollection.Count;
@@ -131,5 +153,4 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         public override string ToString() => InnerCollection.Count.ToString();
         public void Insert(int index, SyncColumn item) => InnerCollection.Insert(index, item);
     }
-
 }

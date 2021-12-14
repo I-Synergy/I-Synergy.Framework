@@ -2,6 +2,7 @@
 using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data.Common;
@@ -15,59 +16,78 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Reset a table, deleting rows from table and tracking_table
         /// </summary>
-        public Task<bool> ResetTableAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
+        public async Task<bool> ResetTableAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            // using a fake SyncTable based on SetupTable, since we don't need columns
-            var schemaTable = new SyncTable(table.TableName, table.SchemaName);
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.None, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                // using a fake SyncTable based on SetupTable, since we don't need columns
+                var schemaTable = new SyncTable(table.TableName, table.SchemaName);
+                var syncAdapter = GetSyncAdapter(schemaTable, Setup);
+                await InternalResetTableAsync(GetContext(), syncAdapter, runner.Connection, runner.Transaction).ConfigureAwait(false);
+                await runner.CommitAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
 
-            var syncAdapter = this.GetSyncAdapter(schemaTable, this.Setup);
-
-            await this.InternalResetTableAsync(ctx, syncAdapter, connection, transaction).ConfigureAwait(false);
-
-            return true;
-        }, connection, transaction, cancellationToken);
+        }
 
         /// <summary>
         /// Disabling constraints on one table
         /// </summary>
-        public Task<bool> DisableConstraintsAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
+        public async Task<bool> DisableConstraintsAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            // using a fake SyncTable based on SetupTable, since we don't need columns
-            var schemaTable = new SyncTable(table.TableName, table.SchemaName);
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.None, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                // using a fake SyncTable based on SetupTable, since we don't need columns
+                var schemaTable = new SyncTable(table.TableName, table.SchemaName);
+                var syncAdapter = GetSyncAdapter(schemaTable, Setup);
+                await InternalDisableConstraintsAsync(GetContext(), syncAdapter, runner.Connection, runner.Transaction).ConfigureAwait(false);
+                await runner.CommitAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
 
-            var syncAdapter = this.GetSyncAdapter(schemaTable, this.Setup);
-
-            await this.InternalDisableConstraintsAsync(ctx, syncAdapter, connection, transaction).ConfigureAwait(false);
-
-            return true;
-        }, connection, transaction, cancellationToken);
+        }
 
         /// <summary>
         /// Enabling constraints on one table
         /// </summary>
-        public Task<bool> EnableConstraintsAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
+        public async Task<bool> EnableConstraintsAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            // using a fake SyncTable based on SetupTable, since we don't need columns
-            var schemaTable = new SyncTable(table.TableName, table.SchemaName);
-
-            var syncAdapter = this.GetSyncAdapter(schemaTable, this.Setup);
-
-            await this.InternalEnableConstraintsAsync(ctx, syncAdapter, connection, transaction).ConfigureAwait(false);
-
-            return true;
-        }, connection, transaction, cancellationToken);
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.None, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                // using a fake SyncTable based on SetupTable, since we don't need columns
+                var schemaTable = new SyncTable(table.TableName, table.SchemaName);
+                var syncAdapter = GetSyncAdapter(schemaTable, Setup);
+                await InternalEnableConstraintsAsync(GetContext(), syncAdapter, runner.Connection, runner.Transaction).ConfigureAwait(false);
+                await runner.CommitAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
         /// <summary>
         /// Disabling all constraints on synced tables
         /// </summary>
         internal async Task InternalDisableConstraintsAsync(SyncContext context, DbSyncAdapter syncAdapter, DbConnection connection, DbTransaction transaction = null)
         {
-            var command = await syncAdapter.GetCommandAsync(DbCommandType.DisableConstraints, connection, transaction).ConfigureAwait(false);
+            var (command, _) = await syncAdapter.GetCommandAsync(DbCommandType.DisableConstraints, connection, transaction).ConfigureAwait(false);
 
             if (command is null) return;
+
+            await InterceptAsync(new DbCommandArgs(context, command, connection, transaction)).ConfigureAwait(false);
 
             await command.ExecuteNonQueryAsync().ConfigureAwait(false);
         }
@@ -77,9 +97,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         internal async Task InternalEnableConstraintsAsync(SyncContext context, DbSyncAdapter syncAdapter, DbConnection connection, DbTransaction transaction)
         {
-            var command = await syncAdapter.GetCommandAsync(DbCommandType.EnableConstraints, connection, transaction).ConfigureAwait(false);
+            var (command, _) = await syncAdapter.GetCommandAsync(DbCommandType.EnableConstraints, connection, transaction).ConfigureAwait(false);
 
             if (command is null) return;
+            await InterceptAsync(new DbCommandArgs(context, command, connection, transaction)).ConfigureAwait(false);
 
             await command.ExecuteNonQueryAsync().ConfigureAwait(false);
         }
@@ -89,10 +110,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         internal async Task<bool> InternalResetTableAsync(SyncContext context, DbSyncAdapter syncAdapter, DbConnection connection, DbTransaction transaction)
         {
-            var command = await syncAdapter.GetCommandAsync(DbCommandType.Reset, connection, transaction);
+            var (command, _) = await syncAdapter.GetCommandAsync(DbCommandType.Reset, connection, transaction);
 
             if (command is not null)
             {
+                await InterceptAsync(new DbCommandArgs(context, command, connection, transaction)).ConfigureAwait(false);
                 var rowCount = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
                 return rowCount > 0;
             }

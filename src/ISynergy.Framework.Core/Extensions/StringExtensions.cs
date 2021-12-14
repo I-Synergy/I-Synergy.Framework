@@ -607,7 +607,7 @@ namespace ISynergy.Framework.Core.Extensions
             try
             {
                 var type = typeof(T);
-                return type.GetMethod(methodName) != null;
+                return type.GetMethod(methodName) is not null;
             }
             catch (AmbiguousMatchException)
             {

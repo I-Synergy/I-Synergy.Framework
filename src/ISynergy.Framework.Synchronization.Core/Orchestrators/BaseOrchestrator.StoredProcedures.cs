@@ -1,8 +1,9 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Extensions;
+using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -25,48 +26,52 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="progress"></param>
-        public Task<bool> CreateStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
+        public async Task<bool> CreateStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            bool hasBeenCreated = false;
-
-            var (schemaTable, _) = await this.InternalGetTableSchemaAsync(ctx, this.Setup, table, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-            if (schemaTable is null)
-                throw new MissingTableException(table.GetFullName());
-
-            // Create a temporary SyncSet for attaching to the schemaTable
-            var schema = new SyncSet();
-
-            // Add this table to schema
-            schema.Tables.Add(schemaTable);
-
-            schema.EnsureSchema();
-
-            // copy filters from setup
-            foreach (var filter in this.Setup.Filters)
-                schema.Filters.Add(filter);
-
-            // Get table builder
-            var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
-
-            var exists = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-            // should create only if not exists OR if overwrite has been set
-            var shouldCreate = !exists || overwrite;
-
-            if (shouldCreate)
+            try
             {
-                // Drop storedProcedure if already exists
-                if (exists && overwrite)
-                    await InternalDropStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                await using var runner = await this.GetConnectionAsync(SyncStage.Provisioning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                bool hasBeenCreated = false;
+                var (schemaTable, _) = await InternalGetTableSchemaAsync(GetContext(), Setup, table, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                hasBeenCreated = await InternalCreateStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                if (schemaTable is null)
+                    throw new MissingTableException(table.GetFullName());
+
+                // Create a temporary SyncSet for attaching to the schemaTable
+                var schema = new SyncSet();
+                schema.Tables.Add(schemaTable);
+                schema.EnsureSchema();
+
+                // copy filters from setup
+                foreach (var filter in Setup.Filters)
+                    schema.Filters.Add(filter);
+
+                // Get table builder
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
+
+                var exists = await InternalExistsStoredProcedureAsync(GetContext(), tableBuilder, storedProcedureType, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+
+                // should create only if not exists OR if overwrite has been set
+                var shouldCreate = !exists || overwrite;
+
+                if (shouldCreate)
+                {
+                    // Drop storedProcedure if already exists
+                    if (exists && overwrite)
+                        await InternalDropStoredProcedureAsync(GetContext(), tableBuilder, storedProcedureType, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+
+                    hasBeenCreated = await InternalCreateStoredProcedureAsync(GetContext(), tableBuilder, storedProcedureType, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                }
+
+                await runner.CommitAsync().ConfigureAwait(false);
+
+                return hasBeenCreated;
             }
-
-            return hasBeenCreated;
-
-        }, connection, transaction, cancellationToken);
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
         /// <summary>
         /// Create a Stored Procedure
@@ -77,24 +82,30 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="progress"></param>
-        public Task<bool> CreateStoredProceduresAsync(SetupTable table, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
-         {
-             var schema = await this.InternalGetSchemaAsync(ctx, this.Setup, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+        public async Task<bool> CreateStoredProceduresAsync(SetupTable table, bool overwrite = false, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        {
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.Provisioning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                var schema = await InternalGetSchemaAsync(GetContext(), Setup, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                var schemaTable = schema.Tables[table.TableName, table.SchemaName];
 
-             var schemaTable = schema.Tables[table.TableName, table.SchemaName];
+                if (schemaTable is null)
+                    throw new MissingTableException(table.GetFullName());
 
-             if (schemaTable is null)
-                 throw new MissingTableException(table.GetFullName());
+                // Get table builder
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
+                var r = await InternalCreateStoredProceduresAsync(GetContext(), overwrite, tableBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-             // Get table builder
-             var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
+                await runner.CommitAsync().ConfigureAwait(false);
+                return r;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
 
-             var r = await InternalCreateStoredProceduresAsync(ctx, overwrite, tableBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-             return r;
-
-         }, connection, transaction, cancellationToken);
+        }
 
         /// <summary>
         /// Check if a Stored Procedure exists
@@ -105,31 +116,35 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="progress"></param>
-        public Task<bool> ExistStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.None, async (ctx, connection, transaction) =>
+        public async Task<bool> ExistStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            // using a fake SyncTable based on SetupTable, since we don't need columns
-            var schemaTable = new SyncTable(table.TableName, table.SchemaName);
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.None, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                // using a fake SyncTable based on SetupTable, since we don't need columns
+                var schemaTable = new SyncTable(table.TableName, table.SchemaName);
 
-            // Create a temporary SyncSet for attaching to the schemaTable
-            var schema = new SyncSet();
+                // Create a temporary SyncSet for attaching to the schemaTable
+                var schema = new SyncSet();
+                schema.Tables.Add(schemaTable);
+                schema.EnsureSchema();
 
-            // Add this table to schema
-            schema.Tables.Add(schemaTable);
+                // copy filters from setup
+                foreach (var filter in Setup.Filters)
+                    schema.Filters.Add(filter);
 
-            schema.EnsureSchema();
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
 
-            // copy filters from setup
-            foreach (var filter in this.Setup.Filters)
-                schema.Filters.Add(filter);
+                var exists = await InternalExistsStoredProcedureAsync(GetContext(), tableBuilder, storedProcedureType, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
+                return exists;
 
-            var exists = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-            return exists;
-
-        }, connection, transaction, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
         /// <summary>
         /// Drop a Stored Procedure
@@ -140,41 +155,42 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="progress"></param>
-        public Task<bool> DropStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-            => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
+        public async Task<bool> DropStoredProcedureAsync(SetupTable table, DbStoredProcedureType storedProcedureType, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        {
+            try
             {
+                await using var runner = await this.GetConnectionAsync(SyncStage.Deprovisioning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 bool hasBeenDropped = false;
 
-                // using a fake SyncTable based on SetupTable, since we don't need columns
                 var schemaTable = new SyncTable(table.TableName, table.SchemaName);
-
-                // Create a temporary SyncSet for attaching to the schemaTable
                 var schema = new SyncSet();
-
-                // Add this table to schema
                 schema.Tables.Add(schemaTable);
-
                 schema.EnsureSchema();
 
                 // copy filters from setup
-                foreach (var filter in this.Setup.Filters)
+                foreach (var filter in Setup.Filters)
                     schema.Filters.Add(filter);
 
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
 
-                var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
-
-                var existsAndCanBeDeleted = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                var existsAndCanBeDeleted = await InternalExistsStoredProcedureAsync(GetContext(), tableBuilder, storedProcedureType, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 if (existsAndCanBeDeleted)
-                    hasBeenDropped = await InternalDropStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                    hasBeenDropped = await InternalDropStoredProcedureAsync(GetContext(), tableBuilder, storedProcedureType, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 // Removing cached commands
-                var syncAdapter = this.GetSyncAdapter(schemaTable, this.Setup);
+                var syncAdapter = GetSyncAdapter(schemaTable, Setup);
                 syncAdapter.RemoveCommands();
 
-                return hasBeenDropped;
+                await runner.CommitAsync().ConfigureAwait(false);
 
-            }, connection, transaction, cancellationToken);
+                return hasBeenDropped;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
         /// <summary>
         /// Drop all Stored Procedures
@@ -184,39 +200,43 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="progress"></param>
-        public Task<bool> DropStoredProceduresAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-            => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
+        public async Task<bool> DropStoredProceduresAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        {
+            try
             {
+                await using var runner = await this.GetConnectionAsync(SyncStage.Deprovisioning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 var hasDroppedAtLeastOneStoredProcedure = false;
 
                 // using a fake SyncTable based on SetupTable, since we don't need columns
                 var schemaTable = new SyncTable(table.TableName, table.SchemaName);
-
-                // Create a temporary SyncSet for attaching to the schemaTable
                 var schema = new SyncSet();
-
-                // Add this table to schema
                 schema.Tables.Add(schemaTable);
-
                 schema.EnsureSchema();
 
                 // copy filters from setup
-                foreach (var filter in this.Setup.Filters)
+                foreach (var filter in Setup.Filters)
                     schema.Filters.Add(filter);
 
                 // using a fake SyncTable based on SetupTable, since we don't need columns
-                var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
 
                 // check bulk before
-                hasDroppedAtLeastOneStoredProcedure = await InternalDropStoredProceduresAsync(ctx, tableBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                hasDroppedAtLeastOneStoredProcedure = await InternalDropStoredProceduresAsync(GetContext(), tableBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 // Removing cached commands
-                var syncAdapter = this.GetSyncAdapter(schemaTable, this.Setup);
+                var syncAdapter = GetSyncAdapter(schemaTable, Setup);
                 syncAdapter.RemoveCommands();
 
-                return hasDroppedAtLeastOneStoredProcedure;
+                await runner.CommitAsync().ConfigureAwait(false);
 
-            }, connection, transaction, cancellationToken);
+                return hasDroppedAtLeastOneStoredProcedure;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+
+        }
 
         /// <summary>
         /// Internal create Stored Procedure routine
@@ -237,13 +257,15 @@ namespace ISynergy.Framework.Synchronization.Core
                 return false;
 
             var action = new StoredProcedureCreatingArgs(ctx, tableBuilder.TableDescription, storedProcedureType, command, connection, transaction);
-            await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(action, progress, cancellationToken).ConfigureAwait(false);
 
             if (action.Cancel || action.Command is null)
                 return false;
 
+            await InterceptAsync(new DbCommandArgs(ctx, action.Command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+
             await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
-            await this.InterceptAsync(new StoredProcedureCreatedArgs(ctx, tableBuilder.TableDescription, storedProcedureType, connection, transaction), cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new StoredProcedureCreatedArgs(ctx, tableBuilder.TableDescription, storedProcedureType, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
             return true;
         }
@@ -253,7 +275,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         internal async Task<bool> InternalDropStoredProcedureAsync(SyncContext ctx, DbTableBuilder tableBuilder, DbStoredProcedureType storedProcedureType, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-
             var filter = tableBuilder.TableDescription.GetFilter();
 
             var command = await tableBuilder.GetDropStoredProcedureCommandAsync(storedProcedureType, filter, connection, transaction).ConfigureAwait(false);
@@ -261,15 +282,16 @@ namespace ISynergy.Framework.Synchronization.Core
             if (command is null)
                 return false;
 
-            var action = new StoredProcedureDroppingArgs(ctx, tableBuilder.TableDescription, storedProcedureType, command, connection, transaction);
-            await this.InterceptAsync(action, cancellationToken).ConfigureAwait(false);
+            var action = await InterceptAsync(new StoredProcedureDroppingArgs(ctx, tableBuilder.TableDescription, storedProcedureType, command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
             if (action.Cancel || action.Command is null)
                 return false;
 
-            await action.Command.ExecuteNonQueryAsync();
+            await InterceptAsync(new DbCommandArgs(ctx, action.Command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
-            await this.InterceptAsync(new StoredProcedureDroppedArgs(ctx, tableBuilder.TableDescription, storedProcedureType, connection, transaction), cancellationToken).ConfigureAwait(false);
+            await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
+
+            await InterceptAsync(new StoredProcedureDroppedArgs(ctx, tableBuilder.TableDescription, storedProcedureType, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
             return true;
         }
@@ -279,19 +301,17 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         internal async Task<bool> InternalExistsStoredProcedureAsync(SyncContext ctx, DbTableBuilder tableBuilder, DbStoredProcedureType storedProcedureType, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-
             var filter = tableBuilder.TableDescription.GetFilter();
 
             var existsCommand = await tableBuilder.GetExistsStoredProcedureCommandAsync(storedProcedureType, filter, connection, transaction).ConfigureAwait(false);
-
             if (existsCommand is null)
                 return false;
 
+            await InterceptAsync(new DbCommandArgs(ctx, existsCommand, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+
             var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);
             var exists = Convert.ToInt32(existsResultObject) > 0;
-
             return exists;
-
         }
 
         /// <summary>
@@ -302,48 +322,19 @@ namespace ISynergy.Framework.Synchronization.Core
             // check bulk before
             var hasDroppedAtLeastOneStoredProcedure = false;
 
+            var listStoredProcedureType = Enum.GetValues(typeof(DbStoredProcedureType)).Cast<DbStoredProcedureType>().OrderBy(sp => (int)sp);
 
-            if (this.Provider.SupportBulkOperations)
+            foreach (DbStoredProcedureType storedProcedureType in Enum.GetValues(typeof(DbStoredProcedureType)))
             {
-                var orderedList = new[] { DbStoredProcedureType.BulkDeleteRows, DbStoredProcedureType.BulkUpdateRows, DbStoredProcedureType.BulkTableType };
-
-                foreach (DbStoredProcedureType storedProcedureType in orderedList)
-                {
-                    var exists = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-                    if (exists)
-                    {
-                        var dropped = await InternalDropStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-                        // If at least one stored proc has been dropped, we're good to return true;
-                        if (dropped)
-                            hasDroppedAtLeastOneStoredProcedure = true;
-                    }
-                }
-
-            }
-
-            var listStoredProcedureType = Enum.GetValues(typeof(DbStoredProcedureType))
-                                              .Cast<DbStoredProcedureType>()
-                                              .Where(sp => sp != DbStoredProcedureType.BulkDeleteRows && sp != DbStoredProcedureType.BulkTableType && sp != DbStoredProcedureType.BulkUpdateRows);
-
-
-            foreach (DbStoredProcedureType storedProcedureType in listStoredProcedureType)
-            {
-                // check with filter
-                if ((storedProcedureType is DbStoredProcedureType.SelectChangesWithFilters || storedProcedureType is DbStoredProcedureType.SelectInitializedChangesWithFilters)
-                    && tableBuilder.TableDescription.GetFilter() is null)
-                    continue;
-
                 var exists = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                if (exists)
+                {
+                    var dropped = await InternalDropStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                if (!exists)
-                    continue;
-
-                var dropped = await InternalDropStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-                // If at least one stored proc has been dropped, we're good to return true;
-                if (dropped)
-                    hasDroppedAtLeastOneStoredProcedure = true;
+                    // If at least one stored proc has been dropped, we're good to return true;
+                    if (dropped)
+                        hasDroppedAtLeastOneStoredProcedure = true;
+                }
             }
 
             return hasDroppedAtLeastOneStoredProcedure;
@@ -356,34 +347,27 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             var hasCreatedAtLeastOneStoredProcedure = false;
 
-            // check bulk before
-            if (this.Provider.SupportBulkOperations)
+            // Order Asc is the correct order to Delete
+            var listStoredProcedureType = Enum.GetValues(typeof(DbStoredProcedureType)).Cast<DbStoredProcedureType>().OrderBy(sp => (int)sp);
+
+            // we need to drop bulk in order to be sure bulk type is delete after all
+            if (overwrite)
             {
-                var orderedList = new[] { DbStoredProcedureType.BulkDeleteRows, DbStoredProcedureType.BulkUpdateRows, DbStoredProcedureType.BulkTableType };
-
-                // we need to drop bulk in order to be sure bulk type is delete after all
-                if (overwrite)
+                foreach (DbStoredProcedureType storedProcedureType in listStoredProcedureType)
                 {
-                    foreach (DbStoredProcedureType storedProcedureType in orderedList)
-                    {
-                        var exists = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                    var exists = await InternalExistsStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                        if (exists)
-                            await InternalDropStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-                    }
-
+                    if (exists)
+                        await InternalDropStoredProcedureAsync(ctx, tableBuilder, storedProcedureType, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 }
+
             }
 
-            var listStoredProcedureType = Enum.GetValues(typeof(DbStoredProcedureType));
+            // Order Desc is the correct order to Create
+            listStoredProcedureType = Enum.GetValues(typeof(DbStoredProcedureType)).Cast<DbStoredProcedureType>().OrderByDescending(sp => (int)sp);
 
             foreach (DbStoredProcedureType storedProcedureType in listStoredProcedureType)
             {
-                // if we are iterating on bulk, but provider do not support it, just loop through and continue
-                if ((storedProcedureType is DbStoredProcedureType.BulkTableType || storedProcedureType is DbStoredProcedureType.BulkUpdateRows || storedProcedureType is DbStoredProcedureType.BulkDeleteRows)
-                    && !this.Provider.SupportBulkOperations)
-                    continue;
-
                 // check with filter
                 if ((storedProcedureType is DbStoredProcedureType.SelectChangesWithFilters || storedProcedureType is DbStoredProcedureType.SelectInitializedChangesWithFilters)
                     && tableBuilder.TableDescription.GetFilter() is null)

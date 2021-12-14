@@ -10,14 +10,13 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
     {
         public BatchPartTableInfo()
         {
-
         }
 
         public BatchPartTableInfo(string tableName, string schemaName = null, int rowsCount = 0)
         {
-            this.TableName = tableName;
-            this.SchemaName = schemaName;
-            this.RowsCount = rowsCount;
+            TableName = tableName;
+            SchemaName = schemaName;
+            RowsCount = rowsCount;
         }
 
         /// <summary>
@@ -42,8 +41,8 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
 
         public override IEnumerable<string> GetAllNamesProperties()
         {
-            yield return this.TableName;
-            yield return this.SchemaName;
+            yield return TableName;
+            yield return SchemaName;
 
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Synchronization.Client
+﻿namespace ISynergy.Framework.Synchronization.Client
 {
     /// <summary>
     /// Http steps involved during a sync beetween a proxy client and proxy server

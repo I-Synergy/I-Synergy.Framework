@@ -53,12 +53,12 @@ namespace ISynergy.Framework.Core.Collections
         {
             var collectionHandler = CollectionChanged;
             var propertyHandler = PropertyChanged;
-            if (collectionHandler != null || propertyHandler != null)
+            if (collectionHandler is not null || propertyHandler is not null)
             {
                 _context.Post(_ =>
                 {
                     collectionHandler?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                    if (propertyHandler != null)
+                    if (propertyHandler is not null)
                     {
                         propertyHandler(this, new PropertyChangedEventArgs("Count"));
                         propertyHandler(this, new PropertyChangedEventArgs(nameof(Keys)));

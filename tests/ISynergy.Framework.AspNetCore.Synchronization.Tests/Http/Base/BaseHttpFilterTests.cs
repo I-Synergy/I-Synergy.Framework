@@ -408,7 +408,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
         /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
-        public async Task CustomSeriazlizer_MessagePack(SyncOptions options)
+        public async Task CustomSerializer_MessagePack(SyncOptions options)
         {
             // create a server schema and seed
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);
@@ -422,10 +422,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
 
             // configure server orchestrator
             this.WebServerOrchestrator.Setup = this.FilterSetup;
-            this.WebServerOrchestrator.Options.SerializerFactory = new CustomMessagePackSerializerFactory();
-
-            // add custom serializer
-            options.SerializerFactory = new CustomMessagePackSerializerFactory();
+            this.WebServerOrchestrator.SerializerFactories.Add(new CustomMessagePackSerializerFactory());
 
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
@@ -603,8 +600,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             var options = new SyncOptions
             {
                 SnapshotsDirectory = directory,
-                BatchSize = 200,
-                SerializerFactory = new CustomMessagePackSerializerFactory()
+                BatchSize = 200
             };
 
             // ----------------------------------
@@ -645,7 +641,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             this.WebServerOrchestrator.Setup = this.FilterSetup;
             this.WebServerOrchestrator.Options.SnapshotsDirectory = directory;
             this.WebServerOrchestrator.Options.BatchSize = 200;
-            this.WebServerOrchestrator.Options.SerializerFactory = new CustomMessagePackSerializerFactory();
+            this.WebServerOrchestrator.SerializerFactories.Add(new CustomMessagePackSerializerFactory());
 
             // Execute a sync on all clients and check results
             foreach (var client in Clients)

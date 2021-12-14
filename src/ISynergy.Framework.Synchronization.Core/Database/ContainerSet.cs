@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -60,7 +60,7 @@ namespace ISynergy.Framework.Synchronization.Core.Database
         {
             Dispose(true);
 
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool cleanup)

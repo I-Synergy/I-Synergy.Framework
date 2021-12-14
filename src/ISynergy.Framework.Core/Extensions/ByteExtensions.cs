@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Core.Extensions
         {
             MemoryStream result = null;
 
-            if (_self != null && _self.Length > 0)
+            if (_self is not null && _self.Length > 0)
             {
                 result = new MemoryStream();
                 result.Write(_self, 0, _self.Length);

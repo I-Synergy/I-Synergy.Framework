@@ -338,7 +338,7 @@ namespace ISynergy.Framework.Mathematics.IO.Mat
         {
             get
             {
-                if (value == null && type != null)
+                if (value is null && type is not null)
                     value = read();
                 return value;
             }

@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Messages;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,6 +19,7 @@ namespace ISynergy.Framework.Synchronization.Core
         {
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"Applying Snapshot.";
         public override int EventId => SyncEventsId.SnapshotApplying.Id;
@@ -33,9 +35,10 @@ namespace ISynergy.Framework.Synchronization.Core
 
         public SnapshotAppliedArgs(SyncContext context, DatabaseChangesApplied changesApplied) : base(context, null, null)
         {
-            this.ChangesApplied = changesApplied;
+            ChangesApplied = changesApplied;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
         public override string Source => "Snapshot";
         public override string Message => $"[Total] Applied:{ChangesApplied.TotalAppliedChanges}. Resolved Conflicts:{ChangesApplied.TotalResolvedConflicts}.";
         public override int EventId => SyncEventsId.SnapshotApplied.Id;
@@ -49,11 +52,13 @@ namespace ISynergy.Framework.Synchronization.Core
     {
         public SnapshotCreatingArgs(SyncContext context, SyncSet schema, string snapshotDirectory, int batchSize, long timestamp, DbConnection connection, DbTransaction transaction) : base(context, connection, transaction)
         {
-            this.Schema = schema;
-            this.SnapshotDirectory = snapshotDirectory;
-            this.BatchSize = batchSize;
-            this.Timestamp = timestamp;
+            Schema = schema;
+            SnapshotDirectory = snapshotDirectory;
+            BatchSize = batchSize;
+            Timestamp = timestamp;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
 
         /// <summary>
         /// Gets the schema used to create the snapshot
@@ -88,11 +93,12 @@ namespace ISynergy.Framework.Synchronization.Core
     {
         public SnapshotCreatedArgs(SyncContext context, BatchInfo batchInfo, DbConnection connection = null, DbTransaction transaction = null) : base(context, connection, transaction)
         {
-            this.BatchInfo = batchInfo;
+            BatchInfo = batchInfo;
         }
 
         public override string Source => Connection.Database;
         public override string Message => $"Snapshot Created [{BatchInfo.GetDirectoryFullPath()}].";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
 
         /// <summary>
         /// Gets the batch info summarizing the snapshot created

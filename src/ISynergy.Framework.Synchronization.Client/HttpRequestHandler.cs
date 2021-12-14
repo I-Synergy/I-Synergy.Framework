@@ -31,25 +31,15 @@ namespace ISynergy.Framework.Synchronization.Client
         private BaseOrchestrator orchestrator;
 
         public HttpRequestHandler(BaseOrchestrator orchestrator)
-            => this.orchestrator = orchestrator;
+            => orchestrator = orchestrator;
 
 
         /// <summary>
         /// Process a request message with HttpClient object. 
         /// </summary>
-        public async Task<HttpResponseMessage> ProcessRequestAsync(
-            HttpClient client, 
-            string baseUri, 
-            byte[] data, 
-            HttpStep step, 
-            Guid sessionId, 
-            string scopeName,
-            ISerializerFactory serializerFactory, 
-            IConverter converter, 
-            int batchSize, 
-            SyncPolicy policy,
-            CancellationToken cancellationToken = default, 
-            IProgress<ProgressArgs> progress = null)
+        public async Task<HttpResponseMessage> ProcessRequestAsync(HttpClient client, string baseUri, byte[] data, HttpStep step, Guid sessionId, string scopeName,
+            ISerializerFactory serializerFactory, IConverter converter, int batchSize, SyncPolicy policy,
+            CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
             if (client is null)
                 throw new ArgumentNullException(nameof(client));
@@ -58,7 +48,7 @@ namespace ISynergy.Framework.Synchronization.Client
                 throw new ArgumentException("BaseUri is not defined");
 
             HttpResponseMessage response = null;
-
+            //var responseMessage = default(U);
             try
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -69,7 +59,7 @@ namespace ISynergy.Framework.Synchronization.Client
                 requestUri.Append(baseUri.EndsWith("/", StringComparison.CurrentCultureIgnoreCase) ? string.Empty : "/");
 
                 // Add params if any
-                if (ScopeParameters != null && ScopeParameters.Count > 0)
+                if (ScopeParameters is not null && ScopeParameters.Count > 0)
                 {
                     string prefix = "?";
                     foreach (var kvp in ScopeParameters)
@@ -88,36 +78,33 @@ namespace ISynergy.Framework.Synchronization.Client
                 var hash = HashAlgorithm.SHA256.Create(data);
                 var hashString = Convert.ToBase64String(hash);
 
-                string contentType = null;
 
+                string contentType = null;
                 // If Json, specify header
-                if (serializerFactory.Key == SerializersCollection.JsonSerializer.Key)
+                if (serializerFactory.Key == SerializersCollection.JsonSerializerFactory.Key)
                     contentType = "application/json";
 
                 // serialize the serialization format and the batchsize we want.
                 var ser = JsonConvert.SerializeObject(new { f = serializerFactory.Key, s = batchSize });
 
                 //// Execute my OpenAsync in my policy context
-                response = await policy.ExecuteAsync(ct => this.SendAsync(client, requestUri.ToString(),
+                response = await policy.ExecuteAsync(ct => SendAsync(client, requestUri.ToString(),
                     sessionId.ToString(), scopeName, step, data, ser, converter, hashString, contentType,
                     ct), cancellationToken, progress);
 
-                if (response is not null)
-                {
-                    // try to set the cookie for http session
-                    if (response.Headers is HttpResponseHeaders headers)
-                        // Ensure we have a cookie
-                        EnsureCookie(headers);
 
-                    if (response.Content is not null)
-                    {
-                        var args2 = new HttpGettingResponseMessageArgs(response, orchestrator.GetContext());
-                        await orchestrator.InterceptAsync(args2, cancellationToken).ConfigureAwait(false);
-                        return response;
-                    }
-                }
+                // try to set the cookie for http session
+                var headers = response?.Headers;
 
-                throw new HttpEmptyResponseContentException();
+                // Ensure we have a cookie
+                EnsureCookie(headers);
+
+                if (response.Content is null)
+                    throw new HttpEmptyResponseContentException();
+
+                await orchestrator.InterceptAsync(new HttpGettingResponseMessageArgs(response, orchestrator.GetContext()), progress, cancellationToken).ConfigureAwait(false);
+
+                return response;
             }
             catch (SyncException)
             {
@@ -131,7 +118,9 @@ namespace ISynergy.Framework.Synchronization.Client
                 var exrror = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 throw new HttpResponseContentException(exrror);
+
             }
+
         }
 
         private void EnsureCookie(HttpResponseHeaders headers)
@@ -144,7 +133,7 @@ namespace ISynergy.Framework.Synchronization.Client
             var cookieList = tmpList.ToList();
 
             // var cookieList = response.Headers.GetValues("Set-Cookie").ToList();
-            if (cookieList != null && cookieList.Count > 0)
+            if (cookieList is not null && cookieList.Count > 0)
             {
 #if NETSTANDARD
                 // Get the first cookie
@@ -170,20 +159,20 @@ namespace ISynergy.Framework.Synchronization.Client
             var requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri) { Content = arrayContent };
 
             // Adding the serialization format used and session id and scope name
-            requestMessage.Headers.Add("dotmim-sync-session-id", sessionId.ToString());
-            requestMessage.Headers.Add("dotmim-sync-scope-name", scopeName);
-            requestMessage.Headers.Add("dotmim-sync-step", ((int)step).ToString());
-            requestMessage.Headers.Add("dotmim-sync-serialization-format", ser);
+            requestMessage.Headers.Add("isynergy-sync-session-id", sessionId.ToString());
+            requestMessage.Headers.Add("isynergy-sync-scope-name", scopeName);
+            requestMessage.Headers.Add("isynergy-sync-step", ((int)step).ToString());
+            requestMessage.Headers.Add("isynergy-sync-serialization-format", ser);
 
             // if client specifies a converter, add it as header
-            if (converter != null)
-                requestMessage.Headers.Add("dotmim-sync-converter", converter.Key);
+            if (converter is not null)
+                requestMessage.Headers.Add("isynergy-sync-converter", converter.Key);
 
 
-            requestMessage.Headers.Add("dotmim-sync-hash", hashString);
+            requestMessage.Headers.Add("isynergy-sync-hash", hashString);
 
             // Adding others headers
-            if (CustomHeaders != null && CustomHeaders.Count > 0)
+            if (CustomHeaders is not null && CustomHeaders.Count > 0)
                 foreach (var kvp in CustomHeaders)
                     if (!requestMessage.Headers.Contains(kvp.Key))
                         requestMessage.Headers.Add(kvp.Key, kvp.Value);
@@ -192,8 +181,7 @@ namespace ISynergy.Framework.Synchronization.Client
             if (!string.IsNullOrEmpty(contentType) && !requestMessage.Content.Headers.Contains("content-type"))
                 requestMessage.Content.Headers.Add("content-type", contentType);
 
-            var args = new HttpSendingRequestMessageArgs(requestMessage, orchestrator.GetContext());
-            await orchestrator.InterceptAsync(args, cancellationToken).ConfigureAwait(false);
+            await orchestrator.InterceptAsync(new HttpSendingRequestMessageArgs(requestMessage, orchestrator.GetContext()), progress: default, cancellationToken).ConfigureAwait(false);
 
             // Eventually, send the request
             var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
@@ -204,7 +192,7 @@ namespace ISynergy.Framework.Synchronization.Client
 
             // throw exception if response is not successfull
             // get response from server
-            if (!response.IsSuccessStatusCode && response.Content != null)
+            if (!response.IsSuccessStatusCode && response.Content is not null)
                 await HandleSyncError(response);
 
             return response;
@@ -219,7 +207,7 @@ namespace ISynergy.Framework.Synchronization.Client
         {
             try
             {
-                if (!TryGetHeaderValue(response.Headers, "dotmim-sync-error", out string syncErrorTypeName))
+                if (!TryGetHeaderValue(response.Headers, "isynergy-sync-error", out string syncErrorTypeName))
                 {
                     var exceptionString = await response.Content.ReadAsStringAsync();
 

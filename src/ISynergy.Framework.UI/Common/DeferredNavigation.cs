@@ -55,7 +55,7 @@ namespace ISynergy.Framework.UI.Common
             {
                 _isBusy = true;
 
-                if (OnNavigating != null)
+                if (OnNavigating is not null)
                 {
                     await OnNavigating(e);
 

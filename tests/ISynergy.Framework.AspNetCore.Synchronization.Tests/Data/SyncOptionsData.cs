@@ -10,7 +10,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Data
         public IEnumerator<object[]> GetEnumerator()
         {
             yield return new object[] { new SyncOptions { BatchSize = 50 } };
-            yield return new object[] { new SyncOptions { BatchSize = 0, UseBulkOperations = false } };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

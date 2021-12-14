@@ -37,7 +37,7 @@ namespace ISynergy.Framework.Mathematics
         public static T[,] Get<T>(this T[,] source, T[,] destination,
             int startRow, int endRow, int startColumn, int endColumn)
         {
-            if (destination == null)
+            if (destination is null)
                 throw new ArgumentNullException("destination");
 
             int rows = source.Rows();
@@ -99,7 +99,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T[,] Get<T>(this T[,] source, T[,] destination, int[] rowIndexes, int[] columnIndexes)
         {
-            if (destination == null)
+            if (destination is null)
                 throw new ArgumentNullException("destination");
 
             return get(source, destination, rowIndexes, columnIndexes);
@@ -132,7 +132,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T[,] Get<T>(this T[,] source, int startRow, int endRow, int[] columnIndexes)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
             int rows = source.Rows();
@@ -151,7 +151,7 @@ namespace ISynergy.Framework.Mathematics
 
             T[,] destination;
 
-            if (columnIndexes != null)
+            if (columnIndexes is not null)
             {
                 newCols = columnIndexes.Length;
                 for (var j = 0; j < columnIndexes.Length; j++)
@@ -194,7 +194,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T[,] Get<T>(this T[,] source, int[] rowIndexes, int startColumn, int endColumn)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
             int rows = source.Rows();
@@ -213,7 +213,7 @@ namespace ISynergy.Framework.Mathematics
 
             T[,] destination;
 
-            if (rowIndexes != null)
+            if (rowIndexes is not null)
             {
                 newRows = rowIndexes.Length;
                 for (var j = 0; j < rowIndexes.Length; j++)
@@ -359,9 +359,9 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T[][] Get<T>(this T[][] source, int[] indexes, bool transpose = false)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
-            if (indexes == null)
+            if (indexes is null)
                 throw new ArgumentNullException("indexes");
 
             int rows = source.Length;
@@ -411,7 +411,7 @@ namespace ISynergy.Framework.Mathematics
         public static T[][] Get<T>(this T[][] source, int[] rowIndexes,
             int startColumn, int endColumn, bool reuseMemory = false)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
             int rows = source.Length;
@@ -434,7 +434,7 @@ namespace ISynergy.Framework.Mathematics
 
             bool canReuseMemory = startColumn == 0 && endColumn == cols;
 
-            if (rowIndexes != null)
+            if (rowIndexes is not null)
             {
                 newRows = rowIndexes.Length;
                 for (var j = 0; j < rowIndexes.Length; j++)
@@ -491,7 +491,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T[][] Get<T>(this T[][] source, int startRow, int endRow, int[] columnIndexes)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
             int rows = source.Length;
@@ -511,7 +511,7 @@ namespace ISynergy.Framework.Mathematics
             }
             T[][] destination;
 
-            if (columnIndexes != null)
+            if (columnIndexes is not null)
             {
                 newCols = columnIndexes.Length;
                 for (var j = 0; j < columnIndexes.Length; j++)
@@ -555,10 +555,10 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T[] Get<T>(this T[] source, int[] indexes, bool inPlace = false)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
-            if (indexes == null)
+            if (indexes is null)
                 throw new ArgumentNullException("indexes");
 
             if (inPlace && source.Length != indexes.Length)
@@ -592,10 +592,10 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T[] Get<T>(this T[] source, IList<int> indexes)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
-            if (indexes == null)
+            if (indexes is null)
                 throw new ArgumentNullException("indexes");
 
             var destination = new T[indexes.Count];
@@ -635,7 +635,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static T Get<T>(this T[] source, int index)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
             if (index >= source.Length)
@@ -655,10 +655,10 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static List<T> Get<T>(this List<T> source, int[] indexes)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
-            if (indexes == null)
+            if (indexes is null)
                 throw new ArgumentNullException("indexes");
 
             var destination = new List<T>();
@@ -678,7 +678,7 @@ namespace ISynergy.Framework.Mathematics
         internal static T[,] get<T>(this T[,] source, T[,] destination,
             int startRow, int endRow, int startColumn, int endColumn)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
             int rows = source.Rows();
@@ -698,7 +698,7 @@ namespace ISynergy.Framework.Mathematics
                 throw new ArgumentException("Argument out of range.");
             }
 
-            if (destination == null)
+            if (destination is null)
                 destination = new T[endRow - startRow, endColumn - startColumn];
 
             for (var i = startRow; i < endRow; i++)
@@ -718,7 +718,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         private static T[,] get<T>(this T[,] source, T[,] destination, int[] rowIndexes, int[] columnIndexes)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
             int rows = source.GetLength(0);
@@ -727,26 +727,26 @@ namespace ISynergy.Framework.Mathematics
             int newRows = rows;
             int newCols = cols;
 
-            if (rowIndexes == null && columnIndexes == null)
+            if (rowIndexes is null && columnIndexes is null)
             {
                 return source;
             }
 
-            if (rowIndexes != null)
+            if (rowIndexes is not null)
             {
                 newRows = rowIndexes.Length;
                 for (var i = 0; i < rowIndexes.Length; i++)
                     if ((rowIndexes[i] < 0) || (rowIndexes[i] >= rows))
                         throw new ArgumentException("Argument out of range.");
             }
-            if (columnIndexes != null)
+            if (columnIndexes is not null)
             {
                 newCols = columnIndexes.Length;
                 for (var i = 0; i < columnIndexes.Length; i++)
                     if ((columnIndexes[i] < 0) || (columnIndexes[i] >= cols))
                         throw new ArgumentException("Argument out of range.");
             }
-            if (destination != null)
+            if (destination is not null)
             {
                 if (destination.GetLength(0) < newRows || destination.GetLength(1) < newCols)
                     throw new DimensionMismatchException("destination",
@@ -757,13 +757,13 @@ namespace ISynergy.Framework.Mathematics
                 destination = new T[newRows, newCols];
             }
 
-            if (columnIndexes == null)
+            if (columnIndexes is null)
             {
                 for (var i = 0; i < rowIndexes.Length; i++)
                     for (var j = 0; j < cols; j++)
                         destination[i, j] = source[rowIndexes[i], j];
             }
-            else if (rowIndexes == null)
+            else if (rowIndexes is null)
             {
                 for (var i = 0; i < rows; i++)
                     for (var j = 0; j < columnIndexes.Length; j++)
@@ -790,7 +790,7 @@ namespace ISynergy.Framework.Mathematics
         private static T[][] get<T>(this T[][] source, T[][] destination,
             int[] rowIndexes, int[] columnIndexes, bool reuseMemory)
         {
-            if (source == null)
+            if (source is null)
                 throw new ArgumentNullException("source");
 
             if (source.Length == 0)
@@ -802,12 +802,12 @@ namespace ISynergy.Framework.Mathematics
             int newRows = rows;
             int newCols = cols;
 
-            if (rowIndexes == null && columnIndexes == null)
+            if (rowIndexes is null && columnIndexes is null)
             {
                 return source;
             }
 
-            if (rowIndexes != null)
+            if (rowIndexes is not null)
             {
                 newRows = rowIndexes.Length;
                 for (var i = 0; i < rowIndexes.Length; i++)
@@ -815,14 +815,14 @@ namespace ISynergy.Framework.Mathematics
                         throw new ArgumentException("Argument out of range.");
             }
 
-            if (columnIndexes != null)
+            if (columnIndexes is not null)
             {
                 newCols = columnIndexes.Length;
                 for (var i = 0; i < columnIndexes.Length; i++)
                     if ((columnIndexes[i] < 0) || (columnIndexes[i] >= cols))
                         throw new ArgumentException("Argument out of range.");
             }
-            if (destination != null)
+            if (destination is not null)
             {
                 if (destination.Length < newRows)
                     throw new DimensionMismatchException("destination",
@@ -831,13 +831,13 @@ namespace ISynergy.Framework.Mathematics
             else
             {
                 destination = new T[newRows][];
-                if (columnIndexes != null && !reuseMemory)
+                if (columnIndexes is not null && !reuseMemory)
                 {
                     for (var i = 0; i < destination.Length; i++)
                         destination[i] = new T[newCols];
                 }
             }
-            if (columnIndexes == null)
+            if (columnIndexes is null)
             {
                 if (reuseMemory)
                 {
@@ -850,7 +850,7 @@ namespace ISynergy.Framework.Mathematics
                         destination[i] = (T[])source[rowIndexes[i]].Clone();
                 }
             }
-            else if (rowIndexes == null)
+            else if (rowIndexes is null)
             {
                 for (var i = 0; i < source.Length; i++)
                     for (var j = 0; j < columnIndexes.Length; j++)
@@ -898,7 +898,7 @@ namespace ISynergy.Framework.Mathematics
 
             int newCols = endColumn - startColumn;
 
-            if (destination == null)
+            if (destination is null)
             {
                 destination = new T[endRow - startRow][];
 

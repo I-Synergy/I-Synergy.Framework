@@ -139,7 +139,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         public JaggedSingularValueDecomposition(double[][] value,
             bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose, bool inPlace)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value", "Matrix cannot be null.");
 
             double[][] a;
@@ -718,7 +718,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (diagonalMatrix != null)
+                if (diagonalMatrix is not null)
                     return diagonalMatrix;
 
                 return diagonalMatrix = Jagged.Diagonal(LeftSingularVectors[0].Length, RightSingularVectors[0].Length,
@@ -884,7 +884,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
         public double[][] SolveForDiagonal(double[] diagonal)
         {
-            if (diagonal == null)
+            if (diagonal is null)
                 throw new ArgumentNullException("diagonal");
 
             return Solve(Jagged.Diagonal(diagonal));
@@ -1181,9 +1181,9 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             svd.Diagonal = (double[])Diagonal.Clone();
             svd.Ordering = (int[])Ordering.Clone();
             svd.swapped = swapped;
-            if (LeftSingularVectors != null)
+            if (LeftSingularVectors is not null)
                 svd.LeftSingularVectors = (double[][])LeftSingularVectors.MemberwiseClone();
-            if (RightSingularVectors != null)
+            if (RightSingularVectors is not null)
                 svd.RightSingularVectors = (double[][])RightSingularVectors.MemberwiseClone();
 
             return svd;

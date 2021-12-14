@@ -156,9 +156,9 @@ namespace ISynergy.Framework.Mathematics.Convergence
                 if (maxIterations > 0 && CurrentIteration >= maxIterations)
                     return true;
 
-                if (NewValues == null && OldValues == null)
+                if (NewValues is null && OldValues is null)
                     return true;
-                if (OldValues == null)
+                if (OldValues is null)
                     return false;
                 if (NewValues.Length == 0 || OldValues.Length == 0)
                     return true;

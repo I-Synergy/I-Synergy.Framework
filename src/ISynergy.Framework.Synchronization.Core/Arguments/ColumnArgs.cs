@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Model.Parsers;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,13 +14,14 @@ namespace ISynergy.Framework.Synchronization.Core
         public string ColumnName { get; }
         public SyncTable Table { get; }
         public ParserName TableName { get; }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
 
         public ColumnCreatedArgs(SyncContext context, string columnName, SyncTable table, ParserName tableName, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.TableName = tableName;
-            this.ColumnName = columnName;
-            this.Table = table;
+            TableName = tableName;
+            ColumnName = columnName;
+            Table = table;
         }
 
         public override string Source => Connection.Database;
@@ -35,14 +37,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public string ColumnName { get; }
         public SyncTable Table { get; }
         public ParserName TableName { get; }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
 
         public ColumnCreatingArgs(SyncContext context, string columnName, SyncTable table, ParserName tableName, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.ColumnName = columnName;
-            this.Table = table;
-            this.TableName = tableName;
-            this.Command = command;
+            ColumnName = columnName;
+            Table = table;
+            TableName = tableName;
+            Command = command;
         }
         public override string Source => Connection.Database;
         public override string Message => $"[{ColumnName}] Adding.";
@@ -55,13 +58,14 @@ namespace ISynergy.Framework.Synchronization.Core
         public string ColumnName { get; }
         public SyncTable Table { get; }
         public ParserName TableName { get; }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
 
         public ColumnDroppedArgs(SyncContext context, string columnName, SyncTable table, ParserName tableName, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.TableName = tableName;
-            this.ColumnName = columnName;
-            this.Table = table;
+            TableName = tableName;
+            ColumnName = columnName;
+            Table = table;
         }
 
         public override string Source => Connection.Database;
@@ -76,14 +80,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public string ColumnName { get; }
         public SyncTable Table { get; }
         public ParserName TableName { get; }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
 
         public ColumnDroppingArgs(SyncContext context, string columnName, SyncTable table, ParserName tableName, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Command = command;
-            this.TableName = tableName;
-            this.ColumnName = columnName;
-            this.Table = table;
+            Command = command;
+            TableName = tableName;
+            ColumnName = columnName;
+            Table = table;
         }
 
         public override string Source => Connection.Database;
@@ -99,8 +104,6 @@ namespace ISynergy.Framework.Synchronization.Core
     /// </summary>
     public static partial class InterceptorsExtensions
     {
-
-
         /// <summary>
         /// Intercept the provider when a column is creating
         /// </summary>
@@ -154,5 +157,4 @@ namespace ISynergy.Framework.Synchronization.Core
         public static EventId ColumnDropping => CreateEventId(12400, nameof(ColumnDropping));
         public static EventId ColumnDropped => CreateEventId(12450, nameof(ColumnDropped));
     }
-
 }

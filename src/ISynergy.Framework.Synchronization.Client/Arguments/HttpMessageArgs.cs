@@ -2,6 +2,7 @@
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -14,21 +15,20 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
         public HttpGettingServerChangesRequestArgs(int batchIndexRequested, int batchCount, SyncContext context, string host)
              : base(context, null, null)
         {
-            this.BatchIndexRequested = batchIndexRequested;
-            this.BatchCount = batchCount;
-
-            this.Host = host;
+            BatchIndexRequested = batchIndexRequested;
+            BatchCount = batchCount;
+            Host = host;
         }
-        public override string Source => this.Host;
-
+        public override string Source => Host;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Message
         {
             get
             {
-                if (this.BatchCount <= 1)
+                if (BatchCount <= 1)
                     return $"Getting Batch Changes.";
                 else
-                    return $"Getting Batch Changes. ({this.BatchIndexRequested + 1}/{this.BatchCount}).";
+                    return $"Getting Batch Changes. ({BatchIndexRequested + 1}/{BatchCount}).";
             }
         }
 
@@ -53,19 +53,20 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
         public HttpGettingServerChangesResponseArgs(BatchInfo batchInfo, int batchIndex, int batchRowsCount, SyncContext syncContext, string host)
             : base(syncContext, null, null)
         {
-            this.BatchInfo = batchInfo;
-            this.BatchIndex = batchIndex;
-            this.BatchRowsCount = batchRowsCount;
-            this.Host = host;
+            BatchInfo = batchInfo;
+            BatchIndex = batchIndex;
+            BatchRowsCount = batchRowsCount;
+            Host = host;
         }
 
-        public override string Source => this.Host;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+        public override string Source => Host;
         public override string Message
         {
             get
             {
-                var batchesCount = this.BatchInfo.BatchPartsInfo?.Count ?? 1;
-                return $"Downloaded Batch Changes. ({this.BatchIndex + 1}/{batchesCount}). Rows:({this.BatchRowsCount}/{this.BatchInfo.RowsCount}).";
+                var batchesCount = BatchInfo.BatchPartsInfo?.Count ?? 1;
+                return $"Downloaded Batch Changes. ({BatchIndex + 1}/{batchesCount}). Rows:({BatchRowsCount}/{BatchInfo.RowsCount}).";
             }
         }
 
@@ -82,23 +83,24 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
         public HttpSendingClientChangesRequestArgs(HttpMessageSendChangesRequest request, int rowsCount, int totalRowsCount, string host)
             : base(request.SyncContext, null, null)
         {
-            this.Request = request;
-            this.RowsCount = rowsCount;
-            this.TotalRowsCount = totalRowsCount;
-            this.Host = host;
+            Request = request;
+            RowsCount = rowsCount;
+            TotalRowsCount = totalRowsCount;
+            Host = host;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public HttpMessageSendChangesRequest Request { get; }
         public string Host { get; }
-        public override string Source => this.Host;
+        public override string Source => Host;
         public override string Message
         {
             get
             {
-                if (this.Request.BatchCount == 0 && this.Request.BatchIndex == 0)
-                    return $"Sending All Changes. Rows:{this.RowsCount}. Waiting Server Response...";
+                if (Request.BatchCount == 0 && Request.BatchIndex == 0)
+                    return $"Sending All Changes. Rows:{RowsCount}. Waiting Server Response...";
                 else
-                    return $"Sending Batch Changes. Batches: ({this.Request.BatchIndex + 1}/{this.Request.BatchCount}). Rows: ({this.RowsCount}/{this.TotalRowsCount}). Waiting Server Response...";
+                    return $"Sending Batch Changes. Batches: ({Request.BatchIndex + 1}/{Request.BatchCount}). Rows: ({RowsCount}/{TotalRowsCount}). Waiting Server Response...";
             }
         }
 

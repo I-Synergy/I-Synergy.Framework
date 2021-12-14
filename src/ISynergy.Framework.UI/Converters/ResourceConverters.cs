@@ -31,7 +31,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (parameter != null && parameter is string)
+            if (parameter is not null && parameter is string)
             {
                 return (Geometry)XamlReader.Load($"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>{Application.Current.Resources[parameter]}</Geometry>");
             }
@@ -73,7 +73,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (parameter != null && parameter is string)
+            if (parameter is not null && parameter is string)
             {
                 return Application.Current.Resources[parameter] as string;
             }

@@ -113,7 +113,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 {
                     itemReceived = true;
 
-                    if (m == null)
+                    if (m is null)
                     {
                         itemIsNull = true;
                     }

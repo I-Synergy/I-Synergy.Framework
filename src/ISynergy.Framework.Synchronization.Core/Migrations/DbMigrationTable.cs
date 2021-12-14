@@ -40,17 +40,17 @@ namespace ISynergy.Framework.Synchronization.Core.Migrations
 {
     public class DbMigrationTable
     {
-        private readonly SyncTable currentTable;
-        private readonly SyncTable newTable;
-        private readonly bool preserveTracking;
-        private readonly CoreProvider provider;
+        private readonly SyncTable _currentTable;
+        private readonly SyncTable _newTable;
+        private readonly bool _preserveTracking;
+        private readonly CoreProvider _provider;
 
         public DbMigrationTable(CoreProvider provider, SyncTable currentTable, SyncTable newTable, bool preserveTracking = true)
         {
-            this.currentTable = currentTable ?? throw new ArgumentNullException(nameof(currentTable));
-            this.newTable = newTable ?? throw new ArgumentNullException(nameof(newTable));
-            this.preserveTracking = preserveTracking;
-            this.provider = provider;
+            _currentTable = currentTable ?? throw new ArgumentNullException(nameof(currentTable));
+            _newTable = newTable ?? throw new ArgumentNullException(nameof(newTable));
+            _preserveTracking = preserveTracking;
+            _provider = provider;
         }
 
         public void Compare()
@@ -70,8 +70,8 @@ namespace ISynergy.Framework.Synchronization.Core.Migrations
         /// </summary>
         private void CheckSchema()
         {
-            var currentSchema = currentTable.Schema;
-            var newSchema = newTable.Schema;
+            var currentSchema = _currentTable.Schema;
+            var newSchema = _newTable.Schema;
 
             // if tracking table name changed, we need to:
             // - Alter tracking table name
@@ -80,36 +80,36 @@ namespace ISynergy.Framework.Synchronization.Core.Migrations
             //if (currentSchema.TrackingTablesPrefix != newSchema.TrackingTablesPrefix ||
             //    currentSchema.TrackingTablesSuffix != newSchema.TrackingTablesSuffix)
             //{
-            //    this.NeedRenameTrackingTable = true;
-            //    this.NeedRecreateTriggers = true;
-            //    this.NeedRecreateStoredProcedures = true;
+            //    NeedRenameTrackingTable = true;
+            //    NeedRecreateTriggers = true;
+            //    NeedRecreateStoredProcedures = true;
             //}
 
             //if (currentSchema.TriggersPrefix != newSchema.TriggersPrefix ||
             //    currentSchema.TriggersSuffix != newSchema.TriggersSuffix)
             //{
-            //    this.NeedRecreateTriggers = true;
+            //    NeedRecreateTriggers = true;
             //}
 
             //if (currentSchema.StoredProceduresPrefix != newSchema.StoredProceduresPrefix ||
             //    currentSchema.StoredProceduresSuffix != newSchema.StoredProceduresSuffix)
             //{
-            //    this.NeedRecreateStoredProcedures = true;
+            //    NeedRecreateStoredProcedures = true;
             //}
         }
 
         private void CheckAddedOrRemovedColumns()
         {
             // Search for column added
-            foreach (var column in newTable.Columns)
+            foreach (var column in _newTable.Columns)
                 // if current table does not contains this new column, so we've added a new column
-                if (!currentTable.Columns.Any(c => c.EqualsByName(column)))
+                if (!_currentTable.Columns.Any(c => c.EqualsByName(column)))
                     AddedColumns.Add(column.Clone());
 
             // Search for columns removed
-            foreach (var column in currentTable.Columns)
+            foreach (var column in _currentTable.Columns)
                 // if current table does not contains this new column, so we've added a new column
-                if (!newTable.Columns.Any(c => c.EqualsByName(column)))
+                if (!_newTable.Columns.Any(c => c.EqualsByName(column)))
                     RemovedColumns.Add(column.Clone());
 
 
@@ -122,18 +122,18 @@ namespace ISynergy.Framework.Synchronization.Core.Migrations
         private void CheckPrimaryKeys()
         {
             // Check primary keys
-            foreach (var pkey in currentTable.PrimaryKeys)
-                if (!newTable.PrimaryKeys.Contains(pkey))
-                    if (preserveTracking)
-                        throw new Exception($"New table {newTable.TableName} has primary keys different from the last values stored in schema");
+            foreach (var pkey in _currentTable.PrimaryKeys)
+                if (!_newTable.PrimaryKeys.Contains(pkey))
+                    if (_preserveTracking)
+                        throw new Exception($"New table {_newTable.TableName} has primary keys different from the last values stored in schema");
                     else
                         NeedRecreateTrackingTable = true;
 
-            foreach (var pkey in newTable.PrimaryKeys)
-                if (!currentTable.PrimaryKeys.Contains(pkey))
+            foreach (var pkey in _newTable.PrimaryKeys)
+                if (!_currentTable.PrimaryKeys.Contains(pkey))
 
-                    if (preserveTracking)
-                        throw new Exception($"New table {newTable.TableName} has primary keys different from the last values stored in schema");
+                    if (_preserveTracking)
+                        throw new Exception($"New table {_newTable.TableName} has primary keys different from the last values stored in schema");
                     else
                         NeedRecreateTrackingTable = true;
 

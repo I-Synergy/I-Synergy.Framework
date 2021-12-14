@@ -20,8 +20,8 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
 
         public TableChangesSelected(string tableName, string schemaName)
         {
-            this.TableName = tableName;
-            this.SchemaName = schemaName;
+            TableName = tableName;
+            SchemaName = schemaName;
         }
 
         /// <summary>
@@ -54,6 +54,6 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// Gets the total number of changes that are applied to a table during the synchronization session.
         /// </summary>
         [IgnoreDataMember()]
-        public int TotalChanges => this.Upserts + this.Deletes;
+        public int TotalChanges => Upserts + Deletes;
     }
 }

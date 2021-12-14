@@ -26,7 +26,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (_staticAction != null)
+                if (_staticAction is not null)
                 {
                     return _staticAction.Method.Name;
                 }
@@ -49,9 +49,9 @@ namespace ISynergy.Framework.Core.Events
                     return false;
                 }
 
-                if (_staticAction != null)
+                if (_staticAction is not null)
                 {
-                    if (Reference != null)
+                    if (Reference is not null)
                     {
                         return Reference.IsAlive;
                     }
@@ -85,7 +85,7 @@ namespace ISynergy.Framework.Core.Events
             {
                 _staticAction = action;
 
-                if (target != null)
+                if (target is not null)
                 {
                     // Keep a reference to the target to control the
                     // WeakAction's lifetime.
@@ -115,7 +115,7 @@ namespace ISynergy.Framework.Core.Events
         /// <param name="parameter">The parameter.</param>
         public void Execute(T parameter)
         {
-            if (_staticAction != null)
+            if (_staticAction is not null)
             {
                 _staticAction(parameter);
                 return;
@@ -125,10 +125,10 @@ namespace ISynergy.Framework.Core.Events
 
             if (IsAlive)
             {
-                if (Method != null
-                    && (LiveReference != null
-                        || ActionReference != null)
-                    && actionTarget != null)
+                if (Method is not null
+                    && (LiveReference is not null
+                        || ActionReference is not null)
+                    && actionTarget is not null)
                 {
                     Method.Invoke(
                         actionTarget,

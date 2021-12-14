@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         public JaggedQrDecomposition(double[][] value, bool transpose = false,
             bool economy = true, bool inPlace = false)
         {
-            if (value == null) throw new ArgumentNullException("value", "Matrix cannot be null.");
+            if (value is null) throw new ArgumentNullException("value", "Matrix cannot be null.");
 
             if (!transpose && value.Length < value[0].Length ||
                 transpose && value[0].Length < value.Length)
@@ -146,7 +146,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (upperTriangularFactor != null)
+                if (upperTriangularFactor is not null)
                     return upperTriangularFactor;
 
                 var rows = economy ? m : n;
@@ -170,7 +170,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (orthogonalFactor != null)
+                if (orthogonalFactor is not null)
                     return orthogonalFactor;
 
                 var cols = economy ? m : n;
@@ -209,7 +209,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <exception cref="T:System.InvalidOperationException">Matrix is rank deficient.</exception>
         public double[][] Solve(double[][] value)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value", "Matrix cannot be null.");
 
             if (value.Length != n)
@@ -256,7 +256,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <exception cref="T:System.InvalidOperationException">Matrix is rank deficient.</exception>
         public double[] Solve(double[] value)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value");
 
             if (value.Length != qr.Length)
@@ -299,7 +299,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
         public double[][] SolveForDiagonal(double[] diagonal)
         {
-            if (diagonal == null)
+            if (diagonal is null)
                 throw new ArgumentNullException("diagonal");
 
             return Solve(Jagged.Diagonal(diagonal));
@@ -341,7 +341,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <exception cref="T:System.InvalidOperationException">Matrix is rank deficient.</exception>
         public double[][] SolveTranspose(double[][] value)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value", "Matrix cannot be null.");
 
             if (value.Columns() != qr.Length)

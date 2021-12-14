@@ -243,14 +243,14 @@ namespace ISynergy.Framework.Mathematics.Optimization
             var list = new SortedSet<string>();
 
             foreach (var term in terms)
-                if (term.Key.Item2 != null)
+                if (term.Key.Item2 is not null)
                 {
                     list.Add(term.Key.Item1);
                     list.Add(term.Key.Item2);
 
                     quadratic.Add(term.Key, term.Value);
                 }
-                else if (term.Key.Item1 != null)
+                else if (term.Key.Item1 is not null)
                 {
                     list.Add(term.Key.Item1);
 

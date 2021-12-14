@@ -30,8 +30,8 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// </summary>
         public TableMetadatasCleaned(string tableName, string schemaName)
         {
-            this.TableName = tableName;
-            this.SchemaName = schemaName;
+            TableName = tableName;
+            SchemaName = schemaName;
         }
 
         /// <summary>

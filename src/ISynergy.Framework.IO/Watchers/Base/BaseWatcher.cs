@@ -199,7 +199,7 @@ namespace ISynergy.Framework.IO.Watchers.Base
                     watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
             }
 
-            if (watcher != null)
+            if (watcher is not null)
             {
                 if (_watcherInfo.WatchForError)
                     watcher.Error += new ErrorEventHandler(watcher_Error);

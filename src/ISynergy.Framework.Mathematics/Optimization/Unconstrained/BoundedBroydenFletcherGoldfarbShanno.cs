@@ -173,10 +173,10 @@ namespace ISynergy.Framework.Mathematics.Optimization
         /// </summary>
         protected override bool Optimize()
         {
-            if (Function == null)
+            if (Function is null)
                 throw new InvalidOperationException("function");
 
-            if (Gradient == null)
+            if (Gradient is null)
                 throw new InvalidOperationException("gradient");
 
             NonlinearObjectiveFunction.CheckGradient(Gradient, Solution);
@@ -199,7 +199,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             var totalSize = 2 * m * n + 11 * m * m + 5 * n + 8 * m;
 
-            if (work == null || work.Length < totalSize)
+            if (work is null || work.Length < totalSize)
                 work = new double[totalSize];
 
             var i = 0;
@@ -289,7 +289,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
                 exit(csave, lsave, isave, x, dsave, out newF, out newG);
                 return true;
             }
-            if (Progress != null)
+            if (Progress is not null)
                 Progress(this, new OptimizationProgressEventArgs(Iterations, 0, newG, 0, null, 0, f, 0, false)
                 {
                     Tag = new BoundedBroydenFletcherGoldfarbShannoInnerStatus(
@@ -309,7 +309,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
             newG = Gradient(x);
             Evaluations++;
 
-            if (Progress != null)
+            if (Progress is not null)
                 Progress(this, new OptimizationProgressEventArgs(Iterations, 0, newG, 0, null, 0, newF, 0, true)
                 {
                     Tag = new BoundedBroydenFletcherGoldfarbShannoInnerStatus(
@@ -485,10 +485,10 @@ namespace ISynergy.Framework.Mathematics.Optimization
             Func<double[], double> function, Func<double[], double[]> gradient)
             : this(numberOfVariables)
         {
-            if (function == null)
+            if (function is null)
                 throw new ArgumentNullException("function");
 
-            if (gradient == null)
+            if (gradient is null)
                 throw new ArgumentNullException("gradient");
 
             Function = function;

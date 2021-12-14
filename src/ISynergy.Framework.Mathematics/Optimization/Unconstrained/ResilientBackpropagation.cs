@@ -209,7 +209,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
         /// <param name="args">The ProgressChangedEventArgs instance containing the event data.</param>
         protected void OnProgressChanged(ProgressChangedEventArgs args)
         {
-            if (ProgressChanged != null)
+            if (ProgressChanged is not null)
                 ProgressChanged(this, args);
         }
 

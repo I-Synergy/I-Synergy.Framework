@@ -46,7 +46,7 @@ namespace ISynergy.Framework.Mvvm.Commands
 
             _execute = new WeakAction<T>(execute, keepTargetAlive);
 
-            if (canExecute != null)
+            if (canExecute is not null)
             {
                 _canExecute = new WeakFunc<T, bool>(canExecute, keepTargetAlive);
             }
@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         {
             var val = parameter;
 
-            if (parameter != null
+            if (parameter is not null
                 && parameter.GetType() != typeof(T))
             {
                 if (parameter is IConvertible)
@@ -112,7 +112,7 @@ namespace ISynergy.Framework.Mvvm.Commands
             }
 
             if (CanExecute(val)
-                && _execute != null
+                && _execute is not null
                 && (_execute.IsStatic || _execute.IsAlive))
             {
                 if (val is null)

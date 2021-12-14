@@ -26,10 +26,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public override IEnumerable<string> GetAllNamesProperties()
         {
-            yield return this.TableName;
-            yield return this.SchemaName;
-            yield return this.ColumnName;
-            yield return this.ParameterName;
+            yield return TableName;
+            yield return SchemaName;
+            yield return ColumnName;
+            yield return ParameterName;
         }
 
     }

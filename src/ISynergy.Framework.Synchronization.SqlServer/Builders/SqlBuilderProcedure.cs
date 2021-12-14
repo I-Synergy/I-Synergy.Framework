@@ -27,20 +27,23 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         private readonly SqlDbMetadata sqlDbMetadata;
         public SqlBuilderProcedure(SyncTable tableDescription, ParserName tableName, ParserName trackingName, SyncSetup setup)
         {
-            this.tableDescription = tableDescription;
-            this.setup = setup;
-            this.tableName = tableName;
-            this.trackingName = trackingName;
-            this.sqlObjectNames = new SqlObjectNames(this.tableDescription, tableName, trackingName, setup);
-            this.sqlDbMetadata = new SqlDbMetadata();
+            tableDescription = tableDescription;
+            setup = setup;
+            tableName = tableName;
+            trackingName = trackingName;
+            sqlObjectNames = new SqlObjectNames(tableDescription, tableName, trackingName, setup);
+            sqlDbMetadata = new SqlDbMetadata();
         }
 
         public Task<DbCommand> GetExistsStoredProcedureCommandAsync(DbStoredProcedureType storedProcedureType, SyncFilter filter, DbConnection connection, DbTransaction transaction)
         {
-            if (filter == null && (storedProcedureType == DbStoredProcedureType.SelectChangesWithFilters || storedProcedureType == DbStoredProcedureType.SelectInitializedChangesWithFilters))
+            if (filter is null && (storedProcedureType == DbStoredProcedureType.SelectChangesWithFilters || storedProcedureType == DbStoredProcedureType.SelectInitializedChangesWithFilters))
                 return Task.FromResult<DbCommand>(null);
 
-            var quotedProcedureName = this.sqlObjectNames.GetStoredProcedureCommandName(storedProcedureType, filter);
+            if (storedProcedureType == DbStoredProcedureType.BulkInitRows)
+                return Task.FromResult<DbCommand>(null);
+
+            var quotedProcedureName = sqlObjectNames.GetStoredProcedureCommandName(storedProcedureType, filter);
 
             var procedureName = ParserName.Parse(quotedProcedureName).ToString();
 
@@ -69,9 +72,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         }
 
         public Task<DbCommand> GetDropStoredProcedureCommandAsync(DbStoredProcedureType storedProcedureType, SyncFilter filter, DbConnection connection, DbTransaction transaction)
-
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(storedProcedureType, filter);
+            if (storedProcedureType == DbStoredProcedureType.BulkInitRows)
+                return Task.FromResult<DbCommand>(null);
+
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(storedProcedureType, filter);
             var text = $"DROP PROCEDURE {commandName};";
 
             if (storedProcedureType == DbStoredProcedureType.BulkTableType)
@@ -90,19 +95,19 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         {
             var command = storedProcedureType switch
             {
-                DbStoredProcedureType.SelectChanges => this.CreateSelectIncrementalChangesCommand(connection, transaction),
-                DbStoredProcedureType.SelectChangesWithFilters => this.CreateSelectIncrementalChangesWithFilterCommand(filter, connection, transaction),
-                DbStoredProcedureType.SelectInitializedChanges => this.CreateSelectInitializedChangesCommand(connection, transaction),
-                DbStoredProcedureType.SelectInitializedChangesWithFilters => this.CreateSelectInitializedChangesWithFilterCommand(filter, connection, transaction),
-                DbStoredProcedureType.SelectRow => this.CreateSelectRowCommand(connection, transaction),
-                DbStoredProcedureType.UpdateRow => this.CreateUpdateCommand(connection, transaction),
-                DbStoredProcedureType.DeleteRow => this.CreateDeleteCommand(connection, transaction),
-                DbStoredProcedureType.DeleteMetadata => this.CreateDeleteMetadataCommand(connection, transaction),
-                DbStoredProcedureType.BulkTableType => this.CreateBulkTableTypeCommand(connection, transaction),
-                DbStoredProcedureType.BulkUpdateRows => this.CreateBulkUpdateCommand(connection, transaction),
-                DbStoredProcedureType.BulkDeleteRows => this.CreateBulkDeleteCommand(connection, transaction),
-                DbStoredProcedureType.Reset => this.CreateResetCommand(connection, transaction),
-                _ => throw new NotImplementedException($"this DbStoredProcedureType {storedProcedureType} has no command to create.")
+                DbStoredProcedureType.SelectChanges => CreateSelectIncrementalChangesCommand(connection, transaction),
+                DbStoredProcedureType.SelectChangesWithFilters => CreateSelectIncrementalChangesWithFilterCommand(filter, connection, transaction),
+                DbStoredProcedureType.SelectInitializedChanges => CreateSelectInitializedChangesCommand(connection, transaction),
+                DbStoredProcedureType.SelectInitializedChangesWithFilters => CreateSelectInitializedChangesWithFilterCommand(filter, connection, transaction),
+                DbStoredProcedureType.SelectRow => CreateSelectRowCommand(connection, transaction),
+                DbStoredProcedureType.UpdateRow => CreateUpdateCommand(connection, transaction),
+                DbStoredProcedureType.DeleteRow => CreateDeleteCommand(connection, transaction),
+                DbStoredProcedureType.DeleteMetadata => CreateDeleteMetadataCommand(connection, transaction),
+                DbStoredProcedureType.BulkTableType => CreateBulkTableTypeCommand(connection, transaction),
+                DbStoredProcedureType.BulkUpdateRows => CreateBulkUpdateCommand(connection, transaction),
+                DbStoredProcedureType.BulkDeleteRows => CreateBulkDeleteCommand(connection, transaction),
+                DbStoredProcedureType.Reset => CreateResetCommand(connection, transaction),
+                _ => null,
             };
 
             return Task.FromResult(command);
@@ -110,12 +115,12 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         protected void AddPkColumnParametersToCommand(SqlCommand sqlCommand)
         {
-            foreach (var pkColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
                 sqlCommand.Parameters.Add(GetSqlParameter(pkColumn));
         }
         protected void AddColumnParametersToCommand(SqlCommand sqlCommand)
         {
-            foreach (var column in this.tableDescription.Columns.Where(c => !c.IsReadOnly))
+            foreach (var column in tableDescription.Columns.Where(c => !c.IsReadOnly))
                 sqlCommand.Parameters.Add(GetSqlParameter(column));
         }
 
@@ -127,14 +132,14 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             };
 
             // Get the good SqlDbType (even if we are not from Sql Server def)
-            var sqlDbType = this.tableDescription.OriginalProvider == SqlSyncProvider.ProviderType ?
-                this.sqlDbMetadata.GetSqlDbType(column) : this.sqlDbMetadata.GetOwnerDbTypeFromDbType(column);
+            var sqlDbType = tableDescription.OriginalProvider == SqlSyncProvider.ProviderType ?
+                sqlDbMetadata.GetSqlDbType(column) : sqlDbMetadata.GetOwnerDbTypeFromDbType(column);
 
 
             sqlParameter.SqlDbType = sqlDbType;
             sqlParameter.IsNullable = column.AllowDBNull;
 
-            var (p, s) = this.sqlDbMetadata.GetCompatibleColumnPrecisionAndScale(column, this.tableDescription.OriginalProvider);
+            var (p, s) = sqlDbMetadata.GetCompatibleColumnPrecisionAndScale(column, tableDescription.OriginalProvider);
 
             if (p > 0)
             {
@@ -143,7 +148,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                     sqlParameter.Scale = s;
             }
 
-            var m = this.sqlDbMetadata.GetCompatibleMaxLength(column, this.tableDescription.OriginalProvider);
+            var m = sqlDbMetadata.GetCompatibleMaxLength(column, tableDescription.OriginalProvider);
 
             if (m > 0)
                 sqlParameter.Size = m;
@@ -161,7 +166,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             var sqlDbMetadata = new SqlDbMetadata();
 
             if (sqlDbType == SqlDbType.Structured)
+            {
                 stringBuilder3.Append(string.Concat(param.ParameterName, " ", param.TypeName, " READONLY"));
+            }
             else
             {
                 var tmpColumn = new SyncColumn(param.ParameterName)
@@ -173,10 +180,10 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                     Scale = param.Scale
                 };
 
-                var columnDeclarationString = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(tmpColumn, SqlSyncProvider.ProviderType);
+                string columnDeclarationString = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(tmpColumn, SqlSyncProvider.ProviderType);
                 stringBuilder3.Append($"{param.ParameterName} {columnDeclarationString}");
 
-                if (param.Value != null)
+                if (param.Value is not null)
                     stringBuilder3.Append($" = {param.Value}");
                 else if (param.IsNullable)
                     stringBuilder3.Append(" = NULL");
@@ -195,8 +202,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         {
             var cmd = BuildCommand();
 
-            var stringBuilder = new StringBuilder(string.Concat("CREATE PROCEDURE ", procName));
-            var str = "\n\t";
+            StringBuilder stringBuilder = new StringBuilder(string.Concat("CREATE PROCEDURE ", procName));
+            string str = "\n\t";
 
             foreach (SqlParameter parameter in cmd.Parameters)
             {
@@ -216,8 +223,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         {
             var cmd = BuildCommand(t);
 
-            var stringBuilder = new StringBuilder(string.Concat("CREATE PROCEDURE ", procName));
-            var str = "\n\t";
+            StringBuilder stringBuilder = new StringBuilder(string.Concat("CREATE PROCEDURE ", procName));
+            string str = "\n\t";
 
             foreach (SqlParameter parameter in cmd.Parameters)
             {
@@ -241,7 +248,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine("--Select all ids not inserted / deleted / updated as conflict");
             stringBuilder.Append("SELECT ");
             var pkeyComma = " ";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var cc = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{pkeyComma}{cc}");
@@ -254,7 +261,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.Append("\t SELECT ");
 
             pkeyComma = " ";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var cc = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{pkeyComma}{cc}");
@@ -265,7 +272,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.Append("\t WHERE ");
 
             pkeyComma = " ";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var cc = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{pkeyComma}[t].{cc} = [i].{cc}");
@@ -291,31 +298,31 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             var sqlParameter2 = new SqlParameter("@changeTable", SqlDbType.Structured)
             {
-                TypeName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkTableType)
+                TypeName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkTableType)
             };
             sqlCommand.Parameters.Add(sqlParameter2);
 
-            var str4 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[p]", "[t]");
-            var str5 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[changes]", "[base]");
-            var str6 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[t]", "[side]");
-            var str7 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[p]", "[side]");
+            string str4 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[p]", "[t]");
+            string str5 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[changes]", "[base]");
+            string str6 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[t]", "[side]");
+            string str7 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[p]", "[side]");
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("-- use a temp table to store the list of PKs that successfully got deleted");
             stringBuilder.Append("declare @dms_changed TABLE (");
-            foreach (var c in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var c in tableDescription.GetPrimaryKeysColumns())
             {
                 // Get the good SqlDbType (even if we are not from Sql Server def)
-                var columnType = this.sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, this.tableDescription.OriginalProvider);
+                var columnType = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, tableDescription.OriginalProvider);
                 stringBuilder.Append($"{ParserName.Parse(c).Quoted().ToString()} {columnType}, ");
             }
             stringBuilder.Append(" PRIMARY KEY (");
-            for (var i = 0; i < this.tableDescription.PrimaryKeys.Count; i++)
+            for (int i = 0; i < tableDescription.PrimaryKeys.Count; i++)
             {
-                var cc = ParserName.Parse(this.tableDescription.PrimaryKeys[i]).Quoted().ToString();
+                var cc = ParserName.Parse(tableDescription.PrimaryKeys[i]).Quoted().ToString();
                 stringBuilder.Append($"{cc}");
 
-                if (i < this.tableDescription.PrimaryKeys.Count - 1)
+                if (i < tableDescription.PrimaryKeys.Count - 1)
                     stringBuilder.Append(", ");
             }
             stringBuilder.AppendLine("));");
@@ -323,7 +330,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             stringBuilder.AppendLine(";WITH [changes] AS (");
             stringBuilder.Append("\tSELECT ");
-            foreach (var c in this.tableDescription.Columns.Where(col => !col.IsReadOnly))
+            foreach (var c in tableDescription.Columns.Where(col => !col.IsReadOnly))
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
                 stringBuilder.Append($"[p].{columnName}, ");
@@ -338,11 +345,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             stringBuilder.AppendLine($"DELETE {tableName.Schema().Quoted().ToString()}");
             stringBuilder.Append($"OUTPUT ");
-            for (var i = 0; i < this.tableDescription.PrimaryKeys.Count; i++)
+            for (int i = 0; i < tableDescription.PrimaryKeys.Count; i++)
             {
-                var cc = ParserName.Parse(this.tableDescription.PrimaryKeys[i]).Quoted().ToString();
+                var cc = ParserName.Parse(tableDescription.PrimaryKeys[i]).Quoted().ToString();
                 stringBuilder.Append($"DELETED.{cc}");
-                if (i < this.tableDescription.PrimaryKeys.Count - 1)
+                if (i < tableDescription.PrimaryKeys.Count - 1)
                     stringBuilder.Append(", ");
                 else
                     stringBuilder.AppendLine();
@@ -368,8 +375,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public DbCommand CreateBulkDeleteCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkDeleteRows);
-            return CreateProcedureCommand(this.BuildBulkDeleteCommand, commandName, connection, transaction);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkDeleteRows);
+            return CreateProcedureCommand(BuildBulkDeleteCommand, commandName, connection, transaction);
         }
 
 
@@ -381,7 +388,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             var sqlCommand = new SqlCommand();
             var stringBuilderArguments = new StringBuilder();
             var stringBuilderParameters = new StringBuilder();
-            var empty = string.Empty;
+            string empty = string.Empty;
 
             var sqlParameter = new SqlParameter("@sync_min_timestamp", SqlDbType.BigInt);
             sqlCommand.Parameters.Add(sqlParameter);
@@ -391,29 +398,29 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             var sqlParameter2 = new SqlParameter("@changeTable", SqlDbType.Structured)
             {
-                TypeName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkTableType)
+                TypeName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkTableType)
             };
             sqlCommand.Parameters.Add(sqlParameter2);
 
-            var str4 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[p]", "[t]");
-            var str5 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[changes]", "[base]");
-            var str6 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[t]", "[side]");
-            var str7 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[p]", "[side]");
+            string str4 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[p]", "[t]");
+            string str5 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[changes]", "[base]");
+            string str6 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[t]", "[side]");
+            string str7 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[p]", "[side]");
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("-- use a temp table to store the list of PKs that successfully got updated/inserted");
             stringBuilder.Append("declare @dms_changed TABLE (");
-            foreach (var c in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var c in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
-                var columnType = this.sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, this.tableDescription.OriginalProvider);
+                var columnType = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, tableDescription.OriginalProvider);
 
                 stringBuilder.Append($"{columnName} {columnType}, ");
             }
             stringBuilder.Append(" PRIMARY KEY (");
 
-            var pkeyComma = " ";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            string pkeyComma = " ";
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{pkeyComma}{columnName}");
@@ -424,7 +431,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine();
 
             // Check if we have auto inc column
-            if (this.tableDescription.HasAutoIncrementColumns)
+            if (tableDescription.HasAutoIncrementColumns)
             {
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine($"SET IDENTITY_INSERT {tableName.Schema().Quoted().ToString()} ON;");
@@ -434,7 +441,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             stringBuilder.AppendLine(";WITH [changes] AS (");
             stringBuilder.Append("\tSELECT ");
-            foreach (var c in this.tableDescription.Columns.Where(col => !col.IsReadOnly))
+            foreach (var c in tableDescription.Columns.Where(col => !col.IsReadOnly))
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
                 stringBuilder.Append($"[p].{columnName}, ");
@@ -451,7 +458,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             if (hasMutableColumns)
             {
                 stringBuilder.AppendLine("WHEN MATCHED AND ([changes].[sync_timestamp] <= @sync_min_timestamp OR [changes].[sync_timestamp] IS NULL OR [changes].[sync_update_scope_id] = @sync_scope_id) THEN");
-                foreach (var mutableColumn in this.tableDescription.Columns.Where(c => !c.IsReadOnly))
+                foreach (var mutableColumn in tableDescription.Columns.Where(c => !c.IsReadOnly))
                 {
                     var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
                     stringBuilderArguments.Append(string.Concat(empty, columnName));
@@ -461,8 +468,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine($"\tUPDATE SET");
 
-                var strSeparator = "";
-                foreach (var mutableColumn in this.tableDescription.GetMutableColumns(false))
+                string strSeparator = "";
+                foreach (var mutableColumn in tableDescription.GetMutableColumns(false))
                 {
                     var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
                     stringBuilder.AppendLine($"\t{strSeparator}{columnName} = [changes].{columnName}");
@@ -477,7 +484,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilderParameters = new StringBuilder();
             empty = string.Empty;
 
-            foreach (var mutableColumn in this.tableDescription.Columns.Where(c => !c.IsReadOnly))
+            foreach (var mutableColumn in tableDescription.Columns.Where(c => !c.IsReadOnly))
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
 
@@ -494,7 +501,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.Append($"\tOUTPUT ");
 
             pkeyComma = " ";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{pkeyComma}INSERTED.{columnName}");
@@ -505,7 +512,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine();
 
             // Check if we have auto inc column
-            if (this.tableDescription.HasAutoIncrementColumns)
+            if (tableDescription.HasAutoIncrementColumns)
             {
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine($"SET IDENTITY_INSERT {tableName.Schema().Quoted().ToString()} ON;");
@@ -529,10 +536,10 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public DbCommand CreateBulkUpdateCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkUpdateRows);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkUpdateRows);
 
             // Check if we have mutables columns
-            var hasMutableColumns = this.tableDescription.GetMutableColumns(false).Any();
+            var hasMutableColumns = tableDescription.GetMutableColumns(false).Any();
 
             return CreateProcedureCommand(BuildBulkUpdateCommand, commandName, hasMutableColumns, connection, transaction);
         }
@@ -542,18 +549,18 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         //------------------------------------------------------------------
         protected virtual SqlCommand BuildResetCommand()
         {
-            var updTriggerName = this.sqlObjectNames.GetTriggerCommandName(DbTriggerType.Update);
-            var delTriggerName = this.sqlObjectNames.GetTriggerCommandName(DbTriggerType.Delete);
-            var insTriggerName = this.sqlObjectNames.GetTriggerCommandName(DbTriggerType.Insert);
+            var updTriggerName = sqlObjectNames.GetTriggerCommandName(DbTriggerType.Update);
+            var delTriggerName = sqlObjectNames.GetTriggerCommandName(DbTriggerType.Delete);
+            var insTriggerName = sqlObjectNames.GetTriggerCommandName(DbTriggerType.Insert);
 
-            var sqlCommand = new SqlCommand();
-            var sqlParameter2 = new SqlParameter("@sync_row_count", SqlDbType.Int)
+            SqlCommand sqlCommand = new SqlCommand();
+            SqlParameter sqlParameter2 = new SqlParameter("@sync_row_count", SqlDbType.Int)
             {
                 Direction = ParameterDirection.Output
             };
             sqlCommand.Parameters.Add(sqlParameter2);
 
-            var stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"SET {sqlParameter2.ParameterName} = 0;");
             stringBuilder.AppendLine();
 
@@ -576,7 +583,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         }
         public DbCommand CreateResetCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.Reset);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.Reset);
             return CreateProcedureCommand(BuildResetCommand, commandName, connection, transaction);
         }
 
@@ -586,7 +593,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         protected virtual SqlCommand BuildDeleteCommand()
         {
             var sqlCommand = new SqlCommand();
-            this.AddPkColumnParametersToCommand(sqlCommand);
+            AddPkColumnParametersToCommand(sqlCommand);
 
             var sqlParameter0 = new SqlParameter("@sync_scope_id", SqlDbType.UniqueIdentifier);
             sqlCommand.Parameters.Add(sqlParameter0);
@@ -603,22 +610,22 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             };
             sqlCommand.Parameters.Add(sqlParameter2);
 
-            var str6 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[t]", "[side]");
+            string str6 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[t]", "[side]");
 
             var stringBuilder = new StringBuilder();
 
             stringBuilder.AppendLine("-- use a temp table to store the list of PKs that successfully got updated/inserted");
             stringBuilder.Append("declare @dms_changed TABLE (");
-            foreach (var c in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var c in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
-                var columnType = this.sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, this.tableDescription.OriginalProvider);
+                var columnType = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, tableDescription.OriginalProvider);
                 stringBuilder.Append($"{columnName} {columnType}, ");
             }
             stringBuilder.Append(" PRIMARY KEY (");
 
             var pkeyComma = " ";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{pkeyComma}{columnName}");
@@ -629,8 +636,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine();
             stringBuilder.AppendLine($"DELETE {tableName.Schema().Quoted().ToString()}");
             stringBuilder.Append($"OUTPUT ");
-            var comma = "";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            string comma = "";
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{comma}DELETED.{columnName}");
@@ -640,11 +647,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine($"FROM {tableName.Schema().Quoted().ToString()} [base]");
             stringBuilder.Append($"JOIN {trackingName.Schema().Quoted().ToString()} [side] ON ");
 
-            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[base]", "[side]"));
+            stringBuilder.AppendLine(SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[base]", "[side]"));
 
             stringBuilder.AppendLine("WHERE ([side].[timestamp] <= @sync_min_timestamp OR [side].[timestamp] IS NULL OR [side].[update_scope_id] = @sync_scope_id OR @sync_force_write = 1)");
             stringBuilder.Append("AND ");
-            stringBuilder.AppendLine(string.Concat("(", SqlManagementUtils.ColumnsAndParameters(this.tableDescription.PrimaryKeys, "[base]"), ");"));
+            stringBuilder.AppendLine(string.Concat("(", SqlManagementUtils.ColumnsAndParameters(tableDescription.PrimaryKeys, "[base]"), ");"));
             stringBuilder.AppendLine();
 
             stringBuilder.AppendLine($"SET {sqlParameter2.ParameterName} = 0;");
@@ -664,7 +671,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         }
         public DbCommand CreateDeleteCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.DeleteRow);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.DeleteRow);
             return CreateProcedureCommand(BuildDeleteCommand, commandName, connection, transaction);
         }
 
@@ -673,16 +680,16 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         //------------------------------------------------------------------
         protected virtual SqlCommand BuildDeleteMetadataCommand()
         {
-            var sqlCommand = new SqlCommand();
-            this.AddPkColumnParametersToCommand(sqlCommand);
-            var sqlParameter1 = new SqlParameter("@sync_row_timestamp", SqlDbType.BigInt);
+            SqlCommand sqlCommand = new SqlCommand();
+            AddPkColumnParametersToCommand(sqlCommand);
+            SqlParameter sqlParameter1 = new SqlParameter("@sync_row_timestamp", SqlDbType.BigInt);
             sqlCommand.Parameters.Add(sqlParameter1);
-            var sqlParameter2 = new SqlParameter("@sync_row_count", SqlDbType.Int)
+            SqlParameter sqlParameter2 = new SqlParameter("@sync_row_count", SqlDbType.Int)
             {
                 Direction = ParameterDirection.Output
             };
             sqlCommand.Parameters.Add(sqlParameter2);
-            var stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"SET {sqlParameter2.ParameterName} = 0;");
             stringBuilder.AppendLine();
             stringBuilder.AppendLine($"DELETE [side] FROM {trackingName.Schema().Quoted().ToString()} [side]");
@@ -695,7 +702,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public DbCommand CreateDeleteMetadataCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.DeleteMetadata);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.DeleteMetadata);
             return CreateProcedureCommand(BuildDeleteMetadataCommand, commandName, (SqlConnection)connection, (SqlTransaction)transaction);
         }
 
@@ -705,15 +712,15 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         protected virtual SqlCommand BuildSelectRowCommand()
         {
             var sqlCommand = new SqlCommand();
-            this.AddPkColumnParametersToCommand(sqlCommand);
+            AddPkColumnParametersToCommand(sqlCommand);
             var sqlParameter = new SqlParameter("@sync_scope_id", SqlDbType.UniqueIdentifier);
             sqlCommand.Parameters.Add(sqlParameter);
 
             var stringBuilder = new StringBuilder("SELECT ");
             stringBuilder.AppendLine();
             var stringBuilder1 = new StringBuilder();
-            var empty = string.Empty;
-            foreach (var pkColumn in this.tableDescription.GetPrimaryKeysColumns())
+            string empty = string.Empty;
+            foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 var parameterName = ParserName.Parse(pkColumn).Unquoted().Normalized().ToString();
@@ -722,7 +729,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                 stringBuilder1.Append($"{empty}[side].{columnName} = @{parameterName}");
                 empty = " AND ";
             }
-            foreach (var mutableColumn in this.tableDescription.GetMutableColumns())
+            foreach (var mutableColumn in tableDescription.GetMutableColumns())
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
                 stringBuilder.AppendLine($"\t[base].{columnName}, ");
@@ -733,8 +740,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine($"FROM {tableName.Schema().Quoted().ToString()} [base]");
             stringBuilder.AppendLine($"RIGHT JOIN {trackingName.Schema().Quoted().ToString()} [side] ON");
 
-            var str = string.Empty;
-            foreach (var pkColumn in this.tableDescription.GetPrimaryKeysColumns())
+            string str = string.Empty;
+            foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.Append($"{str}[base].{columnName} = [side].{columnName}");
@@ -748,7 +755,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public DbCommand CreateSelectRowCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectRow);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectRow);
             return CreateProcedureCommand(BuildSelectRowCommand, commandName, (SqlConnection)connection, (SqlTransaction)transaction);
         }
 
@@ -757,20 +764,20 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         //------------------------------------------------------------------
         private string CreateBulkTableTypeCommandText()
         {
-            var stringBuilder = new StringBuilder();
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkTableType);
+            StringBuilder stringBuilder = new StringBuilder();
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.BulkTableType);
 
             stringBuilder.AppendLine($"CREATE TYPE {commandName} AS TABLE (");
-            var str = "";
+            string str = "";
 
-            foreach (var c in this.tableDescription.Columns.Where(col => !col.IsReadOnly))
+            foreach (var c in tableDescription.Columns.Where(col => !col.IsReadOnly))
             {
-                var isPrimaryKey = this.tableDescription.IsPrimaryKey(c.ColumnName);
+                var isPrimaryKey = tableDescription.IsPrimaryKey(c.ColumnName);
 
                 var columnName = ParserName.Parse(c).Quoted().ToString();
                 var nullString = isPrimaryKey ? "NOT NULL" : "NULL";
 
-                var columnType = this.sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, this.tableDescription.OriginalProvider);
+                var columnType = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, tableDescription.OriginalProvider);
 
                 stringBuilder.AppendLine($"{str}{columnName} {columnType} {nullString}");
                 str = ", ";
@@ -778,7 +785,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             //stringBuilder.AppendLine(", [update_scope_id] [uniqueidentifier] NULL");
             stringBuilder.Append(string.Concat(str, "PRIMARY KEY ("));
             str = "";
-            foreach (var c in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var c in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
                 stringBuilder.Append($"{str}{columnName} ASC");
@@ -790,7 +797,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         }
         public DbCommand CreateBulkTableTypeCommand(DbConnection connection, DbTransaction transaction)
         {
-            var command = new SqlCommand(this.CreateBulkTableTypeCommandText(), (SqlConnection)connection, (SqlTransaction)transaction);
+            var command = new SqlCommand(CreateBulkTableTypeCommandText(), (SqlConnection)connection, (SqlTransaction)transaction);
             return command;
 
         }
@@ -804,9 +811,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             var sqlCommand = new SqlCommand();
             var stringBuilderArguments = new StringBuilder();
             var stringBuilderParameters = new StringBuilder();
-            var empty = string.Empty;
+            string empty = string.Empty;
 
-            this.AddColumnParametersToCommand(sqlCommand);
+            AddColumnParametersToCommand(sqlCommand);
 
             var sqlParameter1 = new SqlParameter("@sync_min_timestamp", SqlDbType.BigInt);
             sqlCommand.Parameters.Add(sqlParameter1);
@@ -825,25 +832,25 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             var stringBuilder = new StringBuilder();
 
-            var str4 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[p]", "[t]");
-            var str5 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[changes]", "[base]");
-            var str6 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[t]", "[side]");
-            var str7 = SqlManagementUtils.JoinTwoTablesOnClause(this.tableDescription.PrimaryKeys, "[p]", "[side]");
+            string str4 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[p]", "[t]");
+            string str5 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[changes]", "[base]");
+            string str6 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[t]", "[side]");
+            string str7 = SqlManagementUtils.JoinTwoTablesOnClause(tableDescription.PrimaryKeys, "[p]", "[side]");
 
             stringBuilder.AppendLine("-- use a temp table to store the list of PKs that successfully got updated/inserted");
             stringBuilder.Append("declare @dms_changed TABLE (");
-            foreach (var c in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var c in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
 
-                var columnType = this.sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, this.tableDescription.OriginalProvider);
+                var columnType = sqlDbMetadata.GetCompatibleColumnTypeDeclarationString(c, tableDescription.OriginalProvider);
 
                 stringBuilder.Append($"{columnName} {columnType}, ");
             }
             stringBuilder.Append(" PRIMARY KEY (");
 
             var pkeyComma = " ";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{pkeyComma}{columnName}");
@@ -854,7 +861,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine();
 
             // Check if we have auto inc column
-            if (this.tableDescription.HasAutoIncrementColumns)
+            if (tableDescription.HasAutoIncrementColumns)
             {
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine($"SET IDENTITY_INSERT {tableName.Schema().Quoted().ToString()} ON;");
@@ -863,7 +870,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             stringBuilder.AppendLine(";WITH [changes] AS (");
             stringBuilder.Append("\tSELECT ");
-            foreach (var c in this.tableDescription.Columns.Where(col => !col.IsReadOnly))
+            foreach (var c in tableDescription.Columns.Where(col => !col.IsReadOnly))
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
                 stringBuilder.Append($"[p].{columnName}, ");
@@ -872,8 +879,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine($"\t[side].[update_scope_id] as [sync_update_scope_id], [side].[timestamp] as [sync_timestamp], [side].[sync_row_is_tombstone] as [sync_row_is_tombstone]");
             stringBuilder.AppendLine($"\tFROM (SELECT ");
             stringBuilder.Append($"\t\t ");
-            var comma = "";
-            foreach (var c in this.tableDescription.Columns.Where(col => !col.IsReadOnly))
+            string comma = "";
+            foreach (var c in tableDescription.Columns.Where(col => !col.IsReadOnly))
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
                 var columnParameterName = ParserName.Parse(c).Unquoted().Normalized().ToString();
@@ -891,7 +898,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             if (hasMutableColumns)
             {
                 stringBuilder.AppendLine("WHEN MATCHED AND ([changes].[sync_timestamp] <= @sync_min_timestamp OR [changes].[sync_timestamp] IS NULL OR [changes].[sync_update_scope_id] = @sync_scope_id OR @sync_force_write = 1) THEN");
-                foreach (var mutableColumn in this.tableDescription.Columns.Where(c => !c.IsReadOnly))
+                foreach (var mutableColumn in tableDescription.Columns.Where(c => !c.IsReadOnly))
                 {
                     var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
                     stringBuilderArguments.Append(string.Concat(empty, columnName));
@@ -901,8 +908,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine($"\tUPDATE SET");
 
-                var strSeparator = "";
-                foreach (var mutableColumn in this.tableDescription.GetMutableColumns(false))
+                string strSeparator = "";
+                foreach (var mutableColumn in tableDescription.GetMutableColumns(false))
                 {
                     var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
                     stringBuilder.AppendLine($"\t{strSeparator}{columnName} = [changes].{columnName}");
@@ -917,7 +924,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilderParameters = new StringBuilder();
             empty = string.Empty;
 
-            foreach (var mutableColumn in this.tableDescription.Columns.Where(c => !c.IsReadOnly))
+            foreach (var mutableColumn in tableDescription.Columns.Where(c => !c.IsReadOnly))
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
 
@@ -934,7 +941,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.Append($"OUTPUT ");
 
             pkeyComma = " ";
-            foreach (var primaryKeyColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var primaryKeyColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(primaryKeyColumn).Quoted().ToString();
                 stringBuilder.Append($"{pkeyComma}INSERTED.{columnName}");
@@ -945,7 +952,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             stringBuilder.AppendLine();
 
             // Check if we have auto inc column
-            if (this.tableDescription.HasAutoIncrementColumns)
+            if (tableDescription.HasAutoIncrementColumns)
             {
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine($"SET IDENTITY_INSERT {tableName.Schema().Quoted().ToString()} ON;");
@@ -970,12 +977,12 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         }
         public DbCommand CreateUpdateCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.UpdateRow);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.UpdateRow);
 
             // Check if we have mutables columns
-            var hasMutableColumns = this.tableDescription.GetMutableColumns(false).Any();
+            var hasMutableColumns = tableDescription.GetMutableColumns(false).Any();
 
-            return this.CreateProcedureCommand(BuildUpdateCommand, commandName, hasMutableColumns, (SqlConnection)connection, (SqlTransaction)transaction);
+            return CreateProcedureCommand(BuildUpdateCommand, commandName, hasMutableColumns, (SqlConnection)connection, (SqlTransaction)transaction);
         }
 
         /// <summary>
@@ -989,11 +996,12 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                 return;
 
             foreach (var param in parameters)
+            {
                 if (param.DbType.HasValue)
                 {
                     // Get column name and type
                     var columnName = ParserName.Parse(param.Name).Unquoted().Normalized().ToString();
-                    var sqlDbType = this.sqlDbMetadata.GetOwnerDbTypeFromDbType(new SyncColumn(columnName) { DbType = (int)param.DbType });
+                    var sqlDbType = sqlDbMetadata.GetOwnerDbTypeFromDbType(new SyncColumn(columnName) { DbType = (int)param.DbType });
 
                     var customParameterFilter = new SqlParameter($"@{columnName}", sqlDbType)
                     {
@@ -1005,19 +1013,19 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                 }
                 else
                 {
-                    var tableFilter = this.tableDescription.Schema.Tables[param.TableName, param.SchemaName];
-                    if (tableFilter == null)
+                    var tableFilter = tableDescription.Schema.Tables[param.TableName, param.SchemaName];
+                    if (tableFilter is null)
                         throw new FilterParamTableNotExistsException(param.TableName);
 
                     var columnFilter = tableFilter.Columns[param.Name];
-                    if (columnFilter == null)
+                    if (columnFilter is null)
                         throw new FilterParamColumnNotExistsException(param.Name, param.TableName);
 
                     // Get column name and type
                     var columnName = ParserName.Parse(columnFilter).Unquoted().Normalized().ToString();
 
                     var sqlDbType = tableFilter.OriginalProvider == SqlSyncProvider.ProviderType ?
-                        this.sqlDbMetadata.GetSqlDbType(columnFilter) : this.sqlDbMetadata.GetOwnerDbTypeFromDbType(columnFilter);
+                        sqlDbMetadata.GetSqlDbType(columnFilter) : sqlDbMetadata.GetOwnerDbTypeFromDbType(columnFilter);
 
                     // Add it as parameter
                     var sqlParamFilter = new SqlParameter($"@{columnName}", sqlDbType)
@@ -1028,6 +1036,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                     };
                     sqlCommand.Parameters.Add(sqlParamFilter);
                 }
+
+            }
         }
 
         /// <summary>
@@ -1106,12 +1116,12 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
             foreach (var whereFilter in sideWhereFilters)
             {
-                var tableFilter = this.tableDescription.Schema.Tables[whereFilter.TableName, whereFilter.SchemaName];
-                if (tableFilter == null)
+                var tableFilter = tableDescription.Schema.Tables[whereFilter.TableName, whereFilter.SchemaName];
+                if (tableFilter is null)
                     throw new FilterParamTableNotExistsException(whereFilter.TableName);
 
                 var columnFilter = tableFilter.Columns[whereFilter.ColumnName];
-                if (columnFilter == null)
+                if (columnFilter is null)
                     throw new FilterParamColumnNotExistsException(whereFilter.ColumnName, whereFilter.TableName);
 
                 var tableName = ParserName.Parse(tableFilter).Unquoted().ToString();
@@ -1125,7 +1135,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
                 var param = filter.Parameters[parameterName];
 
-                if (param == null)
+                if (param is null)
                     throw new FilterParamColumnNotExistsException(columnName, whereFilter.TableName);
 
                 stringBuilder.Append($"{and2}({tableName}.{columnName} = @{parameterName}");
@@ -1193,7 +1203,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             sqlCommand.Parameters.Add(pScopeId);
 
             // Add filter parameters
-            if (filter != null)
+            if (filter is not null)
                 CreateFilterParameters(sqlCommand, filter);
 
             var stringBuilder = new StringBuilder("SELECT DISTINCT");
@@ -1201,12 +1211,12 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             // ----------------------------------
             // Add all columns
             // ----------------------------------
-            foreach (var pkColumn in this.tableDescription.GetPrimaryKeysColumns())
+            foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.AppendLine($"\t[side].{columnName}, ");
             }
-            foreach (var mutableColumn in this.tableDescription.GetMutableColumns())
+            foreach (var mutableColumn in tableDescription.GetMutableColumns())
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
                 stringBuilder.AppendLine($"\t[base].{columnName}, ");
@@ -1222,8 +1232,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             // ----------------------------------
             stringBuilder.Append($"RIGHT JOIN {trackingName.Schema().Quoted().ToString()} [side] ON ");
 
-            var empty = "";
-            foreach (var pkColumn in this.tableDescription.GetPrimaryKeysColumns())
+            string empty = "";
+            foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.Append($"{empty}[base].{columnName} = [side].{columnName}");
@@ -1233,7 +1243,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             // ----------------------------------
             // Custom Joins
             // ----------------------------------
-            if (filter != null)
+            if (filter is not null)
                 stringBuilder.Append(CreateFilterCustomJoins(filter));
 
             stringBuilder.AppendLine();
@@ -1242,7 +1252,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             // ----------------------------------
             // Where filters and Custom Where string
             // ----------------------------------
-            if (filter != null)
+            if (filter is not null)
             {
                 var createFilterWhereSide = CreateFilterWhereSide(filter, true);
                 stringBuilder.Append(createFilterWhereSide);
@@ -1269,38 +1279,141 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
         }
         public DbCommand CreateSelectIncrementalChangesCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectChanges);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectChanges);
             SqlCommand cmdWithoutFilter() => BuildSelectIncrementalChangesCommand(null);
-            return this.CreateProcedureCommand(cmdWithoutFilter, commandName, connection, transaction);
+            return CreateProcedureCommand(cmdWithoutFilter, commandName, connection, transaction);
         }
         public DbCommand CreateSelectIncrementalChangesWithFilterCommand(SyncFilter filter, DbConnection connection, DbTransaction transaction)
         {
-            if (filter == null)
+            if (filter is null)
                 return null;
 
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectChangesWithFilters, filter);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectChangesWithFilters, filter);
             SqlCommand cmdWithFilter() => BuildSelectIncrementalChangesCommand(filter);
-            return this.CreateProcedureCommand(cmdWithFilter, commandName, connection, transaction);
+            return CreateProcedureCommand(cmdWithFilter, commandName, connection, transaction);
         }
 
         //------------------------------------------------------------------
         // Select initialized changes command
         //------------------------------------------------------------------
+
+        //protected virtual SqlCommand BuildSelectInitializedChangesCommand(DbConnection connection, DbTransaction transaction, SyncFilter filter = null)
+        //{
+
+        //    var sqlCommand = new SqlCommand();
+
+        //    var pTimestamp = new SqlParameter("@sync_min_timestamp", SqlDbType.BigInt) { Value = "NULL", IsNullable = true };
+        //    sqlCommand.Parameters.Add(pTimestamp);
+
+        //    var pIndex = new SqlParameter("@sync_index", SqlDbType.BigInt) { Value = 0, IsNullable = false };
+        //    sqlCommand.Parameters.Add(pIndex);
+
+        //    var pBatch = new SqlParameter("@sync_batch_size", SqlDbType.BigInt) { Value = 1, IsNullable = false };
+        //    sqlCommand.Parameters.Add(pBatch);
+
+
+        //    // Add filter parameters
+        //    if (filter is not null)
+        //        CreateFilterParameters(sqlCommand, filter);
+
+        //    var stringBuilder = new StringBuilder("SELECT DISTINCT");
+        //    var columns = tableDescription.GetMutableColumns(false, true).ToList();
+        //    for (var i = 0; i < columns.Count; i++)
+        //    {
+        //        var mutableColumn = columns[i];
+        //        var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
+        //        stringBuilder.Append($"\t[base].{columnName}");
+
+        //        if (i < columns.Count - 1)
+        //            stringBuilder.AppendLine(", ");
+        //    }
+        //    stringBuilder.AppendLine();
+        //    stringBuilder.AppendLine($"FROM {tableName.Schema().Quoted().ToString()} [base]");
+
+        //    // ----------------------------------
+        //    // Make Left Join
+        //    // ----------------------------------
+        //    stringBuilder.Append($"LEFT JOIN {trackingName.Schema().Quoted().ToString()} [side] ON ");
+
+        //    string empty = "";
+        //    foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
+        //    {
+        //        var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
+        //        stringBuilder.Append($"{empty}[base].{columnName} = [side].{columnName}");
+        //        empty = " AND ";
+        //    }
+
+        //    // ----------------------------------
+        //    // Custom Joins
+        //    // ----------------------------------
+        //    if (filter is not null)
+        //        stringBuilder.Append(CreateFilterCustomJoins(filter));
+
+        //    stringBuilder.AppendLine();
+        //    stringBuilder.AppendLine("WHERE (");
+
+        //    // ----------------------------------
+        //    // Where filters and Custom Where string
+        //    // ----------------------------------
+        //    if (filter is not null)
+        //    {
+        //        var createFilterWhereSide = CreateFilterWhereSide(filter);
+        //        stringBuilder.Append(createFilterWhereSide);
+
+        //        if (!string.IsNullOrEmpty(createFilterWhereSide))
+        //            stringBuilder.AppendLine($"AND ");
+
+        //        var createFilterCustomWheres = CreateFilterCustomWheres(filter);
+        //        stringBuilder.Append(createFilterCustomWheres);
+
+        //        if (!string.IsNullOrEmpty(createFilterCustomWheres))
+        //            stringBuilder.AppendLine($"AND ");
+        //    }
+        //    // ----------------------------------
+
+
+        //    stringBuilder.AppendLine("\t([side].[timestamp] > @sync_min_timestamp OR  @sync_min_timestamp IS NULL)");
+        //    stringBuilder.AppendLine(")");
+
+        //    stringBuilder.Append("ORDER BY ");
+        //    empty = "";
+        //    foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
+        //    {
+        //        var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
+        //        stringBuilder.Append($"{empty}[base].{columnName}");
+        //        empty = ", ";
+        //    }
+        //    stringBuilder.AppendLine("");
+        //    stringBuilder.AppendLine("OFFSET @sync_index ROWS FETCH NEXT @sync_batch_size ROWS ONLY");
+
+        //    sqlCommand.CommandText = stringBuilder.ToString();
+
+        //    return sqlCommand;
+        //}
+
         protected virtual SqlCommand BuildSelectInitializedChangesCommand(DbConnection connection, DbTransaction transaction, SyncFilter filter = null)
         {
-
-            var sqlCommand = new SqlCommand();
+            var sqlCommand = new SqlCommand
+            {
+                CommandTimeout = 0
+            };
 
             var pTimestamp = new SqlParameter("@sync_min_timestamp", SqlDbType.BigInt) { Value = "NULL", IsNullable = true };
             sqlCommand.Parameters.Add(pTimestamp);
 
-
             // Add filter parameters
-            if (filter != null)
-                this.CreateFilterParameters(sqlCommand, filter);
+            if (filter is not null)
+                CreateFilterParameters(sqlCommand, filter);
 
-            var stringBuilder = new StringBuilder("SELECT DISTINCT");
-            var columns = this.tableDescription.GetMutableColumns(false, true).ToList();
+            var stringBuilder = new StringBuilder();
+
+            // if we have a filter we may have joins that will duplicate lines
+            if (filter is not null)
+                stringBuilder.AppendLine("SELECT DISTINCT");
+            else
+                stringBuilder.AppendLine("SELECT");
+
+            var columns = tableDescription.GetMutableColumns(false, true).ToList();
             for (var i = 0; i < columns.Count; i++)
             {
                 var mutableColumn = columns[i];
@@ -1318,8 +1431,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             // ----------------------------------
             stringBuilder.Append($"LEFT JOIN {trackingName.Schema().Quoted().ToString()} [side] ON ");
 
-            var empty = "";
-            foreach (var pkColumn in this.tableDescription.GetPrimaryKeysColumns())
+            string empty = "";
+            foreach (var pkColumn in tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.Append($"{empty}[base].{columnName} = [side].{columnName}");
@@ -1329,7 +1442,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             // ----------------------------------
             // Custom Joins
             // ----------------------------------
-            if (filter != null)
+            if (filter is not null)
                 stringBuilder.Append(CreateFilterCustomJoins(filter));
 
             stringBuilder.AppendLine();
@@ -1338,7 +1451,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             // ----------------------------------
             // Where filters and Custom Where string
             // ----------------------------------
-            if (filter != null)
+            if (filter is not null)
             {
                 var createFilterWhereSide = CreateFilterWhereSide(filter);
                 stringBuilder.Append(createFilterWhereSide);
@@ -1365,19 +1478,19 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
 
         public DbCommand CreateSelectInitializedChangesCommand(DbConnection connection, DbTransaction transaction)
         {
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectInitializedChanges);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectInitializedChanges);
             SqlCommand cmdWithoutFilter() => BuildSelectInitializedChangesCommand(connection, transaction, null);
-            return this.CreateProcedureCommand(cmdWithoutFilter, commandName, connection, transaction);
+            return CreateProcedureCommand(cmdWithoutFilter, commandName, connection, transaction);
         }
 
         public DbCommand CreateSelectInitializedChangesWithFilterCommand(SyncFilter filter, DbConnection connection, DbTransaction transaction)
         {
-            if (filter == null)
+            if (filter is null)
                 return null;
 
-            var commandName = this.sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectInitializedChangesWithFilters, filter);
+            var commandName = sqlObjectNames.GetStoredProcedureCommandName(DbStoredProcedureType.SelectInitializedChangesWithFilters, filter);
             SqlCommand cmdWithFilter() => BuildSelectInitializedChangesCommand(connection, transaction, filter);
-            return this.CreateProcedureCommand(cmdWithFilter, commandName, connection, transaction);
+            return CreateProcedureCommand(cmdWithFilter, commandName, connection, transaction);
 
         }
     }

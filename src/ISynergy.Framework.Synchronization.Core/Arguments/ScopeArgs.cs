@@ -18,12 +18,13 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeTableDroppedArgs(SyncContext context, string scopeName, DbScopeType scopeType, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.ScopeType = scopeType;
-            this.ScopeName = scopeName;
+            ScopeType = scopeType;
+            ScopeName = scopeName;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"Scope Table [{ScopeType}] Dropped.";
+        public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Dropped.";
 
         public override int EventId => SyncEventsId.ScopeTableDropped.Id;
     }
@@ -33,14 +34,16 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeTableCreatedArgs(SyncContext context, string scopeName, DbScopeType scopeType, DbConnection connection = null, DbTransaction transaction = null) 
             : base(context, connection, transaction)
         {
-            this.ScopeType = scopeType;
-            this.ScopeName = scopeName;
+            ScopeType = scopeType;
+            ScopeName = scopeName;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public DbScopeType ScopeType { get; }
         public string ScopeName { get; }
         public override int EventId => SyncEventsId.ScopeTableCreated.Id;
         public override string Source => Connection.Database;
-        public override string Message => $"Scope Table [{ScopeType}] Created.";
+        public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Created.";
     }
 
     public class ScopeTableDroppingArgs : ProgressArgs
@@ -53,12 +56,14 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeTableDroppingArgs(SyncContext context, string scopeName, DbScopeType scopeType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context,  connection, transaction)
         {
-            this.Command = command;
-            this.ScopeType = scopeType;
-            this.ScopeName = scopeName;
+            Command = command;
+            ScopeType = scopeType;
+            ScopeName = scopeName;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"Scope Table [{ScopeType}] Dropping.";
+        public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Dropping.";
         public override int EventId => SyncEventsId.ScopeTableDropping.Id;
 
     }
@@ -72,12 +77,14 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeTableCreatingArgs(SyncContext context, string scopeName, DbScopeType scopeType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null) 
             : base(context, connection, transaction)
         {
-            this.Command = command;
-            this.ScopeType = scopeType;
-            this.ScopeName = scopeName;
+            Command = command;
+            ScopeType = scopeType;
+            ScopeName = scopeName;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"Scope Table [{ScopeType}] Creating.";
+        public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Creating.";
         public override int EventId => SyncEventsId.ScopeTableCreating.Id;
     }
 
@@ -88,17 +95,21 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeLoadedArgs(SyncContext context, string scopeName, DbScopeType scopeType, T scopeInfo, DbConnection connection = null, DbTransaction transaction = null) 
             : base(context, connection, transaction)
         {
-            this.ScopeInfo = scopeInfo;
+            ScopeType = scopeType;
+            ScopeName = scopeName;
+            ScopeInfo = scopeInfo;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
 
         public override string Message {
             get
             {
-                return this.ScopeInfo switch
+                return ScopeInfo switch
                 {
-                    ServerScopeInfo ssi => $"[{ssi?.Name}] [Version {ssi.Version}] Last cleanup Timestamp:{ssi?.LastCleanupTimestamp}.",
-                    ScopeInfo si => $"[{si?.Name}] [Version {si.Version}] Last sync:{si?.LastSync} Last sync duration:{si?.LastSyncDurationString}.",
+                    ServerScopeInfo ssi => $"[{Connection.Database}] [{ssi?.Name}] [Version {ssi.Version}] Last cleanup Timestamp:{ssi?.LastCleanupTimestamp}.",
+                    ScopeInfo si => $"[{Connection.Database}] [{si?.Name}] [Version {si.Version}] Last sync:{si?.LastSync} Last sync duration:{si?.LastSyncDurationString}.",
                     _ => base.Message
                 };
             }
@@ -116,13 +127,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeLoadingArgs(SyncContext context, string scopeName, DbScopeType scopeType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null) 
             : base(context, connection, transaction)
         {
-            this.Command = command;
-            this.ScopeType = scopeType;
-            this.ScopeName = scopeName;
+            Command = command;
+            ScopeType = scopeType;
+            ScopeName = scopeName;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => SyncEventsId.ScopeLoading.Id;
         public override string Source => Connection.Database;
-        public override string Message => $"Scope Table [{ScopeType}] Loading.";
+        public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Loading.";
     }
 
     public class ScopeSavingArgs : ProgressArgs
@@ -135,13 +148,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeSavingArgs(SyncContext context, string scopeName, DbScopeType scopeType, object scopeInfo, DbCommand command, DbConnection connection = null, DbTransaction transaction = null) 
             : base(context, connection, transaction)
         {
-            this.Command = command;
-            this.ScopeType = scopeType;
-            this.ScopeName = scopeName;
-            this.ScopeInfo = scopeInfo;
+            Command = command;
+            ScopeType = scopeType;
+            ScopeName = scopeName;
+            ScopeInfo = scopeInfo;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
-        public override string Message => $"Scope Table [{ScopeType}] Saving.";
+        public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Saving.";
 
         public object ScopeInfo { get; }
         public override int EventId => SyncEventsId.ScopeSaving.Id;
@@ -154,13 +169,14 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeSavedArgs(SyncContext context, string scopeName, DbScopeType scopeType, object scopeInfo, DbConnection connection = null, DbTransaction transaction = null) 
             : base(context, connection, transaction)
         {
-            this.ScopeType = scopeType;
-            this.ScopeInfo = scopeInfo;
-            this.ScopeName = scopeName;
-            this.ScopeInfo = scopeInfo;
+            ScopeType = scopeType;
+            ScopeInfo = scopeInfo;
+            ScopeName = scopeName;
         }
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
-        public override string Message => $"Scope Table [{ScopeType}] Saved.";
+        public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Saved.";
 
         public object ScopeInfo { get; }
         public override int EventId => SyncEventsId.ScopeSaved.Id;
