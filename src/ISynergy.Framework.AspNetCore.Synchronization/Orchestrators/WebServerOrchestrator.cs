@@ -613,6 +613,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             if (sessionCache.ClientBatchInfo is null)
             {
                 sessionCache.ClientBatchInfo = new BatchInfo(schema, Options.BatchDirectory);
+                sessionCache.ClientBatchInfo.TryRemoveDirectory();
                 sessionCache.ClientBatchInfo.CreateDirectory();
             }
 
@@ -687,7 +688,10 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
                 cleanFolder = await InternalCanCleanFolderAsync(ctx, sessionCache.ClientBatchInfo, default).ConfigureAwait(false);
 
             if (cleanFolder)
-                sessionCache.ClientBatchInfo.TryRemoveDirectory();
+                sessionCache.ClientBatchInfo.Clear(true);
+
+            // we do not need client batch info now
+            sessionCache.ClientBatchInfo = null;
 
             // Retro compatiblité to version < 0.9.3
             if (serverBatchInfo.BatchPartsInfo is null)

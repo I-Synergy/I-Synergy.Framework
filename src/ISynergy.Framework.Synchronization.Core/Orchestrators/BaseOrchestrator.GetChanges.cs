@@ -61,7 +61,7 @@ namespace ISynergy.Framework.Synchronization.Core
             // Create a batch 
             // batchinfo generate a schema clone with scope columns if needed
             batchInfo = new BatchInfo(message.Schema, message.BatchDirectory);
-
+            batchInfo.TryRemoveDirectory();
             batchInfo.CreateDirectory();
 
             var cptSyncTable = 0;

@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Serialization;
 using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
 
 namespace ISynergy.Framework.Synchronization.Core
@@ -33,11 +34,17 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public string SnapshotsDirectory { get; set; }
 
+        private int batchSize;
+
         /// <summary>
         /// Gets or Sets the size used (approximatively in kb, depending on the serializer) for each batch file, in batch mode. 
-        /// Default is 1000 
+        /// Min value is 100 
         /// </summary>
-        public int BatchSize { get; set; }
+        public int BatchSize
+        {
+            get => batchSize;
+            set => batchSize = Math.Max(value, 100);
+        }
 
         /// <summary>
         /// Gets or Sets the log level for sync operations. Default value is false.

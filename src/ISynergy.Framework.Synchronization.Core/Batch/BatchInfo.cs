@@ -94,11 +94,8 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// </summary>
         public void CreateDirectory()
         {
-            if (Directory.Exists(GetDirectoryFullPath()))
-                Directory.Delete(GetDirectoryFullPath(), true);
-
-            Directory.CreateDirectory(GetDirectoryFullPath());
-
+            if (!Directory.Exists(GetDirectoryFullPath()))
+                Directory.CreateDirectory(GetDirectoryFullPath());
         }
 
         /// <summary>

@@ -77,6 +77,9 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
         public IEnumerable<SyncRow> ReadRowsFromFile(string path, SyncTable shemaTable)
         {
+            if (!File.Exists(path))
+                yield break;
+
             JsonSerializer serializer = new JsonSerializer();
             using var reader = new JsonTextReader(new StreamReader(path));
             while (reader.Read())

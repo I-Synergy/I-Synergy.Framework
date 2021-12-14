@@ -1719,7 +1719,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // configure server orchestrator
             this.WebServerOrchestrator.Setup.Tables.AddRange(Tables);
 
-            var options = new SyncOptions { BatchSize = 10 };
+            var options = new SyncOptions { BatchSize = 100 };
 
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
@@ -1783,8 +1783,8 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
                 Assert.AreEqual(0, s.TotalResolvedConflicts);
 
                 // We have one batch that has been sent 2 times; it will be merged correctly on server
-                Assert.IsTrue(s.ChangesAppliedOnServer.TotalAppliedChanges >= 1001);
-                Assert.IsTrue(s.ChangesAppliedOnServer.TotalAppliedChanges <= 1050);
+                Assert.IsTrue(s.ChangesAppliedOnServer.TotalAppliedChanges >= 1000);
+                Assert.IsTrue(s.ChangesAppliedOnServer.TotalAppliedChanges <= 2000);
                 Assert.AreEqual(1000, s.ClientChangesSelected.TotalChangesSelected);
 
                 download += 1000;
