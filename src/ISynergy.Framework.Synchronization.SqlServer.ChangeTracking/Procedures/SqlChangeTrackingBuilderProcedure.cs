@@ -182,7 +182,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 stringBuilder.AppendLine();
             }
 
-            stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
+            if (setupHasTableWithColumns)
+            {
+                stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
+            }
+
             stringBuilder.AppendLine("DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(";WITH ");
@@ -492,7 +496,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 stringBuilder.AppendLine();
             }
 
-            stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
+            if (setupHasTableWithColumns)
+            {
+                stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
+            }
+
             stringBuilder.AppendLine("DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
             stringBuilder.AppendLine();
 
@@ -736,10 +744,16 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 CreateFilterParameters(sqlCommand, filter);
 
             var stringBuilder = new StringBuilder("");
-            stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
-            stringBuilder.AppendLine("DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine("WITH ");
+
+            if (setupHasTableWithColumns)
+            {
+                stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
+                //stringBuilder.AppendLine("DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
+                stringBuilder.AppendLine();
+            }
+
+            stringBuilder.AppendLine(";WITH ");
+
             stringBuilder.AppendLine($"  {_trackingName.Quoted().ToString()} AS (");
             stringBuilder.Append("\tSELECT ");
             foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
