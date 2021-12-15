@@ -89,6 +89,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public bool HasColumns => Tables?.SelectMany(t => t.Columns).Count() > 0;  // using SelectMany to get columns and not Collection<Column>
 
+        /// <summary>
+        /// Check if Setup has a table that has columns
+        /// </summary>
+        public bool HasTableWithColumns(string tableName) => Tables[tableName]?.Columns?.Count > 0;
 
         /// <summary>
         /// Check if two setups have the same local options

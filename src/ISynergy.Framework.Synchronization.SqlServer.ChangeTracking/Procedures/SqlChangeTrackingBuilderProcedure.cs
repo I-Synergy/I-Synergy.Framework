@@ -133,7 +133,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             var sqlCommand = new SqlCommand();
             var stringBuilderArguments = new StringBuilder();
             var stringBuilderParameters = new StringBuilder();
-            string empty = string.Empty;
+            var setupHasTableWithColumns = _setup.HasTableWithColumns(_tableDescription.TableName);
 
             var sqlParameter = new SqlParameter("@sync_min_timestamp", SqlDbType.BigInt);
             sqlCommand.Parameters.Add(sqlParameter);
@@ -182,35 +182,74 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 stringBuilder.AppendLine();
             }
 
-
-            stringBuilder.AppendLine($"DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
+            stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
+            stringBuilder.AppendLine("DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($";WITH ");
-            stringBuilder.AppendLine($"  CHANGE_TRACKING_CONTEXT(@var_sync_scope_id),");
+            stringBuilder.AppendLine(";WITH ");
+            stringBuilder.AppendLine("  CHANGE_TRACKING_CONTEXT(@var_sync_scope_id),");
             stringBuilder.AppendLine($"  {_trackingName.Quoted().ToString()} AS (");
-            stringBuilder.Append($"\tSELECT ");
+            stringBuilder.Append("\tSELECT ");
             foreach (var c in _tableDescription.Columns.Where(col => !col.IsReadOnly))
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
                 stringBuilder.Append($"[p].{columnName}, ");
             }
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"\tCAST([CT].[SYS_CHANGE_CONTEXT] as uniqueidentifier) AS [sync_update_scope_id], ");
-            stringBuilder.AppendLine($"\t[CT].[SYS_CHANGE_VERSION] as [sync_timestamp],");
-            stringBuilder.AppendLine($"\tCASE WHEN [CT].[SYS_CHANGE_OPERATION] = 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
-            stringBuilder.AppendLine($"\tFROM @changeTable AS [p] ");
+            stringBuilder.AppendLine("\tCAST([CT].[SYS_CHANGE_CONTEXT] AS uniqueidentifier) AS [sync_update_scope_id],");
+            stringBuilder.AppendLine("\t[CT].[SYS_CHANGE_VERSION] AS [sync_timestamp],");
+            stringBuilder.Append("\t[CT].[SYS_CHANGE_OPERATION] AS [sync_change_operation]");
+            if (setupHasTableWithColumns)
+            {
+                stringBuilder.AppendLine(",\n\t-- select the next changed columns when the change operation was an insert");
+                stringBuilder.AppendLine("\t(CASE WHEN [SYS_CHANGE_OPERATION] = 'I' THEN (");
+                stringBuilder.AppendLine("\t\tSELECT [N].[SYS_CHANGE_COLUMNS]");
+                stringBuilder.AppendLine($"\t\tFROM CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @next_sync_min_timestamp) AS [N]");
+                stringBuilder.Append("\t\tWHERE ");
+                string and = string.Empty;
+                foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
+                {
+                    var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
+                    stringBuilder.AppendLine($"{and}[N].{columnName} = [CT].{columnName}");
+                    and = "\t\t\tAND ";
+                }
+                stringBuilder.Append("\t) ELSE [SYS_CHANGE_COLUMNS] END) AS [sync_change_columns]");
+            }
+
+            stringBuilder.AppendLine("\n\tFROM @changeTable AS [p]");
             stringBuilder.AppendLine($"\tLEFT JOIN CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @sync_min_timestamp) AS [CT] ON {str4}");
-            stringBuilder.AppendLine($"\t)");
+            stringBuilder.AppendLine("\t)");
             stringBuilder.AppendLine($"MERGE {_tableName.Schema().Quoted().ToString()} AS [base]");
             stringBuilder.AppendLine($"USING {_trackingName.Quoted().ToString()} as [changes] ON {str5}");
 
             if (hasMutableColumns)
             {
-                stringBuilder.AppendLine("WHEN MATCHED AND ([changes].[sync_timestamp] <= @sync_min_timestamp OR [changes].[sync_timestamp] IS NULL OR [changes].[sync_update_scope_id] = @sync_scope_id) THEN");
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine($"\tUPDATE SET");
+                stringBuilder.AppendLine("WHEN MATCHED AND (");
+                stringBuilder.AppendLine("\t[changes].[sync_timestamp] <= @sync_min_timestamp");
+                stringBuilder.AppendLine("\tOR [changes].[sync_timestamp] IS NULL");
+                stringBuilder.AppendLine("\tOR [changes].[sync_update_scope_id] = @sync_scope_id");
+                if (setupHasTableWithColumns)
+                {
+                    stringBuilder.AppendLine("\tOR (([changes].[sync_change_operation] = 'I' AND [changes].[sync_change_columns] IS NULL)");
+                    stringBuilder.AppendLine("\t\tOR (");
+                    string and = string.Empty;
+                    foreach (var column in _tableDescription.GetMutableColumns())
+                    {
+                        var unquotedColumnName = ParserName.Parse(column).Unquoted().ToString();
+                        stringBuilder.Append("\t\t\t");
+                        stringBuilder.Append(and);
+                        stringBuilder.Append("CHANGE_TRACKING_IS_COLUMN_IN_MASK(");
+                        stringBuilder.Append($"COLUMNPROPERTY(OBJECT_ID('{_tableName.Schema().Quoted().ToString()}'), '{unquotedColumnName}', 'ColumnId')");
+                        stringBuilder.AppendLine(", [changes].[sync_change_columns]) = 0");
+                        and = " AND ";
+                    }
+                    stringBuilder.AppendLine("\t\t)");
+                    stringBuilder.AppendLine("\t)");
+                }
 
-                string strSeparator = "";
+                stringBuilder.AppendLine(") THEN");
+                stringBuilder.AppendLine("\tUPDATE SET");
+
+                string strSeparator = string.Empty;
                 foreach (var mutableColumn in _tableDescription.GetMutableColumns(false))
                 {
                     var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
@@ -221,10 +260,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
 
             stringBuilder.AppendLine("WHEN NOT MATCHED BY TARGET AND ([changes].[sync_timestamp] <= @sync_min_timestamp OR [changes].[sync_timestamp] IS NULL) THEN");
 
-
             stringBuilderArguments = new StringBuilder();
             stringBuilderParameters = new StringBuilder();
-            empty = string.Empty;
+            string empty = string.Empty;
 
             foreach (var mutableColumn in _tableDescription.Columns.Where(c => !c.IsReadOnly))
             {
@@ -235,11 +273,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 empty = ", ";
             }
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"\tINSERT");
+            stringBuilder.AppendLine("\tINSERT");
             stringBuilder.AppendLine($"\t({stringBuilderArguments.ToString()})");
             stringBuilder.AppendLine($"\tVALUES ({stringBuilderParameters.ToString()})");
             stringBuilder.AppendLine();
-            stringBuilder.Append($"OUTPUT ");
+            stringBuilder.Append("OUTPUT ");
             pkeyComma = " ";
             foreach (var primaryKeyColumn in _tableDescription.GetPrimaryKeysColumns())
             {
@@ -249,7 +287,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             }
 
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"\tINTO @dms_changed; -- populates the temp table with successful PKs");
+            stringBuilder.AppendLine("\tINTO @dms_changed; -- populates the temp table with successful PKs");
             stringBuilder.AppendLine();
 
             // Check if we have auto inc column
@@ -266,14 +304,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             return sqlCommand;
         }
 
-
         //------------------------------------------------------------------
         // Delete command
         //------------------------------------------------------------------
         protected override SqlCommand BuildDeleteCommand()
         {
             var sqlCommand = new SqlCommand();
-            AddPkColumnParametersToCommand(sqlCommand);
+            this.AddPkColumnParametersToCommand(sqlCommand);
             var sqlParameter = new SqlParameter("@sync_force_write", SqlDbType.Int);
             sqlCommand.Parameters.Add(sqlParameter);
             var sqlParameter1 = new SqlParameter("@sync_min_timestamp", SqlDbType.BigInt);
@@ -289,19 +326,15 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             sqlCommand.Parameters.Add(sqlParameter2);
 
             string str4 = SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[CT]", "[p]");
-            string str5 = SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[changes]", "[base]");
-            string str6 = SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[t]", "[side]");
-            string str7 = SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[p]", "[side]");
-
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"SET {sqlParameter2.ParameterName} = 0;");
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
+            stringBuilder.AppendLine("DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
             stringBuilder.AppendLine();
 
-            stringBuilder.AppendLine($";WITH ");
-            stringBuilder.AppendLine($"  CHANGE_TRACKING_CONTEXT(@var_sync_scope_id),");
+            stringBuilder.AppendLine(";WITH ");
+            stringBuilder.AppendLine("  CHANGE_TRACKING_CONTEXT(@var_sync_scope_id),");
             stringBuilder.AppendLine($"  {_trackingName.Quoted().ToString()} AS (");
             stringBuilder.Append("\tSELECT ");
             foreach (var c in _tableDescription.GetPrimaryKeysColumns())
@@ -310,11 +343,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 stringBuilder.Append($"[p].{columnName}, ");
             }
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"\tCAST([CT].[SYS_CHANGE_CONTEXT] as uniqueidentifier) AS [sync_update_scope_id], ");
-            stringBuilder.AppendLine($"\t[CT].[SYS_CHANGE_VERSION] as [sync_timestamp],");
-            stringBuilder.AppendLine($"\tCASE WHEN [CT].[SYS_CHANGE_OPERATION] = 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
-            stringBuilder.Append($"\tFROM (SELECT ");
-            string comma = "";
+            stringBuilder.AppendLine("\tCAST([CT].[SYS_CHANGE_CONTEXT] as uniqueidentifier) AS [sync_update_scope_id],");
+            stringBuilder.AppendLine("\t[CT].[SYS_CHANGE_VERSION] as [sync_timestamp],");
+            stringBuilder.AppendLine("\tCASE WHEN [CT].[SYS_CHANGE_OPERATION] = 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
+            stringBuilder.Append("\tFROM (SELECT ");
+            string comma = string.Empty;
             foreach (var c in _tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
@@ -323,9 +356,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 stringBuilder.Append($"{comma}@{columnParameterName} as {columnName}");
                 comma = ", ";
             }
-            stringBuilder.AppendLine($") AS [p]");
+            stringBuilder.AppendLine(") AS [p]");
             stringBuilder.Append($"\tLEFT JOIN CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @sync_min_timestamp) AS [CT] ON {str4}");
-            stringBuilder.AppendLine($"\t)");
+            stringBuilder.AppendLine("\t)");
             stringBuilder.AppendLine($"DELETE {_tableName.Schema().Quoted().ToString()}");
             stringBuilder.AppendLine($"FROM {_tableName.Schema().Quoted().ToString()} [base]");
             stringBuilder.Append($"JOIN {_trackingName.Quoted().ToString()} [side] ON ");
@@ -347,7 +380,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
         protected override SqlCommand BuildSelectRowCommand()
         {
             var sqlCommand = new SqlCommand();
-            AddPkColumnParametersToCommand(sqlCommand);
+            this.AddPkColumnParametersToCommand(sqlCommand);
             var sqlParameter = new SqlParameter("@sync_scope_id", SqlDbType.UniqueIdentifier);
             sqlCommand.Parameters.Add(sqlParameter);
 
@@ -386,34 +419,32 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             var stringBuilder = new StringBuilder();
 
             stringBuilder.AppendLine($"IF (SELECT TOP 1 1 FROM CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, 0) AS [side] WHERE ({stringBuilder1.ToString()})) > 0");
-            stringBuilder.AppendLine($"BEGIN");
-            stringBuilder.AppendLine($"\tSELECT");
+            stringBuilder.AppendLine("BEGIN");
+            stringBuilder.AppendLine("\tSELECT");
             // add side pkeys
             stringBuilder.Append(stringBuilder2.ToString());
             // add columns
             stringBuilder.Append(stringBuilderColumns.ToString());
-            stringBuilder.AppendLine($"\tCAST([side].SYS_CHANGE_CONTEXT as uniqueidentifier) AS [sync_update_scope_id],");
-            stringBuilder.AppendLine($"\tCASE [side].SYS_CHANGE_OPERATION WHEN 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
+            stringBuilder.AppendLine("\tCAST([side].SYS_CHANGE_CONTEXT as uniqueidentifier) AS [sync_update_scope_id],");
+            stringBuilder.AppendLine("\tCASE [side].SYS_CHANGE_OPERATION WHEN 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
             stringBuilder.AppendLine($"\tFROM CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, 0) AS [side]");
             stringBuilder.AppendLine($"\tLEFT JOIN {_tableName.Schema().Quoted().ToString()} [base] ON");
             stringBuilder.AppendLine($"\t\t{stringBuilder4.ToString()}");
             stringBuilder.AppendLine($"\tWHERE {stringBuilder1.ToString()}");
-            stringBuilder.AppendLine($"END");
-            stringBuilder.AppendLine($"ELSE");
-            stringBuilder.AppendLine($"BEGIN");
-            stringBuilder.AppendLine($"\tSELECT");
+            stringBuilder.AppendLine("END");
+            stringBuilder.AppendLine("ELSE");
+            stringBuilder.AppendLine("BEGIN");
+            stringBuilder.AppendLine("\tSELECT");
             // add base pkeys
             stringBuilder.Append(stringBuilder22.ToString());
             // add base columns
             stringBuilder.Append(stringBuilderColumns.ToString());
-            stringBuilder.AppendLine($"\tnull as sync_update_scope_id, ");
-            stringBuilder.AppendLine($"\t0 as sync_row_is_tombstone ");
+            stringBuilder.AppendLine("\tnull as sync_update_scope_id, ");
+            stringBuilder.AppendLine("\t0 as sync_row_is_tombstone ");
             stringBuilder.AppendLine($"\tFROM {_tableName.Schema().Quoted().ToString()} as [base] ");
             stringBuilder.Append(string.Concat("\tWHERE ", stringBuilder11.ToString()));
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"END");
-
-
+            stringBuilder.AppendLine("END");
 
             sqlCommand.CommandText = stringBuilder.ToString();
             return sqlCommand;
@@ -427,8 +458,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             var sqlCommand = new SqlCommand();
             var stringBuilderArguments = new StringBuilder();
             var stringBuilderParameters = new StringBuilder();
+            var setupHasTableWithColumns = _setup.HasTableWithColumns(_tableDescription.TableName);
 
-            AddColumnParametersToCommand(sqlCommand);
+            this.AddColumnParametersToCommand(sqlCommand);
 
             string str4 = SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[CT]", "[p]");
             string str5 = SqlManagementUtils.JoinTwoTablesOnClause(_tableDescription.PrimaryKeys, "[changes]", "[base]");
@@ -459,14 +491,16 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 stringBuilder.AppendLine($"SET IDENTITY_INSERT {_tableName.Schema().Quoted().ToString()} ON;");
                 stringBuilder.AppendLine();
             }
-            stringBuilder.AppendLine($"DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
+
+            stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
+            stringBuilder.AppendLine("DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
             stringBuilder.AppendLine();
 
             stringBuilder.AppendLine($"SET {sqlParameter4.ParameterName} = 0;");
             stringBuilder.AppendLine();
 
-            stringBuilder.AppendLine($";WITH ");
-            stringBuilder.AppendLine($"  CHANGE_TRACKING_CONTEXT(@var_sync_scope_id),");
+            stringBuilder.AppendLine(";WITH ");
+            stringBuilder.AppendLine("  CHANGE_TRACKING_CONTEXT(@var_sync_scope_id),");
             stringBuilder.AppendLine($"  {_trackingName.Quoted().ToString()} AS (");
             stringBuilder.Append("\tSELECT ");
             foreach (var c in _tableDescription.Columns.Where(col => !col.IsReadOnly))
@@ -475,12 +509,28 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 stringBuilder.Append($"[p].{columnName}, ");
             }
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"\tCAST([CT].[SYS_CHANGE_CONTEXT] as uniqueidentifier) AS [sync_update_scope_id], ");
-            stringBuilder.AppendLine($"\t[CT].[SYS_CHANGE_VERSION] as [sync_timestamp],");
-            stringBuilder.AppendLine($"\tCASE WHEN [CT].[SYS_CHANGE_OPERATION] = 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
-            stringBuilder.AppendLine($"\tFROM (SELECT ");
-            stringBuilder.Append($"\t\t ");
-            string comma = "";
+            stringBuilder.AppendLine("\tCAST([CT].[SYS_CHANGE_CONTEXT] as uniqueidentifier) AS [sync_update_scope_id],");
+            stringBuilder.AppendLine("\t[CT].[SYS_CHANGE_VERSION] AS [sync_timestamp],");
+            stringBuilder.Append("\t[CT].[SYS_CHANGE_OPERATION] AS [sync_change_operation]");
+            if (setupHasTableWithColumns)
+            {
+                stringBuilder.AppendLine(",\n\t-- select the next changed columns when the change operation was an insert");
+                stringBuilder.AppendLine("\t(CASE WHEN [SYS_CHANGE_OPERATION] = 'I' THEN (");
+                stringBuilder.AppendLine("\t\tSELECT [N].[SYS_CHANGE_COLUMNS]");
+                stringBuilder.AppendLine($"\t\tFROM CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @next_sync_min_timestamp) AS [N]");
+                stringBuilder.Append("\t\tWHERE ");
+                string and = string.Empty;
+                foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
+                {
+                    var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
+                    stringBuilder.AppendLine($"{and}[N].{columnName} = [CT].{columnName}");
+                    and = "\t\t\tAND ";
+                }
+                stringBuilder.Append("\t) ELSE [SYS_CHANGE_COLUMNS] END) AS [sync_change_columns]");
+            }
+            stringBuilder.AppendLine("\n\tFROM (SELECT ");
+            stringBuilder.Append("\t\t ");
+            string comma = string.Empty;
             foreach (var c in _tableDescription.Columns.Where(col => !col.IsReadOnly))
             {
                 var columnName = ParserName.Parse(c).Quoted().ToString();
@@ -489,20 +539,43 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 stringBuilder.Append($"{comma}@{columnParameterName} as {columnName}");
                 comma = ", ";
             }
-            stringBuilder.AppendLine($") AS [p]");
+            stringBuilder.AppendLine(") AS [p]");
             stringBuilder.Append($"\tLEFT JOIN CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @sync_min_timestamp) AS [CT] ON {str4}");
-            stringBuilder.AppendLine($"\t)");
+            stringBuilder.AppendLine("\t)");
 
             stringBuilder.AppendLine($"MERGE {_tableName.Schema().Quoted().ToString()} AS [base]");
             stringBuilder.AppendLine($"USING {_trackingName.Quoted().ToString()} as [changes] ON {str5}");
 
             if (hasMutableColumns)
             {
-                stringBuilder.AppendLine("WHEN MATCHED AND ([changes].[sync_timestamp] <= @sync_min_timestamp OR [changes].[sync_timestamp] IS NULL OR [changes].[sync_update_scope_id] = @sync_scope_id OR @sync_force_write = 1) THEN");
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine($"\tUPDATE SET");
+                stringBuilder.AppendLine("WHEN MATCHED AND (");
+                stringBuilder.AppendLine("\t[changes].[sync_timestamp] <= @sync_min_timestamp");
+                stringBuilder.AppendLine("\tOR [changes].[sync_timestamp] IS NULL");
+                stringBuilder.AppendLine("\tOR [changes].[sync_update_scope_id] = @sync_scope_id");
+                stringBuilder.AppendLine("\tOR @sync_force_write = 1");
+                if (setupHasTableWithColumns)
+                {
+                    stringBuilder.AppendLine("\tOR (([changes].[sync_change_operation] = 'I' AND [changes].[sync_change_columns] IS NULL)");
+                    stringBuilder.AppendLine("\t\tOR (");
+                    string and = string.Empty;
+                    foreach (var column in _tableDescription.GetMutableColumns())
+                    {
+                        var unquotedColumnName = ParserName.Parse(column).Unquoted().ToString();
+                        stringBuilder.Append("\t\t\t");
+                        stringBuilder.Append(and);
+                        stringBuilder.Append("CHANGE_TRACKING_IS_COLUMN_IN_MASK(");
+                        stringBuilder.Append($"COLUMNPROPERTY(OBJECT_ID('{_tableName.Schema().Quoted().ToString()}'), '{unquotedColumnName}', 'ColumnId')");
+                        stringBuilder.AppendLine(", [changes].[sync_change_columns]) = 0");
+                        and = " AND ";
+                    }
+                    stringBuilder.AppendLine("\t\t)");
+                    stringBuilder.AppendLine("\t)");
+                }
 
-                string strSeparator = "";
+                stringBuilder.AppendLine(") THEN");
+                stringBuilder.AppendLine("\tUPDATE SET");
+
+                string strSeparator = string.Empty;
                 foreach (var mutableColumn in _tableDescription.GetMutableColumns(false))
                 {
                     var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
@@ -527,7 +600,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
                 empty = ", ";
             }
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"\tINSERT");
+            stringBuilder.AppendLine("\tINSERT");
             stringBuilder.AppendLine($"\t({stringBuilderArguments.ToString()})");
             stringBuilder.AppendLine($"\tVALUES ({stringBuilderParameters.ToString()});");
             stringBuilder.AppendLine();
@@ -547,7 +620,6 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             return sqlCommand;
         }
 
-
         //------------------------------------------------------------------
         // Select changes command
         //------------------------------------------------------------------
@@ -559,24 +631,24 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             sqlCommand.Parameters.Add(pTimestamp);
 
             // Add filter parameters
-            if (filter is not null)
+            if (filter != null)
                 CreateFilterParameters(sqlCommand, filter);
 
             var stringBuilder = new StringBuilder("");
-            stringBuilder.AppendLine($";WITH ");
+            stringBuilder.AppendLine(";WITH ");
             stringBuilder.AppendLine($"  {_trackingName.Quoted().ToString()} AS (");
-            stringBuilder.Append($"\tSELECT ");
+            stringBuilder.Append("\tSELECT ");
             foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.Append($"[CT].{columnName}, ");
             }
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"\tCAST([CT].[SYS_CHANGE_CONTEXT] as uniqueidentifier) AS [sync_update_scope_id], ");
-            stringBuilder.AppendLine($"\t[CT].[SYS_CHANGE_VERSION] as [sync_timestamp],");
-            stringBuilder.AppendLine($"\tCASE WHEN [CT].[SYS_CHANGE_OPERATION] = 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
+            stringBuilder.AppendLine("\tCAST([CT].[SYS_CHANGE_CONTEXT] as uniqueidentifier) AS [sync_update_scope_id], ");
+            stringBuilder.AppendLine("\t[CT].[SYS_CHANGE_VERSION] as [sync_timestamp],");
+            stringBuilder.AppendLine("\tCASE WHEN [CT].[SYS_CHANGE_OPERATION] = 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
             stringBuilder.AppendLine($"\tFROM CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @sync_min_timestamp) AS [CT]");
-            stringBuilder.AppendLine($"\t)");
+            stringBuilder.AppendLine("\t)");
 
             stringBuilder.AppendLine("SELECT DISTINCT");
 
@@ -592,12 +664,11 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             }
             stringBuilder.AppendLine();
 
-
             stringBuilder.AppendLine($"FROM {_tableName.Schema().Quoted().ToString()} [base]");
             stringBuilder.Append($"LEFT JOIN {_trackingName.Quoted().ToString()} [side]");
-            stringBuilder.Append($"ON ");
+            stringBuilder.Append("ON ");
 
-            string empty = "";
+            string empty = string.Empty;
             foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
@@ -608,40 +679,37 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             // ----------------------------------
             // Custom Joins
             // ----------------------------------
-            if (filter is not null)
+            if (filter != null)
                 stringBuilder.Append(CreateFilterCustomJoins(filter));
 
             stringBuilder.AppendLine();
             stringBuilder.AppendLine("WHERE (");
-            string str = string.Empty;
 
             // ----------------------------------
             // Where filters on [side]
             // ----------------------------------
-            if (filter is not null)
+            if (filter != null)
             {
                 var createFilterWhereSide = CreateFilterWhereSide(filter, true);
                 stringBuilder.Append(createFilterWhereSide);
 
                 if (!string.IsNullOrEmpty(createFilterWhereSide))
-                    stringBuilder.AppendLine($"AND ");
+                    stringBuilder.AppendLine("AND ");
             }
             // ----------------------------------
 
             // ----------------------------------
             // Custom Where 
             // ----------------------------------
-            if (filter is not null)
+            if (filter != null)
             {
                 var createFilterCustomWheres = CreateFilterCustomWheres(filter);
                 stringBuilder.Append(createFilterCustomWheres);
 
                 if (!string.IsNullOrEmpty(createFilterCustomWheres))
-                    stringBuilder.AppendLine($"AND ");
+                    stringBuilder.AppendLine("AND ");
             }
             // ----------------------------------
-
-
 
             stringBuilder.AppendLine("\t([side].[sync_timestamp] > @sync_min_timestamp OR @sync_min_timestamp IS NULL)");
             stringBuilder.AppendLine(")");
@@ -649,7 +717,6 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
 
             return sqlCommand;
         }
-
 
         //------------------------------------------------------------------
         // Select changes command
@@ -659,50 +726,69 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             var sqlCommand = new SqlCommand();
             var pTimestamp = new SqlParameter("@sync_min_timestamp", SqlDbType.BigInt);
             var pScopeId = new SqlParameter("@sync_scope_id", SqlDbType.UniqueIdentifier);
-
-
+            var setupHasTableWithColumns = _setup.HasTableWithColumns(_tableDescription.TableName);
 
             sqlCommand.Parameters.Add(pTimestamp);
             sqlCommand.Parameters.Add(pScopeId);
 
             // Add filter parameters
-            if (filter is not null)
+            if (filter != null)
                 CreateFilterParameters(sqlCommand, filter);
 
             var stringBuilder = new StringBuilder("");
-            stringBuilder.AppendLine($";WITH ");
+            stringBuilder.AppendLine("DECLARE @next_sync_min_timestamp bigint = @sync_min_timestamp + 1;");
+            stringBuilder.AppendLine("DECLARE @var_sync_scope_id varbinary(128) = cast(@sync_scope_id as varbinary(128));");
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine("WITH ");
             stringBuilder.AppendLine($"  {_trackingName.Quoted().ToString()} AS (");
-            stringBuilder.Append($"\tSELECT ");
+            stringBuilder.Append("\tSELECT ");
             foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.Append($"[CT].{columnName}, ");
             }
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"\tCAST([CT].[SYS_CHANGE_CONTEXT] as uniqueidentifier) AS [sync_update_scope_id], ");
-            stringBuilder.AppendLine($"\t[CT].[SYS_CHANGE_VERSION] as [sync_timestamp],");
-            stringBuilder.AppendLine($"\tCASE WHEN [CT].[SYS_CHANGE_OPERATION] = 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone]");
-            stringBuilder.AppendLine($"\tFROM CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @sync_min_timestamp) AS [CT]");
-            stringBuilder.AppendLine($"\t)");
+            stringBuilder.AppendLine("\tCAST([CT].[SYS_CHANGE_CONTEXT] AS uniqueidentifier) AS [sync_update_scope_id],");
+            stringBuilder.AppendLine("\t[CT].[SYS_CHANGE_VERSION] AS [sync_timestamp],");
+            stringBuilder.Append("\t[CT].[SYS_CHANGE_OPERATION] AS [sync_change_operation]");
+            if (setupHasTableWithColumns)
+            {
+                stringBuilder.AppendLine(",\n\t-- select the next changed columns when the change operation was an insert");
+                stringBuilder.AppendLine("\t(CASE WHEN [SYS_CHANGE_OPERATION] = 'I' THEN (");
+                stringBuilder.AppendLine("\t\tSELECT [N].[SYS_CHANGE_COLUMNS]");
+                stringBuilder.AppendLine($"\t\tFROM CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @next_sync_min_timestamp) AS [N]");
+                stringBuilder.Append("\t\tWHERE ");
+                string and = string.Empty;
+                foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
+                {
+                    var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
+                    stringBuilder.AppendLine($"{and}[N].{columnName} = [CT].{columnName}");
+                    and = "\t\t\tAND ";
+                }
+                stringBuilder.Append("\t) ELSE [SYS_CHANGE_COLUMNS] END) AS [sync_change_columns]");
+            }
+
+            stringBuilder.AppendLine($"\n\tFROM CHANGETABLE(CHANGES {_tableName.Schema().Quoted().ToString()}, @sync_min_timestamp) AS [CT]");
+            stringBuilder.AppendLine("\t)");
 
             stringBuilder.AppendLine("SELECT DISTINCT");
             foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
-                stringBuilder.AppendLine($"\t[side].{columnName}, ");
+                stringBuilder.AppendLine($"\t[side].{columnName},");
             }
             foreach (var mutableColumn in _tableDescription.GetMutableColumns())
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
-                stringBuilder.AppendLine($"\t[base].{columnName}, ");
+                stringBuilder.AppendLine($"\t[base].{columnName},");
             }
-            stringBuilder.AppendLine($"\t[side].[sync_row_is_tombstone], ");
-            stringBuilder.AppendLine($"\t[side].[sync_update_scope_id] ");
+            stringBuilder.AppendLine("\tCASE WHEN [side].[sync_change_operation] = 'D' THEN 1 ELSE 0 END AS [sync_row_is_tombstone],");
+            stringBuilder.AppendLine("\t[side].[sync_update_scope_id]");
             stringBuilder.AppendLine($"FROM {_tableName.Schema().Quoted().ToString()} [base]");
             stringBuilder.Append($"RIGHT JOIN {_trackingName.Quoted().ToString()} [side]");
-            stringBuilder.Append($"ON ");
+            stringBuilder.Append("ON ");
 
-            string empty = "";
+            string empty = string.Empty;
             foreach (var pkColumn in _tableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
@@ -713,43 +799,60 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             // ----------------------------------
             // Custom Joins
             // ----------------------------------
-            if (filter is not null)
+            if (filter != null)
                 stringBuilder.Append(CreateFilterCustomJoins(filter));
 
             stringBuilder.AppendLine();
             stringBuilder.AppendLine("WHERE (");
-            string str = string.Empty;
 
             // ----------------------------------
             // Where filters on [side]
             // ----------------------------------
-            if (filter is not null)
+            if (filter != null)
             {
                 var createFilterWhereSide = CreateFilterWhereSide(filter, true);
                 stringBuilder.Append(createFilterWhereSide);
 
                 if (!string.IsNullOrEmpty(createFilterWhereSide))
-                    stringBuilder.AppendLine($"AND ");
+                    stringBuilder.AppendLine("AND ");
             }
             // ----------------------------------
 
             // ----------------------------------
             // Custom Where 
             // ----------------------------------
-            if (filter is not null)
+            if (filter != null)
             {
                 var createFilterCustomWheres = CreateFilterCustomWheres(filter);
                 stringBuilder.Append(createFilterCustomWheres);
 
                 if (!string.IsNullOrEmpty(createFilterCustomWheres))
-                    stringBuilder.AppendLine($"AND ");
+                    stringBuilder.AppendLine("AND ");
             }
             // ----------------------------------
 
-
-
             stringBuilder.AppendLine("\t[side].[sync_timestamp] > @sync_min_timestamp");
             stringBuilder.AppendLine("\tAND ([side].[sync_update_scope_id] <> @sync_scope_id OR [side].[sync_update_scope_id] IS NULL)");
+
+            if (setupHasTableWithColumns)
+            {
+                stringBuilder.AppendLine("\tAND (([side].[sync_change_operation] = 'I' AND [side].[sync_change_columns] IS NULL)");
+                stringBuilder.AppendLine("\t\tOR (");
+                string or = string.Empty;
+                foreach (var column in _tableDescription.GetMutableColumns())
+                {
+                    var unquotedColumn = ParserName.Parse(column).Unquoted().ToString();
+                    stringBuilder.Append("\t\t\t");
+                    stringBuilder.Append(or);
+                    stringBuilder.Append("CHANGE_TRACKING_IS_COLUMN_IN_MASK(");
+                    stringBuilder.Append($"COLUMNPROPERTY(OBJECT_ID('{_tableName.Schema().Quoted().ToString()}'), '{unquotedColumn}', 'ColumnId')");
+                    stringBuilder.AppendLine(", [side].[sync_change_columns]) = 1");
+                    or = " OR ";
+                }
+                stringBuilder.AppendLine("\t\t)");
+                stringBuilder.AppendLine("\t)");
+            }
+
             stringBuilder.AppendLine(")");
             sqlCommand.CommandText = stringBuilder.ToString();
 
@@ -759,7 +862,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
         protected override SqlCommand BuildDeleteMetadataCommand()
         {
             SqlCommand sqlCommand = new SqlCommand();
-            AddPkColumnParametersToCommand(sqlCommand);
+            this.AddPkColumnParametersToCommand(sqlCommand);
             SqlParameter sqlParameter1 = new SqlParameter("@sync_row_timestamp", SqlDbType.BigInt);
             sqlCommand.Parameters.Add(sqlParameter1);
             SqlParameter sqlParameter2 = new SqlParameter("@sync_row_count", SqlDbType.Int)
@@ -770,12 +873,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"SET {sqlParameter2.ParameterName} = 0;");
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"SELECT 1;");
+            stringBuilder.AppendLine("SELECT 1;");
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(string.Concat("SET ", sqlParameter2.ParameterName, " = 1;"));
             sqlCommand.CommandText = stringBuilder.ToString();
             return sqlCommand;
         }
+
         protected override SqlCommand BuildResetCommand()
         {
             SqlCommand sqlCommand = new SqlCommand();
@@ -791,7 +895,15 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Procedures
 
             stringBuilder.AppendLine($"ALTER TABLE {_tableName.Schema().Quoted().ToString()} DISABLE CHANGE_TRACKING;");
             stringBuilder.AppendLine($"DELETE FROM {_tableName.Schema().Quoted().ToString()};");
-            stringBuilder.AppendLine($"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = OFF);");
+
+            if (_setup.HasTableWithColumns(_tableDescription.TableName))
+            {
+                stringBuilder.AppendLine($"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = ON);");
+            }
+            else
+            {
+                stringBuilder.AppendLine($"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = OFF);");
+            }
 
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(string.Concat("SET ", sqlParameter2.ParameterName, " = @@ROWCOUNT;"));

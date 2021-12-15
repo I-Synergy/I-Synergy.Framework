@@ -31,12 +31,19 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Tables
 
         public Task<DbCommand> GetCreateTrackingTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var commandText = $"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = OFF);";
-
             var command = connection.CreateCommand();
+
+            if (_setup.HasTableWithColumns(_tableDescription.TableName))
+            {
+                command.CommandText = $"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = ON);";
+            }
+            else
+            {
+                command.CommandText = $"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = OFF);";
+            }
+
             command.Connection = connection;
             command.Transaction = transaction;
-            command.CommandText = commandText;
 
             return Task.FromResult(command);
         }
