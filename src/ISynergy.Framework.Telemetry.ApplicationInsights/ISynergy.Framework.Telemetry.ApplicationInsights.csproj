@@ -25,12 +25,12 @@
 	<Choose>
 		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362.0' or '$(TargetFramework)' == 'uap10.0.18362'">
 			<ItemGroup>
-				<PackageReference Include="Microsoft.ApplicationInsights" Version="2.19.0" />
+				<PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
 			</ItemGroup>
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
+				<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
 			</ItemGroup>
 		</Otherwise>
 	</Choose>
