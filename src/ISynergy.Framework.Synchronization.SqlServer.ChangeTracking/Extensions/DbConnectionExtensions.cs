@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.SqlServer.Utilities;
 using System.Data.Common;
 using System.Threading.Tasks;

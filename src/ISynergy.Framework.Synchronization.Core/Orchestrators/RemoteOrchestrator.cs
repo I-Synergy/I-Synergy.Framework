@@ -1,12 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Core.Abstractions;
 using ISynergy.Framework.Synchronization.Core.Batch;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Messages;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data.Common;
@@ -14,7 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public partial class RemoteOrchestrator : BaseOrchestrator
     {
@@ -30,7 +29,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public RemoteOrchestrator(
             IVersionService versionService,
-            CoreProvider provider, 
+            IProvider provider, 
             SyncOptions options, 
             SyncSetup setup, 
             string scopeName = SyncOptions.DefaultScopeName)
@@ -233,7 +232,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     // Get if we need to get all rows from the datasource
                     var fromScratch = clientScope.IsNewScope || ctx.SyncType == SyncType.Reinitialize || ctx.SyncType == SyncType.ReinitializeWithUpload;
 
-                    var message = new MessageGetChangesBatch(clientScope.Id, Guid.Empty, fromScratch, clientScope.LastServerSyncTimestamp, schema, Setup, Options.BatchSize, Options.BatchDirectory, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
+                    var message = new MessageGetChangesBatch(clientScope.Id, Guid.Empty, fromScratch, clientScope.LastServerSyncTimestamp, schema, Setup, Options.BatchSize, Options.BatchDirectory, null, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
 
                     // When we get the chnages from server, we create the batches if it's requested by the client
                     // the batch decision comes from batchsize from client
@@ -308,7 +307,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 var fromScratch = clientScope.IsNewScope || ctx.SyncType == SyncType.Reinitialize || ctx.SyncType == SyncType.ReinitializeWithUpload;
 
                 var message = new MessageGetChangesBatch(clientScope.Id, Guid.Empty, fromScratch, clientScope.LastServerSyncTimestamp,
-                    serverScope.Schema, Setup, Options.BatchSize, Options.BatchDirectory, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
+                    serverScope.Schema, Setup, Options.BatchSize, Options.BatchDirectory, null, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
 
                 BatchInfo serverBatchInfo;
                 DatabaseChangesSelected serverChangesSelected;
@@ -362,7 +361,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 // it's an estimation, so force In Memory (BatchSize == 0)
                 var message = new MessageGetChangesBatch(clientScope.Id, Guid.Empty, fromScratch, clientScope.LastServerSyncTimestamp, serverScope.Schema,
-                    Setup, 0, Options.BatchDirectory, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
+                    Setup, 0, Options.BatchDirectory, null, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
 
                 DatabaseChangesSelected serverChangesSelected;
                 // When we get the chnages from server, we create the batches if it's requested by the client

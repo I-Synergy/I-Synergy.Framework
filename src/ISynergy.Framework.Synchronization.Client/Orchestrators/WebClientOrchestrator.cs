@@ -1,16 +1,18 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Synchronization.Client.Arguments;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Synchronization.Client.Enumerations;
+using ISynergy.Framework.Synchronization.Client.Handlers;
+using ISynergy.Framework.Synchronization.Client.Messages;
 using ISynergy.Framework.Synchronization.Client.Providers;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Messages;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Scopes;
 using ISynergy.Framework.Synchronization.Core.Serialization;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Collections.Generic;
@@ -33,7 +35,6 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
         public override SyncSide Side => SyncSide.ClientSide;
 
         private readonly HttpRequestHandler _httpRequestHandler;
-        private readonly IVersionService _versionService;
 
         public Dictionary<string, string> CustomHeaders => _httpRequestHandler.CustomHeaders;
         public Dictionary<string, string> ScopeParameters => _httpRequestHandler.ScopeParameters;
@@ -92,15 +93,14 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
         /// Gets a new web proxy orchestrator
         /// </summary>
         public WebClientOrchestrator(
-            IVersionService versionService, 
             string serviceUri,
+            IVersionService versionService,
             IConverter customConverter = null,
             HttpClient client = null,
             SyncPolicy syncPolicy = null,
             int maxDownladingDegreeOfParallelism = 4)
             : base(versionService, new ClientCoreProvider(), new SyncOptions(), new SyncSetup())
         {
-            _versionService = versionService;
             _httpRequestHandler = new HttpRequestHandler(this);
 
             // if no HttpClient provisionned, create a new one
@@ -386,7 +386,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
 
                     tmpRowsSendedCount += containerTable.Rows.Count;
 
-                    ctx.ProgressPercentage = initialPctProgress1 + ((changesToSend.BatchIndex + 1) * 0.2d / changesToSend.BatchCount);
+                    ctx.ProgressPercentage = initialPctProgress1 + (changesToSend.BatchIndex + 1) * 0.2d / changesToSend.BatchCount;
                     await InterceptAsync(new HttpSendingClientChangesRequestArgs(changesToSend, tmpRowsSendedCount, clientBatchInfo.RowsCount, GetServiceHost()), progress, cancellationToken).ConfigureAwait(false);
 
                     // serialize message
@@ -445,7 +445,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 Directory.CreateDirectory(serverBatchInfo.GetDirectoryFullPath());
 
             // If we have a snapshot we are raising the batches downloading process that will occurs
-            await InterceptAsync(new HttpBatchesDownloadingArgs(syncContext, StartTime.Value, serverBatchInfo, GetServiceHost()), progress, cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new HttpBatchesDownloadingArgs(_syncContext, StartTime.Value, serverBatchInfo, GetServiceHost()), progress, cancellationToken).ConfigureAwait(false);
 
             // function used to download one part
             var dl = new Func<BatchPartInfo, Task>(async (bpi) =>
@@ -462,7 +462,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 await InterceptAsync(new HttpGettingServerChangesRequestArgs(bpi.Index, serverBatchInfo.BatchPartsInfo.Count, summaryResponseContent.SyncContext, GetServiceHost()), progress, cancellationToken).ConfigureAwait(false);
 
                 // Raise get changes request
-                ctx.ProgressPercentage = initialPctProgress + ((bpi.Index + 1) * 0.2d / serverBatchInfo.BatchPartsInfo.Count);
+                ctx.ProgressPercentage = initialPctProgress + (bpi.Index + 1) * 0.2d / serverBatchInfo.BatchPartsInfo.Count;
 
                 var response = await _httpRequestHandler.ProcessRequestAsync(
                 HttpClient, ServiceUri, binaryData3, step3, ctx.SessionId, ScopeName,
@@ -604,7 +604,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 return (0, null, new DatabaseChangesSelected());
 
             // If we have a snapshot we are raising the batches downloading process that will occurs
-            await InterceptAsync(new HttpBatchesDownloadingArgs(syncContext, StartTime.Value, serverBatchInfo, GetServiceHost()), progress, cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new HttpBatchesDownloadingArgs(_syncContext, StartTime.Value, serverBatchInfo, GetServiceHost()), progress, cancellationToken).ConfigureAwait(false);
 
             await serverBatchInfo.BatchPartsInfo.ForEachAsync(async bpi =>
             {
@@ -796,7 +796,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 await InterceptAsync(new HttpGettingServerChangesRequestArgs(bpi.Index, serverBatchInfo.BatchPartsInfo.Count, summaryResponseContent.SyncContext, GetServiceHost()), progress, cancellationToken).ConfigureAwait(false);
 
                 // Raise get changes request
-                ctx.ProgressPercentage = initialPctProgress + ((bpi.Index + 1) * 0.2d / serverBatchInfo.BatchPartsInfo.Count);
+                ctx.ProgressPercentage = initialPctProgress + (bpi.Index + 1) * 0.2d / serverBatchInfo.BatchPartsInfo.Count;
 
                 var response = await _httpRequestHandler.ProcessRequestAsync(
                 HttpClient, ServiceUri, binaryData3, step3, ctx.SessionId, ScopeName,

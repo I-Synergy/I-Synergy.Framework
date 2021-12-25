@@ -21,10 +21,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Default scope name if not specified
         /// </summary>
         public const string DefaultScopeName = "DefaultScope";
+        private int batchSize;
 
         /// <summary>
         /// Gets or Sets the directory used for batch mode.
-        /// Default value is [User Temp Path]/[DotmimSync]
+        /// Default value is [User Temp Path]/[I-Synergy.Synchronization]
         /// </summary>
         public string BatchDirectory { get; set; }
 
@@ -34,11 +35,10 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public string SnapshotsDirectory { get; set; }
 
-        private int batchSize;
-
         /// <summary>
         /// Gets or Sets the size used (approximatively in kb, depending on the serializer) for each batch file, in batch mode. 
-        /// Min value is 100 
+        /// Default is 5000 
+        /// Min value is 1000
         /// </summary>
         public int BatchSize
         {
@@ -109,14 +109,14 @@ namespace ISynergy.Framework.Synchronization.Core
             DisableConstraintsOnApplyChanges = false;
             ScopeInfoTableName = DefaultScopeInfoTableName;
             ConflictResolutionPolicy = ConflictResolutionPolicy.ServerWins;
-            Logger = new LoggerFactory().CreateLogger("Synchronization");
+            Logger = new LoggerFactory().CreateLogger(nameof(SyncOptions));
             ProgressLevel = SyncProgressLevel.Information;
             LocalSerializerFactory = new LocalJsonSerializerFactory();
         }
 
 
         /// <summary>
-        /// Get the default Batch directory full path ([User Temp Path]/[DotmimSync])
+        /// Get the default Batch directory full path ([User Temp Path]/[I-Synergy.Synchronization])
         /// </summary>
         public static string GetDefaultUserBatchDiretory() => Path.Combine(GetDefaultUserTempPath(), GetDefaultUserBatchDirectoryName());
 
@@ -128,6 +128,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Get the default sync tmp folder name
         /// </summary>
-        public static string GetDefaultUserBatchDirectoryName() => "DotmimSync";
+        public static string GetDefaultUserBatchDirectoryName() => "I-Synergy.Synchronization";
     }
 }

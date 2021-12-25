@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using System;
 using System.Collections;
 using System.Collections.Generic;

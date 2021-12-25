@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Abstractions;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,10 +17,10 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Add the server provider (inherited from CoreProvider) and register in the DI a WebServerOrchestrator.
+        /// Add the server provider (inherited from IProvider) and register in the DI a WebServerOrchestrator.
         /// Use the WebServerOrchestrator in your controller, by inject it.
         /// </summary>
-        /// <param name="providerType">Provider inherited from CoreProvider (SqlSyncProvider, MySqlSyncProvider, OracleSyncProvider) Should have [CanBeServerProvider=true] </param>
+        /// <param name="providerType">Provider inherited from IProvider (SqlSyncProvider, MySqlSyncProvider, OracleSyncProvider) Should have [CanBeServerProvider=true] </param>
         /// <param name="serviceCollection">services collections</param>
         /// <param name="versionService"></param>
         /// <param name="connectionString">Provider connection string</param>
@@ -44,7 +44,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
             setup = setup ?? throw new ArgumentNullException(nameof(setup));
 
             // Create provider
-            var provider = (CoreProvider)Activator.CreateInstance(providerType);
+            var provider = (IProvider)Activator.CreateInstance(providerType);
             provider.ConnectionString = connectionString;
 
             // Create orchestrator
@@ -53,7 +53,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
         }
 
         /// <summary>
-        /// Add the server provider (inherited from CoreProvider) and register in the DI a WebServerOrchestrator.
+        /// Add the server provider (inherited from IProvider) and register in the DI a WebServerOrchestrator.
         /// Use the WebServerOrchestrator in your controller, by inject it.
         /// </summary>
         /// <param name="serviceCollection"></param>
@@ -72,7 +72,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
         }
 
         /// <summary>
-        /// Add the server provider (inherited from CoreProvider) and register in the DI a WebServerOrchestrator.
+        /// Add the server provider (inherited from IProvider) and register in the DI a WebServerOrchestrator.
         /// Use the WebServerOrchestrator in your controller, by inject it.
         /// </summary>
         /// <typeparam name="TProvider"></typeparam>
@@ -90,11 +90,11 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
             string scopeName = SyncOptions.DefaultScopeName, 
             SyncSetup setup = null, 
             SyncOptions options = null) 
-            where TProvider : CoreProvider, new()
+            where TProvider : IProvider, new()
         => serviceCollection.AddSyncServer(versionService, typeof(TProvider), connectionString, scopeName, setup, options);
 
         /// <summary>
-        /// Add the server provider (inherited from CoreProvider) and register in the DI a WebServerOrchestrator.
+        /// Add the server provider (inherited from IProvider) and register in the DI a WebServerOrchestrator.
         /// Use the WebServerOrchestrator in your controller, by inject it.
         /// </summary>
         /// <typeparam name="TProvider"></typeparam>
@@ -110,11 +110,11 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
             string connectionString, 
             SyncSetup setup = null, 
             SyncOptions options = null) 
-            where TProvider : CoreProvider, new()
+            where TProvider : IProvider, new()
              => serviceCollection.AddSyncServer(versionService, typeof(TProvider), connectionString, SyncOptions.DefaultScopeName, setup, options);
 
         /// <summary>
-        /// Add the server provider (inherited from CoreProvider) and register in the DI a WebServerOrchestrator.
+        /// Add the server provider (inherited from IProvider) and register in the DI a WebServerOrchestrator.
         /// Use the WebServerOrchestrator in your controller, by inject it.
         /// </summary>
         /// <typeparam name="TProvider"></typeparam>
@@ -132,11 +132,11 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
             string scopeName = SyncOptions.DefaultScopeName, 
             string[] tables = default, 
             SyncOptions options = null) 
-            where TProvider : CoreProvider, new()
+            where TProvider : IProvider, new()
             => serviceCollection.AddSyncServer(versionService, typeof(TProvider), connectionString, scopeName, new SyncSetup(tables), options);
 
         /// <summary>
-        /// Add the server provider (inherited from CoreProvider) and register in the DI a WebServerOrchestrator.
+        /// Add the server provider (inherited from IProvider) and register in the DI a WebServerOrchestrator.
         /// Use the WebServerOrchestrator in your controller, by inject it.
         /// </summary>
         /// <typeparam name="TProvider"></typeparam>
@@ -152,8 +152,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
             string connectionString, 
             string[] tables = default, 
             SyncOptions options = null) 
-            where TProvider : CoreProvider, new()
+            where TProvider : IProvider, new()
             => serviceCollection.AddSyncServer(versionService, typeof(TProvider), connectionString, SyncOptions.DefaultScopeName, new SyncSetup(tables), options);
-
     }
 }

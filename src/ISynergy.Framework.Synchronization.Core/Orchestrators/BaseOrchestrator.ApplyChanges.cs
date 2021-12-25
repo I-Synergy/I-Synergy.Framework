@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core;
+using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Messages;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public abstract partial class BaseOrchestrator
     {
@@ -34,7 +34,9 @@ namespace ISynergy.Framework.Synchronization.Core
             var changesApplied = new DatabaseChangesApplied();
 
             // Check if we have some data available
-            var hasChanges = message.Changes.HasData();
+            var hasChanges = message.BatchInfo.HasData();
+
+            var threadNumberLimits = Provider.SupportsMultipleActiveResultSets ? 16 : 1;
 
             // if we have changes or if we are in re init mode
             if (hasChanges || context.SyncType != SyncType.Normal)
@@ -74,11 +76,22 @@ namespace ISynergy.Framework.Synchronization.Core
                 // -----------------------------------------------------
                 if (hasChanges)
                 {
+                    //if (Provider.SupportsMultipleActiveResultSets && message.DisableConstraintsOnApplyChanges)
+                    //{
+                    //    await schemaTables.ForEachAsync(async table =>
+                    //        await InternalApplyTableChangesAsync(context, table, message, connection, transaction,
+                    //            DataRowState.Modified, changesApplied, cancellationToken, progress).ConfigureAwait(false)
+                    //    , threadNumberLimits);
+                    //}
+                    //else
+                    //{
                     foreach (var table in schemaTables)
                     {
                         await InternalApplyTableChangesAsync(context, table, message, connection, transaction,
                             DataRowState.Modified, changesApplied, cancellationToken, progress).ConfigureAwait(false);
                     }
+                    //}
+
                 }
 
                 // -----------------------------------------------------
@@ -86,34 +99,40 @@ namespace ISynergy.Framework.Synchronization.Core
                 // -----------------------------------------------------
                 if (!message.IsNew && hasChanges)
                 {
+                    //if (Provider.SupportsMultipleActiveResultSets && message.DisableConstraintsOnApplyChanges)
+                    //{
+                    //    await schemaTables.ForEachAsync(async table =>
+                    //        await InternalApplyTableChangesAsync(context, table, message, connection, transaction,
+                    //            DataRowState.Deleted, changesApplied, cancellationToken, progress).ConfigureAwait(false)
+                    //    , threadNumberLimits);
+                    //}
+                    //else
+                    //{
                     foreach (var table in schemaTables.Reverse())
                     {
                         await InternalApplyTableChangesAsync(context, table, message, connection, transaction,
                             DataRowState.Deleted, changesApplied, cancellationToken, progress).ConfigureAwait(false);
                     }
+                    //}
                 }
 
                 // Re enable check constraints
                 if (message.DisableConstraintsOnApplyChanges)
-                {
                     foreach (var table in schemaTables)
-                    {
                         await InternalEnableConstraintsAsync(context, GetSyncAdapter(table, message.Setup), connection, transaction).ConfigureAwait(false);
-                    }
-                }
 
                 // Dispose data
-                message.Changes.Clear(false);
+                message.BatchInfo.Clear(false);
             }
 
             // Before cleaning, check if we are not applying changes from a snapshotdirectory
             var cleanFolder = message.CleanFolder;
 
             if (cleanFolder)
-                cleanFolder = await InternalCanCleanFolderAsync(context, message.Changes, cancellationToken, progress).ConfigureAwait(false);
+                cleanFolder = await InternalCanCleanFolderAsync(context, message.BatchInfo, cancellationToken, progress).ConfigureAwait(false);
 
             // clear the changes because we don't need them anymore
-            message.Changes.Clear(cleanFolder);
+            message.BatchInfo.Clear(cleanFolder);
 
             var databaseChangesAppliedArgs = new DatabaseChangesAppliedArgs(context, changesApplied, connection, transaction);
             await InterceptAsync(databaseChangesAppliedArgs, progress, cancellationToken).ConfigureAwait(false);
@@ -121,8 +140,6 @@ namespace ISynergy.Framework.Synchronization.Core
             return (context, changesApplied);
 
         }
-
-
 
         /// <summary>
         /// Apply changes internal method for one type of query: Insert, Update or Delete for every batch from a table
@@ -144,7 +161,7 @@ namespace ISynergy.Framework.Synchronization.Core
             if (context.SyncWay == SyncWay.Download && schemaTable.SyncDirection == SyncDirection.UploadOnly)
                 return;
 
-            var hasChanges = message.Changes.HasData(schemaTable.TableName, schemaTable.SchemaName);
+            var hasChanges = message.BatchInfo.HasData(schemaTable.TableName, schemaTable.SchemaName);
 
             // Each table in the messages contains scope columns. Don't forget it
             if (!hasChanges)
@@ -167,18 +184,19 @@ namespace ISynergy.Framework.Synchronization.Core
 
             if (command is null) return;
 
-            var cmdText = command.CommandText;
+            var bpiTables = message.BatchInfo.GetBatchPartsInfo(schemaTable);
 
             // launch interceptor if any
-            var args = new TableChangesApplyingArgs(context, schemaTable, applyType, connection, transaction);
+            var args = new TableChangesApplyingArgs(context, message.BatchInfo, bpiTables, schemaTable, applyType, command, connection, transaction);
             await InterceptAsync(args, progress, cancellationToken).ConfigureAwait(false);
 
-            if (args.Cancel)
+            if (args.Cancel || args.Command is null)
                 return;
 
-            TableChangesApplied tableChangesApplied = null;
+            command = args.Command;
+            var cmdText = command.CommandText;
 
-            var bpiTables = message.Changes.GetBatchPartsInfo(schemaTable);
+            TableChangesApplied tableChangesApplied = null;
 
             // Conflicts occured when trying to apply rows
             var conflictRows = new List<SyncRow>();
@@ -193,35 +211,18 @@ namespace ISynergy.Framework.Synchronization.Core
                 var rowsFetched = 0;
 
                 // Get full path of my batchpartinfo
-                var fullPath = message.Changes.GetBatchPartInfoPath(batchPartInfo).FullPath;
+                var fullPath = message.BatchInfo.GetBatchPartInfoPath(batchPartInfo).FullPath;
 
                 // accumulating rows
                 var batchRows = new List<SyncRow>();
 
                 var localSerializer = message.LocalSerializerFactory.GetLocalSerializer();
-                var firstRowRead = true;
                 foreach (var syncRow in localSerializer.ReadRowsFromFile(fullPath, schemaChangesTable))
                 {
                     rowsFetched++;
 
                     if (syncRow.RowState != applyType)
                         continue;
-
-                    // Launch interceptor if we have at least one row of the good rowstate, to apply
-                    if (firstRowRead)
-                    {
-                        // Launch any interceptor if available
-                        command.CommandText = cmdText;
-                        var batchArgs = new TableChangesBatchApplyingArgs(context, batchPartInfo, applyType, command, connection, transaction);
-                        await InterceptAsync(batchArgs, progress, cancellationToken).ConfigureAwait(false);
-
-                        if (batchArgs.Cancel || batchArgs.Command is null)
-                            continue;
-
-                        // get the correct pointer to the command from the interceptor in case user change the whole instance
-                        command = batchArgs.Command;
-                        firstRowRead = false;
-                    }
 
                     if (isBatch)
                     {
@@ -236,9 +237,19 @@ namespace ISynergy.Framework.Synchronization.Core
                         var failedPrimaryKeysTable = schemaChangesTable.Schema.Clone().Tables[schemaChangesTable.TableName, schemaChangesTable.SchemaName];
 
                         command.CommandText = cmdText;
+                        var batchArgs = new TableChangesApplyingSyncRowsArgs(context, message.BatchInfo, batchRows, schemaChangesTable, applyType, command, connection, transaction);
+                        await InterceptAsync(batchArgs, progress, cancellationToken).ConfigureAwait(false);
+
+                        if (batchArgs.Cancel || batchArgs.Command is null)
+                            continue;
+
+                        // get the correct pointer to the command from the interceptor in case user change the whole instance
+                        command = batchArgs.Command;
+
+                        await InterceptAsync(new DbCommandArgs(context, command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
                         // execute the batch, through the provider
-                        await syncAdapter.ExecuteBatchCommandAsync(command, message.SenderScopeId, batchRows, schemaChangesTable, failedPrimaryKeysTable, message.LastTimestamp, connection, transaction).ConfigureAwait(false);
+                        await syncAdapter.ExecuteBatchCommandAsync(command, message.SenderScopeId, batchArgs.SyncRows, schemaChangesTable, failedPrimaryKeysTable, message.LastTimestamp, connection, transaction).ConfigureAwait(false);
 
                         // Get local and remote row and create the conflict object
                         foreach (var failedRow in failedPrimaryKeysTable.Rows)
@@ -254,8 +265,19 @@ namespace ISynergy.Framework.Synchronization.Core
                     }
                     else
                     {
+
+                        command.CommandText = cmdText;
+                        var batchArgs = new TableChangesApplyingSyncRowsArgs(context, message.BatchInfo, new List<SyncRow> { syncRow }, schemaChangesTable, applyType, command, connection, transaction);
+                        await InterceptAsync(batchArgs, progress, cancellationToken).ConfigureAwait(false);
+
+                        if (batchArgs.Cancel || batchArgs.Command is null || batchArgs.SyncRows is null || batchArgs.SyncRows.Count() <= 0)
+                            continue;
+
+                        // get the correct pointer to the command from the interceptor in case user change the whole instance
+                        command = batchArgs.Command;
+
                         // Set the parameters value from row 
-                        syncAdapter.SetColumnParametersValues(command, syncRow);
+                        syncAdapter.SetColumnParametersValues(command, batchArgs.SyncRows.First());
 
                         // Set the special parameters for update
                         syncAdapter.AddScopeParametersValues(command, message.SenderScopeId, message.LastTimestamp, applyType == DataRowState.Deleted, false);
@@ -310,8 +332,6 @@ namespace ISynergy.Framework.Synchronization.Core
                 // Only Upsert DatabaseChangesApplied if we make an upsert/ delete from the batch or resolved any conflict
                 if (appliedRowsTmp > 0 || conflictsResolvedCount > 0)
                 {
-
-
                     // We may have multiple batch files, so we can have multipe sync tables with the same name
                     // We can say that a syncTable may be contained in several files
                     // That's why we should get an applied changes instance if already exists from a previous batch file
@@ -337,7 +357,7 @@ namespace ISynergy.Framework.Synchronization.Core
                             ResolvedConflicts = conflictsResolvedCount,
                             Failed = changedFailed,
                             State = applyType,
-                            TotalRowsCount = message.Changes.RowsCount,
+                            TotalRowsCount = message.BatchInfo.RowsCount,
                             TotalAppliedCount = changesApplied.TotalAppliedChanges + appliedRowsTmp
                         };
                         changesApplied.TableChangesApplied.Add(tableChangesApplied);
@@ -731,7 +751,5 @@ namespace ISynergy.Framework.Synchronization.Core
 
             return rowUpdatedCount > 0;
         }
-
-
     }
 }

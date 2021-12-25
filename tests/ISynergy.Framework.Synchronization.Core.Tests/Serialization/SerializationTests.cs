@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;

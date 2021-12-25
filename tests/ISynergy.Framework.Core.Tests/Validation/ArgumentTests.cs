@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Validation.Tests
 {
@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotNullTest()
         {
             Product test = null;
-            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNull(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNull(test));
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotNullOrEmptyTest()
         {
             string test = string.Empty;
-            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(test));
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void GuidIsNotEmptyTest()
         {
             Guid test = Guid.Empty;
-            Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEmpty(nameof(test), test));
+            Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEmpty(test));
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void GuidIsNotNullOrEmptyTest()
         {
             Guid test = default;
-            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmpty(test));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotNullOrWhitespaceTest()
         {
             string test = " ";
-            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrWhitespace(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrWhitespace(test));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotNullOrEmptyArrayTest()
         {
             Array test = Array.Empty<object>();
-            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyArray(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyArray(test));
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotNullOrEmptyListTTest()
         {
             var test = new List<object>();
-            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(test));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotEnumTTest()
         {
             var test = new object();
-            Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEnum(nameof(test), test));
+            Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEnum(test));
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
             test.Add(new Product());
             test.Add(null);
             
-            Assert.ThrowsException<ArgumentNullException>(() => Argument.HasNoNulls(nameof(test), test));
+            Assert.ThrowsException<ArgumentNullException>(() => Argument.HasNoNulls(test));
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsNotOutOfRangeTTest()
         {
             var test = 1975;
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsNotOutOfRange(nameof(test), test, 2000, 2021));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsNotOutOfRange(test, 2000, 2021));
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsMinimalTTest()
         {
             var test = 1975;
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMinimal(nameof(test), test, 2000));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMinimal(test, 2000));
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         public void IsMaximumTTest()
         {
             var test = 1975;
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMaximum(nameof(test), test, 1970));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMaximum(test, 1970));
         }
     }
 }

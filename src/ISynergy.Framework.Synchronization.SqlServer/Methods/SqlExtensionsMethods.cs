@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+
+using ISynergy.Framework.Synchronization.Core.Builders;
 using System;
 using System.Data;
 using System.Data.SqlClient;

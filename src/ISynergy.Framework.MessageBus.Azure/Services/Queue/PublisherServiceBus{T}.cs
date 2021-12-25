@@ -39,8 +39,8 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue
         {
             _option = options.Value;
 
-            Argument.IsNotNullOrEmpty(nameof(_option.ConnectionString), _option.ConnectionString);
-            Argument.IsNotNullOrEmpty(nameof(_option.QueueName), _option.QueueName);
+            Argument.IsNotNullOrEmpty(_option.ConnectionString);
+            Argument.IsNotNullOrEmpty(_option.QueueName);
 
             _logger = logger;
         }

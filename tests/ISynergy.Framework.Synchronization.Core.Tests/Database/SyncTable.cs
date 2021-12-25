@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 

@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Extensions;
+﻿using ISynergy.Framework.Synchronization.Core.Extensions;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
         /// <summary>
         /// Creates a filterclause allowing to specify a different DbType.
-        /// If you specify the columnType, ISynergy.Framework.Synchronization.Core will expect that the column does not exist on the table, and the filter is only
+        /// If you specify the columnType, ISynergy.Framework.Synchronization will expect that the column does not exist on the table, and the filter is only
         /// used as a parameter for the selectchanges stored procedure. Thus, IsVirtual would be true
         /// </summary>
         public SetupFilter(string tableName, string schemaName = null)

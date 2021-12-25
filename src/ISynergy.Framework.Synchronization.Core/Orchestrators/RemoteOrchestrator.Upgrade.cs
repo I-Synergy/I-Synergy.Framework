@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public partial class RemoteOrchestrator
     {
@@ -98,7 +97,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
         internal virtual bool InternalNeedsToUpgrade(SyncContext context, List<ServerScopeInfo> serverScopeInfos)
         {
-            var version = _versionService.ProductVersion;
+            var version = _versionService.ProductVersion;;
 
             // get the smallest version of all scope in the scope info server tables
             foreach (var serverScopeInfo in serverScopeInfos)
@@ -109,14 +108,14 @@ namespace ISynergy.Framework.Synchronization.Core
                     version = tmpVersion;
             }
 
-            return version < _versionService.ProductVersion;
+            return version < _versionService.ProductVersion;;
         }
 
 
         internal virtual async Task<bool> InternalUpgradeAsync(SyncContext context, SyncSet schema, List<ServerScopeInfo> serverScopeInfos, DbScopeBuilder builder, DbConnection connection, DbTransaction transaction,
                         CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            var version = _versionService.ProductVersion;
+            var version = _versionService.ProductVersion;;
 
             // get the smallest version of all scope in the scope info server tables
             foreach (var serverScopeInfo in serverScopeInfos)
@@ -181,7 +180,8 @@ namespace ISynergy.Framework.Synchronization.Core
                 }
             }
 
-            return version == _versionService.ProductVersion;
+            return version == _versionService.ProductVersion;;
+
         }
 
         private async Task<Version> UpgdrateTo601Async(SyncContext context, SyncSet schema, DbConnection connection, DbTransaction transaction,

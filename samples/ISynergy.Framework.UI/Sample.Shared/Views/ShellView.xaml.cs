@@ -38,7 +38,7 @@ namespace Sample.Views
         /// <returns></returns>
         private async Task ExecuteCommandAsync()
         {
-            Argument.IsNotNull(nameof(ViewModel), ViewModel);
+            Argument.IsNotNull(ViewModel);
 
             if (ViewModel.Context.IsAuthenticated)
             {

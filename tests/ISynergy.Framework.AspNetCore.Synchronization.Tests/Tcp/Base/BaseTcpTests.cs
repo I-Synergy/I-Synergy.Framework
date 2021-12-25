@@ -2,10 +2,11 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Abstractions.Tests;
-using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Core.Tests.Models;
 using ISynergy.Framework.Synchronization.SqlServer.Metadata;
@@ -68,7 +69,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// <summary>
         /// Gets the remote orchestrator and its database name
         /// </summary>
-        public (string DatabaseName, ProviderType ProviderType, CoreProvider Provider) Server { get; private set; }
+        public (string DatabaseName, ProviderType ProviderType, CoreProvider Provider) Server { get; set; }
 
         /// <summary>
         /// Gets the dictionary of all local orchestrators with database name as key
@@ -587,7 +588,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
-        public async Task Insert_TwoTables_FromServer(SyncOptions options)
+        public virtual async Task Insert_TwoTables_FromServer(SyncOptions options)
         {
             // create a server schema without seeding
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, false, UseFallbackSchema);
@@ -645,7 +646,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
-        public async Task Insert_TwoTables_FromClient(SyncOptions options)
+        public virtual async Task Insert_TwoTables_FromClient(SyncOptions options)
         {
             // create a server schema without seeding
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, false, UseFallbackSchema);
@@ -2633,7 +2634,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// Insert one row in two tables on server, should be correctly sync on all clients
         /// </summary>
         [TestMethod]
-        public async Task Snapshot_Initialize()
+        public virtual async Task Snapshot_Initialize()
         {
             // create a server schema with seeding
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);
@@ -2714,7 +2715,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
             var scopeName = "scopesnap1";
 
-            var myRijndael = new RijndaelManaged();
+            var myRijndael = Aes.Create();
             myRijndael.GenerateKey();
             myRijndael.GenerateIV();
 
@@ -3155,7 +3156,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// Insert one row in two tables on server, should be correctly sync on all clients
         /// </summary>
         [TestMethod]
-        public async Task Snapshot_Initialize_ThenClientUploadSync_ThenReinitialize()
+        public virtual async Task Snapshot_Initialize_ThenClientUploadSync_ThenReinitialize()
         {
             // create a server schema with seeding
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);

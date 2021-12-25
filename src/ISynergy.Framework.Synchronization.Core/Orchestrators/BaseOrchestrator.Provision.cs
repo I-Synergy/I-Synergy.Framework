@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public abstract partial class BaseOrchestrator
     {
@@ -23,7 +22,7 @@ namespace ISynergy.Framework.Synchronization.Core
             if (schema is null || schema.Tables is null || !schema.HasTables)
                 throw new MissingTablesException();
 
-            await InterceptAsync(new ProvisioningArgs(ctx, provision, schema, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new ProvisioningArgs(ctx, provision, schema, connection, transaction),progress, cancellationToken).ConfigureAwait(false);
 
             // get Database builder
             var builder = Provider.GetDatabaseBuilder();
@@ -138,7 +137,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
         internal async Task<bool> InternalDeprovisionAsync(SyncContext ctx, SyncSet schema, SyncSetup setup, SyncProvision provision, object scope, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            await InterceptAsync(new DeprovisioningArgs(ctx, provision, schema, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new DeprovisioningArgs(ctx, provision, schema, connection, transaction),progress, cancellationToken).ConfigureAwait(false);
 
             // get Database builder
             var builder = Provider.GetDatabaseBuilder();

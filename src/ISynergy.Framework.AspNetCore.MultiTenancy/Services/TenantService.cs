@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Validation;
+using System;
 
 namespace ISynergy.Framework.AspNetCore.MultiTenancy.Services
 {
@@ -21,7 +22,8 @@ namespace ISynergy.Framework.AspNetCore.MultiTenancy.Services
         /// <exception cref="ArgumentNullException">httpContextAccessor</exception>
         public TenantService(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            Argument.IsNotNull(httpContextAccessor);
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>

@@ -273,7 +273,7 @@ public class SyncOptions
 {
     /// <summary>
     /// Gets or Sets the directory used for batch mode.
-    /// Default value is [User Temp Path]/[DotmimSync]
+    /// Default value is [User Temp Path]/[I-Synergy.Synchronization]
     /// </summary>
     public string BatchDirectory { get; set; }
 
@@ -345,7 +345,7 @@ default `SyncOptions` is created with default values.
 
 ``` {.sourceCode .csharp}
 /// <summary>
-/// Get the default Batch directory full path ([User Temp Path]/[DotmimSync])
+/// Get the default Batch directory full path ([User Temp Path]/[I-Synergy.Synchronization])
 /// </summary>
 public static string GetDefaultUserBatchDiretory()
 
@@ -355,7 +355,7 @@ public static string GetDefaultUserBatchDiretory()
 public static string GetDefaultUserTempPath()
 
 /// <summary>
-/// Get the default sync tmp folder name (usually 'DotmimSync')
+/// Get the default sync tmp folder name (usually 'I-Synergy.Synchronization')
 /// </summary>
 public static string GetDefaultUserBatchDirectoryName()
 ```

@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Scopes;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Core
 {
-
-
     public class ScopeTableDroppedArgs : ProgressArgs
     {
         public DbScopeType ScopeType { get; }
@@ -21,8 +19,8 @@ namespace ISynergy.Framework.Synchronization.Core
             ScopeType = scopeType;
             ScopeName = scopeName;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
+
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Dropped.";
 
@@ -37,7 +35,6 @@ namespace ISynergy.Framework.Synchronization.Core
             ScopeType = scopeType;
             ScopeName = scopeName;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public DbScopeType ScopeType { get; }
         public string ScopeName { get; }
@@ -60,7 +57,6 @@ namespace ISynergy.Framework.Synchronization.Core
             ScopeType = scopeType;
             ScopeName = scopeName;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Dropping.";
@@ -81,7 +77,6 @@ namespace ISynergy.Framework.Synchronization.Core
             ScopeType = scopeType;
             ScopeName = scopeName;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Creating.";
@@ -95,11 +90,10 @@ namespace ISynergy.Framework.Synchronization.Core
         public ScopeLoadedArgs(SyncContext context, string scopeName, DbScopeType scopeType, T scopeInfo, DbConnection connection = null, DbTransaction transaction = null) 
             : base(context, connection, transaction)
         {
-            ScopeType = scopeType;
             ScopeName = scopeName;
+            ScopeType = scopeType;
             ScopeInfo = scopeInfo;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
 
@@ -131,7 +125,6 @@ namespace ISynergy.Framework.Synchronization.Core
             ScopeType = scopeType;
             ScopeName = scopeName;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => SyncEventsId.ScopeLoading.Id;
         public override string Source => Connection.Database;
@@ -153,7 +146,6 @@ namespace ISynergy.Framework.Synchronization.Core
             ScopeName = scopeName;
             ScopeInfo = scopeInfo;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Saving.";
@@ -173,7 +165,6 @@ namespace ISynergy.Framework.Synchronization.Core
             ScopeInfo = scopeInfo;
             ScopeName = scopeName;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Scope Table [{ScopeType}] Saved.";

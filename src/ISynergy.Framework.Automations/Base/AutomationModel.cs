@@ -24,7 +24,7 @@ namespace ISynergy.Framework.Automations.Base
         /// <param name="automationId"></param>
         protected AutomationModel(Guid automationId)
         {
-            Argument.IsNotNullOrEmpty(nameof(automationId), automationId);
+            Argument.IsNotNullOrEmpty(automationId);
             AutomationId = automationId;
         }
     }

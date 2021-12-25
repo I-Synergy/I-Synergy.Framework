@@ -107,8 +107,8 @@ namespace ISynergy.Framework.UI.Triggers
         /// <param name="triggerValue">The trigger value.</param>
         private static void TriggerStateCheck(DependencyObject target, string operation, object dataValue, object triggerValue)
         {
-            Argument.IsNotNull(nameof(target), target);
-            Argument.IsNotNullOrEmpty(nameof(operation), operation);
+            Argument.IsNotNull(target);
+            Argument.IsNotNullOrEmpty(operation);
 
             if (!(target is ObjectDataTrigger trigger) || dataValue is null) return;
             trigger.SetActive(CompareUtility.Compare(operation, dataValue, triggerValue));

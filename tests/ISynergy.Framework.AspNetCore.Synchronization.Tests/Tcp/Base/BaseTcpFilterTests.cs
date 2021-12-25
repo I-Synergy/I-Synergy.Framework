@@ -1,10 +1,11 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Tests.Data;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Abstractions.Tests;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Parameters;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Parameter;
 using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Core.Tests.Models;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Context;
@@ -31,23 +32,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         public abstract SyncParameters FilterParameters { get; }
 
         /// <summary>
-        /// Gets the remote orchestrator and its database name
-        /// </summary>
-        public (string DatabaseName, ProviderType ProviderType, CoreProvider Provider) Server { get; private set; }
-
-        /// <summary>
-        /// Gets the dictionary of all local orchestrators with database name as key
-        /// </summary>
-        public List<(string DatabaseName, ProviderType ProviderType, CoreProvider Provider)> Clients { get; set; }
-
-        /// <summary>
-        /// Gets a bool indicating if we should generate the schema for tables
-        /// </summary>
-        public bool UseFallbackSchema => ServerType == ProviderType.Sql;
-
-        protected readonly IDatabaseHelper _databaseHelper;
-
-        /// <summary>
         /// For each test, Create a server database and some clients databases, depending on ProviderType provided in concrete class
         /// </summary>
         public BaseTcpFilterTests()
@@ -65,7 +49,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // create remote orchestrator
             var serverProvider = this.CreateProvider(this.ServerType, serverDatabaseName);
 
-            this.Server = (serverDatabaseName, this.ServerType, serverProvider);
+            Server = (serverDatabaseName, this.ServerType, serverProvider);
 
             // Get all clients providers
             Clients = new List<(string DatabaseName, ProviderType ProviderType, CoreProvider Provider)>(this.ClientsType.Count);
@@ -79,18 +63,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 this.Clients.Add((dbCliName, clientType, localProvider));
             }
         }
-
-        /// <summary>
-        /// Drop all databases used for the tests
-        /// </summary>
-        public void Dispose()
-        {
-            _databaseHelper.DropDatabase(Server.DatabaseName);
-
-            foreach (var client in Clients)
-                _databaseHelper.DropDatabase(client.DatabaseName);
-        }
-
 
         [TestMethod]
         public virtual async Task SchemaIsCreated()
@@ -164,7 +136,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
-        public virtual async Task RowsCount(SyncOptions options)
+        public override async Task RowsCount(SyncOptions options)
         {
             // create a server db and seed it
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);
@@ -198,7 +170,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
-        public async Task Insert_TwoTables_FromServer(SyncOptions options)
+        public override async Task Insert_TwoTables_FromServer(SyncOptions options)
         {
             // create a server schema and seed
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);
@@ -272,7 +244,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
-        public async Task Insert_TwoTables_FromClient(SyncOptions options)
+        public override async Task Insert_TwoTables_FromClient(SyncOptions options)
         {
             // create a server schema and seed
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);
@@ -499,7 +471,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// Insert one row in two tables on server, should be correctly sync on all clients
         /// </summary>
         [TestMethod]
-        public async Task Snapshot_Initialize()
+        public override async Task Snapshot_Initialize()
         {
             // create a server schema with seeding
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);
@@ -1135,13 +1107,13 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                     if (tcs.Context.AdditionalProperties is null || tcs.Context.AdditionalProperties.Count <= 0)
                         return;
 
-                    if (tcs.Context.AdditionalProperties.ContainsKey(tcs.Table.GetFullName()))
+                    if (tcs.Context.AdditionalProperties.ContainsKey(tcs.SchemaTable.GetFullName()))
                     {
-                        var addProp = tcs.Context.AdditionalProperties[tcs.Table.GetFullName()];
+                        var addProp = tcs.Context.AdditionalProperties[tcs.SchemaTable.GetFullName()];
                         if (addProp == "Reinitialize")
                         {
-                            var adapter = agent.RemoteOrchestrator.GetSyncAdapter(tcs.Table, setup);
-                            var (command, isBatch) = await adapter.GetCommandAsync(DbCommandType.SelectInitializedChanges, tcs.Connection, tcs.Transaction, tcs.Table.GetFilter());
+                            var adapter = agent.RemoteOrchestrator.GetSyncAdapter(tcs.SchemaTable, setup);
+                            var (command, isBatch) = await adapter.GetCommandAsync(DbCommandType.SelectInitializedChanges, tcs.Connection, tcs.Transaction, tcs.SchemaTable.GetFilter());
                             tcs.Command = command;
                         }
                     }
@@ -1177,11 +1149,11 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                     if (tca.State != DataRowState.Modified)
                         return;
 
-                    if (tca.Context.AdditionalProperties.ContainsKey(tca.Table.GetFullName()))
+                    if (tca.Context.AdditionalProperties.ContainsKey(tca.SchemaTable.GetFullName()))
                     {
-                        var addProp = tca.Context.AdditionalProperties[tca.Table.GetFullName()];
+                        var addProp = tca.Context.AdditionalProperties[tca.SchemaTable.GetFullName()];
                         if (addProp == "Reinitialize")
-                            await agent.LocalOrchestrator.ResetTableAsync(setup.Tables[tca.Table.TableName, tca.Table.SchemaName], tca.Connection, tca.Transaction);
+                            await agent.LocalOrchestrator.ResetTableAsync(setup.Tables[tca.SchemaTable.TableName, tca.SchemaTable.SchemaName], tca.Connection, tca.Transaction);
                     }
                 });
 
@@ -1287,7 +1259,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
         /// Insert one row in two tables on server, should be correctly sync on all clients
         /// </summary>
         [TestMethod]
-        public async Task Snapshot_Initialize_ThenClientUploadSync_ThenReinitialize()
+        public override async Task Snapshot_Initialize_ThenClientUploadSync_ThenReinitialize()
         {
             // create a server schema with seeding
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);

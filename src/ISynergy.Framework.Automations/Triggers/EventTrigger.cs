@@ -24,7 +24,7 @@ namespace ISynergy.Framework.Automations.Triggers
             Func<T, Task> callbackAsync)
             : base(automationId)
         {
-            Argument.IsNotNull(nameof(entity), entity);
+            Argument.IsNotNull(entity);
 
             subscription.Invoke((s, e) =>
             {

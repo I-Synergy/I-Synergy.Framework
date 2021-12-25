@@ -1,16 +1,14 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Synchronization.Core.Abstractions;
 using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Extensions;
-using ISynergy.Framework.Synchronization.Core.Interceptors;
-using ISynergy.Framework.Synchronization.Core.Parameters;
+using ISynergy.Framework.Synchronization.Core.Parameter;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,28 +21,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public abstract partial class BaseOrchestrator
     {
         // Collection of Interceptors
-        private Interceptor _interceptors = new Interceptor();
-
-        internal SyncContext syncContext;
-
+        private Interceptors _interceptors = new Interceptors();
+        internal SyncContext _syncContext;
         protected readonly IVersionService _versionService;
-
-        //// Internal table builder cache
-        //private static ConcurrentDictionary<string, Lazy<DbTableBuilder>> tableBuilders
-        //    = new ConcurrentDictionary<string, Lazy<DbTableBuilder>>();
-
-        //// Internal scope builder cache
-        //private static ConcurrentDictionary<string, Lazy<DbScopeBuilder>> scopeBuilders
-        //    = new ConcurrentDictionary<string, Lazy<DbScopeBuilder>>();
-
-        // Internal sync adapter cache
-        //private static ConcurrentDictionary<string, Lazy<DbSyncAdapter>> syncAdapters
-        //    = new ConcurrentDictionary<string, Lazy<DbSyncAdapter>>();
 
         /// <summary>
         /// Gets or Sets orchestrator side
@@ -54,7 +38,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Gets or Sets the provider used by this local orchestrator
         /// </summary>
-        public virtual CoreProvider Provider { get; set; }
+        public IProvider Provider { get; set; }
 
         /// <summary>
         /// Gets the options used by this local orchestrator
@@ -97,16 +81,16 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="scopeName"></param>
         public BaseOrchestrator(
             IVersionService versionService,
-            CoreProvider provider, 
+            IProvider provider, 
             SyncOptions options, 
             SyncSetup setup, 
             string scopeName = SyncOptions.DefaultScopeName)
         {
-            Argument.IsNotNull(nameof(versionService), versionService);
-            Argument.IsNotNull(nameof(scopeName), scopeName);
-            Argument.IsNotNull(nameof(provider), provider);
-            Argument.IsNotNull(nameof(options), options);
-            Argument.IsNotNull(nameof(setup), setup);
+            Argument.IsNotNull(versionService);
+            Argument.IsNotNull(scopeName);
+            Argument.IsNotNull(provider);
+            Argument.IsNotNull(options);
+            Argument.IsNotNull(setup);
 
             _versionService = versionService;
 
@@ -137,7 +121,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Set a collection of interceptors
         /// </summary>
         [DebuggerStepThrough]
-        internal void On(Interceptor interceptors) => _interceptors = interceptors;
+        internal void On(Interceptors interceptors) => _interceptors = interceptors;
 
         /// <summary>
         /// Returns the Task associated with given type of BaseArgs 
@@ -156,7 +140,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 //for example, getting DatabaseChangesSelectingArgs and transform to DatabaseChangesSelecting
                 var argsTypeName = args.GetType().Name.Replace("Args", "");
 
-                Logger.LogDebug(new EventId(args.EventId, argsTypeName), null, args);
+                Logger.LogDebug(new EventId(args.EventId, argsTypeName), null, args) ;
             }
 
             await interceptor.RunAsync(args, cancellationToken).ConfigureAwait(false);
@@ -195,7 +179,7 @@ namespace ISynergy.Framework.Synchronization.Core
             {
                 var argsTypeName = args.GetType().Name.Replace("Args", ""); ;
                 if (Logger.IsEnabled(LogLevel.Debug))
-                    Logger.LogDebug(new EventId(args.EventId, argsTypeName), null, args.Context);
+                    Logger.LogDebug(new EventId(args.EventId, argsTypeName),null, args.Context);
                 else
                     Logger.LogInformation(new EventId(args.EventId, argsTypeName), null, args);
             }
@@ -291,25 +275,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public DbSyncAdapter GetSyncAdapter(SyncTable tableDescription, SyncSetup setup)
         {
-            //var p = Provider.GetParsers(tableDescription, setup);
-
-            //var s = JsonConvert.SerializeObject(setup);
-            //var data = Encoding.UTF8.GetBytes(s);
-            //var hash = HashAlgorithm.SHA256.Create(data);
-            //var hashString = Convert.ToBase64String(hash);
-
-            //// Create the key
-            //var commandKey = $"{p.tableName.ToString()}-{p.trackingName.ToString()}-{hashString}-{Provider.ConnectionString}";
-
-            //// Get a lazy command instance
-            //var lazySyncAdapter = syncAdapters.GetOrAdd(commandKey,
-            //    k => new Lazy<DbSyncAdapter>(() => Provider.GetSyncAdapter(tableDescription, setup)));
-
-            //// Get the concrete instance
-            //var syncAdapter = lazySyncAdapter.Value;
-
-            //return syncAdapter;
-
             var (tableName, trackingTableName) = Provider.GetParsers(tableDescription, setup);
             return Provider.GetSyncAdapter(tableDescription, tableName, trackingTableName, setup);
         }
@@ -319,25 +284,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public DbTableBuilder GetTableBuilder(SyncTable tableDescription, SyncSetup setup)
         {
-            //var p = Provider.GetParsers(tableDescription, setup);
-
-            //var s = JsonConvert.SerializeObject(setup);
-            //var data = Encoding.UTF8.GetBytes(s);
-            //var hash = HashAlgorithm.SHA256.Create(data);
-            //var hashString = Convert.ToBase64String(hash);
-
-            //// Create the key
-            //var commandKey = $"{p.tableName.ToString()}-{p.trackingName.ToString()}-{hashString}-{Provider.ConnectionString}";
-
-            //// Get a lazy command instance
-            //var lazyTableBuilder = tableBuilders.GetOrAdd(commandKey,
-            //    k => new Lazy<DbTableBuilder>(() => Provider.GetTableBuilder(tableDescription, setup)));
-
-            //// Get the concrete instance
-            //var tableBuilder = lazyTableBuilder.Value;
-
-            //return tableBuilder;
-
             var (tableName, trackingTableName) = Provider.GetParsers(tableDescription, setup);
             return Provider.GetTableBuilder(tableDescription, tableName, trackingTableName, setup);
         }
@@ -348,24 +294,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public DbScopeBuilder GetScopeBuilder(string scopeInfoTableName)
         {
-            //// Create the key
-            //var commandKey = $"{scopeInfoTableName}-{Provider.ConnectionString}";
-
-            //// Get a lazy command instance
-            //var lazyScopeBuilder = scopeBuilders.GetOrAdd(commandKey,
-            //    k => new Lazy<DbScopeBuilder>(() => Provider.GetScopeBuilder(scopeInfoTableName)));
-
-            //// Get the concrete instance
-            //var scopeBuilder = lazyScopeBuilder.Value;
-
-            //return scopeBuilder;
-
             return Provider.GetScopeBuilder(scopeInfoTableName);
         }
         /// <summary>
         /// Sets the current context
         /// </summary>
-        internal virtual void SetContext(SyncContext context) => syncContext = context;
+        internal virtual void SetContext(SyncContext context) => _syncContext = context;
 
         /// <summary>
         /// Gets the current context
@@ -373,12 +307,12 @@ namespace ISynergy.Framework.Synchronization.Core
         [DebuggerStepThrough]
         public virtual SyncContext GetContext()
         {
-            if (syncContext is not null)
-                return syncContext;
+            if (_syncContext is not null)
+                return _syncContext;
 
-            syncContext = new SyncContext(Guid.NewGuid(), ScopeName); ;
+            _syncContext = new SyncContext(Guid.NewGuid(), ScopeName); ;
 
-            return syncContext;
+            return _syncContext;
         }
 
 

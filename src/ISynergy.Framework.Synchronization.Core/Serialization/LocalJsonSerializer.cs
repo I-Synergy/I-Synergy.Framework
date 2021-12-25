@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Core.Serialization
 {
+
     public class LocalJsonSerializerFactory : ILocalSerializerFactory
     {
         public string Key => "json";
         public ILocalSerializer GetLocalSerializer() => new LocalJsonSerializer();
     }
-
     public class LocalJsonSerializer : ILocalSerializer
     {
         private StreamWriter sw;
@@ -31,7 +31,6 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             await writer.CloseAsync();
             sw.Close();
         }
-
         public async Task OpenFileAsync(string path, SyncTable shemaTable)
         {
             if (writer is not null)
@@ -56,7 +55,6 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             writer.WriteWhitespace(Environment.NewLine);
 
         }
-        
         public Task WriteRowToFileAsync(SyncRow row, SyncTable shemaTable)
         {
             writer.WriteStartArray();
@@ -69,7 +67,6 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             return Task.CompletedTask;
         }
-
         public Task<long> GetCurrentFileSizeAsync()
             => sw is not null && sw.BaseStream is not null ?
                 Task.FromResult(sw.BaseStream.Position / 1024L) :

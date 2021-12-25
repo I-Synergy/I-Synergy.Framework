@@ -118,7 +118,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="style">The theme.</param>
         public void SetStyle(Style style)
         {
-            Argument.IsNotNull(nameof(style), style);
+            Argument.IsNotNull(style);
 
             _style = style;
 

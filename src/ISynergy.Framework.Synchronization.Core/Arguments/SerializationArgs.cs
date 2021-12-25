@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Serialization;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -21,9 +21,10 @@ namespace ISynergy.Framework.Synchronization.Core
             FileName = fileName;
             DirectoryPath = directoryPath;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
 
         /// <summary>
-        /// Gets or Sets byte array representing the Set to serialize to the disk. If the Result property is Null, ISynergy.Framework.Synchronization.Core will serialized the container set using the serializer factory configured in the SyncOptions instance
+        /// Gets or Sets byte array representing the Set to serialize to the disk. If the Result property is Null, ISynergy.Framework.Synchronization will serialized the container set using the serializer factory configured in the SyncOptions instance
         /// </summary>
         public byte[] Result { get; set; }
 
@@ -50,7 +51,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
         public override string Source => String.IsNullOrEmpty(DirectoryPath) ? "" : new DirectoryInfo(DirectoryPath).Name;
         public override string Message => $"[{FileName}] Serializing Set.";
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+
     }
 
     /// <summary>
@@ -65,6 +66,7 @@ namespace ISynergy.Framework.Synchronization.Core
             FileName = fileName;
             DirectoryPath = directoryPath;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
 
         /// <summary>
         /// Gets the Filestream to deserialize
@@ -90,12 +92,11 @@ namespace ISynergy.Framework.Synchronization.Core
         public override string Message => $"[{FileName}] Deserializing Set.";
 
         /// <summary>
-        /// Gets or Sets the container set result, after having deserialized the FileStream. If the Result property is Null, ISynergy.Framework.Synchronization.Core will deserialized the stream using a simple Json converter
+        /// Gets or Sets the container set result, after having deserialized the FileStream. If the Result property is Null, ISynergy.Framework.Synchronization will deserialized the stream using a simple Json converter
         /// </summary>
         public ContainerSet Result { get; set; }
 
         public override int EventId => SyncEventsId.DeserializingSet.Id;
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
     }
 
 
@@ -120,6 +121,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
 
     }
+
     public static partial class SyncEventsId
     {
         public static EventId SerializingSet => CreateEventId(8000, nameof(SerializingSet));

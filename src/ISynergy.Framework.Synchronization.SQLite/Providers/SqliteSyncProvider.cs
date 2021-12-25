@@ -1,10 +1,9 @@
 ﻿using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Metadata;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Manager;
 using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Sqlite.Adapters;
 using ISynergy.Framework.Synchronization.Sqlite.Builders;
@@ -16,20 +15,19 @@ using System.IO;
 
 namespace ISynergy.Framework.Synchronization.Sqlite.Providers
 {
+
     public class SqliteSyncProvider : CoreProvider
     {
-
-
-        private string filePath;
-        private DbMetadata dbMetadata;
-        private static String providerType;
+        private string _filePath;
+        private DbMetadata _dbMetadata;
+        private static string _providerType;
 
         public override DbMetadata GetMetadata()
         {
-            if (dbMetadata is null)
-                dbMetadata = new SqliteDbMetadata();
+            if (_dbMetadata is null)
+                _dbMetadata = new SqliteDbMetadata();
 
-            return dbMetadata;
+            return _dbMetadata;
         }
 
 
@@ -47,13 +45,13 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Providers
         {
             get
             {
-                if (!string.IsNullOrEmpty(providerType))
-                    return providerType;
+                if (!string.IsNullOrEmpty(_providerType))
+                    return _providerType;
 
                 Type type = typeof(SqliteSyncProvider);
-                providerType = $"{type.Name}, {type.ToString()}";
+                _providerType = $"{type.Name}, {type.ToString()}";
 
-                return providerType;
+                return _providerType;
             }
 
         }
@@ -64,7 +62,8 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Providers
 
         public SqliteSyncProvider(string filePath) : this()
         {
-            filePath = filePath;
+            _filePath = filePath;
+            
             var builder = new SqliteConnectionStringBuilder();
 
             if (filePath.ToLowerInvariant().StartsWith("data source"))
@@ -90,8 +89,8 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Providers
 
         public SqliteSyncProvider(FileInfo fileInfo) : this()
         {
-            filePath = fileInfo.FullName;
-            var builder = new SqliteConnectionStringBuilder { DataSource = filePath };
+            _filePath = fileInfo.FullName;
+            var builder = new SqliteConnectionStringBuilder { DataSource = _filePath };
 
             ConnectionString = builder.ConnectionString;
         }
@@ -99,10 +98,10 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Providers
 
         public SqliteSyncProvider(SqliteConnectionStringBuilder sqliteConnectionStringBuilder) : this()
         {
-            if (String.IsNullOrEmpty(sqliteConnectionStringBuilder.DataSource))
+            if (string.IsNullOrEmpty(sqliteConnectionStringBuilder.DataSource))
                 throw new Exception("You have to provide at least a DataSource property to be able to connect to your SQlite database.");
 
-            filePath = sqliteConnectionStringBuilder.DataSource;
+            _filePath = sqliteConnectionStringBuilder.DataSource;
 
             ConnectionString = sqliteConnectionStringBuilder.ConnectionString;
         }

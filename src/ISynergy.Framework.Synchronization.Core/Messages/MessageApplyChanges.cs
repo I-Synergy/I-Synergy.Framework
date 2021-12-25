@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Synchronization.Core.Batch;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Serialization;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 
@@ -17,21 +18,49 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// Applying changes message.
         /// Be careful policy could be differente from the schema (especially on client side, it's the reverse one, by default)
         /// </summary>
-        public MessageApplyChanges(Guid localScopeId, Guid senderScopeId, bool isNew, long? lastTimestamp, SyncSet schema, SyncSetup setup,
-                                    ConflictResolutionPolicy policy, bool disableConstraintsOnApplyChanges, bool cleanMetadatas,
-                                    bool cleanFolder, bool snapshotApplied, BatchInfo changes, ILocalSerializerFactory localSerializerFactory)
+        /// <param name="localScopeId"></param>
+        /// <param name="senderScopeId"></param>
+        /// <param name="isNew"></param>
+        /// <param name="lastTimestamp"></param>
+        /// <param name="schema"></param>
+        /// <param name="setup"></param>
+        /// <param name="policy"></param>
+        /// <param name="disableConstraintsOnApplyChanges"></param>
+        /// <param name="cleanMetadatas"></param>
+        /// <param name="cleanFolder"></param>
+        /// <param name="snapshotApplied"></param>
+        /// <param name="changes"></param>
+        /// <param name="localSerializerFactory"></param>
+        public MessageApplyChanges(
+            Guid localScopeId, 
+            Guid senderScopeId, 
+            bool isNew, 
+            long? lastTimestamp, 
+            SyncSet schema, 
+            SyncSetup setup,
+            ConflictResolutionPolicy policy, 
+            bool disableConstraintsOnApplyChanges, 
+            bool cleanMetadatas,
+            bool cleanFolder, 
+            bool snapshotApplied, 
+            BatchInfo changes, 
+            ILocalSerializerFactory localSerializerFactory)
         {
+            Argument.IsNotNull(schema);
+            Argument.IsNotNull(setup);
+            Argument.IsNotNull(changes);
+
             LocalScopeId = localScopeId;
             SenderScopeId = senderScopeId;
             IsNew = isNew;
             LastTimestamp = lastTimestamp;
-            Schema = schema ?? throw new ArgumentNullException(nameof(schema));
-            Setup = setup ?? throw new ArgumentNullException(nameof(setup));
+            Schema = schema;
+            Setup = setup;
             Policy = policy;
             DisableConstraintsOnApplyChanges = disableConstraintsOnApplyChanges;
             CleanMetadatas = cleanMetadatas;
             CleanFolder = cleanFolder;
-            Changes = changes ?? throw new ArgumentNullException(nameof(changes));
+            BatchInfo = changes;
             LocalSerializerFactory = localSerializerFactory;
             SnapshoteApplied = snapshotApplied;
         }
@@ -94,9 +123,9 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         public bool CleanFolder { get; set; }
 
         /// <summary>
-        /// Gets or Sets the changes to apply
+        /// Gets or Sets the batch info containing the changes to apply
         /// </summary>
-        public BatchInfo Changes { get; set; }
+        public BatchInfo BatchInfo { get; set; }
 
         /// <summary>
         /// Gets or Sets the local Serializer used to buffer rows on disk

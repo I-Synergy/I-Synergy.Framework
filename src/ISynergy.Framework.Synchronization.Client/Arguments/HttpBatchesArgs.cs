@@ -1,13 +1,13 @@
-﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
+using ISynergy.Framework.Synchronization.Client.Messages;
+using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
 
     /// <summary>

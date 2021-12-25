@@ -38,9 +38,9 @@ namespace ISynergy.Framework.Mail.Services
             _sendGridOptions = sendGridOptions.Value;
             _logger = logger;
 
-            Argument.IsNotNullOrEmpty(nameof(MailOptions.EmailAddress), _mailOptions.EmailAddress);
-            Argument.IsNotNullOrEmpty(nameof(MailOptions.Sender), _mailOptions.Sender);
-            Argument.IsNotNullOrEmpty(nameof(SendGridOptions.Key), _sendGridOptions.Key);
+            Argument.IsNotNullOrEmpty(_mailOptions.EmailAddress);
+            Argument.IsNotNullOrEmpty(_mailOptions.Sender);
+            Argument.IsNotNullOrEmpty(_sendGridOptions.Key);
         }
 
         /// <summary>

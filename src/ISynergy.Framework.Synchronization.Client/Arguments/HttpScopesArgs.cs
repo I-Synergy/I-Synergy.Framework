@@ -1,13 +1,12 @@
 ﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Scopes;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
 
     /// <summary>
@@ -20,7 +19,6 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
             ServerScopeInfo = scopeInfo;
             Host = host;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => HttpClientSyncEventsId.HttpGettingScopeResponse.Id;
         public override string Source => Host;
@@ -40,11 +38,10 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
             Host = host;
         }
 
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => HttpClientSyncEventsId.HttpGettingScopeRequest.Id;
         public override string Source => Host;
         public override string Message => $"Getting Server Scope. Scope Name:{Context.ScopeName}.";
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public string Host { get; }
     }
 

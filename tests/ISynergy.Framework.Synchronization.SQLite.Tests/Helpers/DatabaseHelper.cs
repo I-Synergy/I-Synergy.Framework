@@ -10,16 +10,6 @@ namespace ISynergy.Framework.Synchronization.SqlLite.Tests.Helpers
 {
     internal class DatabaseHelper : BaseDatabaseHelper
     {
-        private readonly IConfigurationRoot _configuration;
-
-        public DatabaseHelper()
-        {
-            _configuration = new ConfigurationBuilder()
-              .AddJsonFile("appsettings.json", false, true)
-              .AddJsonFile("appsettings.local.json", true, true)
-              .Build();
-        }
-
         /// <summary>
         /// Gets the connection string used to open a sqlite database
         /// </summary>

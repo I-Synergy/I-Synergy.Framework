@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Batch;
+﻿using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Messages;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -62,7 +62,7 @@ namespace ISynergy.Framework.Synchronization.Core
         }
 
         public override string Source => Connection.Database;
-        public override string Message => $"Applying Changes. Total Changes To Apply: {ApplyChanges.Changes.RowsCount}";
+        public override string Message => $"Applying Changes. Total Changes To Apply: {ApplyChanges.BatchInfo.RowsCount}";
 
         /// <summary>
         /// All parameters that will be used to apply changes
@@ -84,7 +84,7 @@ namespace ISynergy.Framework.Synchronization.Core
         }
 
         public DatabaseChangesApplied ChangesApplied { get; set; }
-        public override SyncProgressLevel ProgressLevel => ChangesApplied.TotalAppliedChanges > 0 ? SyncProgressLevel.Information : SyncProgressLevel.Debug;
+        public override SyncProgressLevel ProgressLevel => ChangesApplied.TotalAppliedChanges > 0 ? SyncProgressLevel.Information: SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"[Total] Applied:{ChangesApplied.TotalAppliedChanges}. Conflicts:{ChangesApplied.TotalResolvedConflicts}.";
 

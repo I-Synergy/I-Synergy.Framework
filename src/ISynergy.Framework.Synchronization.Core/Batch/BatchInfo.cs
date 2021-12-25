@@ -1,11 +1,13 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Serialization;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Core.Batch
 {
@@ -221,6 +223,62 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
             return $"{tableName}_{batchIndex}_{Path.GetRandomFileName().Replace(".", "_")}.{extension}";
         }
 
+
+        /// <summary>
+        /// Load the Batch part info in memory, in a SyncTable
+        /// </summary>
+        public Task<SyncTable> LoadBatchPartInfoAsync(BatchPartInfo batchPartInfo, ILocalSerializerFactory localSerializerFactory = null)
+        {
+            if (localSerializerFactory is null)
+                localSerializerFactory = new LocalJsonSerializerFactory();
+
+            // Get full path of my batchpartinfo
+            var fullPath = GetBatchPartInfoPath(batchPartInfo).FullPath;
+
+            if (!File.Exists(fullPath))
+                return Task.FromResult<SyncTable>(null);
+
+            if (SanitizedSchema is null || batchPartInfo.Tables is null || batchPartInfo.Tables.Count() < 1)
+                return Task.FromResult<SyncTable>(null);
+
+            var schemaTable = SanitizedSchema.Tables[batchPartInfo.Tables[0].TableName, batchPartInfo.Tables[0].SchemaName];
+
+            var localSerializer = localSerializerFactory.GetLocalSerializer();
+
+            var table = schemaTable.Clone();
+
+            foreach (var syncRow in localSerializer.ReadRowsFromFile(fullPath, schemaTable))
+                table.Rows.Add(syncRow);
+
+            return Task.FromResult(table);
+        }
+
+        public async Task SaveBatchPartInfoAsync(BatchPartInfo batchPartInfo, SyncTable syncTable, ILocalSerializerFactory localSerializerFactory = null)
+        {
+            if (localSerializerFactory is null)
+                localSerializerFactory = new LocalJsonSerializerFactory();
+
+            // Get full path of my batchpartinfo
+            var fullPath = GetBatchPartInfoPath(batchPartInfo).FullPath;
+
+            if (!File.Exists(fullPath))
+                return;
+
+            File.Delete(fullPath);
+
+            var localSerializer = localSerializerFactory.GetLocalSerializer();
+
+            // open the file and write table header
+            await localSerializer.OpenFileAsync(fullPath, syncTable).ConfigureAwait(false);
+
+            foreach (var row in syncTable.Rows)
+                await localSerializer.WriteRowToFileAsync(row, syncTable).ConfigureAwait(false);
+
+            // Close file
+            await localSerializer.CloseFileAsync(fullPath, syncTable).ConfigureAwait(false);
+
+        }
+
         /// <summary>
         /// try to delete the Batch tmp directory and all the files stored in it
         /// </summary>
@@ -253,5 +311,6 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
             if (deleteFolder)
                 TryRemoveDirectory();
         }
+
     }
 }

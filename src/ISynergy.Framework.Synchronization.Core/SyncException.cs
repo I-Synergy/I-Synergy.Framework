@@ -13,24 +13,18 @@ namespace ISynergy.Framework.Synchronization.Core
     /// </summary>
     public class SyncException : Exception
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="message"></param>
-        public SyncException(string message) 
-            : base(message)
+        public SyncException(string message) : base(message)
         {
+
         }
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="exception"></param>
-        /// <param name="stage"></param>
-        public SyncException(Exception exception, SyncStage stage = SyncStage.None) 
-            : base(exception.Message, exception)
+        public SyncException(Exception exception, SyncStage stage = SyncStage.None) : base(exception.Message, exception)
         {
             SyncStage = stage;
+
+            if (exception is null)
+                return;
+
             TypeName = exception.GetType().Name;
         }
 
@@ -377,7 +371,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
 
     /// <summary>
-    /// Occurs when a column is not supported by the ISynergy.Framework.Synchronization.Core framework
+    /// Occurs when a column is not supported by the ISynergy.Framework.Synchronization
     /// </summary>
     public class UnsupportedColumnTypeException : Exception
     {
@@ -386,7 +380,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public UnsupportedColumnTypeException(string tableName, string columnName, string columnType, string provider) : base(string.Format(message, tableName, columnName, columnType, provider)) { }
     }
     /// <summary>
-    /// Occurs when a column name is not supported by the ISynergy.Framework.Synchronization.Core framework
+    /// Occurs when a column name is not supported by the ISynergy.Framework.Synchronization
     /// </summary>
     public class UnsupportedColumnNameException : Exception
     {
@@ -398,7 +392,7 @@ namespace ISynergy.Framework.Synchronization.Core
     }
 
     /// <summary>
-    /// Occurs when a column name is not supported by the ISynergy.Framework.Synchronization.Core framework for a primary key
+    /// Occurs when a column name is not supported by the ISynergy.Framework.Synchronization for a primary key
     /// </summary>
     public class UnsupportedPrimaryKeyColumnNameException : Exception
     {

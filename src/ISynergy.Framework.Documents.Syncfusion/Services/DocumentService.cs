@@ -44,7 +44,7 @@ namespace ISynergy.Framework.Documents.Services
         /// <exception cref="Exception"></exception>
         public Task<Stream> GenerateExcelSheetAsync<T>(SpreadsheetRequest<T> spreadsheetRequest, CancellationToken cancellationToken = default)
         {
-            Argument.IsNotNull(nameof(spreadsheetRequest), spreadsheetRequest);
+            Argument.IsNotNull(spreadsheetRequest);
 
             Stream result = new MemoryStream();
             IWorkbook workbook = null;
@@ -91,7 +91,7 @@ namespace ISynergy.Framework.Documents.Services
         /// <returns>Task.</returns>
         public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default)
         {
-            Argument.IsNotNull(nameof(documentRequest), documentRequest);
+            Argument.IsNotNull(documentRequest);
 
             Stream result = new MemoryStream();
             WordDocument document = null;

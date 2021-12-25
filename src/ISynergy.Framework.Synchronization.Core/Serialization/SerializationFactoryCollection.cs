@@ -16,11 +16,6 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         public static ISerializerFactory JsonSerializerFactory { get; } = new JsonConverterFactory();
 
         /// <summary>
-        /// Get the Utf8Json serializer
-        /// </summary>
-        //public static ISerializerFactory Utf8JsonSerializer { get; } = new Utf8JsonConverterFactory();
-
-        /// <summary>
         /// Get the default Json serializer
         /// </summary>
         public static ISerializerFactory DataContractSerializerFactory { get; } = new ContractSerializerFactory();

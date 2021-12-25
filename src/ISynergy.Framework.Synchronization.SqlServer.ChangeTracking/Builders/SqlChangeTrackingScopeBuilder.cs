@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.SqlServer.Builders;
 using System;
+using System.Data;
 using System.Data.Common;
 
 namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Builders

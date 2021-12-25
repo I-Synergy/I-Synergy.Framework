@@ -36,8 +36,8 @@ namespace ISynergy.Framework.Automations.States.Base
         protected BaseNumericState(T below, T above)
             : base(TimeSpan.Zero)
         {
-            Argument.IsNotNull(nameof(below), below);
-            Argument.IsNotNull(nameof(above), above);
+            Argument.IsNotNull(below);
+            Argument.IsNotNull(above);
 
             Below = below;
             Above = above;

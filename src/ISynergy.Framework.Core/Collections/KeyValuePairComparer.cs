@@ -27,7 +27,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public KeyValuePairComparer(IComparer<TKey> keyComparer)
         {
-            Argument.IsNotNull(nameof(keyComparer), keyComparer);
+            Argument.IsNotNull(keyComparer);
 
             _keyComparer = keyComparer;
         }

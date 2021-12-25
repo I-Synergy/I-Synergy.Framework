@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -133,6 +133,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public static void OnTriggerDropped(this BaseOrchestrator orchestrator, Func<TriggerDroppedArgs, Task> action)
             => orchestrator.SetInterceptor(action);
+
     }
 
     public static partial class SyncEventsId

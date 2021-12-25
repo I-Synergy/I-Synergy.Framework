@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -18,10 +18,11 @@ namespace ISynergy.Framework.Synchronization.Core
             : base(context, connection)
         {
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
+
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Connection Opened.";
+
         public override int EventId => SyncEventsId.ConnectionOpen.Id;
     }
 
@@ -39,6 +40,7 @@ namespace ISynergy.Framework.Synchronization.Core
         }
 
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
+
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Trying to Reconnect...";
 
@@ -68,10 +70,11 @@ namespace ISynergy.Framework.Synchronization.Core
             : base(context, connection)
         {
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
+
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Connection Closed.";
+
         public override int EventId => SyncEventsId.ConnectionClose.Id;
     }
 
@@ -100,10 +103,10 @@ namespace ISynergy.Framework.Synchronization.Core
             : base(context, connection, transaction)
         {
         }
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Transaction Commited.";
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
+
         public override int EventId => SyncEventsId.TransactionCommit.Id;
     }
 
@@ -116,10 +119,10 @@ namespace ISynergy.Framework.Synchronization.Core
             : base(context, connection, null)
         {
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Session Begins. Id:{Context.SessionId}. Scope name:{Context.ScopeName}.";
+
         public override int EventId => SyncEventsId.SessionBegin.Id;
     }
 
@@ -132,7 +135,6 @@ namespace ISynergy.Framework.Synchronization.Core
             : base(context, connection, null)
         {
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
         public override string Source => Connection.Database;
         public override string Message => $"[{Connection.Database}] Session Ends. Id:{Context.SessionId}. Scope name:{Context.ScopeName}.";
@@ -185,7 +187,6 @@ namespace ISynergy.Framework.Synchronization.Core
         public SyncConflict Conflict { get; }
 
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
-
         /// <summary>
         /// Gets or Sets the scope id who will be marked as winner
         /// </summary>
@@ -204,10 +205,10 @@ namespace ISynergy.Framework.Synchronization.Core
             resolution = action;
             SenderScopeId = senderScopeId;
         }
-
         public override string Source => Connection.Database;
         public override string Message => $"Conflict {Conflict.Type}.";
         public override int EventId => SyncEventsId.ApplyChangesFailed.Id;
+
     }
 
 

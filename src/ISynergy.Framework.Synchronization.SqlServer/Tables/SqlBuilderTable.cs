@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Definitions;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Manager;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.Metadata;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
             _sqlDbMetadata = new SqlDbMetadata();
         }
 
-        private Dictionary<string, string> createdRelationNames = new Dictionary<string, string>();
+        private Dictionary<string, string> _createdRelationNames = new Dictionary<string, string>();
 
         private static string GetRandomString() =>
             Path.GetRandomFileName().Replace(".", "").ToLowerInvariant();
@@ -51,8 +51,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
         /// </summary>
         public string NormalizeRelationName(string relation)
         {
-            if (createdRelationNames.ContainsKey(relation))
-                return createdRelationNames[relation];
+            if (_createdRelationNames.ContainsKey(relation))
+                return _createdRelationNames[relation];
 
             var name = relation;
 
@@ -62,7 +62,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
             // MySql could have a special character in its relation names
             name = name.Replace("~", "").Replace("#", "");
 
-            createdRelationNames.Add(relation, name);
+            _createdRelationNames.Add(relation, name);
 
             return name;
         }
@@ -93,10 +93,14 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
                 if (column.IsReadOnly)
                     nullString = "NULL";
 
-                var defaultValue = string.Empty;
+                string defaultValue = string.Empty;
                 if (_tableDescription.OriginalProvider == SqlSyncProvider.ProviderType)
+                {
                     if (!string.IsNullOrEmpty(column.DefaultValue))
+                    {
                         defaultValue = "DEFAULT " + column.DefaultValue;
+                    }
+                }
 
                 stringBuilder.AppendLine($"\t{empty}{columnName} {columnType} {identity} {nullString} {defaultValue}");
                 empty = ",";
@@ -391,10 +395,14 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Tables
             if (column.IsReadOnly)
                 nullString = "NULL";
 
-            var defaultValue = string.Empty;
+            string defaultValue = string.Empty;
             if (_tableDescription.OriginalProvider == SqlSyncProvider.ProviderType)
+            {
                 if (!string.IsNullOrEmpty(column.DefaultValue))
+                {
                     defaultValue = "DEFAULT " + column.DefaultValue;
+                }
+            }
 
             stringBuilder.AppendLine($"ADD {columnNameString} {columnType} {identity} {nullString} {defaultValue}");
 

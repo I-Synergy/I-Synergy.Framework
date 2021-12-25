@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -41,9 +41,9 @@ namespace ISynergy.Framework.Synchronization.Core
             TrackingTableName = trackingTableName;
             Command = command;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{TrackingTableName}] tracking table creating.";
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TrackingTableCreating.Id;
 
     }
@@ -80,7 +80,6 @@ namespace ISynergy.Framework.Synchronization.Core
             TrackingTableName = trackingTableName;
             Command = command;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{TrackingTableName}] Tracking Table Dropping.";
@@ -123,9 +122,8 @@ namespace ISynergy.Framework.Synchronization.Core
             OldTrackingTableName = oldTrackingTableName;
 
         }
-
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Message => $"[{TrackingTableName}] Tracking Table Renaming.";
         public override int EventId => SyncEventsId.TrackingTableRenaming.Id;
 

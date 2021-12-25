@@ -1,9 +1,10 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 
 namespace ISynergy.Framework.Synchronization.Core.Serialization
 {
     public interface IConverter
     {
+
         /// <summary>
         /// get the unique key for this converter
         /// </summary>

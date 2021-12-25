@@ -199,7 +199,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task.</returns>
         public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModelBlade viewmodel)
         {
-            Argument.IsNotNull(nameof(owner), owner);
+            Argument.IsNotNull(owner);
 
             viewmodel.Owner = owner;
             viewmodel.Closed += Viewmodel_Closed;
@@ -238,7 +238,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task.</returns>
         public Task RemoveBladeAsync(IViewModelBladeView owner, IViewModelBlade viewmodel)
         {
-            Argument.IsNotNull(nameof(owner), owner);
+            Argument.IsNotNull(owner);
 
             if (owner.Blades is not null)
             {

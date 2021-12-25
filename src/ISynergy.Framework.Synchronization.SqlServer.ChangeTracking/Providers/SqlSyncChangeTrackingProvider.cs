@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Adapters;
+using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Adapters;
 using ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Builders;

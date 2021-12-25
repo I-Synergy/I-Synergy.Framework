@@ -2,7 +2,8 @@
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Parameters;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Parameter;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;

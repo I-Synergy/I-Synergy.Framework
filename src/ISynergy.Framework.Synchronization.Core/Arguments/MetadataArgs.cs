@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Messages;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,9 +21,9 @@ namespace ISynergy.Framework.Synchronization.Core
             Setup = setup;
             TimeStampStart = timeStampStart;
         }
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"Cleaning Metadatas.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
 
         public override int EventId => SyncEventsId.MetadataCleaning.Id;
     }
@@ -40,8 +40,8 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Gets or Sets the rows count cleaned for all tables, during a DeleteMetadatasAsync call
         /// </summary>
         public DatabaseMetadatasCleaned DatabaseMetadatasCleaned { get; set; }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
 
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Connection.Database;
         public override string Message => $"Tables Cleaned:{DatabaseMetadatasCleaned.Tables.Count}. Rows Cleaned:{DatabaseMetadatasCleaned.RowsCleanedCount}.";
 
@@ -74,7 +74,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public static void OnMetadataCleaned(this BaseOrchestrator orchestrator, Func<MetadataCleanedArgs, Task> action)
             => orchestrator.SetInterceptor(action);
-
     }
 
     public static partial class SyncEventsId

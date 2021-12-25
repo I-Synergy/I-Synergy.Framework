@@ -1,11 +1,11 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Synchronization.Core.Abstractions;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Interceptors;
-using ISynergy.Framework.Synchronization.Core.Parameters;
-using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Parameter;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Core
 {
-
     /// <summary>
     /// Sync agent. It's the sync orchestrator
     /// Knows both the Sync Server provider and the Sync Client provider
@@ -67,15 +66,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public SyncOptions Options => LocalOrchestrator?.Options;
 
-        /// <summary>
-        /// Get or sets schema.
-        /// </summary>
         public SyncSet Schema { get; private set; }
 
         /// <summary>
         /// Set interceptors on the LocalOrchestrator
         /// </summary>
-        public void SetInterceptors(Interceptor interceptors) => LocalOrchestrator.On(interceptors);
+        public void SetInterceptors(Interceptors interceptors) => LocalOrchestrator.On(interceptors);
 
 
         /// <summary>
@@ -87,7 +83,6 @@ namespace ISynergy.Framework.Synchronization.Core
                 throw new InvalidRemoteOrchestratorException();
 
             RemoteOrchestrator.OnApplyChangesFailed(action);
-
         }
 
 
@@ -112,9 +107,10 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             // Enf sync from local provider
             lock (lockObj)
+            {
                 syncInProgress = false;
+            }
         }
-
 
         private SyncAgent(IVersionService versionService, string scopeName)
         {
@@ -131,7 +127,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="serverProvider">Local Provider connecting to your server database</param>
         /// <param name="tables">Tables list to synchronize</param>
         /// <param name="scopeName">Scope Name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, CoreProvider serverProvider, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, IProvider serverProvider, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, serverProvider, new SyncOptions(), new SyncSetup(tables), scopeName)
         {
         }
@@ -144,7 +140,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="clientProvider">Local Provider connecting to your client database</param>
         /// <param name="serverProvider">Local Provider connecting to your server database</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, CoreProvider serverProvider, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, IProvider serverProvider, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, serverProvider, new SyncOptions(), new SyncSetup(), scopeName)
         {
         }
@@ -159,7 +155,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="options">Sync Options defining options used by your local and remote provider</param>
         /// <param name="tables">tables list</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, CoreProvider serverProvider, SyncOptions options, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, IProvider serverProvider, SyncOptions options, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, serverProvider, options, new SyncSetup(tables), scopeName)
         {
         }
@@ -173,7 +169,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="serverProvider">Local Provider connecting to your server database</param>
         /// <param name="setup">Sync Setup containing your tables and columns list.</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, CoreProvider serverProvider, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, IProvider serverProvider, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, serverProvider, new SyncOptions(), setup, scopeName)
         {
         }
@@ -188,23 +184,14 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="options">Sync Options defining options used by your local and remote provider</param>
         /// <param name="setup">Sync Setup containing the definition of your tables, columns, filters and naming conventions.</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(
-            IVersionService versionService,
-            CoreProvider clientProvider,
-            CoreProvider serverProvider,
-            SyncOptions options,
-            SyncSetup setup,
-            string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, IProvider serverProvider, SyncOptions options, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, scopeName)
         {
-            if (clientProvider is null)
-                throw new ArgumentNullException(nameof(clientProvider));
-            if (serverProvider is null)
-                throw new ArgumentNullException(nameof(serverProvider));
-            if (options is null)
-                throw new ArgumentNullException(nameof(options));
-            if (setup is null)
-                throw new ArgumentNullException(nameof(setup));
+            Argument.IsNotNull(versionService);
+            Argument.IsNotNull(setup);
+            Argument.IsNotNull(options);
+            Argument.IsNotNull(clientProvider);
+            Argument.IsNotNull(serverProvider);
 
             // Affect local and remote orchestrators
             LocalOrchestrator = new LocalOrchestrator(versionService, clientProvider, options, setup, scopeName);
@@ -222,7 +209,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="remoteOrchestrator">Remote Orchestrator already configured with a SyncProvider</param>
         /// <param name="tables">tables list</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, RemoteOrchestrator remoteOrchestrator, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, RemoteOrchestrator remoteOrchestrator, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, remoteOrchestrator, new SyncOptions(), new SyncSetup(tables), scopeName)
         {
         }
@@ -236,10 +223,9 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="clientProvider">Local Provider connecting to your client database</param>
         /// <param name="remoteOrchestrator">Remote Orchestrator already configured with a SyncProvider</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, RemoteOrchestrator remoteOrchestrator, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, RemoteOrchestrator remoteOrchestrator, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, remoteOrchestrator, new SyncOptions(), new SyncSetup(), scopeName)
         {
-
         }
 
 
@@ -253,7 +239,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="options">Sync Options defining options used by your local provider (and remote provider if remoteOrchestrator is not a WebClientOrchestrator)</param>
         /// <param name="tables">tables list</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, RemoteOrchestrator remoteOrchestrator, SyncOptions options, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, RemoteOrchestrator remoteOrchestrator, SyncOptions options, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, remoteOrchestrator, options, new SyncSetup(tables), scopeName)
         {
         }
@@ -267,7 +253,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="remoteOrchestrator">Remote Orchestrator already configured with a SyncProvider</param>
         /// <param name="options">Sync Options defining options used by your local provider (and remote provider if remoteOrchestrator is not a WebClientOrchestrator)</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, RemoteOrchestrator remoteOrchestrator, SyncOptions options, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, RemoteOrchestrator remoteOrchestrator, SyncOptions options, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, remoteOrchestrator, options, new SyncSetup(), scopeName)
         {
         }
@@ -281,7 +267,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="remoteOrchestrator">Remote Orchestrator already configured with a SyncProvider</param>
         /// <param name="setup"></param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, RemoteOrchestrator remoteOrchestrator, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, RemoteOrchestrator remoteOrchestrator, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, clientProvider, remoteOrchestrator, new SyncOptions(), setup, scopeName)
         {
         }
@@ -296,7 +282,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="options">Sync Options defining options used by your local provider (and remote provider if remoteOrchestrator is not a WebClientOrchestrator)</param>
         /// <param name="setup">Sync Setup containing the definition of your tables, columns, filters and naming conventions.</param>
         /// <param name="scopeName">scope name</param>
-        public SyncAgent(IVersionService versionService, CoreProvider clientProvider, RemoteOrchestrator remoteOrchestrator, SyncOptions options, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
+        public SyncAgent(IVersionService versionService, IProvider clientProvider, RemoteOrchestrator remoteOrchestrator, SyncOptions options, SyncSetup setup, string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, scopeName)
         {
             if (clientProvider is null)
@@ -423,8 +409,8 @@ namespace ISynergy.Framework.Synchronization.Core
                     ServerScopeInfo serverScopeInfo = null;
 
                     // Internal set the good reference. Don't use the SetContext method here
-                    LocalOrchestrator.syncContext = context;
-                    RemoteOrchestrator.syncContext = context;
+                    LocalOrchestrator._syncContext = context;
+                    RemoteOrchestrator._syncContext = context;
                     LocalOrchestrator.StartTime = startTime;
                     RemoteOrchestrator.StartTime = startTime;
 
@@ -552,8 +538,10 @@ namespace ISynergy.Framework.Synchronization.Core
 
                         // Apply snapshot
                         if (serverSnapshotChanges.ServerBatchInfo is not null)
+                        {
                             (result.SnapshotChangesAppliedOnClient, clientScopeInfo) = await LocalOrchestrator.ApplySnapshotAsync(
                                 clientScopeInfo, serverSnapshotChanges.ServerBatchInfo, clientChanges.ClientTimestamp, serverSnapshotChanges.RemoteClientTimestamp, serverSnapshotChanges.DatabaseChangesSelected, default, default, cancellationToken, progress).ConfigureAwait(false);
+                        }
                     }
 
                     // Get if we have already applied a snapshot, so far we don't need to reset table even if we are i Reinitialize Mode
@@ -622,12 +610,12 @@ namespace ISynergy.Framework.Synchronization.Core
             return result;
         }
 
-    #region IDisposable
-    // Dispose() calls Dispose(true)
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public void Dispose()
+        #region IDisposable
+        // Dispose() calls Dispose(true)
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

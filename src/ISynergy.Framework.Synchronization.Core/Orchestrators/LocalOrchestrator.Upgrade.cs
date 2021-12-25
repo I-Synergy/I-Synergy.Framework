@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data;
@@ -13,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public partial class LocalOrchestrator
     {
@@ -103,7 +102,6 @@ namespace ISynergy.Framework.Synchronization.Core
         internal virtual async Task<ScopeInfo> InternalUpgradeAsync(SyncContext context, SyncSet schema, SyncSetup setup, ScopeInfo scopeInfo, DbScopeBuilder builder, DbConnection connection, DbTransaction transaction,
                         CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-
             var version = new Version(scopeInfo.Version);
             var oldVersion = version.Clone() as Version;
 
@@ -171,7 +169,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             var message = $"Upgrade to {newVersion}:";
             await InterceptAsync(new UpgradeProgressArgs(context, message, newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
-
+            
             foreach (var schemaTable in schemaTables)
             {
                 var tableBuilder = GetTableBuilder(schemaTable, setup);

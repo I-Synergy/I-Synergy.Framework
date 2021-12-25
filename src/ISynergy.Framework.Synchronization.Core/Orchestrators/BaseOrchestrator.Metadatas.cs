@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Messages;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data;
@@ -11,7 +9,7 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public abstract partial class BaseOrchestrator
     {
@@ -51,7 +49,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     DbConnection connection, DbTransaction transaction,
                     CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            await InterceptAsync(new MetadataCleaningArgs(context, Setup, timestampLimit, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new MetadataCleaningArgs(context, Setup, timestampLimit, connection, transaction),progress, cancellationToken).ConfigureAwait(false);
 
             DatabaseMetadatasCleaned databaseMetadatasCleaned = new DatabaseMetadatasCleaned { TimestampLimit = timestampLimit };
 

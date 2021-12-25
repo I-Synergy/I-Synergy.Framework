@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
 using System.Data.Common;
 
-namespace ISynergy.Framework.Synchronization.Core.Arguments
+namespace ISynergy.Framework.Synchronization.Core
 {
     public class ProgressArgs
     {
@@ -31,11 +31,8 @@ namespace ISynergy.Framework.Synchronization.Core.Arguments
         public virtual string Hint { get; set; }
 
         /// <summary>
-        /// Default constructor.
+        /// Constructor
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
         public ProgressArgs(SyncContext context, DbConnection connection, DbTransaction transaction)
         {
             Context = context;
@@ -45,11 +42,6 @@ namespace ISynergy.Framework.Synchronization.Core.Arguments
             ProgressLevel = SyncProgressLevel.Information;
         }
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="connection"></param>
         public ProgressArgs(SyncContext context, DbConnection connection)
         {
             Context = context;

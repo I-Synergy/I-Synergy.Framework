@@ -44,9 +44,9 @@ namespace ISynergy.Framework.Automations.Triggers.Base
         protected BaseNumericTrigger(Guid automationId, T below, T above, TimeSpan @for)
             : base(automationId)
         {
-            Argument.IsNotNull(nameof(below), below);
-            Argument.IsNotNull(nameof(above), above);
-            Argument.IsNotNull(nameof(@for), @for);
+            Argument.IsNotNull(below);
+            Argument.IsNotNull(above);
+            Argument.IsNotNull(@for);
 
             Below = below;
             Above = above;

@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Cache;
-using ISynergy.Framework.Synchronization.Client;
-using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Client.Messages;
+using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 
 namespace ISynergy.Framework.AspNetCore.Synchronization.Arguments

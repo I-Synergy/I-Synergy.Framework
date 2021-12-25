@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Core
 {
-
     public class LocalTimestampLoadingArgs : ProgressArgs
     {
         public bool Cancel { get; set; } = false;
@@ -24,19 +23,21 @@ namespace ISynergy.Framework.Synchronization.Core
 
         public override int EventId => SyncEventsId.LocalTimestampLoading.Id;
     }
+
     public class LocalTimestampLoadedArgs : ProgressArgs
     {
         public LocalTimestampLoadedArgs(SyncContext context, long localTimestamp, DbConnection connection, DbTransaction transaction) : base(context, connection, transaction)
         {
             LocalTimestamp = localTimestamp;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+
         public override string Source => Connection.Database;
         public override string Message => $"[{Source}] Local Timestamp Loaded:{LocalTimestamp}.";
         public long LocalTimestamp { get; }
         public override int EventId => SyncEventsId.LocalTimestampLoaded.Id;
     }
+
     public static partial class InterceptorsExtensions
     {
         /// <summary>

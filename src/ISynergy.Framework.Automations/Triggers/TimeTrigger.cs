@@ -36,7 +36,7 @@ namespace ISynergy.Framework.Automations.Triggers
         public TimeTrigger(Guid automationId, TimeSpan at, bool isFixedTime)
             : base(automationId)
         {
-            Argument.IsNotNull(nameof(at), at);
+            Argument.IsNotNull(at);
 
             At = at;
             IsFixedTime = isFixedTime;

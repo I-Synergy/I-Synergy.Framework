@@ -101,6 +101,8 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         private readonly SyncSetup _newSetup;
         private readonly SyncSetup _oldSetup;
 
+
+
         public Migration(SyncSetup newSetup, SyncSetup oldSetup)
         {
             _newSetup = newSetup;
@@ -109,7 +111,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
         public MigrationResults Compare()
         {
-            var migrationSetup = new MigrationResults();
+            MigrationResults migrationSetup = new MigrationResults();
 
             if (_newSetup.EqualsByProperties(_oldSetup))
                 return migrationSetup;
@@ -212,6 +214,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             // Search for new filters
             // If we have any filter, just recreate them, just in case
             if (_newSetup.Filters is not null && _newSetup.Filters.Count > 0)
+            {
                 foreach (var filter in _newSetup.Filters)
                 {
                     var setupTable = _newSetup.Tables[filter.TableName, filter.SchemaName];
@@ -235,6 +238,8 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
                     migrationTable.StoredProcedures = MigrationAction.Create;
                 }
+
+            }
 
 
             return migrationSetup;

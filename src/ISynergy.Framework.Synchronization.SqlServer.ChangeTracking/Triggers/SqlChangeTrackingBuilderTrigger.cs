@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
+using ISynergy.Framework.Synchronization.SqlServer.Builders;
 using ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Extensions;
-using ISynergy.Framework.Synchronization.SqlServer.Triggers;
 using System.Data.Common;
 using System.Threading.Tasks;
 

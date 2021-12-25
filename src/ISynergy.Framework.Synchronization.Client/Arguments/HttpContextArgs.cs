@@ -1,13 +1,12 @@
 ﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
 
     /// <summary>
@@ -20,9 +19,8 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
         {
             Response = response;
         }
-
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => HttpClientSyncEventsId.HttpGettingResponseMessage.Id;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
 
         public HttpResponseMessage Response { get; }
     }
@@ -37,9 +35,9 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
         {
             Request = request;
         }
-
         public override int EventId => HttpClientSyncEventsId.HttpSendingRequestMessage.Id;
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+
         public HttpRequestMessage Request { get; }
     }
 

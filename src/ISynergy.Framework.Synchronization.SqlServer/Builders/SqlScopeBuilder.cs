@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using System;
 using System.Data;
@@ -96,8 +96,8 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
             {
                 DbScopeType.Server => GetAllServerScopesCommand(connection, transaction),
                 DbScopeType.ServerHistory => GetAllServerHistoryScopesCommand(connection, transaction),
-                _ => GetAllClientScopesCommand(connection, transaction)
-            };
+            _ => GetAllClientScopesCommand(connection, transaction)
+        };
 
         public DbCommand GetCreateClientScopeInfoTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
@@ -257,11 +257,6 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Builders
                 _ => throw new NotImplementedException($"Can't save this DbScopeType {scopeType}")
             };
 
-        /// <summary>
-        /// Get save server client scopeinfo command.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
         /// <returns></returns>
         public DbCommand GetSaveClientScopeInfoCommand(DbConnection connection, DbTransaction transaction)
         {

@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,6 +35,7 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             Schema = schema;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
 
         /// <summary>
         /// Gets the schema loaded.

@@ -1,14 +1,13 @@
 ﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
 
     /// <summary>
@@ -20,7 +19,6 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
         {
             Host = host;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Host;
         public override int EventId => HttpClientSyncEventsId.HttpGettingSchemaRequest.Id;
@@ -36,13 +34,12 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
             Schema = schema;
             Host = host;
         }
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Source => Host;
         public override int EventId => HttpClientSyncEventsId.HttpGettingSchemaResponse.Id;
         public override string Message => $"Received Schema From Server. Tables Count:{Schema.Tables.Count}.";
 
         public SyncSet Schema { get; set; }
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public ServerScopeInfo ServerScopeInfo { get; set; }
 
         public string Host { get; }

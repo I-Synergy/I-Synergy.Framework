@@ -119,8 +119,8 @@ namespace ISynergy.Framework.UI.Extensions
         /// <exception cref="ArgumentException">ExceptionSettingsStorageExtensionsFileNameIsNullOrEmpty".GetLocalized() - fileName</exception>
         public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
         {
-            Argument.IsNotNull(nameof(content), content);
-            Argument.IsNotNullOrEmpty(nameof(fileName), fileName);
+            Argument.IsNotNull(content);
+            Argument.IsNotNullOrEmpty(fileName);
 
             var storageFile = await folder.CreateFileAsync(fileName, options);
             await FileIO.WriteBytesAsync(storageFile, content);

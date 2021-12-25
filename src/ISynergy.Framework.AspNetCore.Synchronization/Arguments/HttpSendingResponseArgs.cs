@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Cache;
-using ISynergy.Framework.Synchronization.Client;
+using ISynergy.Framework.Synchronization.Client.Enumerations;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using Microsoft.AspNetCore.Http;
 

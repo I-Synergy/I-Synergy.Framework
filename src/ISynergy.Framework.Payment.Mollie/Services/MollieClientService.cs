@@ -54,8 +54,8 @@ namespace ISynergy.Framework.Payment.Mollie.Services
         /// <param name="validatorService">The validator service.</param>
         public MollieClientService(IHttpClientFactory httpClientFactory, IOptions<MollieApiOptions> options, ILogger<MollieClientService> logger, IValidatorService validatorService = null)
         {
-            Argument.IsNotNull(nameof(options), options);
-            Argument.IsNotNullOrEmpty(nameof(options.Value.ApiKey), options.Value?.ApiKey);
+            Argument.IsNotNull(options);
+            Argument.IsNotNullOrEmpty(options.Value?.ApiKey);
 
             _jsonConverterService = new JsonConverterService();
             _httpClient = httpClientFactory.CreateClient();

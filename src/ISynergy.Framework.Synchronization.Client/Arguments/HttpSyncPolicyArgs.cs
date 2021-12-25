@@ -1,12 +1,11 @@
 ﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
     public class HttpSyncPolicyArgs : ProgressArgs
     {
@@ -18,9 +17,8 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
             Delay = delay;
         }
 
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Message => $"Retry Sending Http Request ({RetryNumber}/{RetryCount}. Waiting {Delay.TotalMilliseconds}ms... )";
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => HttpClientSyncEventsId.HttpSyncPolicy.Id;
 
         /// <summary>

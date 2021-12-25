@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Collections.Concurrent;
@@ -91,14 +91,14 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
                     if (column is not null)
                     {
                         object value = row[column] ?? DBNull.Value;
-                        DbSyncAdapter.SetParameterValue(command, parameter.ParameterName, value);
+                        SetParameterValue(command, parameter.ParameterName, value);
                     }
                 }
 
             }
 
             // return value
-            var syncRowCountParam = DbSyncAdapter.GetParameter(command, "sync_row_count");
+            var syncRowCountParam = GetParameter(command, "sync_row_count");
 
             if (syncRowCountParam is not null)
             {
@@ -169,11 +169,10 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// </summary>
         internal void AddScopeParametersValues(DbCommand command, Guid? id, long? lastTimestamp, bool isDeleted, bool forceWrite)
         {
-            // Dotmim.Sync parameters
-            DbSyncAdapter.SetParameterValue(command, "sync_force_write", forceWrite ? 1 : 0);
-            DbSyncAdapter.SetParameterValue(command, "sync_min_timestamp", lastTimestamp.HasValue ? (object)lastTimestamp.Value : DBNull.Value);
-            DbSyncAdapter.SetParameterValue(command, "sync_scope_id", id.HasValue ? (object)id.Value : DBNull.Value);
-            DbSyncAdapter.SetParameterValue(command, "sync_row_is_tombstone", isDeleted);
+            SetParameterValue(command, "sync_force_write", forceWrite ? 1 : 0);
+            SetParameterValue(command, "sync_min_timestamp", lastTimestamp.HasValue ? lastTimestamp.Value : DBNull.Value);
+            SetParameterValue(command, "sync_scope_id", id.HasValue ? id.Value : DBNull.Value);
+            SetParameterValue(command, "sync_row_is_tombstone", isDeleted);
         }
 
 
@@ -285,11 +284,13 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
             for (int i = 0; i < numArray.Length; i++)
             {
                 string str1 = numArray[i].ToString("X", NumberFormatInfo.InvariantInfo);
-                stringBuilder.Append((str1.Length == 1 ? string.Concat("0", str1) : str1));
+                stringBuilder.Append(str1.Length == 1 ? string.Concat("0", str1) : str1);
             }
 
             long.TryParse(stringBuilder.ToString(), NumberStyles.HexNumber, CultureInfo.InvariantCulture.NumberFormat, out timestamp);
             return timestamp;
         }
+
+
     }
 }

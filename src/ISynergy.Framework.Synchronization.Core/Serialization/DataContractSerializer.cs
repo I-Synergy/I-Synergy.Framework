@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.IO;
 using System.Runtime.Serialization;

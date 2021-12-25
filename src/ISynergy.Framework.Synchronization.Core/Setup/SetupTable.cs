@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -65,7 +65,9 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
             // Check Schema
             if (string.IsNullOrEmpty(schemaName))
+            {
                 schemaName = string.IsNullOrEmpty(parserTableName.SchemaName) ? null : parserTableName.SchemaName;
+            }
             else
             {
                 var parserSchemaName = ParserName.Parse(schemaName);
@@ -73,7 +75,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
 
             }
 
-            // https://github.com/Mimetis/ISynergy.Framework.Synchronization.Core/issues/621#issuecomment-968369322
+            // https://github.com/Mimetis/Dotmim.Sync/issues/621#issuecomment-968369322
             SchemaName = string.IsNullOrEmpty(schemaName) ? string.Empty : schemaName;
             Columns = new SetupColumns();
         }

@@ -1,6 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
@@ -63,25 +62,25 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
                 if (connection.State != ConnectionState.Open)
                     throw new ConnectionClosedException(connection);
 
-                command.Connection = connection;
-                command.Transaction = transaction;
+            command.Connection = connection;
+            command.Transaction = transaction;
 
-                // Get a lazy command instance
-                var lazyCommand = commands.GetOrAdd(commandKey, k => new Lazy<SyncCommand>(() =>
-                {
-                    var syncCommand = new SyncCommand(commandKey);
-                    return syncCommand;
-                }));
+            // Get a lazy command instance
+            var lazyCommand = commands.GetOrAdd(commandKey, k => new Lazy<SyncCommand>(() =>
+            {
+                var syncCommand = new SyncCommand(commandKey);
+                return syncCommand;
+            }));
 
-                // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
-                if (lazyCommand.Value.IsPrepared == true)
-                    return command;
+            // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
+            if (lazyCommand.Value.IsPrepared == true)
+                return command;
 
-                // Testing The Prepare() performance increase
-                command.Prepare();
+            // Testing The Prepare() performance increase
+            command.Prepare();
 
-                // Adding this command as prepared
-                lazyCommand.Value.IsPrepared = true;
+            // Adding this command as prepared
+            lazyCommand.Value.IsPrepared = true;
 
                 commands.AddOrUpdate(commandKey, lazyCommand, (key, lc) => new Lazy<SyncCommand>(() => lc.Value));
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.Serialization;
 
 namespace ISynergy.Framework.Synchronization.Core.Batch
@@ -48,4 +48,5 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
                 return table.TableName;
         }
     }
+
 }

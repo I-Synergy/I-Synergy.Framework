@@ -1,11 +1,11 @@
-﻿using ISynergy.Framework.Synchronization.Core;
+using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Definitions;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Manager;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Sqlite.Metadata;
+using ISynergy.Framework.Synchronization.Sqlite.Models;
 using ISynergy.Framework.Synchronization.Sqlite.Utilities;
 using Microsoft.Data.Sqlite;
 using System;
@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 {
+
     /// <summary>
     /// The SqlBuilder class is the Sql implementation of DbBuilder class.
     /// In charge of creating tracking table, stored proc, triggers and adapters.
@@ -24,13 +25,13 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
     public class SqliteTableBuilder : DbTableBuilder
     {
 
-        private SqliteObjectNames sqliteObjectNames;
-        private SqliteDbMetadata sqliteDbMetadata;
+        private SqliteObjectNames _sqliteObjectNames;
+        private SqliteDbMetadata _sqliteDbMetadata;
 
         public SqliteTableBuilder(SyncTable tableDescription, ParserName tableName, ParserName trackingTableName, SyncSetup setup) : base(tableDescription, tableName, trackingTableName, setup)
         {
-            sqliteObjectNames = new SqliteObjectNames(tableDescription, TableName, TrackingTableName, setup);
-            sqliteDbMetadata = new SqliteDbMetadata();
+            _sqliteObjectNames = new SqliteObjectNames(tableDescription, TableName, TrackingTableName, setup);
+            _sqliteDbMetadata = new SqliteDbMetadata();
         }
 
         private string BuildTableCommandText()
@@ -41,11 +42,11 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             foreach (var column in TableDescription.Columns)
             {
                 var columnName = ParserName.Parse(column).Quoted().ToString();
-                var columnType = sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(column, TableDescription.OriginalProvider);
+                var columnType = _sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(column, TableDescription.OriginalProvider);
 
                 // check case
                 string casesensitive = "";
-                if (sqliteDbMetadata.IsTextType(column))
+                if (_sqliteDbMetadata.IsTextType(column))
                 {
                     casesensitive = SyncGlobalization.IsCaseSensitive() ? "" : "COLLATE NOCASE";
 
@@ -138,7 +139,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             foreach (var pkColumn in TableDescription.GetPrimaryKeysColumns())
             {
                 var quotedColumnName = ParserName.Parse(pkColumn).Quoted().ToString();
-                var columnType = sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(pkColumn, TableDescription.OriginalProvider);
+                var columnType = _sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(pkColumn, TableDescription.OriginalProvider);
                 stringBuilder.AppendLine($"{quotedColumnName} {columnType} NOT NULL COLLATE NOCASE, ");
             }
 
@@ -280,7 +281,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         public override Task<DbCommand> GetExistsTriggerCommandAsync(DbTriggerType triggerType, DbConnection connection, DbTransaction transaction)
         {
-            var commandTriggerName = string.Format(sqliteObjectNames.GetTriggerCommandName(triggerType), TableName.Unquoted().ToString());
+            var commandTriggerName = string.Format(_sqliteObjectNames.GetTriggerCommandName(triggerType), TableName.Unquoted().ToString());
             var triggerName = ParserName.Parse(commandTriggerName).ToString();
 
             var command = connection.CreateCommand();
@@ -299,7 +300,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         private DbCommand CreateInsertTriggerCommand(DbConnection connection, DbTransaction transaction)
         {
-            var insTriggerName = string.Format(sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Insert), TableName.Unquoted().ToString());
+            var insTriggerName = string.Format(_sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Insert), TableName.Unquoted().ToString());
 
             StringBuilder createTrigger = new StringBuilder($"CREATE TRIGGER IF NOT EXISTS {insTriggerName} AFTER INSERT ON {TableName.Quoted().ToString()} ");
             createTrigger.AppendLine();
@@ -347,7 +348,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         private DbCommand CreateDeleteTriggerCommand(DbConnection connection, DbTransaction transaction)
         {
-            var delTriggerName = string.Format(sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Delete), TableName.Unquoted().ToString());
+            var delTriggerName = string.Format(_sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Delete), TableName.Unquoted().ToString());
 
             StringBuilder createTrigger = new StringBuilder($"CREATE TRIGGER IF NOT EXISTS {delTriggerName} AFTER DELETE ON {TableName.Quoted().ToString()} ");
             createTrigger.AppendLine();
@@ -395,7 +396,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         private DbCommand CreateUpdateTriggerCommand(DbConnection connection, DbTransaction transaction)
         {
-            var updTriggerName = string.Format(sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Update), TableName.Unquoted().ToString());
+            var updTriggerName = string.Format(_sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Update), TableName.Unquoted().ToString());
 
             StringBuilder createTrigger = new StringBuilder($"CREATE TRIGGER IF NOT EXISTS {updTriggerName} AFTER UPDATE ON {TableName.Quoted().ToString()} ");
             createTrigger.AppendLine();
@@ -546,7 +547,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         public override Task<DbCommand> GetDropTriggerCommandAsync(DbTriggerType triggerType, DbConnection connection, DbTransaction transaction)
         {
-            var triggerNameString = string.Format(sqliteObjectNames.GetTriggerCommandName(triggerType), TableDescription.GetFilter());
+            var triggerNameString = string.Format(_sqliteObjectNames.GetTriggerCommandName(triggerType), TableDescription.GetFilter());
 
             var triggerName = ParserName.Parse(triggerNameString).ToString();
 
@@ -584,7 +585,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
                     AllowDBNull = !Convert.ToBoolean(c["notnull"]),
                     DefaultValue = c["dflt_value"].ToString(),
 
-                    // No unsigned type in Sqlite
+                    // No unsigned type in SQLite
                     IsUnsigned = false
                 };
 
@@ -678,11 +679,11 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             var column = TableDescription.Columns[columnName];
             var columnNameString = ParserName.Parse(column).Quoted().ToString();
 
-            var columnType = sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(column, TableDescription.OriginalProvider);
+            var columnType = _sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(column, TableDescription.OriginalProvider);
 
             // check case
             string casesensitive = "";
-            if (sqliteDbMetadata.IsTextType(column))
+            if (_sqliteDbMetadata.IsTextType(column))
             {
                 casesensitive = SyncGlobalization.IsCaseSensitive() ? "" : "COLLATE NOCASE";
 

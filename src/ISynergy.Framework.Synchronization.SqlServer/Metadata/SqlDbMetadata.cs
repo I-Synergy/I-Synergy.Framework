@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Metadata;
+using ISynergy.Framework.Synchronization.Core.Manager;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
 using System;
 using System.Data;
-
 
 namespace ISynergy.Framework.Synchronization.SqlServer.Metadata
 {

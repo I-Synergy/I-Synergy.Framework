@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Parameters;
+using ISynergy.Framework.Synchronization.Core.Parameter;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;

@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
 using System.Data.Common;
 
-namespace ISynergy.Framework.Synchronization.Core.Arguments
+namespace ISynergy.Framework.Synchronization.Core
 {
     internal class DbCommandArgs : ProgressArgs
     {
@@ -19,4 +19,5 @@ namespace ISynergy.Framework.Synchronization.Core.Arguments
 
         public DbCommand Command { get; }
     }
+
 }

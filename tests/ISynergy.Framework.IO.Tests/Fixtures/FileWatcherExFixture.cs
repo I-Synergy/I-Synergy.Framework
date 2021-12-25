@@ -74,7 +74,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         /// </summary>
         private void AddEventHandlers()
         {
-            Argument.IsNotNull(nameof(FileWatcher), FileWatcher);
+            Argument.IsNotNull(FileWatcher);
 
             FileWatcher.EventChangedAttribute += fileWatcher_EventChanged;
             FileWatcher.EventChangedCreationTime += fileWatcher_EventChanged;

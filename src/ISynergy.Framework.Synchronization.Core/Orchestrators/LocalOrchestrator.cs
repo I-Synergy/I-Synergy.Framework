@@ -1,19 +1,18 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Core.Abstractions;
 using ISynergy.Framework.Synchronization.Core.Batch;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Messages;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public partial class LocalOrchestrator : BaseOrchestrator
     {
@@ -22,14 +21,9 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Create a local orchestrator, used to orchestrates the whole sync on the client side
         /// </summary>
-        /// <param name="versionService"></param>
-        /// <param name="provider"></param>
-        /// <param name="options"></param>
-        /// <param name="setup"></param>
-        /// <param name="scopeName"></param>
         public LocalOrchestrator(
             IVersionService versionService,
-            CoreProvider provider, 
+            IProvider provider, 
             SyncOptions options, 
             SyncSetup setup, 
             string scopeName = SyncOptions.DefaultScopeName)
@@ -124,7 +118,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 // Creating the message
                 var message = new MessageGetChangesBatch(remoteScopeId, localScopeInfo.Id, isNew, lastSyncTS, localScopeInfo.Schema, Setup,
-                                                         Options.BatchSize, Options.BatchDirectory, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
+                                                         Options.BatchSize, Options.BatchDirectory, null, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
 
                 var ctx = GetContext();
                 // Locally, if we are new, no need to get changes
@@ -189,7 +183,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 // Creating the message
                 // Since it's an estimated count, we don't need to create batches, so we hard code the batchsize to 0
-                var message = new MessageGetChangesBatch(remoteScopeId, localScopeInfo.Id, isNew, lastSyncTS, localScopeInfo.Schema, Setup, 0, Options.BatchDirectory, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
+                var message = new MessageGetChangesBatch(remoteScopeId, localScopeInfo.Id, isNew, lastSyncTS, localScopeInfo.Schema, Setup, 0, Options.BatchDirectory, null, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
 
                 DatabaseChangesSelected clientChangesSelected;
                 // Locally, if we are new, no need to get changes
@@ -292,7 +286,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var ctx = GetContext();
 
             ctx.SyncStage = SyncStage.SnapshotApplying;
-            await InterceptAsync(new SnapshotApplyingArgs(ctx), progress, cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new SnapshotApplyingArgs(ctx, Provider.CreateConnection()), progress, cancellationToken).ConfigureAwait(false);
 
             if (clientScopeInfo.Schema is null)
                 throw new ArgumentNullException(nameof(clientScopeInfo.Schema));

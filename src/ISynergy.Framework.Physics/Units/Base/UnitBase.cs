@@ -34,16 +34,16 @@ namespace ISynergy.Framework.Physics.Base
         /// <param name="unitTypes"></param>
         protected UnitBase(Units unit, UnitTypes[] unitTypes)
         {
-            Argument.IsNotNull(nameof(unit), unit);
+            Argument.IsNotNull(unit);
 
             Name = unit.GetDescription();
             Symbol = unit.GetSymbol();
 
-            Argument.IsNotNullOrEmpty(nameof(Name), Name);
-            Argument.IsNotNullOrEmpty(nameof(Symbol), Symbol);
+            Argument.IsNotNullOrEmpty(Name);
+            Argument.IsNotNullOrEmpty(Symbol);
 
-            Argument.IsNotNull(nameof(unitTypes), unitTypes);
-            Argument.Condition(nameof(unitTypes), unitTypes, value => unitTypes.Count() >= 1);
+            Argument.IsNotNull(unitTypes);
+            Argument.Condition(unitTypes, value => unitTypes.Count() >= 1);
 
             UnitTypes = unitTypes;
         }

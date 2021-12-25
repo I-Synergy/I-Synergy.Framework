@@ -30,7 +30,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            Argument.IsNotNull(nameof(value), value);
+            Argument.IsNotNull(value);
             return ((SolidColorBrush)value).Color.ToString();
         }
 
@@ -106,7 +106,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            Argument.IsNotNull(nameof(value), value);
+            Argument.IsNotNull(value);
 
             if (value is int color)
             {
@@ -126,7 +126,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            Argument.IsNotNull(nameof(value), value);
+            Argument.IsNotNull(value);
 
             if(value is Windows.UI.Color color)
             {

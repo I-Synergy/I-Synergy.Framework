@@ -2,18 +2,19 @@
 using ISynergy.Framework.AspNetCore.Synchronization.Cache;
 using ISynergy.Framework.AspNetCore.Synchronization.Extensions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Synchronization.Client;
+using ISynergy.Framework.Synchronization.Client.Enumerations;
 using ISynergy.Framework.Synchronization.Client.Exceptions;
+using ISynergy.Framework.Synchronization.Client.Messages;
 using ISynergy.Framework.Synchronization.Core;
+using ISynergy.Framework.Synchronization.Core.Abstractions;
 using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Core.Algorithms;
 using ISynergy.Framework.Synchronization.Core.Batch;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Encryption;
+using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Messages;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
-using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Serialization;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -45,7 +46,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         /// <param name="scopeName"></param>
         public WebServerOrchestrator(
             IVersionService versionService, 
-            CoreProvider provider, 
+            IProvider provider, 
             SyncOptions options, 
             SyncSetup setup, 
             string scopeName = SyncOptions.DefaultScopeName)
@@ -66,7 +67,11 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         /// <param name="provider"></param>
         /// <param name="tables"></param>
         /// <param name="scopeName"></param>
-        public WebServerOrchestrator(IVersionService versionService, CoreProvider provider, string[] tables, string scopeName = SyncOptions.DefaultScopeName)
+        public WebServerOrchestrator(
+            IVersionService versionService, 
+            IProvider provider, 
+            string[] tables, 
+            string scopeName = SyncOptions.DefaultScopeName)
             : this(versionService, provider, new SyncOptions(), new SyncSetup(tables), scopeName)
         {
         }
@@ -476,7 +481,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
 
             var changes = await base.GetEstimatedChangesCountAsync(httpMessage.Scope, default, default, cancellationToken, progress);
 
-            var changesResponse = new HttpMessageSendChangesResponse(syncContext)
+            var changesResponse = new HttpMessageSendChangesResponse(_syncContext)
             {
                 ServerChangesSelected = changes.ServerChangesSelected,
                 ClientChangesApplied = new DatabaseChangesApplied(),

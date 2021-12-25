@@ -1,9 +1,8 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Metadata;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Manager;
 using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data.Common;
@@ -18,7 +17,7 @@ namespace ISynergy.Framework.Synchronization.Client.Providers
     {
         public override DbMetadata GetMetadata() => throw new NotImplementedException();
 
-        public override string GetProviderTypeName() => "Fancy";
+        public override string GetProviderTypeName() => "ClientCore";
 
         public override bool CanBeServerProvider => true;
 

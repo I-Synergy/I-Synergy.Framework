@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Core
 {
+
+
     public class SchemaNameCreatedArgs : ProgressArgs
     {
         public SyncTable Table { get; }
@@ -18,7 +20,6 @@ namespace ISynergy.Framework.Synchronization.Core
         {
             Table = table;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.SchemaName}] Schema Created.";
@@ -38,7 +39,6 @@ namespace ISynergy.Framework.Synchronization.Core
             Table = table;
             Command = command;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.SchemaName}] Schema Creating.";
@@ -57,9 +57,9 @@ namespace ISynergy.Framework.Synchronization.Core
             Table = table;
         }
 
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Table Created.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TableCreated.Id;
     }
 
@@ -77,11 +77,11 @@ namespace ISynergy.Framework.Synchronization.Core
             TableName = tableName;
             Command = command;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Table Creating.";
         public override int EventId => SyncEventsId.TableCreating.Id;
+
     }
 
     public class TableDroppedArgs : ProgressArgs
@@ -96,9 +96,9 @@ namespace ISynergy.Framework.Synchronization.Core
             Table = table;
         }
 
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Table Dropped.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TableDropped.Id;
     }
 
@@ -116,11 +116,11 @@ namespace ISynergy.Framework.Synchronization.Core
             TableName = tableName;
             Table = table;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Table Dropping.";
         public override int EventId => SyncEventsId.TableDropping.Id;
+
     }
 
 
@@ -129,6 +129,7 @@ namespace ISynergy.Framework.Synchronization.Core
     /// </summary>
     public static partial class InterceptorsExtensions
     {
+
         /// <summary>
         /// Intercept the provider when database schema is created (works only on SQL Server)
         /// </summary>

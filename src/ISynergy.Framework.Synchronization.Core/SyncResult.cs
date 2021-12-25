@@ -29,7 +29,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public DateTime CompleteTime { get; set; }
 
-
         /// <summary>
         /// Gets the number of changes applied on the client
         /// </summary>
@@ -89,7 +88,6 @@ namespace ISynergy.Framework.Synchronization.Core
         {
 
         }
-
         /// <summary>
         /// Ctor. New sync context with a new Guid
         /// </summary>

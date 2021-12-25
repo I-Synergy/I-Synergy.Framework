@@ -40,8 +40,8 @@ namespace ISynergy.Framework.AspNetCore.Middleware
         /// <param name="options">The options.</param>
         public MaxConcurrentRequestsMiddleware(RequestDelegate next, IOptions<MaxConcurrentRequestsOptions> options)
         {
-            Argument.IsNotNull(nameof(MaxConcurrentRequestsOptions), options.Value);
-            Argument.IsNotNull(nameof(next), next);
+            Argument.IsNotNull(options.Value, nameof(MaxConcurrentRequestsOptions));
+            Argument.IsNotNull(next);
 
             _concurrentRequestsCount = 0;
             _next = next;

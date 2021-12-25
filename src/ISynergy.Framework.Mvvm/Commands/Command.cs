@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <exception cref="ArgumentNullException">execute</exception>
         public Command(Action execute, Func<bool> canExecute, bool keepTargetAlive = false)
         {
-            Argument.IsNotNull(nameof(execute), execute);
+            Argument.IsNotNull(execute);
 
             _execute = new WeakAction(execute, keepTargetAlive);
 

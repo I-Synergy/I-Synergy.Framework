@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -19,7 +19,6 @@ namespace ISynergy.Framework.Synchronization.Core
             Table = table;
             StoredProcedureType = storedProcedureType;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{StoredProcedureType}] Created.";
@@ -33,7 +32,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public DbStoredProcedureType StoredProcedureType { get; }
         public bool Cancel { get; set; } = false;
         public DbCommand Command { get; set; }
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public StoredProcedureCreatingArgs(SyncContext context, SyncTable table, DbStoredProcedureType storedProcedureType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
@@ -41,8 +40,6 @@ namespace ISynergy.Framework.Synchronization.Core
             Table = table;
             StoredProcedureType = storedProcedureType;
         }
-
-        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{StoredProcedureType}] Creating.";
         public override int EventId => SyncEventsId.StoredProcedureCreating.Id;
@@ -59,7 +56,6 @@ namespace ISynergy.Framework.Synchronization.Core
             Table = table;
             StoredProcedureType = storedProcedureType;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{StoredProcedureType}] Dropped.";
@@ -80,7 +76,6 @@ namespace ISynergy.Framework.Synchronization.Core
             Table = table;
             StoredProcedureType = storedProcedureType;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
         public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{StoredProcedureType}] Dropping.";

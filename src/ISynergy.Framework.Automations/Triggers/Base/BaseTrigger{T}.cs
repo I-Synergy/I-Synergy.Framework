@@ -50,10 +50,10 @@ namespace ISynergy.Framework.Automations.Triggers.Base
             TimeSpan @for)
             : base(automationId)
         {
-            Argument.IsNotNull(nameof(from), from);
-            Argument.IsNotNull(nameof(to), to);
-            Argument.Equals(nameof(from), from, to);
-            Argument.IsNotNull(nameof(@for), @for);
+            Argument.IsNotNull(from);
+            Argument.IsNotNull(to);
+            Argument.Equals(from, to);
+            Argument.IsNotNull(@for);
 
             From = from;
             To = to;

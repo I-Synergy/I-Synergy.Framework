@@ -57,7 +57,7 @@ namespace ISynergy.Framework.Core.Base
         /// </summary>
         public Property(string name)
         {
-            Argument.IsNotNullOrEmpty(nameof(name), name);
+            Argument.IsNotNullOrEmpty(name);
 
             Name = name;
             Errors = new ObservableCollection<string>();

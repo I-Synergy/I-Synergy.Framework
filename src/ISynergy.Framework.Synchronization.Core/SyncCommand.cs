@@ -11,8 +11,8 @@
         {
             CommandCodeName = commandCodeName;
             IsPrepared = false;
-
         }
+
         //public SyncCommand(DbCommand dbCommand)
         //{
         //    DbCommand = dbCommand;

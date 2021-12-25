@@ -1,5 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Sqlite.Models;
 using Microsoft.Data.Sqlite;
 using System.Data;
 using System.Data.Common;

@@ -1,12 +1,12 @@
 ﻿using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
-using ISynergy.Framework.Synchronization.SqlServer.Builders;
 using ISynergy.Framework.Synchronization.SqlServer.Metadata;
 using ISynergy.Framework.Synchronization.SqlServer.Methods;
+using ISynergy.Framework.Synchronization.SqlServer.Models;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
 using Microsoft.SqlServer.Server;
 using System;
@@ -72,7 +72,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Adapters
 
             if (sqlDbType == SqlDbType.Char || sqlDbType == SqlDbType.NChar)
             {
-                maxLength = maxLength <= 0 ? (sqlDbType == SqlDbType.NChar ? 4000 : 8000) : maxLength;
+                maxLength = maxLength <= 0 ? sqlDbType == SqlDbType.NChar ? 4000 : 8000 : maxLength;
                 return new SqlMetaData(column.ColumnName, sqlDbType, maxLength);
             }
 
@@ -509,7 +509,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Adapters
                 else
                 {
                     // Using the SqlCommandBuilder.DeriveParameters() method is not working yet, 
-                    // because default value is not well done handled on the Dotmim.Sync framework
+                    // because default value is not well done handled on the ISynergy.Framework.Synchronization
                     // TODO: Fix SqlCommandBuilder.DeriveParameters
                     //SqlCommandBuilder.DeriveParameters((SqlCommand)command);
 

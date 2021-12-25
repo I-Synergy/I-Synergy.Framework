@@ -107,8 +107,8 @@ namespace ISynergy.Framework.Automations.States
         /// <param name="isFixedTime"></param>
         public TimeState(TimeSpan after, TimeSpan before, bool isFixedTime)
         {
-            Argument.IsNotNull(nameof(after), after);
-            Argument.IsNotNull(nameof(before), before);
+            Argument.IsNotNull(after);
+            Argument.IsNotNull(before);
 
             After = after;
             Before = before;

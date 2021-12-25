@@ -1,13 +1,12 @@
-using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Arguments;
+﻿using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Batch;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Messages;
-using ISynergy.Framework.Synchronization.Core.Parameters;
+using ISynergy.Framework.Synchronization.Core.Parameter;
 using ISynergy.Framework.Synchronization.Core.Scopes;
 using ISynergy.Framework.Synchronization.Core.Serialization;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Collections.Concurrent;
@@ -20,11 +19,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public partial class RemoteOrchestrator : BaseOrchestrator
     {
-
         /// <summary>
         /// Get a snapshot
         /// </summary>
@@ -149,11 +148,11 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 // check parameters
                 // If context has no parameters specified, and user specifies a parameter collection we switch them
-                if ((syncContext.Parameters is null || syncContext.Parameters.Count <= 0) && syncParameters is not null && syncParameters.Count > 0)
-                    syncContext.Parameters = syncParameters;
+                if ((_syncContext.Parameters is null || _syncContext.Parameters.Count <= 0) && syncParameters is not null && syncParameters.Count > 0)
+                    _syncContext.Parameters = syncParameters;
 
                 // 1) Get Schema from remote provider
-                var schema = await InternalGetSchemaAsync(syncContext, Setup, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                var schema = await InternalGetSchemaAsync(_syncContext, Setup, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 // 2) Ensure databases are ready
                 //    Even if we are using only stored procedures, we need tracking tables and triggers
@@ -163,24 +162,24 @@ namespace ISynergy.Framework.Synchronization.Core
                 // 3) Provision everything
                 var scopeBuilder = GetScopeBuilder(Options.ScopeInfoTableName);
 
-                var exists = await InternalExistsScopeInfoTableAsync(syncContext, DbScopeType.Server, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                var exists = await InternalExistsScopeInfoTableAsync(_syncContext, DbScopeType.Server, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 if (!exists)
-                    await InternalCreateScopeInfoTableAsync(syncContext, DbScopeType.Server, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                    await InternalCreateScopeInfoTableAsync(_syncContext, DbScopeType.Server, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                var serverScopeInfo = await InternalGetScopeAsync<ServerScopeInfo>(syncContext, DbScopeType.Server, ScopeName, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
-                schema = await InternalProvisionAsync(syncContext, false, schema, Setup, provision, serverScopeInfo, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                var serverScopeInfo = await InternalGetScopeAsync<ServerScopeInfo>(_syncContext, DbScopeType.Server, ScopeName, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                schema = await InternalProvisionAsync(_syncContext, false, schema, Setup, provision, serverScopeInfo, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 // 4) Getting the most accurate timestamp
-                var remoteClientTimestamp = await InternalGetLocalTimestampAsync(syncContext, runner.Connection, runner.Transaction, cancellationToken, progress);
-
-
-                await runner.CommitAsync().ConfigureAwait(false);
+                var remoteClientTimestamp = await InternalGetLocalTimestampAsync(_syncContext, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 // 5) Create the snapshot with
                 localSerializerFactory = localSerializerFactory is null ? new LocalJsonSerializerFactory() : localSerializerFactory;
 
-                var batchInfo = await InternalCreateSnapshotAsync(GetContext(), schema, Setup, localSerializerFactory, remoteClientTimestamp, cancellationToken, progress).ConfigureAwait(false);
+                var batchInfo = await InternalCreateSnapshotAsync(GetContext(), schema, Setup, localSerializerFactory, remoteClientTimestamp,
+                    runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+
+                await runner.CommitAsync().ConfigureAwait(false);
 
                 return batchInfo;
             }
@@ -192,23 +191,15 @@ namespace ISynergy.Framework.Synchronization.Core
         }
 
         internal virtual async Task<BatchInfo> InternalCreateSnapshotAsync(SyncContext context, SyncSet schema, SyncSetup setup,
-                ILocalSerializerFactory localSerializerFactory, long remoteClientTimestamp,
-                CancellationToken cancellationToken, IProgress<ProgressArgs> progress = null)
+              ILocalSerializerFactory localSerializerFactory, long remoteClientTimestamp, DbConnection connection, DbTransaction transaction,
+              CancellationToken cancellationToken, IProgress<ProgressArgs> progress = null)
         {
-
             await InterceptAsync(new SnapshotCreatingArgs(GetContext(), schema, Options.SnapshotsDirectory, Options.BatchSize, remoteClientTimestamp, Provider.CreateConnection(), null), progress, cancellationToken).ConfigureAwait(false);
 
-            //// Call interceptor
-            //await InterceptAsync(new DatabaseChangesSelectingArgs(context, null, null, null), progress, cancellationToken).ConfigureAwait(false);
-
-            // create local directory
             if (!Directory.Exists(Options.SnapshotsDirectory))
                 Directory.CreateDirectory(Options.SnapshotsDirectory);
 
             var (rootDirectory, nameDirectory) = await InternalGetSnapshotDirectoryAsync(context, cancellationToken, progress).ConfigureAwait(false);
-
-            if (string.IsNullOrEmpty(rootDirectory))
-                return null;
 
             // create local directory with scope inside
             if (!Directory.Exists(rootDirectory))
@@ -220,199 +211,17 @@ namespace ISynergy.Framework.Synchronization.Core
             if (Directory.Exists(directoryFullPath))
                 Directory.Delete(directoryFullPath, true);
 
-            Directory.CreateDirectory(directoryFullPath);
+            var message = new MessageGetChangesBatch(Guid.Empty, Guid.Empty, true, null, schema, Setup, Options.BatchSize,
+                rootDirectory, nameDirectory, Provider.SupportsMultipleActiveResultSets, Options.LocalSerializerFactory);
 
-            // Create stats object to store changes count
-            var changes = new DatabaseChangesSelected();
-            var batchInfo = new BatchInfo(schema, rootDirectory, nameDirectory);
+            BatchInfo serverBatchInfo;
+            DatabaseChangesSelected serverChangesSelected;
 
-            var schemaTables = schema.Tables.SortByDependencies(tab => tab.GetRelations().Select(r => r.GetParentTable()));
+            (context, serverBatchInfo, serverChangesSelected) =
+                    await InternalGetChangesAsync(context, message, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            var lstAllBatchPartInfos = new ConcurrentBag<BatchPartInfo>();
-
-            await schemaTables.ForEachAsync(async table =>
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    return;
-                try
-                {
-                    var serializer = localSerializerFactory.GetLocalSerializer();
-
-                    //list of batchpart for that synctable
-                    var batchPartInfos = new List<BatchPartInfo>();
-
-                    var batchIndex = 0;
-                    // Get Select initialize changes command
-                    await using var runner = await this.GetConnectionAsync(SyncStage.SnapshotCreating, null, null, cancellationToken, progress).ConfigureAwait(false);
-                    var selectIncrementalChangesCommand = await GetSelectChangesCommandAsync(context, table, setup, true, runner.Connection, runner.Transaction).ConfigureAwait(false);
-
-                    if (selectIncrementalChangesCommand is null)
-                        return;
-
-                    // generate a new path
-                    var (fullPath, fileName) = batchInfo.GetNewBatchPartInfoPath(table, batchIndex, serializer.Extension);
-
-                    var schemaChangesTable = DbSyncAdapter.CreateChangesTable(table);
-
-                    // open the file and write table header
-                    await serializer.OpenFileAsync(fullPath, schemaChangesTable).ConfigureAwait(false);
-
-                    // Statistics
-                    var tableChangesSelected = new TableChangesSelected(table.TableName, table.SchemaName);
-
-                    var rowsCountInBatch = 0;
-                    // We are going to batch select, if needed by the provider
-
-                    // Set parameters
-                    SetSelectChangesCommonParameters(context, table, null, true, null, selectIncrementalChangesCommand);
-
-                    // launch interceptor if any
-                    var args = await InterceptAsync(new TableChangesSelectingArgs(context, table, selectIncrementalChangesCommand, runner.Connection, runner.Transaction), progress, cancellationToken).ConfigureAwait(false);
-
-                    if (!args.Cancel && args.Command is not null)
-                    {
-                        await InterceptAsync(new DbCommandArgs(context, args.Command, runner.Connection, runner.Transaction), progress, cancellationToken).ConfigureAwait(false);
-
-                        // Get the reader
-                        using var dataReader = await selectIncrementalChangesCommand.ExecuteReaderAsync().ConfigureAwait(false);
-
-                        while (await dataReader.ReadAsync())
-                        {
-                            // Create a row from dataReader
-                            var syncRow = CreateSyncRowFromReader2(dataReader, schemaChangesTable);
-                            rowsCountInBatch++;
-
-                            // Set the correct state to be applied
-                            if (syncRow.RowState == DataRowState.Deleted)
-                                tableChangesSelected.Deletes++;
-                            else
-                                tableChangesSelected.Upserts++;
-
-                            await serializer.WriteRowToFileAsync(syncRow, schemaChangesTable).ConfigureAwait(false);
-
-                            var currentBatchSize = await serializer.GetCurrentFileSizeAsync().ConfigureAwait(false);
-
-                            // Next line if we don't reach the batch size yet.
-                            if (currentBatchSize <= Options.BatchSize)
-                                continue;
-
-                            var bpi = new BatchPartInfo { FileName = fileName };
-
-                            // Create the info on the batch part
-                            BatchPartTableInfo tableInfo = new BatchPartTableInfo
-                            {
-                                TableName = tableChangesSelected.TableName,
-                                SchemaName = tableChangesSelected.SchemaName,
-                                RowsCount = rowsCountInBatch
-
-                            };
-
-                            bpi.Tables = new BatchPartTableInfo[] { tableInfo };
-                            bpi.RowsCount = rowsCountInBatch;
-                            bpi.IsLastBatch = false;
-                            bpi.Index = batchIndex;
-                            batchPartInfos.Add(bpi);
-
-                            // Add to all bpi concurrent bag
-                            lstAllBatchPartInfos.Add(bpi);
-
-                            Debug.WriteLine($"Added BPI for table {tableChangesSelected.TableName}. lstAllBatchPartInfos.Count:{lstAllBatchPartInfos.Count}");
-
-                            // Close file
-                            await serializer.CloseFileAsync(fullPath, schemaChangesTable).ConfigureAwait(false);
-
-                            // increment batch index
-                            batchIndex++;
-                            // Reinit rowscount in batch
-                            rowsCountInBatch = 0;
-
-                            // generate a new path
-                            (fullPath, fileName) = batchInfo.GetNewBatchPartInfoPath(schemaChangesTable, batchIndex, serializer.Extension);
-
-                            // open a new file and write table header
-                            await serializer.OpenFileAsync(fullPath, schemaChangesTable).ConfigureAwait(false);
-
-                            // Raise progress
-                            await InterceptAsync(new TableChangesSelectedArgs(context, null, tableChangesSelected, runner.Connection, runner.Transaction), progress, cancellationToken).ConfigureAwait(false);
-
-                        }
-
-                        dataReader.Close();
-
-                    }
-
-                    var bpi2 = new BatchPartInfo { FileName = fileName };
-
-                    // Create the info on the batch part
-                    BatchPartTableInfo tableInfo2 = new BatchPartTableInfo
-                    {
-                        TableName = tableChangesSelected.TableName,
-                        SchemaName = tableChangesSelected.SchemaName,
-                        RowsCount = rowsCountInBatch
-                    };
-                    bpi2.Tables = new BatchPartTableInfo[] { tableInfo2 };
-                    bpi2.RowsCount = rowsCountInBatch;
-                    bpi2.IsLastBatch = true;
-                    bpi2.Index = batchIndex;
-                    batchPartInfos.Add(bpi2);
-
-                    // Add to all bpi concurrent bag
-                    lstAllBatchPartInfos.Add(bpi2);
-
-                    Debug.WriteLine($"Added last BPI for table {tableChangesSelected.TableName}. lstAllBatchPartInfos.Count:{lstAllBatchPartInfos.Count}");
-
-                    batchIndex++;
-
-                    // Close file
-                    await serializer.CloseFileAsync(fullPath, schemaChangesTable).ConfigureAwait(false);
-
-                    // Raise progress
-                    var tableChangesSelectedArgs = await InterceptAsync(new TableChangesSelectedArgs(context, batchPartInfos, tableChangesSelected, runner.Connection, runner.Transaction), progress, cancellationToken).ConfigureAwait(false);
-
-                    changes.TableChangesSelected.Add(tableChangesSelected);
-
-                }
-                catch (Exception ex)
-                {
-                    throw GetSyncError(ex);
-                }
-            });
-
-            // Check the last index as the last batch
-            batchInfo.EnsureLastBatch();
-            batchInfo.Timestamp = remoteClientTimestamp;
-
-            // delete all empty batchparts (empty tables)
-            foreach (var bpi in lstAllBatchPartInfos)
-            {
-                if (bpi.RowsCount <= 0)
-                {
-                    var fullPathToDelete = Path.Combine(directoryFullPath, bpi.FileName);
-                    File.Delete(fullPathToDelete);
-                }
-            }
-
-            // Generate a good index order to be compliant with previous versions
-            var tmpLstBatchPartInfos = new List<BatchPartInfo>();
-            foreach (var table in schemaTables)
-            {
-                // get all bpi where count > 0 and ordered by index
-                foreach (var bpi in lstAllBatchPartInfos.Where(bpi => bpi.RowsCount > 0 && bpi.Tables[0].EqualsByName(new BatchPartTableInfo(table.TableName, table.SchemaName))).OrderBy(bpi => bpi.Index).ToArray())
-                {
-                    batchInfo.BatchPartsInfo.Add(bpi);
-                    batchInfo.RowsCount += bpi.RowsCount;
-
-                    tmpLstBatchPartInfos.Add(bpi);
-                }
-            }
-
-            var newBatchIndex = 0;
-            foreach (var bpi in tmpLstBatchPartInfos)
-            {
-                bpi.Index = newBatchIndex;
-                newBatchIndex++;
-                bpi.IsLastBatch = newBatchIndex == tmpLstBatchPartInfos.Count;
-            }
+            // since we explicitely defined remote client timestamp to null, to get all rows, just reaffect here
+            serverBatchInfo.Timestamp = remoteClientTimestamp;
 
             // Serialize on disk.
             var jsonConverter = new Serialization.JsonConverter<BatchInfo>();
@@ -421,16 +230,13 @@ namespace ISynergy.Framework.Synchronization.Core
 
             using (var f = new FileStream(summaryFileName, FileMode.CreateNew, FileAccess.ReadWrite))
             {
-                var bytes = await jsonConverter.SerializeAsync(batchInfo).ConfigureAwait(false);
+                var bytes = await jsonConverter.SerializeAsync(serverBatchInfo).ConfigureAwait(false);
                 f.Write(bytes, 0, bytes.Length);
             }
 
-            // Raise database changes selected
-            //await InterceptAsync(new DatabaseChangesSelectedArgs(context, remoteClientTimestamp, batchInfo, changes), progress, cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new SnapshotCreatedArgs(GetContext(), serverBatchInfo, Provider.CreateConnection(), null), progress, cancellationToken).ConfigureAwait(false);
 
-            await InterceptAsync(new SnapshotCreatedArgs(GetContext(), batchInfo, Provider.CreateConnection(), null), progress, cancellationToken).ConfigureAwait(false);
-
-            return batchInfo;
+            return serverBatchInfo;
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
+﻿using ISynergy.Framework.Synchronization.Client.Messages;
+using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
 
     public class HttpGettingServerChangesRequestArgs : ProgressArgs
@@ -17,10 +17,12 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
         {
             BatchIndexRequested = batchIndexRequested;
             BatchCount = batchCount;
+
             Host = host;
         }
         public override string Source => Host;
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+
         public override string Message
         {
             get
@@ -58,8 +60,8 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
             BatchRowsCount = batchRowsCount;
             Host = host;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+
         public override string Source => Host;
         public override string Message
         {
@@ -88,8 +90,8 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
             TotalRowsCount = totalRowsCount;
             Host = host;
         }
-
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+
         public HttpMessageSendChangesRequest Request { get; }
         public string Host { get; }
         public override string Source => Host;

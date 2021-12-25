@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         {
             Tables = new SetupTables();
             Filters = new SetupFilters();
-            //Version = _versionService.ProductVersion.ToString();
+            //Version = SyncVersion.Current.ToString();
         }
 
         /// <summary>

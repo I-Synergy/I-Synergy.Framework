@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -10,6 +10,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
     {
         public BatchPartTableInfo()
         {
+
         }
 
         public BatchPartTableInfo(string tableName, string schemaName = null, int rowsCount = 0)

@@ -1,10 +1,10 @@
-﻿using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Adapters;
+using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
-using ISynergy.Framework.Synchronization.Sqlite.Builders;
 using ISynergy.Framework.Synchronization.Sqlite.Metadata;
+using ISynergy.Framework.Synchronization.Sqlite.Models;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -20,14 +20,14 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
     /// </summary>
     public class SqliteSyncAdapter : DbSyncAdapter
     {
-        private SqliteObjectNames sqliteObjectNames;
-        private SqliteDbMetadata sqliteDbMetadata;
+        private SqliteObjectNames _sqliteObjectNames;
+        private SqliteDbMetadata _sqliteDbMetadata;
 
         public SqliteSyncAdapter(SyncTable tableDescription, ParserName tableName, ParserName trackingName, SyncSetup setup) : base(tableDescription, setup)
         {
 
-            sqliteObjectNames = new SqliteObjectNames(TableDescription, tableName, trackingName, Setup);
-            sqliteDbMetadata = new SqliteDbMetadata();
+            _sqliteObjectNames = new SqliteObjectNames(TableDescription, tableName, trackingName, Setup);
+            _sqliteDbMetadata = new SqliteDbMetadata();
         }
 
         public override bool IsPrimaryKeyViolation(Exception Error)
@@ -39,7 +39,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
         {
             var command = new SqliteCommand();
             string text;
-            text = sqliteObjectNames.GetCommandName(commandType, filter);
+            text = _sqliteObjectNames.GetCommandName(commandType, filter);
 
             // on Sqlite, everything is text :)
             command.CommandType = CommandType.Text;
@@ -138,9 +138,6 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
             p.ParameterName = "@sync_scope_id";
             p.DbType = DbType.Guid;
             command.Parameters.Add(p);
-
-
-
         }
 
         private void SetInitializeRowParameters(DbCommand command)
@@ -171,9 +168,6 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
             p.ParameterName = "@sync_scope_id";
             p.DbType = DbType.Guid;
             command.Parameters.Add(p);
-
-
-
         }
 
         private void SetDeleteRowParameters(DbCommand command)
@@ -204,7 +198,6 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
             p.ParameterName = "@sync_scope_id";
             p.DbType = DbType.Guid;
             command.Parameters.Add(p);
-
         }
 
         private void SetSelectRowParameters(DbCommand command)
@@ -225,7 +218,6 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
             p.ParameterName = "@sync_scope_id";
             p.DbType = DbType.Guid;
             command.Parameters.Add(p);
-
         }
 
         private void SetUpdateMetadataParameters(DbCommand command)
@@ -251,8 +243,8 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Adapters
             p.ParameterName = "@sync_row_is_tombstone";
             p.DbType = DbType.Boolean;
             command.Parameters.Add(p);
-
         }
+
         private void SetDeleteMetadataParameters(DbCommand command)
         {
             var p = command.CreateParameter();

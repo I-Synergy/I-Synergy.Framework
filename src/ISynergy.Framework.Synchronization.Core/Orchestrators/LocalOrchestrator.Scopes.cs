@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Extensions;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Scopes;
 using System;
 using System.Data.Common;
@@ -8,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public partial class LocalOrchestrator : BaseOrchestrator
     {

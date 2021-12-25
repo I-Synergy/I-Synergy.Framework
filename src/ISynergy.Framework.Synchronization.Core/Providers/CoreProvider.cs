@@ -1,8 +1,9 @@
-﻿using ISynergy.Framework.Synchronization.Core.Adapters;
+﻿using ISynergy.Framework.Synchronization.Core.Abstractions;
+using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Metadata;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Manager;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Newtonsoft.Json;
 using System;
@@ -15,14 +16,14 @@ namespace ISynergy.Framework.Synchronization.Core.Providers
     /// <summary>
     /// Core provider : should be implemented by any server / client provider
     /// </summary>
-    public abstract partial class CoreProvider
+    public abstract partial class CoreProvider : IProvider
     {
         /// <summary>
         /// Gets the reference to the orchestrator owner of this instance
         /// </summary>
         [JsonIgnore]
         [IgnoreDataMember]
-        public BaseOrchestrator Orchestrator { get; internal set; }
+        public BaseOrchestrator Orchestrator { get; set; }
 
         /// <summary>
         /// Connection is opened. this method is called before any interceptors
@@ -110,7 +111,5 @@ namespace ISynergy.Framework.Synchronization.Core.Providers
         /// Let's a chance to retry on error if connection has been refused.
         /// </summary>
         public virtual bool ShouldRetryOn(Exception exception) => false;
-
-
     }
 }

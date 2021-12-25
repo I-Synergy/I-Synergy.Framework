@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Scopes;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,6 +23,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public OutdatedAction Action { get; set; } = OutdatedAction.Rollback;
         public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
+
         public override string Source => Connection.Database;
         public override string Message => $"Database Out Dated. Last Client Sync Endpoint {ClientScopeInfo.LastServerSyncTimestamp} < Last Server Cleanup Metadatas {ServerScopeInfo.LastCleanupTimestamp}.";
 
