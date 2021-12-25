@@ -18,37 +18,37 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Gets or Sets the name of the table where the filter will be applied (and so the _Changes stored proc)
         /// </summary>
-        [DataMember(Name = "tn", IsRequired = true, Order = 1)]
+        [DataMember(Name = "tn", IsRequired = true)]
         public string TableName { get; set; }
 
         /// <summary>
         /// Gets or Sets the schema name of the table where the filter will be applied (and so the _Changes stored proc)
         /// </summary>
-        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
         /// <summary>
         /// Gets the custom joins list, used with custom wheres
         /// </summary>
-        [DataMember(Name = "j", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "j", IsRequired = false, EmitDefaultValue = false)]
         public List<SetupFilterJoin> Joins { get; } = new List<SetupFilterJoin>();
 
         /// <summary>
         /// Gets the custom joins list, used with custom wheres
         /// </summary>
-        [DataMember(Name = "cw", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "cw", IsRequired = false, EmitDefaultValue = false)]
         public List<string> CustomWheres { get; } = new List<string>();
 
         /// <summary>
         /// Gets the parameters list, used as input in the stored procedure
         /// </summary>
-        [DataMember(Name = "p", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "p", IsRequired = false, EmitDefaultValue = false)]
         public List<SetupFilterParameter> Parameters { get; } = new List<SetupFilterParameter>();
 
         /// <summary>
         /// Side where filters list
         /// </summary>
-        [DataMember(Name = "w", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "w", IsRequired = false, EmitDefaultValue = false)]
         public List<SetupFilterWhere> Wheres { get; } = new List<SetupFilterWhere>();
 
         /// <summary>

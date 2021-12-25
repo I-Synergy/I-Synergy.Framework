@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// <summary>
         /// Get the view to be applied 
         /// </summary>
-        [DataMember(Name = "tca", IsRequired = false, EmitDefaultValue = false, Order = 1)]
+        [DataMember(Name = "tca", IsRequired = false, EmitDefaultValue = false)]
         public List<TableChangesApplied> TableChangesApplied { get; } = new List<TableChangesApplied>();
 
 

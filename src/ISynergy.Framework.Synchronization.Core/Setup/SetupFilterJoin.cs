@@ -58,22 +58,22 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
     [DataContract(Name = "sfj"), Serializable]
     public class SetupFilterJoin : SyncNamedItem<SetupFilterJoin>
     {
-        [DataMember(Name = "je", IsRequired = true, Order = 1)]
+        [DataMember(Name = "je", IsRequired = true)]
         public Join JoinEnum { get; set; }
 
-        [DataMember(Name = "tn", IsRequired = true, Order = 2)]
+        [DataMember(Name = "tn", IsRequired = true)]
         public string TableName { get; set; }
 
-        [DataMember(Name = "ltn", IsRequired = true, Order = 3)]
+        [DataMember(Name = "ltn", IsRequired = true)]
         public string LeftTableName { get; set; }
 
-        [DataMember(Name = "lcn", IsRequired = true, Order = 4)]
+        [DataMember(Name = "lcn", IsRequired = true)]
         public string LeftColumnName { get; set; }
 
-        [DataMember(Name = "rtn", IsRequired = true, Order = 5)]
+        [DataMember(Name = "rtn", IsRequired = true)]
         public string RightTableName { get; set; }
 
-        [DataMember(Name = "rcn", IsRequired = true, Order = 6)]
+        [DataMember(Name = "rcn", IsRequired = true)]
         public string RightColumnName { get; set; }
 
         /// <summary>

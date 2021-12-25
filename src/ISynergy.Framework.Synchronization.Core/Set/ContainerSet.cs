@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Synchronization.Core.Set
         /// <summary>
         /// List of tables
         /// </summary>
-        [DataMember(Name = "t", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "t", IsRequired = false, EmitDefaultValue = false)]
         public Collection<ContainerTable> Tables { get; set; } = new Collection<ContainerTable>();
 
 

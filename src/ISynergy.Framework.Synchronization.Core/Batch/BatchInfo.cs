@@ -43,37 +43,37 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// <summary>
         /// Gets or Sets directory name
         /// </summary>
-        [DataMember(Name = "dirname", IsRequired = false, EmitDefaultValue = false, Order = 1)]
+        [DataMember(Name = "dirname", IsRequired = false, EmitDefaultValue = false)]
         public string DirectoryName { get; set; }
 
         /// <summary>
         /// Gets or sets directory root
         /// </summary>
-        [DataMember(Name = "dir", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "dir", IsRequired = false, EmitDefaultValue = false)]
         public string DirectoryRoot { get; set; }
 
         /// <summary>
         /// Gets or sets server timestamp
         /// </summary>
-        [DataMember(Name = "ts", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "ts", IsRequired = false, EmitDefaultValue = false)]
         public long Timestamp { get; set; }
 
         /// <summary>
         /// List of batch parts
         /// </summary>
-        [DataMember(Name = "parts", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "parts", IsRequired = false, EmitDefaultValue = false)]
         public List<BatchPartInfo> BatchPartsInfo { get; set; }
 
         /// <summary>
         /// Gets or Sets the rows count contained in the batch info
         /// </summary>
-        [DataMember(Name = "count", IsRequired = true, Order = 5)]
+        [DataMember(Name = "count", IsRequired = true)]
         public int RowsCount { get; set; }
 
         /// <summary>
         /// Gets or Sets the Serialization Factory Key used to serialize this batch info
         /// </summary>
-        [DataMember(Name = "ser", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "ser", IsRequired = false, EmitDefaultValue = false)]
         public string SerializerFactoryKey { get; set; }
 
 
@@ -81,7 +81,7 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// Internally setting schema
         /// </summary>
         //[IgnoreDataMember]
-        [DataMember(Name = "schema", IsRequired = true, EmitDefaultValue = false, Order = 7)]
+        [DataMember(Name = "schema", IsRequired = true, EmitDefaultValue = false)]
         public SyncSet SanitizedSchema { get; set; } = new SyncSet();
 
         /// <summary>

@@ -23,22 +23,22 @@ namespace ISynergy.Framework.Synchronization.Core.Set
         [IgnoreDataMember]
         public SyncSet Schema { get; set; }
 
-        [DataMember(Name = "je", IsRequired = true, Order = 1)]
+        [DataMember(Name = "je", IsRequired = true)]
         public Join JoinEnum { get; set; }
 
-        [DataMember(Name = "tbl", IsRequired = true, Order = 2)]
+        [DataMember(Name = "tbl", IsRequired = true)]
         public string TableName { get; set; }
 
-        [DataMember(Name = "ltbl", IsRequired = true, Order = 3)]
+        [DataMember(Name = "ltbl", IsRequired = true)]
         public string LeftTableName { get; set; }
 
-        [DataMember(Name = "lcol", IsRequired = true, Order = 4)]
+        [DataMember(Name = "lcol", IsRequired = true)]
         public string LeftColumnName { get; set; }
 
-        [DataMember(Name = "rtbl", IsRequired = true, Order = 5)]
+        [DataMember(Name = "rtbl", IsRequired = true)]
         public string RightTableName { get; set; }
 
-        [DataMember(Name = "rcol", IsRequired = true, Order = 6)]
+        [DataMember(Name = "rcol", IsRequired = true)]
         public string RightColumnName { get; set; }
 
         public SyncFilterJoin()

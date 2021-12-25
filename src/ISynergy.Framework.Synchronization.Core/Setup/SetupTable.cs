@@ -22,26 +22,26 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Gets or Sets the table name
         /// </summary>
-        [DataMember(Name = "tn", IsRequired = true, Order = 1)]
+        [DataMember(Name = "tn", IsRequired = true)]
         public string TableName { get; set; }
 
         /// <summary>
         /// Gets or Sets the schema name
         /// </summary>
-        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
         /// <summary>
         /// Gets or Sets the table columns collection
         /// </summary>
-        [DataMember(Name = "cols", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "cols", IsRequired = false, EmitDefaultValue = false)]
         public SetupColumns Columns { get; set; }
 
         /// <summary>
         /// Gets or Sets the Sync direction (may be Bidirectional, DownloadOnly, UploadOnly) 
         /// Default is Bidirectional
         /// </summary>
-        [DataMember(Name = "sd", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "sd", IsRequired = false, EmitDefaultValue = false)]
         public SyncDirection SyncDirection { get; set; }
 
         /// <summary>

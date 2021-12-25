@@ -15,35 +15,35 @@ namespace ISynergy.Framework.Synchronization.Core.Set
     public class SyncFilter : SyncNamedItem<SyncFilter>, IDisposable
     {
 
-        [DataMember(Name = "t", IsRequired = true, Order = 1)]
+        [DataMember(Name = "t", IsRequired = true)]
         public string TableName { get; set; }
 
-        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
 
         /// <summary>
         /// Gets or Sets the parameters list, used as input in the stored procedure
         /// </summary>
-        [DataMember(Name = "p", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "p", IsRequired = false, EmitDefaultValue = false)]
         public SyncFilterParameters Parameters { get; set; } = new SyncFilterParameters();
 
         /// <summary>
         /// Gets or Sets side where filters list
         /// </summary>
-        [DataMember(Name = "w", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "w", IsRequired = false, EmitDefaultValue = false)]
         public SyncFilterWhereSideItems Wheres { get; set; } = new SyncFilterWhereSideItems();
 
         /// <summary>
         /// Gets or Sets side where filters list
         /// </summary>
-        [DataMember(Name = "j", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "j", IsRequired = false, EmitDefaultValue = false)]
         public SyncFilterJoins Joins { get; set; } = new SyncFilterJoins();
 
         /// <summary>
         /// Gets or Sets customs where
         /// </summary>
-        [DataMember(Name = "cw", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "cw", IsRequired = false, EmitDefaultValue = false)]
         public List<string> CustomWheres { get; set; } = new List<string>();
 
 

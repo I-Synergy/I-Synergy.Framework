@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// <summary>
         /// Get the changes selected to be applied for a current table
         /// </summary> 
-        [DataMember(Name = "tcs", IsRequired = false, EmitDefaultValue = false, Order = 1)]
+        [DataMember(Name = "tcs", IsRequired = false, EmitDefaultValue = false)]
         public List<TableChangesSelected> TableChangesSelected { get; set; } = new List<TableChangesSelected>();
 
         /// <summary>

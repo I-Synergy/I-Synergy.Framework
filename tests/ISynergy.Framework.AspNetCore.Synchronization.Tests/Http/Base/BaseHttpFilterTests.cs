@@ -56,7 +56,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // public property
             Server = (serverDatabaseName, this.ServerType, serverProvider);
 
-            // Create a kestrell server
+            // Create a kestrel server
             kestrel = new KestrelTestServer(this.WebServerOrchestrator, this.UseFiddler);
 
             // start server and get uri

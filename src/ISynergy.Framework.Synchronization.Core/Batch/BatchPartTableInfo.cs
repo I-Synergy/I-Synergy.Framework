@@ -23,20 +23,20 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
         /// <summary>
         /// Gets or sets the name of the table that the DmTableSurrogate object represents.
         /// </summary>
-        [DataMember(Name = "n", IsRequired = true, Order = 1)]
+        [DataMember(Name = "n", IsRequired = true)]
         public string TableName { get; set; }
 
         /// <summary>
         /// Get or Set the schema used for the DmTableSurrogate
         /// </summary>
-        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
 
         /// <summary>
         /// Tables contained rows count
         /// </summary>
-        [DataMember(Name = "rc", IsRequired = false, Order = 3)]
+        [DataMember(Name = "rc", IsRequired = false)]
         public int RowsCount { get; set; }
 
 

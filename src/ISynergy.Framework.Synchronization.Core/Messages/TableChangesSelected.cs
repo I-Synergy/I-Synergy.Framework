@@ -27,27 +27,27 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// <summary>
         /// Gets the table name
         /// </summary>
-        [DataMember(Name = "n", IsRequired = false, EmitDefaultValue = false, Order = 1)]
+        [DataMember(Name = "n", IsRequired = false, EmitDefaultValue = false)]
         public string TableName { get; set; }
 
 
         /// <summary>
         /// Get or Set the schema used for the DmTableSurrogate
         /// </summary>
-        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
 
         /// <summary>
         /// Gets or sets the number of deletes that should be applied to a table during the synchronization session.
         /// </summary>
-        [DataMember(Name = "d", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "d", IsRequired = false, EmitDefaultValue = false)]
         public int Deletes { get; set; }
 
         /// <summary>
         /// Gets or sets the number of updates OR inserts that should be applied to a table during the synchronization session.
         /// </summary>
-        [DataMember(Name = "u", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "u", IsRequired = false, EmitDefaultValue = false)]
         public int Upserts { get; set; }
 
         /// <summary>

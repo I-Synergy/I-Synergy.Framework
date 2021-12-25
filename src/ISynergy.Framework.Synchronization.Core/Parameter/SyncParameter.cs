@@ -14,13 +14,13 @@ namespace ISynergy.Framework.Synchronization.Core.Parameter
         /// <summary>
         /// Gets or sets the name of the column from the table involved in filter.
         /// </summary>
-        [DataMember(Name = "pn", IsRequired = true, Order = 1)]
+        [DataMember(Name = "pn", IsRequired = true)]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the parameter.
         /// </summary>
-        [DataMember(Name = "v", IsRequired = true, Order = 2)]
+        [DataMember(Name = "v", IsRequired = true)]
         public object Value { get; set; }
 
         /// <summary>

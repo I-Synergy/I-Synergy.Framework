@@ -7,13 +7,13 @@ namespace ISynergy.Framework.Synchronization.Core.Set
     [DataContract(Name = "sci"), Serializable]
     public class SyncColumnIdentifier : SyncNamedItem<SyncColumnIdentifier>
     {
-        [DataMember(Name = "c", IsRequired = true, Order = 1)]
+        [DataMember(Name = "c", IsRequired = true)]
         public string ColumnName { get; set; }
 
-        [DataMember(Name = "t", IsRequired = true, Order = 2)]
+        [DataMember(Name = "t", IsRequired = true)]
         public string TableName { get; set; }
 
-        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
         public SyncColumnIdentifier()

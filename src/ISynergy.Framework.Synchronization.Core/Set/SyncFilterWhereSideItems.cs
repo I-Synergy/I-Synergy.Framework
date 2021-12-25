@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Synchronization.Core.Set
         /// <summary>
         /// Exposing the InnerCollection for serialization purpose
         /// </summary>
-        [DataMember(Name = "c", IsRequired = true, Order = 1)]
+        [DataMember(Name = "c", IsRequired = true)]
         public Collection<SyncFilterWhereSideItem> InnerCollection { get; set; } = new Collection<SyncFilterWhereSideItem>();
 
         /// <summary>

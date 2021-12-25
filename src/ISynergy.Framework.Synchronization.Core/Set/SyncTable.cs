@@ -22,38 +22,38 @@ namespace ISynergy.Framework.Synchronization.Core.Set
         /// <summary>
         /// Gets or sets the name of the table that the DmTableSurrogate object represents.
         /// </summary>
-        [DataMember(Name = "n", IsRequired = true, Order = 1)]
+        [DataMember(Name = "n", IsRequired = true)]
         public string TableName { get; set; }
 
         /// <summary>
         /// Get or Set the schema used for the DmTableSurrogate
         /// </summary>
-        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
         /// <summary>
         /// Gets or Sets the original provider (SqlServer, MySql, Sqlite, Oracle, PostgreSQL)
         /// </summary>
-        [DataMember(Name = "op", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "op", IsRequired = false, EmitDefaultValue = false)]
         public string OriginalProvider { get; set; }
 
         /// <summary>
         /// Gets or Sets the Sync direction (may be Bidirectional, DownloadOnly, UploadOnly) 
         /// Default is Bidirectional
         /// </summary>
-        [DataMember(Name = "sd", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "sd", IsRequired = false, EmitDefaultValue = false)]
         public SyncDirection SyncDirection { get; set; }
 
         /// <summary>
         /// Gets or Sets the table columns
         /// </summary>
-        [DataMember(Name = "c", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "c", IsRequired = false, EmitDefaultValue = false)]
         public SyncColumns Columns { get; set; }
 
         /// <summary>
         /// Gets or Sets the table primary keys
         /// </summary>
-        [DataMember(Name = "pk", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "pk", IsRequired = false, EmitDefaultValue = false)]
         public Collection<string> PrimaryKeys { get; set; } = new Collection<string>();
 
 

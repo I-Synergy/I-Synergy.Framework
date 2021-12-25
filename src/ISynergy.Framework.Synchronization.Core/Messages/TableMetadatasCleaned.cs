@@ -9,19 +9,19 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// <summary>
         /// Gets or sets the name of the table that the DmTableSurrogate object represents.
         /// </summary>
-        [DataMember(Name = "tn", IsRequired = true, Order = 1)]
+        [DataMember(Name = "tn", IsRequired = true)]
         public string TableName { get; set; }
 
         /// <summary>
         /// Get or Set the schema used for the DmTableSurrogate
         /// </summary>
-        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
         /// <summary>
         /// Gets or Sets the last timestamp used as the limit to clean the table metadatas. All rows below this limit have beed cleaned.
         /// </summary>
-        [DataMember(Name = "ttl", IsRequired = true, Order = 3)]
+        [DataMember(Name = "ttl", IsRequired = true)]
         public long TimestampLimit { get; set; }
 
 
@@ -37,7 +37,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// <summary>
         /// Gets or Sets the metadatas rows count, that have been cleaned
         /// </summary>
-        [DataMember(Name = "rcc", IsRequired = true, Order = 4)]
+        [DataMember(Name = "rcc", IsRequired = true)]
         public int RowsCleanedCount { get; set; }
 
     }

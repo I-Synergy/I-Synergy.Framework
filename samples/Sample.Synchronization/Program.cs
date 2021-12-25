@@ -81,7 +81,7 @@ namespace Sample.Synchronization.SqlServer
             //await ProvisionAsync(serverProvider, setup, options);
             //await CreateSnapshotAsync(serverProvider, setup, options);
             await SynchronizeAsync(clientProvider, serverProvider, setup, options);
-            //await SyncHttpThroughKestrellAsync(clientProvider, serverProvider, setup, options);
+            //await SyncHttpThroughKestrelAsync(clientProvider, serverProvider, setup, options);
         }
 
 
@@ -292,7 +292,7 @@ namespace Sample.Synchronization.SqlServer
         }
 
 
-        public static async Task SyncHttpThroughKestrellAsync(CoreProvider clientProvider, CoreProvider serverProvider, SyncSetup setup, SyncOptions options)
+        public static async Task SyncHttpThroughKestrelAsync(CoreProvider clientProvider, CoreProvider serverProvider, SyncSetup setup, SyncOptions options)
         {
 
             var configureServices = new Action<IServiceCollection>(services =>
@@ -814,7 +814,7 @@ namespace Sample.Synchronization.SqlServer
 
         }
 
-        public static async Task SyncHttpThroughKestrellAndTestDateTimeSerializationAsync()
+        public static async Task SyncHttpThroughKestrelAndTestDateTimeSerializationAsync()
         {
             // server provider
             // Create 2 Sql Sync providers

@@ -12,19 +12,19 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Cache
     [DataContract(Name = "sc"), Serializable]
     public class SessionCache
     {
-        [DataMember(Name = "rct", IsRequired = false, EmitDefaultValue = false, Order = 1)]
+        [DataMember(Name = "rct", IsRequired = false, EmitDefaultValue = false)]
         public long RemoteClientTimestamp { get; set; }
 
-        [DataMember(Name = "sbi", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "sbi", IsRequired = false, EmitDefaultValue = false)]
         public BatchInfo ServerBatchInfo { get; set; }
 
-        [DataMember(Name = "cbi", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "cbi", IsRequired = false, EmitDefaultValue = false)]
         public BatchInfo ClientBatchInfo { get; set; }
 
-        [DataMember(Name = "dcs", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "dcs", IsRequired = false, EmitDefaultValue = false)]
         public DatabaseChangesSelected ServerChangesSelected { get; set; }
 
-        [DataMember(Name = "dca", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "dca", IsRequired = false, EmitDefaultValue = false)]
         public DatabaseChangesApplied ClientChangesApplied { get; set; }
 
 

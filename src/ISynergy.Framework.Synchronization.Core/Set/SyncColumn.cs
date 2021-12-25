@@ -12,70 +12,70 @@ namespace ISynergy.Framework.Synchronization.Core.Set
     public class SyncColumn : SyncNamedItem<SyncColumn>
     {
         /// <summary>Gets or sets the name of the column</summary>
-        [DataMember(Name = "n", IsRequired = true, Order = 1)]
+        [DataMember(Name = "n", IsRequired = true)]
         public string ColumnName { get; set; }
 
-        [DataMember(Name = "dt", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "dt", IsRequired = false, EmitDefaultValue = false)]
         public string DataType { get; set; }
 
-        [DataMember(Name = "an", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "an", IsRequired = false, EmitDefaultValue = false)]
         public bool AllowDBNull { get; set; }
 
-        [DataMember(Name = "iu", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "iu", IsRequired = false, EmitDefaultValue = false)]
         public bool IsUnique { get; set; }
 
-        [DataMember(Name = "ir", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "ir", IsRequired = false, EmitDefaultValue = false)]
         public bool IsReadOnly { get; set; }
 
-        [DataMember(Name = "ia", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "ia", IsRequired = false, EmitDefaultValue = false)]
         public bool IsAutoIncrement { get; set; }
 
-        [DataMember(Name = "seed", IsRequired = false, EmitDefaultValue = false, Order = 7)]
+        [DataMember(Name = "seed", IsRequired = false, EmitDefaultValue = false)]
         public int AutoIncrementSeed { get; set; }
 
-        [DataMember(Name = "step", IsRequired = false, EmitDefaultValue = false, Order = 8)]
+        [DataMember(Name = "step", IsRequired = false, EmitDefaultValue = false)]
         public int AutoIncrementStep { get; set; }
 
-        [DataMember(Name = "ius", IsRequired = false, EmitDefaultValue = false, Order = 9)]
+        [DataMember(Name = "ius", IsRequired = false, EmitDefaultValue = false)]
         public bool IsUnsigned { get; set; }
 
-        [DataMember(Name = "iuc", IsRequired = false, EmitDefaultValue = false, Order = 10)]
+        [DataMember(Name = "iuc", IsRequired = false, EmitDefaultValue = false)]
         public bool IsUnicode { get; set; }
 
-        [DataMember(Name = "ico", IsRequired = false, EmitDefaultValue = false, Order = 11)]
+        [DataMember(Name = "ico", IsRequired = false, EmitDefaultValue = false)]
         public bool IsCompute { get; set; }
 
-        [DataMember(Name = "ml", IsRequired = false, EmitDefaultValue = false, Order = 12)]
+        [DataMember(Name = "ml", IsRequired = false, EmitDefaultValue = false)]
         public int MaxLength { get; set; }
 
-        [DataMember(Name = "o", IsRequired = false, EmitDefaultValue = false, Order = 13)]
+        [DataMember(Name = "o", IsRequired = false, EmitDefaultValue = false)]
         public int Ordinal { get; set; }
 
-        [DataMember(Name = "ps", IsRequired = false, EmitDefaultValue = false, Order = 14)]
+        [DataMember(Name = "ps", IsRequired = false, EmitDefaultValue = false)]
         public bool PrecisionSpecified { get; set; }
 
-        [DataMember(Name = "p1", Order = 15)]
+        [DataMember(Name = "p1")]
         public byte Precision { get; set; }
 
-        [DataMember(Name = "ss", IsRequired = false, EmitDefaultValue = false, Order = 16)]
+        [DataMember(Name = "ss", IsRequired = false, EmitDefaultValue = false)]
         public bool ScaleSpecified { get; set; }
 
-        [DataMember(Name = "sc", EmitDefaultValue = false, Order = 17)]
+        [DataMember(Name = "sc", EmitDefaultValue = false)]
         public byte Scale { get; set; }
 
-        [DataMember(Name = "odb", IsRequired = false, EmitDefaultValue = false, Order = 18)]
+        [DataMember(Name = "odb", IsRequired = false, EmitDefaultValue = false)]
         public string OriginalDbType { get; set; }
 
-        [DataMember(Name = "oty", IsRequired = false, EmitDefaultValue = false, Order = 19)]
+        [DataMember(Name = "oty", IsRequired = false, EmitDefaultValue = false)]
         public string OriginalTypeName { get; set; }
 
-        [DataMember(Name = "db", IsRequired = false, EmitDefaultValue = false, Order = 20)]
+        [DataMember(Name = "db", IsRequired = false, EmitDefaultValue = false)]
         public int DbType { get; set; }
 
-        [DataMember(Name = "dv", IsRequired = false, EmitDefaultValue = false, Order = 21)]
+        [DataMember(Name = "dv", IsRequired = false, EmitDefaultValue = false)]
         public string DefaultValue { get; set; }
 
-        [DataMember(Name = "ext1", IsRequired = false, EmitDefaultValue = false, Order = 22)]
+        [DataMember(Name = "ext1", IsRequired = false, EmitDefaultValue = false)]
         public string ExtraProperty1 { get; set; }
 
 

@@ -13,55 +13,55 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Gets or Sets the tables involved in the sync
         /// </summary>
-        [DataMember(Name = "tbls", IsRequired = false, EmitDefaultValue = false, Order = 1)]
+        [DataMember(Name = "tbls", IsRequired = false, EmitDefaultValue = false)]
         public SetupTables Tables { get; set; }
 
         /// <summary>
         /// Gets or Sets the filters involved in the sync
         /// </summary>
-        [DataMember(Name = "fils", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "fils", IsRequired = false, EmitDefaultValue = false)]
         public SetupFilters Filters { get; set; }
 
         /// <summary>
         /// Specify a prefix for naming stored procedure. Default is empty string
         /// </summary>
-        [DataMember(Name = "spp", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "spp", IsRequired = false, EmitDefaultValue = false)]
         public string StoredProceduresPrefix { get; set; }
 
         /// <summary>
         /// Specify a suffix for naming stored procedures. Default is empty string
         /// </summary>
-        [DataMember(Name = "sps", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "sps", IsRequired = false, EmitDefaultValue = false)]
         public string StoredProceduresSuffix { get; set; }
 
         /// <summary>
         /// Specify a prefix for naming stored procedure. Default is empty string
         /// </summary>
-        [DataMember(Name = "tf", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "tf", IsRequired = false, EmitDefaultValue = false)]
         public string TriggersPrefix { get; set; }
 
         /// <summary>
         /// Specify a suffix for naming stored procedures. Default is empty string
         /// </summary>
-        [DataMember(Name = "ts", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "ts", IsRequired = false, EmitDefaultValue = false)]
         public string TriggersSuffix { get; set; }
 
         /// <summary>
         /// Specify a prefix for naming tracking tables. Default is empty string
         /// </summary>
-        [DataMember(Name = "ttp", IsRequired = false, EmitDefaultValue = false, Order = 7)]
+        [DataMember(Name = "ttp", IsRequired = false, EmitDefaultValue = false)]
         public string TrackingTablesPrefix { get; set; }
 
         /// <summary>
         /// Specify a suffix for naming tracking tables.
         /// </summary>
-        [DataMember(Name = "tts", IsRequired = false, EmitDefaultValue = false, Order = 8)]
+        [DataMember(Name = "tts", IsRequired = false, EmitDefaultValue = false)]
         public string TrackingTablesSuffix { get; set; }
 
         ///// <summary>
         ///// Gets or Sets the current Setup version.
         ///// </summary>
-        //[DataMember(Name = "v", IsRequired = false, EmitDefaultValue = false, Order = 9)]
+        //[DataMember(Name = "v", IsRequired = false, EmitDefaultValue = false)]
         //public string Version { get; set; }
 
         /// <summary>

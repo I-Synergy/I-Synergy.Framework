@@ -52,44 +52,44 @@ namespace ISynergy.Framework.Synchronization.Core.Set
         /// for SQL, will be named @{ParamterName}
         /// for MySql, will be named in_{ParameterName}
         /// </summary>
-        [DataMember(Name = "n", IsRequired = true, Order = 1)]
+        [DataMember(Name = "n", IsRequired = true)]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or Sets table name, if parameter is linked to a table
         /// </summary>
-        [DataMember(Name = "t", IsRequired = true, Order = 2)]
+        [DataMember(Name = "t", IsRequired = true)]
         public string TableName { get; set; }
 
         /// <summary>
         /// Gets or sets schema name, if parameter is linked to a table
         /// </summary>
-        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "s", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
         /// <summary>
         /// Gets or Sets the parameter db type
         /// </summary>
-        [DataMember(Name = "dt", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "dt", IsRequired = false, EmitDefaultValue = false)]
         public DbType? DbType { get; set; }
 
         /// <summary>
         /// Gets or Sets the parameter default value expression.
         /// Be careful, must be expresse in data source language
         /// </summary>
-        [DataMember(Name = "dv", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "dv", IsRequired = false, EmitDefaultValue = false)]
         public string DefaultValue { get; set; }
 
         /// <summary>
         /// Gets or Sets if the parameter is default null
         /// </summary>
-        [DataMember(Name = "an", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "an", IsRequired = false, EmitDefaultValue = false)]
         public bool AllowNull { get; set; } = false;
 
         /// <summary>
         /// Gets or Sets the parameter max length (if needed)
         /// </summary>
-        [DataMember(Name = "ml", IsRequired = false, EmitDefaultValue = false, Order = 7)]
+        [DataMember(Name = "ml", IsRequired = false, EmitDefaultValue = false)]
         public int MaxLength { get; set; }
 
         public override string ToString() => Name;

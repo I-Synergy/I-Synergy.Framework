@@ -9,7 +9,7 @@ namespace Sample.Synchronization.Common.Host
     public delegate Task ResponseDelegate(string serviceUri);
 
     /// <summary>
-    /// This is a test server for Kestrell
+    /// This is a test server for Kestrel
     /// Actually we can use Microsoft.AspNetCore.TestHost
     /// But I can't manage to find a way to perform through Fiddler
     /// </summary>

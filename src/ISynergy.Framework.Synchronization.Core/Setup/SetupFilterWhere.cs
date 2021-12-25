@@ -8,16 +8,16 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
     [DataContract(Name = "sfw"), Serializable]
     public class SetupFilterWhere : SyncNamedItem<SetupFilterWhere>
     {
-        [DataMember(Name = "tn", IsRequired = true, Order = 1)]
+        [DataMember(Name = "tn", IsRequired = true)]
         public string TableName { get; set; }
 
-        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
-        [DataMember(Name = "cn", IsRequired = true, Order = 3)]
+        [DataMember(Name = "cn", IsRequired = true)]
         public string ColumnName { get; set; }
 
-        [DataMember(Name = "pn", IsRequired = true, Order = 4)]
+        [DataMember(Name = "pn", IsRequired = true)]
         public string ParameterName { get; set; }
 
 

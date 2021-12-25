@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Exposing the InnerCollection for serialization purpose
         /// </summary>
-        [DataMember(Name = "c", IsRequired = true, Order = 1)]
+        [DataMember(Name = "c", IsRequired = true)]
         public Collection<SetupTable> InnerCollection = new Collection<SetupTable>();
 
         public SetupTables()

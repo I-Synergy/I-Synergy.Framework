@@ -13,19 +13,19 @@ namespace ISynergy.Framework.Synchronization.Core.Set
         /// <summary>
         /// Gets or Sets the relation name 
         /// </summary>
-        [DataMember(Name = "n", IsRequired = true, Order = 1)]
+        [DataMember(Name = "n", IsRequired = true)]
         public string RelationName { get; set; }
 
         /// <summary>
         /// Gets or Sets a list of columns that represent the parent key.
         /// </summary>
-        [DataMember(Name = "pks", IsRequired = true, Order = 2)]
+        [DataMember(Name = "pks", IsRequired = true)]
         public IList<SyncColumnIdentifier> ParentKeys { get; set; } = new List<SyncColumnIdentifier>();
 
         /// <summary>
         /// Gets or Sets a list of columns that represent the parent key.
         /// </summary>
-        [DataMember(Name = "cks", IsRequired = true, Order = 3)]
+        [DataMember(Name = "cks", IsRequired = true)]
         public IList<SyncColumnIdentifier> Keys { get; set; } = new List<SyncColumnIdentifier>();
 
         /// <summary>
