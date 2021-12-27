@@ -56,7 +56,7 @@ namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 
             // Create a batch 
             // batchinfo generate a schema clone with scope columns if needed
-            batchInfo = new BatchInfo(message.Schema, message.BatchDirectory, message.BatchDirectoryName);
+            batchInfo = message.Schema.ToBatchInfo(message.BatchDirectory, message.BatchDirectoryName);
             batchInfo.TryRemoveDirectory();
             batchInfo.CreateDirectory();
 
@@ -415,7 +415,7 @@ namespace ISynergy.Framework.Synchronization.Core.Orchestrators
         internal Task<(BatchInfo, DatabaseChangesSelected)> InternalGetEmptyChangesAsync(MessageGetChangesBatch message)
         {
             // Create the batch info, in memory
-            var batchInfo = new BatchInfo(message.Schema, message.BatchDirectory); ;
+            var batchInfo = message.Schema.ToBatchInfo(message.BatchDirectory); ;
 
             // Create a new empty in-memory batch info
             return Task.FromResult((batchInfo, new DatabaseChangesSelected()));

@@ -314,7 +314,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
             // if we don't have any BatchPartsInfo, just generate a new one to get, at least, something to send to the server
             // and get a response with new data from server
             if (clientBatchInfo is null)
-                clientBatchInfo = new BatchInfo(schema);
+                clientBatchInfo = schema.ToBatchInfo();
 
             // --------------------------------------------------------------
             // STEP 1 : Send everything to the server side
@@ -413,7 +413,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
             ctx.ProgressPercentage = initialPctProgress;
 
             // Create the BatchInfo
-            var serverBatchInfo = new BatchInfo(schema);
+            var serverBatchInfo = schema.ToBatchInfo();
 
             HttpMessageSummaryResponse summaryResponseContent = null;
 
@@ -565,7 +565,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
                 Directory.CreateDirectory(batchDirectoryFullPath);
 
             // Create the BatchInfo serialized (forced because in a snapshot call, so we are obviously serialized on disk)
-            var serverBatchInfo = new BatchInfo(schema, batchDirectoryRoot, batchDirectoryName);
+            var serverBatchInfo = schema.ToBatchInfo(batchDirectoryRoot, batchDirectoryName);
 
             // Firstly, get the snapshot summary
             var changesToSend = new HttpMessageSendChangesRequest(ctx, null);
@@ -747,7 +747,7 @@ namespace ISynergy.Framework.Synchronization.Client.Orchestrators
 
 
             // Create the BatchInfo
-            var serverBatchInfo = new BatchInfo(schema);
+            var serverBatchInfo = schema.ToBatchInfo();
 
             HttpMessageSummaryResponse summaryResponseContent = null;
 

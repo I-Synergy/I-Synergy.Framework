@@ -79,17 +79,16 @@ namespace ISynergy.Framework.Synchronization.Core.Orchestrators
         /// </summary>
         internal async Task<bool> InternalExistsScopeInfoTableAsync(SyncContext ctx, DbScopeType scopeType, DbScopeBuilder scopeBuilder, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            // Get exists command
-            var existsCommand = scopeBuilder.GetCommandAsync(DbScopeCommandType.ExistsScopeTable, scopeType, connection, transaction);
+            if (scopeBuilder.GetCommandAsync(DbScopeCommandType.ExistsScopeTable, scopeType, connection, transaction) is DbCommand command)
+            {
+                await InterceptAsync(new DbCommandArgs(ctx, command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
-            if (existsCommand is null)
-                return false;
-       
-            await InterceptAsync(new DbCommandArgs(ctx, existsCommand, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+                var existsResultObject = await command.ExecuteScalarAsync().ConfigureAwait(false);
+                var exists = Convert.ToInt32(existsResultObject) > 0;
+                return exists;
+            }
 
-            var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);
-            var exists = Convert.ToInt32(existsResultObject) > 0;
-            return exists;
+            return false;
         }
 
         /// <summary>
@@ -98,23 +97,21 @@ namespace ISynergy.Framework.Synchronization.Core.Orchestrators
         internal async Task<bool> InternalExistsScopeInfoAsync(SyncContext ctx, DbScopeType scopeType, string scopeId, DbScopeBuilder scopeBuilder, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
             // Get exists command
-            var existsCommand = scopeBuilder.GetCommandAsync(DbScopeCommandType.ExistScope, scopeType, connection, transaction);
+            if (scopeBuilder.GetCommandAsync(DbScopeCommandType.ExistScope, scopeType, connection, transaction) is DbCommand command)
+            {
+                // Just in case, in older version we may have sync_scope_name as primary key;
+                DbSyncAdapter.SetParameterValue(command, "sync_scope_name", scopeId);
+                // Set primary key value
+                DbSyncAdapter.SetParameterValue(command, "sync_scope_id", scopeId);
 
-            if (existsCommand is null) return false;
+                await InterceptAsync(new DbCommandArgs(ctx, command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
-            // Just in case, in older version we may have sync_scope_name as primary key;
-            DbSyncAdapter.SetParameterValue(existsCommand, "sync_scope_name", scopeId);
-            // Set primary key value
-            DbSyncAdapter.SetParameterValue(existsCommand, "sync_scope_id", scopeId);
+                var existsResultObject = await command.ExecuteScalarAsync().ConfigureAwait(false);
+                var exists = Convert.ToInt32(existsResultObject) > 0;
+                return exists;
+            }
 
-            if (existsCommand is null)
-                return false;
-          
-            await InterceptAsync(new DbCommandArgs(ctx, existsCommand, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
-
-            var existsResultObject = await existsCommand.ExecuteScalarAsync().ConfigureAwait(false);
-            var exists = Convert.ToInt32(existsResultObject) > 0;
-            return exists;
+            return false;
         }
 
         /// <summary>
@@ -122,23 +119,25 @@ namespace ISynergy.Framework.Synchronization.Core.Orchestrators
         /// </summary>
         internal async Task<bool> InternalDropScopeInfoTableAsync(SyncContext ctx, DbScopeType scopeType, DbScopeBuilder scopeBuilder, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            var command = scopeBuilder.GetCommandAsync(DbScopeCommandType.DropScopeTable, scopeType, connection, transaction);
+            if (scopeBuilder.GetCommandAsync(DbScopeCommandType.DropScopeTable, scopeType, connection, transaction) is DbCommand command)
+            {
+                var action = new ScopeTableDroppingArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, command, connection, transaction);
+                
+                await InterceptAsync(action, progress, cancellationToken).ConfigureAwait(false);
 
-            if (command is null) return false;
+                if (action.Cancel || action.Command is null)
+                    return false;
 
-            var action = new ScopeTableDroppingArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, command, connection, transaction);
-            await InterceptAsync(action, progress, cancellationToken).ConfigureAwait(false);
+                await InterceptAsync(new DbCommandArgs(ctx, action.Command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command is null)
-                return false;
+                await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
-            await InterceptAsync(new DbCommandArgs(ctx, action.Command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+                await InterceptAsync(new ScopeTableDroppedArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
-            await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
+                return true;
+            }
 
-            await InterceptAsync(new ScopeTableDroppedArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
-
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -146,24 +145,25 @@ namespace ISynergy.Framework.Synchronization.Core.Orchestrators
         /// </summary>
         internal async Task<bool> InternalCreateScopeInfoTableAsync(SyncContext ctx, DbScopeType scopeType, DbScopeBuilder scopeBuilder, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            var command = scopeBuilder.GetCommandAsync(DbScopeCommandType.CreateScopeTable, scopeType, connection, transaction);
+            if (scopeBuilder.GetCommandAsync(DbScopeCommandType.CreateScopeTable, scopeType, connection, transaction) is DbCommand command)
+            {
+                var action = new ScopeTableCreatingArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, command, connection, transaction);
+                
+                await InterceptAsync(action, progress, cancellationToken).ConfigureAwait(false);
 
-            if (command is null)
-                return false;
+                if (action.Cancel || action.Command is null)
+                    return false;
 
-            var action = new ScopeTableCreatingArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, command, connection, transaction);
-            await InterceptAsync(action, progress, cancellationToken).ConfigureAwait(false);
+                await InterceptAsync(new DbCommandArgs(ctx, action.Command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
-            if (action.Cancel || action.Command is null)
-                return false;
+                await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
-            await InterceptAsync(new DbCommandArgs(ctx, action.Command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+                await InterceptAsync(new ScopeTableCreatedArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
-            await action.Command.ExecuteNonQueryAsync().ConfigureAwait(false);
+                return true;
+            }
 
-            await InterceptAsync(new ScopeTableCreatedArgs(ctx, scopeBuilder.ScopeInfoTableName.ToString(), scopeType, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
-
-            return true;
+            return false;
         }
 
         /// <summary>

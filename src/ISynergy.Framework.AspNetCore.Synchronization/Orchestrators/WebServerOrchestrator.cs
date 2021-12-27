@@ -2,6 +2,7 @@
 using ISynergy.Framework.AspNetCore.Synchronization.Cache;
 using ISynergy.Framework.AspNetCore.Synchronization.Extensions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Synchronization.Client.Enumerations;
 using ISynergy.Framework.Synchronization.Client.Exceptions;
 using ISynergy.Framework.Synchronization.Client.Messages;
@@ -11,6 +12,7 @@ using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Algorithms;
 using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Messages;
 using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Serialization;
@@ -33,8 +35,20 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
 {
     public class WebServerOrchestrator : RemoteOrchestrator
     {
-        public readonly Collection<IConverter> Converters;
-        public readonly Collection<ISerializerFactory> SerializerFactories;
+        /// <summary>
+        /// Gets or sets converters.
+        /// </summary>
+        public Collection<IConverter> Converters { get; set; }
+
+        /// <summary>
+        /// Gets or sets serializer factories.
+        /// </summary>
+        public Collection<ISerializerFactory> SerializerFactories { get; set; }
+
+        /// <summary>
+        /// Gets or Sets the Client Converter
+        /// </summary>
+        public IConverter ClientConverter { get; private set; }
 
         /// <summary>
         /// Default ctor. Using default options and schema
@@ -75,11 +89,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             : this(versionService, provider, new SyncOptions(), new SyncSetup(tables), scopeName)
         {
         }
-
-        /// <summary>
-        /// Gets or Sets the Client Converter
-        /// </summary>
-        public IConverter ClientConverter { get; private set; }
 
         /// <summary>
         /// Call this method to handle requests on the server, sent by the client
@@ -385,14 +394,15 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             return false;
         }
 
-        internal async Task<HttpMessageEnsureScopesResponse> EnsureScopesAsync(HttpContext httpContext, HttpMessageEnsureScopesRequest httpMessage, SessionCache sessionCache,
-                                            CancellationToken cancellationToken, IProgress<ProgressArgs> progress = null)
+        internal async Task<HttpMessageEnsureScopesResponse> EnsureScopesAsync(
+            HttpContext httpContext, 
+            HttpMessageEnsureScopesRequest httpMessage, 
+            SessionCache sessionCache,
+            CancellationToken cancellationToken, 
+            IProgress<ProgressArgs> progress = null)
         {
-            if (httpMessage is null)
-                throw new ArgumentException("EnsureScopesAsync message could not be null");
-
-            if (Setup is null)
-                throw new ArgumentException("You need to set the tables to sync on server side");
+            Argument.IsNotNull(httpContext);
+            Argument.IsNotNull(Setup);
 
             // Get context from request message
             var ctx = httpMessage.SyncContext;
@@ -413,12 +423,8 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
         internal async Task<HttpMessageEnsureSchemaResponse> EnsureSchemaAsync(HttpContext httpContext, HttpMessageEnsureScopesRequest httpMessage, SessionCache sessionCache,
             CancellationToken cancellationToken, IProgress<ProgressArgs> progress = null)
         {
-
-            if (httpMessage is null)
-                throw new ArgumentException("EnsureScopesAsync message could not be null");
-
-            if (Setup is null)
-                throw new ArgumentException("You need to set the tables to sync on server side");
+            Argument.IsNotNull(httpContext);
+            Argument.IsNotNull(Setup);
 
             // Get context from request message
             var ctx = httpMessage.SyncContext;
@@ -617,7 +623,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             // Get batch info from session cache if exists, otherwise create it
             if (sessionCache.ClientBatchInfo is null)
             {
-                sessionCache.ClientBatchInfo = new BatchInfo(schema, Options.BatchDirectory);
+                sessionCache.ClientBatchInfo = schema.ToBatchInfo(Options.BatchDirectory);
                 sessionCache.ClientBatchInfo.TryRemoveDirectory();
                 sessionCache.ClientBatchInfo.CreateDirectory();
             }

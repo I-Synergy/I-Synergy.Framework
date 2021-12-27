@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Validation;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -78,8 +79,6 @@ namespace ISynergy.Framework.Synchronization.Core.Set
         [DataMember(Name = "ext1", IsRequired = false, EmitDefaultValue = false)]
         public string ExtraProperty1 { get; set; }
 
-
-
         /// <summary>
         /// Ctor for serialization purpose
         /// </summary>
@@ -88,21 +87,31 @@ namespace ISynergy.Framework.Synchronization.Core.Set
         /// <summary>
         /// Create a new column with the given name
         /// </summary>
-        public SyncColumn(string columnName) : this() => ColumnName = columnName ?? throw new ArgumentNullException(nameof(columnName));
+        public SyncColumn(string columnName) 
+            : this()
+        {
+            Argument.IsNotNull(columnName);
+            ColumnName = columnName;
+        }
 
         /// <summary>
         /// Create a new column with the given name and given type
         /// </summary>
-        public SyncColumn(string columnName, Type type) : this(columnName) => SetType(type);
+        public SyncColumn(string columnName, Type type) 
+            : this(columnName)
+        {
+            SetType(type);
+        }
 
         /// <summary>
         /// Set the SyncColumn Type (if the type was not set with the correct ctor)
         /// </summary>
         public void SetType(Type type)
         {
+            Argument.IsNotNull(type);
+
             DataType = GetAssemblyQualifiedName(type);
             DbType = (int)CoerceDbType();
-
         }
 
         /// <summary>

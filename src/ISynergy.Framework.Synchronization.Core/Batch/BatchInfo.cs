@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Builders;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Serialization;
 using ISynergy.Framework.Synchronization.Core.Set;
 using System;
@@ -17,29 +16,6 @@ namespace ISynergy.Framework.Synchronization.Core.Batch
     [DataContract(Name = "bi"), Serializable]
     public class BatchInfo
     {
-
-        /// <summary>
-        /// Ctor for serializer
-        /// </summary>
-        public BatchInfo()
-        {
-
-        }
-
-        /// <summary>
-        /// Create a new BatchInfo, containing all BatchPartInfo
-        /// </summary>
-        public BatchInfo(SyncSet inSchema, string rootDirectory = null, string directoryName = null)
-        {
-            // We need to create a change table set, containing table with columns not readonly
-            foreach (var table in inSchema.Tables)
-                DbSyncAdapter.CreateChangesTable(inSchema.Tables[table.TableName, table.SchemaName], SanitizedSchema);
-
-            DirectoryRoot = rootDirectory;
-            BatchPartsInfo = new List<BatchPartInfo>();
-            DirectoryName = string.IsNullOrEmpty(directoryName) ? string.Concat(DateTime.UtcNow.ToString("yyyy_MM_dd_ss"), Path.GetRandomFileName().Replace(".", "")) : directoryName;
-        }
-
         /// <summary>
         /// Gets or Sets directory name
         /// </summary>

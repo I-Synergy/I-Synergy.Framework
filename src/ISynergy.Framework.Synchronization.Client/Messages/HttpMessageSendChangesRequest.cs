@@ -17,8 +17,6 @@ namespace ISynergy.Framework.Synchronization.Client.Messages
         public HttpMessageSendChangesRequest(SyncContext context, ScopeInfo scope)
             : base(context)
         {
-            Argument.IsNotNull(scope);
-
             Scope = scope;
         }
 

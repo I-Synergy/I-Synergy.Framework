@@ -118,49 +118,46 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// </summary>
         public async Task<(DbCommand Command, bool IsBatch)> GetCommandAsync(DbCommandType commandType, DbConnection connection, DbTransaction transaction, SyncFilter filter = null)
         {
-            // Create the key
-            var commandKey = $"{connection.DataSource}-{connection.Database}-{TableDescription.GetFullName()}-{commandType}";
-
-            var (command, isBatch) = GetCommand(commandType, filter);
-
-            if (command is null)
-                return (null, false);
-
-            // Add Parameters
-            await AddCommandParametersAsync(commandType, command, connection, transaction, filter).ConfigureAwait(false);
-
-            if (command is null)
-                throw new MissingCommandException(commandType.ToString());
-
             if (connection is null)
                 throw new MissingConnectionException();
 
-            if (connection.State != ConnectionState.Open)
-                throw new ConnectionClosedException(connection);
+            // Create the key
+            var commandKey = $"{connection.DataSource}-{connection.Database}-{TableDescription.GetFullName()}-{commandType}";
 
-            command.Connection = connection;
-            command.Transaction = transaction;
-
-            // Get a lazy command instance
-            var lazyCommand = commands.GetOrAdd(commandKey, k => new Lazy<SyncCommand>(() =>
+            if (GetCommand(commandType, filter) is (DbCommand command, bool isBatchCommand))
             {
-                var syncCommand = new SyncCommand(commandKey);
-                return syncCommand;
-            }));
+                // Add Parameters
+                await AddCommandParametersAsync(commandType, command, connection, transaction, filter).ConfigureAwait(false);
 
-            // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
-            if (lazyCommand.Value.IsPrepared == true)
-                return (command, isBatch);
+                if (connection.State != ConnectionState.Open)
+                    throw new ConnectionClosedException(connection);
 
-            // Testing The Prepare() performance increase
-            command.Prepare();
+                command.Connection = connection;
+                command.Transaction = transaction;
 
-            // Adding this command as prepared
-            lazyCommand.Value.IsPrepared = true;
+                // Get a lazy command instance
+                var lazyCommand = commands.GetOrAdd(commandKey, k => new Lazy<SyncCommand>(() =>
+                {
+                    var syncCommand = new SyncCommand(commandKey);
+                    return syncCommand;
+                }));
 
-            commands.AddOrUpdate(commandKey, lazyCommand, (key, lc) => new Lazy<SyncCommand>(() => lc.Value));
+                // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
+                if (lazyCommand.Value.IsPrepared == true)
+                    return (command, isBatchCommand);
 
-            return (command, isBatch);
+                // Testing The Prepare() performance increase
+                command.Prepare();
+
+                // Adding this command as prepared
+                lazyCommand.Value.IsPrepared = true;
+
+                commands.AddOrUpdate(commandKey, lazyCommand, (key, lc) => new Lazy<SyncCommand>(() => lc.Value));
+
+                return (command, isBatchCommand);
+            }
+
+            throw new MissingCommandException(commandType.ToString());
         }
 
         /// <summary>

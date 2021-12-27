@@ -27,7 +27,7 @@ namespace ISynergy.Framework.Synchronization.Core.Merger
         public Task MigrateAsync(SyncContext context)
         {
 
-            return null;
+            return Task.CompletedTask;
             //DbTransaction transaction = null;
 
             //using (var connection = provider.CreateConnection())

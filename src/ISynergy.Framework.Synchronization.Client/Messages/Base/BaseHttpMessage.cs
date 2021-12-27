@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 
 namespace ISynergy.Framework.Synchronization.Client.Messages.Base
 {
+    [DataContract]
     public abstract class BaseHttpMessage
     {
         [DataMember(Name = "sc", IsRequired = true)]
