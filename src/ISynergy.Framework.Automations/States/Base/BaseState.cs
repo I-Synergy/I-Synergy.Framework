@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Automations.States.Base
         /// <param name="for"></param>
         protected BaseState(TimeSpan @for)
         {
-            Argument.IsNotNull(nameof(@for), @for);
+            Argument.IsNotNull(@for);
 
             StateId = Guid.NewGuid();
             For = @for;

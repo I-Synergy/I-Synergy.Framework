@@ -15,28 +15,28 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// <summary>
         /// Get the changes selected to be applied for a current table
         /// </summary> 
-        [DataMember(Name = "tcs", IsRequired = false, EmitDefaultValue = false, Order = 1)]
+        [DataMember(Name = "tcs", IsRequired = false, EmitDefaultValue = false)]
         public List<TableChangesSelected> TableChangesSelected { get; set; } = new List<TableChangesSelected>();
 
         /// <summary>
         /// Gets the total number of changes that are to be applied during the synchronization session.
         /// </summary>
         [IgnoreDataMember]
-        public int TotalChangesSelected => this.TableChangesSelected.Sum(t => t.TotalChanges);
+        public int TotalChangesSelected => TableChangesSelected.Sum(t => t.TotalChanges);
 
         /// <summary>
         /// Gets the total number of deletes that are to be applied during the synchronization session.
         /// </summary>
         [IgnoreDataMember]
-        public int TotalChangesSelectedDeletes => this.TableChangesSelected.Sum(t => t.Deletes);
+        public int TotalChangesSelectedDeletes => TableChangesSelected.Sum(t => t.Deletes);
 
         /// <summary>
         /// Gets the total number of updates OR inserts that are to be applied during the synchronization session.
         /// </summary>
         [IgnoreDataMember]
-        public int TotalChangesSelectedUpdates => this.TableChangesSelected.Sum(t => t.Upserts);
+        public int TotalChangesSelectedUpdates => TableChangesSelected.Sum(t => t.Upserts);
 
-        public override string ToString() => $"{this.TotalChangesSelected} changes selected for {this.TableChangesSelected.Count} tables";
+        public override string ToString() => $"{TotalChangesSelected} changes selected for {TableChangesSelected.Count} tables";
 
     }
 

@@ -1,13 +1,13 @@
 ﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
 
     /// <summary>
@@ -17,12 +17,12 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
     {
         public HttpGettingSchemaRequestArgs(SyncContext context, string host) : base(context, null)
         {
-            this.Host = host;
+            Host = host;
         }
-
-        public override string Source => this.Host;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+        public override string Source => Host;
         public override int EventId => HttpClientSyncEventsId.HttpGettingSchemaRequest.Id;
-        public override string Message => $"Getting Server Schema. Scope Name:{this.Context.ScopeName}.";
+        public override string Message => $"Getting Server Schema. Scope Name:{Context.ScopeName}.";
 
         public string Host { get; }
     }
@@ -30,16 +30,16 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
     {
         public HttpGettingSchemaResponseArgs(ServerScopeInfo serverScopeInfo, SyncSet schema, SyncContext context, string host) : base(context, null)
         {
-            this.ServerScopeInfo = serverScopeInfo;
-            this.Schema = schema;
-            this.Host = host;
+            ServerScopeInfo = serverScopeInfo;
+            Schema = schema;
+            Host = host;
         }
-        public override string Source => this.Host;
+        public override string Source => Host;
         public override int EventId => HttpClientSyncEventsId.HttpGettingSchemaResponse.Id;
-        public override string Message => $"Received Schema From Server. Tables Count:{this.Schema.Tables.Count}.";
+        public override string Message => $"Received Schema From Server. Tables Count:{Schema.Tables.Count}.";
 
         public SyncSet Schema { get; set; }
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public ServerScopeInfo ServerScopeInfo { get; set; }
 
         public string Host { get; }

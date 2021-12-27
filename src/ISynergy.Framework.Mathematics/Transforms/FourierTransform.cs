@@ -308,7 +308,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
                 throw new ArgumentOutOfRangeException();
 
             // check if the array is already calculated
-            if (reversedBits[numberOfBits - 1] == null)
+            if (reversedBits[numberOfBits - 1] is null)
             {
                 int n = Tools.Pow2(numberOfBits);
                 int[] rBits = new int[n];
@@ -337,7 +337,7 @@ namespace ISynergy.Framework.Mathematics.Transforms
             int directionIndex = (direction == Direction.Forward) ? 0 : 1;
 
             // check if the array is already calculated
-            if (complexRotation[numberOfBits - 1, directionIndex] == null)
+            if (complexRotation[numberOfBits - 1, directionIndex] is null)
             {
                 int n = 1 << (numberOfBits - 1);
                 double uR = 1.0;

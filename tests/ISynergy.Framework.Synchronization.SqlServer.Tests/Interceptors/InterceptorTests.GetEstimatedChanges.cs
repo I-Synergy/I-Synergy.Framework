@@ -77,7 +77,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             localOrchestrator.OnTableChangesSelected(action =>
             {
-                Assert.IsNull(action.Changes);
+                Assert.IsNull(action.BatchPartInfos);
                 onSelected++;
             });
             localOrchestrator.OnDatabaseChangesSelecting(dcs =>
@@ -182,7 +182,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             remoteOrchestrator.OnTableChangesSelected(action =>
             {
-                Assert.IsNull(action.Changes);
+                Assert.IsNull(action.BatchPartInfos);
                 onSelected++;
             });
 

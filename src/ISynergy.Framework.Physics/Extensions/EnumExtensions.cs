@@ -28,11 +28,11 @@ namespace ISynergy.Framework.Physics.Extensions
             //for the enum
             MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
 
-            if (memberInfo != null && memberInfo.Length > 0)
+            if (memberInfo is not null && memberInfo.Length > 0)
             {
                 object[] attrs = memberInfo[0].GetCustomAttributes(typeof(SymbolAttribute), false);
 
-                if (attrs != null && attrs.Length > 0)
+                if (attrs is not null && attrs.Length > 0)
                     return ((SymbolAttribute)attrs[0]).Symbol;
             }
 

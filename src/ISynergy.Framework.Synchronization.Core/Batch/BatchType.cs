@@ -2,9 +2,7 @@
 {
     public enum BatchType
     {
-        InMemory,
         Files,
         Archive
-
     }
 }

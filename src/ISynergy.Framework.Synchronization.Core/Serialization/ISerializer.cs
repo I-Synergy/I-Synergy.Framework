@@ -23,4 +23,6 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         Task<T> DeserializeAsync(Stream ms);
         Task<byte[]> SerializeAsync(T obj);
     }
+
+
 }

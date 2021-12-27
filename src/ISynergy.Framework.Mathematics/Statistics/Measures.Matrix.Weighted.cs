@@ -427,7 +427,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         /// </example>
         public static double[] ExponentialWeightedMean(this double[][] matrix, double alpha = 0)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix", "The matrix cannot be null.");
 
             return matrix.ExponentialWeightedMean(matrix.Rows(), alpha);
@@ -506,7 +506,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double[,] ExponentialWeightedCovariance(
             this double[][] matrix, double alpha = 0, bool unbiased = false)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix", "The matrix cannot be null.");
 
             return matrix.ExponentialWeightedCovariance(matrix.Rows(), alpha, unbiased);
@@ -1099,7 +1099,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         private static void Validate(double[][] matrix, int window, double alpha)
         {
             // Perform some basic error validation
-            if (matrix == null)
+            if (matrix is null)
             {
                 throw new ArgumentNullException("matrix", "The matrix cannot be null.");
             }

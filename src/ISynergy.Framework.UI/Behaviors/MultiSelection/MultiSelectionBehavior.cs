@@ -26,7 +26,7 @@ namespace ISynergy.Framework.UI.Behaviors
         protected override void OnAttached()
         {
             base.OnAttached();
-            if (SelectedItems != null)
+            if (SelectedItems is not null)
             {
                 AssociatedObject.SelectedItems.Clear();
                 foreach (var item in SelectedItems)
@@ -104,7 +104,7 @@ namespace ISynergy.Framework.UI.Behaviors
             {
                 _isUpdatingTarget = true;
 
-                if (e.OldItems != null)
+                if (e.OldItems is not null)
                 {
                     foreach (var item in e.OldItems)
                     {
@@ -112,7 +112,7 @@ namespace ISynergy.Framework.UI.Behaviors
                     }
                 }
 
-                if (e.NewItems != null)
+                if (e.NewItems is not null)
                 {
                     foreach (var item in e.NewItems)
                     {

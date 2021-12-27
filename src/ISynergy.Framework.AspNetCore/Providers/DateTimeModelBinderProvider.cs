@@ -35,7 +35,7 @@ namespace ISynergy.Framework.AspNetCore.Providers
         /// <returns>System.Nullable&lt;IModelBinder&gt;.</returns>
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
-            Argument.IsNotNull(nameof(context), context);
+            Argument.IsNotNull(context);
 
             return (context.Metadata.ModelType == typeof(DateTime))
                    || (context.Metadata.ModelType == typeof(DateTime?))

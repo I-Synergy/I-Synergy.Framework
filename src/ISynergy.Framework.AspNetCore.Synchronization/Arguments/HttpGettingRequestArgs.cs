@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Cache;
-using ISynergy.Framework.Synchronization.Client;
+using ISynergy.Framework.Synchronization.Client.Enumerations;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using Microsoft.AspNetCore.Http;
 
 namespace ISynergy.Framework.AspNetCore.Synchronization.Arguments
@@ -26,6 +26,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Arguments
             HttpStep = httpStep;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => HttpServerSyncEventsId.HttpGettingRequest.Id;
         public HttpContext HttpContext { get; }
         public SessionCache SessionCache { get; }

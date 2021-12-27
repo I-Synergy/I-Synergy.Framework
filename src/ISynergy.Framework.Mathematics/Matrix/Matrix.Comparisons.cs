@@ -13,9 +13,9 @@
         {
             if (a == b)
                 return true;
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return true;
-            if (a == null ^ b == null)
+            if (a is null ^ b is null)
                 return false;
             int[] la = a.GetLength(true);
             int[] lb = b.GetLength(true);
@@ -116,9 +116,9 @@
         {
             if (a == b)
                 return true;
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return true;
-            if (a == null ^ b == null)
+            if (a is null ^ b is null)
                 return false;
             int[] la = a.GetLength(true);
             int[] lb = b.GetLength(true);
@@ -224,9 +224,9 @@
         ///
         public static bool IsEqual(this Double[,] a, Double[][] b, Double atol = 0, Double rtol = 0)
         {
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return true;
-            if (a == null ^ b == null)
+            if (a is null ^ b is null)
                 return false;
             int[] la = a.GetLength(true);
             int[] lb = b.GetLength(true);
@@ -328,9 +328,9 @@
         ///
         public static bool IsEqual(this Double[][] a, Double[,] b, Double atol = 0, Double rtol = 0)
         {
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return true;
-            if (a == null ^ b == null)
+            if (a is null ^ b is null)
                 return false;
             int[] la = a.GetLength(true);
             int[] lb = b.GetLength(true);
@@ -434,9 +434,9 @@
         {
             if (a == b)
                 return true;
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return true;
-            if (a == null ^ b == null)
+            if (a is null ^ b is null)
                 return false;
             int[] la = a.GetLength(true);
             int[] lb = b.GetLength(true);
@@ -538,7 +538,7 @@
         /// 
         public static bool IsEqual(this Double[] a, Double b, Double atol = 0, Double rtol = 0)
         {
-            if (a == null)
+            if (a is null)
                 return true;
 
             if (rtol > 0)
@@ -630,7 +630,7 @@
         ///
         public static bool IsEqual(this Double[,] a, Double b, Double atol = 0, Double rtol = 0)
         {
-            if (a == null)
+            if (a is null)
                 return true;
 
             unsafe
@@ -728,7 +728,7 @@
         ///
         public static bool IsEqual(this Double[][] a, Double b, Double atol = 0, Double rtol = 0)
         {
-            if (a == null)
+            if (a is null)
                 return true;
 
             if (rtol > 0)
@@ -1127,9 +1127,9 @@
         {
             if (a == b)
                 return true;
-            if (a == null && b == null)
+            if (a is null && b is null)
                 return true;
-            if (a == null ^ b == null)
+            if (a is null ^ b is null)
                 return false;
             int[] la = a.GetLength(true);
             int[] lb = b.GetLength(true);

@@ -79,7 +79,7 @@ namespace ISynergy.Framework.Mathematics
                 vector = null;
             }
 
-            return vector != null;
+            return vector is not null;
         }
 
         #endregion

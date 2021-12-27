@@ -112,7 +112,7 @@ namespace ISynergy.Framework.Mathematics
         public static T[] Create<T>(int size, T[] values)
         {
             var v = new T[size];
-            if (values != null)
+            if (values is not null)
             {
                 for (var i = 0; i < Math.Min(values.Length, size); i++)
                     v[i] = values[i];

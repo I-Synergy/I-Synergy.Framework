@@ -46,7 +46,7 @@ namespace ISynergy.Framework.AspNetCore.Extensions
         /// <returns>HtmlString.</returns>
         public static HtmlString InlineImageAsync(this IHtmlHelper html, string path, byte[] image, string extension, object attributes = null)
         {
-            if (image != null && !string.IsNullOrWhiteSpace(extension))
+            if (image is not null && !string.IsNullOrWhiteSpace(extension))
             {
                 return ConvertArrayToHtmlString(image, GetFileContentType(extension), attributes);
             }

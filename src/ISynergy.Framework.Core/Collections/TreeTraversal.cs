@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Core.Collections
         public static IEnumerator<TNode> BreadthFirst<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>, new()
         {
-            if (tree.Root == null)
+            if (tree.Root is null)
                 yield break;
 
             var queue = new Queue<TNode>(new[] { tree.Root });
@@ -67,16 +67,16 @@ namespace ISynergy.Framework.Core.Collections
         public static IEnumerator<TNode> PreOrder<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>, new()
         {
-            if (tree.Root == null)
+            if (tree.Root is null)
                 yield break;
 
             var stack = new Stack<TNode>();
 
             TNode current = tree.Root;
 
-            while (stack.Count != 0 || current != null)
+            while (stack.Count != 0 || current is not null)
             {
-                if (current != null)
+                if (current is not null)
                 {
                     stack.Push(current);
                     yield return current;
@@ -97,16 +97,16 @@ namespace ISynergy.Framework.Core.Collections
         public static IEnumerator<TNode> InOrder<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>, new()
         {
-            if (tree.Root == null)
+            if (tree.Root is null)
                 yield break;
 
             var stack = new Stack<TNode>();
 
             TNode current = tree.Root;
 
-            while (stack.Count != 0 || current != null)
+            while (stack.Count != 0 || current is not null)
             {
-                if (current != null)
+                if (current is not null)
                 {
                     stack.Push(current);
                     current = current.Left;
@@ -127,7 +127,7 @@ namespace ISynergy.Framework.Core.Collections
         public static IEnumerator<TNode> PostOrder<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>, new()
         {
-            if (tree.Root == null)
+            if (tree.Root is null)
                 yield break;
 
             var stack = new Stack<TNode>(new[] { tree.Root });
@@ -140,9 +140,9 @@ namespace ISynergy.Framework.Core.Collections
 
                 if (previous == current || previous.Left == current || previous.Right == current)
                 {
-                    if (current.Left != null)
+                    if (current.Left is not null)
                         stack.Push(current.Left);
-                    else if (current.Right != null)
+                    else if (current.Right is not null)
                         stack.Push(current.Right);
                     else
                     {
@@ -151,7 +151,7 @@ namespace ISynergy.Framework.Core.Collections
                 }
                 else if (current.Left == previous)
                 {
-                    if (current.Right != null)
+                    if (current.Right is not null)
                         stack.Push(current.Right);
                     else
                     {
@@ -178,7 +178,7 @@ namespace ISynergy.Framework.Core.Collections
         public static IEnumerator<TNode> DepthFirst<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>
         {
-            if (tree.Root == null)
+            if (tree.Root is null)
                 yield break;
 
             var stack = new Stack<TNode>();
@@ -206,18 +206,18 @@ namespace ISynergy.Framework.Core.Collections
         public static IEnumerator<TNode> DepthFirst<TNode>(Tree<TNode> tree)
             where TNode : TreeNode<TNode>
         {
-            if (tree.Root == null)
+            if (tree.Root is null)
                 yield break;
 
             TNode node = tree.Root;
 
-            while (node != null)
+            while (node is not null)
             {
                 yield return node;
 
                 if (node.IsLeaf)
                 {
-                    while (node.Next == null && node.Parent != null)
+                    while (node.Next is null && node.Parent is not null)
                         node = node.Parent;
                     node = node.Next;
                 }

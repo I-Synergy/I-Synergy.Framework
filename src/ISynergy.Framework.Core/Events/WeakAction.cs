@@ -27,7 +27,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (_staticAction != null)
+                if (_staticAction is not null)
                 {
                     return _staticAction.Method.Name;
                 }
@@ -62,7 +62,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                return _staticAction != null;
+                return _staticAction is not null;
             }
         }
 
@@ -95,7 +95,7 @@ namespace ISynergy.Framework.Core.Events
             {
                 _staticAction = action;
 
-                if (target != null)
+                if (target is not null)
                 {
                     // Keep a reference to the target to control the
                     // WeakAction's lifetime.
@@ -126,9 +126,9 @@ namespace ISynergy.Framework.Core.Events
                     return false;
                 }
 
-                if (_staticAction != null)
+                if (_staticAction is not null)
                 {
-                    if (Reference != null)
+                    if (Reference is not null)
                     {
                         return Reference.IsAlive;
                     }
@@ -138,12 +138,12 @@ namespace ISynergy.Framework.Core.Events
 
                 // Non static action
 
-                if (LiveReference != null)
+                if (LiveReference is not null)
                 {
                     return true;
                 }
 
-                if (Reference != null)
+                if (Reference is not null)
                 {
                     return Reference.IsAlive;
                 }
@@ -177,7 +177,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (LiveReference != null)
+                if (LiveReference is not null)
                 {
                     return LiveReference;
                 }
@@ -196,13 +196,13 @@ namespace ISynergy.Framework.Core.Events
         /// </summary>
         public void Execute()
         {
-            if (_staticAction != null)
+            if (_staticAction is not null)
             {
                 _staticAction();
                 return;
             }
 
-            if (IsAlive && Method != null && (LiveReference != null || ActionReference != null) && ActionTarget != null)
+            if (IsAlive && Method is not null && (LiveReference is not null || ActionReference is not null) && ActionTarget is not null)
             {
                 Method.Invoke(ActionTarget, null);
                 return;

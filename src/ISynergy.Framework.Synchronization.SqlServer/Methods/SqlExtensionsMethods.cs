@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+
+using ISynergy.Framework.Synchronization.Core.Builders;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,7 +12,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Methods
 
         internal static async Task<SqlParameter[]> DeriveParametersAsync(this SqlConnection connection, SqlCommand cmd, bool includeReturnValueParameter = false, SqlTransaction transaction = null)
         {
-            if (cmd == null) throw new ArgumentNullException("SqlCommand");
+            if (cmd is null) throw new ArgumentNullException("SqlCommand");
 
             var textParser = ParserName.Parse(cmd.CommandText);
 

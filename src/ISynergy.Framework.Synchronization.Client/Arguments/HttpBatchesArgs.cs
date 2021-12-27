@@ -1,12 +1,13 @@
-﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
+using ISynergy.Framework.Synchronization.Client.Messages;
+using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Batch;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
 
     /// <summary>
@@ -16,14 +17,15 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
     {
         public HttpBatchesDownloadingArgs(SyncContext context, DateTime startTime, BatchInfo serverBatchInfo, string host) : base(context, null)
         {
-            this.StartTime = startTime;
-            this.ServerBatchInfo = serverBatchInfo;
-            this.Host = host;
+            StartTime = startTime;
+            ServerBatchInfo = serverBatchInfo;
+            Host = host;
         }
 
-        public override string Source => this.Host;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+        public override string Source => Host;
         public override int EventId => HttpClientSyncEventsId.HttpGettingSchemaRequest.Id;
-        public override string Message => $"Downloading Batches. Scope Name:{this.Context.ScopeName}. Batches Count:{this.ServerBatchInfo.BatchPartsInfo?.Count ?? 1}. Rows Count:{this.ServerBatchInfo.RowsCount}";
+        public override string Message => $"Downloading Batches. Scope Name:{Context.ScopeName}. Batches Count:{ServerBatchInfo.BatchPartsInfo?.Count ?? 1}. Rows Count:{ServerBatchInfo.RowsCount}";
 
         public DateTime StartTime { get; }
         public BatchInfo ServerBatchInfo { get; }
@@ -33,19 +35,21 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
     {
         public HttpBatchesDownloadedArgs(HttpMessageSummaryResponse httpSummary, SyncContext context, DateTime startTime, DateTime completeTime, string host) : base(context, null)
         {
-            this.HttpSummary = httpSummary;
-            this.StartTime = startTime;
-            this.CompleteTime = completeTime;
-            this.Host = host;
+            HttpSummary = httpSummary;
+            StartTime = startTime;
+            CompleteTime = completeTime;
+            Host = host;
         }
-        public override string Source => this.Host;
+
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
+        public override string Source => Host;
         public override int EventId => HttpClientSyncEventsId.HttpGettingSchemaResponse.Id;
         public override string Message
         {
             get
             {
-                var batchCount = this.HttpSummary.BatchInfo?.BatchPartsInfo?.Count ?? 1;
-                var totalRows = this.HttpSummary.ServerChangesSelected?.TotalChangesSelected ?? 0;
+                var batchCount = HttpSummary.BatchInfo?.BatchPartsInfo?.Count ?? 1;
+                var totalRows = HttpSummary.ServerChangesSelected?.TotalChangesSelected ?? 0;
 
                 return $"Snapshot Downloaded. Batches Count: {batchCount}. Total Rows: {totalRows}. Duration: {Duration:hh\\:mm\\:ss}";
             }

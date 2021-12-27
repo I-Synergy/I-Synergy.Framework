@@ -103,7 +103,7 @@ namespace ISynergy.Framework.Mathematics.Random
                     return threadRandom;
 
                 // No possibility of race condition here since its thread static
-                if (threadRandom == null || threadLastUpdateTicks < sourceLastUpdateTicks)
+                if (threadRandom is null || threadLastUpdateTicks < sourceLastUpdateTicks)
                 {
                     threadSeed = GetRandomSeed();
                     threadLastUpdateTicks = sourceLastUpdateTicks;
@@ -166,7 +166,7 @@ namespace ISynergy.Framework.Mathematics.Random
                                 sourceRandom = new System.Random(value.Value);
                             }
                         }
-                        else // value == null
+                        else // value is null
                         {
                             Trace.WriteLine("All threads will be initialized with unpredictable random seeds.");
                             var s = unchecked((13 * Thread.CurrentThread.ManagedThreadId) ^ sourceLastUpdateTicks);
@@ -190,7 +190,7 @@ namespace ISynergy.Framework.Mathematics.Random
             {
                 lock (sourceSeedLock)
                 {
-                    if (sourceRandom == null)
+                    if (sourceRandom is null)
                     {
                         // There is no source random generator. This means we need to initialize the 
                         // generator for the current thread with a value that is (almost) unpredictable, 

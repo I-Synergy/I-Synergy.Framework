@@ -209,7 +209,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns>System.String.</returns>
         public static string ToLocalDateString(this DateTimeOffset self, string format, TimeSpan offset, CultureInfo culture = null)
         {
-            Argument.IsNotNullOrEmpty(nameof(format), format);
+            Argument.IsNotNullOrEmpty(format);
 
             if (culture is null)
                 culture = CultureInfo.InvariantCulture;

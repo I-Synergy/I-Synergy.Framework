@@ -1,14 +1,13 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public partial class RemoteOrchestrator : BaseOrchestrator
     {
@@ -26,7 +25,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var provision = SyncProvision.ServerScope | SyncProvision.ServerHistoryScope |
                             SyncProvision.StoredProcedures | SyncProvision.Triggers | SyncProvision.TrackingTable;
 
-            return this.ProvisionAsync(provision, overwrite, null, connection, transaction, cancellationToken, progress);
+            return ProvisionAsync(provision, overwrite, null, connection, transaction, cancellationToken, progress);
         }
 
         /// <summary>
@@ -40,9 +39,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="cancellationToken"></param>
         /// <param name="progress"></param>
         /// <returns>Full schema with table and columns properties</returns>
-        public virtual Task<SyncSet> ProvisionAsync(SyncProvision provision, bool overwrite = false, ServerScopeInfo serverScopeInfo = null, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-            => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
+        public virtual async Task<SyncSet> ProvisionAsync(SyncProvision provision, bool overwrite = false, ServerScopeInfo serverScopeInfo = null, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        {
+            try
             {
+                await using var runner = await this.GetConnectionAsync(SyncStage.Provisioning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 // Check incompatibility with the flags
                 if (provision.HasFlag(SyncProvision.ClientScope))
                     throw new InvalidProvisionForRemoteOrchestratorException();
@@ -50,22 +51,24 @@ namespace ISynergy.Framework.Synchronization.Core
                 // Get server scope if not supplied
                 if (serverScopeInfo is null)
                 {
-                    var scopeBuilder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
+                    var scopeBuilder = GetScopeBuilder(Options.ScopeInfoTableName);
 
-                    var exists = await this.InternalExistsScopeInfoTableAsync(ctx, DbScopeType.Server, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
+                    var exists = await InternalExistsScopeInfoTableAsync(GetContext(), DbScopeType.Server, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
                     if (exists)
-                        serverScopeInfo = await this.InternalGetScopeAsync<ServerScopeInfo>(ctx, DbScopeType.Server, this.ScopeName, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                        serverScopeInfo = await InternalGetScopeAsync<ServerScopeInfo>(GetContext(), DbScopeType.Server, ScopeName, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
                 }
 
-                var schema = new SyncSet(this.Setup);
+                var schema = new SyncSet(Setup);
+                schema = await InternalProvisionAsync(GetContext(), overwrite, schema, Setup, provision, serverScopeInfo, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                schema = await InternalProvisionAsync(ctx, overwrite, schema, this.Setup, provision, serverScopeInfo, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
+                await runner.CommitAsync().ConfigureAwait(false);
                 return schema;
-
-            }, connection, transaction, cancellationToken);
-
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
         /// <summary>
         /// Deprovision the remote database 
@@ -74,12 +77,12 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="progress"></param>
-        public virtual Task DeprovisionAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        public virtual Task<bool> DeprovisionAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
             var provision = SyncProvision.ServerScope | SyncProvision.ServerHistoryScope |
                             SyncProvision.StoredProcedures | SyncProvision.Triggers | SyncProvision.TrackingTable;
 
-            return this.DeprovisionAsync(provision, null, connection, transaction, cancellationToken, progress);
+            return DeprovisionAsync(provision, null, connection, transaction, cancellationToken, progress);
         }
 
         /// <summary>
@@ -91,37 +94,46 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="progress"></param>
-        public virtual Task DeprovisionAsync(SyncProvision provision, ServerScopeInfo serverScopeInfo = null, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.Deprovisioning, async (ctx, connection, transaction) =>
+        public virtual async Task<bool> DeprovisionAsync(SyncProvision provision, ServerScopeInfo serverScopeInfo = null, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            // Get server scope if not supplied
-            if (serverScopeInfo is null)
+            try
             {
-                var scopeBuilder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
+                await using var runner = await this.GetConnectionAsync(SyncStage.Deprovisioning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                // Get server scope if not supplied
+                if (serverScopeInfo is null)
+                {
+                    var scopeBuilder = GetScopeBuilder(Options.ScopeInfoTableName);
 
-                var exists = await this.InternalExistsScopeInfoTableAsync(ctx, DbScopeType.Server, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                    var exists = await InternalExistsScopeInfoTableAsync(GetContext(), DbScopeType.Server, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                if (exists)
-                    serverScopeInfo = await this.InternalGetScopeAsync<ServerScopeInfo>(ctx, DbScopeType.Server, this.ScopeName, scopeBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                    if (exists)
+                        serverScopeInfo = await InternalGetScopeAsync<ServerScopeInfo>(GetContext(), DbScopeType.Server, ScopeName, scopeBuilder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                }
+
+                // Create a temporary SyncSet for attaching to the schemaTable
+                var tmpSchema = new SyncSet();
+
+                // Add this table to schema
+                foreach (var table in Setup.Tables)
+                    tmpSchema.Tables.Add(new SyncTable(table.TableName, table.SchemaName));
+
+                tmpSchema.EnsureSchema();
+
+                // copy filters from old setup
+                foreach (var filter in Setup.Filters)
+                    tmpSchema.Filters.Add(filter);
+
+                var isDeprovisioned = await InternalDeprovisionAsync(GetContext(), tmpSchema, Setup, provision, serverScopeInfo, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+
+                await runner.CommitAsync().ConfigureAwait(false);
+
+                return isDeprovisioned;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
             }
 
-            // Create a temporary SyncSet for attaching to the schemaTable
-            var tmpSchema = new SyncSet();
-
-            // Add this table to schema
-            foreach (var table in this.Setup.Tables)
-                tmpSchema.Tables.Add(new SyncTable(table.TableName, table.SchemaName));
-
-            tmpSchema.EnsureSchema();
-
-            // copy filters from old setup
-            foreach (var filter in this.Setup.Filters)
-                tmpSchema.Filters.Add(filter);
-
-            var isDeprovisioned = await InternalDeprovisionAsync(ctx, tmpSchema, this.Setup, provision, serverScopeInfo, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-            return isDeprovisioned;
-
-        }, connection, transaction, cancellationToken);
+        }
     }
 }

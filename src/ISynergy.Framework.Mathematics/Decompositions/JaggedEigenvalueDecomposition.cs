@@ -77,7 +77,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         public JaggedEigenvalueDecomposition(double[][] value, bool assumeSymmetric,
             bool inPlace = false, bool sort = false)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value", "Matrix cannot be null.");
 
             if (value.Length != value[0].Length)
@@ -165,7 +165,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (diagonalMatrix != null)
+                if (diagonalMatrix is not null)
                     return diagonalMatrix;
 
                 var x = new double[n][];

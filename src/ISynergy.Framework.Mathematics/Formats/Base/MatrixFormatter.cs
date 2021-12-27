@@ -36,7 +36,7 @@
 
             // Check if the user has provided the correct format provider
             // for a matrix or if the argument is indeed an array (matrix)
-            if (provider != null && obj != null)
+            if (provider is not null && obj is not null)
             {
                 return Format(format, obj, provider);
             }
@@ -87,7 +87,7 @@
                     object obj = matrix.GetValue(i);
                     Array row = obj as Array;
 
-                    if (row == null)
+                    if (row is null)
                     {
                         sb.Append(handleOtherFormats(elementFormat, obj, culture));
                     }
@@ -228,11 +228,11 @@
             try
             {
                 IFormattable obj = arg as IFormattable;
-                if (obj != null)
+                if (obj is not null)
                 {
                     return obj.ToString(format, culture);
                 }
-                else if (arg != null)
+                else if (arg is not null)
                 {
                     return arg.ToString();
                 }

@@ -140,7 +140,7 @@ namespace ISynergy.Framework.Geography.Utm
         /// <returns>True if they are equal</returns>
         public bool Equals(UtmCoordinate other)
         {
-            return other != null && other.Grid.Equals(Grid) &&
+            return other is not null && other.Grid.Equals(Grid) &&
                     IsApproximatelyEqual(other, DefaultPrecision);
         }
 

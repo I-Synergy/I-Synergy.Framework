@@ -1,8 +1,7 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Adapters;
-using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Messages;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data;
@@ -10,7 +9,7 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public abstract partial class BaseOrchestrator
     {
@@ -23,43 +22,51 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="transaction"></param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <param name="progress">Progress args</param>
-        public virtual Task<DatabaseMetadatasCleaned> DeleteMetadatasAsync(long? timeStampStart, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.MetadataCleaning, async (ctx, connection, transaction) =>
+        public virtual async Task<DatabaseMetadatasCleaned> DeleteMetadatasAsync(long? timeStampStart, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
             if (!timeStampStart.HasValue)
                 return null;
 
-            // Create a dummy schema to be able to call the DeprovisionAsync method on the provider
-            // No need columns or primary keys to be able to deprovision a table
-            SyncSet schema = new SyncSet(this.Setup);
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.MetadataCleaning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                // Create a dummy schema to be able to call the DeprovisionAsync method on the provider
+                // No need columns or primary keys to be able to deprovision a table
+                SyncSet schema = new SyncSet(Setup);
+                var databaseMetadatasCleaned = await InternalDeleteMetadatasAsync(GetContext(), schema, Setup, timeStampStart.Value, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
+                await runner.CommitAsync().ConfigureAwait(false);
+                return databaseMetadatasCleaned;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
 
-            var databaseMetadatasCleaned = await this.InternalDeleteMetadatasAsync(ctx, schema, this.Setup, timeStampStart.Value, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-            return databaseMetadatasCleaned;
-
-        }, connection, transaction, cancellationToken);
+        }
 
 
         internal virtual async Task<DatabaseMetadatasCleaned> InternalDeleteMetadatasAsync(SyncContext context, SyncSet schema, SyncSetup setup, long timestampLimit,
                     DbConnection connection, DbTransaction transaction,
                     CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            await this.InterceptAsync(new MetadataCleaningArgs(context, this.Setup, timestampLimit, connection, transaction), cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new MetadataCleaningArgs(context, Setup, timestampLimit, connection, transaction),progress, cancellationToken).ConfigureAwait(false);
 
             DatabaseMetadatasCleaned databaseMetadatasCleaned = new DatabaseMetadatasCleaned { TimestampLimit = timestampLimit };
 
             foreach (var syncTable in schema.Tables)
             {
                 // Create sync adapter
-                var syncAdapter = this.GetSyncAdapter(syncTable, setup);
+                var syncAdapter = GetSyncAdapter(syncTable, setup);
 
-                var command = await syncAdapter.GetCommandAsync(DbCommandType.DeleteMetadata, connection, transaction);
+                var (command, _) = await syncAdapter.GetCommandAsync(DbCommandType.DeleteMetadata, connection, transaction);
 
                 if (command is not null)
                 {
 
                     // Set the special parameters for delete metadata
                     DbSyncAdapter.SetParameterValue(command, "sync_row_timestamp", timestampLimit);
+
+                    await InterceptAsync(new DbCommandArgs(context, command, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
                     var rowsCleanedCount = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
@@ -84,7 +91,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 }
             }
 
-            await this.InterceptAsync(new MetadataCleanedArgs(context, databaseMetadatasCleaned, connection), cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new MetadataCleanedArgs(context, databaseMetadatasCleaned, connection), progress, cancellationToken).ConfigureAwait(false);
             return databaseMetadatasCleaned;
         }
 
@@ -95,7 +102,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         internal async Task<bool> InternalUpdateMetadatasAsync(SyncContext context, DbSyncAdapter syncAdapter, SyncRow row, Guid? senderScopeId, bool forceWrite, DbConnection connection, DbTransaction transaction)
         {
-            var command = await syncAdapter.GetCommandAsync(DbCommandType.UpdateMetadata, connection, transaction);
+            var (command, _) = await syncAdapter.GetCommandAsync(DbCommandType.UpdateMetadata, connection, transaction);
 
             if (command is null) return false;
 
@@ -104,6 +111,8 @@ namespace ISynergy.Framework.Synchronization.Core
 
             // Set the special parameters for update
             syncAdapter.AddScopeParametersValues(command, senderScopeId, 0, row.RowState == DataRowState.Deleted, forceWrite);
+
+            await InterceptAsync(new DbCommandArgs(context, command, connection, transaction)).ConfigureAwait(false);
 
             var metadataUpdatedRowsCount = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 

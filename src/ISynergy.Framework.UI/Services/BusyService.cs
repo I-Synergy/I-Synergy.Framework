@@ -68,7 +68,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task.</returns>
         public void StartBusy(string message = null)
         {
-            if (message != null)
+            if (message is not null)
             {
                 BusyMessage = message;
             }

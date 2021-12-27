@@ -32,7 +32,7 @@ namespace ISynergy.Framework.Clipboard.Services
             {
                 var imageReceived = await dataPackageView.GetBitmapAsync();
 
-                if (imageReceived != null)
+                if (imageReceived is not null)
                 {
                     using var imageStream = await imageReceived.OpenReadAsync();
                     var bitmapImage = new BitmapImage();

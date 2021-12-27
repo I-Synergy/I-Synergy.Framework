@@ -108,7 +108,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (leftTriangularFactor == null)
+                if (leftTriangularFactor is null)
                 {
                     if (destroyed)
                         throw new InvalidOperationException("The decomposition has been destroyed.");
@@ -130,7 +130,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (diagonalMatrix == null)
+                if (diagonalMatrix is null)
                 {
                     if (destroyed)
                         throw new InvalidOperationException("The decomposition has been destroyed.");
@@ -166,7 +166,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                     for (var i = 0; i < n; i++)
                         detL *= L[i][i];
 
-                    if (Diagonal != null)
+                    if (Diagonal is not null)
                         for (var i = 0; i < n; i++)
                             detD *= Diagonal[i];
 
@@ -197,7 +197,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
                     for (var i = 0; i < n; i++)
                         detL += Math.Log(L[i][i]);
 
-                    if (Diagonal != null)
+                    if (Diagonal is not null)
                         for (var i = 0; i < Diagonal.Length; i++)
                             detD += Math.Log(Diagonal[i]);
 
@@ -266,7 +266,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
         public double[][] SolveForDiagonal(double[] diagonal)
         {
-            if (diagonal == null)
+            if (diagonal is null)
                 throw new ArgumentNullException("diagonal");
 
             return Solve(Jagged.Diagonal(diagonal));
@@ -389,7 +389,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
         public double[][] Solve(double[][] value, bool inPlace)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value");
 
             if (value.Length != n)
@@ -446,7 +446,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
         public double[] Solve(double[] value, bool inPlace)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value");
 
             if (value.Length != n)

@@ -1,12 +1,12 @@
 ﻿using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
-using ISynergy.Framework.Synchronization.Core.Arguments;
+using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Scopes;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Client.Arguments
+namespace ISynergy.Framework.Synchronization.Client
 {
 
     /// <summary>
@@ -16,13 +16,13 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
     {
         public HttpGettingScopeResponseArgs(ServerScopeInfo scopeInfo, SyncContext context, string host) : base(context, null)
         {
-            this.ServerScopeInfo = scopeInfo;
-            this.Host = host;
+            ServerScopeInfo = scopeInfo;
+            Host = host;
         }
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => HttpClientSyncEventsId.HttpGettingScopeResponse.Id;
-        public override string Source => this.Host;
-        public override string Message => $"Received Scope. Scope Name:{this.ServerScopeInfo.Name}.";
+        public override string Source => Host;
+        public override string Message => $"Received Scope. Scope Name:{ServerScopeInfo.Name}.";
 
         public ServerScopeInfo ServerScopeInfo { get; }
         public string Host { get; }
@@ -35,13 +35,13 @@ namespace ISynergy.Framework.Synchronization.Client.Arguments
     {
         public HttpGettingScopeRequestArgs(SyncContext context, string host) : base(context, null)
         {
-            this.Host = host;
+            Host = host;
         }
 
         public override int EventId => HttpClientSyncEventsId.HttpGettingScopeRequest.Id;
-        public override string Source => this.Host;
-        public override string Message => $"Getting Server Scope. Scope Name:{this.Context.ScopeName}.";
-
+        public override string Source => Host;
+        public override string Message => $"Getting Server Scope. Scope Name:{Context.ScopeName}.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public string Host { get; }
     }
 

@@ -83,7 +83,7 @@ namespace ISynergy.Framework.Mathematics.Kinematics
         /// </summary>
         public void Compute()
         {
-            if (Parent == null)
+            if (Parent is null)
                 Model.Compute();
             else
                 Model.Compute(Parent.Model);
@@ -127,7 +127,7 @@ namespace ISynergy.Framework.Mathematics.Kinematics
         /// </summary>
         protected override void InsertItem(int index, DenavitHartenbergNode item)
         {
-            if (item.Parent != null)
+            if (item.Parent is not null)
                 throw new ArgumentException("The node already belongs to another model.", "item");
 
             item.Parent = Owner;

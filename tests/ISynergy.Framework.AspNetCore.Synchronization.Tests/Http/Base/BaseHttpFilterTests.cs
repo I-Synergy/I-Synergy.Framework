@@ -5,7 +5,8 @@ using ISynergy.Framework.AspNetCore.Synchronization.Tests.TestServer;
 using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Parameters;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Parameter;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Core.Tests.Models;
@@ -55,7 +56,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // public property
             Server = (serverDatabaseName, this.ServerType, serverProvider);
 
-            // Create a kestrell server
+            // Create a kestrel server
             kestrel = new KestrelTestServer(this.WebServerOrchestrator, this.UseFiddler);
 
             // start server and get uri
@@ -103,7 +104,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri));
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -132,7 +133,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var s = await agent.SynchronizeAsync();
@@ -167,7 +168,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var s = await agent.SynchronizeAsync();
@@ -202,7 +203,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var s = await agent.SynchronizeAsync();
@@ -239,7 +240,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var s = await agent.SynchronizeAsync();
@@ -293,7 +294,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var s = await agent.SynchronizeAsync();
@@ -308,7 +309,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 await agent.SynchronizeAsync();
@@ -383,7 +384,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var snapshotApplying = 0;
@@ -408,7 +409,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
         /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
-        public async Task CustomSeriazlizer_MessagePack(SyncOptions options)
+        public async Task CustomSerializer_MessagePack(SyncOptions options)
         {
             // create a server schema and seed
             await this.EnsureDatabaseSchemaAndSeedAsync(this.Server, true, UseFallbackSchema);
@@ -422,16 +423,13 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
 
             // configure server orchestrator
             this.WebServerOrchestrator.Setup = this.FilterSetup;
-            this.WebServerOrchestrator.Options.SerializerFactory = new CustomMessagePackSerializerFactory();
-
-            // add custom serializer
-            options.SerializerFactory = new CustomMessagePackSerializerFactory();
+            this.WebServerOrchestrator.SerializerFactories.Add(new CustomMessagePackSerializerFactory());
 
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter and serializer message pack
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -467,7 +465,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter and serializer message pack
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
@@ -564,7 +562,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), clientOptions);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), clientOptions);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var s = await agent.SynchronizeAsync();
@@ -603,8 +601,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             var options = new SyncOptions
             {
                 SnapshotsDirectory = directory,
-                BatchSize = 200,
-                SerializerFactory = new CustomMessagePackSerializerFactory()
+                BatchSize = 200
             };
 
             // ----------------------------------
@@ -645,13 +642,13 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             this.WebServerOrchestrator.Setup = this.FilterSetup;
             this.WebServerOrchestrator.Options.SnapshotsDirectory = directory;
             this.WebServerOrchestrator.Options.BatchSize = 200;
-            this.WebServerOrchestrator.Options.SerializerFactory = new CustomMessagePackSerializerFactory();
+            this.WebServerOrchestrator.SerializerFactories.Add(new CustomMessagePackSerializerFactory());
 
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
                 // create agent with filtered tables and parameter
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 agent.Parameters.AddRange(this.FilterParameters);
 
                 var snapshotApplying = 0;

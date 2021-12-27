@@ -1,11 +1,11 @@
-﻿using ISynergy.Framework.Synchronization.Core;
+using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Definitions;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Manager;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Sqlite.Metadata;
+using ISynergy.Framework.Synchronization.Sqlite.Models;
 using ISynergy.Framework.Synchronization.Sqlite.Utilities;
 using Microsoft.Data.Sqlite;
 using System;
@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 {
+
     /// <summary>
     /// The SqlBuilder class is the Sql implementation of DbBuilder class.
     /// In charge of creating tracking table, stored proc, triggers and adapters.
@@ -24,35 +25,35 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
     public class SqliteTableBuilder : DbTableBuilder
     {
 
-        private SqliteObjectNames sqliteObjectNames;
-        private SqliteDbMetadata sqliteDbMetadata;
+        private SqliteObjectNames _sqliteObjectNames;
+        private SqliteDbMetadata _sqliteDbMetadata;
 
         public SqliteTableBuilder(SyncTable tableDescription, ParserName tableName, ParserName trackingTableName, SyncSetup setup) : base(tableDescription, tableName, trackingTableName, setup)
         {
-            this.sqliteObjectNames = new SqliteObjectNames(tableDescription, this.TableName, this.TrackingTableName, setup);
-            this.sqliteDbMetadata = new SqliteDbMetadata();
+            _sqliteObjectNames = new SqliteObjectNames(tableDescription, TableName, TrackingTableName, setup);
+            _sqliteDbMetadata = new SqliteDbMetadata();
         }
 
         private string BuildTableCommandText()
         {
-            var stringBuilder = new StringBuilder($"CREATE TABLE IF NOT EXISTS {this.TableName.Quoted().ToString()} (");
+            var stringBuilder = new StringBuilder($"CREATE TABLE IF NOT EXISTS {TableName.Quoted().ToString()} (");
             string empty = string.Empty;
             stringBuilder.AppendLine();
-            foreach (var column in this.TableDescription.Columns)
+            foreach (var column in TableDescription.Columns)
             {
                 var columnName = ParserName.Parse(column).Quoted().ToString();
-                var columnType = this.sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(column, TableDescription.OriginalProvider);
+                var columnType = _sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(column, TableDescription.OriginalProvider);
 
                 // check case
                 string casesensitive = "";
-                if (this.sqliteDbMetadata.IsTextType(column))
+                if (_sqliteDbMetadata.IsTextType(column))
                 {
                     casesensitive = SyncGlobalization.IsCaseSensitive() ? "" : "COLLATE NOCASE";
 
                     //check if it's a primary key, then, even if it's case sensitive, we turn on case insensitive
                     if (SyncGlobalization.IsCaseSensitive())
                     {
-                        if (this.TableDescription.PrimaryKeys.Contains(column.ColumnName))
+                        if (TableDescription.PrimaryKeys.Contains(column.ColumnName))
                             casesensitive = "COLLATE NOCASE";
                     }
                 }
@@ -82,20 +83,20 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
                 empty = ",";
             }
             stringBuilder.Append("\t,PRIMARY KEY (");
-            for (int i = 0; i < this.TableDescription.PrimaryKeys.Count; i++)
+            for (int i = 0; i < TableDescription.PrimaryKeys.Count; i++)
             {
-                var pkColumn = this.TableDescription.PrimaryKeys[i];
+                var pkColumn = TableDescription.PrimaryKeys[i];
                 var quotedColumnName = ParserName.Parse(pkColumn).Quoted().ToString();
 
                 stringBuilder.Append(quotedColumnName);
 
-                if (i < this.TableDescription.PrimaryKeys.Count - 1)
+                if (i < TableDescription.PrimaryKeys.Count - 1)
                     stringBuilder.Append(", ");
             }
             stringBuilder.Append(")");
 
             // Constraints
-            foreach (var constraint in this.TableDescription.GetRelations())
+            foreach (var constraint in TableDescription.GetRelations())
             {
                 // Don't want foreign key on same table since it could be a problem on first 
                 // sync. We are not sure that parent row will be inserted in first position
@@ -132,13 +133,13 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
         private string BuildTrackingTableCommandText()
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"CREATE TABLE IF NOT EXISTS {this.TrackingTableName.Quoted().ToString()} (");
+            stringBuilder.AppendLine($"CREATE TABLE IF NOT EXISTS {TrackingTableName.Quoted().ToString()} (");
 
             // Adding the primary key
-            foreach (var pkColumn in this.TableDescription.GetPrimaryKeysColumns())
+            foreach (var pkColumn in TableDescription.GetPrimaryKeysColumns())
             {
                 var quotedColumnName = ParserName.Parse(pkColumn).Quoted().ToString();
-                var columnType = this.sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(pkColumn, TableDescription.OriginalProvider);
+                var columnType = _sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(pkColumn, TableDescription.OriginalProvider);
                 stringBuilder.AppendLine($"{quotedColumnName} {columnType} NOT NULL COLLATE NOCASE, ");
             }
 
@@ -149,14 +150,14 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             stringBuilder.AppendLine($"[last_change_datetime] [datetime] NULL, ");
 
             stringBuilder.Append(" PRIMARY KEY (");
-            for (int i = 0; i < this.TableDescription.PrimaryKeys.Count; i++)
+            for (int i = 0; i < TableDescription.PrimaryKeys.Count; i++)
             {
-                var pkColumn = this.TableDescription.PrimaryKeys[i];
+                var pkColumn = TableDescription.PrimaryKeys[i];
                 var quotedColumnName = ParserName.Parse(pkColumn).Quoted().ToString();
 
                 stringBuilder.Append(quotedColumnName);
 
-                if (i < this.TableDescription.PrimaryKeys.Count - 1)
+                if (i < TableDescription.PrimaryKeys.Count - 1)
                     stringBuilder.Append(", ");
             }
             stringBuilder.Append(")");
@@ -164,11 +165,11 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
             stringBuilder.Append(");");
 
-            stringBuilder.AppendLine($"CREATE INDEX IF NOT EXISTS [{this.TrackingTableName.Schema().Unquoted().Normalized().ToString()}_timestamp_index] ON {this.TrackingTableName.Schema().Quoted().ToString()} (");
+            stringBuilder.AppendLine($"CREATE INDEX IF NOT EXISTS [{TrackingTableName.Schema().Unquoted().Normalized().ToString()}_timestamp_index] ON {TrackingTableName.Schema().Quoted().ToString()} (");
             stringBuilder.AppendLine($"\t [timestamp] ASC");
             stringBuilder.AppendLine($"\t,[update_scope_id] ASC");
             stringBuilder.AppendLine($"\t,[sync_row_is_tombstone] ASC");
-            foreach (var pkColumn in this.TableDescription.GetPrimaryKeysColumns())
+            foreach (var pkColumn in TableDescription.GetPrimaryKeysColumns())
             {
                 var columnName = ParserName.Parse(pkColumn).Quoted().ToString();
                 stringBuilder.AppendLine($"\t,{columnName} ASC");
@@ -192,7 +193,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
         }
         public override Task<DbCommand> GetExistsTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var tbl = this.TableName.Unquoted().ToString();
+            var tbl = TableName.Unquoted().ToString();
 
             var command = connection.CreateCommand();
 
@@ -214,7 +215,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
             command.Connection = connection;
             command.Transaction = transaction;
-            command.CommandText = $"drop table if exists {this.TableName.Quoted().ToString()}";
+            command.CommandText = $"drop table if exists {TableName.Quoted().ToString()}";
 
             return Task.FromResult(command);
         }
@@ -240,14 +241,14 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
             command.Connection = connection;
             command.Transaction = transaction;
-            command.CommandText = $"drop table if exists {this.TrackingTableName.Quoted().ToString()}";
+            command.CommandText = $"drop table if exists {TrackingTableName.Quoted().ToString()}";
 
             return Task.FromResult(command);
         }
 
         public override Task<DbCommand> GetRenameTrackingTableCommandAsync(ParserName oldTableName, DbConnection connection, DbTransaction transaction)
         {
-            var tableNameString = this.TrackingTableName.Quoted().ToString();
+            var tableNameString = TrackingTableName.Quoted().ToString();
             var oldTableNameString = oldTableName.Quoted().ToString();
 
             var command = connection.CreateCommand();
@@ -262,7 +263,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         public override Task<DbCommand> GetExistsTrackingTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var tbl = this.TrackingTableName.Unquoted().ToString();
+            var tbl = TrackingTableName.Unquoted().ToString();
 
             var command = connection.CreateCommand();
 
@@ -280,7 +281,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         public override Task<DbCommand> GetExistsTriggerCommandAsync(DbTriggerType triggerType, DbConnection connection, DbTransaction transaction)
         {
-            var commandTriggerName = string.Format(this.sqliteObjectNames.GetTriggerCommandName(triggerType), TableName.Unquoted().ToString());
+            var commandTriggerName = string.Format(_sqliteObjectNames.GetTriggerCommandName(triggerType), TableName.Unquoted().ToString());
             var triggerName = ParserName.Parse(commandTriggerName).ToString();
 
             var command = connection.CreateCommand();
@@ -299,7 +300,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         private DbCommand CreateInsertTriggerCommand(DbConnection connection, DbTransaction transaction)
         {
-            var insTriggerName = string.Format(this.sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Insert), TableName.Unquoted().ToString());
+            var insTriggerName = string.Format(_sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Insert), TableName.Unquoted().ToString());
 
             StringBuilder createTrigger = new StringBuilder($"CREATE TRIGGER IF NOT EXISTS {insTriggerName} AFTER INSERT ON {TableName.Quoted().ToString()} ");
             createTrigger.AppendLine();
@@ -314,8 +315,8 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             createTrigger.AppendLine("BEGIN");
             createTrigger.AppendLine("-- If row was deleted before, it already exists, so just make an update");
 
-            createTrigger.AppendLine($"\tINSERT OR REPLACE INTO {this.TrackingTableName.Quoted().ToString()} (");
-            foreach (var mutableColumn in this.TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
+            createTrigger.AppendLine($"\tINSERT OR REPLACE INTO {TrackingTableName.Quoted().ToString()} (");
+            foreach (var mutableColumn in TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
 
@@ -347,7 +348,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         private DbCommand CreateDeleteTriggerCommand(DbConnection connection, DbTransaction transaction)
         {
-            var delTriggerName = string.Format(this.sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Delete), TableName.Unquoted().ToString());
+            var delTriggerName = string.Format(_sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Delete), TableName.Unquoted().ToString());
 
             StringBuilder createTrigger = new StringBuilder($"CREATE TRIGGER IF NOT EXISTS {delTriggerName} AFTER DELETE ON {TableName.Quoted().ToString()} ");
             createTrigger.AppendLine();
@@ -362,7 +363,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             createTrigger.AppendLine("BEGIN");
 
             createTrigger.AppendLine($"\tINSERT OR REPLACE INTO {TrackingTableName.Quoted().ToString()} (");
-            foreach (var mutableColumn in this.TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
+            foreach (var mutableColumn in TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
 
@@ -395,7 +396,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         private DbCommand CreateUpdateTriggerCommand(DbConnection connection, DbTransaction transaction)
         {
-            var updTriggerName = string.Format(this.sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Update), TableName.Unquoted().ToString());
+            var updTriggerName = string.Format(_sqliteObjectNames.GetTriggerCommandName(DbTriggerType.Update), TableName.Unquoted().ToString());
 
             StringBuilder createTrigger = new StringBuilder($"CREATE TRIGGER IF NOT EXISTS {updTriggerName} AFTER UPDATE ON {TableName.Quoted().ToString()} ");
             createTrigger.AppendLine();
@@ -410,14 +411,14 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             createTrigger.AppendLine("\t\t,[last_change_datetime] = datetime('now')");
 
             createTrigger.Append($"\tWhere ");
-            createTrigger.Append(SqliteManagementUtils.JoinTwoTablesOnClause(this.TableDescription.PrimaryKeys, TrackingTableName.Quoted().ToString(), "new"));
+            createTrigger.Append(SqliteManagementUtils.JoinTwoTablesOnClause(TableDescription.PrimaryKeys, TrackingTableName.Quoted().ToString(), "new"));
 
-            if (this.TableDescription.GetMutableColumns().Count() > 0)
+            if (TableDescription.GetMutableColumns().Count() > 0)
             {
                 createTrigger.AppendLine();
                 createTrigger.AppendLine("\t AND (");
                 string or = "    ";
-                foreach (var column in this.TableDescription.GetMutableColumns())
+                foreach (var column in TableDescription.GetMutableColumns())
                 {
                     var quotedColumn = ParserName.Parse(column).Quoted().ToString();
 
@@ -456,7 +457,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             string argAnd = string.Empty;
 
             createTrigger.AppendLine($"\tINSERT OR IGNORE INTO {TrackingTableName.Quoted().ToString()} (");
-            foreach (var mutableColumn in this.TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
+            foreach (var mutableColumn in TableDescription.GetPrimaryKeysColumns().Where(c => !c.IsReadOnly))
             {
                 var columnName = ParserName.Parse(mutableColumn).Quoted().ToString();
 
@@ -482,7 +483,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             createTrigger.AppendLine("\t\t,datetime('now')");
 
             createTrigger.Append($"\tWHERE (SELECT COUNT(*) FROM {TrackingTableName.Quoted().ToString()} WHERE ");
-            var pkeys = this.TableDescription.GetPrimaryKeysColumns();
+            var pkeys = TableDescription.GetPrimaryKeysColumns();
             var str1 = "";
             foreach (var pkey in pkeys)
             {
@@ -491,11 +492,11 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
                 str1 = " AND ";
             }
             createTrigger.AppendLine(")=0");
-            if (this.TableDescription.GetMutableColumns().Count() > 0)
+            if (TableDescription.GetMutableColumns().Count() > 0)
             {
                 createTrigger.AppendLine("\t AND (");
                 string or = "    ";
-                foreach (var column in this.TableDescription.GetMutableColumns())
+                foreach (var column in TableDescription.GetMutableColumns())
                 {
                     var quotedColumn = ParserName.Parse(column).Quoted().ToString();
 
@@ -546,7 +547,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         public override Task<DbCommand> GetDropTriggerCommandAsync(DbTriggerType triggerType, DbConnection connection, DbTransaction transaction)
         {
-            var triggerNameString = string.Format(this.sqliteObjectNames.GetTriggerCommandName(triggerType), this.TableDescription.GetFilter());
+            var triggerNameString = string.Format(_sqliteObjectNames.GetTriggerCommandName(triggerType), TableDescription.GetFilter());
 
             var triggerName = ParserName.Parse(triggerNameString).ToString();
 
@@ -562,7 +563,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             var columns = new List<SyncColumn>();
             // Get the columns definition
             var columnsList = await SqliteManagementUtils.GetColumnsForTableAsync(connection as SqliteConnection, transaction as SqliteTransaction,
-                                                                                  this.TableName.Unquoted().ToString());
+                                                                                  TableName.Unquoted().ToString());
             var sqlDbMetadata = new SqliteDbMetadata();
 
             foreach (var c in columnsList.Rows.OrderBy(r => Convert.ToInt32(r["cid"])))
@@ -584,7 +585,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
                     AllowDBNull = !Convert.ToBoolean(c["notnull"]),
                     DefaultValue = c["dflt_value"].ToString(),
 
-                    // No unsigned type in Sqlite
+                    // No unsigned type in SQLite
                     IsUnsigned = false
                 };
 
@@ -599,16 +600,16 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
             var relations = new List<DbRelationDefinition>();
             var relationsTable = await SqliteManagementUtils.GetRelationsForTableAsync(connection as SqliteConnection, transaction as SqliteTransaction,
-                                                                                       this.TableName.Unquoted().ToString());
+                                                                                       TableName.Unquoted().ToString());
 
-            if (relationsTable != null && relationsTable.Rows.Count > 0)
+            if (relationsTable is not null && relationsTable.Rows.Count > 0)
             {
 
                 foreach (var fk in relationsTable.Rows.GroupBy(row =>
                 new
                 {
                     Name = row["id"].ToString(),
-                    TableName = this.TableName.Quoted().ToString(),
+                    TableName = TableName.Quoted().ToString(),
                     ReferenceTableName = (string)row["table"],
                 }))
                 {
@@ -637,7 +638,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
         public override async Task<IEnumerable<SyncColumn>> GetPrimaryKeysAsync(DbConnection connection, DbTransaction transaction)
         {
             var keys = await SqliteManagementUtils.GetPrimaryKeysForTableAsync(connection as SqliteConnection, transaction as SqliteTransaction,
-                this.TableName.Unquoted().ToString());
+                TableName.Unquoted().ToString());
 
             var lstKeys = new List<SyncColumn>();
 
@@ -657,7 +658,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             var command = connection.CreateCommand();
             command.Connection = connection;
             command.Transaction = transaction;
-            command.CommandText = $"SELECT count(*) FROM pragma_table_info('{this.TableName.Unquoted().ToString()}') WHERE name=@columnName;"; ;
+            command.CommandText = $"SELECT count(*) FROM pragma_table_info('{TableName.Unquoted().ToString()}') WHERE name=@columnName;"; ;
 
             var parameter = command.CreateParameter();
             parameter.ParameterName = "@columnName";
@@ -669,27 +670,27 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
 
         public override Task<DbCommand> GetAddColumnCommandAsync(string columnName, DbConnection connection, DbTransaction transaction)
         {
-            var stringBuilder = new StringBuilder($"ALTER TABLE {this.TableName.Quoted().ToString()} ADD COLUMN");
+            var stringBuilder = new StringBuilder($"ALTER TABLE {TableName.Quoted().ToString()} ADD COLUMN");
 
             var command = connection.CreateCommand();
             command.Connection = connection;
             command.Transaction = transaction;
 
-            var column = this.TableDescription.Columns[columnName];
+            var column = TableDescription.Columns[columnName];
             var columnNameString = ParserName.Parse(column).Quoted().ToString();
 
-            var columnType = this.sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(column, TableDescription.OriginalProvider);
+            var columnType = _sqliteDbMetadata.GetCompatibleColumnTypeDeclarationString(column, TableDescription.OriginalProvider);
 
             // check case
             string casesensitive = "";
-            if (this.sqliteDbMetadata.IsTextType(column))
+            if (_sqliteDbMetadata.IsTextType(column))
             {
                 casesensitive = SyncGlobalization.IsCaseSensitive() ? "" : "COLLATE NOCASE";
 
                 //check if it's a primary key, then, even if it's case sensitive, we turn on case insensitive
                 if (SyncGlobalization.IsCaseSensitive())
                 {
-                    if (this.TableDescription.PrimaryKeys.Contains(column.ColumnName))
+                    if (TableDescription.PrimaryKeys.Contains(column.ColumnName))
                         casesensitive = "COLLATE NOCASE";
                 }
             }

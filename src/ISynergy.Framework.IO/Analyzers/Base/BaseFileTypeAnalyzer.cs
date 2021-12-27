@@ -57,7 +57,7 @@ namespace ISynergy.Framework.IO.Analyzers.Base
         /// <exception cref="ArgumentNullException">inputStream</exception>
         public FileTypeInfo DetectType(Stream inputStream, string extension)
         {
-            if (inputStream == null)
+            if (inputStream is null)
                 throw new ArgumentNullException(nameof(inputStream));
 
             if (inputStream.CanSeek)
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.IO.Analyzers.Base
         /// <exception cref="ArgumentException">input must not be empty</exception>
         public FileTypeInfo DetectType(byte[] fileContent, string extension)
         {
-            if (fileContent == null)
+            if (fileContent is null)
                 throw new ArgumentNullException(nameof(fileContent));
 
             if (fileContent.Length == 0)
@@ -147,7 +147,7 @@ namespace ISynergy.Framework.IO.Analyzers.Base
             foreach (var fileTypeInfo in AvailableTypes.Where(t =>
                 t.Extension.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
                 t.MimeType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
-                t.Aliases != null && t.Aliases.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase)))
+                t.Aliases is not null && t.Aliases.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase)))
             {
                 if (IsMatchingType(fileContent, fileTypeInfo))
                     return true;
@@ -173,7 +173,7 @@ namespace ISynergy.Framework.IO.Analyzers.Base
 
             // some file types have the same header
             // but different signature in another location, if its one of these determine what the true file type is
-            if (isMatch && type.SubHeader != null)
+            if (isMatch && type.SubHeader is not null)
             {
                 // find all indices of matching the 1st byte of the additional sequence
                 var matchingIndices = new List<int>();

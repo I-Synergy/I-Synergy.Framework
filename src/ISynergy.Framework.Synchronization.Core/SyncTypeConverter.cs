@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Synchronization.Core
             if (value is null)
                 return default;
 
-            provider = provider ?? CultureInfo.InvariantCulture;
+            provider ??= CultureInfo.InvariantCulture;
 
             var typeOfT = typeof(T);
             var typeOfU = value.GetType();
@@ -35,24 +35,29 @@ namespace ISynergy.Framework.Synchronization.Core
             else if (typeOfT == typeof(ulong))
                 return Convert.ToUInt64(value);
             else if (typeOfT == typeof(DateTime))
+            {
                 if (DateTime.TryParse(value.ToString(), provider, DateTimeStyles.None, out DateTime dateTime))
                     return (T)Convert.ChangeType(dateTime, typeOfT, provider);
                 else if (typeOfU == typeof(long))
                     return (T)Convert.ChangeType(new DateTime(value), typeOfT, provider);
                 else
                     return Convert.ToDateTime(value);
+            }
             else if (typeOfT == typeof(DateTimeOffset))
+            {
                 if (DateTimeOffset.TryParse(value.ToString(), provider, DateTimeStyles.None, out DateTimeOffset dateTime))
                     return (T)Convert.ChangeType(dateTime, typeOfT, provider);
                 else if (typeOfU == typeof(long))
                     return (T)Convert.ChangeType(new DateTimeOffset(new DateTime(value)), typeOfT, provider);
                 else
                     return Convert.ToDateTime(value);
+            }
             else if (typeOfT == typeof(string))
                 return value.ToString();
             else if (typeOfT == typeof(byte))
                 return Convert.ToByte(value);
             else if (typeOfT == typeof(bool))
+            {
                 if (bool.TryParse(value.ToString(), out bool v))
                     return (T)Convert.ChangeType(v, typeOfT);
                 else if (value.ToString().Trim() == "0")
@@ -61,6 +66,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     return (T)Convert.ChangeType(true, typeOfT, provider);
                 else
                     return Convert.ToBoolean(value);
+            }
             else if (typeOfT == typeof(Guid))
             {
                 string valueStr = value.ToString();
@@ -90,10 +96,12 @@ namespace ISynergy.Framework.Synchronization.Core
                     return (T)Convert.ChangeType(q, typeOfT, provider);
             }
             else if (typeOfT == typeof(byte[]))
+            {
                 if (typeOfU == typeof(string))
                     return (T)Convert.ChangeType(Convert.FromBase64String((string)value), typeOfT, provider);
                 else
                     return (T)Convert.ChangeType(BitConverter.GetBytes((dynamic)value), typeOfT, provider);
+            }
             else if (typeConverter.CanConvertFrom(typeOfT))
                 return (T)Convert.ChangeType(typeConverter.ConvertFrom(value), typeOfT, provider);
             else
@@ -199,9 +207,6 @@ namespace ISynergy.Framework.Synchronization.Core
                 return TryConvertTo<byte[]>(value, provider);
             else
                 throw new FormatDbTypeException(typeOfT);
-
         }
-
-
     }
 }

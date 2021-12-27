@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Definitions;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Manager;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -37,10 +36,10 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
         /// </summary>
         public DbTableBuilder(SyncTable tableDescription, ParserName tableName, ParserName trackingTableName, SyncSetup setup)
         {
-            this.TableDescription = tableDescription;
-            this.Setup = setup;
-            this.TableName = tableName;
-            this.TrackingTableName = trackingTableName;
+            TableDescription = tableDescription;
+            Setup = setup;
+            TableName = tableName;
+            TrackingTableName = trackingTableName;
         }
 
         public abstract Task<DbCommand> GetCreateSchemaCommandAsync(DbConnection connection, DbTransaction transaction);

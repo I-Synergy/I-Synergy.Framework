@@ -1,12 +1,13 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Data.Common;
 
-namespace ISynergy.Framework.Synchronization.Core.Arguments
+namespace ISynergy.Framework.Synchronization.Core
 {
     public class UpgradeProgressArgs : ProgressArgs
     {
-        private string message;
+        private string _message;
 
         public SyncTable Table { get; }
 
@@ -15,12 +16,13 @@ namespace ISynergy.Framework.Synchronization.Core.Arguments
         public UpgradeProgressArgs(SyncContext context, string message, Version version, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.message = message;
+            _message = message;
             Version = version;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
 
         public override string Source => Connection.Database;
-        public override string Message => message;
+        public override string Message => _message;
 
         public override int EventId => 999999;
     }

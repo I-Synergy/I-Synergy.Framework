@@ -27,11 +27,11 @@ namespace ISynergy.Framework.Core.Extensions
             //Tries to find a DescriptionAttribute for a potential friendly name
             //for the enum
             MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
-            if (memberInfo != null && memberInfo.Length > 0)
+            if (memberInfo is not null && memberInfo.Length > 0)
             {
                 object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-                if (attrs != null && attrs.Length > 0)
+                if (attrs is not null && attrs.Length > 0)
                     return ((DescriptionAttribute)attrs[0]).Description;
             }
 
@@ -56,11 +56,11 @@ namespace ISynergy.Framework.Core.Extensions
             //Tries to find a DescriptionAttribute for a potential friendly name
             //for the enum
             MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
-            if (memberInfo != null && memberInfo.Length > 0)
+            if (memberInfo is not null && memberInfo.Length > 0)
             {
                 object[] attrs = memberInfo[0].GetCustomAttributes(typeof(LocalizedDescriptionAttribute), false);
 
-                if (attrs != null && attrs.Length > 0)
+                if (attrs is not null && attrs.Length > 0)
                     return ((LocalizedDescriptionAttribute)attrs[0]).Description;
             }
 

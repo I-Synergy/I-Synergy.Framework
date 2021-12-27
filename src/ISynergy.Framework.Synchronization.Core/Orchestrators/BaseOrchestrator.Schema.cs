@@ -1,43 +1,50 @@
-using ISynergy.Framework.Synchronization.Core.Arguments;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Definitions;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Manager;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public abstract partial class BaseOrchestrator
     {
-
         /// <summary>
         /// Read the schema stored from the orchestrator database, through the provider.
         /// </summary>
         /// <returns>Schema containing tables, columns, relations, primary keys</returns>
-        public virtual Task<SyncSet> GetSchemaAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-            => RunInTransactionAsync(SyncStage.SchemaReading, async (ctx, connection, transaction) =>
+        public virtual async Task<SyncSet> GetSchemaAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        {
+            try
             {
-                var schema = await this.InternalGetSchemaAsync(ctx, this.Setup, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                await using var runner = await this.GetConnectionAsync(SyncStage.SchemaReading, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+
+                var schema = await InternalGetSchemaAsync(GetContext(), Setup, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
                 return schema;
-
-            }, connection, transaction, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
 
         /// <summary>
         /// Read the schema stored from the orchestrator database, through the provider.
         /// </summary>
         /// <returns>Schema containing tables, columns, relations, primary keys</returns>
-        public virtual Task<SyncTable> GetTableSchemaAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-            => RunInTransactionAsync(SyncStage.SchemaReading, async (ctx, connection, transaction) =>
+        public virtual async Task<SyncTable> GetTableSchemaAsync(SetupTable table, DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
+        {
+            try
             {
-                var (schemaTable, _) = await this.InternalGetTableSchemaAsync(ctx, this.Setup, table, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                await using var runner = await this.GetConnectionAsync(SyncStage.SchemaReading, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+
+                var (schemaTable, _) = await InternalGetTableSchemaAsync(GetContext(), Setup, table, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
                 if (schemaTable is null)
                     throw new MissingTableException(table.GetFullName());
@@ -51,11 +58,18 @@ namespace ISynergy.Framework.Synchronization.Core
                 schema.EnsureSchema();
 
                 // copy filters from setup
-                foreach (var filter in this.Setup.Filters)
+                foreach (var filter in Setup.Filters)
                     schema.Filters.Add(filter);
 
+                await runner.CommitAsync().ConfigureAwait(false);
+
                 return schemaTable;
-            }, connection, transaction, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
         /// <summary>
         /// update configuration object with tables desc from server database
@@ -66,7 +80,7 @@ namespace ISynergy.Framework.Synchronization.Core
             if (setup is null || setup.Tables.Count <= 0)
                 throw new MissingTablesException();
 
-            await this.InterceptAsync(new SchemaLoadingArgs(context, setup, connection, transaction), cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new SchemaLoadingArgs(context, setup, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
             // Create the schema
             var schema = new SyncSet();
@@ -97,8 +111,7 @@ namespace ISynergy.Framework.Synchronization.Core
             schema.EnsureSchema();
 
             var schemaArgs = new SchemaLoadedArgs(context, schema, connection);
-            await this.InterceptAsync(schemaArgs, cancellationToken).ConfigureAwait(false);
-            this.ReportProgress(context, progress, schemaArgs);
+            await InterceptAsync(schemaArgs, progress, cancellationToken).ConfigureAwait(false);
 
             return schema;
         }
@@ -110,9 +123,9 @@ namespace ISynergy.Framework.Synchronization.Core
         {
 
             // ensure table is compliante with name / schema with provider
-            var syncTable = await this.Provider.GetDatabaseBuilder().EnsureTableAsync(setupTable.TableName, setupTable.SchemaName, connection, transaction);
+            var syncTable = await Provider.GetDatabaseBuilder().EnsureTableAsync(setupTable.TableName, setupTable.SchemaName, connection, transaction);
 
-            var tableBuilder = this.GetTableBuilder(syncTable, setup);
+            var tableBuilder = GetTableBuilder(syncTable, setup);
 
             var exists = await InternalExistsTableAsync(context, tableBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
@@ -123,7 +136,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var lstColumns = await tableBuilder.GetColumnsAsync(connection, transaction).ConfigureAwait(false);
 
             // Validate the column list and get the dmTable configuration object.
-            this.FillSyncTableWithColumns(setupTable, syncTable, lstColumns);
+            FillSyncTableWithColumns(setupTable, syncTable, lstColumns);
 
             // Check primary Keys
             await SetPrimaryKeysAsync(syncTable, tableBuilder, connection, transaction).ConfigureAwait(false);
@@ -140,7 +153,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         private void FillSyncTableWithColumns(SetupTable setupTable, SyncTable schemaTable, IEnumerable<SyncColumn> columns)
         {
-            schemaTable.OriginalProvider = this.Provider.GetProviderTypeName();
+            schemaTable.OriginalProvider = Provider.GetProviderTypeName();
             schemaTable.SyncDirection = setupTable.SyncDirection;
 
             var ordinal = 0;
@@ -183,8 +196,8 @@ namespace ISynergy.Framework.Synchronization.Core
             foreach (var column in lstColumns.OrderBy(c => c.Ordinal))
             {
                 // First of all validate if the column is currently supported
-                if (!this.Provider.GetMetadata().IsValid(column))
-                    throw new UnsupportedColumnTypeException(setupTable.GetFullName(), column.ColumnName, column.OriginalTypeName, this.Provider.GetProviderTypeName()); ;
+                if (!Provider.GetMetadata().IsValid(column))
+                    throw new UnsupportedColumnTypeException(setupTable.GetFullName(), column.ColumnName, column.OriginalTypeName, Provider.GetProviderTypeName()); ;
 
                 var columnNameLower = column.ColumnName.ToLowerInvariant();
                 if (columnNameLower == "sync_scope_id"
@@ -197,31 +210,31 @@ namespace ISynergy.Framework.Synchronization.Core
                     || columnNameLower == "sync_timestamp"
                     || columnNameLower == "sync_row_is_tombstone"
                     )
-                    throw new UnsupportedColumnNameException(setupTable.GetFullName(), column.ColumnName, column.OriginalTypeName, this.Provider.GetProviderTypeName()); ;
+                    throw new UnsupportedColumnNameException(setupTable.GetFullName(), column.ColumnName, column.OriginalTypeName, Provider.GetProviderTypeName()); ;
 
                 // Gets the max length
-                column.MaxLength = this.Provider.GetMetadata().GetMaxLength(column);
+                column.MaxLength = Provider.GetMetadata().GetMaxLength(column);
 
                 // Gets the owner dbtype (SqlDbType, OracleDbType, MySqlDbType, NpsqlDbType & so on ...)
                 // Sqlite does not have it's own type, so it's DbType too
-                column.OriginalDbType = this.Provider.GetMetadata().GetOwnerDbType(column).ToString();
+                column.OriginalDbType = Provider.GetMetadata().GetOwnerDbType(column).ToString();
 
                 // get the downgraded DbType
-                column.DbType = (int)this.Provider.GetMetadata().GetDbType(column);
+                column.DbType = (int)Provider.GetMetadata().GetDbType(column);
 
                 // Gets the column readonly's propertye
-                column.IsReadOnly = this.Provider.GetMetadata().IsReadonly(column);
+                column.IsReadOnly = Provider.GetMetadata().IsReadonly(column);
 
                 // set position ordinal
                 column.Ordinal = ordinal;
                 ordinal++;
 
                 // Validate the precision and scale properties
-                if (this.Provider.GetMetadata().IsNumericType(column))
+                if (Provider.GetMetadata().IsNumericType(column))
                 {
-                    if (this.Provider.GetMetadata().IsSupportingScale(column))
+                    if (Provider.GetMetadata().IsSupportingScale(column))
                     {
-                        var (p, s) = this.Provider.GetMetadata().GetPrecisionAndScale(column);
+                        var (p, s) = Provider.GetMetadata().GetPrecisionAndScale(column);
                         column.Precision = p;
                         column.PrecisionSpecified = true;
                         column.Scale = s;
@@ -229,7 +242,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     }
                     else
                     {
-                        column.Precision = this.Provider.GetMetadata().GetPrecision(column);
+                        column.Precision = Provider.GetMetadata().GetPrecision(column);
                         column.PrecisionSpecified = true;
                         column.ScaleSpecified = false;
                     }
@@ -238,7 +251,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
                 // Get the managed type
                 // Important to set it at the end, because we are altering column.DataType here
-                column.SetType(this.Provider.GetMetadata().GetType(column));
+                column.SetType(Provider.GetMetadata().GetType(column));
 
                 // if setup table has no columns, we add all columns from db
                 // otherwise check if columns exist in the data source
@@ -280,7 +293,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     || columnNameLower == "sync_row_is_tombstone"
                     || columnNameLower == "last_change_datetime"
                     )
-                    throw new UnsupportedPrimaryKeyColumnNameException(schemaTable.GetFullName(), columnKey.ColumnName, columnKey.OriginalTypeName, this.Provider.GetProviderTypeName());
+                    throw new UnsupportedPrimaryKeyColumnNameException(schemaTable.GetFullName(), columnKey.ColumnName, columnKey.OriginalTypeName, Provider.GetProviderTypeName());
 
 
                 schemaTable.PrimaryKeys.Add(columnKey.ColumnName);

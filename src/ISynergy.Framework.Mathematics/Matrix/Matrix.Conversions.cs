@@ -461,9 +461,9 @@ namespace ISynergy.Framework.Mathematics
                 var current = array.GetValue(indices[0]) as Array;
                 var last = indices.Get(1, 0);
                 var length = last.Length == 0 ? 1 : Enumerable.Max(last) + 1;
-                if (current == null || current.Length < length)
+                if (current is null || current.Length < length)
                 {
-                    if (current == null)
+                    if (current is null)
                     {
                         current = Array.CreateInstance(array.GetType().GetElementType(), length);
                     }
@@ -486,7 +486,7 @@ namespace ISynergy.Framework.Mathematics
         private static object convertValue(Type outputElementType, object inputValue)
         {
             var inputArray = inputValue as Array;
-            if (inputArray != null)
+            if (inputArray is not null)
                 return To(inputArray, outputElementType);
             return inputValue.To(outputElementType);
         }
@@ -784,7 +784,7 @@ namespace ISynergy.Framework.Mathematics
 
         private static Type GetHighestEnclosingType(object[] values)
         {
-            var types = values.Select(x => x != null ? x.GetType() : null);
+            var types = values.Select(x => x is not null ? x.GetType() : null);
             if (types.Any(x => x == typeof(object)))
                 return typeof(object);
             if (types.Any(x => x == typeof(string)))

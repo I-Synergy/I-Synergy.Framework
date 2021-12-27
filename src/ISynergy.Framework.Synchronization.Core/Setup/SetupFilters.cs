@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Exposing the InnerCollection for serialization purpose
         /// </summary>
-        [DataMember(Name = "c", IsRequired = true, Order = 1)]
+        [DataMember(Name = "c", IsRequired = true)]
         public Collection<SetupFilter> InnerCollection = new Collection<SetupFilter>();
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             if (InnerCollection.Any(st => item.EqualsByName(st)))
                 throw new FilterAlreadyExistsException(item.TableName);
 
-            this.InnerCollection.Add(item);
+            InnerCollection.Add(item);
         }
 
         /// <summary>
@@ -48,12 +48,12 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             // add the side where expression, allowing to be null
             item.AddWhere(columnName, tableName, columnName, schemaName);
 
-            this.Add(item);
+            Add(item);
             return this;
         }
 
 
-        public void Clear() => this.InnerCollection.Clear();
+        public void Clear() => InnerCollection.Clear();
         public SetupFilter this[int index] => InnerCollection[index];
         public int Count => InnerCollection.Count;
         public bool IsReadOnly => false;
@@ -66,7 +66,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public void RemoveAt(int index) => InnerCollection.RemoveAt(index);
         IEnumerator IEnumerable.GetEnumerator() => InnerCollection.GetEnumerator();
         public IEnumerator<SetupFilter> GetEnumerator() => InnerCollection.GetEnumerator();
-        public override string ToString() => this.InnerCollection.Count.ToString();
+        public override string ToString() => InnerCollection.Count.ToString();
     }
 
 }

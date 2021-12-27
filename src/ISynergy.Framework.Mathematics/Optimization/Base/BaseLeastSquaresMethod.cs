@@ -124,7 +124,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         {
             this.numberOfParameters = numberOfParameters;
 
-            if (solution == null || solution.Length != numberOfParameters)
+            if (solution is null || solution.Length != numberOfParameters)
             {
                 solution = new double[numberOfParameters];
                 Initialize();

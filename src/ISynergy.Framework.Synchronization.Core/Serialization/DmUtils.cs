@@ -27,7 +27,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         public static List<MemberInfo> GetMembers(this Type type,
             BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
         {
-            var targetMembers = new List<MemberInfo>();
+            List<MemberInfo> targetMembers = new List<MemberInfo>();
 
             var s = type.GetBaseType().GetFields(flags);
 
@@ -36,11 +36,11 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             // Dont add Properties since they are methods
             //targetMembers.AddRange(type.GetProperties(flags));
 
-            var distinctMembers = new List<MemberInfo>(targetMembers.Count);
+            List<MemberInfo> distinctMembers = new List<MemberInfo>(targetMembers.Count);
 
-            foreach (var groupedMember in targetMembers.GroupBy(m => m.Name))
+            foreach (IGrouping<string, MemberInfo> groupedMember in targetMembers.GroupBy(m => m.Name))
             {
-                var count = groupedMember.Count();
+                int count = groupedMember.Count();
                 var member = groupedMember.FirstOrDefault();
 
                 if (member is null)
@@ -53,17 +53,50 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
         }
 
+        // .Net Standard 1.5 only
+        //public static bool CanRead(this MemberInfo member)
+        //{
+        //    if (member.MemberType == MemberTypes.Field)
+        //    {
+        //        FieldInfo fi = (FieldInfo)member;
+        //        return fi.IsPublic;
+        //    }
+        //    else if (member.MemberType == MemberTypes.Property)
+        //    {
+        //        PropertyInfo pi = (PropertyInfo)member;
+        //        return pi.CanRead;
+        //    }
+
+        //    return false;
+        //}
+
+        //public static bool CanWrite(this MemberInfo member)
+        //{
+        //    if (member.MemberType == MemberTypes.Field)
+        //    {
+        //        FieldInfo fi = (FieldInfo)member;
+        //        return (!fi.IsLiteral && !fi.IsInitOnly && fi.IsPublic);
+        //    }
+        //    else if (member.MemberType == MemberTypes.Property)
+        //    {
+        //        PropertyInfo pi = (PropertyInfo)member;
+        //        return pi.CanWrite;
+        //    }
+
+        //    return false;
+        //}
+
         /// <summary>
         /// Get a member value
         /// </summary>
         public static object GetValue(this MemberInfo member, object obj)
         {
 
-            var fi = member as FieldInfo;
+            FieldInfo fi = member as FieldInfo;
             if (fi is not null)
                 return fi.GetValue(obj);
 
-            var pi = member as PropertyInfo;
+            PropertyInfo pi = member as PropertyInfo;
             if (pi is not null)
                 return pi.GetValue(obj);
 
@@ -89,11 +122,11 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         public static void SetValue(this MemberInfo member, object obj, object value)
         {
 
-            var fi = member as FieldInfo;
+            FieldInfo fi = member as FieldInfo;
             if (fi is not null)
                 fi.SetValue(obj, value);
 
-            var pi = member as PropertyInfo;
+            PropertyInfo pi = member as PropertyInfo;
             if (pi is not null)
                 pi.SetValue(obj, value);
 
@@ -115,7 +148,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         /// </summary>
         public static bool IsIndexedProperty(this MemberInfo member)
         {
-            var propertyInfo = member as PropertyInfo;
+            PropertyInfo propertyInfo = member as PropertyInfo;
 
             return propertyInfo is not null ? propertyInfo.GetIndexParameters().Length > 0 : false;
         }
@@ -128,11 +161,11 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             //return member.GetType();
 
-            var fi = member as FieldInfo;
+            FieldInfo fi = member as FieldInfo;
             if (fi is not null)
                 return fi.FieldType;
 
-            var pi = member as PropertyInfo;
+            PropertyInfo pi = member as PropertyInfo;
             if (pi is not null)
                 return pi.PropertyType;
 
@@ -184,12 +217,12 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             // if it's a nullable<T>
             if (t.IsNullableType())
             {
-                var nonNullable = Nullable.GetUnderlyingType(t);
+                Type nonNullable = Nullable.GetUnderlyingType(t);
 
                 // Nullable<Enum> ?
                 if (nonNullable.GetTypeInfo().IsEnum)
                 {
-                    var nullableUnderlyingType = typeof(Nullable<>).MakeGenericType(Enum.GetUnderlyingType(nonNullable));
+                    Type nullableUnderlyingType = typeof(Nullable<>).MakeGenericType(Enum.GetUnderlyingType(nonNullable));
                     return nullableUnderlyingType.IsPrimitive();
                 }
 
@@ -385,14 +418,16 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             if (typeof(ISerializable).IsAssignableFrom(t))
                 return true;
 
-            var typeInfo = t.GetTypeInfo();
+            TypeInfo typeInfo = t.GetTypeInfo();
 
             if (typeInfo.ImplementedInterfaces is null || typeInfo.ImplementedInterfaces.Count() == 0)
                 return false;
 
             foreach (var interf in typeInfo.ImplementedInterfaces)
+            {
                 if (interf == typeof(ISerializable))
                     return true;
+            }
 
             return false;
         }
@@ -420,7 +455,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             if (typeof(IDictionary).IsAssignableFrom(type))
                 return true;
 
-            var typeInfo = type.GetTypeInfo();
+            TypeInfo typeInfo = type.GetTypeInfo();
 
             if (typeInfo.IsGenericType && type.GetGenericTypeDefinition() == typeof(IDictionary<,>))
                 return true;
@@ -444,7 +479,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
             if (type.GetTypeInfo().IsValueType)
                 return Activator.CreateInstance(type);
 
-            var constructorInfo = type.GetParameterizedConstructor(true);
+            ConstructorInfo constructorInfo = type.GetParameterizedConstructor(true);
 
             if (constructorInfo is null)
                 return null;
@@ -464,19 +499,21 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             object instance;
 
-            var constructorInfo = type.GetDefaultConstructor(true);
+            ConstructorInfo constructorInfo = type.GetDefaultConstructor(true);
 
             if (constructorInfo is null)
             {
                 // try to create an uninitialized object when we have a parameters constructor
                 // since we don't know what kind of parameters values we need to pass, we can try this method
                 // Exception : Doesn't work if the base class is abstract
-                var rh = typeof(RuntimeHelpers);
+                Type rh = typeof(RuntimeHelpers);
                 var mi = rh.GetRuntimeMethod("GetUninitializedObject", new Type[] { typeof(Type) });
                 instance = mi.Invoke(null, new object[] { type });
             }
             else
+            {
                 instance = constructorInfo.Invoke(null);
+            }
 
             return instance;
         }
@@ -484,7 +521,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         public static ParameterInfo[] GetConstructorParameters(this Type type, bool nonPublic)
         {
 
-            var ci = type.GetDefaultConstructor(nonPublic);
+            ConstructorInfo ci = type.GetDefaultConstructor(nonPublic);
 
             if (ci is not null)
                 return null;
@@ -502,7 +539,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
         public static ConstructorInfo GetDefaultConstructor(this Type t, bool nonPublic)
         {
-            var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
             if (nonPublic)
                 bindingFlags = bindingFlags | BindingFlags.NonPublic;
@@ -514,7 +551,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
         public static ConstructorInfo GetParameterizedConstructor(this Type objectType, bool nonPublic)
         {
-            var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
             if (nonPublic)
                 bindingFlags = bindingFlags | BindingFlags.NonPublic;
@@ -538,7 +575,7 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         }
         public static void WriteIndent(this TextWriter writer, int indent)
         {
-            for (var i = 0; i < indent; i++)
+            for (int i = 0; i < indent; i++)
                 writer.Write("  ");
 
         }

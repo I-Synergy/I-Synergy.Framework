@@ -20,8 +20,8 @@ namespace ISynergy.Framework.IO.Models
         /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and IsFreeSpaceAvailable does not support relative paths.</exception>
         public static bool IsFreeSpaceAvailable(string path, long fileSize)
         {
-            Argument.IsNotNullOrEmpty(nameof(path), path);
-            Argument.IsMinimal(nameof(fileSize), fileSize, 1);
+            Argument.IsNotNullOrEmpty(path);
+            Argument.IsMinimal(fileSize, 1);
 
             if (!Path.IsPathRooted(path))
             {
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.IO.Models
         /// <exception cref="ArgumentException">The path '{path}' was not a rooted path.</exception>
         public static bool IsNetworkDrive(string path)
         {
-            Argument.IsNotNullOrEmpty(nameof(path), path);
+            Argument.IsNotNullOrEmpty(path);
 
             if (!Path.IsPathRooted(path))
                 throw new ArgumentException($"The path '{path}' was not a rooted path.");
@@ -61,7 +61,7 @@ namespace ISynergy.Framework.IO.Models
 
             var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
 
-            if (drive != null && drive.DriveType == DriveType.Network)
+            if (drive is not null && drive.DriveType == DriveType.Network)
             {
                 return true;
             }
@@ -80,7 +80,7 @@ namespace ISynergy.Framework.IO.Models
         /// <exception cref="ArgumentException">A UNC path was passed to GetDriveName</exception>
         public static string GetDriveName(string path)
         {
-            Argument.IsNotNullOrEmpty(nameof(path), path);
+            Argument.IsNotNullOrEmpty(path);
 
             if (!Path.IsPathRooted(path))
                 throw new ArgumentException($"The path '{path}' was not a rooted path.");
@@ -100,7 +100,7 @@ namespace ISynergy.Framework.IO.Models
         /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and ResolveToRootUNC does not support relative paths.</exception>
         public static string ResolveToRootUNC(string path)
         {
-            Argument.IsNotNullOrEmpty(nameof(path), path);
+            Argument.IsNotNullOrEmpty(path);
 
             if (!Path.IsPathRooted(path))
             {
@@ -117,7 +117,7 @@ namespace ISynergy.Framework.IO.Models
 
             var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
 
-            if (drive != null && drive.DriveType == DriveType.Network)
+            if (drive is not null && drive.DriveType == DriveType.Network)
             {
                 return drive.RootDirectory.ToString();
             }
@@ -136,7 +136,7 @@ namespace ISynergy.Framework.IO.Models
         /// <exception cref="ArgumentException">The path '{path}' was not a rooted path and ResolveToUNC does not support relative paths.</exception>
         public static string ResolveToUNC(string path)
         {
-            Argument.IsNotNullOrEmpty(nameof(path), path);
+            Argument.IsNotNullOrEmpty(path);
 
             if (!Path.IsPathRooted(path))
             {

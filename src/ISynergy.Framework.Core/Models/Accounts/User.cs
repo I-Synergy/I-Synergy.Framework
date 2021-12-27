@@ -164,7 +164,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         {
             get
             {
-                if (Roles != null) return string.Join(", ", Roles.Select(s => s.Name));
+                if (Roles is not null) return string.Join(", ", Roles.Select(s => s.Name));
                 return string.Empty;
             }
         }

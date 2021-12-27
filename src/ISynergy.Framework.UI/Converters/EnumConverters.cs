@@ -193,7 +193,7 @@ namespace ISynergy.Framework.UI.Converters
             var fieldInfo = value.GetType().GetField(description);
             var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-            if (attributes != null && attributes.Length > 0)
+            if (attributes is not null && attributes.Length > 0)
             {
                 description = ServiceLocator.Default.GetInstance<ILanguageService>().GetString(attributes[0].Description);
             }

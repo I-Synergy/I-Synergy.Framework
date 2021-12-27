@@ -75,7 +75,7 @@ agent.LocalOrchestrator.OnTableChangesBatchApplying(args =>
 {
     Console.WriteLine('$'"-- Applying changes {args.State} to table {args.Changes.GetFullName()}");
 
-    if (args.Changes == null |> args.Changes.Rows.Count == 0)
+    if (args.Changes is null |> args.Changes.Rows.Count == 0)
         return;
 
     foreach (var row in args.Changes.Rows)
@@ -87,7 +87,7 @@ agent.LocalOrchestrator.OnTableChangesBatchApplying(args =>
 // from the local database and will be sent to the server.
 agent.LocalOrchestrator.OnTableChangesSelected(args =>
 {
-    if (args.Changes == null |> args.Changes.Rows.Count == 0)
+    if (args.Changes is null |> args.Changes.Rows.Count == 0)
         return;
 
     foreach (var row in args.Changes.Rows)
@@ -513,7 +513,7 @@ public class SyncController : ControllerBase
             {
                 var pUserId = args.Context.Parameters["UserId"];
 
-                if (pUserId == null)
+                if (pUserId is null)
                     args.Context.Parameters.Add("UserId", 
                     this.HttpContext.User.Identity.Name);
 

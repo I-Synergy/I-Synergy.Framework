@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         /// <summary>
         /// Get the view to be applied 
         /// </summary>
-        [DataMember(Name = "tca", IsRequired = false, EmitDefaultValue = false, Order = 1)]
+        [DataMember(Name = "tca", IsRequired = false, EmitDefaultValue = false)]
         public List<TableChangesApplied> TableChangesApplied { get; } = new List<TableChangesApplied>();
 
 
@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
             get
             {
                 var conflicts = 0;
-                foreach (var tableProgress in this.TableChangesApplied)
+                foreach (var tableProgress in TableChangesApplied)
                     conflicts = conflicts + tableProgress.ResolvedConflicts;
                 return conflicts;
             }
@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
             get
             {
                 var changesApplied = 0;
-                foreach (var tableProgress in this.TableChangesApplied)
+                foreach (var tableProgress in TableChangesApplied)
                     changesApplied += tableProgress.Applied;
                 return changesApplied;
             }
@@ -66,14 +66,14 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
             get
             {
                 var changesFailed = 0;
-                foreach (var tableProgress in this.TableChangesApplied)
+                foreach (var tableProgress in TableChangesApplied)
                     changesFailed += tableProgress.Failed;
 
                 return changesFailed;
             }
         }
 
-        public override string ToString() => $"{this.TotalAppliedChanges} changes applied for {this.TableChangesApplied.Count} tables";
+        public override string ToString() => $"{TotalAppliedChanges} changes applied for {TableChangesApplied.Count} tables";
     }
 
 }

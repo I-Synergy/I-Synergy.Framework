@@ -177,7 +177,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value != null)
+            if (value is not null)
             {
                 return true;
             }
@@ -348,7 +348,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public virtual object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return value != null && value.Equals(True);
+            return value is not null && value.Equals(True);
         }
     }
 }

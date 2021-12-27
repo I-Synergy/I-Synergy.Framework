@@ -36,7 +36,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
         public abstract bool UseFiddler { get; }
 
         /// <summary>
-        /// Service Uri provided by kestrell when starts
+        /// Service Uri provided by kestrel when starts
         /// </summary>
         public string ServiceUri { get; protected set; }
 
@@ -113,7 +113,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // public property
             this.Server = (serverDatabaseName, this.ServerType, serverProvider);
 
-            // Create a kestrell server
+            // Create a kestrel server
             this.kestrel = new KestrelTestServer(this.WebServerOrchestrator, this.UseFiddler);
 
             // start server and get uri

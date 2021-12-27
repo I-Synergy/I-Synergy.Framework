@@ -260,12 +260,12 @@
         /// 
         public static double[] Quantiles(this double[] values, double[] probabilities, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
         {
-            if (values == null)
+            if (values is null)
                 throw new ArgumentNullException("Sequence of observations can't be null.", "values");
             if (values.Length == 0)
                 throw new ArgumentException("Sequence of observations can't be empty.", "values");
 
-            if (probabilities == null)
+            if (probabilities is null)
                 throw new ArgumentNullException("Sequence of quantile probabilities can't be null.", "probabilities");
             if (probabilities.Length == 0)
                 throw new ArgumentNullException("Sequence of quantile probabilities can't be empty.", "probabilities");

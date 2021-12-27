@@ -37,8 +37,8 @@ namespace ISynergy.Framework.Storage.Azure.Services
         /// <param name="containerName">Name of the container.</param>
         public StorageService(IOptions<TStorageOptions> storageOptions, string containerName)
         {
-            Argument.IsNotNull(nameof(storageOptions), storageOptions.Value);
-            Argument.IsNotNullOrEmpty(nameof(containerName), containerName);
+            Argument.IsNotNull(storageOptions.Value);
+            Argument.IsNotNullOrEmpty(containerName);
 
             _storageOptions = storageOptions.Value;
 

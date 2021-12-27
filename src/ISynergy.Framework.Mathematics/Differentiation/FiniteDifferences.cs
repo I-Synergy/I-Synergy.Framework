@@ -141,7 +141,7 @@ namespace ISynergy.Framework.Mathematics.Differentiation
             get => StepSizes.Max();
             set
             {
-                if (StepSizes == null)
+                if (StepSizes is null)
                     StepSizes = new double[NumberOfVariables];
                 for (var i = 0; i < StepSizes.Length; i++)
                     StepSizes[i] = value;
@@ -230,20 +230,20 @@ namespace ISynergy.Framework.Mathematics.Differentiation
         /// <param name="result">The gradient of the function evaluated at point <c>x</c>.</param>
         public double[] Gradient(double[] x, double[] result)
         {
-            if (x == null)
+            if (x is null)
                 throw new ArgumentNullException("x");
 
             if (x.Length != NumberOfVariables)
                 throw new ArgumentException("The number of dimensions does not match.", "x");
 
-            if (Function == null)
+            if (Function is null)
                 throw new InvalidOperationException("The Function has not been defined.");
 
             if (x.Length < result.Length)
                 throw new DimensionMismatchException("gradient",
                     "Gradient vector must have at least the same size as x.");
 
-            if (Function == null)
+            if (Function is null)
                 throw new InvalidOperationException("The Function has not been defined.");
 
             var pointCache = points.Value[0];

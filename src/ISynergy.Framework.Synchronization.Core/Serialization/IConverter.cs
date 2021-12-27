@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 
 namespace ISynergy.Framework.Synchronization.Core.Serialization
 {
@@ -13,11 +13,11 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         /// <summary>
         /// Convert a row before being serialized
         /// </summary>
-        void BeforeSerialize(SyncRow row);
+        void BeforeSerialize(object[] row, SyncTable schemaTable);
 
         /// <summary>
         /// Convert a row afeter being deserialized
         /// </summary>
-        void AfterDeserialized(SyncRow row);
+        void AfterDeserialized(object[] row, SyncTable schemaTable);
     }
 }

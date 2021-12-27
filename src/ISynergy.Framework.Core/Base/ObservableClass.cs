@@ -178,7 +178,7 @@ namespace ISynergy.Framework.Core.Base
         /// <param name="broadcast"></param>
         protected void SetValue<T>(T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
         {
-            Argument.IsNotNull(propertyName, propertyName);
+            Argument.IsNotNull(propertyName);
 
             if (!Properties.ContainsKey(propertyName))
                 Properties.Add(propertyName, new Property<T>(propertyName));

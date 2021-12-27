@@ -144,12 +144,12 @@ namespace ISynergy.Framework.Mathematics.Optimization
             var jacobianSize = blockSize * outputCount;
 
             // Re-allocate the partial Jacobian matrix only if needed
-            if (jacobian[0] == null || jacobian[0].Length < jacobianSize)
+            if (jacobian[0] is null || jacobian[0].Length < jacobianSize)
                 for (var i = 0; i < jacobian.Length; i++)
                     jacobian[i] = new double[jacobianSize];
 
             // Re-allocate error vector only if needed
-            if (errors == null || errors.Length < jacobianSize)
+            if (errors is null || errors.Length < jacobianSize)
                 errors = new double[jacobianSize];
 
             Convergence.CurrentIteration = 0;

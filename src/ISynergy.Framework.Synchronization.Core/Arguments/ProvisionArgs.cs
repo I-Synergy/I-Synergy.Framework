@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -21,6 +21,7 @@ namespace ISynergy.Framework.Synchronization.Core
             Provision = provision;
             Schema = schema;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
 
         public override string Source => Connection.Database;
         public override string Message => $"Provisioned {Schema.Tables.Count} Tables. Provision:{Provision}.";
@@ -48,6 +49,7 @@ namespace ISynergy.Framework.Synchronization.Core
             Schema = schema;
         }
         public override string Source => Connection.Database;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
 
         public override string Message => $"Provisioning {Schema.Tables.Count} Tables. Provision:{Provision}.";
 
@@ -66,6 +68,7 @@ namespace ISynergy.Framework.Synchronization.Core
             Provision = provision;
             Schema = schema;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
         public override string Source => Connection.Database;
         public override string Message => $"Deprovisioned {Schema.Tables.Count} Tables. Provision:{Provision}.";
         public override int EventId => SyncEventsId.Deprovisioned.Id;
@@ -90,7 +93,7 @@ namespace ISynergy.Framework.Synchronization.Core
             Schema = schema;
         }
         public override string Source => Connection.Database;
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override string Message => $"Deprovisioning {Schema.Tables.Count} Tables. Provision:{Provision}.";
         public override int EventId => SyncEventsId.Deprovisioning.Id;
     }
@@ -151,7 +154,4 @@ namespace ISynergy.Framework.Synchronization.Core
         public static EventId Deprovisioning => CreateEventId(5100, nameof(Deprovisioning));
         public static EventId Deprovisioned => CreateEventId(5150, nameof(Deprovisioned));
     }
-
-
-
 }

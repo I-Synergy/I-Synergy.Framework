@@ -115,7 +115,7 @@ namespace ISynergy.Framework.Mathematics.IO
                 {
                     foreach (var s in matrix.Enumerate<string>(shape))
                     {
-                        if (s != null)
+                        if (s is not null)
                         {
                             var c = 0;
                             for (var i = 0; i < s.Length; i++)

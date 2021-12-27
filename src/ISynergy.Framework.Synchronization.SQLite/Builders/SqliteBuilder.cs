@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Data.Common;
 using System.Threading.Tasks;

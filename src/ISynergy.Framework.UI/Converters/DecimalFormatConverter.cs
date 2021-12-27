@@ -33,7 +33,7 @@ namespace ISynergy.Framework.UI.Converters
 #if WINDOWS_UWP || WINDOWS
             var decimalFormatter = new DecimalFormatter();
 
-            if (value is IContext context && context.NumberFormat != null)
+            if (value is IContext context && context.NumberFormat is not null)
             {
                 decimalFormatter.FractionDigits = context.NumberFormat.NumberDecimalDigits;
             }

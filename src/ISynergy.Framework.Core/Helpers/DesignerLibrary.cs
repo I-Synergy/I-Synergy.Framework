@@ -36,14 +36,14 @@ namespace ISynergy.Framework.Core.Helpers
 
             // Check .NET 
             var cmdm = Type.GetType("System.ComponentModel.DesignerProperties, PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
-            if (cmdm != null) // loaded the assembly, could be .net 
+            if (cmdm is not null) // loaded the assembly, could be .net 
             {
                 return DesignerPlatformLibrary.Net;
             }
 
             // check WinRT next
             var wadm = Type.GetType("Windows.ApplicationModel.DesignMode, Windows, ContentType=WindowsRuntime");
-            if (wadm != null)
+            if (wadm is not null)
             {
                 return DesignerPlatformLibrary.WinRt;
             }

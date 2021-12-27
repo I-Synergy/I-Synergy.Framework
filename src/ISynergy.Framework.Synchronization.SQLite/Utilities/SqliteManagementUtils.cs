@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Synchronization.Sqlite.Utilities
 {
-    internal static class SqliteManagementUtils
+    public static class SqliteManagementUtils
     {
         public static async Task<SyncTable> GetTableAsync(SqliteConnection connection, SqliteTransaction transaction, string unquotedTableName)
         {
@@ -167,7 +167,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Utilities
 
                 dbCommand.Transaction = transaction;
 
-                tableExist = ((long)await dbCommand.ExecuteScalarAsync().ConfigureAwait(false)) != 0L;
+                tableExist = (long)await dbCommand.ExecuteScalarAsync().ConfigureAwait(false) != 0L;
             }
             return tableExist;
         }
@@ -185,7 +185,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Utilities
 
                 dbCommand.Transaction = transaction;
 
-                triggerExist = ((long)await dbCommand.ExecuteScalarAsync().ConfigureAwait(false)) != 0L;
+                triggerExist = (long)await dbCommand.ExecuteScalarAsync().ConfigureAwait(false) != 0L;
             }
             return triggerExist;
         }
@@ -193,7 +193,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Utilities
         public static string JoinOneTablesOnParametersValues(IEnumerable<string> columns, string leftName)
         {
             var stringBuilder = new StringBuilder();
-            string strLeftName = (string.IsNullOrEmpty(leftName) ? string.Empty : string.Concat(leftName, "."));
+            string strLeftName = string.IsNullOrEmpty(leftName) ? string.Empty : string.Concat(leftName, ".");
 
             string str = "";
             foreach (var column in columns)
@@ -216,8 +216,8 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Utilities
         public static string JoinTwoTablesOnClause(IEnumerable<string> columns, string leftName, string rightName)
         {
             var stringBuilder = new StringBuilder();
-            string strRightName = (string.IsNullOrEmpty(rightName) ? string.Empty : string.Concat(rightName, "."));
-            string strLeftName = (string.IsNullOrEmpty(leftName) ? string.Empty : string.Concat(leftName, "."));
+            string strRightName = string.IsNullOrEmpty(rightName) ? string.Empty : string.Concat(rightName, ".");
+            string strLeftName = string.IsNullOrEmpty(leftName) ? string.Empty : string.Concat(leftName, ".");
 
             string str = "";
             foreach (var column in columns)
@@ -277,7 +277,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Utilities
         public static string CommaSeparatedUpdateFromParameters(SyncTable table, string fromPrefix = "")
         {
             var stringBuilder = new StringBuilder();
-            string strFromPrefix = (string.IsNullOrEmpty(fromPrefix) ? string.Empty : string.Concat(fromPrefix, "."));
+            string strFromPrefix = string.IsNullOrEmpty(fromPrefix) ? string.Empty : string.Concat(fromPrefix, ".");
             string strSeparator = "";
             foreach (var mutableColumn in table.GetMutableColumns())
             {

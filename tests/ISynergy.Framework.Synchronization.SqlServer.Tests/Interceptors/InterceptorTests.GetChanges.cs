@@ -90,7 +90,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             localOrchestrator.OnTableChangesSelected(action =>
             {
-                Assert.IsNotNull(action.Changes);
+                Assert.IsNotNull(action.BatchPartInfos);
                 onSelected++;
             });
 
@@ -194,7 +194,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             localOrchestrator.OnTableChangesSelected(action =>
             {
-                Assert.IsNotNull(action.Changes);
+                Assert.IsNotNull(action.BatchPartInfos);
                 onSelected++;
             });
 
@@ -202,9 +202,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             var changes = await localOrchestrator.GetChangesAsync();
 
             Assert.AreEqual(this.Tables.Length, onSelecting);
-            Assert.IsTrue(onSelected >= 50);
-            Assert.IsTrue(onSelected <= 60);
-
+            Assert.AreEqual(16, onSelected);
             Assert.AreEqual(1, onDatabaseSelected);
             Assert.AreEqual(1, onDatabaseSelecting);
 
@@ -280,7 +278,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             remoteOrchestrator.OnTableChangesSelected(action =>
             {
-                Assert.IsNotNull(action.Changes);
+                Assert.IsNotNull(action.BatchPartInfos);
                 onSelected++;
             });
             remoteOrchestrator.OnDatabaseChangesSelecting(dcs =>

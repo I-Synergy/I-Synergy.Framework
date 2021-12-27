@@ -1,5 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Sqlite.Models;
 using Microsoft.Data.Sqlite;
 using System.Data;
 using System.Data.Common;
@@ -134,7 +135,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             if (scopeType != DbScopeType.Client)
                 return null;
 
-            return this.GetSaveScopeInfoCommand(false, connection, transaction);
+            return GetSaveScopeInfoCommand(false, connection, transaction);
         }
 
         public override DbCommand GetUpdateScopeInfoCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction)
@@ -142,7 +143,7 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Builders
             if (scopeType != DbScopeType.Client)
                 return null;
 
-            return this.GetSaveScopeInfoCommand(true, connection, transaction);
+            return GetSaveScopeInfoCommand(true, connection, transaction);
         }
 
         public override DbCommand GetLocalTimestampCommand(DbConnection connection, DbTransaction transaction)

@@ -260,7 +260,7 @@ namespace ISynergy.Framework.UI.ViewModels
             {
                 DisplayName = Context.CurrentProfile.Username;
 
-                if (PrimaryItems != null && PrimaryItems.Count > 0)
+                if (PrimaryItems is not null && PrimaryItems.Count > 0)
                 {
                     if (PrimaryItems.First().Command.CanExecute(PrimaryItems.First().CommandParameter))
                         PrimaryItems.First().Command.Execute(PrimaryItems.First().CommandParameter);
@@ -412,7 +412,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void CurrentWallpaperChanged(object sender, EventArgs e)
         {
-            if (sender != null && sender is byte[])
+            if (sender is not null && sender is byte[])
             {
                 _settingsService.Wallpaper = sender as byte[];
             }

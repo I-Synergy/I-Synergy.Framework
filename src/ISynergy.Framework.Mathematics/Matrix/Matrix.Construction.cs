@@ -789,7 +789,7 @@ namespace ISynergy.Framework.Mathematics
         public static T[,] Random<T>(int size, IRandomNumberGenerator<T> generator, bool symmetric = false,
             T[,] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = new T[size, size];
 
             if (!symmetric)
@@ -809,7 +809,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] Random<T>(int rows, int cols, IRandomNumberGenerator<T> generator, T[,] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = new T[rows, cols];
 
             for (var i = 0; i < rows; i++)
@@ -826,7 +826,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[,] RowVector<T>(params T[] values)
         {
-            if (values == null)
+            if (values is null)
                 throw new ArgumentNullException("values");
 
             var matrix = new T[1, values.Length];
@@ -883,7 +883,7 @@ namespace ISynergy.Framework.Mathematics
         /// </param>
         public static int[] GetLength(this Array array, bool deep = true, bool max = false)
         {
-            if (array == null)
+            if (array is null)
                 return new[] { -1 };
             if (array.Rank == 0)
                 return new int[0];
@@ -967,10 +967,10 @@ namespace ISynergy.Framework.Mathematics
             for (var i = 0; i < array.Length; i++)
             {
                 var element = array.GetValue(i);
-                if (element != null)
+                if (element is not null)
                 {
                     var a = element as Array;
-                    if (a != null)
+                    if (a is not null)
                     {
                         a = Trim(a);
                         if (a != element)

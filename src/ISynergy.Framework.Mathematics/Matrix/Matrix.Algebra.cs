@@ -284,7 +284,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static double[,] Power(this double[,] matrix, int n)
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             if (!matrix.IsSquare())

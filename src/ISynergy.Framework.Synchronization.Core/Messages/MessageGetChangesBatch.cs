@@ -1,5 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Synchronization.Core.Serialization;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 
@@ -10,18 +11,49 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
     /// </summary>
     public class MessageGetChangesBatch
     {
-        public MessageGetChangesBatch(Guid? excludingScopeId, Guid localScopeId, bool isNew, long? lastTimestamp, SyncSet schema, SyncSetup setup,
-                                      int batchSize, string batchDirectory, ISerializerFactory serializerFactory)
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="excludingScopeId"></param>
+        /// <param name="localScopeId"></param>
+        /// <param name="isNew"></param>
+        /// <param name="lastTimestamp"></param>
+        /// <param name="schema"></param>
+        /// <param name="setup"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="batchDirectory"></param>
+        /// <param name="batchDirectoryName"></param>
+        /// <param name="supportsMultiActiveResultSets"></param>
+        /// <param name="localSerializerFactory"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public MessageGetChangesBatch(
+            Guid? excludingScopeId, 
+            Guid localScopeId, 
+            bool isNew, 
+            long? lastTimestamp, 
+            SyncSet schema, 
+            SyncSetup setup,
+            int batchSize, 
+            string batchDirectory, 
+            string batchDirectoryName, 
+            bool supportsMultiActiveResultSets, 
+            ILocalSerializerFactory localSerializerFactory)
         {
-            this.Schema = schema ?? throw new ArgumentNullException(nameof(schema));
-            this.Setup = setup ?? throw new ArgumentNullException(nameof(setup));
-            this.BatchDirectory = batchDirectory ?? throw new ArgumentNullException(nameof(batchDirectory));
-            this.SerializerFactory = serializerFactory;
-            this.ExcludingScopeId = excludingScopeId;
-            this.LocalScopeId = localScopeId;
-            this.IsNew = isNew;
-            this.LastTimestamp = lastTimestamp;
-            this.BatchSize = batchSize;
+            Argument.IsNotNull(schema);
+            Argument.IsNotNull(setup);
+            Argument.IsNotNull(batchDirectory);
+
+            Schema = schema;
+            Setup = setup;
+            BatchDirectory = batchDirectory;
+            BatchDirectoryName = batchDirectoryName;
+            SupportsMultiActiveResultSets = supportsMultiActiveResultSets;
+            LocalSerializerFactory = localSerializerFactory;
+            ExcludingScopeId = excludingScopeId;
+            LocalScopeId = localScopeId;
+            IsNew = isNew;
+            LastTimestamp = lastTimestamp;
+            BatchSize = batchSize;
         }
 
         /// <summary>
@@ -31,7 +63,7 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         public Guid? ExcludingScopeId { get; set; }
 
         /// <summary>
-        /// Gets or Sets the local Scope Id that will replace null values when creating the row
+        /// Gets or Sets the local Scope Id that will replace NULL values when creating the row
         /// </summary>
         public Guid LocalScopeId { get; set; }
 
@@ -63,14 +95,23 @@ namespace ISynergy.Framework.Synchronization.Core.Messages
         public int BatchSize { get; set; }
 
         /// <summary>
+        /// Gets or Sets the batch directory name to concat (optional)
+        /// </summary>
+        public string BatchDirectoryName { get; set; }
+
+        /// <summary>
         /// Gets or Sets the batch directory used to serialize the datas
         /// </summary>
         public string BatchDirectory { get; set; }
 
         /// <summary>
-        /// Gets or Sets the Serializer factory used when batch mode is enabled
+        /// Gets info if connection supports multiple active result sets.
         /// </summary>
-        public ISerializerFactory SerializerFactory { get; set; }
+        public bool SupportsMultiActiveResultSets { get; }
 
+        /// <summary>
+        /// Gets or Sets the Local Serializer factory, used to buffer rows when reading from datasource
+        /// </summary>
+        public ILocalSerializerFactory LocalSerializerFactory { get; set; }
     }
 }

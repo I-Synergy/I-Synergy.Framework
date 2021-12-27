@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -18,9 +18,10 @@ namespace ISynergy.Framework.Synchronization.Core
             : base(context, connection)
         {
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
 
         public override string Source => Connection.Database;
-        public override string Message => $"Connection Opened.";
+        public override string Message => $"[{Connection.Database}] Connection Opened.";
 
         public override int EventId => SyncEventsId.ConnectionOpen.Id;
     }
@@ -33,14 +34,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public ReConnectArgs(SyncContext context, DbConnection connection, Exception handledException, int retry, TimeSpan waitingTimeSpan)
             : base(context, connection)
         {
-            this.HandledException = handledException;
-            this.Retry = retry;
-            this.WaitingTimeSpan = waitingTimeSpan;
+            HandledException = handledException;
+            Retry = retry;
+            WaitingTimeSpan = waitingTimeSpan;
         }
 
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
 
         public override string Source => Connection.Database;
-        public override string Message => $"Trying to Reconnect";
+        public override string Message => $"[{Connection.Database}] Trying to Reconnect...";
 
         /// <summary>
         /// Gets the handled exception
@@ -68,9 +70,10 @@ namespace ISynergy.Framework.Synchronization.Core
             : base(context, connection)
         {
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
 
         public override string Source => Connection.Database;
-        public override string Message => $"Connection Closed.";
+        public override string Message => $"[{Connection.Database}] Connection Closed.";
 
         public override int EventId => SyncEventsId.ConnectionClose.Id;
     }
@@ -86,8 +89,8 @@ namespace ISynergy.Framework.Synchronization.Core
         }
 
         public override string Source => Connection.Database;
-        public override string Message => $"Transaction Opened.";
-
+        public override string Message => $"[{Connection.Database}] Transaction Opened.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override int EventId => SyncEventsId.TransactionOpen.Id;
     }
 
@@ -100,9 +103,9 @@ namespace ISynergy.Framework.Synchronization.Core
             : base(context, connection, transaction)
         {
         }
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"Transaction Commit.";
+        public override string Message => $"[{Connection.Database}] Transaction Commited.";
 
         public override int EventId => SyncEventsId.TransactionCommit.Id;
     }
@@ -112,13 +115,13 @@ namespace ISynergy.Framework.Synchronization.Core
     /// </summary>
     public class SessionBeginArgs : ProgressArgs
     {
-        public SessionBeginArgs(SyncContext context, DbConnection connection, DbTransaction transaction)
-            : base(context, connection, transaction)
+        public SessionBeginArgs(SyncContext context, DbConnection connection)
+            : base(context, connection, null)
         {
         }
-
-        public override string Source => Context.SessionId.ToString();
-        public override string Message => $"Session Begins.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
+        public override string Source => Connection.Database;
+        public override string Message => $"[{Connection.Database}] Session Begins. Id:{Context.SessionId}. Scope name:{Context.ScopeName}.";
 
         public override int EventId => SyncEventsId.SessionBegin.Id;
     }
@@ -128,13 +131,13 @@ namespace ISynergy.Framework.Synchronization.Core
     /// </summary>
     public class SessionEndArgs : ProgressArgs
     {
-        public SessionEndArgs(SyncContext context, DbConnection connection, DbTransaction transaction)
-            : base(context, connection, transaction)
+        public SessionEndArgs(SyncContext context, DbConnection connection)
+            : base(context, connection, null)
         {
         }
-
-        public override string Source => Context.SessionId.ToString();
-        public override string Message => $"Session Ended.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
+        public override string Source => Connection.Database;
+        public override string Message => $"[{Connection.Database}] Session Ends. Id:{Context.SessionId}. Scope name:{Context.ScopeName}.";
         public override int EventId => SyncEventsId.SessionEnd.Id;
     }
 
@@ -151,29 +154,26 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public ConflictResolution Resolution
         {
-            get => this.resolution;
+            get => resolution;
             set
             {
-                if (this.resolution != value)
+                if (resolution != value)
                 {
-                    this.resolution = value;
+                    resolution = value;
 
-                    if (this.resolution == ConflictResolution.MergeRow)
+                    if (resolution == ConflictResolution.MergeRow)
                     {
-                        var finalRowArray = this.Conflict.RemoteRow.ToArray();
-                        var finalTable = this.Conflict.RemoteRow.Table.Clone();
-                        var finalSet = this.Conflict.RemoteRow.Table.Schema.Clone(false);
+                        var finalRowArray = Conflict.RemoteRow.ToArray();
+                        var finalTable = Conflict.RemoteRow.SchemaTable.Clone();
+                        var finalSet = Conflict.RemoteRow.SchemaTable.Schema.Clone(false);
                         finalSet.Tables.Add(finalTable);
-                        this.FinalRow = new SyncRow(finalTable.Columns.Count);
-                        this.FinalRow.Table = finalTable;
-
-                        this.FinalRow.FromArray(finalRowArray);
-                        finalTable.Rows.Add(this.FinalRow);
+                        FinalRow = new SyncRow(Conflict.RemoteRow.SchemaTable, finalRowArray);
+                        finalTable.Rows.Add(FinalRow);
                     }
-                    else if (this.FinalRow is not null)
+                    else if (FinalRow is not null)
                     {
-                        var finalSet = this.FinalRow.Table.Schema;
-                        this.FinalRow.Clear();
+                        var finalSet = FinalRow.SchemaTable.Schema;
+                        FinalRow.Clear();
                         finalSet.Clear();
                         finalSet.Dispose();
                     }
@@ -186,7 +186,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public SyncConflict Conflict { get; }
 
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
         /// <summary>
         /// Gets or Sets the scope id who will be marked as winner
         /// </summary>
@@ -201,13 +201,12 @@ namespace ISynergy.Framework.Synchronization.Core
         public ApplyChangesFailedArgs(SyncContext context, SyncConflict dbSyncConflict, ConflictResolution action, Guid? senderScopeId, DbConnection connection, DbTransaction transaction)
             : base(context, connection, transaction)
         {
-            this.Conflict = dbSyncConflict;
-            this.resolution = action;
-            this.SenderScopeId = senderScopeId;
+            Conflict = dbSyncConflict;
+            resolution = action;
+            SenderScopeId = senderScopeId;
         }
         public override string Source => Connection.Database;
-        public override string Message => $"Conflict {this.Conflict.Type}.";
-
+        public override string Message => $"Conflict {Conflict.Type}.";
         public override int EventId => SyncEventsId.ApplyChangesFailed.Id;
 
     }

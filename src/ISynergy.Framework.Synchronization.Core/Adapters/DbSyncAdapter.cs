@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Collections.Concurrent;
@@ -18,9 +18,6 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
     /// </summary>
     public abstract class DbSyncAdapter
     {
-        internal const int BATCH_SIZE = 10000;
-
-
         // Internal commands cache
         private ConcurrentDictionary<string, Lazy<SyncCommand>> commands = new ConcurrentDictionary<string, Lazy<SyncCommand>>();
 
@@ -52,7 +49,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// <summary>
         /// Gets a command from the current adapter
         /// </summary>
-        public abstract DbCommand GetCommand(DbCommandType commandType, SyncFilter filter = null);
+        public abstract (DbCommand Command, bool IsBatchCommand) GetCommand(DbCommandType commandType, SyncFilter filter = null);
 
         /// <summary>
         /// Add parameters to a command
@@ -79,28 +76,31 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// </summary>
         internal void SetColumnParametersValues(DbCommand command, SyncRow row)
         {
-            if (row.Table is null)
+            if (row.SchemaTable is null)
                 throw new ArgumentException("Schema table columns does not correspond to row values");
 
-            var schemaTable = row.Table;
+            var schemaTable = row.SchemaTable;
 
             foreach (DbParameter parameter in command.Parameters)
+            {
                 if (!string.IsNullOrEmpty(parameter.SourceColumn))
                 {
                     // foreach parameter, check if we have a column 
                     var column = schemaTable.Columns[parameter.SourceColumn];
 
-                    if (column != null)
+                    if (column is not null)
                     {
-                        var value = row[column] ?? DBNull.Value;
+                        object value = row[column] ?? DBNull.Value;
                         SetParameterValue(command, parameter.ParameterName, value);
                     }
                 }
 
+            }
+
             // return value
             var syncRowCountParam = GetParameter(command, "sync_row_count");
 
-            if (syncRowCountParam != null)
+            if (syncRowCountParam is not null)
             {
                 syncRowCountParam.Direction = ParameterDirection.Output;
                 syncRowCountParam.Value = DBNull.Value;
@@ -116,7 +116,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// Get the command from provider, check connection is opened, affect connection and transaction
         /// Prepare the command parameters and add scope parameters
         /// </summary>
-        public async Task<DbCommand> GetCommandAsync(DbCommandType commandType, DbConnection connection, DbTransaction transaction, SyncFilter filter = null)
+        public async Task<(DbCommand Command, bool IsBatch)> GetCommandAsync(DbCommandType commandType, DbConnection connection, DbTransaction transaction, SyncFilter filter = null)
         {
             if (connection is null)
                 throw new MissingConnectionException();
@@ -124,7 +124,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
             // Create the key
             var commandKey = $"{connection.DataSource}-{connection.Database}-{TableDescription.GetFullName()}-{commandType}";
 
-            if(GetCommand(commandType, filter) is DbCommand command)
+            if (GetCommand(commandType, filter) is (DbCommand command, bool isBatchCommand))
             {
                 // Add Parameters
                 await AddCommandParametersAsync(commandType, command, connection, transaction, filter).ConfigureAwait(false);
@@ -144,7 +144,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
 
                 // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
                 if (lazyCommand.Value.IsPrepared == true)
-                    return command;
+                    return (command, isBatchCommand);
 
                 // Testing The Prepare() performance increase
                 command.Prepare();
@@ -154,7 +154,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
 
                 commands.AddOrUpdate(commandKey, lazyCommand, (key, lc) => new Lazy<SyncCommand>(() => lc.Value));
 
-                return command;
+                return (command, isBatchCommand);
             }
 
             throw new MissingCommandException(commandType.ToString());
@@ -166,7 +166,6 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// </summary>
         internal void AddScopeParametersValues(DbCommand command, Guid? id, long? lastTimestamp, bool isDeleted, bool forceWrite)
         {
-            // ISynergy.Framework.Synchronization.Core parameters
             SetParameterValue(command, "sync_force_write", forceWrite ? 1 : 0);
             SetParameterValue(command, "sync_min_timestamp", lastTimestamp.HasValue ? lastTimestamp.Value : DBNull.Value);
             SetParameterValue(command, "sync_scope_id", id.HasValue ? id.Value : DBNull.Value);
@@ -178,7 +177,7 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
         /// <summary>
         /// Create a change table with scope columns and tombstone column
         /// </summary>
-        public static SyncTable CreateChangesTable(SyncTable syncTable, SyncSet owner)
+        public static SyncTable CreateChangesTable(SyncTable syncTable, SyncSet owner = null)
         {
             if (syncTable.Schema is null)
                 throw new ArgumentException("Schema can't be null when creating a changes table");
@@ -199,6 +198,9 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
 
             foreach (var c in orderedNames)
                 changesTable.Columns.Add(c.Clone());
+
+            if (owner is null)
+                owner = new SyncSet();
 
             owner.Tables.Add(changesTable);
 
@@ -246,15 +248,9 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
 
         }
 
-        /// <summary>
-        /// Get Sync integer parameter.
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <param name="command"></param>
-        /// <returns></returns>
         public static int GetSyncIntOutParameter(string parameter, DbCommand command)
         {
-            var dbParameter = GetParameter(command, parameter);
+            DbParameter dbParameter = GetParameter(command, parameter);
             if (dbParameter is null || dbParameter.Value is null || string.IsNullOrEmpty(dbParameter.Value.ToString()))
                 return 0;
 
@@ -282,9 +278,9 @@ namespace ISynergy.Framework.Synchronization.Core.Adapters
                 return 0;
 
             var stringBuilder = new StringBuilder();
-            for (var i = 0; i < numArray.Length; i++)
+            for (int i = 0; i < numArray.Length; i++)
             {
-                var str1 = numArray[i].ToString("X", NumberFormatInfo.InvariantInfo);
+                string str1 = numArray[i].ToString("X", NumberFormatInfo.InvariantInfo);
                 stringBuilder.Append(str1.Length == 1 ? string.Concat("0", str1) : str1);
             }
 

@@ -10,9 +10,10 @@
         UpdateRow,
         DeleteRow,
         DeleteMetadata,
-        BulkTableType,
+        BulkInitRows,
         BulkUpdateRows,
         BulkDeleteRows,
-        Reset
+        Reset,
+        BulkTableType
     }
 }

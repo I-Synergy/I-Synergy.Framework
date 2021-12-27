@@ -2,6 +2,7 @@
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Abstractions.Tests;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Core.Tests.Models;
@@ -19,23 +20,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
     public abstract class BaseTcpConflictsTests : BaseTcpTests, IDisposable
     {
         /// <summary>
-        /// Gets the remote orchestrator and its database name
-        /// </summary>
-        public (string DatabaseName, ProviderType ProviderType, CoreProvider Provider) Server { get; private set; }
-
-        /// <summary>
-        /// Gets the dictionary of all local orchestrators with database name as key
-        /// </summary>
-        public List<(string DatabaseName, ProviderType ProviderType, CoreProvider Provider)> Clients { get; set; }
-
-        /// <summary>
-        /// Gets a bool indicating if we should generate the schema for tables
-        /// </summary>
-        public bool UseFallbackSchema => ServerType == ProviderType.Sql;
-
-        protected readonly IDatabaseHelper _databaseHelper;
-
-        /// <summary>
         /// For each test, Create a server database and some clients databases, depending on ProviderType provided in concrete class
         /// </summary>
         public BaseTcpConflictsTests()
@@ -52,7 +36,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // create remote orchestrator
             var serverProvider = this.CreateProvider(this.ServerType, serverDatabaseName);
 
-            this.Server = (serverDatabaseName, this.ServerType, serverProvider);
+            Server = (serverDatabaseName, this.ServerType, serverProvider);
 
             // Get all clients providers
             Clients = new List<(string DatabaseName, ProviderType ProviderType, CoreProvider provider)>(this.ClientsType.Count);
@@ -65,18 +49,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
                 this.Clients.Add((dbCliName, clientType, localProvider));
             }
         }
-
-        /// <summary>
-        /// Drop all databases used for the tests
-        /// </summary>
-        public void Dispose()
-        {
-            _databaseHelper.DropDatabase(Server.DatabaseName);
-
-            foreach (var client in Clients)
-                _databaseHelper.DropDatabase(client.DatabaseName);
-        }
-
 
         private async Task CheckProductCategoryRows((string DatabaseName, ProviderType ProviderType, CoreProvider Provider) client, string nameShouldStartWith = null)
         {
@@ -1648,7 +1620,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
             // So far we have a row marked as deleted in the tracking table.
         }
 
-        /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
         public async Task Conflict_DC_NULLS_ServerShouldWins(SyncOptions options)
@@ -1673,7 +1644,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
         }
 
-        /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
         public async Task Conflict_DC_NULLS_ServerShouldWins_CozHandler(SyncOptions options)
@@ -1721,7 +1691,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
         }
 
-        /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
         public async Task Conflict_DC_NULLS_ClientShouldWins(SyncOptions options)
@@ -1749,8 +1718,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
         }
 
-
-        /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
         public async Task Conflict_DC_NULLS_ClientShouldWins_CozHandler(SyncOptions options)
@@ -1907,7 +1874,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
         }
 
-        /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
         public async Task Conflict_NULLC_DS_ClientShouldWins(SyncOptions options)
@@ -1938,8 +1904,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
         }
 
-
-        /// </summary>
         [DataTestMethod]
         [DataRow(typeof(SyncOptionsData))]
         public async Task Conflict_NULLC_DS_ClientShouldWins_CozHandler(SyncOptions options)
@@ -1992,8 +1956,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Tcp.Base
 
         }
 
-
-
+        /// <summary>
         /// Generate a conflict when inserting one row on server and the same row on each client
         /// Server should wins the conflict because default behavior
         /// </summary>

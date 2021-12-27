@@ -66,7 +66,6 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             var onDatabaseApplying = 0;
             var onDatabaseApplied = 0;
-            var onBatchApplying = 0;
             var onBatchApplied = 0;
             var onApplying = 0;
             var onApplied = 0;
@@ -83,13 +82,6 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
                 onDatabaseApplied++;
             });
 
-            localOrchestrator.OnTableChangesBatchApplying(action =>
-            {
-                Assert.IsNotNull(action.Changes);
-                Assert.IsNotNull(action.Command);
-                onBatchApplying++;
-            });
-
             localOrchestrator.OnTableChangesBatchApplied(action =>
             {
                 Assert.AreEqual(1, action.TableChangesApplied.Applied);
@@ -98,7 +90,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
 
             localOrchestrator.OnTableChangesApplying(action =>
             {
-                Assert.IsNotNull(action.Table);
+                Assert.IsNotNull(action.SchemaTable);
                 onApplying++;
             });
 
@@ -111,7 +103,6 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
             // Making a first sync, will initialize everything we need
             var s2 = await agent.SynchronizeAsync();
 
-            Assert.AreEqual(2, onBatchApplying);
             Assert.AreEqual(2, onBatchApplied);
             Assert.AreEqual(1, onDatabaseApplying);
             Assert.AreEqual(1, onDatabaseApplied);
@@ -192,9 +183,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Interceptors.Tests
                 onDatabaseApplied++;
             });
 
-            remoteOrchestrator.OnTableChangesBatchApplying(action =>
+            remoteOrchestrator.OnTableChangesApplying(action =>
             {
-                Assert.IsNotNull(action.Changes);
+                Assert.IsNotNull(action.BatchPartInfos);
                 Assert.IsNotNull(action.Command);
                 onApplying++;
             });

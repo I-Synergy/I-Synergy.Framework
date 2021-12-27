@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -93,13 +93,13 @@ namespace ISynergy.Framework.Synchronization.Core
                     catch (Exception ex)
                     {
                         // Did we excesseed the retry count ?
-                        var canRetry = tryCount < this.RetryCount;
+                        var canRetry = tryCount < RetryCount;
 
                         if (!canRetry)
                             throw;
 
                         // Do we have a Func that explicitely say if we can retry or not
-                        if (this.isRetriable is not null)
+                        if (isRetriable is not null)
                             canRetry = isRetriable(ex, arg);
 
                         if (!canRetry)
@@ -112,7 +112,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     if (tryCount < int.MaxValue)
                         tryCount++;
 
-                    var waitDuration = this.SleepDuration?.Invoke(tryCount) ?? TimeSpan.Zero;
+                    var waitDuration = SleepDuration?.Invoke(tryCount) ?? TimeSpan.Zero;
 
                     if (onRetryAsync is not null)
                         await onRetryAsync(handledException, tryCount, waitDuration, arg);

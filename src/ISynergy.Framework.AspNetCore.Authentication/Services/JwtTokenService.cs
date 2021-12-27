@@ -128,7 +128,7 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Services
         {
             var principal = ValidateToken(token);
 
-            if (principal != null)
+            if (principal is not null)
             {
                 return principal.Claims.ToList();
             }

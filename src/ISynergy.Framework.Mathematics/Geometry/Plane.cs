@@ -185,9 +185,9 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public static bool operator ==(Plane a, Plane b)
         {
-            if ((object)a == null && (object)b == null)
+            if ((object)a is null && (object)b is null)
                 return true;
-            if ((object)a == null || (object)b == null)
+            if ((object)a is null || (object)b is null)
                 return false;
 
             return a._offset == b._offset && a._normal == b._normal;
@@ -199,9 +199,9 @@ namespace ISynergy.Framework.Mathematics.Geometry
         /// 
         public static bool operator !=(Plane a, Plane b)
         {
-            if ((object)a == null && (object)b == null)
+            if ((object)a is null && (object)b is null)
                 return false;
-            if ((object)a == null || (object)b == null)
+            if ((object)a is null || (object)b is null)
                 return true;
 
             return a._offset != b._offset || a._normal != b._normal;
@@ -254,7 +254,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
         public override bool Equals(object obj)
         {
             Plane other = obj as Plane;
-            if (other == null)
+            if (other is null)
                 return false;
 
             return Equals(other);
@@ -366,7 +366,7 @@ namespace ISynergy.Framework.Mathematics.Geometry
 
             public string s(float x)
             {
-                if (provider == null)
+                if (provider is null)
                     provider = System.Globalization.CultureInfo.CurrentCulture;
 
                 string str = x.ToString(format, provider);

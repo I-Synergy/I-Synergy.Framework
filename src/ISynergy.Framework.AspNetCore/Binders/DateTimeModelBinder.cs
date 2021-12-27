@@ -44,7 +44,7 @@ namespace ISynergy.Framework.AspNetCore.Binders
         /// </para></returns>
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            Argument.IsNotNull(nameof(bindingContext), bindingContext);
+            Argument.IsNotNull(bindingContext);
 
             if ((bindingContext.ModelType != typeof(DateTime))
                 && (bindingContext.ModelType != typeof(DateTime?)))

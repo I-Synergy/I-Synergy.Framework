@@ -384,21 +384,12 @@ namespace ISynergy.Framework.Synchronization.Core.Tests.Base
 
         protected override bool Equals(ModelCacheKey other)
         {
-            try
-            {
-                var otherModel = other as MyModelCacheKey<TContext>;
-                var isequal = base.Equals(other)
-                    && otherModel?.useSchema == useSchema
-                    && otherModel?.useSeeding == useSeeding;
+            var otherModel = other as MyModelCacheKey<TContext>;
+            var isequal = base.Equals(other)
+                && otherModel?.useSchema == useSchema
+                && otherModel?.useSeeding == useSeeding;
 
-                return isequal;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            return isequal;
         }
 
         public override int GetHashCode()

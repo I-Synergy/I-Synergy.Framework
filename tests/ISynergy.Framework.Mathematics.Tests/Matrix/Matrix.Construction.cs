@@ -140,7 +140,7 @@
 
             List<int> actual = new List<int>();
             foreach (object obj in Jagged.Enumerate(input, new int[] { 2, 3, 1 }))
-                actual.Add(obj == null ? 0 : (int)obj);
+                actual.Add(obj is null ? 0 : (int)obj);
 
             Assert.IsTrue(expected.IsEqual(actual.ToArray()));
 

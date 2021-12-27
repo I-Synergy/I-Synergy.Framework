@@ -1,28 +1,29 @@
-﻿using ISynergy.Framework.Synchronization.Core.Adapters;
+﻿using ISynergy.Framework.Synchronization.Core.Abstractions;
+using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Metadata;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Manager;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
+using Newtonsoft.Json;
 using System;
 using System.Data;
 using System.Data.Common;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
 namespace ISynergy.Framework.Synchronization.Core.Providers
 {
     /// <summary>
     /// Core provider : should be implemented by any server / client provider
     /// </summary>
-    public abstract partial class CoreProvider
+    public abstract partial class CoreProvider : IProvider
     {
         /// <summary>
         /// Gets the reference to the orchestrator owner of this instance
         /// </summary>
         [JsonIgnore]
         [IgnoreDataMember]
-        public BaseOrchestrator Orchestrator { get; internal set; }
+        public BaseOrchestrator Orchestrator { get; set; }
 
         /// <summary>
         /// Connection is opened. this method is called before any interceptors
@@ -77,11 +78,6 @@ namespace ISynergy.Framework.Synchronization.Core.Providers
         public string ConnectionString { get; set; }
 
         /// <summary>
-        /// Gets a boolean indicating if the provider can use bulk operations
-        /// </summary>
-        public abstract bool SupportBulkOperations { get; }
-
-        /// <summary>
         /// Gets a boolean indicating if the provider can be a server side provider
         /// </summary>
         public abstract bool CanBeServerProvider { get; }
@@ -89,7 +85,17 @@ namespace ISynergy.Framework.Synchronization.Core.Providers
         /// <summary>
         /// Gets the default isolation level used during transaction
         /// </summary>
-        public virtual IsolationLevel IsolationLevel { get; } = IsolationLevel.ReadCommitted;
+        public virtual IsolationLevel IsolationLevel { get; set; } = IsolationLevel.ReadCommitted;
+
+        /// <summary>
+        /// Gets or Sets the number of line for every batch bulk operations
+        /// </summary>
+        public virtual int BulkBatchMaxLinesCount { get; set; } = 10000;
+
+        /// <summary>
+        /// Gets or Sets if the provider supports multi results sets on the same connection
+        /// </summary>
+        public virtual bool SupportsMultipleActiveResultSets { get; set; } = false;
 
         /// <summary>
         /// Get naming tables
@@ -105,7 +111,5 @@ namespace ISynergy.Framework.Synchronization.Core.Providers
         /// Let's a chance to retry on error if connection has been refused.
         /// </summary>
         public virtual bool ShouldRetryOn(Exception exception) => false;
-
-
     }
 }

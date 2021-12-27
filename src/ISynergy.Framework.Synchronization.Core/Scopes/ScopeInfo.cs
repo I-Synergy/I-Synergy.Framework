@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Runtime.Serialization;
@@ -16,25 +16,25 @@ namespace ISynergy.Framework.Synchronization.Core.Scopes
         /// </summary>
         public ScopeInfo()
         {
-        }
 
+        }
         /// <summary>
         /// Scope name. Shared by all clients and the server
         /// </summary>
-        [DataMember(Name = "n", IsRequired = true, Order = 1)]
+        [DataMember(Name = "n", IsRequired = true)]
         public string Name { get; set; }
 
         /// <summary>
         /// Id of the scope owner
         /// </summary>
-        [DataMember(Name = "id", IsRequired = true, Order = 2)]
+        [DataMember(Name = "id", IsRequired = true)]
         public Guid Id { get; set; }
 
         /// <summary>
         /// Gets or Sets if the current provider is newly created one in database.
         /// If new, we will override timestamp for first synchronisation to be sure to get all datas from server
         /// </summary>
-        [DataMember(Name = "in", IsRequired = true, Order = 3)]
+        [DataMember(Name = "in", IsRequired = true)]
         public bool IsNewScope { get; set; }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Synchronization.Core.Scopes
         /// <summary>
         /// Gets or Sets the schema version
         /// </summary>
-        [DataMember(Name = "v", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "v", IsRequired = false, EmitDefaultValue = false)]
         public string Version { get; set; }
 
         /// <summary>
@@ -64,13 +64,13 @@ namespace ISynergy.Framework.Synchronization.Core.Scopes
         /// <summary>
         /// Gets or Sets the last timestamp a sync has occured. This timestamp is set just 'before' sync start.
         /// </summary>
-        [DataMember(Name = "lst", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "lst", IsRequired = false, EmitDefaultValue = false)]
         public long? LastSyncTimestamp { get; set; }
 
         /// <summary>
         /// Gets or Sets the last server timestamp a sync has occured for this scope client.
         /// </summary>
-        [DataMember(Name = "lsst", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "lsst", IsRequired = false, EmitDefaultValue = false)]
         public long? LastServerSyncTimestamp { get; set; }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace ISynergy.Framework.Synchronization.Core.Scopes
         {
             get
             {
-                var durationTs = new TimeSpan(this.LastSyncDuration);
+                var durationTs = new TimeSpan(LastSyncDuration);
                 return $"{durationTs.Hours}:{durationTs.Minutes}:{durationTs.Seconds}.{durationTs.Milliseconds}";
             }
         }

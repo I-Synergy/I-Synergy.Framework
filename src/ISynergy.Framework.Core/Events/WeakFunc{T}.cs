@@ -28,7 +28,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                return _staticFunc != null;
+                return _staticFunc is not null;
             }
         }
 
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (_staticFunc != null)
+                if (_staticFunc is not null)
                 {
                     return _staticFunc.Method.Name;
                 }
@@ -96,7 +96,7 @@ namespace ISynergy.Framework.Core.Events
             {
                 _staticFunc = func;
 
-                if (target != null)
+                if (target is not null)
                 {
                     // Keep a reference to the target to control the
                     // WeakAction's lifetime.
@@ -127,9 +127,9 @@ namespace ISynergy.Framework.Core.Events
                     return false;
                 }
 
-                if (_staticFunc != null)
+                if (_staticFunc is not null)
                 {
-                    if (Reference != null)
+                    if (Reference is not null)
                     {
                         return Reference.IsAlive;
                     }
@@ -139,12 +139,12 @@ namespace ISynergy.Framework.Core.Events
 
                 // Non static action
 
-                if (LiveReference != null)
+                if (LiveReference is not null)
                 {
                     return true;
                 }
 
-                if (Reference != null)
+                if (Reference is not null)
                 {
                     return Reference.IsAlive;
                 }
@@ -178,7 +178,7 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (LiveReference != null)
+                if (LiveReference is not null)
                 {
                     return LiveReference;
                 }
@@ -198,7 +198,7 @@ namespace ISynergy.Framework.Core.Events
         /// <returns>TResult.</returns>
         public TResult Execute()
         {
-            if (_staticFunc != null)
+            if (_staticFunc is not null)
             {
                 return _staticFunc();
             }
@@ -207,10 +207,10 @@ namespace ISynergy.Framework.Core.Events
 
             if (IsAlive)
             {
-                if (Method != null
-                    && (LiveReference != null
-                        || FuncReference != null)
-                    && funcTarget != null)
+                if (Method is not null
+                    && (LiveReference is not null
+                        || FuncReference is not null)
+                    && funcTarget is not null)
                 {
                     return (TResult)Method.Invoke(funcTarget, null);
                 }

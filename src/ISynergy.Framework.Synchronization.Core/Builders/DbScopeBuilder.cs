@@ -1,6 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
@@ -12,7 +11,7 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
     {
         public ParserName ScopeInfoTableName { get; protected set; }
 
-        public DbScopeBuilder(string scopeInfoTableName) => this.ScopeInfoTableName = ParserName.Parse(scopeInfoTableName);
+        public DbScopeBuilder(string scopeInfoTableName) => ScopeInfoTableName = ParserName.Parse(scopeInfoTableName);
 
         public abstract DbCommand GetExistsScopeInfoTableCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction);
         public abstract DbCommand GetCreateScopeInfoTableCommand(DbScopeType scopeType, DbConnection connection, DbTransaction transaction);
@@ -31,7 +30,7 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
         /// <summary>
         /// Remove a Command from internal shared dictionary
         /// </summary>
-        internal void RemoveCommands() => this.commands.Clear();
+        internal void RemoveCommands() => commands.Clear();
 
         /// <summary>
         /// Get the command from provider, check connection is opened, affect connection and transaction
@@ -43,7 +42,7 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
                 throw new MissingConnectionException();
 
             // Create the key
-            var commandKey = $"{connection.DataSource}-{connection.Database}-{this.ScopeInfoTableName.ToString()}-{commandType}-{scopeType}";
+            var commandKey = $"{connection.DataSource}-{connection.Database}-{ScopeInfoTableName.ToString()}-{commandType}-{scopeType}";
 
             var command = commandType switch
             {
@@ -63,25 +62,25 @@ namespace ISynergy.Framework.Synchronization.Core.Builders
                 if (connection.State != ConnectionState.Open)
                     throw new ConnectionClosedException(connection);
 
-                command.Connection = connection;
-                command.Transaction = transaction;
+            command.Connection = connection;
+            command.Transaction = transaction;
 
-                // Get a lazy command instance
-                var lazyCommand = commands.GetOrAdd(commandKey, k => new Lazy<SyncCommand>(() =>
-                {
-                    var syncCommand = new SyncCommand(commandKey);
-                    return syncCommand;
-                }));
+            // Get a lazy command instance
+            var lazyCommand = commands.GetOrAdd(commandKey, k => new Lazy<SyncCommand>(() =>
+            {
+                var syncCommand = new SyncCommand(commandKey);
+                return syncCommand;
+            }));
 
-                // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
-                if (lazyCommand.Value.IsPrepared == true)
-                    return command;
+            // lazyCommand.Metadata is a boolean indicating if the command is already prepared on the server
+            if (lazyCommand.Value.IsPrepared == true)
+                return command;
 
-                // Testing The Prepare() performance increase
-                command.Prepare();
+            // Testing The Prepare() performance increase
+            command.Prepare();
 
-                // Adding this command as prepared
-                lazyCommand.Value.IsPrepared = true;
+            // Adding this command as prepared
+            lazyCommand.Value.IsPrepared = true;
 
                 commands.AddOrUpdate(commandKey, lazyCommand, (key, lc) => new Lazy<SyncCommand>(() => lc.Value));
 

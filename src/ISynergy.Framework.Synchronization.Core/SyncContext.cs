@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Parameters;
+using ISynergy.Framework.Synchronization.Core.Parameter;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -16,25 +16,25 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Current Session, in progress
         /// </summary>
-        [DataMember(Name = "id", IsRequired = true, Order = 1)]
+        [DataMember(Name = "id", IsRequired = true)]
         public Guid SessionId { get; set; }
 
         /// <summary>
         /// Current Session, in progress
         /// </summary>
-        [DataMember(Name = "csid", IsRequired = true, Order = 2)]
+        [DataMember(Name = "csid", IsRequired = true)]
         public Guid ClientScopeId { get; set; }
 
         /// <summary>
         /// Gets or Sets the ScopeName for this sync session
         /// </summary>
-        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false)]
         public string ScopeName { get; set; }
 
         /// <summary>
         /// Gets or sets the sync type used during this session. Can be : Normal, Reinitialize, ReinitializeWithUpload
         /// </summary>
-        [DataMember(Name = "typ", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "typ", IsRequired = false, EmitDefaultValue = false)]
         public SyncType SyncType { get; set; }
 
         /// <summary>
@@ -43,33 +43,33 @@ namespace ISynergy.Framework.Synchronization.Core
         /// When remote GetChanges and locally ApplyChanges, we are in Download direction
         /// this Property is used to check SyncDirection on each table.
         /// </summary>
-        [DataMember(Name = "way", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "way", IsRequired = false, EmitDefaultValue = false)]
         public SyncWay SyncWay { get; set; }
 
         /// <summary>
         /// Actual sync stage
         /// </summary>
-        [DataMember(Name = "stage", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "stage", IsRequired = false, EmitDefaultValue = false)]
         public SyncStage SyncStage { get; set; }
 
         /// <summary>
         /// Get or Sets the Sync parameter to pass to Remote provider for filtering rows
         /// </summary>
-        [DataMember(Name = "ps", IsRequired = false, EmitDefaultValue = false, Order = 7)]
+        [DataMember(Name = "ps", IsRequired = false, EmitDefaultValue = false)]
         public SyncParameters Parameters { get; set; }
 
 
         /// <summary>
         /// Get or Sets additional properties you want to use
         /// </summary>
-        [DataMember(Name = "ap", IsRequired = false, EmitDefaultValue = false, Order = 8)]
+        [DataMember(Name = "ap", IsRequired = false, EmitDefaultValue = false)]
         public Dictionary<string, string> AdditionalProperties { get; set; }
 
 
         /// <summary>
         /// Gets or Sets the current percentage progress overall
         /// </summary>
-        [DataMember(Name = "pp", IsRequired = false, EmitDefaultValue = false, Order = 9)]
+        [DataMember(Name = "pp", IsRequired = false, EmitDefaultValue = false)]
         public double ProgressPercentage { get; set; }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public SyncContext(Guid sessionId, string scopeName)
         {
-            this.SessionId = sessionId;
-            this.ScopeName = scopeName;
+            SessionId = sessionId;
+            ScopeName = scopeName;
         }
 
         /// <summary>
@@ -95,18 +95,18 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <param name="otherSyncContext"></param>
         public void CopyTo(SyncContext otherSyncContext)
         {
-            otherSyncContext.Parameters = this.Parameters;
-            otherSyncContext.ScopeName = this.ScopeName;
-            otherSyncContext.SessionId = this.SessionId;
-            otherSyncContext.SyncStage = this.SyncStage;
-            otherSyncContext.SyncType = this.SyncType;
-            otherSyncContext.SyncWay = this.SyncWay;
-            otherSyncContext.ProgressPercentage = this.ProgressPercentage;
+            otherSyncContext.Parameters = Parameters;
+            otherSyncContext.ScopeName = ScopeName;
+            otherSyncContext.SessionId = SessionId;
+            otherSyncContext.SyncStage = SyncStage;
+            otherSyncContext.SyncType = SyncType;
+            otherSyncContext.SyncWay = SyncWay;
+            otherSyncContext.ProgressPercentage = ProgressPercentage;
 
-            if (this.AdditionalProperties is not null)
+            if (AdditionalProperties is not null)
             {
                 otherSyncContext.AdditionalProperties = new Dictionary<string, string>();
-                foreach (var p in this.AdditionalProperties)
+                foreach (var p in AdditionalProperties)
                     otherSyncContext.AdditionalProperties.Add(p.Key, p.Value);
             }
 
@@ -115,6 +115,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Get the result if sync session is ended
         /// </summary>
-        public override string ToString() => this.ScopeName;
+        public override string ToString() => ScopeName;
     }
 }

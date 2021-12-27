@@ -250,7 +250,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value != null && !string.IsNullOrWhiteSpace(value.ToString()) && value is string)
+            if (value is not null && !string.IsNullOrWhiteSpace(value.ToString()) && value is string)
             {
                 return (Geometry)XamlReader.Load(
                         "<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>"

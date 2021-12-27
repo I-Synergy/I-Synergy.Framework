@@ -81,9 +81,9 @@ namespace ISynergy.Framework.Mathematics.Distances.Base
 
             double[] z;
 
-            if (_svd != null)
+            if (_svd is not null)
                 z = _svd.Solve(d);
-            else if (_chol != null)
+            else if (_chol is not null)
                 z = _chol.Solve(d);
             else
                 z = _precision.Dot(d);

@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Payment.Mollie.Converters
             queryParameters.AddValueIfNotNullOrEmpty(nameof(from), from);
             queryParameters.AddValueIfNotNullOrEmpty(nameof(limit), Convert.ToString(limit));
 
-            if (otherParameters != null)
+            if (otherParameters is not null)
             {
                 foreach (var parameter in otherParameters)
                 {

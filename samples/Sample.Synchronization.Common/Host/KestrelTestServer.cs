@@ -9,7 +9,7 @@ namespace Sample.Synchronization.Common.Host
     public delegate Task ResponseDelegate(string serviceUri);
 
     /// <summary>
-    /// This is a test server for Kestrell
+    /// This is a test server for Kestrel
     /// Actually we can use Microsoft.AspNetCore.TestHost
     /// But I can't manage to find a way to perform through Fiddler
     /// </summary>
@@ -58,17 +58,18 @@ namespace Sample.Synchronization.Common.Host
             await clientHandler(serviceUrl);
         }
 
-        public async void Dispose()
+        public void Dispose()
         {
-            await Dispose(true);
-            GC.SuppressFinalize(this);
+            Dispose(true);
         }
 
-        protected virtual async Task Dispose(bool cleanup)
+        protected virtual void Dispose(bool cleanup)
         {
-            if (_host != null)
+            if (_host is not null)
             {
-                await _host.StopAsync();
+                _host.StopAsync()
+                    .GetAwaiter()
+                    .GetResult(); 
                 _host.Dispose();
             }
         }

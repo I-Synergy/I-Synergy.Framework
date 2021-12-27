@@ -1,11 +1,11 @@
 ﻿using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Core.Tests.Models;
 using ISynergy.Framework.Synchronization.SqlServer.Providers;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Base;
 using ISynergy.Framework.Synchronization.SqlServer.Tests.Context;
-using ISynergy.Framework.Synchronization.SqlServer.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -33,7 +33,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             {
                 Assert.AreEqual(SyncStage.BeginSession, args.Context.SyncStage);
                 Assert.IsInstanceOfType(args, typeof(SessionBeginArgs));
-                Assert.IsNull(args.Connection);
+                Assert.IsNotNull(args.Connection);
                 Assert.IsNull(args.Transaction);
                 onSessionBegin = true;
             });
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             {
                 Assert.AreEqual(SyncStage.EndSession, args.Context.SyncStage);
                 Assert.IsInstanceOfType(args, typeof(SessionEndArgs));
-                Assert.IsNull(args.Connection);
+                Assert.IsNotNull(args.Connection);
                 Assert.IsNull(args.Transaction);
                 onSessionEnd = true;
             });
@@ -125,7 +125,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Orchestrations.Tests
             // Defining options with Batchsize to enable serialization on disk
             agent.Options.BatchSize = 2000;
 
-            var myRijndael = new RijndaelManaged();
+            var myRijndael = Aes.Create();
             myRijndael.GenerateKey();
             myRijndael.GenerateIV();
 

@@ -30,8 +30,8 @@ namespace ISynergy.Framework.Physics
         public Unit(Units unit, UnitTypes[] unitTypes, Func<double, double> formulaConvert, Func<double, double> formulaConvertBack)
             : base(unit, unitTypes)
         {
-            Argument.IsNotNull(nameof(formulaConvert), formulaConvert);
-            Argument.IsNotNull(nameof(formulaConvertBack), formulaConvertBack);
+            Argument.IsNotNull(formulaConvert);
+            Argument.IsNotNull(formulaConvertBack);
 
             FormulaConvert = formulaConvert;
             FormulaConvertBack = formulaConvertBack;

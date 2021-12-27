@@ -308,7 +308,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
             var finish = false;
 
             // Make initial progress report with initialization parameters
-            if (Progress != null)
+            if (Progress is not null)
                 Progress(this, new OptimizationProgressEventArgs
                     (Iterations, Evaluations, g, gnorm, Solution, xnorm, f, stp1, finish));
             // Main iteration
@@ -441,7 +441,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
                     if (Iterations > MaxIterations)
                         finish = true;
 
-                if (Progress != null)
+                if (Progress is not null)
                     Progress(this, new OptimizationProgressEventArgs(Iterations,
                         Evaluations, g, gnorm, Solution, xnorm, f, stp, finish));
             }

@@ -34,7 +34,7 @@ namespace ISynergy.Framework.UI.Helpers
             {
                 var child = VisualTreeHelper.GetChild(parent, i);
                 result = FindChild(child, name);
-                if (result != null) break;
+                if (result is not null) break;
             }
 
             return result;
@@ -60,7 +60,7 @@ namespace ISynergy.Framework.UI.Helpers
             {
                 var child = VisualTreeHelper.GetChild(parent, i);
                 foundChild = FindChild<T>(child);
-                if (foundChild != null) break;
+                if (foundChild is not null) break;
             }
 
             return (T)foundChild;

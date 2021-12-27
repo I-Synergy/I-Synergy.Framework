@@ -164,7 +164,7 @@ SERVER PROVIDER CS               data source=(localdb)\mssqllocaldb; initial cat
 CLIENT PROVIDER                  Sqlite
 CLIENT PROVIDER CS               c:\users\johndoe\.the synchronization frameworkync\advworks.db
 CONF CONFLICT                    ServerWins
-CONF BATCH DIR                   C:\Users\johndoe\AppData\Local\Temp\DotmimSync
+CONF BATCH DIR                   C:\Users\johndoe\AppData\Local\Temp\I-Synergy.Synchronization
 CONF BATCH SIZE                  0
 CONF SERIALIZATION               Json
 CONF BULK OPERATIONS             True

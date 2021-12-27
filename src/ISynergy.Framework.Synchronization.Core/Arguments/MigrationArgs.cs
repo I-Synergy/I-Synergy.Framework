@@ -1,5 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,13 +17,14 @@ namespace ISynergy.Framework.Synchronization.Core
     {
         public MigratingArgs(SyncContext context, SyncSet newSchema, SyncSetup oldSetup, SyncSetup newSetup, MigrationResults migrationResults, DbConnection connection, DbTransaction transaction) : base(context, connection, transaction)
         {
-            this.NewSchema = newSchema;
-            this.OldSetup = oldSetup;
-            this.NewSetup = newSetup;
-            this.MigrationResults = migrationResults;
+            NewSchema = newSchema;
+            OldSetup = oldSetup;
+            NewSetup = newSetup;
+            MigrationResults = migrationResults;
         }
 
         public override string Source => Connection.Database;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
 
         /// <summary>
         /// Gets message about migration
@@ -55,10 +57,11 @@ namespace ISynergy.Framework.Synchronization.Core
     {
         public MigratedArgs(SyncContext context, SyncSet schema, SyncSetup setup, MigrationResults migration, DbConnection connection = null, DbTransaction transaction = null) : base(context, connection, transaction)
         {
-            this.Schema = schema;
-            this.Setup = setup;
-            this.Migration = migration;
+            Schema = schema;
+            Setup = setup;
+            Migration = migration;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
 
         public override string Source => Connection.Database;
         /// <summary>

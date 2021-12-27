@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Exposing the InnerCollection for serialization purpose
         /// </summary>
-        [DataMember(Name = "c", IsRequired = true, Order = 1)]
+        [DataMember(Name = "c", IsRequired = true)]
         public Collection<string> InnerCollection = new Collection<string>();
 
         public SetupColumns() { }
@@ -42,13 +42,13 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public void AddRange(IEnumerable<string> columnsName)
         {
             foreach (var columnName in columnsName)
-                this.Add(columnName);
+                Add(columnName);
         }
 
         /// <summary>
         /// Clear all columns
         /// </summary>
-        public void Clear() => this.InnerCollection.Clear();
+        public void Clear() => InnerCollection.Clear();
 
 
         /// <summary>
@@ -61,17 +61,17 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public string this[int index] => InnerCollection[index];
         public int Count => InnerCollection.Count;
         public bool IsReadOnly => false;
-        string IList<string>.this[int index] { get => this.InnerCollection[index]; set => this.InnerCollection[index] = value; }
+        string IList<string>.this[int index] { get => InnerCollection[index]; set => InnerCollection[index] = value; }
         public bool Remove(string item) => InnerCollection.Remove(item);
         public bool Contains(string item) => InnerCollection.Any(c => string.Equals(c, item, SyncGlobalization.DataSourceStringComparison));
         public void CopyTo(string[] array, int arrayIndex) => InnerCollection.CopyTo(array, arrayIndex);
         public int IndexOf(string item) => InnerCollection.IndexOf(item);
         public void RemoveAt(int index) => InnerCollection.RemoveAt(index);
-        public override string ToString() => this.InnerCollection.Count.ToString();
-        public void Insert(int index, string item) => this.InnerCollection.Insert(index, item);
+        public override string ToString() => InnerCollection.Count.ToString();
+        public void Insert(int index, string item) => InnerCollection.Insert(index, item);
         public IEnumerator<string> GetEnumerator() => InnerCollection.GetEnumerator();
-        IEnumerator<string> IEnumerable<string>.GetEnumerator() => this.InnerCollection.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => this.InnerCollection.GetEnumerator();
+        IEnumerator<string> IEnumerable<string>.GetEnumerator() => InnerCollection.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => InnerCollection.GetEnumerator();
 
     }
 

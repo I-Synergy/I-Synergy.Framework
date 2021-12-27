@@ -250,7 +250,7 @@
         public Cobyla(NonlinearObjectiveFunction function, NonlinearConstraint[] constraints)
             : base(function.NumberOfVariables, function.Function)
         {
-            if (constraints == null)
+            if (constraints is null)
                 throw new ArgumentNullException("constraints");
 
             for (var i = 0; i < constraints.Length; i++)

@@ -1,5 +1,5 @@
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;

@@ -129,7 +129,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// </param>
         public static int[] GetLength(this Array array, bool deep = true, bool max = false)
         {
-            if (array == null)
+            if (array is null)
                 return new[] { -1 };
             if (array.Rank == 0)
                 return new int[0];

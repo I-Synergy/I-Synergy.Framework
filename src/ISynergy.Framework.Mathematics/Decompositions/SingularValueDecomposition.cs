@@ -139,7 +139,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         public SingularValueDecomposition(double[,] value,
             bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose, bool inPlace)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value", "Matrix cannot be null.");
 
             double[,] a;
@@ -710,7 +710,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (diagonalMatrix != null)
+                if (diagonalMatrix is not null)
                     return diagonalMatrix;
 
                 return diagonalMatrix = Matrix.Diagonal(LeftSingularVectors.Columns(), RightSingularVectors.Columns(),
@@ -1182,9 +1182,9 @@ namespace ISynergy.Framework.Mathematics.Decompositions
             svd.Diagonal = (double[])Diagonal.Clone();
             svd.Ordering = (int[])Ordering.Clone();
             svd.swapped = swapped;
-            if (LeftSingularVectors != null)
+            if (LeftSingularVectors is not null)
                 svd.LeftSingularVectors = (double[,])LeftSingularVectors.MemberwiseClone();
-            if (RightSingularVectors != null)
+            if (RightSingularVectors is not null)
                 svd.RightSingularVectors = (double[,])RightSingularVectors.MemberwiseClone();
 
             return svd;

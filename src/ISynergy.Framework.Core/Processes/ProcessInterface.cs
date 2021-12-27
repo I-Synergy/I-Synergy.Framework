@@ -66,7 +66,7 @@ namespace ISynergy.Framework.Core.Processes
         /// <param name="e">The <see cref="DoWorkEventArgs" /> instance containing the event data.</param>
         void OutputWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (!OutputWorker.CancellationPending && OutputReader != null)
+            while (!OutputWorker.CancellationPending && OutputReader is not null)
             {
                 //  Any lines to read?
                 int count;
@@ -105,7 +105,7 @@ namespace ISynergy.Framework.Core.Processes
         /// <param name="e">The <see cref="DoWorkEventArgs" /> instance containing the event data.</param>
         void ErrorWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (!ErrorWorker.CancellationPending && ErrorReader != null)
+            while (!ErrorWorker.CancellationPending && ErrorReader is not null)
             {
                 //  Any lines to read?
                 int count;
@@ -208,7 +208,7 @@ namespace ISynergy.Framework.Core.Processes
         void CurrentProcess_Exited(object sender, EventArgs e)
         {
             //  Fire process exited.
-            if(Process != null) FireProcessExitEvent(Process.ExitCode);
+            if(Process is not null) FireProcessExitEvent(Process.ExitCode);
 
             //  Disable the threads.
             OutputWorker.CancelAsync();
@@ -267,7 +267,7 @@ namespace ISynergy.Framework.Core.Processes
         /// <param name="input">The input.</param>
         public void WriteInput(string input)
         {
-            if (IsProcessRunning && InputWriter != null)
+            if (IsProcessRunning && InputWriter is not null)
             {
                 InputWriter.WriteLine(input);
                 InputWriter.Flush();
@@ -352,7 +352,7 @@ namespace ISynergy.Framework.Core.Processes
             {
                 try
                 {
-                    return Process != null && !Process.HasExited;
+                    return Process is not null && !Process.HasExited;
                 }
                 catch
                 {
@@ -370,34 +370,34 @@ namespace ISynergy.Framework.Core.Processes
         {
             if (disposing)
             {
-                if (OutputWorker != null)
+                if (OutputWorker is not null)
                 {
                     OutputWorker.Dispose();
                 }
 
-                if (ErrorWorker != null)
+                if (ErrorWorker is not null)
                 {
                     ErrorWorker.Dispose();
                 }
 
-                if (Process != null)
+                if (Process is not null)
                 {
                     Process.Kill();
                     Process.Dispose();
                     Process = null;
                 }
 
-                if (InputWriter != null)
+                if (InputWriter is not null)
                 {
                     InputWriter = null;
                 }
 
-                if (OutputReader != null)
+                if (OutputReader is not null)
                 {
                     OutputReader = null;
                 }
 
-                if (ErrorReader != null)
+                if (ErrorReader is not null)
                 {
                     ErrorReader = null;
                 }

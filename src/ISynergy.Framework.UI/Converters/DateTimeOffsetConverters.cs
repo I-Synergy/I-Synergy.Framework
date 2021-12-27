@@ -118,7 +118,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             var result = new ObservableCollection<DateTime>();
 
-            if (value != null && value.GetType() == typeof(ObservableCollection<DateTimeOffset>))
+            if (value is not null && value.GetType() == typeof(ObservableCollection<DateTimeOffset>))
             {
                 var collection = value as ObservableCollection<DateTimeOffset>;
 
@@ -143,7 +143,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             var result = new ObservableCollection<DateTimeOffset>();
 
-            if (value != null)
+            if (value is not null)
             {
                 if (value.GetType() == typeof(ObservableCollection<DateTime>))
                 {
@@ -254,7 +254,7 @@ namespace ISynergy.Framework.UI.Converters
                     offset = context.CurrentTimeZone.BaseUtcOffset;
                 }
 
-                if (parameter != null)
+                if (parameter is not null)
                     return datetime.ToLocalDateString(parameter.ToString(), offset, culture);
 
                 return datetime.ToLocalDateString("f", offset, culture);

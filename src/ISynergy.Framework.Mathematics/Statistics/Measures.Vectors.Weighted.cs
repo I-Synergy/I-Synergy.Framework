@@ -34,7 +34,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         ///
         public static double ExponentialWeightedMean(this double[] values, double alpha = 0)
         {
-            if (values == null)
+            if (values is null)
                 throw new ArgumentNullException("values", "The vector cannot be null.");
 
             return values.ExponentialWeightedMean(values.Length, alpha);
@@ -113,7 +113,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         public static double ExponentialWeightedVariance(
             this double[] values, double alpha = 0, bool unbiased = false)
         {
-            if (values == null)
+            if (values is null)
                 throw new ArgumentNullException("values", "The vector cannot be null.");
 
             return values.ExponentialWeightedVariance(values.Length, alpha, unbiased);
@@ -1343,7 +1343,7 @@ namespace ISynergy.Framework.Mathematics.Statistics
         private static void Validate(double[] vector, int window, double alpha)
         {
             // Perform some basic error validation
-            if (vector == null)
+            if (vector is null)
                 throw new ArgumentNullException("vector", "The vector cannot be null.");
 
             if (alpha < 0 || alpha > 1)

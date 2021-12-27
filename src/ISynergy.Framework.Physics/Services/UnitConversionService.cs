@@ -40,9 +40,9 @@ namespace ISynergy.Framework.Physics.Services
         /// </remarks>
         public double Convert(IUnit source, double value, IUnit target)
         {
-            Argument.IsNotNull(nameof(source), source);
-            Argument.IsNotNull(nameof(value), value);
-            Argument.IsNotNull(nameof(target), target);
+            Argument.IsNotNull(source);
+            Argument.IsNotNull(value);
+            Argument.IsNotNull(target);
 
             if (target.Equals(source))
                 return value;
@@ -89,9 +89,9 @@ namespace ISynergy.Framework.Physics.Services
         /// <returns></returns>
         public double Convert(string sourceSymbol, double value, string targetSymbol)
         {
-            Argument.IsNotNull(nameof(sourceSymbol), sourceSymbol);
-            Argument.IsNotNull(nameof(value), value);
-            Argument.IsNotNull(nameof(targetSymbol), targetSymbol);
+            Argument.IsNotNull(sourceSymbol);
+            Argument.IsNotNull(value);
+            Argument.IsNotNull(targetSymbol);
 
             if (targetSymbol.Equals(sourceSymbol))
                 return value;

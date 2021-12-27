@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ISynergy.Framework.Core.Validation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using System;
 using System.Threading.Tasks;
@@ -25,10 +26,7 @@ namespace ISynergy.Framework.AspNetCore.Routing
         /// <exception cref="ArgumentNullException">httpContext</exception>
         public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
-            if (httpContext is null)
-            {
-                throw new ArgumentNullException(nameof(httpContext));
-            }
+            Argument.IsNotNull(httpContext);
 
             // Test if length of result complies with ISO2 country code,
             // else return ZeroResultTask.

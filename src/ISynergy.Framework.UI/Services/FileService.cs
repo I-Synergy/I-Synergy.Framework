@@ -271,7 +271,7 @@ namespace ISynergy.Framework.UI.Services
             initializeWithWindow.Initialize(hwnd);
 #endif
 
-            if (allowedTypes != null)
+            if (allowedTypes is not null)
             {
                 var hasAtleastOneType = false;
 

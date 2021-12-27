@@ -134,7 +134,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         public NonAdaptiveGaussKronrod(Func<double, double> function)
             : this()
         {
-            if (function == null)
+            if (function is null)
                 throw new ArgumentNullException("function");
 
             ToleranceAbsolute = 0;

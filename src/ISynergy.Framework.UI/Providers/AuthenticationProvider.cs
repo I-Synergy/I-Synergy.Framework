@@ -48,7 +48,7 @@ namespace ISynergy.Framework.UI.Providers
         /// <returns><c>true</c> if [has access to UI element] [the specified element]; otherwise, <c>false</c>.</returns>
         public bool HasAccessToUIElement(object element, object tag, string authorizationTag)
         {
-            if (authorizationTag != null && Context.CurrentProfile != null)
+            if (authorizationTag is not null && Context.CurrentProfile is not null)
             {
                 var roles = authorizationTag.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 

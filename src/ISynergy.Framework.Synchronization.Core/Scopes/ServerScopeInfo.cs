@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Runtime.Serialization;
@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Synchronization.Core.Scopes
         /// <summary>
         /// Scope name. Shared by all clients and the server
         /// </summary>
-        [DataMember(Name = "n", IsRequired = true, Order = 1)]
+        [DataMember(Name = "n", IsRequired = true)]
         public string Name { get; set; }
 
         /// <summary>
@@ -26,19 +26,19 @@ namespace ISynergy.Framework.Synchronization.Core.Scopes
         /// <summary>
         /// Setup. stored locally
         /// </summary>
-        [DataMember(Name = "s", IsRequired = true, Order = 2)]
+        [DataMember(Name = "s", IsRequired = true)]
         public SyncSetup Setup { get; set; }
 
         /// <summary>
         /// Gets or Sets the schema version
         /// </summary>
-        [DataMember(Name = "v", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "v", IsRequired = false, EmitDefaultValue = false)]
         public string Version { get; set; }
 
         /// <summary>
         /// Gets or Sets the last timestamp a sync has occured. This timestamp is set just 'before' sync start.
         /// </summary>
-        [DataMember(Name = "lst", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "lst", IsRequired = false, EmitDefaultValue = false)]
         public long LastCleanupTimestamp { get; set; }
 
 

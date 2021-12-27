@@ -9,14 +9,14 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
     public class JsonConverterFactory : ISerializerFactory
     {
         public string Key => "json";
-        private static JsonConverterFactory instance = null;
-        public static JsonConverterFactory Current => instance ?? new JsonConverterFactory();
 
         public ISerializer<T> GetSerializer<T>() => new JsonConverter<T>();
+
     }
 
     public class JsonConverter<T> : ISerializer<T>
     {
+
         public async Task<T> DeserializeAsync(Stream ms)
         {
             using var sr = new StreamReader(ms);
@@ -45,5 +45,6 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
 
             return ms.ToArray();
         }
+
     }
 }

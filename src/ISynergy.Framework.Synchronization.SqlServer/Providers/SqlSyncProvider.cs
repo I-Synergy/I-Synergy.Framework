@@ -1,14 +1,13 @@
 ﻿using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Metadata;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Manager;
 using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.Adapters;
 using ISynergy.Framework.Synchronization.SqlServer.Builders;
-using ISynergy.Framework.Synchronization.SqlServer.Exceptions;
+using ISynergy.Framework.Synchronization.SqlServer.Detectors;
 using ISynergy.Framework.Synchronization.SqlServer.Metadata;
 using System;
 using System.Data.Common;
@@ -18,19 +17,28 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Providers
 {
     public class SqlSyncProvider : CoreProvider
     {
-        private DbMetadata dbMetadata;
-        static string providerType;
+        private DbMetadata _dbMetadata;
+        static string _providerType;
+
         public SqlSyncProvider() : base()
         { }
 
-        public SqlSyncProvider(string connectionString) : base() => this.ConnectionString = connectionString;
+        public SqlSyncProvider(string connectionString) : base()
+        {
+            ConnectionString = connectionString;
+
+            if (!string.IsNullOrEmpty(ConnectionString))
+                SupportsMultipleActiveResultSets = new SqlConnectionStringBuilder(ConnectionString).MultipleActiveResultSets;
+
+        }
 
         public SqlSyncProvider(SqlConnectionStringBuilder builder) : base()
         {
             if (string.IsNullOrEmpty(builder.ConnectionString))
                 throw new Exception("You have to provide parameters to the Sql builder to be able to construct a valid connection string.");
 
-            this.ConnectionString = builder.ConnectionString;
+            ConnectionString = builder.ConnectionString;
+            SupportsMultipleActiveResultSets = builder.MultipleActiveResultSets;
         }
 
         public override string GetProviderTypeName() => ProviderType;
@@ -39,13 +47,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Providers
         {
             get
             {
-                if (!string.IsNullOrEmpty(providerType))
-                    return providerType;
+                if (!string.IsNullOrEmpty(_providerType))
+                    return _providerType;
 
                 var type = typeof(SqlSyncProvider);
-                providerType = $"{type.Name}, {type}";
+                _providerType = $"{type.Name}, {type}";
 
-                return providerType;
+                return _providerType;
             }
         }
 
@@ -54,10 +62,10 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Providers
         /// </summary>
         public override DbMetadata GetMetadata()
         {
-            if (dbMetadata == null)
-                dbMetadata = new SqlDbMetadata();
+            if (_dbMetadata is null)
+                _dbMetadata = new SqlDbMetadata();
 
-            return dbMetadata;
+            return _dbMetadata;
         }
 
         /// <summary>
@@ -67,9 +75,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Providers
 
         public override void EnsureSyncException(SyncException syncException)
         {
-            if (!string.IsNullOrEmpty(this.ConnectionString))
+            if (!string.IsNullOrEmpty(ConnectionString))
             {
-                var builder = new SqlConnectionStringBuilder(this.ConnectionString);
+                var builder = new SqlConnectionStringBuilder(ConnectionString);
 
                 syncException.DataSource = builder.DataSource;
                 syncException.InitialCatalog = builder.InitialCatalog;
@@ -78,7 +86,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Providers
             // Can add more info from SqlException
             var sqlException = syncException.InnerException as SqlException;
 
-            if (sqlException == null)
+            if (sqlException is null)
                 return;
 
             syncException.Number = sqlException.Number;
@@ -87,15 +95,9 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Providers
         }
 
         /// <summary>
-        /// Sql server support bulk operations through Table Value parameter
-        /// </summary>
-        public override bool SupportBulkOperations => true;
-
-        /// <summary>
         /// Sql Server supports to be a server side provider
         /// </summary>
         public override bool CanBeServerProvider => true;
-
 
         public override (ParserName tableName, ParserName trackingName) GetParsers(SyncTable tableDescription, SyncSetup setup)
         {
@@ -119,7 +121,7 @@ namespace ISynergy.Framework.Synchronization.SqlServer.Providers
             return (originalTableName, trackingTableName);
         }
 
-        public override DbConnection CreateConnection() => new SqlConnection(this.ConnectionString);
+        public override DbConnection CreateConnection() => new SqlConnection(ConnectionString);
         public override DbScopeBuilder GetScopeBuilder(string scopeInfoTableName) => new SqlScopeBuilder(scopeInfoTableName);
 
         /// <summary>

@@ -1,8 +1,9 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Builders;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Extensions;
 using ISynergy.Framework.Synchronization.SqlServer.Metadata;
+using ISynergy.Framework.Synchronization.SqlServer.Utilities;
 using System.Data.Common;
 using System.Threading.Tasks;
 
@@ -31,12 +32,19 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Tables
 
         public Task<DbCommand> GetCreateTrackingTableCommandAsync(DbConnection connection, DbTransaction transaction)
         {
-            var commandText = $"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = OFF);";
-
             var command = connection.CreateCommand();
+
+            if (_setup.HasTableWithColumns(_tableDescription.TableName))
+            {
+                command.CommandText = $"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = ON);";
+            }
+            else
+            {
+                command.CommandText = $"ALTER TABLE {_tableName.Schema().Quoted().ToString()} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = OFF);";
+            }
+
             command.Connection = connection;
             command.Transaction = transaction;
-            command.CommandText = commandText;
 
             return Task.FromResult(command);
         }

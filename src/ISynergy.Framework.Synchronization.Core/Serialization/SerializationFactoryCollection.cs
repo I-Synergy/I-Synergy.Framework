@@ -13,12 +13,12 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         /// <summary>
         /// Get the default Json serializer
         /// </summary>
-        public static ISerializerFactory JsonSerializer { get; } = new JsonConverterFactory();
+        public static ISerializerFactory JsonSerializerFactory { get; } = new JsonConverterFactory();
 
         /// <summary>
         /// Get the default Json serializer
         /// </summary>
-        public static ISerializerFactory DataContractSerializer { get; } = new ContractSerializerFactory();
+        public static ISerializerFactory DataContractSerializerFactory { get; } = new ContractSerializerFactory();
 
 
         /// <summary>
@@ -27,11 +27,11 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         public SerializersCollection()
         {
             // add json serializer, as default
-            this.Add(JsonSerializer);
+            Add(JsonSerializerFactory);
             // add utf8json serializer
-            //this.Add(Utf8JsonSerializer);
+            //Add(Utf8JsonSerializer);
             // add binary serializer;
-            this.Add(DataContractSerializer);
+            Add(DataContractSerializerFactory);
         }
 
         public ISerializerFactory this[string key]
@@ -57,6 +57,6 @@ namespace ISynergy.Framework.Synchronization.Core.Serialization
         public void RemoveAt(int index) => collection.RemoveAt(index);
         IEnumerator IEnumerable.GetEnumerator() => collection.GetEnumerator();
         public IEnumerator<ISerializerFactory> GetEnumerator() => collection.GetEnumerator();
-        public override string ToString() => this.collection.Count.ToString();
+        public override string ToString() => collection.Count.ToString();
     }
 }

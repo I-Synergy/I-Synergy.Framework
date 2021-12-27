@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeDictionary(IComparer<TKey> comparer)
         {
-            if (comparer == null)
+            if (comparer is null)
                 throw new ArgumentNullException("comparer");
 
             init(comparer);
@@ -113,12 +113,12 @@ namespace ISynergy.Framework.Core.Collections
         {
             var node = _tree.Find(item);
 
-            if (node == null)
+            if (node is null)
                 return false;
 
             var result = _tree.Remove(node);
 
-            return result != null;
+            return result is not null;
         }
 
 
@@ -134,7 +134,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool ContainsKey(TKey key)
         {
-            return _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue))) != null;
+            return _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue))) is not null;
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             var result = _tree.Find(item);
 
-            return result != null && item.Value.Equals(result.Value);
+            return result is not null && item.Value.Equals(result.Value);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace ISynergy.Framework.Core.Collections
 
             var result = _tree.Find(new KeyValuePair<TKey, TValue>(key, value));
 
-            if (result == null)
+            if (result is null)
                 return false;
 
             value = result.Value.Value;
@@ -220,7 +220,7 @@ namespace ISynergy.Framework.Core.Collections
             {
                 var result = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
 
-                if (result == null)
+                if (result is null)
                     throw new KeyNotFoundException("The requested key was not found in the present tree.");
 
                 return result.Value.Value;
@@ -231,7 +231,7 @@ namespace ISynergy.Framework.Core.Collections
 
                 var result = _tree.Find(pair);
 
-                if (result != null)
+                if (result is not null)
                 {
                     result.Value = pair;
                 }
@@ -370,7 +370,7 @@ namespace ISynergy.Framework.Core.Collections
             var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
             var prevNode = _tree.GetPreviousNode(node);
 
-            if (prevNode != null)
+            if (prevNode is not null)
                 return prevNode.Value;
 
             throw new KeyNotFoundException("There are no ancestor keys in the dictionary.");
@@ -398,7 +398,7 @@ namespace ISynergy.Framework.Core.Collections
             var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
             var prevNode = _tree.GetPreviousNode(node);
 
-            if (prevNode != null)
+            if (prevNode is not null)
             {
                 prev = prevNode.Value;
                 return true;
@@ -423,7 +423,7 @@ namespace ISynergy.Framework.Core.Collections
             var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
             var nextNode = _tree.GetNextNode(node);
 
-            if (nextNode != null)
+            if (nextNode is not null)
                 return nextNode.Value;
 
             throw new KeyNotFoundException("There are no successor keys in the dictionary.");
@@ -451,7 +451,7 @@ namespace ISynergy.Framework.Core.Collections
             var node = _tree.Find(new KeyValuePair<TKey, TValue>(key, default(TValue)));
             var nextNode = _tree.GetNextNode(node);
 
-            if (nextNode != null)
+            if (nextNode is not null)
             {
                 next = nextNode.Value;
                 return true;

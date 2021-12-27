@@ -50,7 +50,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public virtual IEnumerator<TNode> GetEnumerator()
         {
-            if (Root == null)
+            if (Root is null)
                 yield break;
 
             var stack = new Stack<TNode>(new[] { Root });
@@ -61,10 +61,10 @@ namespace ISynergy.Framework.Core.Collections
 
                 yield return current;
 
-                if (current.Left != null)
+                if (current.Left is not null)
                     stack.Push(current.Left);
 
-                if (current.Right != null)
+                if (current.Right is not null)
                     stack.Push(current.Right);
             }
         }

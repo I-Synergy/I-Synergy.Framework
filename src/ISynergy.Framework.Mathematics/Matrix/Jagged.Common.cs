@@ -396,7 +396,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static T[][] GetSymmetric<T>(this T[][] matrix, MatrixType type, T[][] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = Jagged.CreateAs(matrix);
 
             switch (type)
@@ -423,7 +423,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsDiagonal<T>(this T[][] matrix) where T : IComparable
         {
-            if (matrix == null)
+            if (matrix is null)
                 throw new ArgumentNullException("matrix");
 
             var zero = default(T);

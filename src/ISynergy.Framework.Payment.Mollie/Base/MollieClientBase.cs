@@ -32,7 +32,7 @@ namespace ISynergy.Framework.Payment.Mollie.Base
         protected MollieClientBase(IMollieClientService clientService, IOptions<MollieApiOptions> options, ILogger<MollieClientBase> logger) 
             : base(logger)
         {
-            Argument.IsNotNull(nameof(options), options);
+            Argument.IsNotNull(options);
 
             _clientService = clientService;
             _mollieApiOptions = options.Value;

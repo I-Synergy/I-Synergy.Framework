@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Scopes;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,75 +12,92 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public partial class RemoteOrchestrator
     {
         /// <summary>
         /// Upgrade the database structure to reach the last DMS version
         /// </summary>
-        public virtual Task<bool> UpgradeAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
+        public virtual async Task<bool> UpgradeAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            if (this.Setup is null)
+            if (Setup is null)
                 return false;
 
-            // get Database builder
-            var dbBuilder = this.Provider.GetDatabaseBuilder();
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.Provisioning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                var dbBuilder = Provider.GetDatabaseBuilder();
 
-            // Initialize database if needed
-            await dbBuilder.EnsureDatabaseAsync(connection, transaction).ConfigureAwait(false);
+                // Initialize database if needed
+                await dbBuilder.EnsureDatabaseAsync(runner.Connection, runner.Transaction).ConfigureAwait(false);
 
-            // Get schema
-            var schema = await this.InternalGetSchemaAsync(ctx, this.Setup, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                // Get schema
+                var schema = await InternalGetSchemaAsync(GetContext(), Setup, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            // If schema does not have any table, raise an exception
-            if (schema is null || schema.Tables is null || !schema.HasTables)
-                throw new MissingTablesException();
+                // If schema does not have any table, raise an exception
+                if (schema is null || schema.Tables is null || !schema.HasTables)
+                    throw new MissingTablesException();
 
-            var builder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
+                var builder = GetScopeBuilder(Options.ScopeInfoTableName);
 
-            var serverScopeInfos = await this.InternalGetAllScopesAsync<ServerScopeInfo>(ctx, DbScopeType.Server, this.ScopeName, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                var serverScopeInfos = await InternalGetAllScopesAsync<ServerScopeInfo>(GetContext(), DbScopeType.Server, ScopeName, builder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            if (serverScopeInfos is null || serverScopeInfos.Count <= 0)
-                throw new MissingServerScopeInfoException();
+                if (serverScopeInfos is null || serverScopeInfos.Count <= 0)
+                    throw new MissingServerScopeInfoException();
 
-            return await this.InternalUpgradeAsync(ctx, schema, serverScopeInfos, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                var r = await InternalUpgradeAsync(GetContext(), schema, serverScopeInfos, builder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-        }, connection, transaction, cancellationToken);
+                await runner.CommitAsync().ConfigureAwait(false);
+
+                return r;
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
 
         /// <summary>
         /// Check if we need to upgrade the Database Structure
         /// </summary>
-        public virtual Task<bool> NeedsToUpgradeAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
-        => RunInTransactionAsync(SyncStage.Provisioning, async (ctx, connection, transaction) =>
+        public virtual async Task<bool> NeedsToUpgradeAsync(DbConnection connection = default, DbTransaction transaction = default, CancellationToken cancellationToken = default, IProgress<ProgressArgs> progress = null)
         {
-            // get Database builder
-            var dbBuilder = this.Provider.GetDatabaseBuilder();
+            try
+            {
+                await using var runner = await this.GetConnectionAsync(SyncStage.Provisioning, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                // get Database builder
+                var dbBuilder = Provider.GetDatabaseBuilder();
 
-            // Initialize database if needed
-            await dbBuilder.EnsureDatabaseAsync(connection, transaction).ConfigureAwait(false);
+                // Initialize database if needed
+                await dbBuilder.EnsureDatabaseAsync(runner.Connection, runner.Transaction).ConfigureAwait(false);
 
-            var builder = this.GetScopeBuilder(this.Options.ScopeInfoTableName);
+                var builder = GetScopeBuilder(Options.ScopeInfoTableName);
 
-            var exists = await this.InternalExistsScopeInfoTableAsync(ctx, DbScopeType.Server, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                var exists = await InternalExistsScopeInfoTableAsync(GetContext(), DbScopeType.Server, builder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            if (!exists)
-                return false;
+                if (!exists)
+                    return false;
 
-            var scopes = await this.InternalGetAllScopesAsync<ServerScopeInfo>(ctx, DbScopeType.Server, this.ScopeName, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                var scopes = await InternalGetAllScopesAsync<ServerScopeInfo>(GetContext(), DbScopeType.Server, ScopeName, builder, runner.Connection, runner.Transaction, cancellationToken, progress).ConfigureAwait(false);
 
-            if (scopes is null || scopes.Count <= 0)
-                return false;
+                if (scopes is null || scopes.Count <= 0)
+                    return false;
 
-            return InternalNeedsToUpgrade(ctx, scopes);
+                await runner.CommitAsync().ConfigureAwait(false);
 
-        }, connection, transaction, cancellationToken);
+                return InternalNeedsToUpgrade(GetContext(), scopes);
+            }
+            catch (Exception ex)
+            {
+                throw GetSyncError(ex);
+            }
+        }
 
         internal virtual bool InternalNeedsToUpgrade(SyncContext context, List<ServerScopeInfo> serverScopeInfos)
         {
-            var version = _versionService.ProductVersion;
+            var version = _versionService.ProductVersion;;
 
             // get the smallest version of all scope in the scope info server tables
             foreach (var serverScopeInfo in serverScopeInfos)
@@ -92,16 +108,14 @@ namespace ISynergy.Framework.Synchronization.Core
                     version = tmpVersion;
             }
 
-            return version < _versionService.ProductVersion;
-
+            return version < _versionService.ProductVersion;;
         }
 
 
         internal virtual async Task<bool> InternalUpgradeAsync(SyncContext context, SyncSet schema, List<ServerScopeInfo> serverScopeInfos, DbScopeBuilder builder, DbConnection connection, DbTransaction transaction,
                         CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-
-            var version = _versionService.ProductVersion;
+            var version = _versionService.ProductVersion;;
 
             // get the smallest version of all scope in the scope info server tables
             foreach (var serverScopeInfo in serverScopeInfos)
@@ -148,6 +162,12 @@ namespace ISynergy.Framework.Synchronization.Core
                 if (version.Minor == 9 && version.Build == 0)
                     version = await AutoUpgdrateToNewVersionAsync(context, new Version(0, 9, 1), connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
+                if (version.Minor == 9 && version.Build == 1)
+                    version = await UpgdrateTo093Async(context, schema, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+
+                if (version.Minor == 9 && version.Build == 2)
+                    version = await UpgdrateTo093Async(context, schema, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+
             }
 
             foreach (var serverScopeInfo in serverScopeInfos)
@@ -156,11 +176,11 @@ namespace ISynergy.Framework.Synchronization.Core
                 if (oldVersion != version)
                 {
                     serverScopeInfo.Version = version.ToString();
-                    await this.InternalSaveScopeAsync(context, DbScopeType.Server, serverScopeInfo, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                    await InternalSaveScopeAsync(context, DbScopeType.Server, serverScopeInfo, builder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 }
             }
 
-            return version == _versionService.ProductVersion;
+            return version == _versionService.ProductVersion;;
 
         }
 
@@ -175,21 +195,17 @@ namespace ISynergy.Framework.Synchronization.Core
                     .Select(r => r.GetParentTable()));
 
             var message = $"Upgrade to {newVersion}:";
-            var args = new UpgradeProgressArgs(context, message, newVersion, connection, transaction);
-            this.ReportProgress(context, progress, args, connection, transaction);
+            await InterceptAsync(new UpgradeProgressArgs(context, message, newVersion, connection, transaction), progress, cancellationToken);
 
             foreach (var schemaTable in schemaTables)
             {
-                var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
                 await InternalCreateStoredProceduresAsync(context, true, tableBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-                args = new UpgradeProgressArgs(context, $"ALL Stored procedures for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction);
-                this.ReportProgress(context, progress, args, connection, transaction);
+                await InterceptAsync(new UpgradeProgressArgs(context, $"ALL Stored procedures for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
             }
 
             message = "Upgrade to 0.6.1 done.";
-            args = new UpgradeProgressArgs(context, message, newVersion, connection, transaction);
-            this.ReportProgress(context, progress, args, connection, transaction);
+            await InterceptAsync(new UpgradeProgressArgs(context, message, newVersion, connection, transaction), progress, cancellationToken);
 
             return newVersion;
         }
@@ -200,9 +216,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var newVersion = new Version(0, 6, 2);
 
             var message = $"Upgrade to {newVersion}:";
-            var args = new UpgradeProgressArgs(context, message, newVersion, connection, transaction);
-            this.ReportProgress(context, progress, args, connection, transaction);
-            // Update the "Update trigger" for all tables
+            await InterceptAsync(new UpgradeProgressArgs(context, message, newVersion, connection, transaction), progress, cancellationToken);
 
 
             // Sorting tables based on dependencies between them
@@ -212,7 +226,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             foreach (var schemaTable in schemaTables)
             {
-                var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
 
                 // Upgrade Select Initial Changes
                 var exists = await InternalExistsTriggerAsync(context, tableBuilder, DbTriggerType.Update, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
@@ -220,16 +234,11 @@ namespace ISynergy.Framework.Synchronization.Core
                     await InternalDropTriggerAsync(context, tableBuilder, DbTriggerType.Update, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 await InternalCreateTriggerAsync(context, tableBuilder, DbTriggerType.Update, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                args = new UpgradeProgressArgs(context, $"Update Trigger for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction);
-                this.ReportProgress(context, progress, args, connection, transaction);
-
+                await InterceptAsync(new UpgradeProgressArgs(context, $"Update Trigger for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
             }
 
             message = $"Upgrade to {newVersion} done.";
-            args = new UpgradeProgressArgs(context, message, newVersion, connection, transaction);
-            this.ReportProgress(context, progress, args, connection, transaction);
-
-
+            await InterceptAsync(new UpgradeProgressArgs(context, message, newVersion, connection, transaction), progress, cancellationToken);
 
             return newVersion;
         }
@@ -246,12 +255,11 @@ namespace ISynergy.Framework.Synchronization.Core
                     .Select(r => r.GetParentTable()));
 
             var message = $"Upgrade to {newVersion}:";
-            var args = new UpgradeProgressArgs(context, message, newVersion, connection, transaction);
-            this.ReportProgress(context, progress, args, connection, transaction);
+            await InterceptAsync(new UpgradeProgressArgs(context, message, newVersion, connection, transaction), progress, cancellationToken);
 
             foreach (var schemaTable in schemaTables)
             {
-                var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
 
                 // Upgrade Reset stored procedure
                 var exists = await InternalExistsStoredProcedureAsync(context, tableBuilder,
@@ -260,8 +268,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     await InternalDropStoredProcedureAsync(context, tableBuilder, DbStoredProcedureType.Reset, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 await InternalCreateStoredProcedureAsync(context, tableBuilder, DbStoredProcedureType.Reset, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                args = new UpgradeProgressArgs(context, $"Reset stored procedure for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction);
-                this.ReportProgress(context, progress, args, connection, transaction);
+                await InterceptAsync(new UpgradeProgressArgs(context, $"Reset stored procedure for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
                 // Upgrade Update stored procedure
                 var existsUpdateSP = await InternalExistsStoredProcedureAsync(context, tableBuilder,
@@ -270,24 +277,18 @@ namespace ISynergy.Framework.Synchronization.Core
                     await InternalDropStoredProcedureAsync(context, tableBuilder, DbStoredProcedureType.UpdateRow, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 await InternalCreateStoredProcedureAsync(context, tableBuilder, DbStoredProcedureType.UpdateRow, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
 
-                args = new UpgradeProgressArgs(context, $"Update stored procedure for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction);
-                this.ReportProgress(context, progress, args, connection, transaction);
+                await InterceptAsync(new UpgradeProgressArgs(context, $"Update stored procedure for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
-                // Upgrade Bulk Update stored procedure
-                if (this.Provider.SupportBulkOperations)
+                var existsBulkUpdateSP = await InternalExistsStoredProcedureAsync(context, tableBuilder,
+                    DbStoredProcedureType.BulkUpdateRows, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+
+                if (existsBulkUpdateSP)
                 {
-                    var existsBulkUpdateSP = await InternalExistsStoredProcedureAsync(context, tableBuilder,
-                        DbStoredProcedureType.BulkUpdateRows, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-                    if (existsBulkUpdateSP)
-                        await InternalDropStoredProcedureAsync(context, tableBuilder, DbStoredProcedureType.BulkUpdateRows, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+                    await InternalDropStoredProcedureAsync(context, tableBuilder, DbStoredProcedureType.BulkUpdateRows, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                     await InternalCreateStoredProcedureAsync(context, tableBuilder, DbStoredProcedureType.BulkUpdateRows, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-                    args = new UpgradeProgressArgs(context, $"Bulk Update stored procedure for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction);
-                    this.ReportProgress(context, progress, args, connection, transaction);
+                    await InterceptAsync(new UpgradeProgressArgs(context, $"Bulk Update stored procedure for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
                 }
-
             }
-
             return newVersion;
         }
 
@@ -304,30 +305,45 @@ namespace ISynergy.Framework.Synchronization.Core
                     .Select(r => r.GetParentTable()));
 
             var message = $"Upgrade to {newVersion}:";
-            var args = new UpgradeProgressArgs(context, message, newVersion, connection, transaction);
-            this.ReportProgress(context, progress, args, connection, transaction);
+            await InterceptAsync(new UpgradeProgressArgs(context, message, newVersion, connection, transaction), progress, cancellationToken);
 
             foreach (var schemaTable in schemaTables)
             {
-                var tableBuilder = this.GetTableBuilder(schemaTable, this.Setup);
+                var tableBuilder = GetTableBuilder(schemaTable, Setup);
                 await InternalCreateStoredProceduresAsync(context, true, tableBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
-
-                args = new UpgradeProgressArgs(context, $"ALL Stored procedures for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction);
-                this.ReportProgress(context, progress, args, connection, transaction);
+                await InterceptAsync(new UpgradeProgressArgs(context, $"ALL Stored procedures for table {tableBuilder.TableDescription.GetFullName()} updated", newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
             }
 
             return newVersion;
         }
 
 
-
-        private Task<Version> AutoUpgdrateToNewVersionAsync(SyncContext context, Version newVersion, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
+        private async Task<Version> UpgdrateTo093Async(SyncContext context, SyncSet schema, DbConnection connection, DbTransaction transaction,
+               CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
         {
-            var message = $"Upgrade to {newVersion}:";
-            var args = new UpgradeProgressArgs(context, message, newVersion, connection, transaction);
-            this.ReportProgress(context, progress, args, connection, transaction);
 
-            return Task.FromResult(newVersion);
+            var newVersion = new Version(0, 9, 3);
+            // Sorting tables based on dependencies between them
+
+            var schemaTables = schema.Tables
+                .SortByDependencies(tab => tab.GetRelations()
+                    .Select(r => r.GetParentTable()));
+
+            await InterceptAsync(new UpgradeProgressArgs(context, $"Upgrade to {newVersion}:", newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+
+            var provision = SyncProvision.StoredProcedures | SyncProvision.Triggers;
+
+            await DeprovisionAsync(provision, null, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+            await ProvisionAsync(provision, false, null, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
+
+            return newVersion;
+        }
+
+        private async Task<Version> AutoUpgdrateToNewVersionAsync(SyncContext context, Version newVersion, DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)
+        {
+            await InterceptAsync(new UpgradeProgressArgs(context, $"Upgrade to {newVersion}:", newVersion, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
+
+            return newVersion;
         }
     }
 }

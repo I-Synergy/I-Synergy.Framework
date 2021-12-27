@@ -90,10 +90,10 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
             double[] solution, double xnorm,
             double value, double stp, bool finished)
         {
-            if (gradient != null)
+            if (gradient is not null)
                 Gradient = (double[])gradient.Clone();
 
-            if (solution != null)
+            if (solution is not null)
                 Solution = (double[])solution.Clone();
 
             Value = value;

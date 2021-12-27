@@ -47,7 +47,7 @@ namespace ISynergy.Framework.Core.Extensions
             Func<TSource, TSource> nextItem)
             where TSource : class
         {
-            return FromHierarchy(source, nextItem, s => s != null);
+            return FromHierarchy(source, nextItem, s => s is not null);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
         public static bool CanMoveItemUp(this IList list, object item)
         {
-            Argument.IsNotNull(nameof(list), list);
+            Argument.IsNotNull(list);
 
             if (item is null)
             {
@@ -89,8 +89,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentNullException">The <paramref name="item" /> is <c>null</c>.</exception>
         public static bool MoveItemUp(this IList list, object item)
         {
-            Argument.IsNotNull(nameof(list), list);
-            Argument.IsNotNull(nameof(item), item);
+            Argument.IsNotNull(list);
+            Argument.IsNotNull(item);
 
             var currentIndex = list.IndexOf(item);
 
@@ -111,7 +111,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
         public static bool CanMoveItemDown(this IList list, object item)
         {
-            Argument.IsNotNull(nameof(list), list);
+            Argument.IsNotNull(list);
 
             if (item is null)
             {
@@ -148,8 +148,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="index" /> is smaller than 0 or larger than the list count.</exception>
         public static bool MoveItemUpByIndex(this IList list, int index)
         {
-            Argument.IsNotNull(nameof(list), list);
-            Argument.IsNotOutOfRange(nameof(index), index, 0, list.Count - 1);
+            Argument.IsNotNull(list);
+            Argument.IsNotOutOfRange(index, 0, list.Count - 1);
 
             if (list.Count < index - 1)
             {
@@ -178,8 +178,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentNullException">The <paramref name="item" /> is <c>null</c>.</exception>
         public static bool MoveItemDown(this IList list, object item)
         {
-            Argument.IsNotNull(nameof(list), list);
-            Argument.IsNotNull(nameof(item), item);
+            Argument.IsNotNull(list);
+            Argument.IsNotNull(item);
 
             var currentIndex = list.IndexOf(item);
 
@@ -201,8 +201,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="index" /> is smaller than 0 or larger than the list count.</exception>
         public static bool MoveItemDownByIndex(this IList list, int index)
         {
-            Argument.IsNotNull(nameof(list), list);
-            Argument.IsNotOutOfRange(nameof(index), index, 0, list.Count - 1);
+            Argument.IsNotNull(list);
+            Argument.IsNotOutOfRange(index, 0, list.Count - 1);
 
             if (list.Count < index - 1)
             {
@@ -263,8 +263,8 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentNullException">The <paramref name="range" /> is <c>null</c>.</exception>
         public static void ReplaceRange<T>(this ICollection<T> collection, IEnumerable<T> range)
         {
-            Argument.IsNotNull(nameof(collection), collection);
-            Argument.IsNotNull(nameof(range), range);
+            Argument.IsNotNull(collection);
+            Argument.IsNotNull(range);
 
             collection.Clear();
 
@@ -280,7 +280,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
         public static void RemoveFirst(this IList list)
         {
-            Argument.IsNotNull(nameof(list), list);
+            Argument.IsNotNull(list);
 
             if (list.Count == 0)
             {
@@ -299,7 +299,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentNullException">The <paramref name="list" /> is <c>null</c>.</exception>
         public static void RemoveLast(this IList list)
         {
-            Argument.IsNotNull(nameof(list), list);
+            Argument.IsNotNull(list);
 
             if (list.Count == 0)
             {
@@ -330,7 +330,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="ArgumentNullException">The <paramref name="collection" /> is <c>null</c>.</exception>
         public static ReadOnlyCollection<T> AsReadOnly<T>(this IList<T> collection)
         {
-            Argument.IsNotNull(nameof(collection), collection);
+            Argument.IsNotNull(collection);
 
             return new ReadOnlyCollection<T>(collection);
         }
@@ -343,9 +343,9 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns>Array.</returns>
         public static Array ToArray(this IEnumerable collection, Type elementType)
         {
-            Argument.IsNotNull(nameof(elementType), elementType);
+            Argument.IsNotNull(elementType);
 
-            var internalList = new List<object>(collection != null ? collection.Cast<object>() : Array.Empty<object>());
+            var internalList = new List<object>(collection is not null ? collection.Cast<object>() : Array.Empty<object>());
             var array = Array.CreateInstance(elementType, internalList.Count);
 
             var index = 0;
@@ -405,7 +405,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="comparer">The comparer.</param>
         public static void Sort<T>(this IList<T> existingSet, Func<T, T, int> comparer = null)
         {
-            Argument.IsNotNull(nameof(existingSet), existingSet);
+            Argument.IsNotNull(existingSet);
 
             for (var i = existingSet.Count - 1; i >= 0; i--)
             {

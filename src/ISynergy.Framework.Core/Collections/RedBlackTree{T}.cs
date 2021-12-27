@@ -172,7 +172,7 @@ namespace ISynergy.Framework.Core.Collections
             item.Left = null;
             item.Right = null;
 
-            if (p == null)
+            if (p is null)
             {
                 _root = item;
                 item.Color = RedBlackTreeNodeType.Black;
@@ -193,7 +193,7 @@ namespace ISynergy.Framework.Core.Collections
                 else if (cmp <= 0)
                 {
                     // k <= p.k
-                    if (p.Left != null)
+                    if (p.Left is not null)
                         p = p.Left;
                     else
                     {
@@ -204,7 +204,7 @@ namespace ISynergy.Framework.Core.Collections
                 }
                 else
                 {
-                    if (p.Right != null)
+                    if (p.Right is not null)
                         p = p.Right;
                     else
                     {
@@ -222,12 +222,12 @@ namespace ISynergy.Framework.Core.Collections
                 // red cannot have red child
                 var u = p == p.Parent.Left ? p.Parent.Right : p.Parent.Left;
 
-                if (u != null && u.Color == RedBlackTreeNodeType.Red)
+                if (u is not null && u.Color == RedBlackTreeNodeType.Red)
                 {
                     p.Color = u.Color = RedBlackTreeNodeType.Black;
                     item = p.Parent;
 
-                    if ((p = item.Parent) != null)
+                    if ((p = item.Parent) is not null)
                     {
                         item.Color = RedBlackTreeNodeType.Red;
                         goto fixtree;
@@ -274,10 +274,10 @@ namespace ISynergy.Framework.Core.Collections
         {
             var node = Find(item);
 
-            if (node == null)
+            if (node is null)
                 return false;
 
-            return Remove(node) != null;
+            return Remove(node) is not null;
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         bool ICollection<RedBlackTreeNode<T>>.Remove(RedBlackTreeNode<T> item)
         {
-            return Remove(item) != null;
+            return Remove(item) is not null;
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             var node = Find(item);
 
-            if (node == null)
+            if (node is null)
                 return null;
 
             return Remove(node);
@@ -331,20 +331,20 @@ namespace ISynergy.Framework.Core.Collections
 
             RedBlackTreeNode<T> m, mp;
 
-            if (node.Left != null && node.Right != null)
+            if (node.Left is not null && node.Right is not null)
             {
                 var lmax = node.Left;
 
-                while (lmax.Right != null)
+                while (lmax.Right is not null)
                     lmax = lmax.Right;
 
                 node.Value = lmax.Value;
                 node = lmax;
             }
 
-            m = node.Left != null ? node.Left : node.Right;
+            m = node.Left is not null ? node.Left : node.Right;
 
-            if (node.Parent != null)
+            if (node.Parent is not null)
             {
                 if (node.Parent.Right == node)
                     node.Parent.Right = m;
@@ -356,12 +356,12 @@ namespace ISynergy.Framework.Core.Collections
             }
 
             mp = node.Parent;
-            if (m != null)
+            if (m is not null)
                 m.Parent = mp;
 
             if (node.Color == RedBlackTreeNodeType.Black)
             {
-                if (m != null && m.Color == RedBlackTreeNodeType.Red)
+                if (m is not null && m.Color == RedBlackTreeNodeType.Red)
                 {
                     m.Color = RedBlackTreeNodeType.Black;
                 }
@@ -369,7 +369,7 @@ namespace ISynergy.Framework.Core.Collections
                 {
 
                 deleteblack:
-                    if (mp != null)
+                    if (mp is not null)
                     {
                         var s = m == mp.Left ? mp.Right : mp.Left;
 
@@ -387,10 +387,10 @@ namespace ISynergy.Framework.Core.Collections
 
                         if (mp.Color == RedBlackTreeNodeType.Black
                           && s.Color == RedBlackTreeNodeType.Black
-                          && (s.Left == null || s.Left.Color == RedBlackTreeNodeType.Black)
-                          && (s.Right == null || s.Right.Color == RedBlackTreeNodeType.Black))
+                          && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
+                          && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                         {
-                            if (s != null)
+                            if (s is not null)
                                 s.Color = RedBlackTreeNodeType.Red;
 
                             m = mp;
@@ -400,10 +400,10 @@ namespace ISynergy.Framework.Core.Collections
                         }
                         else if (mp.Color == RedBlackTreeNodeType.Red
                             && s.Color == RedBlackTreeNodeType.Black
-                            && (s.Left == null || s.Left.Color == RedBlackTreeNodeType.Black)
-                            && (s.Right == null || s.Right.Color == RedBlackTreeNodeType.Black))
+                            && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
+                            && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                         {
-                            if (s != null)
+                            if (s is not null)
                                 s.Color = RedBlackTreeNodeType.Red;
 
                             mp.Color = RedBlackTreeNodeType.Black;
@@ -411,8 +411,8 @@ namespace ISynergy.Framework.Core.Collections
                         else
                         {
                             if (m == mp.Left && s.Color == RedBlackTreeNodeType.Black
-                                && (s.Left != null && s.Left.Color == RedBlackTreeNodeType.Red)
-                                && (s.Right == null || s.Right.Color == RedBlackTreeNodeType.Black))
+                                && (s.Left is not null && s.Left.Color == RedBlackTreeNodeType.Red)
+                                && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                             {
                                 s.Color = RedBlackTreeNodeType.Red;
                                 s.Left.Color = RedBlackTreeNodeType.Black;
@@ -422,8 +422,8 @@ namespace ISynergy.Framework.Core.Collections
                                 s = m == mp.Left ? mp.Right : mp.Left;
                             }
                             else if (m == mp.Right && s.Color == RedBlackTreeNodeType.Black
-                                && (s.Right != null && s.Right.Color == RedBlackTreeNodeType.Red)
-                                && (s.Left == null || s.Left.Color == RedBlackTreeNodeType.Black))
+                                && (s.Right is not null && s.Right.Color == RedBlackTreeNodeType.Red)
+                                && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black))
                             {
                                 s.Color = RedBlackTreeNodeType.Red;
                                 s.Right.Color = RedBlackTreeNodeType.Black;
@@ -522,11 +522,11 @@ namespace ISynergy.Framework.Core.Collections
             RedBlackTreeNode<T> node = _root;
             RedBlackTreeNode<T> lastNode = null;
 
-            while (node != null)
+            while (node is not null)
             {
                 if (lastNode == node.Parent)
                 {
-                    if (node.Left != null)
+                    if (node.Left is not null)
                     {
                         lastNode = node;
                         node = node.Left;
@@ -542,7 +542,7 @@ namespace ISynergy.Framework.Core.Collections
                 {
                     yield return node;
 
-                    if (node.Right != null)
+                    if (node.Right is not null)
                     {
                         lastNode = node;
                         node = node.Right;
@@ -594,7 +594,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool Contains(T item)
         {
-            return Find(item) != null;
+            return Find(item) is not null;
         }
 
         /// <summary>
@@ -609,7 +609,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool Contains(RedBlackTreeNode<T> item)
         {
-            return Find(item.Value) != null;
+            return Find(item.Value) is not null;
         }
 
         /// <summary>
@@ -627,7 +627,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             var p = _root;
 
-            while (p != null)
+            while (p is not null)
             {
                 int comp = _compare.Compare(item, p.Value);
 
@@ -656,14 +656,14 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> FindLessThanOrEqualTo(RedBlackTreeNode<T> node, T value)
         {
-            while (node != null)
+            while (node is not null)
             {
                 if (_compare.Compare(node.Value, value) <= 0)
                 {
                     // p.k <= k
                     var r = FindLessThanOrEqualTo(node.Right, value);
 
-                    if (r != null)
+                    if (r is not null)
                         return r;
                     return node;
                 }
@@ -710,14 +710,14 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> FindLessThan(RedBlackTreeNode<T> node, T value)
         {
-            while (node != null)
+            while (node is not null)
             {
                 if (_compare.Compare(node.Value, value) < 0)
                 {
                     // p.k < k
                     var r = FindLessThan(node.Right, value);
 
-                    if (r != null)
+                    if (r is not null)
                         return r;
                     return node;
                 }
@@ -761,14 +761,14 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> FindGreaterThan(RedBlackTreeNode<T> node, T value)
         {
-            while (node != null)
+            while (node is not null)
             {
                 if (_compare.Compare(node.Value, value) > 0)
                 {
                     // p.k > k
                     var l = FindGreaterThan(node.Left, value);
 
-                    if (l != null)
+                    if (l is not null)
                         return l;
                     return node;
                 }
@@ -811,7 +811,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             var n = this._root;
 
-            while (n != null && n.Left != null)
+            while (n is not null && n.Left is not null)
             {
                 n = n.Left;
             }
@@ -832,7 +832,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             var n = this._root;
 
-            while (n != null && n.Right != null)
+            while (n is not null && n.Right is not null)
             {
                 n = n.Right;
             }
@@ -854,22 +854,22 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> GetNextNode(RedBlackTreeNode<T> node)
         {
-            if (node == null)
+            if (node is null)
                 return null;
 
-            if (node.Right == null)
+            if (node.Right is null)
             {
                 RedBlackTreeNode<T> prev;
                 do
                 {
                     prev = node;
                     node = node.Parent;
-                } while (node != null && prev == node.Right);
+                } while (node is not null && prev == node.Right);
             }
             else
             {
                 node = node.Right;
-                while (node.Left != null)
+                while (node.Left is not null)
                     node = node.Left;
             }
 
@@ -890,10 +890,10 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public RedBlackTreeNode<T> GetPreviousNode(RedBlackTreeNode<T> node)
         {
-            if (node == null)
+            if (node is null)
                 return null;
 
-            if (node.Left == null)
+            if (node.Left is null)
             {
                 RedBlackTreeNode<T> prev;
 
@@ -901,12 +901,12 @@ namespace ISynergy.Framework.Core.Collections
                 {
                     prev = node;
                     node = node.Parent;
-                } while (node != null && prev == node.Left);
+                } while (node is not null && prev == node.Left);
             }
             else
             {
                 node = node.Left;
-                while (node.Right != null)
+                while (node.Right is not null)
                     node = node.Right;
             }
 
@@ -936,7 +936,7 @@ namespace ISynergy.Framework.Core.Collections
             p.Right = n.Left;
             n.Left = p;
 
-            if (p.Parent != null)
+            if (p.Parent is not null)
             {
                 if (p == p.Parent.Left)
                     p.Parent.Left = n;
@@ -950,7 +950,7 @@ namespace ISynergy.Framework.Core.Collections
             n.Parent = p.Parent;
             p.Parent = n;
 
-            if (p.Right != null)
+            if (p.Right is not null)
                 p.Right.Parent = p;
         }
 
@@ -961,7 +961,7 @@ namespace ISynergy.Framework.Core.Collections
             p.Left = n.Right;
             n.Right = p;
 
-            if (p.Parent != null)
+            if (p.Parent is not null)
             {
                 if (p == p.Parent.Left)
                     p.Parent.Left = n;
@@ -975,7 +975,7 @@ namespace ISynergy.Framework.Core.Collections
             n.Parent = p.Parent;
             p.Parent = n;
 
-            if (p.Left != null)
+            if (p.Left is not null)
                 p.Left.Parent = p;
         }
 
@@ -986,30 +986,30 @@ namespace ISynergy.Framework.Core.Collections
             int nbl = 0;
             int nbr = 0;
 
-            if (n == null)
+            if (n is null)
             {
                 nblack = 0;
                 return true;
             }
 
-            if (n.Right != null && n.Right.Parent != n)
+            if (n.Right is not null && n.Right.Parent != n)
                 return false;
 
-            if (n.Right != null && _compare.Compare(n.Right.Value, n.Value) < 0)
+            if (n.Right is not null && _compare.Compare(n.Right.Value, n.Value) < 0)
                 return false;
 
-            if (n.Left != null && n.Left.Parent != n)
+            if (n.Left is not null && n.Left.Parent != n)
                 return false;
 
-            if (n.Left != null && _compare.Compare(n.Left.Value, n.Value) > 0)
+            if (n.Left is not null && _compare.Compare(n.Left.Value, n.Value) > 0)
                 return false;
 
             if (n.Color == RedBlackTreeNodeType.Red)
             {
-                if (n.Right != null && n.Right.Color == RedBlackTreeNodeType.Red)
+                if (n.Right is not null && n.Right.Color == RedBlackTreeNodeType.Red)
                     return false;
 
-                if (n.Left != null && n.Left.Color == RedBlackTreeNodeType.Red)
+                if (n.Left is not null && n.Left.Color == RedBlackTreeNodeType.Red)
                     return false;
             }
 
@@ -1028,7 +1028,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             int nblack = 0;
 
-            if (_root == null)
+            if (_root is null)
                 return true;
 
             if (_root.Color != RedBlackTreeNodeType.Black)

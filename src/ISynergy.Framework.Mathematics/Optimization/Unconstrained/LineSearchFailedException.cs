@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
         /// </PermissionSet>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (info == null)
+            if (info is null)
                 throw new ArgumentNullException("info");
 
             base.GetObjectData(info, context);

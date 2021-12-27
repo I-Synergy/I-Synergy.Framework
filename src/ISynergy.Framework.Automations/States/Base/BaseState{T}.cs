@@ -37,8 +37,8 @@ namespace ISynergy.Framework.Automations.States.Base
         protected BaseState(T from, T to, TimeSpan @for)
             : base(@for)
         {
-            Argument.IsNotNull(nameof(from), from);
-            Argument.IsNotNull(nameof(to), to);
+            Argument.IsNotNull(from);
+            Argument.IsNotNull(to);
 
             From = from;
             To = to;

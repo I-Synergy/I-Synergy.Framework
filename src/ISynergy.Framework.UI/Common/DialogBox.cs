@@ -38,7 +38,7 @@ namespace ISynergy.Framework.UI.Common
                 Content = content,
                 PrimaryButtonText = ok
             };
-            if (cancel != null)
+            if (cancel is not null)
             {
                 dialog.SecondaryButtonText = cancel;
             }

@@ -172,7 +172,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             var castedMessage = testMessage as ITestMessage;
 
-            if (castedMessage != null)
+            if (castedMessage is not null)
             {
                 Assert.AreEqual(TestContent, castedMessage.Content);
                 _messageWasReceived = true;

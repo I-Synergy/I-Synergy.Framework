@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.SqlServer.Adapters;
 using System.Data;
@@ -18,13 +18,13 @@ namespace ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Adapters
         /// <summary>
         /// Overriding adapter since the update metadata is not a stored proc that we can override
         /// </summary>
-        public override DbCommand GetCommand(DbCommandType nameType, SyncFilter filter)
+        public override (DbCommand, bool) GetCommand(DbCommandType nameType, SyncFilter filter)
         {
             if (nameType == DbCommandType.UpdateMetadata)
             {
                 var c = new SqlCommand("Set @sync_row_count = 1;");
                 c.Parameters.Add("@sync_row_count", SqlDbType.Int);
-                return c;
+                return (c, false);
             }
 
             return base.GetCommand(nameType, filter);

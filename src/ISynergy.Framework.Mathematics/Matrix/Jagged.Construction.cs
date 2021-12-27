@@ -868,7 +868,7 @@ namespace ISynergy.Framework.Mathematics
         public static T[][] Random<T>(int size, IRandomNumberGenerator<T> generator,
             bool symmetric = false, T[][] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = Jagged.Create<T>(size, size);
 
             if (!symmetric)
@@ -896,7 +896,7 @@ namespace ISynergy.Framework.Mathematics
         public static T[][] Random<T>(int rows, int cols,
             IRandomNumberGenerator<T> generator, T[][] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = Jagged.Create<T>(rows, cols);
 
             for (var i = 0; i < rows; i++)
@@ -944,7 +944,7 @@ namespace ISynergy.Framework.Mathematics
                 }
                 else
                 {
-                    if (a == null || i >= a.Length)
+                    if (a is null || i >= a.Length)
                     {
                         if (depth == shape.Length)
                         {
@@ -1019,7 +1019,7 @@ namespace ISynergy.Framework.Mathematics
                 }
                 else
                 {
-                    if (a == null || i >= a.Length)
+                    if (a is null || i >= a.Length)
                     {
                         if (depth == shape.Length)
                         {
@@ -1094,7 +1094,7 @@ namespace ISynergy.Framework.Mathematics
                 {
                     Object e = a.GetValue(i);
                     T[] next = e as T[];
-                    if (next != null)
+                    if (next is not null)
                     {
                         foreach (T t in next)
                             yield return t;
@@ -1149,7 +1149,7 @@ namespace ISynergy.Framework.Mathematics
                 {
                     Object e = a.GetValue(i);
                     Array next = e as Array;
-                    if (next == null)
+                    if (next is null)
                     {
                         yield return e;
                         i++;

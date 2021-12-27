@@ -103,7 +103,7 @@ namespace ISynergy.Framework.Mathematics
 
             for (var i = 0; i < values.Length; i++)
                 if (values[i].HasValue)
-                    if (max == null || values[i].Value.CompareTo(max.Value) > 0)
+                    if (max is null || values[i].Value.CompareTo(max.Value) > 0)
                     {
                         max = values[i];
                         imax = i;
@@ -123,7 +123,7 @@ namespace ISynergy.Framework.Mathematics
 
             for (var i = 0; i < values.Length; i++)
                 if (values[i].HasValue)
-                    if (min == null || values[i].Value.CompareTo(min.Value) < 0)
+                    if (min is null || values[i].Value.CompareTo(min.Value) < 0)
                     {
                         min = values[i];
                         imin = i;

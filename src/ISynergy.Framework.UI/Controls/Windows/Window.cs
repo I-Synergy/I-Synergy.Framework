@@ -78,7 +78,7 @@ namespace ISynergy.Framework.UI.Controls
 
                     frameworkElement = GetDescendantFromName(frameworkElement, name);
 
-                    if (frameworkElement != null)
+                    if (frameworkElement is not null)
                     {
                         return frameworkElement;
                     }

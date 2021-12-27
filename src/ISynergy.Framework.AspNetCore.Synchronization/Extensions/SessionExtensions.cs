@@ -11,7 +11,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
         {
             var data = session.GetString(key);
 
-            if (data == null)
+            if (data is null)
                 return default;
 
             return JsonConvert.DeserializeObject<T>(data);

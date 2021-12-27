@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// 
         public static bool HasDefaultConstructor(this Type t)
         {
-            return t.IsValueType || t.GetConstructor(Type.EmptyTypes) != null;
+            return t.IsValueType || t.GetConstructor(Type.EmptyTypes) is not null;
         }
 
         /// <summary>

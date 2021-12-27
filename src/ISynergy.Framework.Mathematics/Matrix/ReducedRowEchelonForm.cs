@@ -28,7 +28,7 @@
         ///   
         public ReducedRowEchelonForm(double[,] value, bool inPlace = false)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value");
 
             rref = inPlace ? value : (double[,])value.Clone();
@@ -121,7 +121,7 @@
         {
             get
             {
-                if (freeCount == null)
+                if (freeCount is null)
                     freeCount = count();
 
                 return freeCount.Value;

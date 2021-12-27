@@ -55,8 +55,8 @@ namespace ISynergy.Framework.Automations.States
         /// <param name="for"></param>
         public EventState(EventInfo @event, object eventData, TimeSpan @for)
         {
-            Argument.IsNotNull(nameof(@event), @event);
-            Argument.IsNotNull(nameof(@for), @for);
+            Argument.IsNotNull(@event);
+            Argument.IsNotNull(@for);
 
             StateId = Guid.NewGuid();
             For = @for;

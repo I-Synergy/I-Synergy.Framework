@@ -26,7 +26,7 @@
         /// 
         public static double[,] Random(int rows, int columns, double min, double max, double[,] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = new double[rows, columns];
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
@@ -43,7 +43,7 @@
         /// 
         public static double[,] Random(int size, double min, double max, bool symmetric = false, double[,] result = null)
         {
-            if (result == null)
+            if (result is null)
                 result = new double[size, size];
 
             var random = ISynergy.Framework.Mathematics.Random.Generator.Random;

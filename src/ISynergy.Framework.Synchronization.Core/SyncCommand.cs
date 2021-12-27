@@ -9,10 +9,10 @@
 
         public SyncCommand(string commandCodeName)
         {
-            this.CommandCodeName = commandCodeName;
-            this.IsPrepared = false;
-
+            CommandCodeName = commandCodeName;
+            IsPrepared = false;
         }
+
         //public SyncCommand(DbCommand dbCommand)
         //{
         //    DbCommand = dbCommand;

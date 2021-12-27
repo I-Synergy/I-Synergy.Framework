@@ -17,6 +17,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Synchronization.Core\ISynergy.Framework.Synchronization.Core.csproj" />
 	  <ProjectReference Include="..\ISynergy.Framework.Synchronization.SqlServer\ISynergy.Framework.Synchronization.SqlServer.csproj" />
 	</ItemGroup>
 

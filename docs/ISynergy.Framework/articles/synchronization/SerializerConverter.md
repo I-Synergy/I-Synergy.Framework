@@ -34,7 +34,7 @@ serialization mechanism:
 serialization mechanism.
 
 When you run a synchronization, The `WebClientOrchestrator` sends a
-special HTTP header `dotmim-sync-serialization-format`, containing two
+special HTTP header `isynergy-sync-serialization-format`, containing two
 information:
 
 -   First one is specifying the serialization format to use. The server
@@ -46,7 +46,7 @@ Here is an example of one header sent by the client to the server,
 during a sync session:
 
 ``` {.sourceCode .csharp}
-dotmim-sync-serialization-format: {
+isynergy-sync-serialization-format: {
     "f":"json",
     "s":500
 }
@@ -232,13 +232,13 @@ public class CustomConverter : IConverter
             return;
 
         // Encode a specific column, named "ThumbNailPhoto"
-        if (row["ThumbNailPhoto"] != null)
+        if (row["ThumbNailPhoto"] is not null)
             row["ThumbNailPhoto"] = Convert.ToBase64String((byte[])row["ThumbNailPhoto"]);
 
         // Convert all DateTime columns to ticks
         foreach (var col in row.Table.Columns.Where(c => c.GetDataType() == typeof(DateTime)))
         {
-            if (row[col.ColumnName] != null)
+            if (row[col.ColumnName] is not null)
                 row[col.ColumnName] = ((DateTime)row[col.ColumnName]).Ticks;
         }
     }
@@ -255,7 +255,7 @@ public class CustomConverter : IConverter
         // Convert all DateTime back from ticks
         foreach (var col in row.Table.Columns.Where(c => c.GetDataType() == typeof(DateTime)))
         {
-            if (row[col.ColumnName] != null)
+            if (row[col.ColumnName] is not null)
                 row[col.ColumnName] = new DateTime(Convert.ToInt64(row[col.ColumnName]));
         }
     }

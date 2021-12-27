@@ -1,10 +1,9 @@
 ﻿using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Adapters;
 using ISynergy.Framework.Synchronization.Core.Builders;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Metadata;
-using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+using ISynergy.Framework.Synchronization.Core.Manager;
 using ISynergy.Framework.Synchronization.Core.Providers;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Sqlite.Adapters;
 using ISynergy.Framework.Synchronization.Sqlite.Builders;
@@ -16,27 +15,22 @@ using System.IO;
 
 namespace ISynergy.Framework.Synchronization.Sqlite.Providers
 {
+
     public class SqliteSyncProvider : CoreProvider
     {
-
-
-        private string filePath;
-        private DbMetadata dbMetadata;
-        private static String providerType;
+        private string _filePath;
+        private DbMetadata _dbMetadata;
+        private static string _providerType;
 
         public override DbMetadata GetMetadata()
         {
-            if (dbMetadata == null)
-                dbMetadata = new SqliteDbMetadata();
+            if (_dbMetadata is null)
+                _dbMetadata = new SqliteDbMetadata();
 
-            return dbMetadata;
+            return _dbMetadata;
         }
 
 
-        /// <summary>
-        /// Sqlite does not support Bulk operations
-        /// </summary>
-        public override bool SupportBulkOperations => false;
 
         /// <summary>
         /// SQLIte does not support to be a server side.
@@ -51,28 +45,30 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Providers
         {
             get
             {
-                if (!string.IsNullOrEmpty(providerType))
-                    return providerType;
+                if (!string.IsNullOrEmpty(_providerType))
+                    return _providerType;
 
                 Type type = typeof(SqliteSyncProvider);
-                providerType = $"{type.Name}, {type.ToString()}";
+                _providerType = $"{type.Name}, {type.ToString()}";
 
-                return providerType;
+                return _providerType;
             }
 
         }
+
         public SqliteSyncProvider() : base()
         {
         }
 
         public SqliteSyncProvider(string filePath) : this()
         {
-            this.filePath = filePath;
+            _filePath = filePath;
+            
             var builder = new SqliteConnectionStringBuilder();
 
             if (filePath.ToLowerInvariant().StartsWith("data source"))
             {
-                this.ConnectionString = filePath;
+                ConnectionString = filePath;
             }
             else
             {
@@ -86,42 +82,42 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Providers
 
                 builder.DataSource = filePath;
 
-                this.ConnectionString = builder.ConnectionString;
+                ConnectionString = builder.ConnectionString;
             }
 
         }
 
         public SqliteSyncProvider(FileInfo fileInfo) : this()
         {
-            this.filePath = fileInfo.FullName;
-            var builder = new SqliteConnectionStringBuilder { DataSource = filePath };
+            _filePath = fileInfo.FullName;
+            var builder = new SqliteConnectionStringBuilder { DataSource = _filePath };
 
-            this.ConnectionString = builder.ConnectionString;
+            ConnectionString = builder.ConnectionString;
         }
 
 
         public SqliteSyncProvider(SqliteConnectionStringBuilder sqliteConnectionStringBuilder) : this()
         {
-            if (String.IsNullOrEmpty(sqliteConnectionStringBuilder.DataSource))
+            if (string.IsNullOrEmpty(sqliteConnectionStringBuilder.DataSource))
                 throw new Exception("You have to provide at least a DataSource property to be able to connect to your SQlite database.");
 
-            this.filePath = sqliteConnectionStringBuilder.DataSource;
+            _filePath = sqliteConnectionStringBuilder.DataSource;
 
-            this.ConnectionString = sqliteConnectionStringBuilder.ConnectionString;
+            ConnectionString = sqliteConnectionStringBuilder.ConnectionString;
         }
 
         public override void EnsureSyncException(SyncException syncException)
         {
-            if (!string.IsNullOrEmpty(this.ConnectionString))
+            if (!string.IsNullOrEmpty(ConnectionString))
             {
-                var builder = new SqliteConnectionStringBuilder(this.ConnectionString);
+                var builder = new SqliteConnectionStringBuilder(ConnectionString);
 
                 syncException.DataSource = builder.DataSource;
             }
 
             var sqliteException = syncException.InnerException as SqliteException;
 
-            if (sqliteException == null)
+            if (sqliteException is null)
                 return;
 
             syncException.Number = sqliteException.SqliteErrorCode;
@@ -133,15 +129,15 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Providers
         public override DbConnection CreateConnection()
         {
             // Affect options
-            var builder = new SqliteConnectionStringBuilder(this.ConnectionString);
+            var builder = new SqliteConnectionStringBuilder(ConnectionString);
 
-            if (!builder.ForeignKeys.HasValue && this.Orchestrator != null)
+            if (!builder.ForeignKeys.HasValue && Orchestrator is not null)
             {
-                builder.ForeignKeys = !this.Orchestrator.Options.DisableConstraintsOnApplyChanges;
-                this.ConnectionString = builder.ToString();
+                builder.ForeignKeys = !Orchestrator.Options.DisableConstraintsOnApplyChanges;
+                ConnectionString = builder.ToString();
             }
 
-            var sqliteConnection = new SqliteConnection(this.ConnectionString);
+            var sqliteConnection = new SqliteConnection(ConnectionString);
 
             return sqliteConnection;
         }
@@ -161,8 +157,8 @@ namespace ISynergy.Framework.Synchronization.Sqlite.Providers
             string tableAndPrefixName = tableDescription.TableName;
             var originalTableName = ParserName.Parse(tableDescription);
 
-            var pref = setup.TrackingTablesPrefix != null ? setup.TrackingTablesPrefix : "";
-            var suf = setup.TrackingTablesSuffix != null ? setup.TrackingTablesSuffix : "";
+            var pref = setup.TrackingTablesPrefix is not null ? setup.TrackingTablesPrefix : "";
+            var suf = setup.TrackingTablesSuffix is not null ? setup.TrackingTablesSuffix : "";
 
             // be sure, at least, we have a suffix if we have empty values. 
             // othewise, we have the same name for both table and tracking table

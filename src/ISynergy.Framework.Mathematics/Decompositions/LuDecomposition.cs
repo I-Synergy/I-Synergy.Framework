@@ -75,7 +75,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// </param>
         public LuDecomposition(double[,] value, bool transpose, bool inPlace)
         {
-            if (value == null) throw new ArgumentNullException("value", "Matrix cannot be null.");
+            if (value is null) throw new ArgumentNullException("value", "Matrix cannot be null.");
 
             if (transpose)
                 lu = value.Transpose(inPlace);
@@ -232,7 +232,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (lowerTriangularFactor == null)
+                if (lowerTriangularFactor is null)
                 {
                     var L = new double[rows, rows];
 
@@ -259,7 +259,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         {
             get
             {
-                if (upperTriangularFactor == null)
+                if (upperTriangularFactor is null)
                 {
                     var U = new double[rows, cols];
                     for (var i = 0; i < rows; i++)
@@ -325,7 +325,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
         public double[,] Solve(double[,] value)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value");
 
             if (value.GetLength(0) != rows)
@@ -364,7 +364,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
         public double[] Solve(double[] value)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value");
 
             if (value.Length != rows)
@@ -426,7 +426,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions
         /// <returns>Matrix <c>X</c> so that <c>X * L * U = A</c>.</returns>
         public double[,] SolveTranspose(double[,] value)
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException("value");
 
             if (value.GetLength(0) != rows)

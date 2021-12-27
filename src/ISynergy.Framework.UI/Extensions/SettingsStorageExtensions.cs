@@ -119,8 +119,8 @@ namespace ISynergy.Framework.UI.Extensions
         /// <exception cref="ArgumentException">ExceptionSettingsStorageExtensionsFileNameIsNullOrEmpty".GetLocalized() - fileName</exception>
         public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
         {
-            Argument.IsNotNull(nameof(content), content);
-            Argument.IsNotNullOrEmpty(nameof(fileName), fileName);
+            Argument.IsNotNull(content);
+            Argument.IsNotNullOrEmpty(fileName);
 
             var storageFile = await folder.CreateFileAsync(fileName, options);
             await FileIO.WriteBytesAsync(storageFile, content);
@@ -138,7 +138,7 @@ namespace ISynergy.Framework.UI.Extensions
         {
             var item = await folder.TryGetItemAsync(fileName).AsTask();
 
-            if ((item != null) && item.IsOfType(StorageItemTypes.File))
+            if ((item is not null) && item.IsOfType(StorageItemTypes.File))
             {
                 var storageFile = await folder.GetFileAsync(fileName);
                 var content = await storageFile.ReadBytesAsync();
@@ -157,7 +157,7 @@ namespace ISynergy.Framework.UI.Extensions
         /// <returns>System.Byte[].</returns>
         public static async Task<byte[]> ReadBytesAsync(this StorageFile file)
         {
-            if (file != null)
+            if (file is not null)
             {
                 using IRandomAccessStream stream = await file.OpenReadAsync();
                 using var reader = new DataReader(stream.GetInputStreamAt(0));

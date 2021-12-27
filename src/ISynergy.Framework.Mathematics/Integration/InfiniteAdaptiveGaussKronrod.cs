@@ -208,7 +208,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         /// <param name="function">The function to be integrated.</param>
         public InfiniteAdaptiveGaussKronrod(int subintervals, Func<double, double> function)
         {
-            if (function == null)
+            if (function is null)
                 throw new ArgumentNullException("function");
 
             init(subintervals, function, double.MinValue, double.MaxValue);
@@ -227,7 +227,7 @@ namespace ISynergy.Framework.Mathematics.Integration
         public InfiniteAdaptiveGaussKronrod(int subintervals,
             Func<double, double> function, double a, double b)
         {
-            if (function == null)
+            if (function is null)
                 throw new ArgumentNullException("function");
 
             init(subintervals, function, a, b);

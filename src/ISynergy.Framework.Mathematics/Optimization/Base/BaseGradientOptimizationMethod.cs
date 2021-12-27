@@ -34,7 +34,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
             Func<double[], double> function, Func<double[], double[]> gradient)
             : base(numberOfVariables, function)
         {
-            if (gradient == null)
+            if (gradient is null)
                 throw new ArgumentNullException("gradient");
 
             Gradient = gradient;
@@ -60,7 +60,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         /// </returns>
         public override bool Maximize()
         {
-            if (Gradient == null)
+            if (Gradient is null)
                 Gradient = FiniteDifferences.Gradient(Function, NumberOfVariables);
 
             NonlinearObjectiveFunction.CheckGradient(Gradient, Solution);
@@ -88,7 +88,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         /// </returns>
         public override bool Minimize()
         {
-            if (Gradient == null)
+            if (Gradient is null)
                 Gradient = FiniteDifferences.Gradient(Function, NumberOfVariables);
 
             NonlinearObjectiveFunction.CheckGradient(Gradient, Solution);

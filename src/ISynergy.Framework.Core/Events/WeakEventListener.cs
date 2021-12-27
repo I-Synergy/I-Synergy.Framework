@@ -24,7 +24,7 @@ namespace ISynergy.Framework.Core.Events
         /// <param name="instance">Instance subscribing to the event.</param>
         public WeakEventListener(TInstance instance)
         {
-            if (instance == null)
+            if (instance is null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }

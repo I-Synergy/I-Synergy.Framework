@@ -262,7 +262,7 @@ namespace ISynergy.Framework.Geography.Utm
                     throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_ZONE);
                 _zone = value;
                 ComputeSizes();
-                if (_origin != null)
+                if (_origin is not null)
                     ComputeFlatSize();
             }
         }
@@ -281,7 +281,7 @@ namespace ISynergy.Framework.Geography.Utm
                     throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_BAND);
                 _band = value;
                 ComputeSizes();
-                if (_origin != null)
+                if (_origin is not null)
                     ComputeFlatSize();
             }
         }

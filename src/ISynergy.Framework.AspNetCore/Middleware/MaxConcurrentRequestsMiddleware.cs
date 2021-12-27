@@ -40,8 +40,8 @@ namespace ISynergy.Framework.AspNetCore.Middleware
         /// <param name="options">The options.</param>
         public MaxConcurrentRequestsMiddleware(RequestDelegate next, IOptions<MaxConcurrentRequestsOptions> options)
         {
-            Argument.IsNotNull(nameof(MaxConcurrentRequestsOptions), options.Value);
-            Argument.IsNotNull(nameof(next), next);
+            Argument.IsNotNull(options.Value, nameof(MaxConcurrentRequestsOptions));
+            Argument.IsNotNull(next);
 
             _concurrentRequestsCount = 0;
             _next = next;
@@ -125,7 +125,7 @@ namespace ISynergy.Framework.AspNetCore.Middleware
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         private async Task<bool> TryWaitInQueueAsync(CancellationToken requestAbortedCancellationToken)
         {
-            return (_enqueuer != null) && (await _enqueuer.EnqueueAsync(requestAbortedCancellationToken).ConfigureAwait(false));
+            return (_enqueuer is not null) && (await _enqueuer.EnqueueAsync(requestAbortedCancellationToken).ConfigureAwait(false));
         }
 
         /// <summary>

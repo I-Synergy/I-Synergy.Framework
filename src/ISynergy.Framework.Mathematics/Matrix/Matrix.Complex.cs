@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static Complex[] Abs(this Complex[] x)
         {
-            if (x == null)
+            if (x is null)
                 throw new ArgumentNullException("x");
 
             var r = new Complex[x.Length];
@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static Complex Sum(this Complex[] x)
         {
-            if (x == null)
+            if (x is null)
                 throw new ArgumentNullException("x");
 
             var r = Complex.Zero;
@@ -45,9 +45,9 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static Complex[] Multiply(this Complex[] a, Complex[] b)
         {
-            if (a == null)
+            if (a is null)
                 throw new ArgumentNullException("a");
-            if (b == null)
+            if (b is null)
                 throw new ArgumentNullException("b");
 
             var r = new Complex[a.Length];
@@ -196,7 +196,7 @@ namespace ISynergy.Framework.Mathematics
         /// <param name="c">An array of complex numbers.</param>
         public static double[,] ToArray(this Complex[] c)
         {
-            if (c == null)
+            if (c is null)
                 throw new ArgumentNullException("c");
 
             var arr = new double[c.Length, 2];
@@ -222,10 +222,10 @@ namespace ISynergy.Framework.Mathematics
         /// </returns>
         public static Complex[] ToComplex(this double[] real, double[] imag)
         {
-            if (real == null)
+            if (real is null)
                 throw new ArgumentNullException("real");
 
-            if (imag == null)
+            if (imag is null)
                 throw new ArgumentNullException("imag");
 
             if (real.Length != imag.Length)
@@ -245,7 +245,7 @@ namespace ISynergy.Framework.Mathematics
         /// <returns>The range of magnitude values in the complex vector.</returns>
         public static NumericRange Range(this Complex[] array)
         {
-            if (array == null)
+            if (array is null)
                 throw new ArgumentNullException("array");
 
             var min = array[0].Magnitude;
@@ -271,9 +271,9 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsEqual(this Complex[][] objA, Complex[][] objB, double threshold)
         {
-            if (objA == null && objB == null) return true;
-            if (objA == null) throw new ArgumentNullException("objA");
-            if (objB == null) throw new ArgumentNullException("objB");
+            if (objA is null && objB is null) return true;
+            if (objA is null) throw new ArgumentNullException("objA");
+            if (objB is null) throw new ArgumentNullException("objB");
 
             for (var i = 0; i < objA.Length; i++)
                 for (var j = 0; j < objA[i].Length; j++)
@@ -298,9 +298,9 @@ namespace ISynergy.Framework.Mathematics
         /// </summary>
         public static bool IsEqual(this Complex[] objA, Complex[] objB, double threshold)
         {
-            if (objA == null && objB == null) return true;
-            if (objA == null) throw new ArgumentNullException("objA");
-            if (objB == null) throw new ArgumentNullException("objB");
+            if (objA is null && objB is null) return true;
+            if (objA is null) throw new ArgumentNullException("objA");
+            if (objB is null) throw new ArgumentNullException("objB");
 
             for (var i = 0; i < objA.Length; i++)
             {

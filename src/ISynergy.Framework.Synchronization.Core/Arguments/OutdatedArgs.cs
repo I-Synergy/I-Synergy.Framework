@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Scopes;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,14 +14,15 @@ namespace ISynergy.Framework.Synchronization.Core
     {
         public OutdatedArgs(SyncContext context, ScopeInfo clientScopeInfo, ServerScopeInfo serverScopeInfo, DbConnection connection= null, DbTransaction transaction = null) : base(context, connection, transaction)
         {
-            this.ClientScopeInfo = clientScopeInfo;
-            this.ServerScopeInfo = serverScopeInfo;
+            ClientScopeInfo = clientScopeInfo;
+            ServerScopeInfo = serverScopeInfo;
         }
 
         /// <summary>
         /// Gets or sets an action enumeration value for the action to handle the outdated peer.
         /// </summary>
         public OutdatedAction Action { get; set; } = OutdatedAction.Rollback;
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
 
         public override string Source => Connection.Database;
         public override string Message => $"Database Out Dated. Last Client Sync Endpoint {ClientScopeInfo.LastServerSyncTimestamp} < Last Server Cleanup Metadatas {ServerScopeInfo.LastCleanupTimestamp}.";

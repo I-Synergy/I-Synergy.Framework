@@ -74,7 +74,7 @@
                 matrix = null;
             }
 
-            return matrix != null;
+            return matrix is not null;
         }
 
         #endregion

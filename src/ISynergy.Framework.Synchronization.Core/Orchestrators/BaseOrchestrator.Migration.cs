@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using System;
 using System.Data;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Synchronization.Core
+namespace ISynergy.Framework.Synchronization.Core.Orchestrators
 {
     public abstract partial class BaseOrchestrator
     {
@@ -27,7 +26,7 @@ namespace ISynergy.Framework.Synchronization.Core
             var migrationResults = migration.Compare();
 
             // Launch InterceptAsync on Migrating
-            await this.InterceptAsync(new MigratingArgs(context, schema, oldSetup, newSetup, migrationResults, connection, transaction), cancellationToken).ConfigureAwait(false);
+            await InterceptAsync(new MigratingArgs(context, schema, oldSetup, newSetup, migrationResults, connection, transaction), progress, cancellationToken).ConfigureAwait(false);
 
             // Deprovision triggers stored procedures and tracking table if required
             foreach (var migrationTable in migrationResults.Tables)
@@ -48,7 +47,7 @@ namespace ISynergy.Framework.Synchronization.Core
                     tmpSchema.Filters.Add(filter);
 
                 // using a fake Synctable, since we don't need columns to deprovision
-                var tableBuilder = this.GetTableBuilder(schemaTable, oldSetup);
+                var tableBuilder = GetTableBuilder(schemaTable, oldSetup);
 
                 // Deprovision stored procedures
                 if (migrationTable.StoredProcedures == MigrationAction.Drop || migrationTable.StoredProcedures == MigrationAction.Create)
@@ -68,7 +67,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 }
 
                 // Removing cached commands
-                var syncAdapter = this.GetSyncAdapter(schemaTable, oldSetup);
+                var syncAdapter = GetSyncAdapter(schemaTable, oldSetup);
                 syncAdapter.RemoveCommands();
             }
 
@@ -82,7 +81,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 if (syncTable is null)
                     continue;
 
-                var tableBuilder = this.GetTableBuilder(syncTable, newSetup);
+                var tableBuilder = GetTableBuilder(syncTable, newSetup);
 
                 // Re provision table
                 if (migrationTable.Table == MigrationAction.Create)
@@ -128,7 +127,7 @@ namespace ISynergy.Framework.Synchronization.Core
                 // Re provision tracking table
                 if (migrationTable.TrackingTable == MigrationAction.Rename && oldTable is not null)
                 {
-                    var (_, oldTableName) = this.Provider.GetParsers(new SyncTable(oldTable.TableName, oldTable.SchemaName), oldSetup);
+                    var (_, oldTableName) = Provider.GetParsers(new SyncTable(oldTable.TableName, oldTable.SchemaName), oldSetup);
 
                     await InternalRenameTrackingTableAsync(context, newSetup, oldTableName, tableBuilder, connection, transaction, cancellationToken, progress).ConfigureAwait(false);
                 }
@@ -152,8 +151,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
             // InterceptAsync Migrated
             var args = new MigratedArgs(context, schema, newSetup, migrationResults, connection, transaction);
-            await this.InterceptAsync(args, cancellationToken).ConfigureAwait(false);
-            this.ReportProgress(context, progress, args);
+            await InterceptAsync(args, progress, cancellationToken).ConfigureAwait(false);
 
             return context;
         }

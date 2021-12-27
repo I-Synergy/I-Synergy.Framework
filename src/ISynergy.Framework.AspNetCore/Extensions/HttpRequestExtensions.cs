@@ -23,9 +23,9 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             if (connection.RemoteIpAddress is null && connection.LocalIpAddress is null)
                 return true;
 
-            if (connection.RemoteIpAddress != null)
+            if (connection.RemoteIpAddress is not null)
             {
-                return connection.LocalIpAddress != null
+                return connection.LocalIpAddress is not null
                     ? connection.RemoteIpAddress.Equals(connection.LocalIpAddress)
                     : IPAddress.IsLoopback(connection.RemoteIpAddress);
             }
@@ -57,7 +57,7 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             // Copy the request headers
             foreach (var header in request.Headers)
             {
-                if (!result.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && result.Content != null)
+                if (!result.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && result.Content is not null)
                 {
                     result.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
                 }

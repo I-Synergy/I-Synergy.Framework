@@ -85,7 +85,7 @@ namespace ISynergy.Framework.UI.Triggers
         /// <param name="triggerValue">if set to <c>true</c> [trigger value].</param>
         private static void TriggerStateCheck(DependencyObject target, bool dataValue, bool triggerValue)
         {
-            Argument.IsNotNull(nameof(target), target);
+            Argument.IsNotNull(target);
 
             if (!(target is BooleanDataTrigger trigger)) return;
             trigger.SetActive(dataValue == triggerValue);

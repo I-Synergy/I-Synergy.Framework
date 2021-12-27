@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Enumerations;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
@@ -13,15 +13,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public SyncTable Table { get; }
         public DbStoredProcedureType StoredProcedureType { get; }
 
-        public StoredProcedureCreatedArgs(SyncContext context, SyncTable table, DbStoredProcedureType StoredProcedureType, DbConnection connection = null, DbTransaction transaction = null)
+        public StoredProcedureCreatedArgs(SyncContext context, SyncTable table, DbStoredProcedureType storedProcedureType, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Table = table;
-            this.StoredProcedureType = StoredProcedureType;
+            Table = table;
+            StoredProcedureType = storedProcedureType;
         }
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.Table.GetFullName()}] Stored Procedure [{this.StoredProcedureType}] Created.";
+        public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{StoredProcedureType}] Created.";
 
         public override int EventId => SyncEventsId.StoredProcedureCreated.Id;
     }
@@ -32,16 +32,16 @@ namespace ISynergy.Framework.Synchronization.Core
         public DbStoredProcedureType StoredProcedureType { get; }
         public bool Cancel { get; set; } = false;
         public DbCommand Command { get; set; }
-
-        public StoredProcedureCreatingArgs(SyncContext context, SyncTable table, DbStoredProcedureType StoredProcedureType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
+        public StoredProcedureCreatingArgs(SyncContext context, SyncTable table, DbStoredProcedureType storedProcedureType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Command = command;
-            this.Table = table;
-            this.StoredProcedureType = StoredProcedureType;
+            Command = command;
+            Table = table;
+            StoredProcedureType = storedProcedureType;
         }
         public override string Source => Connection.Database;
-        public override string Message => $"[{this.Table.GetFullName()}] Stored Procedure [{this.StoredProcedureType}] Creating.";
+        public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{StoredProcedureType}] Creating.";
         public override int EventId => SyncEventsId.StoredProcedureCreating.Id;
     }
 
@@ -50,15 +50,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public SyncTable Table { get; }
         public DbStoredProcedureType StoredProcedureType { get; }
 
-        public StoredProcedureDroppedArgs(SyncContext context, SyncTable table, DbStoredProcedureType StoredProcedureType, DbConnection connection = null, DbTransaction transaction = null)
+        public StoredProcedureDroppedArgs(SyncContext context, SyncTable table, DbStoredProcedureType storedProcedureType, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
             Table = table;
-            this.StoredProcedureType = StoredProcedureType;
+            StoredProcedureType = storedProcedureType;
         }
-
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{this.StoredProcedureType}] Dropped.";
+        public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{StoredProcedureType}] Dropped.";
         public override int EventId => SyncEventsId.StoredProcedureDropped.Id;
     }
 
@@ -69,15 +69,16 @@ namespace ISynergy.Framework.Synchronization.Core
         public bool Cancel { get; set; } = false;
         public DbCommand Command { get; set; }
 
-        public StoredProcedureDroppingArgs(SyncContext context, SyncTable table, DbStoredProcedureType StoredProcedureType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
+        public StoredProcedureDroppingArgs(SyncContext context, SyncTable table, DbStoredProcedureType storedProcedureType, DbCommand command, DbConnection connection = null, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Command = command;
-            this.Table = table;
-            this.StoredProcedureType = StoredProcedureType;
+            Command = command;
+            Table = table;
+            StoredProcedureType = storedProcedureType;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Trace;
         public override string Source => Connection.Database;
-        public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{this.StoredProcedureType}] Dropping.";
+        public override string Message => $"[{Table.GetFullName()}] Stored Procedure [{StoredProcedureType}] Dropping.";
         public override int EventId => SyncEventsId.StoredProcedureDropping.Id;
 
     }

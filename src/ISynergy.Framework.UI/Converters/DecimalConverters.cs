@@ -286,7 +286,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is decimal @decimal)
             {
-                if (parameter != null)
+                if (parameter is not null)
                 {
                     return string.Format((string)parameter, value);
                 }
@@ -294,7 +294,7 @@ namespace ISynergy.Framework.UI.Converters
                 return @decimal.ToString();
             }
 
-            if (parameter != null)
+            if (parameter is not null)
             {
                 return string.Format((string)parameter, (decimal)0);
             }

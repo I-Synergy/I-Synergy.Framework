@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.AspNetCore.Middleware;
+using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Builder;
 using System;
 
@@ -17,10 +18,7 @@ namespace ISynergy.Framework.AspNetCore.Extensions
         /// <exception cref="ArgumentNullException">app</exception>
         public static IApplicationBuilder UseMaxConcurrentRequests(this IApplicationBuilder app)
         {
-            if (app is null)
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
+            Argument.IsNotNull(app);
 
             return app.UseMiddleware<MaxConcurrentRequestsMiddleware>();
         }

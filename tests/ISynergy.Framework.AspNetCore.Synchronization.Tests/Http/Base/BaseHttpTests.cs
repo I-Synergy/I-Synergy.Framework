@@ -1,11 +1,12 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Extensions;
 using ISynergy.Framework.AspNetCore.Synchronization.Tests.Data;
 using ISynergy.Framework.Synchronization.Client;
-using ISynergy.Framework.Synchronization.Client.Arguments;
+using ISynergy.Framework.Synchronization.Client.Enumerations;
 using ISynergy.Framework.Synchronization.Client.Exceptions;
 using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Providers;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using ISynergy.Framework.Synchronization.Core.Tests.Converters;
@@ -40,7 +41,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri));
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService));
 
                 var s = await agent.SynchronizeAsync();
 
@@ -72,7 +73,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -105,7 +106,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 webClientOrchestrator.SyncPolicy.RetryCount = 0;
 
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator);
@@ -142,7 +143,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 webClientOrchestrator.SyncPolicy.RetryCount = 0;
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator);
 
@@ -176,7 +177,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 webClientOrchestrator.SyncPolicy.RetryCount = 0;
 
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator);
@@ -209,7 +210,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 webClientOrchestrator.SyncPolicy.RetryCount = 0;
 
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator);
@@ -244,7 +245,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -268,7 +269,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -298,7 +299,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -327,7 +328,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 var s = await agent.SynchronizeAsync();
 
                 Assert.AreEqual(download++, s.TotalChangesDownloaded);
@@ -404,7 +405,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -440,7 +441,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Sync and check we have delete these lines on each server
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -477,7 +478,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 await agent.SynchronizeAsync();
             }
 
@@ -504,7 +505,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 var s = await agent.SynchronizeAsync();
 
                 Assert.AreEqual(download * 2000, s.TotalChangesDownloaded);
@@ -539,7 +540,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 var s = await agent.SynchronizeAsync();
 
                 Assert.AreEqual(rowsCount, s.TotalChangesDownloaded);
@@ -569,7 +570,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // inserted rows will be deleted 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync(SyncType.Reinitialize);
 
@@ -603,7 +604,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 var s = await agent.SynchronizeAsync();
 
                 Assert.AreEqual(rowsCount, s.TotalChangesDownloaded);
@@ -634,7 +635,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             var download = 2;
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 var s = await agent.SynchronizeAsync(SyncType.ReinitializeWithUpload);
 
                 Assert.AreEqual(rowsCount + download, s.TotalChangesDownloaded);
@@ -671,7 +672,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             {
                 // Add a converter on the client.
                 // But this converter is not register on the server side converters list.
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri, new DateConverter());
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService, new DateConverter());
                 webClientOrchestrator.SyncPolicy.RetryCount = 0;
 
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
@@ -722,7 +723,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -753,7 +754,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
 
             foreach (var client in Clients)
             {
-                var wenClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var wenClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, wenClientOrchestrator, options);
 
                 // Interceptor on sending scopes
@@ -792,7 +793,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             var download = 0;
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
 
                 // Just before sending changes, get changes sent
@@ -838,7 +839,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Assert if datetime are correctly converted to long
             this.WebServerOrchestrator.OnHttpSendingChanges(sra =>
             {
-                if (sra.Response.Changes == null)
+                if (sra.Response.Changes is null)
                     return;
 
                 // check we have rows
@@ -847,7 +848,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
                 // getting a table where we know we have date time
                 var table = sra.Response.Changes.Tables.FirstOrDefault(t => t.TableName == "Employee");
 
-                if (table != null)
+                if (table is not null)
                 {
                     Assert.IsTrue(table.Rows.Count > 0);
 
@@ -864,7 +865,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in this.Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri, new DateConverter());
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService, new DateConverter());
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
 
                 var s = await agent.SynchronizeAsync();
@@ -932,7 +933,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -963,7 +964,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1001,7 +1002,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
                                     $"Update scope_info set scope_last_server_sync_timestamp={dmc.TimestampLimit - 1}");
 
                 // create a new agent
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 //// Making a first sync, will initialize everything we need
                 //var se = await Assert.ThrowsExceptionAsync<SyncException>(() => agent.SynchronizeAsync());
@@ -1043,7 +1044,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in this.Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options, "customScope1");
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options, "customScope1");
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1078,7 +1079,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
 
                 // Ensure scope is created locally
@@ -1114,7 +1115,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1151,7 +1152,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
 
                 // Ensure scope is created locally
@@ -1192,7 +1193,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
 
                 // Ensure scope is created locally
@@ -1228,7 +1229,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1265,7 +1266,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
 
                 // Ensure scope is created locally
@@ -1301,7 +1302,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1330,7 +1331,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             {
                 var batchIndex = 0;
 
-                var orch = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var orch = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, orch, options);
 
                 this.WebServerOrchestrator.OnHttpSendingResponse(async args =>
@@ -1356,7 +1357,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
                 Assert.AreEqual("HttpSessionLostException", ex.TypeName);
 
                 // Act 2: Ensure client can recover
-                var agent2 = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent2 = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s2 = await agent2.SynchronizeAsync();
 
@@ -1396,7 +1397,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and check results
             foreach (var client in Clients)
             {
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s = await agent.SynchronizeAsync();
 
@@ -1425,7 +1426,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
 
                 // restreint parallelism degrees to be sure the batch index is not downloaded at the end
                 // (This will not raise the error if the batchindex 1 is downloaded as the last part)
-                var orch = new WebClientOrchestrator(_versionService, this.ServiceUri, maxDownladingDegreeOfParallelism: 1);
+                var orch = new WebClientOrchestrator(this.ServiceUri, _versionService, maxDownladingDegreeOfParallelism: 1);
                 var agent = new SyncAgent(_versionService, client.Provider, orch, options);
 
                 // IMPORTANT: Simulate server-side session loss after first batch message is already transmitted
@@ -1455,7 +1456,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
                 this.WebServerOrchestrator.OnHttpSendingResponse(null);
 
                 // Act 2: Ensure client can recover
-                var agent2 = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent2 = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
 
                 var s2 = await agent2.SynchronizeAsync();
 
@@ -1516,7 +1517,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients and add the task to a list of tasks
             foreach (var clientProvider in clientProviders)
             {
-                var agent = new SyncAgent(_versionService, clientProvider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, clientProvider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 allTasks.Add(agent.SynchronizeAsync());
             }
 
@@ -1548,7 +1549,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to get the new server row
             foreach (var clientProvider in clientProviders)
             {
-                var agent = new SyncAgent(_versionService, clientProvider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, clientProvider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 allTasks.Add(agent.SynchronizeAsync());
             }
 
@@ -1611,7 +1612,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
 
                 var policyRetries = 0;
                 webClientOrchestrator.OnHttpPolicyRetrying(args =>
@@ -1676,7 +1677,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
 
                 var policyRetries = 0;
                 webClientOrchestrator.OnHttpPolicyRetrying(args =>
@@ -1719,12 +1720,12 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // configure server orchestrator
             this.WebServerOrchestrator.Setup.Tables.AddRange(Tables);
 
-            var options = new SyncOptions { BatchSize = 10 };
+            var options = new SyncOptions { BatchSize = 100 };
 
             // Execute a sync on all clients to initialize client and server schema 
             foreach (var client in Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
 
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator, options);
 
@@ -1773,7 +1774,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
 
                 });
 
-                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(_versionService, this.ServiceUri), options);
+                var agent = new SyncAgent(_versionService, client.Provider, new WebClientOrchestrator(this.ServiceUri, _versionService), options);
                 var s = await agent.SynchronizeAsync();
 
                 this.WebServerOrchestrator.OnHttpSendingResponse(null);
@@ -1783,8 +1784,8 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
                 Assert.AreEqual(0, s.TotalResolvedConflicts);
 
                 // We have one batch that has been sent 2 times; it will be merged correctly on server
-                Assert.IsTrue(s.ChangesAppliedOnServer.TotalAppliedChanges >= 1001);
-                Assert.IsTrue(s.ChangesAppliedOnServer.TotalAppliedChanges <= 1050);
+                Assert.IsTrue(s.ChangesAppliedOnServer.TotalAppliedChanges >= 1000);
+                Assert.IsTrue(s.ChangesAppliedOnServer.TotalAppliedChanges <= 2000);
                 Assert.AreEqual(1000, s.ClientChangesSelected.TotalChangesSelected);
 
                 download += 1000;
@@ -1811,7 +1812,7 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Execute a sync on all clients to initialize schemas
             foreach (var client in this.Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator);
                 var s = await agent.SynchronizeAsync();
             }
@@ -1857,13 +1858,13 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Tests.Http.Base
             // Two sync to be sure all clients have all rows from all
             foreach (var client in this.Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator);
                 var s = await agent.SynchronizeAsync();
             }
             foreach (var client in this.Clients)
             {
-                var webClientOrchestrator = new WebClientOrchestrator(_versionService, this.ServiceUri);
+                var webClientOrchestrator = new WebClientOrchestrator(this.ServiceUri, _versionService);
                 var agent = new SyncAgent(_versionService, client.Provider, webClientOrchestrator);
                 var s = await agent.SynchronizeAsync();
             }

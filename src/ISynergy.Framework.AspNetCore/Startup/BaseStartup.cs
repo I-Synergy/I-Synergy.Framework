@@ -50,8 +50,8 @@ namespace ISynergy.Framework.AspNetCore.Startup
         /// <param name="configuration">The configuration.</param>
         protected BaseStartup(IWebHostEnvironment environment, IConfiguration configuration)
         {
-            Argument.IsNotNull(nameof(environment), environment);
-            Argument.IsNotNull(nameof(configuration), configuration);
+            Argument.IsNotNull(environment);
+            Argument.IsNotNull(configuration);
 
             Environment = environment;
             Configuration = configuration;

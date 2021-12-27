@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Synchronization.Core.Model.Parsers;
+﻿using ISynergy.Framework.Synchronization.Core.Builders;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Exposing the InnerCollection for serialization purpose
         /// </summary>
-        [DataMember(Name = "c", IsRequired = true, Order = 1)]
+        [DataMember(Name = "c", IsRequired = true)]
         public Collection<SetupTable> InnerCollection = new Collection<SetupTable>();
 
         public SetupTables()
@@ -32,7 +32,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public SetupTables(IEnumerable<string> tables)
         {
             foreach (var table in tables)
-                this.Add(table);
+                Add(table);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public SetupTable Add(string tableName, string schemaName = null)
         {
             var st = new SetupTable(tableName, schemaName);
-            this.Add(st);
+            Add(st);
             return st;
         }
 
@@ -63,7 +63,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public void AddRange(IEnumerable<SetupTable> tables)
         {
             foreach (var table in tables)
-                this.InnerCollection.Add(table);
+                InnerCollection.Add(table);
         }
 
 
@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
                 return;
 
             foreach (var table in tables)
-                this.InnerCollection.Add(new SetupTable(table));
+                InnerCollection.Add(new SetupTable(table));
         }
 
         /// <summary>
@@ -133,27 +133,27 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Check if Setup has tables
         /// </summary>
-        public bool HasTables => this.InnerCollection?.Count > 0;
+        public bool HasTables => InnerCollection?.Count > 0;
 
         /// <summary>
         /// Check if Setup has at least one table with columns
         /// </summary>
-        public bool HasColumns => this.InnerCollection?.SelectMany(t => t.Columns).Count() > 0;  // using SelectMany to get columns and not Collection<Column>
+        public bool HasColumns => InnerCollection?.SelectMany(t => t.Columns).Count() > 0;  // using SelectMany to get columns and not Collection<Column>
 
-        public void Clear() => this.InnerCollection.Clear();
+        public void Clear() => InnerCollection.Clear();
         public SetupTable this[int index] => InnerCollection[index];
         public int Count => InnerCollection.Count;
         public bool IsReadOnly => false;
-        SetupTable IList<SetupTable>.this[int index] { get => this.InnerCollection[index]; set => this.InnerCollection[index] = value; }
+        SetupTable IList<SetupTable>.this[int index] { get => InnerCollection[index]; set => InnerCollection[index] = value; }
         public bool Remove(SetupTable item) => InnerCollection.Remove(item);
         public bool Contains(SetupTable item) => this[item.TableName, item.SchemaName] is not null;
         public void CopyTo(SetupTable[] array, int arrayIndex) => InnerCollection.CopyTo(array, arrayIndex);
         public int IndexOf(SetupTable item) => InnerCollection.IndexOf(item);
         public void RemoveAt(int index) => InnerCollection.RemoveAt(index);
-        public override string ToString() => this.InnerCollection.Count.ToString();
-        public void Insert(int index, SetupTable item) => this.InnerCollection.Insert(index, item);
+        public override string ToString() => InnerCollection.Count.ToString();
+        public void Insert(int index, SetupTable item) => InnerCollection.Insert(index, item);
         public IEnumerator<SetupTable> GetEnumerator() => InnerCollection.GetEnumerator();
-        IEnumerator<SetupTable> IEnumerable<SetupTable>.GetEnumerator() => this.InnerCollection.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => this.InnerCollection.GetEnumerator();
+        IEnumerator<SetupTable> IEnumerable<SetupTable>.GetEnumerator() => InnerCollection.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => InnerCollection.GetEnumerator();
     }
 }

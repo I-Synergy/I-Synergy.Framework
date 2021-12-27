@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Synchronization.Core.Database;
-using ISynergy.Framework.Synchronization.Core.Extensions;
+﻿using ISynergy.Framework.Synchronization.Core.Extensions;
+using ISynergy.Framework.Synchronization.Core.Set;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,48 +18,48 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// <summary>
         /// Gets or Sets the name of the table where the filter will be applied (and so the _Changes stored proc)
         /// </summary>
-        [DataMember(Name = "tn", IsRequired = true, Order = 1)]
+        [DataMember(Name = "tn", IsRequired = true)]
         public string TableName { get; set; }
 
         /// <summary>
         /// Gets or Sets the schema name of the table where the filter will be applied (and so the _Changes stored proc)
         /// </summary>
-        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false, Order = 2)]
+        [DataMember(Name = "sn", IsRequired = false, EmitDefaultValue = false)]
         public string SchemaName { get; set; }
 
         /// <summary>
         /// Gets the custom joins list, used with custom wheres
         /// </summary>
-        [DataMember(Name = "j", IsRequired = false, EmitDefaultValue = false, Order = 3)]
+        [DataMember(Name = "j", IsRequired = false, EmitDefaultValue = false)]
         public List<SetupFilterJoin> Joins { get; } = new List<SetupFilterJoin>();
 
         /// <summary>
         /// Gets the custom joins list, used with custom wheres
         /// </summary>
-        [DataMember(Name = "cw", IsRequired = false, EmitDefaultValue = false, Order = 4)]
+        [DataMember(Name = "cw", IsRequired = false, EmitDefaultValue = false)]
         public List<string> CustomWheres { get; } = new List<string>();
 
         /// <summary>
         /// Gets the parameters list, used as input in the stored procedure
         /// </summary>
-        [DataMember(Name = "p", IsRequired = false, EmitDefaultValue = false, Order = 5)]
+        [DataMember(Name = "p", IsRequired = false, EmitDefaultValue = false)]
         public List<SetupFilterParameter> Parameters { get; } = new List<SetupFilterParameter>();
 
         /// <summary>
         /// Side where filters list
         /// </summary>
-        [DataMember(Name = "w", IsRequired = false, EmitDefaultValue = false, Order = 6)]
+        [DataMember(Name = "w", IsRequired = false, EmitDefaultValue = false)]
         public List<SetupFilterWhere> Wheres { get; } = new List<SetupFilterWhere>();
 
         /// <summary>
         /// Creates a filterclause allowing to specify a different DbType.
-        /// If you specify the columnType, ISynergy.Framework.Synchronization.Core will expect that the column does not exist on the table, and the filter is only
+        /// If you specify the columnType, ISynergy.Framework.Synchronization will expect that the column does not exist on the table, and the filter is only
         /// used as a parameter for the selectchanges stored procedure. Thus, IsVirtual would be true
         /// </summary>
         public SetupFilter(string tableName, string schemaName = null)
         {
-            this.TableName = tableName;
-            this.SchemaName = schemaName;
+            TableName = tableName;
+            SchemaName = schemaName;
         }
 
         /// <summary>
@@ -70,12 +70,12 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public void AddParameter(string parameterName, DbType type, bool allowNull = false, string defaultValue = null, int maxLength = 0)
         {
 
-            if (this.Parameters.Any(p => string.Equals(p.Name, parameterName, SyncGlobalization.DataSourceStringComparison)))
-                throw new FilterParameterAlreadyExistsException(parameterName, this.TableName);
+            if (Parameters.Any(p => string.Equals(p.Name, parameterName, SyncGlobalization.DataSourceStringComparison)))
+                throw new FilterParameterAlreadyExistsException(parameterName, TableName);
 
             var parameter = new SetupFilterParameter { Name = parameterName, DbType = type, DefaultValue = defaultValue, AllowNull = allowNull, MaxLength = maxLength };
 
-            this.Parameters.Add(parameter);
+            Parameters.Add(parameter);
         }
 
         /// <summary>
@@ -86,10 +86,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         public void AddParameter(string columnName, string tableName, string schemaName, bool allowNull = false, string defaultValue = null)
         {
 
-            if (this.Parameters.Any(p => string.Equals(p.Name, columnName, SyncGlobalization.DataSourceStringComparison)))
-                throw new FilterParameterAlreadyExistsException(columnName, this.TableName);
+            if (Parameters.Any(p => string.Equals(p.Name, columnName, SyncGlobalization.DataSourceStringComparison)))
+                throw new FilterParameterAlreadyExistsException(columnName, TableName);
 
-            this.Parameters.Add(new SetupFilterParameter { Name = columnName, TableName = tableName, SchemaName = schemaName, DefaultValue = defaultValue, AllowNull = allowNull });
+            Parameters.Add(new SetupFilterParameter { Name = columnName, TableName = tableName, SchemaName = schemaName, DefaultValue = defaultValue, AllowNull = allowNull });
         }
 
 
@@ -100,10 +100,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public void AddParameter(string columnName, string tableName, bool allowNull = false, string defaultValue = null)
         {
-            if (this.Parameters.Any(p => string.Equals(p.Name, columnName, SyncGlobalization.DataSourceStringComparison)))
-                throw new FilterParameterAlreadyExistsException(columnName, this.TableName);
+            if (Parameters.Any(p => string.Equals(p.Name, columnName, SyncGlobalization.DataSourceStringComparison)))
+                throw new FilterParameterAlreadyExistsException(columnName, TableName);
 
-            this.Parameters.Add(new SetupFilterParameter { Name = columnName, TableName = tableName, DefaultValue = defaultValue, AllowNull = allowNull });
+            Parameters.Add(new SetupFilterParameter { Name = columnName, TableName = tableName, DefaultValue = defaultValue, AllowNull = allowNull });
         }
 
 
@@ -117,7 +117,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         internal void AddJoin(SetupFilterJoin setupFilterJoin)
         {
-            this.Joins.Add(setupFilterJoin);
+            Joins.Add(setupFilterJoin);
         }
 
 
@@ -126,10 +126,10 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public SetupFilter AddWhere(string columnName, string tableName, string parameterName, string schemaName = null)
         {
-            if (!this.Parameters.Any(p => string.Equals(p.Name, parameterName, SyncGlobalization.DataSourceStringComparison)))
+            if (!Parameters.Any(p => string.Equals(p.Name, parameterName, SyncGlobalization.DataSourceStringComparison)))
                 throw new FilterTrackingWhereException(parameterName);
 
-            this.Wheres.Add(new SetupFilterWhere { ColumnName = columnName, TableName = tableName, ParameterName = parameterName, SchemaName = schemaName });
+            Wheres.Add(new SetupFilterWhere { ColumnName = columnName, TableName = tableName, ParameterName = parameterName, SchemaName = schemaName });
             return this;
         }
 
@@ -141,7 +141,7 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
             // check we don't add a null value
             where = where ?? string.Empty;
 
-            this.CustomWheres.Add(where);
+            CustomWheres.Add(where);
             return this;
         }
 
@@ -157,8 +157,8 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
         /// </summary>
         public override IEnumerable<string> GetAllNamesProperties()
         {
-            yield return this.TableName;
-            yield return this.SchemaName;
+            yield return TableName;
+            yield return SchemaName;
         }
 
 
@@ -171,25 +171,25 @@ namespace ISynergy.Framework.Synchronization.Core.Setup
                 return false;
 
             // Check name properties
-            if (!this.EqualsByName(other))
+            if (!EqualsByName(other))
                 return false;
 
             // Compare all list properties
             // For each, check if they are both null or not null
             // If not null, compare each item
 
-            if (!this.Joins.CompareWith(other.Joins))
+            if (!Joins.CompareWith(other.Joins))
                 return false;
 
-            if (!this.Parameters.CompareWith(other.Parameters))
+            if (!Parameters.CompareWith(other.Parameters))
                 return false;
 
-            if (!this.Wheres.CompareWith(other.Wheres))
+            if (!Wheres.CompareWith(other.Wheres))
                 return false;
 
             // since it's string comparison, don't rely on internal comparison and provide our own comparison func, using StringComparison
             var sc = SyncGlobalization.DataSourceStringComparison;
-            if (!this.CustomWheres.CompareWith(other.CustomWheres, (c, oc) => string.Equals(c, oc, sc)))
+            if (!CustomWheres.CompareWith(other.CustomWheres, (c, oc) => string.Equals(c, oc, sc)))
                 return false;
 
             return true;

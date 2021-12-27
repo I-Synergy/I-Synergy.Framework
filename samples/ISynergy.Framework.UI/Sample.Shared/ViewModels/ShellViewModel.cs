@@ -9,6 +9,7 @@ using ISynergy.Framework.UI.Navigation;
 using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
+using System;
 
 #if WINDOWS_UWP || HAS_UNO
 using Windows.UI.Xaml;
@@ -27,9 +28,9 @@ namespace Sample.ViewModels
         /// Gets or sets the Version property value.
         /// </summary>
         /// <value>The version.</value>
-        public string Version
+        public Version Version
         {
-            get { return GetValue<string>(); }
+            get { return GetValue<Version>(); }
             set { SetValue(value); }
         }
 

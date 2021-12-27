@@ -293,7 +293,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
         /// <param name="numberOfVariables">The number of variables.</param>
         protected override void OnNumberOfVariablesChanged(int numberOfVariables)
         {
-            if (Solution == null || numberOfVariables > Solution.Length)
+            if (Solution is null || numberOfVariables > Solution.Length)
                 base.OnNumberOfVariablesChanged(numberOfVariables);
         }
         /// <summary>

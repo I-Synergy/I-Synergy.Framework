@@ -149,7 +149,7 @@ namespace ISynergy.Framework.IO.Watchers
         {
             _run = true;
 
-            if (_thread != null)
+            if (_thread is not null)
                 _thread.Start();
         }
 

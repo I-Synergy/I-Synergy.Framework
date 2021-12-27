@@ -95,7 +95,7 @@ namespace ISynergy.Framework.IO.Watchers.Base
         /// <param name="info">The information.</param>
         protected BaseWatcher(WatcherInfo info)
         {
-            Argument.IsNotNull(nameof(info), info);
+            Argument.IsNotNull(info);
             _watcherInfo = info;
             Initialize();
         }
@@ -199,7 +199,7 @@ namespace ISynergy.Framework.IO.Watchers.Base
                     watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
             }
 
-            if (watcher != null)
+            if (watcher is not null)
             {
                 if (_watcherInfo.WatchForError)
                     watcher.Error += new ErrorEventHandler(watcher_Error);

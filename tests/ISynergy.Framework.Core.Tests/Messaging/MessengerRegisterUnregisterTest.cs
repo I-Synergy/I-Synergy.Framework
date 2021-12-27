@@ -72,7 +72,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 {
                     var exceptionMessage =
                         m as TestMessageGeneric<Exception>;
-                    if (exceptionMessage != null)
+                    if (exceptionMessage is not null)
                     {
                         ReceivedContentException =
                             exceptionMessage.Content;
@@ -81,7 +81,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
                     var dateTimeMessage =
                         m as TestMessageGeneric<DateTime>;
-                    if (dateTimeMessage != null)
+                    if (dateTimeMessage is not null)
                     {
                         ReceivedContentDateTime1 =
                             dateTimeMessage.Content;
@@ -89,7 +89,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                     }
 
                     var stringMessage = m as TestMessageGeneric<string>;
-                    if (stringMessage != null)
+                    if (stringMessage is not null)
                     {
                         ReceivedContentStringA1 = stringMessage.Content;
                         return;
@@ -194,7 +194,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
                     var dateTimeMessage =
                         m as TestMessageGeneric<DateTime>;
-                    if (dateTimeMessage != null)
+                    if (dateTimeMessage is not null)
                     {
                         ReceivedContentDateTime1 =
                             dateTimeMessage.Content;
@@ -202,7 +202,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                     }
 
                     var stringMessage = m as TestMessageGeneric<string>;
-                    if (stringMessage != null)
+                    if (stringMessage is not null)
                     {
                         ReceivedContentStringA1 = stringMessage.Content;
                         return;
@@ -265,14 +265,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 m =>
                 {
                     var messageA = m as TestMessageA;
-                    if (messageA != null)
+                    if (messageA is not null)
                     {
                         ReceivedContentStringA1 = messageA.Content;
                         return;
                     }
 
                     var messageB = m as TestMessageB;
-                    if (messageB != null)
+                    if (messageB is not null)
                     {
                         ReceivedContentStringB = messageB.Content;
                         return;
@@ -315,13 +315,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 m =>
                 {
                     var messageA = m;
-                    if (messageA != null)
+                    if (messageA is not null)
                     {
                         ReceivedContentStringA1 = messageA.Content;
                     }
 
                     var messageAa = m as TestMessageAa;
-                    if (messageAa != null)
+                    if (messageAa is not null)
                     {
                         ReceivedContentStringA2 = messageAa.Content;
                     }

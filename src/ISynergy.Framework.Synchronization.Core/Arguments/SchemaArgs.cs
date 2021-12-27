@@ -1,5 +1,6 @@
-﻿using ISynergy.Framework.Synchronization.Core.Arguments;
-using ISynergy.Framework.Synchronization.Core.Database;
+﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
+using ISynergy.Framework.Synchronization.Core.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,7 +15,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public SchemaLoadingArgs(SyncContext context, SyncSetup setup, DbConnection connection, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Setup = setup;
+            Setup = setup;
         }
 
         /// <summary>
@@ -22,8 +23,8 @@ namespace ISynergy.Framework.Synchronization.Core
         /// </summary>
         public SyncSetup Setup { get; }
         public override string Source => Connection.Database;
-        public override string Message => $"Loading Schema For {this.Setup.Tables.Count} Tables.";
-
+        public override string Message => $"Loading Schema For {Setup.Tables.Count} Tables.";
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Debug;
         public override int EventId => SyncEventsId.SchemaLoading.Id;
     }
 
@@ -32,15 +33,16 @@ namespace ISynergy.Framework.Synchronization.Core
         public SchemaLoadedArgs(SyncContext context, SyncSet schema, DbConnection connection, DbTransaction transaction = null)
             : base(context, connection, transaction)
         {
-            this.Schema = schema;
+            Schema = schema;
         }
+        public override SyncProgressLevel ProgressLevel => SyncProgressLevel.Information;
 
         /// <summary>
         /// Gets the schema loaded.
         /// </summary>
         public SyncSet Schema { get; }
         public override string Source => Connection.Database;
-        public override string Message => $"Schema Loaded For {this.Schema.Tables.Count} Tables.";
+        public override string Message => $"[{Connection.Database}] Schema Loaded For {Schema.Tables.Count} Tables.";
 
         public override int EventId => SyncEventsId.SchemaLoaded.Id;
     }

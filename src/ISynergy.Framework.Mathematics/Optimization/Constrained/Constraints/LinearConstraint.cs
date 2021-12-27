@@ -78,7 +78,7 @@
             get { return indices; }
             set
             {
-                if (value == null)
+                if (value is null)
                     throw new ArgumentNullException("value");
 
                 if (value.Length != NumberOfVariables)
@@ -98,7 +98,7 @@
             get { return combinedAs; }
             set
             {
-                if (value == null)
+                if (value is null)
                     throw new ArgumentNullException("value");
 
                 if (value.Length != NumberOfVariables)
@@ -294,7 +294,7 @@
         /// <returns>The gradient of the constraint.</returns>
         public double[] Gradient(double[] x)
         {
-            if (grad == null)
+            if (grad is null)
             {
                 if (x.Length == indices.Length && indices.IsEqual(Vector.Range(x.Length)))
                 {
@@ -446,20 +446,20 @@
 
         private static string parse(Dictionary<string, double> terms, Expression expr, ref double value)
         {
-            if (expr == null)
+            if (expr is null)
                 return null;
 
             BinaryExpression eb = expr as BinaryExpression;
             MemberExpression em = expr as MemberExpression;
             UnaryExpression eu = expr as UnaryExpression;
 
-            if (em != null) // member expression
+            if (em is not null) // member expression
             {
                 string term = em.Member.Name;
                 terms[term] = 1;
                 return term;
             }
-            else if (eb != null) // binary expression
+            else if (eb is not null) // binary expression
             {
                 if (expr.NodeType == ExpressionType.Multiply)
                 {
@@ -468,7 +468,7 @@
                     MemberExpression m = eb.Left as MemberExpression ?? eb.Right as MemberExpression;
                     UnaryExpression u = eb.Left as UnaryExpression ?? eb.Right as UnaryExpression;
 
-                    if (a != null)
+                    if (a is not null)
                     {
                         // This is a constant times an expression
                         double scalar = (double)a.Value;
@@ -492,33 +492,33 @@
                     MemberExpression rm = eb.Right as MemberExpression;
                     ConstantExpression rc = eb.Right as ConstantExpression;
 
-                    if (lb != null)
+                    if (lb is not null)
                     {
                         parse(terms, lb, ref value);
                     }
-                    else if (lm != null)
+                    else if (lm is not null)
                     {
                         terms[lm.Member.Name] = 1;
                     }
-                    else if (lu != null)
+                    else if (lu is not null)
                     {
                         parse(terms, lu, ref value);
                     }
-                    else if (lc != null)
+                    else if (lc is not null)
                     {
                         value += (double)lc.Value;
                     }
                     else throw new FormatException("Unexpected expression.");
 
-                    if (rb != null)
+                    if (rb is not null)
                     {
                         parse(terms, rb, ref value);
                     }
-                    else if (rm != null)
+                    else if (rm is not null)
                     {
                         terms[rm.Member.Name] = 1;
                     }
-                    else if (rc != null)
+                    else if (rc is not null)
                     {
                         value += (double)rc.Value;
                     }
@@ -535,31 +535,31 @@
                     MemberExpression rm = eb.Right as MemberExpression;
                     ConstantExpression rc = eb.Right as ConstantExpression;
 
-                    if (lb != null)
+                    if (lb is not null)
                         parse(terms, lb, ref value);
-                    else if (lm != null)
+                    else if (lm is not null)
                         terms[lm.Member.Name] = 1;
-                    else if (lu != null)
+                    else if (lu is not null)
                         parse(terms, lu, ref value);
                     else throw new FormatException("Unexpected expression.");
 
-                    if (rb != null)
+                    if (rb is not null)
                     {
                         var term = parse(terms, rb, ref value);
                         terms[term] = -terms[term];
                     }
-                    else if (rm != null)
+                    else if (rm is not null)
                     {
                         terms[rm.Member.Name] = -1;
                     }
-                    else if (rc != null)
+                    else if (rc is not null)
                     {
                         value -= (double)rc.Value;
                     }
                     else throw new FormatException("Unexpected expression.");
                 }
             }
-            else if (eu != null) // unary expression
+            else if (eu is not null) // unary expression
             {
                 if (expr.NodeType == ExpressionType.UnaryPlus)
                 {
@@ -567,15 +567,15 @@
                     MemberExpression lm = eu.Operand as MemberExpression;
                     ConstantExpression lc = eu.Operand as ConstantExpression;
 
-                    if (lm != null)
+                    if (lm is not null)
                     {
                         terms[lm.Member.Name] = 1;
                     }
-                    else if (lb != null)
+                    else if (lb is not null)
                     {
                         parse(terms, lb, ref value);
                     }
-                    else if (lc != null)
+                    else if (lc is not null)
                     {
                         value += (double)lc.Value;
                     }
@@ -587,16 +587,16 @@
                     MemberExpression lm = eu.Operand as MemberExpression;
                     ConstantExpression lc = eu.Operand as ConstantExpression;
 
-                    if (lm != null)
+                    if (lm is not null)
                     {
                         terms[lm.Member.Name] = -1;
                     }
-                    else if (lb != null)
+                    else if (lb is not null)
                     {
                         var term = parse(terms, lb, ref value);
                         terms[term] = -terms[term];
                     }
-                    else if (lc != null)
+                    else if (lc is not null)
                     {
                         value -= (double)lc.Value;
                     }

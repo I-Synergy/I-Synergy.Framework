@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Synchronization.Core.Scopes
         {
             get
             {
-                var durationTs = new TimeSpan(this.LastSyncDuration);
+                var durationTs = new TimeSpan(LastSyncDuration);
                 return $"{durationTs.Hours}:{durationTs.Minutes}:{durationTs.Seconds}.{durationTs.Milliseconds}";
             }
         }

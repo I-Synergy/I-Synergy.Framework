@@ -42,7 +42,7 @@ namespace ISynergy.Framework.Core.Collections
         {
             get
             {
-                if (Parent == null)
+                if (Parent is null)
                     return null;
                 if (Index + 1 >= Parent.Children.Length)
                     return null;
@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Core.Collections
         /// 
         public bool IsLeaf
         {
-            get { return Children == null || Children.Length == 0; }
+            get { return Children is null || Children.Length == 0; }
         }
 
         /// <summary>

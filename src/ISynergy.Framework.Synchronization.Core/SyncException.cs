@@ -377,7 +377,7 @@ namespace ISynergy.Framework.Synchronization.Core
 
 
     /// <summary>
-    /// Occurs when a column is not supported by the ISynergy.Framework.Synchronization.Core framework
+    /// Occurs when a column is not supported by the ISynergy.Framework.Synchronization
     /// </summary>
     public class UnsupportedColumnTypeException : Exception
     {
@@ -386,7 +386,7 @@ namespace ISynergy.Framework.Synchronization.Core
         public UnsupportedColumnTypeException(string tableName, string columnName, string columnType, string provider) : base(string.Format(message, tableName, columnName, columnType, provider)) { }
     }
     /// <summary>
-    /// Occurs when a column name is not supported by the ISynergy.Framework.Synchronization.Core framework
+    /// Occurs when a column name is not supported by the ISynergy.Framework.Synchronization
     /// </summary>
     public class UnsupportedColumnNameException : Exception
     {
@@ -398,7 +398,7 @@ namespace ISynergy.Framework.Synchronization.Core
     }
 
     /// <summary>
-    /// Occurs when a column name is not supported by the ISynergy.Framework.Synchronization.Core framework for a primary key
+    /// Occurs when a column name is not supported by the ISynergy.Framework.Synchronization for a primary key
     /// </summary>
     public class UnsupportedPrimaryKeyColumnNameException : Exception
     {

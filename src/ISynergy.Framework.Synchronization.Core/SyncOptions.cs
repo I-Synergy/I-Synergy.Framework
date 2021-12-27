@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Synchronization.Core.Enumerations;
 using ISynergy.Framework.Synchronization.Core.Serialization;
 using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
 
 namespace ISynergy.Framework.Synchronization.Core
@@ -20,10 +21,11 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Default scope name if not specified
         /// </summary>
         public const string DefaultScopeName = "DefaultScope";
+        private int batchSize;
 
         /// <summary>
         /// Gets or Sets the directory used for batch mode.
-        /// Default value is [User Temp Path]/[DotmimSync]
+        /// Default value is [User Temp Path]/[I-Synergy.Synchronization]
         /// </summary>
         public string BatchDirectory { get; set; }
 
@@ -35,20 +37,19 @@ namespace ISynergy.Framework.Synchronization.Core
 
         /// <summary>
         /// Gets or Sets the size used (approximatively in kb, depending on the serializer) for each batch file, in batch mode. 
-        /// Default is 0 (no batch mode)
+        /// Default is 5000 
+        /// Min value is 1000
         /// </summary>
-        public int BatchSize { get; set; }
+        public int BatchSize
+        {
+            get => batchSize;
+            set => batchSize = Math.Max(value, 100);
+        }
 
         /// <summary>
         /// Gets or Sets the log level for sync operations. Default value is false.
         /// </summary>
         public bool UseVerboseErrors { get; set; }
-
-        /// <summary>
-        /// Gets or Sets if we should use the bulk operations. Default is true.
-        /// If provider does not support bulk operations, this option is overrided to false.
-        /// </summary>
-        public bool UseBulkOperations { get; set; }
 
         /// <summary>
         /// Gets or Sets if we should clean tracking table metadatas.
@@ -65,7 +66,7 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Default value is false
         /// </summary>
 
-        // trying false by default : https://github.com/Mimetis/ISynergy.Framework.Synchronization.Core/discussions/453#discussioncomment-380530
+        // trying false by default : https://github.com/Mimetis/Dotmim.Sync/discussions/453#discussioncomment-380530
         public bool DisableConstraintsOnApplyChanges { get; set; }
 
         /// <summary>
@@ -85,9 +86,15 @@ namespace ISynergy.Framework.Synchronization.Core
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Gets or Sets the serializer used when batch mode is enabled. Default is Json
+        /// Gets or Sets the local serializer used to buffer rows on disk
         /// </summary>
-        public ISerializerFactory SerializerFactory { get; set; }
+        public ILocalSerializerFactory LocalSerializerFactory { get; set; }
+
+        /// <summary>
+        /// Gets the Progress Level
+        /// </summary>
+        public SyncProgressLevel ProgressLevel { get; set; }
+
 
         /// <summary>
         /// Create a new instance of options with default values
@@ -95,21 +102,21 @@ namespace ISynergy.Framework.Synchronization.Core
         public SyncOptions()
         {
             BatchDirectory = GetDefaultUserBatchDiretory();
-            BatchSize = 0;
+            BatchSize = 5000;
             CleanMetadatas = true;
             CleanFolder = true;
-            UseBulkOperations = true;
             UseVerboseErrors = false;
             DisableConstraintsOnApplyChanges = false;
             ScopeInfoTableName = DefaultScopeInfoTableName;
             ConflictResolutionPolicy = ConflictResolutionPolicy.ServerWins;
             Logger = new LoggerFactory().CreateLogger(nameof(SyncOptions));
-            SerializerFactory = SerializersCollection.JsonSerializer;
+            ProgressLevel = SyncProgressLevel.Information;
+            LocalSerializerFactory = new LocalJsonSerializerFactory();
         }
 
 
         /// <summary>
-        /// Get the default Batch directory full path ([User Temp Path]/[DotmimSync])
+        /// Get the default Batch directory full path ([User Temp Path]/[I-Synergy.Synchronization])
         /// </summary>
         public static string GetDefaultUserBatchDiretory() => Path.Combine(GetDefaultUserTempPath(), GetDefaultUserBatchDirectoryName());
 
@@ -121,6 +128,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// <summary>
         /// Get the default sync tmp folder name
         /// </summary>
-        public static string GetDefaultUserBatchDirectoryName() => "DotmimSync";
+        public static string GetDefaultUserBatchDirectoryName() => "I-Synergy.Synchronization";
     }
 }

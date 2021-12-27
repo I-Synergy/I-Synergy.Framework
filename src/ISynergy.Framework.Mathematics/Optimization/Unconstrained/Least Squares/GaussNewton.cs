@@ -123,7 +123,7 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
         private double iterate(double[][] inputs, double[] outputs)
         {
-            if (Residuals == null || inputs.Length != Residuals.Length)
+            if (Residuals is null || inputs.Length != Residuals.Length)
             {
                 Residuals = new double[inputs.Length];
                 for (var i = 0; i < Jacobian.Length; i++)

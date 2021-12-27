@@ -16,7 +16,6 @@ namespace ISynergy.Framework.Synchronization.Core
         /// Gets or Sets the number decimal separator used to parse decimal float and double from data source.
         /// Default is Invariant Number Decimal Separator (".")
         /// </summary>
-
         public static string DataSourceNumberDecimalSeparator { get; set; }
             = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
 
@@ -35,6 +34,5 @@ namespace ISynergy.Framework.Synchronization.Core
         static SyncGlobalization()
         {
         }
-
     }
 }

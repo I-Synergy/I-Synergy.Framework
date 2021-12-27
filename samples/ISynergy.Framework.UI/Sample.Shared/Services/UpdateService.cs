@@ -85,7 +85,7 @@ namespace Sample.Services
         /// </summary>
         public async Task DownloadAndInstallUpdateAsync()
         {
-            if(updates != null && updates.Count > 0)
+            if(updates is not null && updates.Count > 0)
             {
                 // Download the packages.
                 var downloaded = await DownloadPackageUpdatesAsync(updates);

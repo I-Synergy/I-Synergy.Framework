@@ -129,13 +129,13 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <returns>System.String.</returns>
         public string GetEnumDescription(Enum value)
         {
-            Argument.IsNotNull(nameof(value), value);
+            Argument.IsNotNull(value);
 
             var description = value.ToString();
             var fieldInfo = value.GetType().GetField(description);
             var attributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
 
-            if (attributes != null && attributes.Length > 0)
+            if (attributes is not null && attributes.Length > 0)
             {
                 description = BaseCommonServices.LanguageService.GetString(attributes[0].Description);
             }
