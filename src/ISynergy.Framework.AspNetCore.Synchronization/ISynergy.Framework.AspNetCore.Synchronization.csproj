@@ -23,12 +23,11 @@
 		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.13" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
 	  <ProjectReference Include="..\ISynergy.Framework.Synchronization.Client\ISynergy.Framework.Synchronization.Client.csproj" />
 	</ItemGroup>
 </Project>

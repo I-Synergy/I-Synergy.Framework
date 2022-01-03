@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Synchronization.Client.Orchestrators;
 using ISynergy.Framework.Synchronization.Core;
+using ISynergy.Framework.Synchronization.Core.Abstractions;
 using ISynergy.Framework.Synchronization.SqlServer.ChangeTracking.Providers;
 using Microsoft.AspNetCore.SignalR.Client;
 using Sample.Synchronization.Common.Abstractions;
@@ -19,6 +20,7 @@ namespace Sample.Synchronization.Client.Services
         private readonly IContext _context;
         private readonly IMessageService _messageService;
         private readonly IVersionService _versionService;
+        private readonly IFileSynchronizationService _fileSynchronizationService;
         private readonly ClientSynchronizationOptions _options;
         private readonly Timer _timer;
         private readonly HubConnection _connection;
@@ -27,6 +29,7 @@ namespace Sample.Synchronization.Client.Services
             IContext context,
             IMessageService messageService,
             IVersionService versionService,
+            IFileSynchronizationService fileSynchronizationService,
             ClientSynchronizationOptions options)
         {
             Argument.IsNotNull(options);
@@ -34,6 +37,7 @@ namespace Sample.Synchronization.Client.Services
             _context = context;
             _messageService = messageService;
             _versionService = versionService;
+            _fileSynchronizationService = fileSynchronizationService;
             _options = options;
 
             _connection = new HubConnectionBuilder()
@@ -66,7 +70,8 @@ namespace Sample.Synchronization.Client.Services
                         // Tester is online and able to connect.
                         MarkClientOnline();
 
-                        await SynchronizeAsync();
+                        //await SynchronizeAsync();
+                        await SynchronizeFilesAsync();
                     }
                     else
                     {
@@ -133,6 +138,29 @@ namespace Sample.Synchronization.Client.Services
                     Console.WriteLine($"Synchronization failed at {DateTime.Now}.{Environment.NewLine}{ex.Message}");
                 }
 
+            }
+            else
+            {
+                Console.WriteLine("Tester is unavailable and disconnected.");
+            }
+        }
+
+        public async Task SynchronizeFilesAsync()
+        {
+            if (!_context.IsOffline)
+            {
+                try
+                {
+                    Console.WriteLine($"File synchronization started at {DateTime.Now}");
+
+                    await _fileSynchronizationService.SynchronizeAsync();
+
+                    Console.WriteLine($"File synchronization completed at {DateTime.Now}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"File synchronization failed at {DateTime.Now}.{Environment.NewLine}{ex.Message}");
+                }
             }
             else
             {

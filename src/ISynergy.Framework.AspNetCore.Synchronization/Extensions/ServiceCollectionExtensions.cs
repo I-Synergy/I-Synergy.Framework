@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Orchestrators;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Synchronization.Core;
 using ISynergy.Framework.Synchronization.Core.Abstractions;
 using ISynergy.Framework.Synchronization.Core.Setup;
@@ -37,11 +38,10 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Extensions
             SyncSetup setup = null, 
             SyncOptions options = null)
         {
-            if (string.IsNullOrWhiteSpace(connectionString))
-                throw new ArgumentNullException(nameof(connectionString));
+            Argument.IsNotNullOrEmpty(connectionString);
+            Argument.IsNotNull(setup);
 
             options ??= new SyncOptions();
-            setup = setup ?? throw new ArgumentNullException(nameof(setup));
 
             // Create provider
             var provider = (IProvider)Activator.CreateInstance(providerType);

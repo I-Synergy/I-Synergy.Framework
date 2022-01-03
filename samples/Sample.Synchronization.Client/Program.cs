@@ -16,15 +16,21 @@ namespace Sample.Synchronization.Client
             {
                 var context = Context.GetInstance();
                 var syncSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", $"{nameof(ClientSynchronizationOptions)}.json");
+                var fileSyncSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", $"{nameof(FileSynchronizationOptions)}.json");
 
-                if (File.Exists(syncSettingsPath))
+                if (File.Exists(syncSettingsPath) && File.Exists(fileSyncSettingsPath))
                 {
                     var config = new ConfigurationBuilder()
                         .AddJsonFile(syncSettingsPath, false)
+                        .AddJsonFile(fileSyncSettingsPath, false)
                         .AddEnvironmentVariables()
                         .Build();
 
-                    if(config.Get<ClientSynchronizationOptions>() is ClientSynchronizationOptions options && !string.IsNullOrEmpty(options.Host))
+                    if(config.Get<ClientSynchronizationOptions>() is ClientSynchronizationOptions options &&
+                        config.Get<FileSynchronizationOptions>() is FileSynchronizationOptions fileSyncOptions &&
+                        !string.IsNullOrEmpty(options.Host) &&
+                        !string.IsNullOrEmpty(fileSyncOptions.Host)
+                        )
                     {
                         var serviceProvider = new ServiceCollection()
                         .AddLogging()
