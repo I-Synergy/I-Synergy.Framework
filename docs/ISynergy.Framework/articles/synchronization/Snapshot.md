@@ -24,7 +24,7 @@ the server side, when initializing a new client:
 5)  **Client** orchestrator applies the rows to the local database using
     the client provider.
 
-![image](assets/Snapshot01.png)
+![image](images/Snapshot01.png)
 
 > Depending on numbers of tables, and rows, the step **3** could take a
   lot of times.
@@ -63,7 +63,7 @@ Server side
 Create a new method, that will generate a *snapshot* at a current time
 *T* with all rows / tables, available for all new clients:
 
-![image](assets/Snapshot02.png)
+![image](images/Snapshot02.png)
 
 > ### Note
 > Creates a new project, a console application for example, to create a

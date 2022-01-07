@@ -178,7 +178,7 @@ serverProxyOrchestrator.OnSendingChanges(args =>
 });
 ```
 
-![image](assets/CustomMSPackSerializer.png)
+![image](images/CustomMSPackSerializer.png)
 
 Custom converter
 ----------------

@@ -1,7 +1,7 @@
 Overview
 ========
 
-![image](assets/Smallicon.png)
+![image](images/Smallicon.png)
 
 > **I-Synergy.Framework.Synchronization** (**the synchronization framework**) is the easiest way to handle a full
   **synchronization** between one server database and multiples clients
@@ -24,7 +24,7 @@ Nuget packages
 Basically, **the synchronization framework** is working with *sync database providers*, that are
 available through nuget, from the **Visual Studio** interface:
 
-![packages](assets/Packages.png)
+![packages](images/Packages.png)
 
 Obviously, you can add them through your command line, assuming you are
 developing with **Visual Studio Code**, **Rider** or even **Notepad** :)

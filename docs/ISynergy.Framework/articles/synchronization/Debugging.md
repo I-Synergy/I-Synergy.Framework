@@ -16,9 +16,9 @@ Once we\'ve correctly configured our Visual Studio environment, we are
 able to **Step Into** the **the synchronization framework** code, during a debugging session (or
 press **F11**):
 
-![image](assets/StepInto.png)
+![image](images/StepInto.png)
 
-![image](assets/Debuggingthe synchronization frameworkSourceCode.png)
+![image](images/Debuggingthe synchronization frameworkSourceCode.png)
 
 As you can see in the previous screenshot, we are actually *step into*
 the `SynchronizeAsync` method directly from your code.
@@ -53,7 +53,7 @@ Go to **Tools** \> **Options** \> **Debugging** \> **Symbols**:
 > If you don\'t have the Nuget.Org Symbol option, you can add this url
 directly : <https://symbols.nuget.org/download/symbols>
 
-![image](assets/SymbolsOptions.png)
+![image](images/SymbolsOptions.png)
 
 > Now we are able to map the execution to the original source code
   location, but we still miss\... the source code itself !
@@ -83,7 +83,7 @@ Go to **Tools** \> **Options** \> **Debugging** \> **General**:
 -   Uncheck **Enable Just My Code**
 -   Check **Enable Source Link support**
 
-![image](assets/DebuggingOptions.png)
+![image](images/DebuggingOptions.png)
 
 We can now debug our code, and **Step Into** the the synchronization framework code as well.
 

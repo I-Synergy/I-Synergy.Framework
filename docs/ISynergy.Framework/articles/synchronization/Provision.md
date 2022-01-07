@@ -347,7 +347,7 @@ public virtual async Task DeprovisionAsync(SyncSet schema, SyncProvision provisi
 Let\'s start with a basic example, where you have a simple database
 containing two tables *Customers* and *Region*:
 
-![provision](assets/Provision_Northwind01.png)
+![provision](images/Provision_Northwind01.png)
 
 And here the most straightforward code to be able to sync a client db :
 
@@ -366,7 +366,7 @@ Console.WriteLine(syncContext);
 Once your sync process is finished, you will have a full configured
 database :
 
-![provision](assets/Provision_Northwind02.png)
+![provision](images/Provision_Northwind02.png)
 
 **the synchronization framework** has provisioned:
 

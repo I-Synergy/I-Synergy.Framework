@@ -82,9 +82,8 @@
     "resource": [
       {
         "files": [
-          "assets/**"
-        ],
-        "src": "../.."
+          "images/**"
+        ]
       }
     ],
     "overwrite": [
@@ -104,8 +103,8 @@
     "globalMetadata": {
       "_appTitle": "I-Synergy Framework Documentation",
       "_appFooter": "",
-      "_appLogoPath": "assets/images/logo.svg",
-      "_appFaviconPath": "assets/favicon.ico"
+      "_appLogoPath": "images/logo.svg",
+      "_appFaviconPath": "images/favicon.ico"
     },
     "fileMetadataFiles": [],
     "template": [

@@ -54,7 +54,7 @@ Your project file should be something like this:
 
 Here is a screenshot of Visual Studio, after installing the packages:
 
-![image](assets/SqliteEncryption01.png)
+![image](images/SqliteEncryption01.png)
 
 -   As you can see, the `I-Synergy.Framework.Synchronization.Sqlite` is referencing the
     `Microsoft.Data.Sqlite` package that is referencing

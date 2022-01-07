@@ -81,7 +81,7 @@ To illustrate how it works, here is a straightforward scenario:
 2)  Each customer has **Addresses** and **Sales Orders** which should be
     filtered as well.
 
-![Tables diagram](assets/DatabaseDiagram.png)
+![Tables diagram](images/DatabaseDiagram.png)
 
 We will have to filter on each level:
 

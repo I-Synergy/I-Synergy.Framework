@@ -11,7 +11,7 @@ successful sync:
 SELECT * FROM [Customer_tracking]
 ```
 
-![image](assets/metadatas.png)
+![image](images/metadatas.png)
 
 > So, over time, we can have an increase of these tracking tables, with
   a lot of rows that are not useful anymore.

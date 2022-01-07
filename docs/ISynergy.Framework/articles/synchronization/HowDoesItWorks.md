@@ -27,7 +27,7 @@ Overview
 Here is the big picture of the components used in a simple
 synchronization, over **TCP**:
 
-![Architecture](assets/Architecture01.png)
+![Architecture](images/Architecture01.png)
 
 If we take a close look to the
 [HelloSync](https://github.com/I-Synergy/I-Synergy.Framework/tree/master/samples/Sample.Synchronization)
@@ -89,7 +89,7 @@ Of course, a real scenario will involve more clients databases. Each
 client will have its own provider, depending on the local database type.
 And each client will have a sync agent, responsible of the sync process:
 
-![architecture](assets/Architecture02.png)
+![architecture](images/Architecture02.png)
 
 Sync over HTTP
 --------------
@@ -113,7 +113,7 @@ network. Here is coming a new orchestrator in the game. Or shoud I say
 
 Here is the big picture of this more advanced scenario:
 
-![architecture](assets/Architecture03.png)
+![architecture](images/Architecture03.png)
 
 You can read more on the web architecture and how to implement it, here:
 [Asp.net Core Web Api sync proxy](./Web.html)

@@ -173,12 +173,12 @@ You should have useful information, like a test to reach your server
 database, your `SyncSetup`, your `SqlSyncProvider`, your `SyncOptions`
 and your `WebServerOptions` configuration:
 
-![image](assets/WebServerProperties.png)
+![image](images/WebServerProperties.png)
 
 If your configuration is not correct, you should have an error message,
 like this:
 
-![image](assets/WebServerPropertiesError.png)
+![image](images/WebServerPropertiesError.png)
 
 Client side
 -----------
@@ -213,4 +213,4 @@ Now we can launch both application, The Web Api on one side, and the
 Console application on the other side. Just hit Enter and get the
 results from your synchronization over http.
 
-![image](assets/WebSync01.png)
+![image](images/WebSync01.png)

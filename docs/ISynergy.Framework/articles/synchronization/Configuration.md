@@ -191,7 +191,7 @@ var setup = new SyncSetup(tables)
 };
 ```
 
-![configuration](assets/SyncConfiguration01.png)
+![configuration](images/SyncConfiguration01.png)
 
 ### HTTP mode
 
@@ -410,7 +410,7 @@ await agent.SynchronizeAsync();
 
 Here is the fiddler trace:
 
-![batch](assets/batch01.png)
+![batch](images/batch01.png)
 
 > As you can see, the fiddler trace shows a http response around **16
   Mb** (approximatively **6 Mb** compressed).
@@ -439,7 +439,7 @@ its payload, regarding the client ask.
 
 Here is the fiddler trace:
 
-![batch](assets/batch02.png)
+![batch](images/batch02.png)
 
 And the progress of the sync process:
 
