@@ -1,5 +1,8 @@
 ﻿using ISynergy.Framework.AspNetCore.Synchronization.Orchestrators;
+using ISynergy.Framework.Synchronization.Core.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Sample.Synchronization.Common.Options;
 
 namespace Sample.Synchronization.Server.Controllers
 {
@@ -8,12 +11,17 @@ namespace Sample.Synchronization.Server.Controllers
     public class SyncController : ControllerBase
     {
         private readonly WebServerOrchestrator _orchestrator;
+        private readonly ServerSynchronizationOptions _options;
         private readonly ILogger _logger;
 
         // Injected thanks to Dependency Injection
-        public SyncController(WebServerOrchestrator webServerOrchestrator, ILogger<SyncController> logger)
+        public SyncController(
+            WebServerOrchestrator webServerOrchestrator,
+            IOptions<ServerSynchronizationOptions> options,
+            ILogger<SyncController> logger)
         {
             _orchestrator = webServerOrchestrator;
+            _options = options.Value;
             _logger = logger;
         }
 
@@ -34,5 +42,30 @@ namespace Sample.Synchronization.Server.Controllers
         [HttpGet]
         public Task Get()
             => WebServerOrchestrator.WriteHelloAsync(HttpContext, _orchestrator);
+
+        /// <summary>
+        /// Retrieves the remote folder for the client.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("files/folder")]
+        public string GetRemoteFolder() 
+            => _orchestrator.GetRemoteFullPath(_options.SynchronizationFolderPath);
+
+        /// <summary>
+        /// Gets a list of files in the remote folder.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("files/list")]
+        public List<FileInfoMetadata> GetRemoteFiles()
+            => _orchestrator.GetRemoteFiles(_options.SynchronizationFolderPath);
+
+        /// <summary>
+        /// Downloads file by it's full name.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        [HttpGet("files/download")]
+        public IActionResult DownloadFile(string path) 
+            => PhysicalFile(path, "application/octet-stream", Path.GetFileName(path));
     }
 }

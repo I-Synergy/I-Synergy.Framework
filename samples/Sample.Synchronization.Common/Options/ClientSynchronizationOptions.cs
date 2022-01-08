@@ -1,4 +1,6 @@
-﻿namespace Sample.Synchronization.Common.Options
+﻿using ISynergy.Framework.Synchronization.Core.Abstractions;
+
+namespace Sample.Synchronization.Common.Options
 {
     /// <summary>
     /// Class that defines synchronization settings.

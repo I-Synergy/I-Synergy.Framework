@@ -14,11 +14,13 @@ using ISynergy.Framework.Synchronization.Core.Batch;
 using ISynergy.Framework.Synchronization.Core.Builders;
 using ISynergy.Framework.Synchronization.Core.Extensions;
 using ISynergy.Framework.Synchronization.Core.Messages;
+using ISynergy.Framework.Synchronization.Core.Models;
 using ISynergy.Framework.Synchronization.Core.Orchestrators;
 using ISynergy.Framework.Synchronization.Core.Serialization;
 using ISynergy.Framework.Synchronization.Core.Set;
 using ISynergy.Framework.Synchronization.Core.Setup;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -1061,5 +1063,38 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
 
             await httpResponse.WriteAsync(stringBuilder.ToString(), cancellationToken);
         }
+
+        /// <summary>
+        /// Retrieves the remote folder for the client.
+        /// </summary>
+        /// <returns></returns>
+        public string GetRemoteFullPath(string path)
+        {
+            Argument.IsNotNullOrEmpty(path);
+            return Path.GetFullPath(path);
+        }
+
+        /// <summary>
+        /// Gets a list of files in the remote folder.
+        /// </summary>
+        /// <returns></returns>
+        public List<FileInfoMetadata> GetRemoteFiles(string path)
+        {
+            Argument.IsNotNullOrEmpty(path);
+            var remotePath = GetRemoteFullPath(path);
+            var remoteFolder = new DirectoryInfo(remotePath);
+            return remoteFolder
+                .GetFiles("*.*", SearchOption.AllDirectories)
+                .Select(s => new FileInfoMetadata(remoteFolder.FullName, s))
+                .ToList();
+        }
+
+        /// <summary>
+        /// Downloads file by it's full name.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>PhysicalFileResult</returns>
+        public PhysicalFileResult DownloadFile(string path) =>
+            new PhysicalFileResult(path, "application/octet-stream");
     }
 }

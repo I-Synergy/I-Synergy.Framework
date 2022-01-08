@@ -2,7 +2,7 @@
 I-Synergy Framework for backend and frontend applications
 
 ## Documentation
- [I-Synergy Framework Documentation](https://i-synergy.github.io/I-Synergy.Framework/)
+ [I-Synergy Framework Documentation](https://framework.i-synergy.net/)
 
 ___
 ## I-Synergy Framework Build Status
@@ -47,7 +47,8 @@ ___
 | [I-Synergy.Framework.Storage](https://www.nuget.org/packages/I-Synergy.Framework.Storage/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage) |
 | [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage.Azure) |
 | [I-Synergy.Framework.Synchronization.Client](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Client/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Client) |
-| [I-Synergy.Framework.Synchronization.Core](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Core) |
+| [I-Synergy.Framework.Synchronization.Core](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Core/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Core) |
+| [I-Synergy.Framework.Synchronization.Files](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Files/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Files) |
 | [I-Synergy.Framework.Synchronization.Sqlite](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.Sqlite/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.Sqlite) |
 | [I-Synergy.Framework.Synchronization.SqlServer](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.SqlServer/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.SqlServer) |
 | [I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking](https://www.nuget.org/packages/I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Synchronization.SqlServer.ChangeTracking) |

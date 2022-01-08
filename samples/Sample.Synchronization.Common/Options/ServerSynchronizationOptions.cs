@@ -25,5 +25,10 @@
         /// List of all folders to be synchronized.
         /// </summary>
         public string[] Folders { get; set; }
+
+        /// <summary>
+        /// Path of folder to be synchronized.
+        /// </summary>
+        public string SynchronizationFolderPath { get; set; }
     }
 }

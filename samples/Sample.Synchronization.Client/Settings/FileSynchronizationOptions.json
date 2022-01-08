@@ -1,0 +1,9 @@
+{
+  "CheckHostInterval": "00:00:15",
+  "Host": "https://localhost:8080",
+  "SynchronizationFolderPath": "C:\\Temp\\Client",
+  "SynchronizationFolderRoute": "/api/sync/files/folder",
+  "SynchronizationListRoute": "/api/sync/files/list",
+  "SynchronizationDownloadRoute": "/api/sync/files/download",
+  "SynchronizationDownloadParameter": "path"
+}

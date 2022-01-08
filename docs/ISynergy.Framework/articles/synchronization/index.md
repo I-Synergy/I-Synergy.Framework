@@ -9,7 +9,7 @@ Welcome to the I-Synergy Synchronization Framework
 > In this initial version we only support SQL Server, Azure SQL, localDB and Sqlite databases.
 
 
-![icon](assets/Smallicon.png)
+![icon](images/Smallicon.png)
 
 **I-Synergy.Framework.Synchronization** (**the synchronization framework**) is a straightforward framework for syncing
 relational databases, developed on top of **.Net Standard 2.0**,
@@ -24,9 +24,9 @@ Available for syncing **SQL Server**, **MySQL**, **MariaDB** and
 >
 > This framework is still in beta. There is no support other than me and the time I can put on it. Don\'t be afraid to reach me out, but expect delay sometimes :)
 
-![all in one](assets/allinone.png)
+![all in one](images/allinone.png)
 
-![Architecture](assets/Architecture01.png)
+![Architecture](images/Architecture01.png)
 
 Starting from scratch
 =====================

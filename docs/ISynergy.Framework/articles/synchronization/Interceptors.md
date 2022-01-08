@@ -17,7 +17,7 @@ stage**.
   intercept the sync process, encapsulate in a fancy `OnMethodAsync()`
   method:
 
-![image](assets/interceptor01.png)
+![image](images/interceptor01.png)
 
 Imagine you have a table that should **never** be synchronized. You\'re
 able to use an interceptor like this:
@@ -98,7 +98,7 @@ agent.LocalOrchestrator.OnTableChangesSelected(args =>
 *In the screenshot below, yellow lines are interceptors from server
 side.*
 
-![image](assets/ProgressionInterceptors.png)
+![image](images/ProgressionInterceptors.png)
 
 Interceptors DbCommand execution
 --------------------------------
