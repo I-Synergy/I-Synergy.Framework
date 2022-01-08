@@ -99,19 +99,6 @@ namespace ISynergy.Framework.AspNetCore.Synchronization.Orchestrators
             HandleRequestAsync(context, null, token, progress);
 
         /// <summary>
-        /// Gets list of file metadata
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private Task<List<FileInfoMetadata>> GetFileMetadataAsync(string path)
-        {
-            var filePath = Path.GetFullPath(path);
-            var rootFolder = new DirectoryInfo(filePath);
-            var files = rootFolder.GetFiles("*.*", SearchOption.AllDirectories);
-            return Task.FromResult(files.Select(s => new FileInfoMetadata(rootFolder.FullName, s)).ToList());
-        }
-
-        /// <summary>
         /// Call this method to handle requests on the server, sent by the client
         /// </summary>
         public async Task HandleRequestAsync(HttpContext httpContext, Action<RemoteOrchestrator> action, CancellationToken cancellationToken, IProgress<ProgressArgs> progress)

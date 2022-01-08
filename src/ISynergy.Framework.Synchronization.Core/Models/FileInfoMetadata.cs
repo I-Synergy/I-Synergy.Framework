@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Synchronization.Core.Models
     /// <summary>
     /// File info with meta data class
     /// </summary>
-    public class FileInfoMetadata : IEquatable<FileInfoMetadata>
+    public sealed class FileInfoMetadata : IEquatable<FileInfoMetadata>
     {
         /// <summary>
         /// Relative file path name.

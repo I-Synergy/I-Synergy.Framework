@@ -56,12 +56,12 @@ namespace ISynergy.Framework.Synchronization.Files.Services
         /// <returns></returns>
         private async Task CopyFilesAsync()
         {
-            foreach (var metadata in _remoteFiles.Except(_localFiles, _comparer))
+            foreach (var metadataFullName in _remoteFiles.Except(_localFiles, _comparer).Select(s => s.FullName))
             {
-                var file = new FileInfo(metadata.FullName.Replace(_remoteDirectory.FullName, _localDirectory.FullName));
+                var file = new FileInfo(metadataFullName.Replace(_remoteDirectory.FullName, _localDirectory.FullName));
 
                 await new Url($"{_options.Host}{_options.SynchronizationDownloadRoute}")
-                    .SetQueryParam(_options.SynchronizationDownloadParameter, metadata.FullName)
+                    .SetQueryParam(_options.SynchronizationDownloadParameter, metadataFullName)
                     .DownloadFileAsync(Path.GetDirectoryName(file.FullName));
             }
         }
