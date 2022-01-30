@@ -1,4 +1,4 @@
-<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\..\project.props" />
 	
 	<PropertyGroup>
@@ -46,6 +46,9 @@
 			</ItemGroup>
 		</When>
 		<Otherwise>
+			<PropertyGroup>
+				<UnoUIDisableLongPathWarning>True</UnoUIDisableLongPathWarning>
+			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="Uno.Core" Version="4.0.1" />
 				<PackageReference Include="Uno.UI" Version="4.0.13" />
