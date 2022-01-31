@@ -34,10 +34,13 @@
 			</ItemGroup>
 		</When>
 		<Otherwise>
+			<PropertyGroup>
+				<UnoUIDisableLongPathWarning>True</UnoUIDisableLongPathWarning>
+			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="Uno.Core" Version="4.0.1" />
-				<PackageReference Include="Uno.UI" Version="4.0.11" />
-				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.10" />
+				<PackageReference Include="Uno.UI" Version="4.0.13" />
+				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.11" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
 			</ItemGroup>
 		</Otherwise>
