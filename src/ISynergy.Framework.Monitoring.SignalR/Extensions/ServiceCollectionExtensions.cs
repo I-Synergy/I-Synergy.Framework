@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Monitoring.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Monitoring.Abstractions.Services;
 using ISynergy.Framework.Monitoring.Hubs;
 using ISynergy.Framework.Monitoring.Services;
 using Microsoft.AspNetCore.Builder;
@@ -44,9 +45,8 @@ namespace ISynergy.Framework.Monitoring.Extensions
         /// <returns></returns>
         public static IApplicationBuilder UseMonitorSignalR(this IApplicationBuilder app)
         {
-            app.UseRouting();
-            app.UseEndpoints(endpoints => endpoints.MapHub<MonitorHub>("/monitor"));
-            return app;
+            Argument.IsNotNull(app);
+            return app.UseEndpoints(endpoints => endpoints.MapHub<MonitorHub>("/monitor"));
         }
     }
 }

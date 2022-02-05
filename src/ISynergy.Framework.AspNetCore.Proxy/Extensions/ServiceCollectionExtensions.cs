@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.AspNetCore.Proxy.Middleware;
 using ISynergy.Framework.AspNetCore.Proxy.Options;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,8 +36,8 @@ namespace ISynergy.Framework.AspNetCore.Proxy.Extensions
         /// <returns></returns>
         public static IApplicationBuilder UseProxy(this IApplicationBuilder app)
         {
-            app.UseMiddleware<GatewayProxyMiddleware>();
-            return app;
+            Argument.IsNotNull(app);
+            return app.UseMiddleware<GatewayProxyMiddleware>();
         }
     }
 }
