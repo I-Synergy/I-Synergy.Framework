@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
     /// </summary>
     public abstract class BaseOptimizationMethod
     {
-        private int numberOfVariables;
+        private int _numberOfVariables;
 
         private double[] x;
 
@@ -79,10 +79,10 @@ namespace ISynergy.Framework.Mathematics.Optimization.Base
         /// <value>The number of parameters.</value>
         public virtual int NumberOfVariables
         {
-            get => numberOfVariables;
+            get => _numberOfVariables;
             set
             {
-                numberOfVariables = value;
+                _numberOfVariables = value;
                 OnNumberOfVariablesChanged(value);
             }
         }

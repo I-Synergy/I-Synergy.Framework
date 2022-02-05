@@ -19,7 +19,6 @@ namespace ISynergy.Framework.AspNetCore.Extensions
         public static IApplicationBuilder UseMaxConcurrentRequests(this IApplicationBuilder app)
         {
             Argument.IsNotNull(app);
-
             return app.UseMiddleware<MaxConcurrentRequestsMiddleware>();
         }
     }
