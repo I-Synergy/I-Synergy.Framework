@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Storage.Abstractions.Options;
 using ISynergy.Framework.Storage.Abstractions.Services;
 using ISynergy.Framework.Storage.Azure.Services;
@@ -24,9 +23,6 @@ namespace ISynergy.Framework.Storage.Azure.Extensions
         public static IServiceCollection AddStorageAzureIntegration<TStorageOptions>(this IServiceCollection services, IConfiguration configuration, string containerName)
             where TStorageOptions : class, IStorageOptions, new()
         {
-            services.AddOptions();
-            services.Configure<TStorageOptions>(configuration.GetSection(nameof(TStorageOptions)).BindWithReload);
-            
             services.AddSingleton<IStorageService<TStorageOptions>, StorageService<TStorageOptions>>(e =>
                 new StorageService<TStorageOptions>(e.GetService<IOptions<TStorageOptions>>(), containerName));
 
@@ -42,9 +38,6 @@ namespace ISynergy.Framework.Storage.Azure.Extensions
         public static IServiceCollection AddTenantStorageAzureIntegration<TStorageOptions>(this IServiceCollection services, IConfiguration configuration)
             where TStorageOptions : class, IStorageOptions, new()
         {
-            services.AddOptions();
-            services.Configure<TStorageOptions>(configuration.GetSection(nameof(TStorageOptions)).BindWithReload);
-
             services.AddSingleton<IStorageService<TStorageOptions>, StorageService<TStorageOptions>>(e =>
                 new StorageService<TStorageOptions>(e.GetService<IOptions<TStorageOptions>>(), e.GetService<ITenantService>().TenantId.ToString()));
 

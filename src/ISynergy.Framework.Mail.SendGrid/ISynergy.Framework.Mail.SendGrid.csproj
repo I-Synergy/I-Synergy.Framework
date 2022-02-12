@@ -22,7 +22,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-        <PackageReference Include="SendGrid" Version="9.25.2" />
+        <PackageReference Include="SendGrid" Version="9.25.3" />
     </ItemGroup>
 
     <ItemGroup>
