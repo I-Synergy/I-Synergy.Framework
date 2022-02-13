@@ -64,7 +64,7 @@ stages:
             versionSpec: 6.0.0
 
         - task: UseDotNet@2
-          displayName: 'Install .Net SDK 6.0.100'
+          displayName: 'Install .Net SDK'
           inputs:
             packageType: 'sdk'
             useGlobalJson: true
@@ -844,6 +844,12 @@ stages:
           displayName: 'Use NuGet 6.0.0'
           inputs:
             versionSpec: 6.0.0
+
+        - task: UseDotNet@2
+          displayName: 'Install .Net SDK'
+          inputs:
+            packageType: 'sdk'
+            useGlobalJson: true
 
         - task: ChocolateyToolInstaller@0
           inputs:
