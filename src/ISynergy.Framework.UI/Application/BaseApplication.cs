@@ -414,22 +414,23 @@ namespace ISynergy.Framework.UI
             services.AddLogging();
             services.AddOptions();
 
+            // Register singleton services
             services.AddSingleton((s) => _languageService);
             services.AddSingleton((s) => _navigationService);
-            
             services.AddSingleton<ILogger>((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
-            
             services.AddSingleton<IMessageService, MessageService>();
-            services.AddSingleton<IBusyService, BusyService>();
-            services.AddSingleton<IThemeService, ThemeService>();
-            services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
-            services.AddSingleton<IConverterService, ConverterService>();
-            services.AddSingleton<IFileService, FileService>();
-            services.AddSingleton<IDispatcherService, DispatcherService>();
+            
+            // Register scoped services
+            services.AddScoped<IThemeService, ThemeService>();
+            services.AddScoped<IAuthenticationProvider, AuthenticationProvider>();
+            services.AddScoped<IConverterService, ConverterService>();
+            services.AddScoped<IBusyService, BusyService>();
+            services.AddScoped<IDialogService, DialogService>();
+            services.AddScoped<IDispatcherService, DispatcherService>();
+            services.AddScoped<IFileService, FileService>();
 
             //Register functions
-            services.AddSingleton<LocalizationFunctions>();
+            services.AddScoped<LocalizationFunctions>();
         }
 
         /// <summary>
@@ -533,11 +534,11 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction is not null && !viewmodel.IsGenericType)
                 {
-                    _services.AddSingleton(abstraction, viewmodel);
+                    _services.AddScoped(abstraction, viewmodel);
                 }
                 else
                 {
-                    _services.AddSingleton(viewmodel);
+                    _services.AddScoped(viewmodel);
                 }
             }
 
@@ -551,11 +552,11 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction is not null)
                 {
-                    _services.AddSingleton(abstraction, view);
+                    _services.AddScoped(abstraction, view);
                 }
                 else
                 {
-                    _services.AddSingleton(view);
+                    _services.AddScoped(view);
                 }
 
                 var viewmodel = ViewModelTypes.Find(q =>
@@ -580,17 +581,17 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction is not null)
                 {
-                    _services.AddSingleton(abstraction, window);
+                    _services.AddScoped(abstraction, window);
                 }
                 else
                 {
-                    _services.AddSingleton(window);
+                    _services.AddScoped(window);
                 }
             }
 
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
             {
-                _services.AddSingleton(bootstrapper);
+                _services.AddScoped(bootstrapper);
             }
         }
 
