@@ -136,8 +136,8 @@ namespace Sample
             services.AddClipboardIntegration();
 #endif
 
-            services.AddSingleton<IShellViewModel, ShellViewModel>();
-            services.AddSingleton<IShellView, ShellView>();
+            services.AddScoped<IShellViewModel, ShellViewModel>();
+            services.AddScoped<IShellView, ShellView>();
 
             //Add current resource manager.
             AddResourceManager(new ResourceManager(typeof(Resources)));
