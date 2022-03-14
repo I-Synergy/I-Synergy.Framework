@@ -148,11 +148,12 @@ namespace ISynergy.Framework.Update.Services
         {
             try
             {
-                System.Net.WebClient UpdateWebClient = new System.Net.WebClient();
-
-                await UpdateWebClient.DownloadFileTaskAsync(
-                    new Uri(_updateOptions.UpdateUrl + $"software/download?application={applicationId}"),
-                    _updateOptions.UpdateFilePath);
+                using (var UpdateWebClient = new System.Net.WebClient())
+                {
+                    await UpdateWebClient.DownloadFileTaskAsync(
+                       new Uri(_updateOptions.UpdateUrl + $"software/download?application={applicationId}"),
+                       _updateOptions.UpdateFilePath);
+                } 
             }
             catch (Exception)
             {

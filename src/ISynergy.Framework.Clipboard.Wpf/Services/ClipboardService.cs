@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Clipboard.Services
 
                 return Task.FromResult<object>(BitmapFrame.Create(iBitmapStream));
             }
-            return null;
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
