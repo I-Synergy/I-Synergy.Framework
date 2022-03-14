@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>34d4b002-d63f-4845-9817-a209f0054123</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ISynergy.Framework.UI</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Application\BaseApplication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Views\View.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Windows\Window.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SettingsStorageExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\WindowExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\LanguageResource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Navigation\NavigationItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DialogService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\NavigationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ThemeService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModelBase.cs" />
+  </ItemGroup>
+</Project>

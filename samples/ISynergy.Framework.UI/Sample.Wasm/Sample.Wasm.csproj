@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\..\project.props" />
-
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
@@ -46,8 +44,8 @@
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
 		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.1.0" />
 		<PackageReference Include="Uno.Material" Version="1.2.0" />
-        <PackageReference Include="Uno.UI.WebAssembly" Version="4.0.13" />
-		<PackageReference Include="Uno.UI.RemoteControl" Version="4.0.13" Condition="'$(Configuration)'=='Debug'" />
+        <PackageReference Include="Uno.UI.WebAssembly" Version="4.1.8" />
+		<PackageReference Include="Uno.UI.RemoteControl" Version="4.1.8" Condition="'$(Configuration)'=='Debug'" />
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.2.0" />
         <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.2.0" PrivateAssets="all" />
     </ItemGroup>

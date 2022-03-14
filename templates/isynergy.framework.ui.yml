@@ -1,0 +1,64 @@
+  steps:
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.UI - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.UI - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.UI.Uwp - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.UI.Uwp\ISynergy.Framework.UI.Uwp.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.UI.Uwp - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.UI.Uwp\ISynergy.Framework.UI.Uwp.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.UI.WinUI - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.UI.WinUI - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.UI.Wpf - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.UI.Wpf\ISynergy.Framework.UI.Wpf.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.UI.Wpf - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.UI.Wpf\ISynergy.Framework.UI.Wpf.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'

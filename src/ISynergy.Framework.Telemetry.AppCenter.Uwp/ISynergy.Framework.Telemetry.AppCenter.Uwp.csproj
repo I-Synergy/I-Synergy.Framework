@@ -1,0 +1,36 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\ISynergy.Framework.Telemetry.AppCenter.Shared\ISynergy.Framework.Telemetry.AppCenter.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFramework>uap10.0.18362</TargetFramework>
+		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+		<PackageId>ISynergy.Framework.Telemetry.AppCenter.Uwp</PackageId>
+		<Description>I-Synergy Framework Telemetry library for AppCenter Uwp</Description>
+		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Uwp</PackageTags>
+		<RootNamespace>ISynergy.Framework.Telemetry.AppCenter</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+</Project>

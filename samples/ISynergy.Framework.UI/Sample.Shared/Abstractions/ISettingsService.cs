@@ -5,7 +5,7 @@ namespace Sample.Abstractions.Services
     /// <summary>
     /// Interface ISettingsService
     /// </summary>
-    public interface ISettingsService : IBaseSettingsService
+    public interface ISettingsService
     {
         /// <summary>
         /// Gets a value indicating whether this instance is first run.

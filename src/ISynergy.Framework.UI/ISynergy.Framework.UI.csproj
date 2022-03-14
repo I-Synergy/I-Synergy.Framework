@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0;netstandard2.0;net6.0;MonoAndroid11.0</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0;net6.0-windows;netstandard2.0;net6.0;MonoAndroid11.0</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Uno Platform Applications</Description>
@@ -19,6 +19,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		
 	</ItemGroup>
 
 	<Choose>
@@ -51,8 +52,8 @@
 			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="Uno.Core" Version="4.0.1" />
-				<PackageReference Include="Uno.UI" Version="4.0.13" />
-				<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.0.13" />
+				<PackageReference Include="Uno.UI" Version="4.1.8" />
+				<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.1.8" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.11" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
 			</ItemGroup>

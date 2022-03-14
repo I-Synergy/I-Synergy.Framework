@@ -21,6 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj" />
 	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 	</ItemGroup>
 

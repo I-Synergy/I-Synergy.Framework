@@ -19,7 +19,9 @@
 		<Version>1.0.0</Version>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<NoWarn>1701;1702;CS1591</NoWarn>
+		<NoWarn>1701;1702;CS1591;CS8002</NoWarn>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">

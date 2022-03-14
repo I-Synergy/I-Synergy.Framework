@@ -1,5 +1,4 @@
 ﻿#if WINDOWS_UWP || WINDOWS
-
 using System;
 using System.IO;
 using System.Threading.Tasks;

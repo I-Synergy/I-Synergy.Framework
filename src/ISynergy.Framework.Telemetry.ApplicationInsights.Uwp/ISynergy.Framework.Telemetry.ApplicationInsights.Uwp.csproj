@@ -1,0 +1,35 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\ISynergy.Framework.Telemetry.ApplicationInsights.Shared\ISynergy.Framework.Telemetry.ApplicationInsights.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFramework>uap10.0.18362</TargetFramework>
+		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+		<PackageId>I-Synergy.Framework.Telemetry.ApplicationInsights.Uwp</PackageId>
+		<Description>I-Synergy Framework Telemetry library for ApplicationInsights Uwp</Description>
+		<PackageTags>I-Synergy, Framework, Telemetry, ApplicationInsights, Uwp</PackageTags>
+		<RootNamespace>ISynergy.Framework.Telemetry.ApplicationInsights</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj" />
+	</ItemGroup>
+</Project>

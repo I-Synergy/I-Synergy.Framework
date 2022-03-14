@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+
 #if WINDOWS_UWP || WINDOWS
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
@@ -20,14 +21,14 @@ namespace ISynergy.Framework.UI.Functions
         /// <summary>
         /// The settings service
         /// </summary>
-        public readonly IBaseSettingsService SettingsService;
+        public readonly IBaseApplicationSettingsService SettingsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizationFunctions"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="settingsService">The settings service.</param>
-        public LocalizationFunctions(IContext context, IBaseSettingsService settingsService)
+        public LocalizationFunctions(IContext context, IBaseApplicationSettingsService settingsService)
         {
             Context = context;
             SettingsService = settingsService;
@@ -39,7 +40,7 @@ namespace ISynergy.Framework.UI.Functions
         /// <param name="isoLanguage">The iso language.</param>
         public void SetLocalizationLanguage(string isoLanguage)
         {
-            SettingsService.Culture = isoLanguage;
+            SettingsService.Settings.Culture = isoLanguage;
 
 #if WINDOWS_UWP || WINDOWS
             ApplicationLanguages.PrimaryLanguageOverride = isoLanguage;

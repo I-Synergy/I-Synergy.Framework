@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.UI.Abstractions.Services
 {

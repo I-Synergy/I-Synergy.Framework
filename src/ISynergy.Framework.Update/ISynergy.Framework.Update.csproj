@@ -2,10 +2,10 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Update</PackageId>
-		<Description>I-Synergy Framework Update for WinUI and UWP</Description>
-		<PackageTags>I-Synergy, Framework, Update, WinUI, UWP, UAP</PackageTags>
+		<Description>I-Synergy Framework Update for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
+		<PackageTags>I-Synergy, Framework, Update</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

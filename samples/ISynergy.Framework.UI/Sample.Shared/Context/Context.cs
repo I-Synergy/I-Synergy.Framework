@@ -86,7 +86,7 @@ namespace Sample
         {
             get
             {
-                if (CurrentProfile is not null)
+                if (CurrentProfile != null)
                 {
                     return TimeZoneInfo.FindSystemTimeZoneById(CurrentProfile.TimeZoneId);
                 }
@@ -179,7 +179,7 @@ namespace Sample
         {
             get
             {
-                if (CurrentProfile is not null)
+                if (CurrentProfile != null)
                 {
                     return CurrentProfile.IsAuthenticated;
                 }
@@ -196,7 +196,7 @@ namespace Sample
         {
             get
             {
-                if (CurrentProfile is not null)
+                if (CurrentProfile != null)
                 {
                     return CurrentProfile.IsInRole(nameof(RoleNames.Administrator));
                 }

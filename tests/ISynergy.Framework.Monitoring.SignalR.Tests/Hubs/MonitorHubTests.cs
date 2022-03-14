@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
