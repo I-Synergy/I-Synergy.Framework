@@ -1,6 +1,8 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Physics.Abstractions;
+using ISynergy.Framework.Physics.Enumerations;
+using ISynergy.Framework.Physics.Extensions;
 using System;
 using System.Linq;
 
@@ -98,6 +100,29 @@ namespace ISynergy.Framework.Physics.Services
 
             if (Units.Where(q => q.Symbol.Equals(sourceSymbol)).Single() is IUnit source &&
                 Units.Where(q => q.Symbol.Equals(targetSymbol)).Single() is IUnit target)
+                return Convert(source, value, target);
+
+            throw new ArgumentException("Converter failed to get the corresponding units.");
+        }
+
+        /// <summary>
+        /// Converter to convert from unit enumeration to another unit enumeration.
+        /// </summary>
+        /// <param name="sourceUnit"></param>
+        /// <param name="value"></param>
+        /// <param name="targetUnit"></param>
+        /// <returns></returns>
+        public double Convert(Units sourceUnit, double value, Units targetUnit)
+        {
+            Argument.IsNotNull(sourceUnit);
+            Argument.IsNotNull(value);
+            Argument.IsNotNull(targetUnit);
+
+            if (targetUnit.Equals(sourceUnit))
+                return value;
+
+            if (Units.Where(q => q.Symbol.Equals(sourceUnit.GetSymbol())).Single() is IUnit source &&
+                Units.Where(q => q.Symbol.Equals(targetUnit.GetSymbol())).Single() is IUnit target)
                 return Convert(source, value, target);
 
             throw new ArgumentException("Converter failed to get the corresponding units.");

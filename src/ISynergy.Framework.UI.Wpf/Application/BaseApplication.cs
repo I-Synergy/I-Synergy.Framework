@@ -146,15 +146,15 @@ namespace ISynergy.Framework.UI
             _context.ViewModels = ViewModelTypes;
 
             //Only in Windows i can set the culture.
-            var culture = CultureInfo.CurrentCulture;
+            //var culture = CultureInfo.CurrentCulture;
 
-            culture.NumberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
-            culture.NumberFormat.CurrencyNegativePattern = 1;
+            //culture.NumberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+            //culture.NumberFormat.CurrencyNegativePattern = 1;
 
-            _context.NumberFormat = culture.NumberFormat;
+            //_context.NumberFormat = culture.NumberFormat;
 
-            var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
-            localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IBaseApplicationSettingsService>().Settings.Culture);
+            //var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
+            //localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IBaseApplicationSettingsService>().Settings.Culture);
 
             // Bootstrap all registered modules.
             foreach (var bootstrapper in BootstrapperTypes.Distinct())

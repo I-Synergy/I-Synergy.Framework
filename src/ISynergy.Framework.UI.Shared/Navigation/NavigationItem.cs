@@ -20,11 +20,6 @@ namespace ISynergy.Framework.UI.Navigation
         /// <value>The name.</value>
         public string Name { get; set; }
         /// <summary>
-        /// Gets or sets the symbol.
-        /// </summary>
-        /// <value>The symbol.</value>
-        public string Symbol { get; set; }
-        /// <summary>
         /// Gets or sets the command.
         /// </summary>
         /// <value>The command.</value>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ISynergy.Framework.Physics.Enumerations;
+using System.Collections.Generic;
 
 namespace ISynergy.Framework.Physics.Abstractions
 {
@@ -33,5 +34,14 @@ namespace ISynergy.Framework.Physics.Abstractions
         /// <param name="targetSymbol"></param>
         /// <returns></returns>
         double Convert(string sourceSymbol, double value, string targetSymbol);
+
+        /// <summary>
+        /// Converter to convert from unit enumeration to another unit enumeration.
+        /// </summary>
+        /// <param name="sourceUnit"></param>
+        /// <param name="value"></param>
+        /// <param name="targetUnit"></param>
+        /// <returns></returns>
+        double Convert(Units sourceUnit, double value, Units targetUnit);
     }
 }

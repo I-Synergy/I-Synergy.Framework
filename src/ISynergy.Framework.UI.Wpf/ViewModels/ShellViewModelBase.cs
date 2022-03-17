@@ -34,7 +34,11 @@ namespace ISynergy.Framework.UI.ViewModels
 
         private void InitializeUI()
         {
-            ForegroundColor = new SolidColorBrush(ColorHelper.HexStringToColor(_themeService.Style.Color));
+            if(_themeService is not null)
+            {
+                ForegroundColor = new SolidColorBrush(ColorHelper.HexStringToColor(_themeService.Style.Color));
+            }
+
             StateChanged_Command = new Command<VisualStateChangedEventArgs>(args => GoToState(args.NewState.Name));
         }
 
@@ -46,7 +50,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             var brush = Application.Current.Resources["SystemControlForegroundBaseHighBrush"] as SolidColorBrush;
 
-            if (!_themeService.IsLightThemeEnabled)
+            if (_themeService is not null && !_themeService.IsLightThemeEnabled)
             {
                 brush = Application.Current.Resources["SystemControlForegroundAltHighBrush"] as SolidColorBrush;
             }

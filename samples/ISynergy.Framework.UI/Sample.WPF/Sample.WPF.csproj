@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\..\project.props" />
 	<PropertyGroup>
-		<OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
-		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
-		<TargetFramework>net5.0-windows</TargetFramework>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <AssemblyName>Sample</AssemblyName>
         <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -12,26 +10,51 @@
         <Company>International Intelligence</Company>
         <Authors>Ismail Hassani</Authors>
         <AssemblyName>Sample</AssemblyName>
+        <CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+        <RootNamespace>Sample</RootNamespace>
+		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     </PropertyGroup>
-    <PropertyGroup>
-		<UnoSourceGeneratorUseGenerationController>false</UnoSourceGeneratorUseGenerationController>
-	</PropertyGroup>
-    <ItemGroup>
-        <UpToDateCheckInput Include="..\Sample.Shared\**\*.xaml" />
-    </ItemGroup>
-    <ItemGroup Condition="exists('..\Sample.Shared')">
-        <Content Include="..\Sample.Shared\Assets\StoreLogo.scale-100.png" Link="Assets\StoreLogo.png" />
-        <Content Include="..\Sample.Shared\Assets\Fonts\uno-fluentui-assets.ttf" Link="Assets\Fonts\uno-fluentui-assets.ttf" />
-    </ItemGroup>
-
-    <ItemGroup>
-		<PackageReference Include="Uno.Material" Version="1.0.0-dev.674" />
-		<PackageReference Include="Uno.UI.Lottie" Version="3.6.0-dev.429" />
-        <PackageReference Include="Uno.UI.Skia.Wpf" Version="3.6.0-dev.429" />
-        <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.429" Condition="'$(Configuration)'=='Debug'" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <ProjectReference Include="..\Sample.Skia.Gtk.WPF\Sample.Skia.Gtk.WPF.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+	  <PackageReference Include="Syncfusion.SfInput.WPF" Version="19.4.0.56" />
+	  <PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="19.4.0.56" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Clipboard.Wpf\ISynergy.Framework.Clipboard.Wpf.csproj" />
+	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj" />
+	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.AppCenter.Wpf\ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj" />
+	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.Wpf\ISynergy.Framework.UI.Wpf.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>PublicSettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
+	</ItemGroup>
 </Project>

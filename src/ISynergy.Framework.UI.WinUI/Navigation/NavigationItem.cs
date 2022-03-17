@@ -1,6 +1,9 @@
 ﻿using System.Windows.Input;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Shapes;
 
 namespace ISynergy.Framework.UI.Navigation
 {
@@ -11,6 +14,11 @@ namespace ISynergy.Framework.UI.Navigation
     /// <seealso cref="NavigationBase" />
     public partial class NavigationItem
     {
+        /// <summary>
+        /// Gets or sets the symbol.
+        /// </summary>
+        /// <value>The symbol.</value>
+        public string Symbol { get; set; }
         /// <summary>
         /// Gets or sets the selected visibility.
         /// </summary>

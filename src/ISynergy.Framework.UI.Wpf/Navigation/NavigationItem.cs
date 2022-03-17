@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace ISynergy.Framework.UI.Navigation
 {
@@ -11,6 +12,11 @@ namespace ISynergy.Framework.UI.Navigation
     /// <seealso cref="NavigationBase" />
     public partial class NavigationItem
     {
+        /// <summary>
+        /// Gets or sets the symbol.
+        /// </summary>
+        /// <value>The symbol.</value>
+        public Path Symbol { get; set; }
         /// <summary>
         /// Gets or sets the selected visibility.
         /// </summary>
@@ -26,7 +32,7 @@ namespace ISynergy.Framework.UI.Navigation
         /// </summary>
         /// <value>The foreground.</value>
         public SolidColorBrush Foreground { get; set; }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationItem"/> class.
         /// </summary>
@@ -39,7 +45,14 @@ namespace ISynergy.Framework.UI.Navigation
         {
             Name = name;
             ToolTipMenu = name;
-            Symbol = symbol;
+            Symbol = new Path {
+                Data = Geometry.Parse(symbol),
+                Fill = foreground ?? new SolidColorBrush(Colors.Black),
+                Height = 16, 
+                Width = 16, 
+                Stretch = Stretch.Fill, 
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center };
             Foreground = foreground;
             Command = command;
             CommandParameter = commandParameter;
