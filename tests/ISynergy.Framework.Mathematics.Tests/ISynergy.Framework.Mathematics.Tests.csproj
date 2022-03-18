@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\project.props" />
-    
     <PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
         <IsPackable>false</IsPackable>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <ItemGroup>

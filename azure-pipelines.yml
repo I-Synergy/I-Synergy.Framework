@@ -4,13 +4,6 @@ trigger:
 - master
 
 variables:
-  - name: VersionMajor
-    value: ''
-  - name: VersionMinor
-    value: ''
-  - name: VersionRevision
-    value: ''
-
   - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     - group: ACC
  
@@ -28,35 +21,89 @@ stages:
       displayName: 'Build, pack and test assemblies'
       timeoutInMinutes: 120
       steps:
-        - task: PowerShell@2
-          displayName: Set the Major Version variable value
+        - task: gitversion/setup@0
+          displayName: Determine Version Number
           inputs:
-            targetType: 'inline'
-            script: |
-              [string] $buildNumber = $Env:BUILD_BUILDNUMBER
-              [string] $version = $buildNumber.Substring(0,4)
-              Write-Host "Setting the major version number variable to '$version'."
-              Write-Host "##vso[task.setvariable variable=VersionMajor]$version"
+            versionSpec: '5.x'
         
-        - task: PowerShell@2
-          displayName: Set the Minor Version variable value
+        - task: gitversion/execute@0
+          displayName: Calculating version
           inputs:
-            targetType: 'inline'
-            script: |
-              [string] $buildNumber = $Env:BUILD_BUILDNUMBER
-              [string] $version = $buildNumber.Substring(5,4)
-              Write-Host "Setting the minor version number variable to '$version'."
-              Write-Host "##vso[task.setvariable variable=VersionMinor]$version"
+            useConfigFile: True
+            configFilePath: "gitversion.yml"
 
-        - task: PowerShell@2
-          displayName: Set the Revision Version variable value
+        #- task: PowerShell@2
+        #  displayName: Set the version variable value
+        #  inputs:
+        #    targetType: 'inline'
+        #    script: |
+        #      [version] $version = $(GitVersion.SemVer)
+        #      Write-Host "##vso[task.setvariable variable=VersionMajor]$version.Major"
+        #      Write-Host "##vso[task.setvariable variable=VersionMinor]$version.Minor"
+        #      Write-Host "##vso[task.setvariable variable=VersionBuild]$version.Build"
+        #      Write-Host "##vso[task.setvariable variable=VersionRevision]$version.Revision"
+
+        - task: Assembly-Info-NetCore@2
+          displayName: 'Set Assembly Manifest Data v2'
           inputs:
-            targetType: 'inline'
-            script: |
-              [string] $buildNumber = $Env:BUILD_BUILDNUMBER
-              [string] $revision = $buildNumber.Substring($buildNumber.LastIndexOf('.') + 1)
-              Write-Host "Setting the revision number variable to '$revision'."
-              Write-Host "##vso[task.setvariable variable=VersionRevision]$revision"
+            FileNames: |
+             src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj
+             src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj
+             src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj
+             src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj
+             src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj
+             src\ISynergy.Framework.AspNetCore.Globalization\ISynergy.Framework.AspNetCore.Globalization.csproj
+             src\ISynergy.Framework.AspNetCore.MultiTenancy\ISynergy.Framework.AspNetCore.MultiTenancy.csproj
+             src\ISynergy.Framework.AspNetCore.Proxy\ISynergy.Framework.AspNetCore.Proxy.csproj
+             src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
+             src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj
+             src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj
+             src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj
+             src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj
+             src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj
+             src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj
+             src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj
+             src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
+             src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
+             src\ISynergy.Framework.Documents\ISynergy.Framework.Documents.csproj
+             src\ISynergy.Framework.Documents.Syncfusion\ISynergy.Framework.Documents.Syncfusion.csproj
+             src\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj
+             src\ISynergy.Framework.Mail.SendGrid\ISynergy.Framework.Mail.SendGrid.csproj
+             src\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj
+             src\ISynergy.Framework.Monitoring.Client.SignalR\ISynergy.Framework.Monitoring.Client.SignalR.csproj
+             src\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj
+             src\ISynergy.Framework.Monitoring.SignalR\ISynergy.Framework.Monitoring.SignalR.csproj
+             src\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj
+             src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj
+             src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj
+             src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
+             src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj
+             src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj
+             src\ISynergy.Framework.Telemetry.AppCenter.Uwp\ISynergy.Framework.Telemetry.AppCenter.Uwp.csproj
+             src\ISynergy.Framework.Telemetry.AppCenter.WinUI\ISynergy.Framework.Telemetry.AppCenter.WinUI.csproj
+             src\ISynergy.Framework.Telemetry.AppCenter.Wpf\ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj
+             src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj
+             src\ISynergy.Framework.Telemetry.ApplicationInsights.Uwp\ISynergy.Framework.Telemetry.ApplicationInsights.Uwp.csproj
+             src\ISynergy.Framework.Telemetry.ApplicationInsights.WinUI\ISynergy.Framework.Telemetry.ApplicationInsights.WinUI.csproj
+             src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj
+             src\ISynergy.Framework.Clipboard.Uwp\ISynergy.Framework.Clipboard.Uwp.csproj
+             src\ISynergy.Framework.Clipboard.WinUI\ISynergy.Framework.Clipboard.WinUI.csproj
+             src\ISynergy.Framework.Clipboard.Wpf\ISynergy.Framework.Clipboard.Wpf.csproj
+             src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
+             src\ISynergy.Framework.UI.Uwp\ISynergy.Framework.UI.Uwp.csproj
+             src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj
+             src\ISynergy.Framework.UI.Wpf\ISynergy.Framework.UI.Wpf.csproj
+             src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj
+             src\ISynergy.Framework.Update.Uwp\ISynergy.Framework.Update.Uwp.csproj
+             src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj
+             src\ISynergy.Framework.Update.Wpf\ISynergy.Framework.Update.Wpf.csproj
+            InsertAttributes: true
+            WriteBOM: true
+            GeneratePackageOnBuild: true
+            VersionNumber: '$(GitVersion.SemVer)'
+            FileVersionNumber: '$(GitVersion.AssemblySemFileVer)'
+            InformationalVersion: '$(GitVersion.InformationalVersion)'
+            PackageVersion: '$(GitVersion.NuGetVersionV2)'
 
         - task: NuGetToolInstaller@1
           displayName: 'Install NuGet 6.0.0'
@@ -97,55 +144,7 @@ stages:
             scannerMode: 'MSBuild'
             projectKey: 'I-Synergy.Framework'
             projectName: 'I-Synergy.Framework'
-            projectVersion: '$(VersionPackage)'
-      
-        - task: Assembly-Info-NetCore@2
-          displayName: 'Set Assembly Manifest Data v2'
-          inputs:
-            FileNames: |
-             src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj
-             src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj
-             src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj
-             src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj
-             src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj
-             src\ISynergy.Framework.AspNetCore.Globalization\ISynergy.Framework.AspNetCore.Globalization.csproj
-             src\ISynergy.Framework.AspNetCore.MultiTenancy\ISynergy.Framework.AspNetCore.MultiTenancy.csproj
-             src\ISynergy.Framework.AspNetCore.Proxy\ISynergy.Framework.AspNetCore.Proxy.csproj
-             src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj
-             src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj
-             src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj
-             src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj
-             src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj
-             src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj
-             src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj
-             src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj
-             src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
-             src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
-             src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
-             src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj
-             src\ISynergy.Framework.Documents\ISynergy.Framework.Documents.csproj
-             src\ISynergy.Framework.Documents.Syncfusion\ISynergy.Framework.Documents.Syncfusion.csproj
-             src\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj
-             src\ISynergy.Framework.Mail.SendGrid\ISynergy.Framework.Mail.SendGrid.csproj
-             src\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj
-             src\ISynergy.Framework.Monitoring.Client.SignalR\ISynergy.Framework.Monitoring.Client.SignalR.csproj
-             src\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj
-             src\ISynergy.Framework.Monitoring.SignalR\ISynergy.Framework.Monitoring.SignalR.csproj
-             src\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj
-             src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj
-             src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj
-             src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
-             src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj
-             src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj
-             src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj
-             src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj
-            InsertAttributes: true
-            WriteBOM: true
-            GeneratePackageOnBuild: true
-            VersionNumber: '$(VersionNumber)'
-            FileVersionNumber: '$(VersionFile)'
-            InformationalVersion: '$(VersionInformational)'
-            PackageVersion: '$(VersionPackage)'
+            projectVersion: '$(GitVersion.FullSemVer)'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Core'
@@ -162,7 +161,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.IO'
@@ -179,7 +178,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Automations'
@@ -196,7 +195,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore'
@@ -213,7 +212,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Authentication'
@@ -230,7 +229,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Globalization'
@@ -247,7 +246,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.MultiTenancy'
@@ -264,7 +263,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Proxy'
@@ -281,7 +280,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Documents'
@@ -298,7 +297,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Documents.Syncfusion'
@@ -315,7 +314,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.EntityFramework'
@@ -332,7 +331,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Financial'
@@ -349,7 +348,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Geography'
@@ -366,7 +365,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Mail'
@@ -383,7 +382,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Mail.SendGrid'
@@ -400,7 +399,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Physics'
@@ -417,7 +416,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Mathematics'
@@ -434,7 +433,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.MessageBus'
@@ -451,7 +450,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.MessageBus.Azure'
@@ -468,7 +467,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Monitoring'
@@ -485,7 +484,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Monitoring.Client.SignalR'
@@ -502,7 +501,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Monitoring.Common'
@@ -519,7 +518,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Monitoring.SignalR'
@@ -536,7 +535,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Mvvm'
@@ -553,7 +552,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Printer.Label'
@@ -570,7 +569,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Printer.Label.Dymo'
@@ -587,7 +586,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Storage'
@@ -604,7 +603,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Storage.Azure'
@@ -621,7 +620,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Payment'
@@ -638,7 +637,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Payment.Mollie'
@@ -655,7 +654,7 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Telemetry'
@@ -672,88 +671,49 @@ stages:
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
-        - task: MSBuild@1
-          displayName: 'I-Synergy.Framework.Telemetry.AppCenter - Nuget Restore'
-          inputs:
-            solution: 'src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
+        - template: templates/isynergy.framework.telemetry.yml
 
-        - task: MSBuild@1
-          displayName: 'I-Synergy.Framework.Telemetry.AppCenter - Build and Pack'
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Clipboard'
           inputs:
-            solution: 'src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+            command: build
+            projects: 'src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj'
+            arguments: '-c $(BuildConfiguration)'
 
-        - task: MSBuild@1
-          displayName: 'I-Synergy.Framework.Telemetry.ApplicationInsights - Nuget Restore'
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Clipboard'
           inputs:
-            solution: 'src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
-        - task: MSBuild@1
-          displayName: 'I-Synergy.Framework.Telemetry.ApplicationInsights - Build and Pack'
-          inputs:
-            solution: 'src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+        - template: templates/isynergy.framework.clipboard.yml
 
-        - task: MSBuild@1
-          displayName: 'I-Synergy.Framework.Clipboard - Nuget Restore'
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.Update'
           inputs:
-            solution: 'src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
+            command: build
+            projects: 'src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj'
+            arguments: '-c $(BuildConfiguration)'
 
-        - task: MSBuild@1
-          displayName: 'I-Synergy.Framework.Clipboard - Build and Pack'
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.Update'
           inputs:
-            solution: 'src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
 
-        - task: MSBuild@1
-          displayName: 'Framework Update - Nuget Restore'
-          inputs:
-            solution: 'src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
+        - template: templates/isynergy.framework.update.yml
+        - template: templates/isynergy.framework.ui.yml
 
-        - task: MSBuild@1
-          displayName: 'Framework Update - Build and Pack'
-          inputs:
-            solution: 'src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
-
-        - task: MSBuild@1
-          displayName: 'Framework UI - Nuget Restore'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/t:restore'
-
-        - task: MSBuild@1
-          displayName: 'Framework UI - Build and Pack'
-          inputs:
-            solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
-            platform: AnyCpu
-            configuration: '$(BuildConfiguration)'
-            msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
-        
         - task: NuGetCommand@2
           displayName: 'Sign Nuget packages'
           inputs:

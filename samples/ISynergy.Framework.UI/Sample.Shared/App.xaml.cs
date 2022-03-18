@@ -25,7 +25,6 @@ using ISynergy.Framework.Telemetry.Extensions;
 using ISynergy.Framework.UI.Options;
 
 #if WINDOWS || WINDOWS_UWP
-using ISynergy.Framework.Clipboard.Services;
 using ISynergy.Framework.Clipboard.Extensions;
 #endif
 
@@ -124,7 +123,7 @@ namespace Sample
             services.AddSingleton<IUpdateService, UpdateService>();
 #endif
 
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseSettingsService, SettingsService>());
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService, SettingsService>());
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
@@ -143,7 +142,11 @@ namespace Sample
             AddResourceManager(new ResourceManager(typeof(Resources)));
 
             //Add current assembly.
-            RegisterAssemblies(assembly, x => x.Name.StartsWith("Sample"));
+            //Add current assembly.
+            RegisterAssemblies(assembly, x =>
+                x.Name.StartsWith(GetType().Namespace) ||
+                x.Name.Equals(Assembly.GetAssembly(typeof(Sample.Views.Display.Assembly.Identifier)).FullName) ||
+                x.Name.Equals(Assembly.GetAssembly(typeof(Sample.ViewModels.Display.Assembly.Identifier)).FullName));
         }
 
         /// <summary>

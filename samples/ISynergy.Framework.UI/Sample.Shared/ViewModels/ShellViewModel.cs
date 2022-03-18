@@ -10,6 +10,7 @@ using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using System;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 #if WINDOWS_UWP || HAS_UNO
 using Windows.UI.Xaml;
@@ -93,7 +94,7 @@ namespace Sample.ViewModels
         public ShellViewModel(
             IContext context,
             ICommonServices commonServices,
-            ISettingsService settingsService,
+            IBaseApplicationSettingsService settingsService,
             ILogger logger,
             IThemeService themeService,
             LocalizationFunctions localizationFunctions)

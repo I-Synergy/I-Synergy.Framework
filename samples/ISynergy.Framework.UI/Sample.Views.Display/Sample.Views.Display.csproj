@@ -1,8 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
-	<Import Project="..\..\..\project.props" />
-	
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<Description>Sample View for Display</Description>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
@@ -20,7 +18,11 @@
 			<ItemGroup>
 				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
-				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.1" />
+			</ItemGroup>
+
+			<ItemGroup>
+				<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
@@ -32,6 +34,10 @@
 				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
 				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.2" />
 			</ItemGroup>
+
+			<ItemGroup>
+				<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.Uwp\ISynergy.Framework.UI.Uwp.csproj" />
+			</ItemGroup>
 		</When>
 		<Otherwise>
 			<PropertyGroup>
@@ -39,7 +45,7 @@
 			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="Uno.Core" Version="4.0.1" />
-				<PackageReference Include="Uno.UI" Version="4.0.13" />
+				<PackageReference Include="Uno.UI" Version="4.1.8" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.11" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
 			</ItemGroup>
@@ -47,29 +53,22 @@
 	</Choose>
 
 	<ItemGroup>
-	  <None Remove="SlideShowView.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Page Include="SlideShowView.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="SlideShowView.xaml.cs">
-	    <DependentUpon>SlideShowView.xaml</DependentUpon>
-	  </Compile>
 	</ItemGroup>
 </Project>

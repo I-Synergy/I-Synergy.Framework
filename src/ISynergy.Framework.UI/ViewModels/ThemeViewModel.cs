@@ -25,6 +25,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// The settings service.
         /// </summary>
         private readonly IThemeService _themeService;
+        private readonly IBaseApplicationSettingsService _applicationSettingsService;
 
         /// <summary>
         /// Gets or sets the Items property value.
@@ -49,15 +50,18 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
+        /// <param name="applicationSettingsService"></param>
         /// <param name="themeService">The settings services.</param>
         /// <param name="logger">The logger factory.</param>
         public ThemeViewModel(
             IContext context,
             IBaseCommonServices commonServices,
+            IBaseApplicationSettingsService applicationSettingsService,
             IThemeService themeService,
             ILogger logger)
             : base(context, commonServices, logger)
         {
+            _applicationSettingsService = applicationSettingsService;
             _themeService = themeService;
 
             ThemeColors = new ThemeColors();
@@ -71,10 +75,14 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="e">if set to <c>true</c> [e].</param>
         /// <returns>Task.</returns>
-        public override Task SubmitAsync(Style e)
+        public override async Task SubmitAsync(Style e)
         {
+            _applicationSettingsService.Settings.Theme = e.Theme;
+            _applicationSettingsService.Settings.Color = e.Color;
+            await _applicationSettingsService.SaveSettingsAsync();
+
             _themeService.SetStyle(e);
-            return base.SubmitAsync(e);
+            await base.SubmitAsync(e);
         }
     }
 }

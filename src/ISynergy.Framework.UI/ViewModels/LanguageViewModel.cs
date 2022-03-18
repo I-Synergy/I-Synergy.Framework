@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Microsoft.Extensions.Logging;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Functions;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <summary>
         /// The settings service.
         /// </summary>
-        private readonly IBaseSettingsService _settingsService;
+        private readonly IBaseApplicationSettingsService _appSettingsService;
 
         /// <summary>
         /// Gets or sets the color command.
@@ -43,22 +43,22 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="settingsService">The settings services.</param>
+        /// <param name="appSettingsService">The settings services.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         /// <param name="logger">The logger factory.</param>
         public LanguageViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            IBaseSettingsService settingsService,
+            IBaseApplicationSettingsService appSettingsService,
             LocalizationFunctions localizationFunctions,
             ILogger logger)
             : base(context, commonServices, logger)
         {
             _localizationFunctions = localizationFunctions;
-            _settingsService = settingsService;
+            _appSettingsService = appSettingsService;
 
             SetLanguage_Command = new Command<string>((e) => SelectedItem = e);
-            SelectedItem = _settingsService.Culture;
+            SelectedItem = _appSettingsService.Settings.Culture;
         }
 
         /// <summary>
@@ -66,11 +66,11 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
-        public override Task SubmitAsync(string e)
+        public override async Task SubmitAsync(string e)
         {
-            _settingsService.Culture = e;
+            _appSettingsService.Settings.Culture = e;
             _localizationFunctions.SetLocalizationLanguage(e);
-            return base.SubmitAsync(e);
+            await base.SubmitAsync(e);
         }
     }
 }

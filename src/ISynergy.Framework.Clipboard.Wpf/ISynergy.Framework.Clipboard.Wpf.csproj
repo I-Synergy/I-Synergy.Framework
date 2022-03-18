@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\ISynergy.Framework.Clipboard.Shared\ISynergy.Framework.Clipboard.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-windows</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Clipboard.Wpf</PackageId>
+		<Description>I-Synergy Framework Clipboard for Wpf</Description>
+		<PackageTags>I-Synergy, Framework, Clipboard, Wpf</PackageTags>
+		<RootNamespace>ISynergy.Framework.Clipboard</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	</ItemGroup>
+</Project>

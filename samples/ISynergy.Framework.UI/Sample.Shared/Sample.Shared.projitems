@@ -21,6 +21,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\QueryTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ApplicationSetting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.cs" />
@@ -29,6 +30,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AuthenticationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommonServices.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />

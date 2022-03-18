@@ -25,7 +25,8 @@
     
     
     <!-- Add your application specific runtime directives here. -->
-
-
+	  <Assembly Dynamic="Required All" Name="Sample.Models.Display"/>
+	  <Assembly Dynamic="Required All" Name="Sample.ViewModels.Display"/>
+	  <Assembly Dynamic="Required All" Name="Sample.Views.Display"/>
   </Application>
 </Directives>

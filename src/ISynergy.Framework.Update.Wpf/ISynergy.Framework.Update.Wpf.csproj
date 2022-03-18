@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\ISynergy.Framework.Update.Shared\ISynergy.Framework.Update.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\project.props" />
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<PackageId>I-Synergy.Framework.Update.Wpf</PackageId>
+		<Description>I-Synergy Update Framework for Wpf</Description>
+		<PackageTags>I-Synergy, Framework, Update, Wpf</PackageTags>
+		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
+		<UseWPF>true</UseWPF>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Flurl.Http" Version="3.2.2" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj" />
+	</ItemGroup>
+</Project>

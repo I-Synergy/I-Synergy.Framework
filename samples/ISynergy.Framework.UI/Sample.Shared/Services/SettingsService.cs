@@ -1,13 +1,12 @@
-﻿using System;
-using ISynergy.Framework.UI.Services.Base;
-using Sample.Abstractions.Services;
+﻿using Sample.Abstractions.Services;
+using System;
 
 namespace Sample.Services
 {
     /// <summary>
     /// Class SettingsService.
     /// </summary>
-    public class SettingsService : BaseSettingsService, ISettingsService
+    public class SettingsService : ISettingsService
     {
         /// <summary>
         /// Gets a value indicating whether this instance is first run.
