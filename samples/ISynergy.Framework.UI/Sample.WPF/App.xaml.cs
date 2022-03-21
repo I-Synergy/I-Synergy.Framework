@@ -53,7 +53,7 @@ namespace Sample
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Application.Current.MainWindow = new Window() { Title = "I-Synergy WPF UI Framework Sample" };
+            Application.Current.MainWindow = new Window() { Title = "Nuget Unlister" };
             base.OnStartup(e);
             Application.Current.MainWindow.Show();
         }
