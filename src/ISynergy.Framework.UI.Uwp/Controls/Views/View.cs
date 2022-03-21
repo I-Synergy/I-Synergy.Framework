@@ -58,7 +58,8 @@ namespace ISynergy.Framework.UI.Controls
             if (e.Content is IView view && e.Parameter is IViewModel viewModel)
                 view.DataContext = viewModel;
 
-            await DataContext?.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);
+            if (DataContext is not null)
+                await DataContext.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);
         }
 
         /// <summary>
@@ -68,7 +69,9 @@ namespace ISynergy.Framework.UI.Controls
         protected override async void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            await DataContext?.OnDeactivateAsync();
+
+            if (DataContext is not null)
+                await DataContext.OnDeactivateAsync();
         }
     }
 }
