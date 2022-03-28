@@ -6,7 +6,7 @@
 		<TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
 		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-		<PackageId>ISynergy.Framework.Telemetry.ApplicationInsights.WinUI</PackageId>
+		<PackageId>I-Synergy.Framework.Telemetry.ApplicationInsights.WinUI</PackageId>
 		<Description>I-Synergy Framework Telemetry library for ApplicationInsights WinUI</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, ApplicationInsights, WinUI</PackageTags>
 		<RootNamespace>ISynergy.Framework.Telemetry.ApplicationInsights</RootNamespace>

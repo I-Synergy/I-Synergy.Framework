@@ -5,7 +5,7 @@
 	<PropertyGroup>
 		<TargetFramework>uap10.0.18362</TargetFramework>
 		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-		<PackageId>ISynergy.Framework.Telemetry.AppCenter.Uwp</PackageId>
+		<PackageId>I-Synergy.Framework.Telemetry.AppCenter.Uwp</PackageId>
 		<Description>I-Synergy Framework Telemetry library for AppCenter Uwp</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Uwp</PackageTags>
 		<RootNamespace>ISynergy.Framework.Telemetry.AppCenter</RootNamespace>
