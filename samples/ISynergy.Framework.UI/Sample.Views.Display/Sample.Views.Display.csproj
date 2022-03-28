@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<Description>Sample View for Display</Description>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<Choose>
-		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362.0'">
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362'">
 			<PropertyGroup>
 				<DefineConstants>WinUI;WINDOWS</DefineConstants>
 				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
