@@ -4,7 +4,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0-windows</TargetFrameworks>
-		<PackageId>ISynergy.Framework.Telemetry.AppCenter.Wpf</PackageId>
+		<PackageId>I-Synergy.Framework.Telemetry.AppCenter.Wpf</PackageId>
 		<Description>I-Synergy Framework Telemetry library for AppCenter Wpf</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Wpf</PackageTags>
 		<RootNamespace>ISynergy.Framework.Telemetry.AppCenter</RootNamespace>
