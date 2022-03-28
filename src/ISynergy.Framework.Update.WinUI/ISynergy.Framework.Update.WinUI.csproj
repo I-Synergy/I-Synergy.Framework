@@ -2,7 +2,7 @@
 	<Import Project="..\ISynergy.Framework.Update.Shared\ISynergy.Framework.Update.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
+		<TargetFramework>net6.0-windows10.0.18362</TargetFramework>
 		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
 		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 		<PackageId>I-Synergy.Framework.Update.WinUI</PackageId>

@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362.0;net6.0-windows;netstandard2.0;net6.0;MonoAndroid11.0</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362;net6.0-windows;netstandard2.0;net6.0;MonoAndroid11.0</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Uno Platform Applications</Description>
@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<Choose>
-		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362.0'">
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362'">
 			<PropertyGroup>
 				<DefineConstants>NET5_0;WINDOWS</DefineConstants>
 				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
