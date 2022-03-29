@@ -47,4 +47,38 @@
 	<ItemGroup>
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Assets\Fonts\FluentSystemIcons.ttf" />
+	  <None Remove="Assets\Fonts\ISynergy.ttf" />
+	  <None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <None Remove="Assets\Fonts\segoesb.ttf" />
+	  <None Remove="Assets\Fonts\segoeui.ttf" />
+	  <None Remove="Assets\Fonts\segoeuib.ttf" />
+	  <None Remove="Assets\Fonts\segoeuil.ttf" />
+	  <None Remove="Assets\Fonts\uno-fluentui-assets.ttf" />
+	  <None Remove="Assets\Fonts\uno-fluentui-assets.woff2" />
+	  <None Remove="Assets\Images\Error.png" />
+	  <None Remove="Assets\Images\Information.png" />
+	  <None Remove="Assets\Images\Question.png" />
+	  <None Remove="Assets\Images\Refresh.png" />
+	  <None Remove="Assets\Images\Warning.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Assets\Fonts\FluentSystemIcons.ttf" />
+	  <Content Include="Assets\Fonts\ISynergy.ttf" />
+	  <Content Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <Content Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <Content Include="Assets\Fonts\segoesb.ttf" />
+	  <Content Include="Assets\Fonts\segoeui.ttf" />
+	  <Content Include="Assets\Fonts\segoeuib.ttf" />
+	  <Content Include="Assets\Fonts\segoeuil.ttf" />
+	  <Content Include="Assets\Fonts\uno-fluentui-assets.ttf" />
+	  <Content Include="Assets\Fonts\uno-fluentui-assets.woff2" />
+	  <Content Include="Assets\Images\Error.png" />
+	  <Content Include="Assets\Images\Information.png" />
+	  <Content Include="Assets\Images\Question.png" />
+	  <Content Include="Assets\Images\Refresh.png" />
+	  <Content Include="Assets\Images\Warning.png" />
+	</ItemGroup>
 </Project>
