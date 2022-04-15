@@ -58,19 +58,18 @@
             actual = Matrix.Parse(str, DefaultMatrixFormatProvider.InvariantCulture);
             Assert.IsTrue(actual.IsEqual(expected));
 
-            str = @"double[,]
-                   {
+            str = @"new double[,] {
                       { 1, 2 },
                       { 3, 4 }
                    };";
             actual = Matrix.Parse(str, CSharpMatrixFormatProvider.InvariantCulture);
             Assert.IsTrue(actual.IsEqual(expected));
 
-            str = @"double[][]
-                   {
+            str = @"new double[][] {
                       new double[] { 1, 2 },
                       new double[] { 3, 4 }
                    };";
+
             actual = Matrix.Parse(str, CSharpJaggedMatrixFormatProvider.InvariantCulture);
             Assert.IsTrue(actual.IsEqual(expected));
         }
@@ -102,16 +101,14 @@
             actual = Jagged.Parse(str, DefaultMatrixFormatProvider.InvariantCulture);
             Assert.IsTrue(actual.IsEqual(expected));
 
-            str = @"double[,]
-                   {
+            str = @"new double[,] {
                       { 1, 2 },
                       { 3, 4 }
                    };";
             actual = Jagged.Parse(str, CSharpMatrixFormatProvider.InvariantCulture);
             Assert.IsTrue(actual.IsEqual(expected));
 
-            str = @"double[][]
-                   {
+            str = @"new double[][] {
                       new double[] { 1, 2 },
                       new double[] { 3, 4 }
                    };";
