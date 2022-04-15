@@ -254,8 +254,10 @@
         ///
         public static double[][] ParseJagged(string str, IMatrixFormatProvider provider)
         {
+            // remove excess tabs
+            str = str.Replace('\t', ' ');
             // remove excess spaces
-            str = Regex.Replace(str.Replace('\t', ' '), @" +", " ");
+            str = Regex.Replace(str, @" +", " ");
 
             // First remove starting and trailing tokens
             str = str.Remove(0, provider.ParseMatrixStart.Length);
@@ -305,7 +307,8 @@
         ///
         public static double[,] ParseMultidimensional(string str, IMatrixFormatProvider provider)
         {
-            return Matrix.ToMatrix(ParseJagged(str, provider));
+            var jagged = ParseJagged(str, provider);
+            return Matrix.ToMatrix(jagged);
         }
 
         #endregion
