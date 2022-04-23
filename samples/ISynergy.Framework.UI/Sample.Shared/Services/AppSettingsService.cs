@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using Sample.Models;
 using System;
 using System.Threading.Tasks;

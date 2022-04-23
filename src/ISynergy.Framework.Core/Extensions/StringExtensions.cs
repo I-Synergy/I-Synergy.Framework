@@ -614,5 +614,13 @@ namespace ISynergy.Framework.Core.Extensions
                 return true;
             }
         }
+
+        /// <summary>
+        /// Convert string to snake casing.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string ToSnakeCase(this string input) =>
+            string.Concat(input.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
     }
 }

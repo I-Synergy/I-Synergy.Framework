@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading.Tasks;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using ISynergy.Framework.MessageBus.Performance.Models;
 using MessagePack;
 using MessagePack.Resolvers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
 {
@@ -134,8 +133,11 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
         [Benchmark(Baseline = true)]
         public void Json()
         {
-            var result = JsonConvert.SerializeObject(Model);
-            JsonConvert.DeserializeObject(result);
+            var result = JsonSerializer.Serialize(Model);
+            JsonSerializer.Deserialize<TestModel>(result, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
 
         /// <summary>
@@ -160,34 +162,34 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
             };
         }
 
-        /// <summary>
-        /// Bsons this instance.
-        /// </summary>
-        [Benchmark]
-        public void Bson()
-        {
-            byte[] result = null;
+        ///// <summary>
+        ///// Bsons this instance.
+        ///// </summary>
+        //[Benchmark]
+        //public void Bson()
+        //{
+        //    byte[] result = null;
 
-            using (MemoryStream ms = new MemoryStream())
-            {
-                using (BsonDataWriter writer = new BsonDataWriter(ms))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(writer, Model);
-                }
+        //    using (MemoryStream ms = new MemoryStream())
+        //    {
+        //        using (BsonDataWriter writer = new BsonDataWriter(ms))
+        //        {
+        //            JsonSerializer serializer = new JsonSerializer();
+        //            serializer.Serialize(writer, Model);
+        //        }
 
-                result = ms.ToArray();
-            }
+        //        result = ms.ToArray();
+        //    }
 
-            using (MemoryStream ms2 = new MemoryStream(result))
-            {
-                using (BsonDataReader reader = new BsonDataReader(ms2))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Deserialize(reader);
-                }
-            };
-        }
+        //    using (MemoryStream ms2 = new MemoryStream(result))
+        //    {
+        //        using (BsonDataReader reader = new BsonDataReader(ms2))
+        //        {
+        //            JsonSerializer serializer = new JsonSerializer();
+        //            serializer.Deserialize(reader);
+        //        }
+        //    };
+        //}
 
         /// <summary>
         /// Messages the pack.

@@ -10,7 +10,7 @@ using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using System;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 
 #if WINDOWS_UWP || HAS_UNO
 using Windows.UI.Xaml;

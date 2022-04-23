@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
 using ISynergy.Framework.Core.Validation;
@@ -31,7 +31,7 @@ namespace ISynergy.Framework.UI.Extensions
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
             var file = await folder.CreateFileAsync(GetJsonFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = JsonConvert.SerializeObject(content);
+            var fileContent = JsonSerializer.Serialize(content);
 
             await FileIO.WriteTextAsync(file, fileContent);
         }
@@ -53,7 +53,10 @@ namespace ISynergy.Framework.UI.Extensions
             var file = await folder.GetFileAsync(GetJsonFileName(name));
             var fileContent = await FileIO.ReadTextAsync(file);
 
-            return JsonConvert.DeserializeObject<T>(fileContent);
+            return JsonSerializer.Deserialize<T>(fileContent, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace ISynergy.Framework.UI.Extensions
         /// <param name="value">The value.</param>
         public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, JsonConvert.SerializeObject(value));
+            settings.SaveString(key, JsonSerializer.Serialize(value));
             return Task.CompletedTask;
         }
 
@@ -91,7 +94,10 @@ namespace ISynergy.Framework.UI.Extensions
         {
             if (settings.Values.TryGetValue(key, out var obj))
             {
-                return Task.FromResult(JsonConvert.DeserializeObject<T>((string)obj));
+                return Task.FromResult(JsonSerializer.Deserialize<T>((string)obj, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }));
             }
 
             return default;

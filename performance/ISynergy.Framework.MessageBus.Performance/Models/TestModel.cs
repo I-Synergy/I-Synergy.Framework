@@ -9,6 +9,7 @@ namespace ISynergy.Framework.MessageBus.Performance.Models
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     [MessagePackObject(keyAsPropertyName: true)]
+    [Serializable]
     public class TestModel
     {
         /// <summary>

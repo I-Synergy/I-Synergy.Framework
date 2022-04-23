@@ -6,13 +6,13 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Base
 {

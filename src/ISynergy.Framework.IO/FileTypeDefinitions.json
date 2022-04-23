@@ -94,7 +94,7 @@
     "signature": "00001A00051004",
     "additional": "",
     "name": "Lotus 1-2-3 Spreadsheet",
-    "extension": 123,
+    "extension": "123",
     "mimetype": "application/vnd.lotus-1-2-3",
     "alias": ""
   },
@@ -118,7 +118,7 @@
   },
   {
     "offset": 4,
-    "signature": 66747970336770,
+    "signature": "66747970336770",
     "additional": "",
     "name": "3GPP Multimedia File",
     "extension": "3gp",
@@ -208,7 +208,7 @@
   },
   {
     "offset": 0,
-    "signature": 52494646,
+    "signature": "52494646",
     "additional": "",
     "name": "Audio Video Interleave File",
     "extension": "avi",
@@ -235,7 +235,7 @@
   },
   {
     "offset": 0,
-    "signature": 49536328,
+    "signature": "49536328",
     "additional": "",
     "name": "Windows Cabinet File",
     "extension": "cab",
@@ -253,7 +253,7 @@
   },
   {
     "offset": 0,
-    "signature": 52545353,
+    "signature": "52545353",
     "additional": "",
     "name": "Packet Capture File",
     "extension": "cap",
@@ -262,7 +262,7 @@
   },
   {
     "offset": 0,
-    "signature": 58435000,
+    "signature": "58435000",
     "additional": "",
     "name": "Packet Capture File",
     "extension": "cap",
@@ -271,7 +271,7 @@
   },
   {
     "offset": 0,
-    "signature": 49545346,
+    "signature": "49545346",
     "additional": "",
     "name": "Compiled HTML Help File",
     "extension": "chm",
@@ -334,7 +334,7 @@
   },
   {
     "offset": 0,
-    "signature": 6375736800000002000000,
+    "signature": "6375736800000002000000",
     "additional": "",
     "name": "Photoshop Custom Shapes File",
     "extension": "csh",
@@ -370,7 +370,7 @@
   },
   {
     "offset": 0,
-    "signature": 5041474544553634,
+    "signature": "5041474544553634",
     "additional": "",
     "name": "Windows Memory Dump",
     "extension": "dmp",
@@ -451,7 +451,7 @@
   },
   {
     "offset": 0,
-    "signature": 41433130,
+    "signature": "41433130",
     "additional": "",
     "name": "AutoCAD Drawing Database File",
     "extension": "dwg",
@@ -532,7 +532,7 @@
   },
   {
     "offset": 0,
-    "signature": 25464446,
+    "signature": "25464446",
     "additional": "",
     "name": "Acrobat Forms Data Format",
     "extension": "fdf",
@@ -586,7 +586,7 @@
   },
   {
     "offset": 0,
-    "signature": 474946383961,
+    "signature": "474946383961",
     "additional": "",
     "name": "Graphical Interchange Format File",
     "extension": "gif",
@@ -613,7 +613,7 @@
   },
   {
     "offset": 0,
-    "signature": 49536328,
+    "signature": "49536328",
     "additional": "",
     "name": "High Dynamic Range Image File",
     "extension": "hdr",
@@ -649,7 +649,7 @@
   },
   {
     "offset": 0,
-    "signature": 504943540008,
+    "signature": "504943540008",
     "additional": "",
     "name": "Disc Image Data File",
     "extension": "img",
@@ -694,7 +694,7 @@
   },
   {
     "offset": 32769,
-    "signature": 4344303031,
+    "signature": "4344303031",
     "additional": "",
     "name": "Disc Image File",
     "extension": "iso",
@@ -703,7 +703,7 @@
   },
   {
     "offset": 34817,
-    "signature": 4344303031,
+    "signature": "4344303031",
     "additional": "",
     "name": "Disc Image File",
     "extension": "iso",
@@ -712,7 +712,7 @@
   },
   {
     "offset": 36865,
-    "signature": 4344303031,
+    "signature": "4344303031",
     "additional": "",
     "name": "Disc Image File",
     "extension": "iso",
@@ -883,7 +883,7 @@
   },
   {
     "offset": 0,
-    "signature": 4550,
+    "signature": "4550",
     "additional": "",
     "name": "Microsoft Document Imaging File",
     "extension": "mdi",
@@ -955,7 +955,7 @@
   },
   {
     "offset": 4,
-    "signature": 6674797071742020,
+    "signature": "6674797071742020",
     "additional": "",
     "name": "Apple QuickTime Movie",
     "extension": "mov",
@@ -973,7 +973,7 @@
   },
   {
     "offset": 0,
-    "signature": 494433,
+    "signature": "494433",
     "additional": "",
     "name": "MP3 Audio File",
     "extension": "mp3",
@@ -1018,7 +1018,7 @@
   },
   {
     "offset": 4,
-    "signature": 6674797033677035,
+    "signature": "6674797033677035",
     "additional": "",
     "name": "MPEG-4 Video File",
     "extension": "mp4",
@@ -1243,7 +1243,7 @@
   },
   {
     "offset": 0,
-    "signature": 64000000,
+    "signature": "64000000",
     "additional": "",
     "name": "Certificate Request File",
     "extension": "p10",
@@ -1315,7 +1315,7 @@
   },
   {
     "offset": 0,
-    "signature": 25504446,
+    "signature": "25504446",
     "additional": "",
     "name": "Portable Document Format File",
     "extension": "pdf",
@@ -1432,7 +1432,7 @@
   },
   {
     "offset": 0,
-    "signature": 38425053,
+    "signature": "38425053",
     "additional": "",
     "name": "Adobe Photoshop Document",
     "extension": "psd",
@@ -1441,7 +1441,7 @@
   },
   {
     "offset": 0,
-    "signature": 52494646,
+    "signature": "52494646",
     "additional": "",
     "name": "PureVoice Audio File",
     "extension": "qcp",
@@ -1549,7 +1549,7 @@
   },
   {
     "offset": 0,
-    "signature": 5349542100,
+    "signature": "5349542100",
     "additional": "",
     "name": "StuffIt Archive",
     "extension": "sit",
@@ -1567,7 +1567,7 @@
   },
   {
     "offset": 0,
-    "signature": 5350464900,
+    "signature": "5350464900",
     "additional": "",
     "name": "ShadowProtect Full Backup File",
     "extension": "spf",
@@ -1585,7 +1585,7 @@
   },
   {
     "offset": 0,
-    "signature": 435753,
+    "signature": "435753",
     "additional": "",
     "name": "Shockwave Flash Movie",
     "extension": "swf",
@@ -1594,7 +1594,7 @@
   },
   {
     "offset": 0,
-    "signature": 465753,
+    "signature": "465753",
     "additional": "",
     "name": "Shockwave Flash Movie",
     "extension": "swf",
@@ -1657,7 +1657,7 @@
   },
   {
     "offset": 257,
-    "signature": 7573746172,
+    "signature": "7573746172",
     "additional": "",
     "name": "Consolidated Unix File Archive",
     "extension": "tar",
@@ -1675,7 +1675,7 @@
   },
   {
     "offset": 0,
-    "signature": 492049,
+    "signature": "492049",
     "additional": "",
     "name": "Tagged Image File",
     "extension": "tif",
@@ -1711,7 +1711,7 @@
   },
   {
     "offset": 0,
-    "signature": 492049,
+    "signature": "492049",
     "additional": "",
     "name": "Tagged Image File Format",
     "extension": "tiff",
@@ -1765,7 +1765,7 @@
   },
   {
     "offset": 0,
-    "signature": 47,
+    "signature": "47",
     "additional": "",
     "name": "TypeScript File",
     "extension": "ts",
@@ -1774,7 +1774,7 @@
   },
   {
     "offset": 0,
-    "signature": 47,
+    "signature": "47",
     "additional": "",
     "name": "Tab Separated Values File",
     "extension": "tsv",
@@ -1810,7 +1810,7 @@
   },
   {
     "offset": 0,
-    "signature": 52494646,
+    "signature": "52494646",
     "additional": "",
     "name": "WAVE Audio File",
     "extension": "wav",
@@ -1828,7 +1828,7 @@
   },
   {
     "offset": 0,
-    "signature": 52494646,
+    "signature": "52494646",
     "additional": "",
     "name": "WebP Image",
     "extension": "webp",
@@ -1945,7 +1945,7 @@
   },
   {
     "offset": 0,
-    "signature": 78617221,
+    "signature": "78617221",
     "additional": "",
     "name": "Xara Xtreme Drawing",
     "extension": "xar",

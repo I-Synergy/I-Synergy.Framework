@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 
 #if WINDOWS_UWP || WINDOWS
 using Windows.ApplicationModel.Resources.Core;

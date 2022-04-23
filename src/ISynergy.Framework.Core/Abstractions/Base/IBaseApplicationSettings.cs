@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
 using System.Collections.Generic;
 
-namespace ISynergy.Framework.Mvvm.Abstractions
+namespace ISynergy.Framework.Core.Abstractions.Base
 {
     /// <summary>
     /// Base class for application settings.

@@ -5,7 +5,7 @@ using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,7 +61,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue
                 await using var client = new ServiceBusClient(_option.ConnectionString);
                 var sender = client.CreateSender(_option.QueueName);
 
-                var body = JsonConvert.SerializeObject(queueMessage);
+                var body = JsonSerializer.Serialize(queueMessage);
                 var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(body));
 
                 //If a session id is provided, add message to session.

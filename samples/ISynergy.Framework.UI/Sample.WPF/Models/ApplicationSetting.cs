@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Models;
 using System;
 using System.Collections.Generic;

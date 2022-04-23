@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Resources;
 using ISynergy.Framework.Telemetry.Extensions;
 using ISynergy.Framework.UI.Options;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 
 #if WINDOWS || WINDOWS_UWP
 using ISynergy.Framework.Clipboard.Extensions;

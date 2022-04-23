@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Base;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.Core.Models.Accounts

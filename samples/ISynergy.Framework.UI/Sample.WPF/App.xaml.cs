@@ -1,5 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Clipboard.Extensions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
@@ -7,25 +9,24 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
+using ISynergy.Framework.Telemetry.Extensions;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.Abstractions;
+using Sample.Options;
+using Sample.Properties;
 using Sample.Services;
 using Sample.ViewModels;
 using Sample.Views;
-using Sample.Options;
-using Sample.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Resources;
 using System.Windows;
-using ISynergy.Framework.Telemetry.Extensions;
-using ISynergy.Framework.Clipboard.Extensions;
 
 namespace Sample
 {
