@@ -4,7 +4,7 @@ using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -129,7 +129,10 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue
         {
             var message = arg.Message;
             var body = Encoding.UTF8.GetString(message.Body.ToArray());
-            var data = JsonConvert.DeserializeObject<TEntity>(body);
+            var data = JsonSerializer.Deserialize<TEntity>(body, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
             if (ValidateMessage(data))
             {

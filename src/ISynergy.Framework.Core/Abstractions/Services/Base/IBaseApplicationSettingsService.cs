@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+namespace ISynergy.Framework.Core.Abstractions.Services.Base
 {
     public interface IBaseApplicationSettingsService
     {

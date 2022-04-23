@@ -25,6 +25,7 @@ namespace ISynergy.Framework.UI.Services
         public BusyService(ILanguageService language)
         {
             LanguageService = language;
+            IsBusy = false;
         }
 
         /// <summary>

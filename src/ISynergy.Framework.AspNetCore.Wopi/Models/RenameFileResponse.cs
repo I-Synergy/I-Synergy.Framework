@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using System.Net;
 using System.Net.Http;
 
@@ -28,7 +28,7 @@ namespace ISynergy.Framework.Wopi.Models
             // Only serialize reponse on success
             if (StatusCode == HttpStatusCode.OK)
             {
-                string jsonString = JsonConvert.SerializeObject(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+                string jsonString = JsonSerializer.Serialize(this, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
                 httpResponseMessage.Content = new StringContent(jsonString);
             }
             return httpResponseMessage;

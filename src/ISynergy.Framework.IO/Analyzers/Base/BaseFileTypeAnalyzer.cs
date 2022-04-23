@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.IO.Abtractions.Analyzers;
 using ISynergy.Framework.IO.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -237,7 +237,10 @@ namespace ISynergy.Framework.IO.Analyzers.Base
         /// <param name="flatFileData">The flat file data.</param>
         /// <returns>IEnumerable&lt;FileTypeInfo&gt;.</returns>
         private static IEnumerable<FileTypeInfo> LoadFileTypes(string flatFileData) =>
-            JsonConvert.DeserializeObject<IEnumerable<FileTypeInfo>>(flatFileData);
+            JsonSerializer.Deserialize<IEnumerable<FileTypeInfo>>(flatFileData, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
         /// <summary>
         /// Determines whether the specified input is text.

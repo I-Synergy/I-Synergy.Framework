@@ -1,7 +1,7 @@
 ﻿using Flurl;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Models.General;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Sample.TokenService;
 using Sample.TokenService.Models;
 using System;
@@ -39,7 +39,7 @@ namespace Sample.TokenService.Integration.Tests.Fixtures
                 Expiration = TimeSpan.FromMinutes(1)
             };
 
-            var body = JsonConvert.SerializeObject(request);
+            var body = JsonSerializer.Serialize(request);
             var buffer = System.Text.Encoding.UTF8.GetBytes(body);
 
             TokenRequestFixture = new ByteArrayContent(buffer);
@@ -48,7 +48,7 @@ namespace Sample.TokenService.Integration.Tests.Fixtures
 
         public ByteArrayContent TokenToContent(Token token)
         {
-            var body = JsonConvert.SerializeObject(token);
+            var body = JsonSerializer.Serialize(token);
             var buffer = System.Text.Encoding.UTF8.GetBytes(body);
 
             var result = new ByteArrayContent(buffer);
@@ -71,7 +71,7 @@ namespace Sample.TokenService.Integration.Tests.Fixtures
                 new List<string> { "A", "B", "C"},
                 TimeSpan.FromMinutes(1));
 
-            var body = JsonConvert.SerializeObject(wopiToken);
+            var body = JsonSerializer.Serialize(wopiToken);
             var buffer = System.Text.Encoding.UTF8.GetBytes(body);
 
             var result = new ByteArrayContent(buffer);
@@ -82,7 +82,7 @@ namespace Sample.TokenService.Integration.Tests.Fixtures
 
         public ByteArrayContent WopiTokenToTokenContent(WopiToken token)
         {
-            var body = JsonConvert.SerializeObject(new Token { AccessToken = token.AccessToken });
+            var body = JsonSerializer.Serialize(new Token { AccessToken = token.AccessToken });
             var buffer = System.Text.Encoding.UTF8.GetBytes(body);
 
             var result = new ByteArrayContent(buffer);

@@ -33,7 +33,7 @@
 			<ItemGroup>
 				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
-				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.2" />
+				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
@@ -53,8 +53,8 @@
 			</PropertyGroup>
 			<ItemGroup>
 				<PackageReference Include="Uno.Core" Version="4.0.1" />
-				<PackageReference Include="Uno.UI" Version="4.1.9" />
-				<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.1.9" />
+				<PackageReference Include="Uno.UI" Version="4.2.6" />
+				<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.2.6" />
 				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.11" />
 				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
 			</ItemGroup>

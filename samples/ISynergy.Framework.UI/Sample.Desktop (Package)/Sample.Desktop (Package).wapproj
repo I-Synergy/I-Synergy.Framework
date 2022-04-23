@@ -48,7 +48,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.2" IncludeAssets="build" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" IncludeAssets="build" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sample.Desktop\Sample.Desktop.csproj" />

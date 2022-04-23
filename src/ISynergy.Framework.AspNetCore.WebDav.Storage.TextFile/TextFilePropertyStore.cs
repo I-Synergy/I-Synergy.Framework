@@ -11,7 +11,7 @@ using ISynergy.Framework.AspNetCore.WebDav.Server.Model.Headers;
 using ISynergy.Framework.AspNetCore.WebDav.Server.Props.Dead;
 using ISynergy.Framework.AspNetCore.WebDav.Server.Props.Store;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Polly;
 
 namespace ISynergy.Framework.AspNetCore.WebDav.Storage.TextFile
@@ -251,7 +251,7 @@ namespace ISynergy.Framework.AspNetCore.WebDav.Storage.TextFile
         {
             try
             {
-                _fileWritePolicy.Execute(ct => File.WriteAllText(fileName, JsonConvert.SerializeObject(data)), cancellationToken);
+                _fileWritePolicy.Execute(ct => File.WriteAllText(fileName, JsonSerializer.Serialize(data)), cancellationToken);
             }
             catch (Exception)
             {

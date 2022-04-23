@@ -63,8 +63,8 @@ stages:
              src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj
              src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj
              src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj
-             src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
-             src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
+             #src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
+             #src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
              src\ISynergy.Framework.Documents\ISynergy.Framework.Documents.csproj
              src\ISynergy.Framework.Documents.Syncfusion\ISynergy.Framework.Documents.Syncfusion.csproj
              src\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj
@@ -622,39 +622,39 @@ stages:
             versioningScheme: 'byEnvVar'
             versionEnvVar: 'GitVersion.NuGetVersionV2'
 
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Payment'
-          inputs:
-            command: build
-            projects: 'src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj'
-            arguments: '-c $(BuildConfiguration)'
+        #- task: DotNetCoreCLI@2
+        #  displayName: 'Dotnet build: I-Synergy.Framework.Payment'
+        #  inputs:
+        #    command: build
+        #    projects: 'src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj'
+        #    arguments: '-c $(BuildConfiguration)'
 
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Payment'
-          inputs:
-            command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj'
-            nobuild: true
-            includesymbols: true
-            versioningScheme: 'byEnvVar'
-            versionEnvVar: 'GitVersion.NuGetVersionV2'
+        #- task: DotNetCoreCLI@2
+        #  displayName: 'Dotnet pack: I-Synergy.Framework.Payment'
+        #  inputs:
+        #    command: 'pack'
+        #    packagesToPack: 'src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj'
+        #    nobuild: true
+        #    includesymbols: true
+        #    versioningScheme: 'byEnvVar'
+        #    versionEnvVar: 'GitVersion.NuGetVersionV2'
 
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Payment.Mollie'
-          inputs:
-            command: build
-            projects: 'src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj'
-            arguments: '-c $(BuildConfiguration)'
+        #- task: DotNetCoreCLI@2
+        #  displayName: 'Dotnet build: I-Synergy.Framework.Payment.Mollie'
+        #  inputs:
+        #    command: build
+        #    projects: 'src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj'
+        #    arguments: '-c $(BuildConfiguration)'
 
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Payment.Mollie'
-          inputs:
-            command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj'
-            nobuild: true
-            includesymbols: true
-            versioningScheme: 'byEnvVar'
-            versionEnvVar: 'GitVersion.NuGetVersionV2'
+        #- task: DotNetCoreCLI@2
+        #  displayName: 'Dotnet pack: I-Synergy.Framework.Payment.Mollie'
+        #  inputs:
+        #    command: 'pack'
+        #    packagesToPack: 'src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj'
+        #    nobuild: true
+        #    includesymbols: true
+        #    versioningScheme: 'byEnvVar'
+        #    versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet build: I-Synergy.Framework.Telemetry'
@@ -783,12 +783,12 @@ stages:
             projects: 'tests\ISynergy.Framework.Mathematics.Tests\ISynergy.Framework.Mathematics.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Payment'
-          inputs:
-            command: test
-            projects: 'tests\ISynergy.Framework.Payment.Tests\ISynergy.Framework.Payment.Tests.csproj'
-            arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
+        #- task: DotNetCoreCLI@2
+        #  displayName: 'Run Test: I-Synergy.Framework.Payment'
+        #  inputs:
+        #    command: test
+        #    projects: 'tests\ISynergy.Framework.Payment.Tests\ISynergy.Framework.Payment.Tests.csproj'
+        #    arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: SonarCloudAnalyze@1
 
