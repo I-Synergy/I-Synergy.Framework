@@ -7,7 +7,7 @@
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Uno Platform Applications</Description>
 		<PackageTags>I-Synergy, Framework, UI, Uno, Platform, UWP, WinUI, WebAssembly, WASM, Android and .Net 6.0</PackageTags>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

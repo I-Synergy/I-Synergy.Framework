@@ -10,7 +10,7 @@
 		<Description>I-Synergy Update Framework for Uwp</Description>
 		<PackageTags>I-Synergy, Framework, Update, Uwp</PackageTags>
 		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
