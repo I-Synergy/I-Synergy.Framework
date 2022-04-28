@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD
+﻿#if NETSTANDARD || NET472 || NET48
 namespace System.Runtime.CompilerServices;
 
 /// <summary>

@@ -3,7 +3,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net472;net48;net6.0-windows</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Clipboard.Wpf</PackageId>
 		<Description>I-Synergy Framework Clipboard for Wpf</Description>
 		<PackageTags>I-Synergy, Framework, Clipboard, Wpf</PackageTags>

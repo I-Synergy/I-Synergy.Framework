@@ -2,13 +2,14 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net472;net48;netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Core</PackageId>
-		<Description>I-Synergy Framework Core for .Net Standard 2.0, .Net 5.0 and .Net 6.0</Description>
+		<Description>I-Synergy Framework Core for .Net Framework 4.7.2, .Net Framework 4.8, .Net Standard 2.0, .Net Standard 2.1, .Net 5.0 and .Net 6.0</Description>
 		<PackageTags>I-Synergy, Framework, Core</PackageTags>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
@@ -22,9 +23,18 @@
 		<AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-	</ItemGroup>
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'">
+			<ItemGroup>
+				<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
+			<ItemGroup>
+				<Reference Include="System.ComponentModel.DataAnnotations" />
+			</ItemGroup>
+		</When>
+	</Choose>
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
