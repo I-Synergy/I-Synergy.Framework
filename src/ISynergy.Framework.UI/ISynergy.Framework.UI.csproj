@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362;net6.0-windows;netstandard2.0;net6.0;MonoAndroid11.0</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362;net6.0-windows10.0.19041;net6.0-windows10.0.20348;net6.0-windows10.0.22000;net6.0-windows;netstandard2.0;net6.0;MonoAndroid11.0;net472;net48</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Uno Platform Applications</Description>
@@ -19,13 +19,12 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		
 	</ItemGroup>
 
 	<Choose>
-		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362'">
+		<When Condition="$(TargetFramework.StartsWith('net6.0-windows10.0'))">
 			<PropertyGroup>
-				<DefineConstants>NET5_0;WINDOWS</DefineConstants>
+				<DefineConstants>NET6_0;WINDOWS</DefineConstants>
 				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
 				<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 				<UseWinUI>true</UseWinUI>
@@ -45,6 +44,11 @@
 				<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.1" />
 				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
 				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.2" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
+			<ItemGroup>
+				<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
 			</ItemGroup>
 		</When>
 		<Otherwise>

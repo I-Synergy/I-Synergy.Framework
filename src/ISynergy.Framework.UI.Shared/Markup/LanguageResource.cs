@@ -1,8 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Abstractions.Services;
-using Windows.ApplicationModel;
-
-namespace ISynergy.Framework.UI.Markup
+﻿namespace ISynergy.Framework.UI.Markup
 {
     /// <summary>
     /// Class LanguageResource.

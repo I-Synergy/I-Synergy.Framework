@@ -54,7 +54,7 @@ namespace Sample
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Application.Current.MainWindow = new Window() { Title = "Sample with WPF .net 6.0" };
+            Application.Current.MainWindow = new Window() { Title = "Sample with WPF .net framework 4.8" };
             base.OnStartup(e);
             Application.Current.MainWindow.Show();
         }

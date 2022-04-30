@@ -1,0 +1,14 @@
+<app:BaseApplication 
+    x:Class="Sample.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="clr-namespace:ISynergy.Framework.UI;assembly=ISynergy.Framework.UI.Wpf">
+    <app:BaseApplication.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Assets/Images.xaml" />
+                <ResourceDictionary Source="Styles/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </app:BaseApplication.Resources>
+</app:BaseApplication>
