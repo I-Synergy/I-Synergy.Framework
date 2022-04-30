@@ -2,7 +2,7 @@
 	<Import Project="..\ISynergy.Framework.Update.Shared\ISynergy.Framework.Update.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFrameworks>net472;net48;net6.0-windows</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Update.Wpf</PackageId>
 		<Description>I-Synergy Update Framework for Wpf</Description>
 		<PackageTags>I-Synergy, Framework, Update, Wpf</PackageTags>
@@ -10,7 +10,7 @@
 		<UseWPF>true</UseWPF>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -21,7 +21,7 @@
 	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="Flurl.Http" Version="3.2.2" />
+	  <PackageReference Include="Flurl.Http" Version="3.2.3" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

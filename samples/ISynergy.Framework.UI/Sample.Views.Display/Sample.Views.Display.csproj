@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362</TargetFrameworks>
+		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362;net6.0-windows10.0.19041;net6.0-windows10.0.20348;net6.0-windows10.0.22000</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<Description>Sample View for Display</Description>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<Choose>
-		<When Condition="'$(TargetFramework)' == 'net6.0-windows10.0.18362'">
+		<When Condition="$(TargetFramework.StartsWith('net6.0-windows10.0'))">
 			<PropertyGroup>
 				<DefineConstants>WinUI;WINDOWS</DefineConstants>
 				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
@@ -38,6 +38,8 @@
 			<ItemGroup>
 				<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.Uwp\ISynergy.Framework.UI.Uwp.csproj" />
 			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
 		</When>
 		<Otherwise>
 			<PropertyGroup>

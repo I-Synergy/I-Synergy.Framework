@@ -6,7 +6,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-#if !NET35 && !NET40
 namespace ISynergy.Framework.Mathematics.IO.NumPy
 {
     /// <summary>
@@ -16,11 +15,7 @@ namespace ISynergy.Framework.Mathematics.IO.NumPy
     /// <seealso cref="NpyFormat" />
     /// <seealso cref="NpzFormat" />
     public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICollection<T>
-        where T : class,
-#if !NETSTANDARD1_4
-        ICloneable,
-#endif
-        IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
+        where T : class, ICloneable, IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         private ZipArchive archive;
         private Dictionary<string, T> arrays;
@@ -264,4 +259,3 @@ namespace ISynergy.Framework.Mathematics.IO.NumPy
         }
     }
 }
-#endif

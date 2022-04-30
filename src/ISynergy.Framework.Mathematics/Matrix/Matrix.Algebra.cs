@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Mathematics.Formats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 

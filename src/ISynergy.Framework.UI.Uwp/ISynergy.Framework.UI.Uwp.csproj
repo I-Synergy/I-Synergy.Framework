@@ -9,7 +9,7 @@
 		<PackageId>I-Synergy.Framework.UI.Uwp</PackageId>
 		<Description>I-Synergy UI Framework for Uwp</Description>
 		<PackageTags>I-Synergy, Framework, UI, Uwp</PackageTags>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

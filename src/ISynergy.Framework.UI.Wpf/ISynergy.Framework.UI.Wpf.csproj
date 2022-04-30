@@ -2,7 +2,7 @@
 	<Import Project="..\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFrameworks>net472;net48;net6.0-windows</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.UI.Wpf</PackageId>
 		<Description>I-Synergy Framework UI for Wpf</Description>
 		<PackageTags>I-Synergy, Framework, UI, Wpf</PackageTags>
@@ -10,7 +10,7 @@
 		<UseWPF>true</UseWPF>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
