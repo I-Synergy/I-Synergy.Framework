@@ -11,6 +11,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using ISynergy.Framework.Core.Abstractions.Base;
 
+#if NET472 || NET48 || NETSTANDARD2_0
+using Remotion.Linq.Parsing.ExpressionVisitors;
+#endif
+
 namespace ISynergy.Framework.EntityFramework.DataContext
 {
     /// <summary>
