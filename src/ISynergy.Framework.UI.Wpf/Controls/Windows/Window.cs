@@ -58,7 +58,7 @@ namespace ISynergy.Framework.UI.Controls
         {
             var result = base.ShowDialog();
 
-            if ((result.HasValue && result.Value) || (DataContext is IViewModelDialog<TEntity> dataContext && !dataContext.IsCancelled))
+            if ((result.HasValue && result.Value) || (ViewModel is IViewModelDialog<TEntity> dataContext && !dataContext.IsCancelled))
             {
                 return Task.FromResult(true);
             }

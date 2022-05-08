@@ -13,17 +13,11 @@ namespace Sample.Views
     public sealed partial class ShellView : View, IShellView
     {
         /// <summary>
-        /// Gets the view model.
-        /// </summary>
-        /// <value>The view model.</value>
-        public IShellViewModel ViewModel => ServiceLocator.Default.GetInstance<IShellViewModel>();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ShellView" /> class.
         /// </summary>
         public void InitializeView()
         {
-            DataContext = ViewModel;
+            ViewModel = ServiceLocator.Default.GetInstance<IShellViewModel>();
 
             RootNavigationView.Loaded += RootNavigationViewLoaded;
             RootNavigationView.BackRequested += RootNavigationViewBackRequested;
@@ -42,12 +36,12 @@ namespace Sample.Views
 
             if (ViewModel.Context.IsAuthenticated)
             {
-                if (ViewModel.Settings_Command.CanExecute(null))
-                    ViewModel.Settings_Command.Execute(null);
+                if (((IShellViewModel)ViewModel).Settings_Command.CanExecute(null))
+                    ((IShellViewModel)ViewModel).Settings_Command.Execute(null);
             }
             else
             {
-                await ViewModel.ProcessAuthenticationRequestAsync();
+                await ((IShellViewModel)ViewModel).ProcessAuthenticationRequestAsync();
             }
         }
 

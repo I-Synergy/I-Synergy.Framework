@@ -56,9 +56,9 @@ namespace ISynergy.Framework.UI.Controls
             base.OnNavigatedTo(e);
 
             if (e.Content is IView view && e.Parameter is IViewModel viewModel)
-                view.DataContext = viewModel;
+                view.ViewModel = viewModel;
 
-            await DataContext?.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);
+            await ViewModel?.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace ISynergy.Framework.UI.Controls
         protected override async void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            await DataContext?.OnDeactivateAsync();
+            await ViewModel?.OnDeactivateAsync();
         }
     }
 }

@@ -12,18 +12,13 @@ namespace Sample.Views
     public partial class ShellView : IShellView
     {
         /// <summary>
-        /// Gets the view model.
-        /// </summary>
-        /// <value>The view model.</value>
-        public IShellViewModel ViewModel => ServiceLocator.Default.GetInstance<IShellViewModel>();
-
-        /// <summary>
         /// Default constructor to initialize the view
         /// </summary>
         public ShellView()
         {
             InitializeComponent();
-            DataContext = ViewModel;
+
+            ViewModel = ServiceLocator.Default.GetInstance<IShellViewModel>();
             
             var navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
             navigationService.Frame = ContentRootFrame;

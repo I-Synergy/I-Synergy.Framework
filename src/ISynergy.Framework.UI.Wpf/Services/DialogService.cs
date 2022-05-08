@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System;
@@ -13,6 +14,8 @@ namespace ISynergy.Framework.UI.Services
     /// </summary>
     public partial class DialogService
     {
+        private System.Windows.Window _activeDialog = null;
+        
         /// <summary>
         /// show an Content Dialog.
         /// </summary>
@@ -37,21 +40,82 @@ namespace ISynergy.Framework.UI.Services
             return Task.FromResult((MessageBoxResult)result);
         }
 
+         /// <summary>
+        /// Shows the dialog asynchronous.
+        /// </summary>
+        /// <typeparam name="TWindow">The type of the t window.</typeparam>
+        /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task ShowDialogAsync<TWindow, TViewModel, TEntity>(IViewModelDialog<TEntity> viewmodel = null)
             where TWindow : IWindow
             where TViewModel : IViewModelDialog<TEntity>
         {
-            throw new NotImplementedException();
+            if (viewmodel is null)
+                viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Default.GetInstance(typeof(TViewModel));
+
+            return CreateDialogAsync((System.Windows.Window)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel);
         }
 
-        public Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
+        /// <summary>
+        /// Shows the dialog asynchronous.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="window">The window.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
+        public Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel) =>
+            CreateDialogAsync((System.Windows.Window)ServiceLocator.Default.GetInstance(window.GetType()), viewmodel);
+
+        /// <summary>
+        /// Shows the dialog asynchronous.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="type">The type.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
+        public Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel) =>
+            CreateDialogAsync((System.Windows.Window)ServiceLocator.Default.GetInstance(type), viewmodel);
+
+        /// <summary>
+        /// Shows dialog as an asynchronous operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+        /// <param name="dialog">The dialog.</param>
+        /// <param name="viewmodel">The viewmodel.</param>
+        private async Task CreateDialogAsync<TEntity>(System.Windows.Window dialog, IViewModelDialog<TEntity> viewmodel)
         {
-            throw new NotImplementedException();
+            dialog.DataContext = viewmodel;
+
+            viewmodel.Submitted += (sender, e) => CloseDialog(dialog);
+            viewmodel.Cancelled += (sender, e) => CloseDialog(dialog);
+            viewmodel.Closed += (sender, e) => CloseDialog(dialog);
+
+            if (!viewmodel.IsInitialized)
+                await viewmodel.InitializeAsync();
+
+            await OpenDialogAsync(dialog);
         }
 
-        public Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+        private Task<bool?> OpenDialogAsync(System.Windows.Window dialog)
         {
-            throw new NotImplementedException();
+            if (_activeDialog is not null)
+                CloseDialog(_activeDialog);
+
+            _activeDialog = dialog;
+            _activeDialog.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+
+            if (System.Windows.Application.Current.MainWindow != null && System.Windows.Application.Current.MainWindow.IsLoaded) { }
+                _activeDialog.Owner = System.Windows.Application.Current.MainWindow;
+
+            return Task.FromResult(_activeDialog.ShowDialog());
+        }
+
+        private void CloseDialog(System.Windows.Window dialog)
+        {
+            _activeDialog.Hide();
+            _activeDialog = null;
         }
     }
 }
