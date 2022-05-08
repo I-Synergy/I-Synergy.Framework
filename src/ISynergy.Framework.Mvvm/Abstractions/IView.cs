@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions
         /// Gets or sets the data context.
         /// </summary>
         /// <value>The data context.</value>
-        IViewModel DataContext { get; set; }
+        IViewModel ViewModel { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance is enabled.
         /// </summary>

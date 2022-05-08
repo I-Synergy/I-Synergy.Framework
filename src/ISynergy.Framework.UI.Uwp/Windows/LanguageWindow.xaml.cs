@@ -44,7 +44,7 @@ namespace ISynergy.Framework.UI
 
         private void SetLanguageButton()
         {
-            if (DataContext is LanguageViewModel languageViewModel)
+            if (ViewModel is LanguageViewModel languageViewModel)
             {
                 if (!string.IsNullOrEmpty(languageViewModel.SelectedItem))
                 {

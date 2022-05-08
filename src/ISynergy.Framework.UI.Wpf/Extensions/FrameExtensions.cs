@@ -24,7 +24,7 @@ namespace ISynergy.Framework.UI.Extensions
             navigationalView = Activator.CreateInstance(sourcePageType) as IView;
 
             if (parameter is IViewModel viewModel)
-                navigationalView.DataContext = viewModel;
+                navigationalView.ViewModel = viewModel;
 
             frame.Navigate(navigationalView, parameter);
             return navigationalView;

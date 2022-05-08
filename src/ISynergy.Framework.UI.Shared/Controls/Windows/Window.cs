@@ -12,14 +12,20 @@ namespace ISynergy.Framework.UI.Controls
     [Bindable(true)]
     public partial class Window : IWindow
     {
+        private IViewModel _viewModel;
+
         /// <summary>
-        /// Gets or sets the data context for a FrameworkElement. A common use of a data context is when a **FrameworkElement** uses the {Binding} markup extension and participates in data binding.
+        /// Gets or sets the viewmodel and data context for a window.
         /// </summary>
         /// <value>The data context.</value>
-        public new IViewModel DataContext
+        public IViewModel ViewModel
         {
-            get => base.DataContext as IViewModel;
-            set => base.DataContext = value;
+            get => _viewModel;
+            set
+            {
+                _viewModel = value;
+                DataContext = _viewModel;
+            }
         }
     }
 }

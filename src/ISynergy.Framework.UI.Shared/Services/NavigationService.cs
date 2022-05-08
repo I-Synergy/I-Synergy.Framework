@@ -95,8 +95,8 @@ namespace ISynergy.Framework.UI.Services
                 if (owner.Blades.Remove(
                     owner.Blades
                         .FirstOrDefault(q =>
-                            q.DataContext == viewmodel &&
-                            ((IViewModelBlade)q.DataContext).Owner == viewmodel.Owner))
+                            q.ViewModel == viewmodel &&
+                            ((IViewModelBlade)q.ViewModel).Owner == viewmodel.Owner))
                     )
                 {
                     if (owner.Blades.Count < 1)

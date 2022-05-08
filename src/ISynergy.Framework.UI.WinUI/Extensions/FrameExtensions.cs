@@ -38,7 +38,7 @@ namespace ISynergy.Framework.UI.Extensions
                 navigationalView = e.Content as IView;
 
                 if(e.Parameter is IViewModel viewModel)
-                    navigationalView.DataContext = viewModel;
+                    navigationalView.ViewModel = viewModel;
             }
 
             frame.Navigated += OnNavigated;

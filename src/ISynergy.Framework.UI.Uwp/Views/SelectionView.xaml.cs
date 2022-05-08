@@ -34,7 +34,7 @@ namespace ISynergy.Framework.UI
         /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
         private void DataSummary_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataContext is ISelectionViewModel viewModel)
+            if (ViewModel is ISelectionViewModel viewModel)
             {
                 viewModel.SelectedItem = new List<object>();
 
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.UI
         /// <param name="args">The <see cref="DataContextChangedEventArgs"/> instance containing the event data.</param>
         private void SelectionView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            if (DataContext is ISelectionViewModel viewModel)
+            if (ViewModel is ISelectionViewModel viewModel)
             {
                 if (viewModel.SelectionMode == SelectionModes.Single && viewModel.SelectedItem is not null && viewModel.SelectedItem.Count == 1)
                 {

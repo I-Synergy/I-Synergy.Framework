@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Windows.UI.Xaml;
@@ -56,10 +56,10 @@ namespace ISynergy.Framework.UI.Controls
             base.OnNavigatedTo(e);
 
             if (e.Content is IView view && e.Parameter is IViewModel viewModel)
-                view.DataContext = viewModel;
+                view.ViewModel = viewModel;
 
-            if (DataContext is not null)
-                await DataContext.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);
+            if (ViewModel is not null)
+                await ViewModel.OnActivateAsync(e.Parameter, e.NavigationMode == NavigationMode.Back);
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace ISynergy.Framework.UI.Controls
         {
             base.OnNavigatedFrom(e);
 
-            if (DataContext is not null)
-                await DataContext.OnDeactivateAsync();
+            if (ViewModel is not null)
+                await ViewModel.OnDeactivateAsync();
         }
     }
 }

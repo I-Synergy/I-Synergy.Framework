@@ -9,10 +9,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions
     public interface IWindow
     {
         /// <summary>
-        /// Gets or sets the data context.
+        /// Gets or sets the viewmodel.
         /// </summary>
         /// <value>The data context.</value>
-        IViewModel DataContext { get; set; }
+        IViewModel ViewModel { get; set; }
         /// <summary>
         /// Shows the asynchronous.
         /// </summary>

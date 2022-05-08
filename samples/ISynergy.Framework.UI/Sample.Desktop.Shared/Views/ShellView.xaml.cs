@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -44,7 +45,7 @@ namespace Sample.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ViewModel.InitializeAsync(ContentRootFrame);
+            await ((IShellViewModel)ViewModel).InitializeAsync(ContentRootFrame);
         }
 
         /// <summary>
