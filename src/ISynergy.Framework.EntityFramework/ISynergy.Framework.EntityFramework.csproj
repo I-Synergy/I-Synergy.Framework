@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
@@ -20,8 +20,8 @@
 		<When Condition="'$(TargetFramework)' == 'net6.0'">
 			<ItemGroup>
 				<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
-				<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
-				<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
+				<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
+				<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'netstandard2.1'">
