@@ -1,21 +1,5 @@
   steps:
     - task: MSBuild@1
-      displayName: 'I-Synergy.Framework.Telemetry.AppCenter - Nuget Restore'
-      inputs:
-        solution: 'src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj'
-        platform: AnyCpu
-        configuration: '$(BuildConfiguration)'
-        msbuildArguments: '/t:restore'
-
-    - task: MSBuild@1
-      displayName: 'I-Synergy.Framework.Telemetry.AppCenter - Build and Pack'
-      inputs:
-        solution: 'src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj'
-        platform: AnyCpu
-        configuration: '$(BuildConfiguration)'
-        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
-
-    - task: MSBuild@1
       displayName: 'I-Synergy.Framework.Telemetry.AppCenter.Uwp - Nuget Restore'
       inputs:
         solution: 'src\ISynergy.Framework.Telemetry.AppCenter.Uwp\ISynergy.Framework.Telemetry.AppCenter.Uwp.csproj'
@@ -59,22 +43,6 @@
       displayName: 'I-Synergy.Framework.Telemetry.AppCenter.Wpf - Build and Pack'
       inputs:
         solution: 'src\ISynergy.Framework.Telemetry.AppCenter.Wpf\ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj'
-        platform: AnyCpu
-        configuration: '$(BuildConfiguration)'
-        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
-
-    - task: MSBuild@1
-      displayName: 'I-Synergy.Framework.Telemetry.ApplicationInsights - Nuget Restore'
-      inputs:
-        solution: 'src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj'
-        platform: AnyCpu
-        configuration: '$(BuildConfiguration)'
-        msbuildArguments: '/t:restore'
-
-    - task: MSBuild@1
-      displayName: 'I-Synergy.Framework.Telemetry.ApplicationInsights - Build and Pack'
-      inputs:
-        solution: 'src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj'
         platform: AnyCpu
         configuration: '$(BuildConfiguration)'
         msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'

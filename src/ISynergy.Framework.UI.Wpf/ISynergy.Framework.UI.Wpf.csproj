@@ -61,10 +61,25 @@
 		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
 	</ItemGroup>
 
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
+			<ItemGroup>
+				<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows'">
+			<ItemGroup>
+				<PackageReference Include="Uno.UI" Version="4.2.6" />
+			</ItemGroup>
+		</When>
+	</Choose>
+	
+	
 	<ItemGroup>
 		<Page Include="Controls\ErrorPresenter\ErrorPresenter.xaml">
 			<SubType>Designer</SubType>

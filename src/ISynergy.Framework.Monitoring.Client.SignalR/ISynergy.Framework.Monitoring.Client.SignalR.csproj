@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>net472;net48;netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Monitoring.Client.SignalR</PackageId>
-		<Description>I-Synergy Framework SignalR Monitoring Client for .Net Framework 4.7.2, .Net Framework 4.8, .Net Standard 2.0, .Net Standard 2.1, .Net 5.0 and .Net 6.0</Description>
+		<Description>I-Synergy Framework SignalR Monitoring Client for .Net Standard 2.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, Client, SignalR</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>

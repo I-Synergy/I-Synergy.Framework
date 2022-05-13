@@ -36,7 +36,6 @@
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.ApplicationInsights.WinUI\ISynergy.Framework.Telemetry.ApplicationInsights.WinUI.csproj" />
-		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />

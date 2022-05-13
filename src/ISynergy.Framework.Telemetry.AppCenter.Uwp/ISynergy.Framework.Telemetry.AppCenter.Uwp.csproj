@@ -27,8 +27,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>

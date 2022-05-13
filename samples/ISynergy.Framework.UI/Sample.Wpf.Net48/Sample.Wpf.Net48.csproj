@@ -298,10 +298,6 @@
       <Project>{6a27c32a-975f-4bb7-919e-9e2c132d809e}</Project>
       <Name>ISynergy.Framework.Documents</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj">
-      <Project>{fcdb6358-94b5-48fe-a3bc-696280f1e896}</Project>
-      <Name>ISynergy.Framework.EntityFramework</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj">
       <Project>{a5b0727d-fa08-4bfd-a04b-5e54183ad55c}</Project>
       <Name>ISynergy.Framework.Financial</Name>
@@ -353,10 +349,6 @@
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.AppCenter.Wpf\ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj">
       <Project>{5bc9dfce-b532-4651-afa0-6e53d3ebd4f4}</Project>
       <Name>ISynergy.Framework.Telemetry.AppCenter.Wpf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj">
-      <Project>{f6a706c2-0eef-4458-8843-382a7c102da9}</Project>
-      <Name>ISynergy.Framework.Telemetry.AppCenter</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj">
       <Project>{e1e1a9af-3846-45ab-ad51-9b0c725dbc4f}</Project>
