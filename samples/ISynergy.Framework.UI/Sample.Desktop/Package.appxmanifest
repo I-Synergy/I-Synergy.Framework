@@ -34,7 +34,7 @@
 		  DisplayName="Sample"
 		  Square150x150Logo="Assets\Square150x150Logo.png"
 		  Square44x44Logo="Assets\Square44x44Logo.png"
-		  Description="Sample for UWP"
+		  Description="Sample for WinUI"
 		  BackgroundColor="#262626">
 			<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
 			<uap:SplashScreen BackgroundColor="#262626"  Image="Assets\SplashScreen.png"/>
