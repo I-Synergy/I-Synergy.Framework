@@ -90,17 +90,17 @@
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Aero2" />
-    <Reference Include="Syncfusion.Licensing, Version=20.1460.0.52, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Syncfusion.Licensing.20.1.0.52\lib\net46\Syncfusion.Licensing.dll</HintPath>
+    <Reference Include="Syncfusion.Licensing, Version=20.1460.0.55, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Syncfusion.Licensing.20.1.0.55\lib\net46\Syncfusion.Licensing.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.SfInput.WPF, Version=20.1460.0.52, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Syncfusion.SfInput.WPF.20.1.0.52\lib\net46\Syncfusion.SfInput.WPF.dll</HintPath>
+    <Reference Include="Syncfusion.SfInput.WPF, Version=20.1460.0.55, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Syncfusion.SfInput.WPF.20.1.0.55\lib\net46\Syncfusion.SfInput.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.SfNavigationDrawer.WPF, Version=20.1460.0.52, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Syncfusion.SfNavigationDrawer.WPF.20.1.0.52\lib\net46\Syncfusion.SfNavigationDrawer.WPF.dll</HintPath>
+    <Reference Include="Syncfusion.SfNavigationDrawer.WPF, Version=20.1460.0.55, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Syncfusion.SfNavigationDrawer.WPF.20.1.0.55\lib\net46\Syncfusion.SfNavigationDrawer.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.Shared.WPF, Version=20.1460.0.52, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Syncfusion.Shared.WPF.20.1.0.52\lib\net46\Syncfusion.Shared.WPF.dll</HintPath>
+    <Reference Include="Syncfusion.Shared.WPF, Version=20.1460.0.55, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Syncfusion.Shared.WPF.20.1.0.55\lib\net46\Syncfusion.Shared.WPF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -274,6 +274,10 @@
     <Resource Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj">
+      <Project>{2ddfac20-41d8-4412-8f46-20cef34f2db7}</Project>
+      <Name>ISynergy.Framework.Automations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.Clipboard.Wpf\ISynergy.Framework.Clipboard.Wpf.csproj">
       <Project>{3ce5c0ca-dd1a-4f7e-9752-dccab05840bf}</Project>
       <Name>ISynergy.Framework.Clipboard.Wpf</Name>
@@ -286,6 +290,50 @@
       <Project>{3c9680bf-c7cd-4839-9487-79850cce180c}</Project>
       <Name>ISynergy.Framework.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Documents.Syncfusion\ISynergy.Framework.Documents.Syncfusion.csproj">
+      <Project>{2393484a-1b9a-475c-a9aa-8b9e313443ab}</Project>
+      <Name>ISynergy.Framework.Documents.Syncfusion</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Documents\ISynergy.Framework.Documents.csproj">
+      <Project>{6a27c32a-975f-4bb7-919e-9e2c132d809e}</Project>
+      <Name>ISynergy.Framework.Documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj">
+      <Project>{a5b0727d-fa08-4bfd-a04b-5e54183ad55c}</Project>
+      <Name>ISynergy.Framework.Financial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj">
+      <Project>{65d5d300-44fe-446a-8f6d-6cf68b69023a}</Project>
+      <Name>ISynergy.Framework.Geography</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj">
+      <Project>{a8a98e20-855c-4728-b21a-eb976b25f46c}</Project>
+      <Name>ISynergy.Framework.IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mail.SendGrid\ISynergy.Framework.Mail.SendGrid.csproj">
+      <Project>{6c2662d7-024f-4e7b-8af4-a4396f56941e}</Project>
+      <Name>ISynergy.Framework.Mail.SendGrid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj">
+      <Project>{4a785a2d-0a8b-4a07-9477-f435600435ff}</Project>
+      <Name>ISynergy.Framework.Mail</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj">
+      <Project>{7d4afe36-1589-4aab-9d15-85debe74ddf6}</Project>
+      <Name>ISynergy.Framework.Mathematics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Monitoring.Client.SignalR\ISynergy.Framework.Monitoring.Client.SignalR.csproj">
+      <Project>{05eee4f2-1e39-4167-aea6-a2e440c56e8b}</Project>
+      <Name>ISynergy.Framework.Monitoring.Client.SignalR</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj">
+      <Project>{80c0cb93-127d-4b37-bdaf-e3ae8c94e7a6}</Project>
+      <Name>ISynergy.Framework.Monitoring.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj">
+      <Project>{754e91a5-a373-436c-9510-3883ff43c45c}</Project>
+      <Name>ISynergy.Framework.Monitoring</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj">
       <Project>{3828a883-b771-4e6b-b004-e521b6d7ad52}</Project>
       <Name>ISynergy.Framework.Mvvm</Name>
@@ -294,13 +342,13 @@
       <Project>{24db0377-44a6-44f9-856a-dc4d7db903e0}</Project>
       <Name>ISynergy.Framework.Physics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj">
+      <Project>{6e98b6a2-9d06-4410-9adc-fd2be2a6c8fe}</Project>
+      <Name>ISynergy.Framework.Printer.Label</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.AppCenter.Wpf\ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj">
       <Project>{5bc9dfce-b532-4651-afa0-6e53d3ebd4f4}</Project>
       <Name>ISynergy.Framework.Telemetry.AppCenter.Wpf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj">
-      <Project>{f6a706c2-0eef-4458-8843-382a7c102da9}</Project>
-      <Name>ISynergy.Framework.Telemetry.AppCenter</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj">
       <Project>{e1e1a9af-3846-45ab-ad51-9b0c725dbc4f}</Project>

@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Views\View.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Windows\Window.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SettingsStorageExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\UriExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WindowExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Markup\LanguageResource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Navigation\NavigationItem.cs" />

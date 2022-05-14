@@ -1,12 +1,12 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.18362;net6.0-windows10.0.18362;net6.0-windows10.0.19041;net6.0-windows10.0.20348;net6.0-windows10.0.22000;net6.0-windows;netstandard2.0;net6.0;MonoAndroid11.0;net472;net48</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
-		<Description>I-Synergy UI Framework for Uno Platform Applications</Description>
-		<PackageTags>I-Synergy, Framework, UI, Uno, Platform, UWP, WinUI, WebAssembly, WASM, Android and .Net 6.0</PackageTags>
+		<Description>I-Synergy UI Framework for .Net Standard 2.0</Description>
+		<PackageTags>I-Synergy, Framework, UI</PackageTags>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
@@ -18,52 +18,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
-
-	<Choose>
-		<When Condition="$(TargetFramework.StartsWith('net6.0-windows10.0'))">
-			<PropertyGroup>
-				<DefineConstants>NET6_0;WINDOWS</DefineConstants>
-				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-				<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-				<UseWinUI>true</UseWinUI>
-			</PropertyGroup>
-			<ItemGroup>
-				<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
-				<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
-			</ItemGroup>
-		</When>
-		<When Condition="'$(TargetFramework)' == 'uap10.0.18362'">
-			<PropertyGroup>
-				<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-				<ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-			</PropertyGroup>
-			<ItemGroup>
-				<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.1" />
-				<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
-				<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.2" />
-			</ItemGroup>
-		</When>
-		<When Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
-			<ItemGroup>
-				<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
-			</ItemGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<UnoUIDisableLongPathWarning>True</UnoUIDisableLongPathWarning>
-			</PropertyGroup>
-			<ItemGroup>
-				<PackageReference Include="Uno.Core" Version="4.0.1" />
-				<PackageReference Include="Uno.UI" Version="4.2.6" />
-				<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.2.6" />
-				<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.11" />
-				<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
-			</ItemGroup>
-		</Otherwise>
-	</Choose>
 
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
@@ -73,25 +28,18 @@
 	<ItemGroup>
 	  <EmbeddedResource Update="Properties\Resources.resx">
 	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
-	
 	<ItemGroup>
-		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-		<Compile Update="**\*.xaml.cs">
-			<DependentUpon>%(Filename)</DependentUpon>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
 	</ItemGroup>
-	<ItemGroup>
-		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-	</ItemGroup>
+
 	<ItemGroup>
 	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="Properties\Resources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	  </Compile>
-	</ItemGroup>
-
 </Project>

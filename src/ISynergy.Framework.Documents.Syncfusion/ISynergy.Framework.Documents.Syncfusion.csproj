@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>net472;net48;netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Documents.Syncfusion</PackageId>
-		<Description>I-Synergy Framework Documents with Syncfusion for .Net Framework 4.7.2, .Net Framework 4.8, .Net Standard 2.0, .Net Standard 2.1, .Net 5.0 and .Net 6.0</Description>
+		<Description>I-Synergy Framework Documents with Syncfusion for .Net Standard 2.0</Description>
 		<PackageTags>I-Synergy, Framework, Documents, Syncfusion</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -24,10 +24,10 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.1.0.52" />
-        <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="20.1.0.52" />
-        <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.52" />
-        <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="20.1.0.52" />
-        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.1.0.52" />
+        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.1.0.55" />
+        <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="20.1.0.55" />
+        <PackageReference Include="Syncfusion.Licensing" Version="20.1.0.55" />
+        <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="20.1.0.55" />
+        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.1.0.55" />
     </ItemGroup>
 </Project>

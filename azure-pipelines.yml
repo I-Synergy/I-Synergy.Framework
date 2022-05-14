@@ -78,11 +78,9 @@ stages:
              src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj
              src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
              src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj
-             src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj
              src\ISynergy.Framework.Telemetry.AppCenter.Uwp\ISynergy.Framework.Telemetry.AppCenter.Uwp.csproj
              src\ISynergy.Framework.Telemetry.AppCenter.WinUI\ISynergy.Framework.Telemetry.AppCenter.WinUI.csproj
              src\ISynergy.Framework.Telemetry.AppCenter.Wpf\ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj
-             src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj
              src\ISynergy.Framework.Telemetry.ApplicationInsights.Uwp\ISynergy.Framework.Telemetry.ApplicationInsights.Uwp.csproj
              src\ISynergy.Framework.Telemetry.ApplicationInsights.WinUI\ISynergy.Framework.Telemetry.ApplicationInsights.WinUI.csproj
              src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj
@@ -712,6 +710,24 @@ stages:
             versionEnvVar: 'GitVersion.NuGetVersionV2'
 
         - template: templates/isynergy.framework.update.yml
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet build: I-Synergy.Framework.UI'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+            arguments: '-c $(BuildConfiguration)'
+      
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet pack: I-Synergy.Framework.UI'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
+
         - template: templates/isynergy.framework.ui.yml
 
         - task: NuGetCommand@2

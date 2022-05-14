@@ -177,10 +177,6 @@
       <Project>{31f19abf-8e16-4ac7-94b0-2cb3e87c17be}</Project>
       <Name>ISynergy.Framework.Telemetry.ApplicationInsights.Uwp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj">
-      <Project>{98748511-29ad-4ee4-8ed2-ce6fd0652e77}</Project>
-      <Name>ISynergy.Framework.Telemetry.ApplicationInsights</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj">
       <Project>{e1e1a9af-3846-45ab-ad51-9b0c725dbc4f}</Project>
       <Name>ISynergy.Framework.Telemetry</Name>

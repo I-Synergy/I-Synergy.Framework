@@ -1,21 +1,5 @@
   steps:
     - task: MSBuild@1
-      displayName: 'I-Synergy.Framework.UI - Nuget Restore'
-      inputs:
-        solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
-        platform: AnyCpu
-        configuration: '$(BuildConfiguration)'
-        msbuildArguments: '/t:restore'
-
-    - task: MSBuild@1
-      displayName: 'I-Synergy.Framework.UI - Build and Pack'
-      inputs:
-        solution: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
-        platform: AnyCpu
-        configuration: '$(BuildConfiguration)'
-        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
-
-    - task: MSBuild@1
       displayName: 'I-Synergy.Framework.UI.Uwp - Nuget Restore'
       inputs:
         solution: 'src\ISynergy.Framework.UI.Uwp\ISynergy.Framework.UI.Uwp.csproj'
