@@ -44,8 +44,15 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
-        /// <param name="args">Event data for the event.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        /// <param name="e">Event data for the event.</param>
+        protected override void OnLaunched(LaunchActivatedEventArgs e) =>
+            OnLaunchApplication(e);
+
+        /// <summary>
+        /// On launch of application.
+        /// </summary>
+        /// <param name="e"></param>
+        public virtual void OnLaunchApplication(LaunchActivatedEventArgs e)
         {
             MainWindow = new Window();
 
@@ -59,7 +66,7 @@ namespace ISynergy.Framework.UI
                 rootFrame = new Frame();
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (args.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (e.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
                 }
@@ -80,7 +87,7 @@ namespace ISynergy.Framework.UI
                 MainWindow.Content = rootFrame;
             }
 
-            if (args.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Launch)
+            if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Launch)
             {
                 if (rootFrame.Content is null)
                 {
@@ -89,7 +96,7 @@ namespace ISynergy.Framework.UI
                     // parameter
 
                     var view = _serviceProvider.GetRequiredService<IShellView>();
-                    rootFrame.Navigate(view.GetType(), args.Arguments);
+                    rootFrame.Navigate(view.GetType(), e.Arguments);
                 }
             }
 
