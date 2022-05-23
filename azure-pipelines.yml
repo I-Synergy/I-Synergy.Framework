@@ -4,6 +4,13 @@ trigger:
 - master
 
 variables:
+  - name: VersionMajor
+    value: ''
+  - name: VersionMinor
+    value: ''
+  - name: VersionRevision
+    value: ''
+
   - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     - group: ACC
  
@@ -21,27 +28,16 @@ stages:
       displayName: 'Build, pack and test assemblies'
       timeoutInMinutes: 120
       steps:
-        - task: gitversion/setup@0
-          displayName: Determine Version Number
+        - task: PowerShell@2
+          displayName: Set the version variable value
           inputs:
-            versionSpec: '5.x'
-        
-        - task: gitversion/execute@0
-          displayName: Calculating version
-          inputs:
-            useConfigFile: True
-            configFilePath: "gitversion.yml"
-
-        #- task: PowerShell@2
-        #  displayName: Set the version variable value
-        #  inputs:
-        #    targetType: 'inline'
-        #    script: |
-        #      [version] $version = $(GitVersion.SemVer)
-        #      Write-Host "##vso[task.setvariable variable=VersionMajor]$version.Major"
-        #      Write-Host "##vso[task.setvariable variable=VersionMinor]$version.Minor"
-        #      Write-Host "##vso[task.setvariable variable=VersionBuild]$version.Build"
-        #      Write-Host "##vso[task.setvariable variable=VersionRevision]$version.Revision"
+            targetType: 'inline'
+            script: |
+              [version] $version = $Env:BUILD_BUILDNUMBER
+              Write-Host "##vso[task.setvariable variable=VersionMajor]$version.Major"
+              Write-Host "##vso[task.setvariable variable=VersionMinor]$version.Minor"
+              Write-Host "##vso[task.setvariable variable=VersionBuild]$version.Build"
+              Write-Host "##vso[task.setvariable variable=VersionRevision]$version.Revision"
 
         - task: Assembly-Info-NetCore@2
           displayName: 'Set Assembly Manifest Data v2'
@@ -98,10 +94,10 @@ stages:
             InsertAttributes: true
             WriteBOM: true
             GeneratePackageOnBuild: true
-            VersionNumber: '$(GitVersion.SemVer)'
-            FileVersionNumber: '$(GitVersion.AssemblySemFileVer)'
-            InformationalVersion: '$(GitVersion.InformationalVersion)'
-            PackageVersion: '$(GitVersion.NuGetVersionV2)'
+            VersionNumber: '$(VersionNumber)'
+            FileVersionNumber: '$(VersionFile)'
+            InformationalVersion: '$(VersionInformational)'
+            PackageVersion: '$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
           displayName: 'Install NuGet 6.0.0'
