@@ -9,7 +9,7 @@ ___
 
 | Build | Status |
 |:---|---|
-| [I-Synergy.Framework](https://github.com/I-Synergy/I-Synergy.Framework) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework%20CI?branchName=master)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=148&branchName=master)|
+| [I-Synergy.Framework](https://github.com/I-Synergy/I-Synergy.Framework) | [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main)|
 
 ## Nuget Deployment Status
 | Release | Status |
@@ -38,8 +38,6 @@ ___
 | [I-Synergy.Framework.Monitoring.Common](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Common/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.Common) |
 | [I-Synergy.Framework.Monitoring.SignalR](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.SignalR/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.SignalR) |
 | [I-Synergy.Framework.Mvvm](https://www.nuget.org/packages/I-Synergy.Framework.Mvvm/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mvvm) |
-| [I-Synergy.Framework.Payment](https://www.nuget.org/packages/I-Synergy.Framework.Payment/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Payment) |
-| [I-Synergy.Framework.Payment.Mollie](https://www.nuget.org/packages/I-Synergy.Framework.Payment.Mollie/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Payment.Mollie) |
 | [I-Synergy.Framework.Physics](https://www.nuget.org/packages/I-Synergy.Framework.Physics/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Physics) |
 | [I-Synergy.Framework.Printer.Label](https://www.nuget.org/packages/I-Synergy.Framework.Printer.Label/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Printer.Label) |
 | [I-Synergy.Framework.Printer.Label.Dymo](https://www.nuget.org/packages/I-Synergy.Framework.Printer.Label.Dymo/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Printer.Label.Dymo) |

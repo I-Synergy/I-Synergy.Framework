@@ -9,7 +9,7 @@
 		<Copyright>All rights reserved, Copyrights (c) 2008-2022 International Intelligence</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/I-Synergy/I-Synergy.Framework</RepositoryUrl>
+		<RepositoryUrl>https://dev.azure.com/i-synergy/_git/I-Synergy.Framework</RepositoryUrl>
 		<PackageProjectUrl>https://www.i-synergy.net</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
