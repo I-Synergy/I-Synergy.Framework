@@ -1,0 +1,48 @@
+  steps:
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Clipboard.Uwp - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.Clipboard.Uwp\ISynergy.Framework.Clipboard.Uwp.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Clipboard.Uwp - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.Clipboard.Uwp\ISynergy.Framework.Clipboard.Uwp.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Clipboard.WinUI - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.Clipboard.WinUI\ISynergy.Framework.Clipboard.WinUI.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Clipboard.WinUI - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.Clipboard.WinUI\ISynergy.Framework.Clipboard.WinUI.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Clipboard.Wpf - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.Clipboard.Wpf\ISynergy.Framework.Clipboard.Wpf.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Clipboard.Wpf - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.Clipboard.Wpf\ISynergy.Framework.Clipboard.Wpf.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'

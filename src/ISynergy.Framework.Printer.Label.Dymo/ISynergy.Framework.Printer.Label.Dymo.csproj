@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\project.props" />
+    <PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Printer.Label.Dymo</PackageId>
+		<Description>I-Synergy Framework Dymo Label printer library for .Net Standard 2.0</Description>
+		<PackageTags>I-Synergy, Framework, Printer, Label, Dymo</PackageTags>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
+    <ItemGroup>
+      <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="DYMO.Connect.SDK" Version="1.4.3.37" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj" />
+    </ItemGroup>
+</Project>

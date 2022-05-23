@@ -1,0 +1,48 @@
+  steps:
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Update.Uwp - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.Update.Uwp\ISynergy.Framework.Update.Uwp.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Update.Uwp - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.Update.Uwp\ISynergy.Framework.Update.Uwp.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Update.WinUI - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Update.WinUI - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Update.Wpf - Nuget Restore'
+      inputs:
+        solution: 'src\ISynergy.Framework.Update.Wpf\ISynergy.Framework.Update.Wpf.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/t:restore'
+
+    - task: MSBuild@1
+      displayName: 'I-Synergy.Framework.Update.Wpf - Build and Pack'
+      inputs:
+        solution: 'src\ISynergy.Framework.Update.Wpf\ISynergy.Framework.Update.Wpf.csproj'
+        platform: AnyCpu
+        configuration: '$(BuildConfiguration)'
+        msbuildArguments: '/p:PackageOutputPath=$(Build.ArtifactStagingDirectory)'

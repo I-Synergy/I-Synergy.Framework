@@ -1,14 +1,44 @@
 <Project>
-  <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <Authors>Ismail Hassani</Authors>
-    <Company>International Intelligence</Company>
-    <Product>I-Synergy Framework</Product>
-    <Copyright>Copyright (c) 2008-2020 International Intelligence</Copyright>
-    <PackageProjectUrl>https://www.i-synergy.nl</PackageProjectUrl>
-    <PackageIconUrl>https://app.i-synergy.nl/favicon.ico</PackageIconUrl>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<LangVersion>10</LangVersion>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<DefaultLanguage>en-US</DefaultLanguage>
+		<Authors>Ismail Hassani</Authors>
+		<Company>International Intelligence</Company>
+		<Product>I-Synergy Framework</Product>
+		<Copyright>All rights reserved, Copyrights (c) 2008-2022 International Intelligence</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/I-Synergy/I-Synergy.Framework</RepositoryUrl>
+		<PackageProjectUrl>https://www.i-synergy.net</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+		<AssemblyVersion>0.0.0.0</AssemblyVersion>
+		<FileVersion>0.0.0.0</FileVersion>
+		<Version>0.0.0</Version>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<NoWarn>1701;1702;CS1591;CS8002</NoWarn>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+		<EnableNETAnalyzers>false</EnableNETAnalyzers>
+		<EnableTypeInfoReflection>false</EnableTypeInfoReflection>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

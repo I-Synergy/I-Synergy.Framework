@@ -1,0 +1,7 @@
+apiRules:
+  - exclude:
+    uidRegex: ^System\.[^.]+$'
+  - exclude:
+    uidRegex: ^Microsoft\.[^.]+$'
+  - exclude:
+    uidRegex: ^Windows\.[^.]+$'
