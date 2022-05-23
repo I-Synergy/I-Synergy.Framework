@@ -21,7 +21,7 @@
 	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="Flurl.Http" Version="3.2.3" />
+	  <PackageReference Include="Flurl.Http" Version="3.2.4" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />

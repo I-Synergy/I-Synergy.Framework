@@ -14,7 +14,7 @@
 		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Flurl" Version="3.0.5" />
+	  <PackageReference Include="Flurl" Version="3.0.6" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
