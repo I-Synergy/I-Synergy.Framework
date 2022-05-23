@@ -42,7 +42,14 @@ namespace ISynergy.Framework.UI
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
         /// <param name="e">Event data for the event.</param>
-        protected override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e) => 
+            OnStartupApplication(e);
+
+        /// <summary>
+        /// On Application Startup.
+        /// </summary>
+        /// <param name="e">Startup event arguments</param>
+        public virtual void OnStartupApplication(StartupEventArgs e) 
         {
             var window = Application.Current.MainWindow;
             var rootFrame = MainWindow.Content as Frame;
