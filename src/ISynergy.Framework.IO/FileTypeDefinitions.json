@@ -1,0 +1,2099 @@
+[
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "FDFFFFFF22",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "FDFFFFFF23",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "FDFFFFFF28",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "FDFFFFFF29",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "FDFFFFFF04",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "FDFFFFFF10",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "FDFFFFFF04",
+    "additional": "",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "FDFFFFFF20000000",
+    "additional": "",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B030414000600",
+    "additional": "776F726B626F6F6B2E786D6C",
+    "name": "Microsoft Excel Open XML Spreadsheet",
+    "extension": "xlsx",
+    "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B030414000600",
+    "additional": "70726573656E746174696F6E2E786D6C",
+    "name": "PowerPoint Open XML Presentation",
+    "extension": "pptx",
+    "mimetype": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00001A00051004",
+    "additional": "",
+    "name": "Lotus 1-2-3 Spreadsheet",
+    "extension": "123",
+    "mimetype": "application/vnd.lotus-1-2-3",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0000001466747970336770",
+    "additional": "",
+    "name": "3GPP2 Multimedia File",
+    "extension": "3g2",
+    "mimetype": "video/3gpp2",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0000002066747970336770",
+    "additional": "",
+    "name": "3GPP2 Multimedia File",
+    "extension": "3g2",
+    "mimetype": "video/3gpp2",
+    "alias": ""
+  },
+  {
+    "offset": 4,
+    "signature": "66747970336770",
+    "additional": "",
+    "name": "3GPP Multimedia File",
+    "extension": "3gp",
+    "mimetype": "video/3gpp",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "377ABCAF271C",
+    "additional": "",
+    "name": "7-Zip Compressed File",
+    "extension": "7z",
+    "mimetype": "application/x-7z-compressed",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0B77",
+    "additional": "",
+    "name": "Dolby Digital Audio Codec",
+    "extension": "ac3",
+    "mimetype": "audio/ac3",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "464F524D00",
+    "additional": "",
+    "name": "Audio Interchange File Format",
+    "extension": "aiff",
+    "mimetype": "audio/x-aiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "2321414D52",
+    "additional": "",
+    "name": "Adaptive Multi-Rate Codec File",
+    "extension": "amr",
+    "mimetype": "audio/AMR",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4A47040E",
+    "additional": "",
+    "name": "ArtCAM Model",
+    "extension": "art",
+    "mimetype": "message/rfc822",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3026B2758E66CF11A6D900AA0062CE6C",
+    "additional": "",
+    "name": "Advanced Systems Format File",
+    "extension": "asf",
+    "mimetype": "application/vnd.ms-asf",
+    "alias": "wma|wmv"
+  },
+  {
+    "offset": 0,
+    "signature": "3C",
+    "additional": "",
+    "name": "Microsoft ASF Redirector File",
+    "extension": "asx",
+    "mimetype": "video/x-ms-asf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "2E736E64",
+    "additional": "",
+    "name": "Audacity Audio File",
+    "extension": "au",
+    "mimetype": "audio/basic",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "646E732E",
+    "additional": "",
+    "name": "Audacity Audio File",
+    "extension": "au",
+    "mimetype": "audio/basic",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "52494646",
+    "additional": "",
+    "name": "Audio Video Interleave File",
+    "extension": "avi",
+    "mimetype": "video/x-msvideo",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "424D",
+    "additional": "",
+    "name": "Bitmap Image File",
+    "extension": "bmp",
+    "mimetype": "image/bmp",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "425A68",
+    "additional": "",
+    "name": "Bzip2 Compressed File",
+    "extension": "bz2",
+    "mimetype": "application/x-bzip2",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "49536328",
+    "additional": "",
+    "name": "Windows Cabinet File",
+    "extension": "cab",
+    "mimetype": "application/vnd.ms-cab-compressed",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D534346",
+    "additional": "",
+    "name": "Windows Cabinet File",
+    "extension": "cab",
+    "mimetype": "application/vnd.ms-cab-compressed",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "52545353",
+    "additional": "",
+    "name": "Packet Capture File",
+    "extension": "cap",
+    "mimetype": "application/vnd.tcpdump.pcap",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "58435000",
+    "additional": "",
+    "name": "Packet Capture File",
+    "extension": "cap",
+    "mimetype": "application/vnd.tcpdump.pcap",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "49545346",
+    "additional": "",
+    "name": "Compiled HTML Help File",
+    "extension": "chm",
+    "mimetype": "application/vnd.ms-htmlhelp",
+    "alias": ""
+  },
+  {
+    "offset": 2,
+    "signature": "5B56657273696F6E",
+    "additional": "",
+    "name": "Easy CD Creator Disk Image",
+    "extension": "cif",
+    "mimetype": "application/vnd.multiad.creator.cif",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "CAFEBABE",
+    "additional": "",
+    "name": "Java Class File",
+    "extension": "class",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D5A",
+    "additional": "",
+    "name": "Windows Control Panel Item",
+    "extension": "cpl",
+    "mimetype": "application/cpl+xml",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "DCDC",
+    "additional": "",
+    "name": "Windows Control Panel Item",
+    "extension": "cpl",
+    "mimetype": "application/cpl+xml",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4350543746494C45",
+    "additional": "",
+    "name": "Corel PHOTO-PAINT Image",
+    "extension": "cpt",
+    "mimetype": "application/mac-compactpro",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "43505446494C45",
+    "additional": "",
+    "name": "Corel PHOTO-PAINT Image",
+    "extension": "cpt",
+    "mimetype": "application/mac-compactpro",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "6375736800000002000000",
+    "additional": "",
+    "name": "Photoshop Custom Shapes File",
+    "extension": "csh",
+    "mimetype": "application/x-csh",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "424D",
+    "additional": "",
+    "name": "Device Independent Bitmap File",
+    "extension": "dib",
+    "mimetype": "image/bmp",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D5A",
+    "additional": "",
+    "name": "Dynamic Link Library",
+    "extension": "dll",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D444D5093A7",
+    "additional": "",
+    "name": "Windows Memory Dump",
+    "extension": "dmp",
+    "mimetype": "application/vnd.tcpdump.pcap",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5041474544553634",
+    "additional": "",
+    "name": "Windows Memory Dump",
+    "extension": "dmp",
+    "mimetype": "application/vnd.tcpdump.pcap",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5041474544554D50",
+    "additional": "",
+    "name": "Windows Memory Dump",
+    "extension": "dmp",
+    "mimetype": "application/vnd.tcpdump.pcap",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "444D5321",
+    "additional": "",
+    "name": "Disk Masher Image",
+    "extension": "dms",
+    "mimetype": "text/vnd.DMClientScript",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0D444F43",
+    "additional": "",
+    "name": "Microsoft Word Document",
+    "extension": "doc",
+    "mimetype": "application/msword",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "CF11E0A1B11AE100",
+    "additional": "",
+    "name": "Microsoft Word Document",
+    "extension": "doc",
+    "mimetype": "application/msword",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "DBA52D00",
+    "additional": "",
+    "name": "Microsoft Word Document",
+    "extension": "doc",
+    "mimetype": "application/msword",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "ECA5C100",
+    "additional": "",
+    "name": "Microsoft Word Document",
+    "extension": "doc",
+    "mimetype": "application/msword",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B030414000600",
+    "additional": "646F63756D656E742E786D6C",
+    "name": "Microsoft Word Open XML Document",
+    "extension": "docx",
+    "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0764743264647464",
+    "additional": "",
+    "name": "Document Type Definition File",
+    "extension": "dtd",
+    "mimetype": "application/xml-dtd",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "41433130",
+    "additional": "",
+    "name": "AutoCAD Drawing Database File",
+    "extension": "dwg",
+    "mimetype": "image/vnd.dwg",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "01000000",
+    "additional": "",
+    "name": "Enhanced Windows Metafile",
+    "extension": "emf",
+    "mimetype": "image/emf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "46726F6D3A20",
+    "additional": "",
+    "name": "E-Mail Message",
+    "extension": "eml",
+    "mimetype": "message/rfc822",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "52657475726E2D506174683A20",
+    "additional": "",
+    "name": "E-Mail Message",
+    "extension": "eml",
+    "mimetype": "message/rfc822",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "582D",
+    "additional": "",
+    "name": "E-Mail Message",
+    "extension": "eml",
+    "mimetype": "message/rfc822",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "252150532D41646F62652D332E3020455053462D332030",
+    "additional": "",
+    "name": "Encapsulated PostScript File",
+    "extension": "eps",
+    "mimetype": "application/postscript",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "C5D0D3C6",
+    "additional": "",
+    "name": "Encapsulated PostScript File",
+    "extension": "eps",
+    "mimetype": "application/postscript",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B03040A000200",
+    "additional": "",
+    "name": "Open eBook File",
+    "extension": "epub",
+    "mimetype": "application/epub+zip",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D5A",
+    "additional": "",
+    "name": "Windows Executable File",
+    "extension": "exe",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "25464446",
+    "additional": "",
+    "name": "Acrobat Forms Data Format",
+    "extension": "fdf",
+    "mimetype": "application/vnd.fdf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "53494D504C4520203D202020202020202020202020202020202020202054",
+    "additional": "",
+    "name": "Flexible Image Transport System File",
+    "extension": "fits",
+    "mimetype": "image/fits",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "664C614300000022",
+    "additional": "",
+    "name": "Free Lossless Audio Codec File",
+    "extension": "flac",
+    "mimetype": "audio/x-flac",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00000020667479704D345620",
+    "additional": "",
+    "name": "Flash Video File",
+    "extension": "flv",
+    "mimetype": "video/x-flv",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "464C5601",
+    "additional": "",
+    "name": "Flash Video File",
+    "extension": "flv",
+    "mimetype": "video/x-flv",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3C4D616B657246696C6520",
+    "additional": "",
+    "name": "FrameMaker Document",
+    "extension": "fm",
+    "mimetype": "application/vnd.framemaker",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "474946383961",
+    "additional": "",
+    "name": "Graphical Interchange Format File",
+    "extension": "gif",
+    "mimetype": "image/gif",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "1F8B08",
+    "additional": "",
+    "name": "Gnu Zipped Archive",
+    "extension": "gz",
+    "mimetype": "application/gzip",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "233F52414449414E43450A",
+    "additional": "",
+    "name": "High Dynamic Range Image File",
+    "extension": "hdr",
+    "mimetype": "image/vnd.radiance",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "49536328",
+    "additional": "",
+    "name": "High Dynamic Range Image File",
+    "extension": "hdr",
+    "mimetype": "image/vnd.radiance",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "28546869732066696C65206D75737420626520636F6E76657274656420776974682042696E48657820",
+    "additional": "",
+    "name": "BinHex 4.0 Encoded File",
+    "extension": "hqx",
+    "mimetype": "application/mac-binhex40",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00000100",
+    "additional": "",
+    "name": "Icon File",
+    "extension": "ico",
+    "mimetype": "image/vnd.microsoft.icon",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "000100005374616E64617264204A6574204442",
+    "additional": "",
+    "name": "Disc Image Data File",
+    "extension": "img",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504943540008",
+    "additional": "",
+    "name": "Disc Image Data File",
+    "extension": "img",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "514649FB",
+    "additional": "",
+    "name": "Disc Image Data File",
+    "extension": "img",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "53434D49",
+    "additional": "",
+    "name": "Disc Image Data File",
+    "extension": "img",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "7E742C015070024D52010000000800000001000031000000310000004301FF0001000800010000007e742c01",
+    "additional": "",
+    "name": "Disc Image Data File",
+    "extension": "img",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "EB3C902A",
+    "additional": "",
+    "name": "Disc Image Data File",
+    "extension": "img",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 32769,
+    "signature": "4344303031",
+    "additional": "",
+    "name": "Disc Image File",
+    "extension": "iso",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 34817,
+    "signature": "4344303031",
+    "additional": "",
+    "name": "Disc Image File",
+    "extension": "iso",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 36865,
+    "signature": "4344303031",
+    "additional": "",
+    "name": "Disc Image File",
+    "extension": "iso",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4A4152435300",
+    "additional": "",
+    "name": "Java Archive File",
+    "extension": "jar",
+    "mimetype": "application/x-java-archive",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "Java Archive File",
+    "extension": "jar",
+    "mimetype": "application/x-java-archive",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304140008000800",
+    "additional": "",
+    "name": "Java Archive File",
+    "extension": "jar",
+    "mimetype": "application/x-java-archive",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5F27A889",
+    "additional": "",
+    "name": "Java Archive File",
+    "extension": "jar",
+    "mimetype": "application/x-java-archive",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0000000C6A5020200D0A",
+    "additional": "",
+    "name": "JPEG 2000 Core Image File",
+    "extension": "jp2",
+    "mimetype": "image/jp2",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "FFD8",
+    "additional": "",
+    "name": "JPEG Image",
+    "extension": "jpeg",
+    "mimetype": "image/jpeg",
+    "alias": "jpg|jfif"
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "Google Earth Placemark File",
+    "extension": "kmz",
+    "mimetype": "application/vnd.google-earth.kmz",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "KWord Document",
+    "extension": "kwd",
+    "mimetype": "application/vnd.kde.kword",
+    "alias": ""
+  },
+  {
+    "offset": 2,
+    "signature": "2D6C68",
+    "additional": "",
+    "name": "LHARC Compressed Archive",
+    "extension": "lha",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "2A2A2A2020496E7374616C6C6174696F6E205374617274656420",
+    "additional": "",
+    "name": "Log File",
+    "extension": "log",
+    "mimetype": "text/plain",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "576F726450726F",
+    "additional": "",
+    "name": "Lotus Word Pro Document",
+    "extension": "lwp",
+    "mimetype": "application/vnd.lotus-wordpro",
+    "alias": ""
+  },
+  {
+    "offset": 2,
+    "signature": "2D6C68",
+    "additional": "",
+    "name": "LZH Compressed File",
+    "extension": "lzh",
+    "mimetype": "application/octet-stream",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00000020667479704D344120",
+    "additional": "",
+    "name": "MPEG-4 Audio File",
+    "extension": "m4a",
+    "mimetype": "audio/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 4,
+    "signature": "667479704D344120",
+    "additional": "",
+    "name": "MPEG-4 Audio File",
+    "extension": "m4a",
+    "mimetype": "audio/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00000018667479706D703432",
+    "additional": "",
+    "name": "iTunes Video File",
+    "extension": "m4v",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00000020667479704D345620",
+    "additional": "",
+    "name": "iTunes Video File",
+    "extension": "m4v",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 4,
+    "signature": "667479706D703432",
+    "additional": "",
+    "name": "iTunes Video File",
+    "extension": "m4v",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3C3F786D6C2076657273696F6E3D",
+    "additional": "",
+    "name": "Windows Application Manifest File",
+    "extension": "manifest",
+    "mimetype": "text/cache-manifest",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4550",
+    "additional": "",
+    "name": "Microsoft Document Imaging File",
+    "extension": "mdi",
+    "mimetype": "image/vnd.ms-modi",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D546864",
+    "additional": "",
+    "name": "MIDI File",
+    "extension": "mid",
+    "mimetype": "audio/midi",
+    "alias": "midi"
+  },
+  {
+    "offset": 0,
+    "signature": "4D546864",
+    "additional": "",
+    "name": "MIDI File",
+    "extension": "midi",
+    "mimetype": "audio/midi",
+    "alias": "mid"
+  },
+  {
+    "offset": 0,
+    "signature": "3C4D616B657246696C6520",
+    "additional": "",
+    "name": "MapInfo Interchange Format File",
+    "extension": "mif",
+    "mimetype": "application/vnd.mif",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "56657273696F6E20",
+    "additional": "",
+    "name": "MapInfo Interchange Format File",
+    "extension": "mif",
+    "mimetype": "application/vnd.mif",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "1A45DFA3",
+    "additional": "",
+    "name": "Matroska Video File",
+    "extension": "mkv",
+    "mimetype": "video/x-matroska",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D4D4D440000",
+    "additional": "",
+    "name": "Meal-Master Recipe File",
+    "extension": "mmf",
+    "mimetype": "application/vnd.smaf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "000000146674797071742020",
+    "additional": "",
+    "name": "Apple QuickTime Movie",
+    "extension": "mov",
+    "mimetype": "video/quicktime",
+    "alias": ""
+  },
+  {
+    "offset": 4,
+    "signature": "6674797071742020",
+    "additional": "",
+    "name": "Apple QuickTime Movie",
+    "extension": "mov",
+    "mimetype": "video/quicktime",
+    "alias": ""
+  },
+  {
+    "offset": 4,
+    "signature": "6D6F6F76",
+    "additional": "",
+    "name": "Apple QuickTime Movie",
+    "extension": "mov",
+    "mimetype": "video/quicktime",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "494433",
+    "additional": "",
+    "name": "MP3 Audio File",
+    "extension": "mp3",
+    "mimetype": "audio/mpeg",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "FFFB",
+    "additional": "",
+    "name": "MP3 Audio File",
+    "extension": "mp3",
+    "mimetype": "audio/mpeg",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "000000146674797069736F6D",
+    "additional": "",
+    "name": "MPEG-4 Video File",
+    "extension": "mp4",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "000000186674797033677035",
+    "additional": "",
+    "name": "MPEG-4 Video File",
+    "extension": "mp4",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0000001C667479704D534E56012900464D534E566D703432",
+    "additional": "",
+    "name": "MPEG-4 Video File",
+    "extension": "mp4",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 4,
+    "signature": "6674797033677035",
+    "additional": "",
+    "name": "MPEG-4 Video File",
+    "extension": "mp4",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 4,
+    "signature": "667479704D534E56",
+    "additional": "",
+    "name": "MPEG-4 Video File",
+    "extension": "mp4",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 4,
+    "signature": "6674797069736F6D",
+    "additional": "",
+    "name": "MPEG-4 Video File",
+    "extension": "mp4",
+    "mimetype": "video/mp4",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00000100",
+    "additional": "",
+    "name": "MPEG Movie",
+    "extension": "mpeg",
+    "mimetype": "video/mpeg",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "FFD8",
+    "additional": "",
+    "name": "MPEG Movie",
+    "extension": "mpeg",
+    "mimetype": "video/mpeg",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00000100",
+    "additional": "",
+    "name": "MPEG Video File",
+    "extension": "mpg",
+    "mimetype": "video/mpeg",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "000001BA",
+    "additional": "",
+    "name": "MPEG Video File",
+    "extension": "mpg",
+    "mimetype": "video/mpeg",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "FFD8",
+    "additional": "",
+    "name": "MPEG Video File",
+    "extension": "mpg",
+    "mimetype": "video/mpeg",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "2F2F203C212D2D203C6D64623A6D6F726B3A7A",
+    "additional": "",
+    "name": "Mail Summary File",
+    "extension": "msf",
+    "mimetype": "application/vnd.epson.msf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "060E2B34020501010D0102010102",
+    "additional": "",
+    "name": "Material Exchange Format File",
+    "extension": "mxf",
+    "mimetype": "application/mxf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3C435472616E7354696D656C696E653E",
+    "additional": "",
+    "name": "Material Exchange Format File",
+    "extension": "mxf",
+    "mimetype": "application/mxf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "1A0000040000",
+    "additional": "",
+    "name": "NES Sound Format File",
+    "extension": "nsf",
+    "mimetype": "application/vnd.lotus-notes",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4E45534D1A01",
+    "additional": "",
+    "name": "NES Sound Format File",
+    "extension": "nsf",
+    "mimetype": "application/vnd.lotus-notes",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "1A0000",
+    "additional": "",
+    "name": "Lotus Note Template",
+    "extension": "ntf",
+    "mimetype": "application/vnd.lotus-notes",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "30314F52444E414E43452053555256455920202020202020",
+    "additional": "",
+    "name": "Lotus Note Template",
+    "extension": "ntf",
+    "mimetype": "application/vnd.lotus-notes",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4E49544630",
+    "additional": "",
+    "name": "Lotus Note Template",
+    "extension": "ntf",
+    "mimetype": "application/vnd.lotus-notes",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "OpenDocument Presentation",
+    "extension": "odp",
+    "mimetype": "application/vnd.oasis.opendocument.presentation",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "OpenDocument Text Document",
+    "extension": "odt",
+    "mimetype": "application/vnd.oasis.opendocument.text",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4F67675300020000000000000000",
+    "additional": "",
+    "name": "Ogg Vorbis Audio File",
+    "extension": "oga",
+    "mimetype": "audio/ogg",
+    "alias": "ogg|ogv|ogx"
+  },
+  {
+    "offset": 0,
+    "signature": "4F67675300020000000000000000",
+    "additional": "",
+    "name": "Ogg Vorbis Audio File",
+    "extension": "ogg",
+    "mimetype": "audio/ogg",
+    "alias": "oga|ogv|ogx"
+  },
+  {
+    "offset": 0,
+    "signature": "4F67675300020000000000000000",
+    "additional": "",
+    "name": "Ogg Video File",
+    "extension": "ogv",
+    "mimetype": "video/ogg",
+    "alias": "oga|ogg|ogx"
+  },
+  {
+    "offset": 0,
+    "signature": "4F67675300020000000000000000",
+    "additional": "",
+    "name": "Ogg Vorbis Multiplexed Media File",
+    "extension": "ogx",
+    "mimetype": "application/ogg",
+    "alias": "oga|ogg|ogv"
+  },
+  {
+    "offset": 0,
+    "signature": "414F4C564D313030",
+    "additional": "",
+    "name": "Lotus Organizer File",
+    "extension": "org",
+    "mimetype": "application/vnd.lotus-organizer",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "OpenDocument Document Template",
+    "extension": "ott",
+    "mimetype": "application/vnd.oasis.opendocument.text-template",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "OpenXPS File",
+    "extension": "oxps",
+    "mimetype": "application/oxps",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "64000000",
+    "additional": "",
+    "name": "Certificate Request File",
+    "extension": "p10",
+    "mimetype": "application/pkcs10",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "0908100000060500",
+    "additional": "",
+    "name": "Paintbrush Bitmap Image File",
+    "extension": "pcx",
+    "mimetype": "image/vnd.zbrush.pcx",
+    "alias": ""
+  },
+  {
+    "offset": 11,
+    "signature": "000000000000000000000000000000000000000000000000",
+    "additional": "",
+    "name": "Program Database",
+    "extension": "pdb",
+    "mimetype": "application/vnd.palm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D2D5720506F636B6574204469637469",
+    "additional": "",
+    "name": "Program Database",
+    "extension": "pdb",
+    "mimetype": "application/vnd.palm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D6963726F736F667420432F432B2B20",
+    "additional": "",
+    "name": "Program Database",
+    "extension": "pdb",
+    "mimetype": "application/vnd.palm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "736D5F",
+    "additional": "",
+    "name": "Program Database",
+    "extension": "pdb",
+    "mimetype": "application/vnd.palm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "737A657A",
+    "additional": "",
+    "name": "Program Database",
+    "extension": "pdb",
+    "mimetype": "application/vnd.palm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "ACED0005737200126267626C69747A2E",
+    "additional": "",
+    "name": "Program Database",
+    "extension": "pdb",
+    "mimetype": "application/vnd.palm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "25504446",
+    "additional": "",
+    "name": "Portable Document Format File",
+    "extension": "pdf",
+    "mimetype": "application/pdf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "50350A",
+    "additional": "",
+    "name": "Portable Gray Map Image",
+    "extension": "pgm",
+    "mimetype": "image/x-portable-graymap",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5B706C61796C6973745D",
+    "additional": "",
+    "name": "PL/SQL Stored Procedure",
+    "extension": "pls",
+    "mimetype": "application/pls+xml",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "89504E470D0A1A0A",
+    "additional": "",
+    "name": "Portable Network Graphic",
+    "extension": "png",
+    "mimetype": "image/png",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "006E1EF0",
+    "additional": "",
+    "name": "PowerPoint Presentation",
+    "extension": "ppt",
+    "mimetype": "application/vnd.ms-powerpoint",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "0F00E803",
+    "additional": "",
+    "name": "PowerPoint Presentation",
+    "extension": "ppt",
+    "mimetype": "application/vnd.ms-powerpoint",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "A0461DF0",
+    "additional": "",
+    "name": "PowerPoint Presentation",
+    "extension": "ppt",
+    "mimetype": "application/vnd.ms-powerpoint",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "506F776572506F696E74",
+    "name": "PowerPoint Presentation",
+    "extension": "ppt",
+    "mimetype": "application/vnd.ms-powerpoint",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "FDFFFFFF04",
+    "additional": "",
+    "name": "PowerPoint Presentation",
+    "extension": "ppt",
+    "mimetype": "application/vnd.ms-powerpoint",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "FDFFFFFF00000000",
+    "additional": "",
+    "name": "PowerPoint Presentation",
+    "extension": "ppt",
+    "mimetype": "application/vnd.ms-powerpoint",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "",
+    "name": "PowerPoint Slide Show",
+    "extension": "pps",
+    "mimetype": "application/vnd.ms-powerpoint",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "424F4F4B4D4F4249",
+    "additional": "",
+    "name": "Product Representation Compact File",
+    "extension": "prc",
+    "mimetype": "application/vnd.palm",
+    "alias": ""
+  },
+  {
+    "offset": 60,
+    "signature": "74424D504B6E5772",
+    "additional": "",
+    "name": "Product Representation Compact File",
+    "extension": "prc",
+    "mimetype": "application/vnd.palm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "38425053",
+    "additional": "",
+    "name": "Adobe Photoshop Document",
+    "extension": "psd",
+    "mimetype": "image/vnd.adobe.photoshop",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "52494646",
+    "additional": "",
+    "name": "PureVoice Audio File",
+    "extension": "qcp",
+    "mimetype": "audio/qcelp",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00004D4D585052",
+    "additional": "",
+    "name": "QuarkXPress Document",
+    "extension": "qxd",
+    "mimetype": "application/vnd.Quark.QuarkXPress",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "2E524D460000001200",
+    "additional": "",
+    "name": "Real Audio File",
+    "extension": "ra",
+    "mimetype": "audio/x-realaudio",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "2E7261FD00",
+    "additional": "",
+    "name": "Real Audio File",
+    "extension": "ra",
+    "mimetype": "audio/x-realaudio",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "727473703A2F2F",
+    "additional": "",
+    "name": "Real Audio Metadata File",
+    "extension": "ram",
+    "mimetype": "audio/x-pn-realaudio",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "526172211A0700",
+    "additional": "",
+    "name": "WinRAR Compressed Archive",
+    "extension": "rar",
+    "mimetype": "application/vnd.rar",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "526172211A070100",
+    "additional": "",
+    "name": "WinRAR Compressed Archive",
+    "extension": "rar",
+    "mimetype": "application/vnd.rar",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "01DA01010003",
+    "additional": "",
+    "name": "RGB Bitmap",
+    "extension": "rgb",
+    "mimetype": "image/x-rgb",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "2E524D46",
+    "additional": "",
+    "name": "RealMedia File",
+    "extension": "rm",
+    "mimetype": "audio/x-pn-realaudio",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "EDABEEDB",
+    "additional": "",
+    "name": "Red Hat Package Manager File",
+    "extension": "rpm",
+    "mimetype": "application/x-rpm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "7B5C72746631",
+    "additional": "",
+    "name": "Rich Text Format File",
+    "extension": "rtf",
+    "mimetype": "application/rtf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5B50686F6E655D",
+    "additional": "",
+    "name": "LMHOSTS Sample File",
+    "extension": "sam",
+    "mimetype": "application/vnd.lotus-wordpro",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5349542100",
+    "additional": "",
+    "name": "StuffIt Archive",
+    "extension": "sit",
+    "mimetype": "application/x-stuffit",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5374756666497420286329313939372D",
+    "additional": "",
+    "name": "StuffIt Archive",
+    "extension": "sit",
+    "mimetype": "application/x-stuffit",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5350464900",
+    "additional": "",
+    "name": "ShadowProtect Full Backup File",
+    "extension": "spf",
+    "mimetype": "application/vnd.yamaha.smaf-phrase",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00000100",
+    "additional": "",
+    "name": "FutureSplash Animation",
+    "extension": "spl",
+    "mimetype": "application/x-futuresplash",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "435753",
+    "additional": "",
+    "name": "Shockwave Flash Movie",
+    "extension": "swf",
+    "mimetype": "application/x-shockwave-flash",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "465753",
+    "additional": "",
+    "name": "Shockwave Flash Movie",
+    "extension": "swf",
+    "mimetype": "application/x-shockwave-flash",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "5A5753",
+    "additional": "",
+    "name": "Shockwave Flash Movie",
+    "extension": "swf",
+    "mimetype": "application/x-shockwave-flash",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "StarOffice Calc Spreadsheet",
+    "extension": "sxc",
+    "mimetype": "application/vnd.sun.xml.calc",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "StarOffice Calc Spreadsheet",
+    "extension": "sxc",
+    "mimetype": "application/vnd.sun.xml.calc",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "ArcScene Document",
+    "extension": "sxd",
+    "mimetype": "application/vnd.sun.xml.draw",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "StarOffice Impress Presentation",
+    "extension": "sxi",
+    "mimetype": "application/vnd.sun.xml.impress",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "StarOffice Writer Document",
+    "extension": "sxw",
+    "mimetype": "application/vnd.sun.xml.writer",
+    "alias": ""
+  },
+  {
+    "offset": 257,
+    "signature": "7573746172",
+    "additional": "",
+    "name": "Consolidated Unix File Archive",
+    "extension": "tar",
+    "mimetype": "application/x-tar",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "1F8B08",
+    "additional": "",
+    "name": "Gzipped Tar File",
+    "extension": "tgz",
+    "mimetype": "application/gzip",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "492049",
+    "additional": "",
+    "name": "Tagged Image File",
+    "extension": "tif",
+    "mimetype": "image/tiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "49492A00",
+    "additional": "",
+    "name": "Tagged Image File",
+    "extension": "tif",
+    "mimetype": "image/tiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D4D002A",
+    "additional": "",
+    "name": "Tagged Image File",
+    "extension": "tif",
+    "mimetype": "image/tiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D4D002B",
+    "additional": "",
+    "name": "Tagged Image File",
+    "extension": "tif",
+    "mimetype": "image/tiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "492049",
+    "additional": "",
+    "name": "Tagged Image File Format",
+    "extension": "tiff",
+    "mimetype": "image/tiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "49492A00",
+    "additional": "",
+    "name": "Tagged Image File Format",
+    "extension": "tiff",
+    "mimetype": "image/tiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D4D002A",
+    "additional": "",
+    "name": "Tagged Image File Format",
+    "extension": "tiff",
+    "mimetype": "image/tiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4D4D002B",
+    "additional": "",
+    "name": "Tagged Image File Format",
+    "extension": "tiff",
+    "mimetype": "image/tiff",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0020AF30",
+    "additional": "",
+    "name": "Document Template",
+    "extension": "tpl",
+    "mimetype": "application/vnd.groove-tool-template",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "6D7346696C7465724C697374",
+    "additional": "",
+    "name": "Document Template",
+    "extension": "tpl",
+    "mimetype": "application/vnd.groove-tool-template",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "47",
+    "additional": "",
+    "name": "TypeScript File",
+    "extension": "ts",
+    "mimetype": "text/vnd.trolltech.linguist",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "47",
+    "additional": "",
+    "name": "Tab Separated Values File",
+    "extension": "tsv",
+    "mimetype": "text/tab-separated-values",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0001000000",
+    "additional": "",
+    "name": "TrueType Font",
+    "extension": "ttf",
+    "mimetype": "application/font-sfnt",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "454E5452595643440200000102001858",
+    "additional": "",
+    "name": "Virtual CD",
+    "extension": "vcd",
+    "mimetype": "application/x-cdlink",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "424547494E3A56434152440D0A",
+    "additional": "",
+    "name": "vCard File",
+    "extension": "vcf",
+    "mimetype": "text/vcard",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "52494646",
+    "additional": "",
+    "name": "WAVE Audio File",
+    "extension": "wav",
+    "mimetype": "audio/x-wav",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "1A45DFA3",
+    "additional": "",
+    "name": "WebM Video File",
+    "extension": "webm",
+    "mimetype": "video/webm",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "52494646",
+    "additional": "",
+    "name": "WebP Image",
+    "extension": "webp",
+    "mimetype": "image/webp",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0000020006040600080000000000",
+    "additional": "",
+    "name": "Lotus Worksheet",
+    "extension": "wk1",
+    "mimetype": "application/vnd.lotus-1-2-3",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00001A000010040000000000",
+    "additional": "",
+    "name": "Lotus 3 Worksheet",
+    "extension": "wk3",
+    "mimetype": "application/vnd.lotus-1-2-3",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "00001A000210040000000000",
+    "additional": "",
+    "name": "Lotus 4 Worksheet",
+    "extension": "wk4",
+    "mimetype": "application/vnd.lotus-1-2-3",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "0E574B53",
+    "additional": "",
+    "name": "Lotus 1-2-3 Spreadsheet",
+    "extension": "wks",
+    "mimetype": "application/vnd.ms-works",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "FF000200040405540200",
+    "additional": "",
+    "name": "Lotus 1-2-3 Spreadsheet",
+    "extension": "wks",
+    "mimetype": "application/vnd.ms-works",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3026B2758E66CF11A6D900AA0062CE6C",
+    "additional": "",
+    "name": "Windows Media Audio File",
+    "extension": "wma",
+    "mimetype": "audio/x-ms-wma",
+    "alias": "asf|wmv"
+  },
+  {
+    "offset": 0,
+    "signature": "010009000003",
+    "additional": "",
+    "name": "Windows Metafile",
+    "extension": "wmf",
+    "mimetype": "image/wmf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D7CDC69A",
+    "additional": "",
+    "name": "Windows Metafile",
+    "extension": "wmf",
+    "mimetype": "image/wmf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3026B2758E66CF11A6D900AA0062CE6C",
+    "additional": "",
+    "name": "Windows Media Video File",
+    "extension": "wmv",
+    "mimetype": "video/x-ms-wmv",
+    "alias": "asf|wma"
+  },
+  {
+    "offset": 0,
+    "signature": "774F4646",
+    "additional": "",
+    "name": "Web Open Font Format",
+    "extension": "woff",
+    "mimetype": "font/woff",
+    "alias": "wof"
+  },
+  {
+    "offset": 0,
+    "signature": "FF575043",
+    "additional": "",
+    "name": "WordPerfect Document",
+    "extension": "wpd",
+    "mimetype": "application/vnd.wordperfect",
+    "alias": ""
+  },
+  {
+    "offset": 84,
+    "signature": "4D6963726F736F66742057696E646F7773204D6564696120506C61796572202D2D20",
+    "additional": "",
+    "name": "Windows Media Player Playlist",
+    "extension": "wpl",
+    "mimetype": "application/vnd.ms-wpl",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "78617221",
+    "additional": "",
+    "name": "Xara Xtreme Drawing",
+    "extension": "xar",
+    "mimetype": "application/vnd.xara",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "",
+    "name": "Excel Add-In File",
+    "extension": "xla",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 512,
+    "signature": "0908100000060500",
+    "additional": "",
+    "name": "Excel Spreadsheet",
+    "extension": "xls",
+    "mimetype": "application/vnd.ms-excel",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "Cross-platform Installer Package",
+    "extension": "xpi",
+    "mimetype": "application/x-xpinstall",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "XML Paper Specification File",
+    "extension": "xps",
+    "mimetype": "application/vnd.ms-xpsdocument",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3C3F786D6C2076657273696F6E3D22312E30223F3E",
+    "additional": "",
+    "name": "XML User Interface Language File",
+    "extension": "xul",
+    "mimetype": "application/vnd.mozilla.xul+xml",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "FD377A585A00",
+    "additional": "",
+    "name": "XZ Compressed Archive",
+    "extension": "xz",
+    "mimetype": "application/x-xz",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0304",
+    "additional": "",
+    "name": "Zipped File",
+    "extension": "zip",
+    "mimetype": "application/zip",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0506",
+    "additional": "",
+    "name": "Zipped File",
+    "extension": "zip",
+    "mimetype": "application/zip",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B030414000100630000000000",
+    "additional": "",
+    "name": "Zipped File",
+    "extension": "zip",
+    "mimetype": "application/zip",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "504B0708",
+    "additional": "",
+    "name": "Zipped File",
+    "extension": "zip",
+    "mimetype": "application/zip",
+    "alias": ""
+  },
+  {
+    "offset": 30,
+    "signature": "504B4C495445",
+    "additional": "",
+    "name": "Zipped File",
+    "extension": "zip",
+    "mimetype": "application/zip",
+    "alias": ""
+  },
+  {
+    "offset": 526,
+    "signature": "504B537058",
+    "additional": "",
+    "name": "Zipped File",
+    "extension": "zip",
+    "mimetype": "application/zip",
+    "alias": ""
+  },
+  {
+    "offset": 29152,
+    "signature": "57696E5A6970",
+    "additional": "",
+    "name": "Zipped File",
+    "extension": "zip",
+    "mimetype": "application/zip",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "4F54544F",
+    "additional": "",
+    "name": "OTF File",
+    "extension": "otf",
+    "mimetype": "application/font-otf",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "FFFE3C00",
+    "additional": "",
+    "name": "XML File",
+    "extension": "xml",
+    "mimetype": "application/xml",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "D0CF11E0A1B11AE1",
+    "additional": "",
+    "name": "Outlook Message File",
+    "extension": "msg",
+    "mimetype": "application/vnd.ms-outlook",
+    "alias": ""
+  }
+]
