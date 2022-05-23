@@ -34,10 +34,10 @@ stages:
             targetType: 'inline'
             script: |
               [version] $version = $Env:BUILD_BUILDNUMBER
-              Write-Host "##vso[task.setvariable variable=VersionMajor]$version.Major"
-              Write-Host "##vso[task.setvariable variable=VersionMinor]$version.Minor"
-              Write-Host "##vso[task.setvariable variable=VersionBuild]$version.Build"
-              Write-Host "##vso[task.setvariable variable=VersionRevision]$version.Revision"
+              Write-Host "##vso[task.setvariable variable=VersionMajor]$version.Major
+              Write-Host "##vso[task.setvariable variable=VersionMinor]$version.Minor
+              Write-Host "##vso[task.setvariable variable=VersionBuild]$version.Build
+              Write-Host "##vso[task.setvariable variable=VersionRevision]$version.Revision
 
         - task: Assembly-Info-NetCore@2
           displayName: 'Set Assembly Manifest Data v2'
