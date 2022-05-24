@@ -328,4 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-/samples/I-Synergy.Framework.Storage.Azure.Sample/appsettings.Development.json
+/samples/ISynergy.Framework.Storage.Azure.Sample/appsettings.Development.json
+/nuget.exe
+
+*.db

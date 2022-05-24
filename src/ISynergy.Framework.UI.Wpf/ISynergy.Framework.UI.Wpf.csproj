@@ -1,0 +1,89 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\project.props" />
+	<PropertyGroup>
+		<TargetFrameworks>net472;net48;net6.0-windows</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.UI.Wpf</PackageId>
+		<Description>I-Synergy Framework UI for Wpf</Description>
+		<PackageTags>I-Synergy, Framework, UI, Wpf</PackageTags>
+		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
+		<UseWPF>true</UseWPF>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Assets\Fonts\FluentSystemIcons.ttf" />
+	  <None Remove="Assets\Fonts\ISynergy.ttf" />
+	  <None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <None Remove="Assets\Fonts\segoesb.ttf" />
+	  <None Remove="Assets\Fonts\segoeui.ttf" />
+	  <None Remove="Assets\Fonts\segoeuib.ttf" />
+	  <None Remove="Assets\Fonts\segoeuil.ttf" />
+	  <None Remove="Assets\Fonts\uno-fluentui-assets.ttf" />
+	  <None Remove="Assets\Fonts\uno-fluentui-assets.woff2" />
+	  <None Remove="Assets\Images\Error.png" />
+	  <None Remove="Assets\Images\Information.png" />
+	  <None Remove="Assets\Images\Question.png" />
+	  <None Remove="Assets\Images\Refresh.png" />
+	  <None Remove="Assets\Images\Warning.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Assets\Fonts\FluentSystemIcons.ttf" />
+	  <Content Include="Assets\Fonts\ISynergy.ttf" />
+	  <Content Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <Content Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <Content Include="Assets\Fonts\segoesb.ttf" />
+	  <Content Include="Assets\Fonts\segoeui.ttf" />
+	  <Content Include="Assets\Fonts\segoeuib.ttf" />
+	  <Content Include="Assets\Fonts\segoeuil.ttf" />
+	  <Content Include="Assets\Fonts\uno-fluentui-assets.ttf" />
+	  <Content Include="Assets\Fonts\uno-fluentui-assets.woff2" />
+	  <Content Include="Assets\Images\Error.png" />
+	  <Content Include="Assets\Images\Information.png" />
+	  <Content Include="Assets\Images\Question.png" />
+	  <Content Include="Assets\Images\Refresh.png" />
+	  <Content Include="Assets\Images\Warning.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+	</ItemGroup>
+
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
+			<ItemGroup>
+				<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
+			</ItemGroup>
+		</When>
+		<When Condition="'$(TargetFramework)' == 'net6.0-windows'">
+			<ItemGroup>
+				<PackageReference Include="Uno.UI" Version="4.3.6" />
+			</ItemGroup>
+		</When>
+	</Choose>
+	
+	
+	<ItemGroup>
+		<Page Include="Controls\ErrorPresenter\ErrorPresenter.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+</Project>

@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="templates\**" />
+		<Compile Remove="_site\**" />
+		<Compile Remove="_site_pdf\**" />
+		<EmbeddedResource Remove="templates\**" />
+		<EmbeddedResource Remove="_site\**" />
+		<EmbeddedResource Remove="_site_pdf\**" />
+		<None Remove="templates\**" />
+		<None Remove="_site\**" />
+		<None Remove="_site_pdf\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="log.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="docfx.console" Version="2.59.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+</Project>

@@ -1,0 +1,54 @@
+﻿<CommandBar x:Name="BaseMenuInstance"
+    x:Class="ISynergy.Framework.UI.Controls.BaseMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    mc:Ignorable="d" 
+    Background="Transparent" 
+    IsDynamicOverflowEnabled="False">
+
+    <CommandBar.Content>
+        <TextBlock x:Name="TextBlockTitle" 
+                   Text="{Binding Title}" 
+                   Style="{StaticResource TitleTextBlockStyle}" />
+    </CommandBar.Content>
+    <CommandBar.PrimaryCommands>
+        <AppBarButton x:Name="Button_Add" 
+                      Command="{Binding Add_Command}" 
+                      Label="{m:LanguageResource Key=Add}" 
+                      ToolTipService.ToolTip="{m:LanguageResource Key=Add}">
+            <AppBarButton.Icon>
+                <PathIcon Data="{StaticResource plus}"/>
+            </AppBarButton.Icon>
+        </AppBarButton>
+        <AppBarButton x:Name="Button_Edit" 
+                      Command="{Binding Edit_Command}" 
+                      CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
+                      Label="{m:LanguageResource Key=Edit}" 
+                      ToolTipService.ToolTip="{m:LanguageResource Key=Edit}">
+            <AppBarButton.Icon>
+                <PathIcon Data="{StaticResource edit}"/>
+            </AppBarButton.Icon>
+        </AppBarButton>
+        <AppBarButton x:Name="Button_Delete" 
+                      Command="{Binding Delete_Command}" 
+                      CommandParameter="{Binding SelectedItem, Mode=OneWay}" 
+                      Label="{m:LanguageResource Key=Delete}" 
+                      ToolTipService.ToolTip="{m:LanguageResource Key=Delete}">
+            <AppBarButton.Icon>
+                <PathIcon Data="{StaticResource delete}"/>
+            </AppBarButton.Icon>
+        </AppBarButton>
+        <AppBarButton x:Name="Button_Refresh" 
+                      Command="{Binding Refresh_Command}" 
+                      Label="{m:LanguageResource Key=Refresh}" 
+                      ToolTipService.ToolTip="{m:LanguageResource Key=Refresh}" 
+                      Visibility="{Binding Refresh_Enabled, ElementName=BaseMenuInstance}">
+            <AppBarButton.Icon>
+                <PathIcon Data="{StaticResource refresh}"/>
+            </AppBarButton.Icon>
+        </AppBarButton>
+    </CommandBar.PrimaryCommands>
+</CommandBar>

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.IO</PackageId>
+		<Description>I-Synergy IO Framework for .Net Standard 2.0</Description>
+		<PackageTags>I-Synergy, Framework, IO</PackageTags>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="FileTypeDefinitions.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="FileTypeDefinitions.json">
+			<LogicalName>FileTypeDefinitions.json</LogicalName> 
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Watchers\FileSystemWatcherEx.cs">
+			<SubType>Component</SubType>
+		</Compile>
+	</ItemGroup>
+
+</Project>

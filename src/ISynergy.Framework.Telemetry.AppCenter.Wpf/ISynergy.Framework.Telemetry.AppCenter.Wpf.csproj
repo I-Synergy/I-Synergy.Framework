@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\ISynergy.Framework.Telemetry.AppCenter.Shared\ISynergy.Framework.Telemetry.AppCenter.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>net472;net48;net6.0-windows</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Telemetry.AppCenter.Wpf</PackageId>
+		<Description>I-Synergy Framework Telemetry library for AppCenter Wpf</Description>
+		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Wpf</PackageTags>
+		<RootNamespace>ISynergy.Framework.Telemetry.AppCenter</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.1" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <NoWarn>NU1701</NoWarn>
+		<WasmHead>true</WasmHead>
+        <Product>Sample</Product>
+        <Copyright>Copyright (c) 2008-2021 International Intelligence</Copyright>
+        <Company>International Intelligence</Company>
+        <Authors>Ismail Hassani</Authors>
+        <AssemblyName>Sample</AssemblyName>
+        <DefineConstants>__WASM__</DefineConstants>
+		<WasmShellEnableLongPathSupport>false</WasmShellEnableLongPathSupport>
+	    <WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
+	    <CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
+	
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+        <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
+	
+    <ItemGroup>
+        <UpToDateCheckInput Include="..\Sample.Shared\**\*.xaml" />
+	    <UpToDateCheckInput Include="..\Sample.UWP.Shared\**\*.xaml" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="WasmCSS\*.css" />
+        <EmbeddedResource Include="WasmScripts\*.js" />
+    </ItemGroup>
+    <ItemGroup>
+      <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+    </ItemGroup>
+    <ItemGroup>
+        <LinkerDescriptor Include="LinkerConfig.xml" />
+    </ItemGroup>
+	
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.1.0" />
+		<PackageReference Include="Uno.Material" Version="1.2.0" />
+        <PackageReference Include="Uno.UI.WebAssembly" Version="4.1.8" />
+		<PackageReference Include="Uno.UI.RemoteControl" Version="4.1.8" Condition="'$(Configuration)'=='Debug'" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.2.0" />
+        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.2.0" PrivateAssets="all" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+        <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+        <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj" />
+        <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+        <ProjectReference Include="..\Sample.ViewModels.Display\Sample.ViewModels.Display.csproj" />
+        <ProjectReference Include="..\Sample.Views.Display\Sample.Views.Display.csproj" />
+    </ItemGroup>
+    <Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.Shared\Sample.Shared.projitems')" />
+    <Import Project="..\Sample.UWP.Shared\Sample.UWP.Shared.projitems" Label="Shared" />
+</Project>

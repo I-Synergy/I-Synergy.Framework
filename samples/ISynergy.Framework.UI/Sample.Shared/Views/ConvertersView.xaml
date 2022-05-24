@@ -1,0 +1,19 @@
+﻿<c:View xmlns:c="using:ISynergy.Framework.UI.Controls" 
+    x:Class="Sample.Views.ConvertersView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel Orientation="Vertical">
+        <ComboBox Header="ComboBox with EnumToArrayConverter" 
+                  ItemsSource="{Binding SoftwareEnvironments, Converter={StaticResource EnumToArrayConverter}}" 
+                  DisplayMemberPath="Value" 
+                  SelectedValuePath="Key" 
+                  SelectedValue="{Binding SelectedSoftwareEnvironment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="{Binding SelectedSoftwareEnvironment, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}"/>
+    </StackPanel>
+</c:View>
