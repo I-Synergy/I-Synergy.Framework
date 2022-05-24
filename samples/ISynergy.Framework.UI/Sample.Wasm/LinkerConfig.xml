@@ -1,0 +1,18 @@
+﻿<linker>
+    <assembly fullname="Sample" />
+	<assembly fullname="Sample.ViewModels.Display" />
+	<assembly fullname="Sample.Views.Display" />
+	<assembly fullname="ISynergy.Framework.UI" />
+	<assembly fullname="ISynergy.Framework.Mvvm" />
+	<assembly fullname="ISynergy.Framework.Core" />
+	<assembly fullname="ISynergy.Framework.Telemetry.ApplicationInsights" />
+    <assembly fullname="Uno.UI" />
+	<assembly fullname="Uno.UI.WebAssembly"/>
+	<assembly fullname="Microsoft.Extensions.Logging"/>
+	<assembly fullname="Microsoft.Extensions.Options"/>
+	
+    <assembly fullname="System.Core">
+        <!-- This is required by JSon.NET and any expression.Compile caller -->
+        <type fullname="System.Linq.Expressions*" />
+    </assembly>
+</linker>

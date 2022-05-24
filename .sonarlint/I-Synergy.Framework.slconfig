@@ -1,0 +1,15 @@
+{
+  "ServerUri": "https://sonarcloud.io/",
+  "Organization": {
+    "Key": "i-synergy",
+    "Name": "I-Synergy"
+  },
+  "ProjectKey": "I-Synergy.Framework",
+  "ProjectName": "I-Synergy.Framework",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AXMHF2O3i59i90gTYyEz",
+      "ProfileTimestamp": "2022-03-31T10:15:41Z"
+    }
+  }
+}

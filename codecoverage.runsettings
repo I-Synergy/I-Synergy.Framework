@@ -8,24 +8,20 @@
                         <!-- Match assembly file paths: -->
                         <ModulePaths>
                             <Include>
-                                <ModulePath>.*\I-Synergy.Framework.AspNetCore.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.AspNetCore.Authentication.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Core.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Core.Linq.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Entities.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.EntityFramework.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Financial.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Geography.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Mathematics.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.MessageBus.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.MessageBus.Azure.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Models.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Mvvm.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Payment.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Payment.Mollie.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Storage.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Storage.Azure.dll</ModulePath>
-                                <ModulePath>.*\I-Synergy.Framework.Windows.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.AspNetCore.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.AspNetCore.Authentication.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.Core.dll</ModulePath>
+								<ModulePath>.*\ISynergy.Framework.IO.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.EntityFramework.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.Financial.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.Geography.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.Mathematics.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.MessageBus.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.MessageBus.Azure.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.Mvvm.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.Storage.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.Storage.Azure.dll</ModulePath>
+                                <ModulePath>.*\ISynergy.Framework.UI.dll</ModulePath>
                             </Include>
                             <Exclude>
                                 <ModulePath>.*tests.dll</ModulePath>

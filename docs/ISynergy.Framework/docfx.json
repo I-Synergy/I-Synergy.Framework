@@ -1,0 +1,186 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "src/ISynergy.Framework.AspNetCore/ISynergy.Framework.AspNetCore.csproj",
+            "src/ISynergy.Framework.AspNetCore.Authentication/ISynergy.Framework.AspNetCore.Authentication.csproj",
+            "src/ISynergy.Framework.AspNetCore.Globalization/ISynergy.Framework.AspNetCore.Globalization.csproj",
+            "src/ISynergy.Framework.AspNetCore.MultiTenancy/ISynergy.Framework.AspNetCore.MultiTenancy.csproj",
+            "src/ISynergy.Framework.AspNetCore.Proxy/ISynergy.Framework.AspNetCore.Proxy.csproj",
+            "src/ISynergy.Framework.Automations/ISynergy.Framework.Automations.csproj",
+            "src/ISynergy.Framework.Clipboard/ISynergy.Framework.Clipboard.csproj",
+            "src/ISynergy.Framework.Clipboard.Uwp/ISynergy.Framework.Clipboard.Uwp.csproj",
+            "src/ISynergy.Framework.Clipboard.WinUI/ISynergy.Framework.Clipboard.WinUI.csproj",
+            "src/ISynergy.Framework.Clipboard.Wpf/ISynergy.Framework.Clipboard.Wpf.csproj",
+            "src/ISynergy.Framework.Core/ISynergy.Framework.Core.csproj",
+            "src/ISynergy.Framework.Documents/ISynergy.Framework.Documents.csproj",
+            "src/ISynergy.Framework.Documents.Syncfusion/ISynergy.Framework.Documents.Syncfusion.csproj",
+            "src/ISynergy.Framework.EntityFramework/ISynergy.Framework.EntityFramework.csproj",
+            "src/ISynergy.Framework.Financial/ISynergy.Framework.Financial.csproj",
+            "src/ISynergy.Framework.Geography/ISynergy.Framework.Geography.csproj",
+            "src/ISynergy.Framework.IO/ISynergy.Framework.IO.csproj",
+            "src/ISynergy.Framework.Mail/ISynergy.Framework.Mail.csproj",
+            "src/ISynergy.Framework.Mail.SendGrid/ISynergy.Framework.Mail.SendGrid.csproj",
+            "src/ISynergy.Framework.Mathematics/ISynergy.Framework.Mathematics.csproj",
+            "src/ISynergy.Framework.MessageBus/ISynergy.Framework.MessageBus.csproj",
+            "src/ISynergy.Framework.MessageBus.Azure/ISynergy.Framework.MessageBus.Azure.csproj",
+            "src/ISynergy.Framework.Monitoring/ISynergy.Framework.Monitoring.csproj",
+            "src/ISynergy.Framework.Monitoring.Client/ISynergy.Framework.Monitoring.Client.csproj",
+            "src/ISynergy.Framework.Monitoring.Client.SignalR/ISynergy.Framework.Monitoring.Client.SignalR.csproj",
+            "src/ISynergy.Framework.Monitoring.Common/ISynergy.Framework.Monitoring.Common.csproj",
+            "src/ISynergy.Framework.Monitoring.SignalR/ISynergy.Framework.Monitoring.SignalR.csproj",
+            "src/ISynergy.Framework.Mvvm/ISynergy.Framework.Mvvm.csproj",
+            "src/ISynergy.Framework.Physics/ISynergy.Framework.Physics.csproj",
+            "src/ISynergy.Framework.Printer.Label/ISynergy.Framework.Printer.Label.csproj",
+            "src/ISynergy.Framework.Printer.Label.Dymo/ISynergy.Framework.Printer.Label.Dymo.csproj",
+            "src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj",
+            "src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj",
+            "src/ISynergy.Framework.Telemetry/ISynergy.Framework.Telemetry.csproj",
+            "src/ISynergy.Framework.Telemetry.AppCenter.Uwp/ISynergy.Framework.Telemetry.AppCenter.Uwp.csproj",
+            "src/ISynergy.Framework.Telemetry.AppCenter.WinUI/ISynergy.Framework.Telemetry.AppCenter.WinUI.csproj",
+            "src/ISynergy.Framework.Telemetry.AppCenter.Wpf/ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj",
+            "src/ISynergy.Framework.Telemetry.ApplicationInsights.Uwp/ISynergy.Framework.Telemetry.ApplicationInsights.Uwp.csproj",
+            "src/ISynergy.Framework.Telemetry.ApplicationInsights.WinUI/ISynergy.Framework.Telemetry.ApplicationInsights.WinUI.csproj",
+            "src/ISynergy.Framework.UI/ISynergy.Framework.UI.csproj",
+            "src/ISynergy.Framework.UI.Uwp/ISynergy.Framework.UI.Uwp.csproj",
+            "src/ISynergy.Framework.UI.WinUI/ISynergy.Framework.UI.WinUI.csproj",
+            "src/ISynergy.Framework.UI.Wpf/ISynergy.Framework.UI.Wpf.csproj",
+            "src/ISynergy.Framework.Update/ISynergy.Framework.Update.csproj",
+            "src/ISynergy.Framework.Update.Uwp/ISynergy.Framework.Update.Uwp.csproj",
+            "src/ISynergy.Framework.Update.WinUI/ISynergy.Framework.Update.WinUI.csproj",
+            "src/ISynergy.Framework.Update.Wpf/ISynergy.Framework.Update.Wpf.csproj"
+          ],
+          "src": "../..",
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**",
+            "docs/**"
+          ]
+        }
+      ],
+      "dest": "api",
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "articles/**.md",
+          "articles/**/toc.yml",
+          "toc.yml",
+          "*.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/**.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "dest": "_site",
+    "filter": "filter.yml",
+    "globalMetadataFiles": [],
+    "globalMetadata": {
+      "_appTitle": "I-Synergy Framework Documentation",
+      "_appFooter": "",
+      "_appLogoPath": "images/logo.svg",
+      "_appFaviconPath": "images/favicon.ico"
+    },
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "templates/discordfx"
+    ],
+    "postProcessors": [],
+    "markdownEngineName": "markdig",
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "cleanupCacheHistory": false,
+    "disableGitFeatures": false
+  }
+  //"pdf": {
+  //  "content": [
+  //    {
+  //      "files": [
+  //        "api/**.yml",
+  //        "api-vb/**.yml"
+  //      ],
+  //      "exclude": [
+  //        "**/toc.yml",
+  //        "**/toc.md"
+  //      ]
+  //    },
+  //    {
+  //      "files": [
+  //        "articles/**.md",
+  //        "articles/**/toc.yml",
+  //        "toc.yml",
+  //        "*.md",
+  //        "pdf/*"
+  //      ],
+  //      "exclude": [
+  //        "**/bin/**",
+  //        "**/obj/**",
+  //        "_site_pdf/**",
+  //        "**/toc.yml",
+  //        "**/toc.md"
+  //      ]
+  //    },
+  //    {
+  //      "files": "pdf/toc.yml"
+  //    }
+  //  ],
+  //  "resource": [
+  //    {
+  //      "files": [
+  //        "assets/**"
+  //      ],
+  //      "src": "..",
+  //      "exclude": [
+  //        "**/bin/**",
+  //        "**/obj/**",
+  //        "_site_pdf/**"
+  //      ]
+  //    }
+  //  ],
+  //  "overwrite": [
+  //    {
+  //      "files": [
+  //        "apidoc/**.md"
+  //      ],
+  //      "exclude": [
+  //        "**/bin/**",
+  //        "**/obj/**",
+  //        "_site_pdf/**"
+  //      ]
+  //    }
+  //  ],
+  //  "wkhtmltopdf": {
+  //    "additionalArguments": "--enable-local-file-access"
+  //  },
+  //  "dest": "_site_pdf"
+  //}
+}

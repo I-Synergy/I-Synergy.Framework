@@ -1,0 +1,50 @@
+﻿<c:View xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Wpf"
+    x:Class="NugetUnlister.NugetView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <c:View.Resources>
+        <DataTemplate x:Key="versionTpl">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="2" VerticalAlignment="Center" IsChecked="{Binding Selected, Mode=TwoWay}" />
+                <TextBlock Margin="2" VerticalAlignment="Center" Text="{Binding Version}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="logTpl">
+            <TextBlock Text="{Binding}" Foreground="{Binding Converter={StaticResource logConv}}" />
+        </DataTemplate>
+    </c:View.Resources>
+
+    <DockPanel LastChildFill="True">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Package ID:" Margin="4" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" Margin="4" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Text="{Binding PackageId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Grid.Column="2" Content="List Versions" Margin="4" MinWidth="100" Command="{Binding ListVersionCommand}" />
+            <Button Grid.Column="3" Margin="4" MinWidth="100">
+                <Menu Background="Transparent">
+                    <MenuItem Header="Select...">
+                        <MenuItem Header="All" Command="{Binding SelectAllCommand}" />
+                        <MenuItem Header="None" Command="{Binding DeselectAllCommand}"/>
+                    </MenuItem>
+                </Menu>
+            </Button>
+            <Button x:Name="btnUnlist" Grid.Column="4" Content="Unlist!" Margin="4" MinWidth="100" Foreground="#FF0000" Command="{Binding UnlistCommand}" />
+        </Grid>
+        <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ListBox x:Name="versionList" Grid.Row="0" ItemTemplate="{StaticResource versionTpl}" ItemsSource="{Binding Items}"/>
+            <ListBox x:Name="logList" Grid.Row="2" ItemTemplate="{StaticResource logTpl}" ItemsSource="{Binding Logs}" />
+        </Grid>
+    </DockPanel>
+</c:View>

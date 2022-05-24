@@ -1,0 +1,84 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFramework>uap10.0.18362</TargetFramework>
+		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<PackageId>I-Synergy.Framework.UI.Uwp</PackageId>
+		<Description>I-Synergy UI Framework for Uwp</Description>
+		<PackageTags>I-Synergy, Framework, UI, Uwp</PackageTags>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
+		<ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.1" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
+		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout" Version="7.1.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Assets\Fonts\FluentSystemIcons.ttf" />
+	  <None Remove="Assets\Fonts\ISynergy.ttf" />
+	  <None Remove="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <None Remove="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <None Remove="Assets\Fonts\segoesb.ttf" />
+	  <None Remove="Assets\Fonts\segoeui.ttf" />
+	  <None Remove="Assets\Fonts\segoeuib.ttf" />
+	  <None Remove="Assets\Fonts\segoeuil.ttf" />
+	  <None Remove="Assets\Fonts\uno-fluentui-assets.ttf" />
+	  <None Remove="Assets\Fonts\uno-fluentui-assets.woff2" />
+	  <None Remove="Assets\Images\Error.png" />
+	  <None Remove="Assets\Images\Information.png" />
+	  <None Remove="Assets\Images\Question.png" />
+	  <None Remove="Assets\Images\Refresh.png" />
+	  <None Remove="Assets\Images\Warning.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Assets\Fonts\FluentSystemIcons.ttf" />
+	  <Content Include="Assets\Fonts\ISynergy.ttf" />
+	  <Content Include="Assets\Fonts\OpenDyslexic3-Bold.ttf" />
+	  <Content Include="Assets\Fonts\OpenDyslexic3-Regular.ttf" />
+	  <Content Include="Assets\Fonts\segoesb.ttf" />
+	  <Content Include="Assets\Fonts\segoeui.ttf" />
+	  <Content Include="Assets\Fonts\segoeuib.ttf" />
+	  <Content Include="Assets\Fonts\segoeuil.ttf" />
+	  <Content Include="Assets\Fonts\uno-fluentui-assets.ttf" />
+	  <Content Include="Assets\Fonts\uno-fluentui-assets.woff2" />
+	  <Content Include="Assets\Images\Error.png" />
+	  <Content Include="Assets\Images\Information.png" />
+	  <Content Include="Assets\Images\Question.png" />
+	  <Content Include="Assets\Images\Refresh.png" />
+	  <Content Include="Assets\Images\Warning.png" />
+	</ItemGroup>
+</Project>
