@@ -152,7 +152,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="viewmodel">The viewmodel.</param>
         private async Task CreateDialogAsync<TEntity>(Window dialog, IViewModelDialog<TEntity> viewmodel)
         {
-            dialog.DataContext = viewmodel;
+            dialog.ViewModel = viewmodel;
 
             dialog.PrimaryButtonCommand = viewmodel.Submit_Command;
             dialog.SecondaryButtonCommand = viewmodel.Close_Command;
