@@ -872,7 +872,7 @@ stages:
   - stage: Release
     displayName: 'Release'
     dependsOn: BuildStage
-    condition: succeeded()
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
     jobs:
     - job: ArtifactsJob
       displayName: 'Get Nuget artifacts'
