@@ -11,17 +11,17 @@ namespace ISynergy.Framework.UI.Options
         /// Gets or sets the application.
         /// </summary>
         /// <value>The application title.</value>
-        public string Application { get; }
+        public string Application { get; set; }
         /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
         /// <value>The client identifier.</value>
-        public string ClientId { get; }
+        public string ClientId { get; set; }
         /// <summary>
         /// Gets or sets the client secret.
         /// </summary>
         /// <value>The client secret.</value>
-        public string ClientSecret { get; }
+        public string ClientSecret { get; set; }
         /// <summary>
         /// Gets or sets the service endpoint.
         /// </summary>
