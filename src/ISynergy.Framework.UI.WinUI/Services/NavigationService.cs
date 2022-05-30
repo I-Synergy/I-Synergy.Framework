@@ -186,14 +186,7 @@ namespace ISynergy.Framework.UI.Services
 
                 if (TypeActivator.CreateInstance(_pages[viewModelKey]) is ISynergy.Framework.UI.Controls.View view)
                 {
-                    var datacontextBinding = new Binding
-                    {
-                        Source = viewModel,
-                        Mode = BindingMode.TwoWay,
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    };
-
-                    BindingOperations.SetBinding(view, FrameworkElement.DataContextProperty, datacontextBinding);
+                    view.ViewModel = viewModel;
                     return view;
                 }
 
