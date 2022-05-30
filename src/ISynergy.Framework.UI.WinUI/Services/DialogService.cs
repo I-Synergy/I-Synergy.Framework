@@ -161,7 +161,7 @@ namespace ISynergy.Framework.UI.Services
             if(Application.Current is BaseApplication baseApplication)
                 dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
 
-            dialog.DataContext = viewmodel;
+            dialog.ViewModel = viewmodel;
 
             dialog.PrimaryButtonCommand = viewmodel.Submit_Command;
             dialog.SecondaryButtonCommand = viewmodel.Close_Command;
