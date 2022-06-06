@@ -18,12 +18,13 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<DefineConstants>$(DefineConstants);WINDOWS_WINUI</DefineConstants>
 	</PropertyGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -50,10 +51,10 @@
 		  <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	  <Page Include="Views\SelectionView.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+	    <SubType>Designer</SubType>
 	  </Page>
 	  <Page Include="Windows\LanguageWindow.xaml">
-		  <Generator>MSBuild:Compile</Generator>
+	    <SubType>Designer</SubType>
 	  </Page>
 	  <Page Include="Windows\NoteWindow.xaml">
 		  <Generator>MSBuild:Compile</Generator>
@@ -80,5 +81,14 @@
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Update="Views\SelectionView.xaml.cs">
+	    <DependentUpon>SelectionView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Windows\LanguageWindow.xaml.cs">
+	    <DependentUpon>LanguageWindow.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 </Project>

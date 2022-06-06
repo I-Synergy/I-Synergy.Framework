@@ -1,8 +1,11 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using WinRT.Interop;
 
 namespace Sample.Views
 {
