@@ -18,6 +18,7 @@
 		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 		<ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<DefineConstants>$(DefineConstants);WINDOWS_WPF</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Assets\Fonts\FluentSystemIcons.ttf" />
@@ -74,7 +75,7 @@
 		</When>
 		<When Condition="'$(TargetFramework)' == 'net6.0-windows'">
 			<ItemGroup>
-				<PackageReference Include="Uno.UI" Version="4.3.6" />
+				<PackageReference Include="Uno.UI" Version="4.3.8" />
 			</ItemGroup>
 		</When>
 	</Choose>

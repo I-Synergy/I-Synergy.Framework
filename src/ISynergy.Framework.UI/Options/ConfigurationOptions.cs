@@ -13,6 +13,10 @@ namespace ISynergy.Framework.UI.Options
         /// <value>The application title.</value>
         public string Application { get; set; }
         /// <summary>
+        /// Gets or sets the application icon (*.ico) file.  
+        /// </summary>
+        public string Icon { get; set; }
+        /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
         /// <value>The client identifier.</value>

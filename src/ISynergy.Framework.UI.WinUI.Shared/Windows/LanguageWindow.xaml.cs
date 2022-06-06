@@ -5,7 +5,7 @@ using ISynergy.Framework.UI.ViewModels;
 
 #if (WINDOWS_UWP || HAS_UNO)
 using Windows.UI.Xaml;
-#else
+#elif WINDOWS_WINUI
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endif
@@ -26,11 +26,13 @@ namespace ISynergy.Framework.UI
 
             DataContextChanged += LanguageWindow_DataContextChanged;
 
+#if !WINDOWS_WPF
             PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Ok");
             SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
+#endif
         }
 
-#if WINDOWS_UWP || WINDOWS
+#if WINDOWS_UWP || WINDOWS_WINUI
         private void LanguageWindow_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             SetLanguageButton();
@@ -44,25 +46,22 @@ namespace ISynergy.Framework.UI
 
         private void SetLanguageButton()
         {
-            if (ViewModel is LanguageViewModel languageViewModel)
+            if (ViewModel is LanguageViewModel languageViewModel && !string.IsNullOrEmpty(languageViewModel.SelectedItem))
             {
-                if (!string.IsNullOrEmpty(languageViewModel.SelectedItem))
+                switch (languageViewModel.SelectedItem)
                 {
-                    switch (languageViewModel.SelectedItem)
-                    {
-                        case "nl":
-                            Button_Language_nl.IsChecked = true;
-                            break;
-                        case "de":
-                            Button_Language_de.IsChecked = true;
-                            break;
-                        case "fr":
-                            Button_Language_fr.IsChecked = true;
-                            break;
-                        default:
-                            Button_Language_en.IsChecked = true;
-                            break;
-                    }
+                    case "nl":
+                        Button_Language_nl.IsChecked = true;
+                        break;
+                    case "de":
+                        Button_Language_de.IsChecked = true;
+                        break;
+                    case "fr":
+                        Button_Language_fr.IsChecked = true;
+                        break;
+                    default:
+                        Button_Language_en.IsChecked = true;
+                        break;
                 }
             }
         }

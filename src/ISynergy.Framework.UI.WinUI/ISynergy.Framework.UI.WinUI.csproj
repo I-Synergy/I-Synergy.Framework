@@ -1,5 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems" Label="Shared" />
+	<Import Project="..\ISynergy.Framework.UI.WinUI.Shared\ISynergy.Framework.UI.WinUI.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
 		<TargetFrameworks>net6.0-windows10.0.18362;net6.0-windows10.0.19041;net6.0-windows10.0.20348;net6.0-windows10.0.22000</TargetFrameworks>
@@ -18,12 +19,13 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<DefineConstants>$(DefineConstants);WINDOWS_WINUI</DefineConstants>
 	</PropertyGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.8" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.3" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -49,12 +51,6 @@
 	  <Page Include="Controls\Tiles\Tile.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 	  </Page>
-	  <Page Include="Views\SelectionView.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Include="Windows\LanguageWindow.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-	  </Page>
 	  <Page Include="Windows\NoteWindow.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 	  </Page>
@@ -70,8 +66,6 @@
 		<None Remove="Controls\ImageView\ImageView.xaml" />
 		<None Remove="Controls\Menu\BaseMenu.xaml" />
 		<None Remove="Controls\Tiles\Tile.xaml" />
-		<None Remove="Views\SelectionView.xaml" />
-		<None Remove="Windows\LanguageWindow.xaml" />
 		<None Remove="Windows\NoteWindow.xaml" />
 		<None Remove="Windows\ThemeWindow.xaml" />
 	</ItemGroup>

@@ -145,9 +145,7 @@ namespace Sample
             //Add current assembly.
             //Add current assembly.
             RegisterAssemblies(assembly, x =>
-                x.Name.StartsWith(GetType().Namespace) ||
-                x.Name.Equals(Assembly.GetAssembly(typeof(Sample.Views.Display.Assembly.Identifier)).FullName) ||
-                x.Name.Equals(Assembly.GetAssembly(typeof(Sample.ViewModels.Display.Assembly.Identifier)).FullName));
+                x.Name.StartsWith(GetType().Namespace));
         }
 
         /// <summary>
