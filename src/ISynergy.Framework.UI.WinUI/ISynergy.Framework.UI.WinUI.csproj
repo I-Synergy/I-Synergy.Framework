@@ -1,6 +1,5 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems" Label="Shared" />
-	<Import Project="..\ISynergy.Framework.UI.WinUI.Shared\ISynergy.Framework.UI.WinUI.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
 		<TargetFrameworks>net6.0-windows10.0.18362;net6.0-windows10.0.19041;net6.0-windows10.0.20348;net6.0-windows10.0.22000</TargetFrameworks>
@@ -51,6 +50,12 @@
 	  <Page Include="Controls\Tiles\Tile.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 	  </Page>
+	  <Page Include="Views\SelectionView.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Include="Windows\LanguageWindow.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
 	  <Page Include="Windows\NoteWindow.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 	  </Page>
@@ -66,6 +71,8 @@
 		<None Remove="Controls\ImageView\ImageView.xaml" />
 		<None Remove="Controls\Menu\BaseMenu.xaml" />
 		<None Remove="Controls\Tiles\Tile.xaml" />
+		<None Remove="Views\SelectionView.xaml" />
+		<None Remove="Windows\LanguageWindow.xaml" />
 		<None Remove="Windows\NoteWindow.xaml" />
 		<None Remove="Windows\ThemeWindow.xaml" />
 	</ItemGroup>
@@ -74,5 +81,14 @@
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Update="Views\SelectionView.xaml.cs">
+	    <DependentUpon>SelectionView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Windows\LanguageWindow.xaml.cs">
+	    <DependentUpon>LanguageWindow.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 </Project>

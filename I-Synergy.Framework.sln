@@ -225,8 +225,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Wpf", "samples\ISyne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.Uno", "src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj", "{9089AEB6-D268-4EBB-BF25-779423C95D7C}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ISynergy.Framework.UI.WinUI.Shared", "src\ISynergy.Framework.UI.WinUI.Shared\ISynergy.Framework.UI.WinUI.Shared.shproj", "{8FA4FA4F-9F0C-43AE-BD3F-D7B7765A6988}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -4609,7 +4607,6 @@ Global
 		{DCDDECB6-85E0-45E1-9ECF-0708BDF55858} = {748C5FD2-1F73-4289-BC5C-4AC0F7FECB1B}
 		{13BBBDA1-DF39-4B2A-9DAB-CCFDD18085B1} = {DCDDECB6-85E0-45E1-9ECF-0708BDF55858}
 		{9089AEB6-D268-4EBB-BF25-779423C95D7C} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
-		{8FA4FA4F-9F0C-43AE-BD3F-D7B7765A6988} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
@@ -4625,16 +4622,13 @@ Global
 		samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.projitems*{58ac244e-38e5-4165-a25e-fedad3ad26c2}*SharedItemsImports = 13
 		src\ISynergy.Framework.Telemetry.AppCenter.Shared\ISynergy.Framework.Telemetry.AppCenter.Shared.projitems*{5bc9dfce-b532-4651-afa0-6e53d3ebd4f4}*SharedItemsImports = 5
 		src\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems*{5d108ce8-3390-4f69-b929-37e0d85eeeb0}*SharedItemsImports = 5
-		src\ISynergy.Framework.UI.WinUI.Shared\ISynergy.Framework.UI.WinUI.Shared.projitems*{5d108ce8-3390-4f69-b929-37e0d85eeeb0}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		src\ISynergy.Framework.Telemetry.ApplicationInsights.Shared\ISynergy.Framework.Telemetry.ApplicationInsights.Shared.projitems*{683b22aa-de6f-4ac5-9c4e-1defd47c37a2}*SharedItemsImports = 13
 		samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.projitems*{81924ac4-c08f-4e9b-bd05-fb7f75291609}*SharedItemsImports = 5
 		src\ISynergy.Framework.Telemetry.ApplicationInsights.Shared\ISynergy.Framework.Telemetry.ApplicationInsights.Shared.projitems*{8b075643-d2b3-433d-bca8-17fce153adbd}*SharedItemsImports = 5
-		src\ISynergy.Framework.UI.WinUI.Shared\ISynergy.Framework.UI.WinUI.Shared.projitems*{8fa4fa4f-9f0c-43ae-bd3f-d7b7765a6988}*SharedItemsImports = 13
 		samples\ISynergy.Framework.UI\Sample.Desktop.Shared\Sample.Desktop.Shared.projitems*{92ba2c8d-c14e-458a-b53d-ae9afa29e9b3}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{92ba2c8d-c14e-458a-b53d-ae9afa29e9b3}*SharedItemsImports = 5
 		src\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems*{9de26c79-4fed-46eb-b592-01cd146a9baa}*SharedItemsImports = 5
-		src\ISynergy.Framework.UI.WinUI.Shared\ISynergy.Framework.UI.WinUI.Shared.projitems*{9de26c79-4fed-46eb-b592-01cd146a9baa}*SharedItemsImports = 5
 		src\ISynergy.Framework.Update.Shared\ISynergy.Framework.Update.Shared.projitems*{aba841eb-103a-443e-8189-0d87fff0a7f7}*SharedItemsImports = 5
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{b3bccab0-e662-4443-8af3-63721f4dadb5}*SharedItemsImports = 4
 		samples\ISynergy.Framework.UI\Sample.UWP.Shared\Sample.UWP.Shared.projitems*{b3bccab0-e662-4443-8af3-63721f4dadb5}*SharedItemsImports = 4

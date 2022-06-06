@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+﻿#if WINDOWS_UWP || WINDOWS_WINUI
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace ISynergy.Framework.UI
     /// </summary>
     /// <seealso cref="ISynergy.Framework.UI.Controls.View" />
     /// <seealso cref="ISynergy.Framework.Mvvm.Abstractions.IView" />
-    public sealed partial class SelectionView : ISynergy.Framework.UI.Controls.View, IView
+    public partial class SelectionView : ISynergy.Framework.UI.Controls.View, IView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionView" /> class.
@@ -84,3 +85,4 @@ namespace ISynergy.Framework.UI
         }
     }
 }
+#endif
