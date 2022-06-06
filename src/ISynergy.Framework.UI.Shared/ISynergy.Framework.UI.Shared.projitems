@@ -22,5 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\NavigationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ThemeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\SelectionView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\LanguageWindow.cs" />
   </ItemGroup>
 </Project>
