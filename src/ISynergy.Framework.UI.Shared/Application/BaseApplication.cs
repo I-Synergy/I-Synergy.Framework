@@ -7,7 +7,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Assembly;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -23,13 +22,52 @@ using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Extensions;
+using System.Globalization;
+using ISynergy.Framework.Core.Validation;
+using System.IO;
+using ISynergy.Framework.UI.Options;
+using Microsoft.Extensions.Options;
+
+#if WINDOWS_UWP || HAS_UNO
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+using LaunchActivatedEventArgs = Windows.ApplicationModel.Activation.LaunchActivatedEventArgs;
+using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
+#elif WINDOWS_WINUI
+using Microsoft.UI.Windowing;
+using WinRT.Interop;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.ViewManagement;
+using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
+using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
+#elif WINDOWS_WPF
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
+using System.Windows.Navigation;
+using NavigationService = ISynergy.Framework.UI.Services.NavigationService;
+#endif
 
 namespace ISynergy.Framework.UI
 {
     /// <summary>
     /// Class BaseApplication.
     /// </summary>
-    public abstract partial class BaseApplication
+    public abstract class BaseApplication : Application
     {
         /// <summary>
         /// Gets the theme selector.
@@ -70,6 +108,13 @@ namespace ISynergy.Framework.UI
         /// <value>The context.</value>
         protected IContext _context;
 
+#if !WINDOWS_WPF
+        /// <summary>
+        /// Main Application Window.
+        /// </summary>
+        public Window MainWindow { get; private set; }
+#endif
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseApplication" /> class.
         /// </summary>
@@ -93,6 +138,283 @@ namespace ISynergy.Framework.UI
 
             Initialize();
         }
+
+#if WINDOWS_WPF
+        /// <summary>
+        /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
+        /// </summary>
+        /// <param name="e">Event data for the event.</param>
+        protected override void OnStartup(StartupEventArgs e) => 
+            OnLaunchApplication(e);
+
+        /// <summary>
+        /// Handles the UnhandledException event of the Current control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        private void Current_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            HandleException(e.Exception, e.Exception.Message);
+        }
+#else
+        /// <summary>
+        /// Handles the UnhandledException event of the Current control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        private void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
+        }
+
+        /// <summary>
+        /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
+        /// </summary>
+        /// <param name="e">Event data for the event.</param>
+        protected override void OnLaunched(LaunchActivatedEventArgs e) =>
+            OnLaunchApplication(e);
+#endif
+
+        /// <summary>
+        /// On launch of application.
+        /// </summary>
+        /// <param name="e"></param>
+#if WINDOWS_WPF
+        public virtual void OnLaunchApplication(StartupEventArgs e)
+#else
+        public virtual void OnLaunchApplication(LaunchActivatedEventArgs e)
+#endif
+        {
+#if WINDOWS_WPF
+            var window = Application.Current.MainWindow;
+#elif WINDOWS_WINUI
+            MainWindow = new Window();
+
+            var appWindow = GetAppWindowForCurrentWindow(MainWindow);
+
+            if (AppWindowTitleBar.IsCustomizationSupported())
+            {
+                appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+            }
+
+            var config = ServiceLocator.Default.GetInstance<IOptions<ConfigurationOptions>>();
+            
+            if (config.Value is ConfigurationOptions options)
+            {
+                appWindow.Title = options.Application;
+
+                var iconPath = Path.Combine(System.AppContext.BaseDirectory, options.Icon);
+                if (File.Exists(iconPath))
+                {
+                    appWindow.SetIcon(iconPath);
+                }
+            }           
+#elif WINDOWS_UWP
+            MainWindow = Window.Current;
+#endif
+
+            var rootFrame = MainWindow.Content as Frame;
+
+            // Do not repeat app initialization when the Window already has content,
+            // just ensure that the window is active
+            if (rootFrame is null)
+            {
+                // Create a Frame to act as the navigation context and navigate to the first page
+                rootFrame = new Frame();
+                rootFrame.NavigationFailed += OnNavigationFailed;
+
+#if WINDOWS_UWP || HAS_UNO
+                rootFrame.Navigated += OnNavigated;
+
+                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    //TODO: Load state from previously suspended application
+                }
+
+                // Register a handler for BackRequested events and set the
+                // visibility of the Back button
+                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                    AppViewBackButtonVisibility.Visible :
+                    AppViewBackButtonVisibility.Collapsed;
+#elif WINDOWS_WINUI
+                if (e.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    //TODO: Load state from previously suspended application
+                }
+#endif
+
+                // Add custom resourcedictionaries from code.
+                var dictionary = Application.Current.Resources?.MergedDictionaries;
+
+                if (dictionary is not null)
+                {
+                    foreach (var item in GetAdditionalResourceDictionaries())
+                    {
+                        if (!dictionary.Any(t => t.Source == item.Source))
+                            Application.Current.Resources.MergedDictionaries.Add(item);
+                    }
+                }
+
+                // Place the frame in the current Window
+                MainWindow.Content = rootFrame;
+            }
+
+#if WINDOWS_UWP || HAS_UNO
+            if (!e.PrelaunchActivated)
+            {
+                if (rootFrame.Content is null)
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+
+                    var view = _serviceProvider.GetRequiredService<IShellView>();
+                    rootFrame.Navigate(view.GetType(), e.Arguments);
+                }
+            }
+#elif WINDOWS_WINUI
+            if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Launch)
+            {
+                if (rootFrame.Content is null)
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+
+                    var view = _serviceProvider.GetRequiredService<IShellView>();
+                    rootFrame.Navigate(view.GetType(), e.Arguments);
+                }
+            }
+#elif WINDOWS_WPF
+            if (rootFrame.Content is null)
+            {
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
+
+                var view = _serviceProvider.GetRequiredService<IShellView>();
+                rootFrame.Navigate(view, e.Args);
+            }
+#endif
+
+            _themeSelector = _serviceProvider.GetRequiredService<IThemeService>();
+            _themeSelector.InitializeMainWindow(MainWindow);
+
+            MainWindow.Activate();
+        }
+
+#if WINDOWS_WINUI
+        protected virtual AppWindow GetAppWindowForCurrentWindow(Window window)
+        {
+            var hWnd = WindowNative.GetWindowHandle(window);
+            var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            return AppWindow.GetFromWindowId(wndId);
+        }
+#endif
+
+        /// <summary>
+        /// Sets the context.
+        /// </summary>
+        public virtual void Initialize()
+        {
+#if WINDOWS_WPF
+            Current.DispatcherUnhandledException += Current_UnhandledException;
+#else
+            Current.UnhandledException += Current_UnhandledException;
+#endif
+
+            _context = _serviceProvider.GetRequiredService<IContext>();
+            _context.ViewModels = ViewModelTypes;
+
+#if !WINDOWS_WPF
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+#endif
+
+#if WINDOWS_UWP
+            //Only in Windows i can set the culture.
+            var culture = CultureInfo.CurrentCulture;
+
+            culture.NumberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+            culture.NumberFormat.CurrencyNegativePattern = 1;
+
+            _context.NumberFormat = culture.NumberFormat;
+#endif
+
+#if !WINDOWS_WPF
+            var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
+            localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IBaseApplicationSettingsService>().Settings.Culture);
+#endif
+
+            // Bootstrap all registered modules.
+            foreach (var bootstrapper in BootstrapperTypes.Distinct())
+                if (_serviceProvider.GetService(bootstrapper) is IBootstrap instance)
+                    instance.Bootstrap();
+        }
+
+
+        /// <summary>
+        /// Get a new list of additional resource dictionaries which can be merged.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+            new List<ResourceDictionary>();
+
+        /// <summary>
+        /// Invoked when Navigation to a certain page fails
+        /// </summary>
+        /// <param name="sender">The Frame which failed navigation</param>
+        /// <param name="e">Details about the navigation failure</param>
+        /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
+        /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
+#if WINDOWS_WPF
+            throw new Exception($"Failed to load {e.Uri}: {e.Exception}");
+#else
+            throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
+#endif
+
+#if WINDOWS_UWP
+        /// <summary>
+        /// Handles the <see cref="E:Navigated" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
+        private static void OnNavigated(object sender, NavigationEventArgs e)
+        {
+
+            // Each time a navigation event occurs, update the Back button's visibility
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                ((Frame)sender).CanGoBack ?
+                AppViewBackButtonVisibility.Visible :
+                AppViewBackButtonVisibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Handles the <see cref="E:BackRequested" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="BackRequestedEventArgs" /> instance containing the event data.</param>
+        private static void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+            var rootFrame = Window.Current.Content as Frame;
+
+            if (Window.Current.Content.FindDescendantByName("ContentRootFrame") is Frame _frame)
+            {
+                rootFrame = _frame;
+            }
+
+            if (rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
+        }
+#endif
 
         /// <summary>
         /// Handles the UnobservedTaskException event of the TaskScheduler control.
@@ -135,9 +457,6 @@ namespace ISynergy.Framework.UI
 
                 // Exclude logs below this level
                 builder.SetMinimumLevel(loglevel);
-
-                // Exclude logs below this level
-                builder.SetMinimumLevel(LogLevel.Information);
 
                 // Default filters for Uno Platform namespaces
                 builder.AddFilter("Uno", LogLevel.Warning);

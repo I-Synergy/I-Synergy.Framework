@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Sample.Desktop": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

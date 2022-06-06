@@ -193,14 +193,6 @@
       <Project>{c34330e3-87eb-4550-b538-cc99bd72884b}</Project>
       <Name>ISynergy.Framework.Update.Uwp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sample.ViewModels.Display\Sample.ViewModels.Display.csproj">
-      <Project>{26164f71-37c9-4060-92ff-75fcd3eeb2a9}</Project>
-      <Name>Sample.ViewModels.Display</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sample.Views.Display\Sample.Views.Display.csproj">
-      <Project>{c8dc6c34-6819-4ba8-b224-034d35589239}</Project>
-      <Name>Sample.Views.Display</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset">

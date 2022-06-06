@@ -17,6 +17,7 @@
 		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 		<RootNamespace>ISynergy.Framework.UI</RootNamespace>
 		<ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -63,6 +64,11 @@
 	  <None Remove="Assets\Images\Question.png" />
 	  <None Remove="Assets\Images\Refresh.png" />
 	  <None Remove="Assets\Images\Warning.png" />
+	  <None Remove="Views\SelectionView.xaml" />
+	  <None Remove="Windows\LanguageWindow.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Views\SelectionView.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Include="Assets\Fonts\FluentSystemIcons.ttf" />
@@ -80,5 +86,18 @@
 	  <Content Include="Assets\Images\Question.png" />
 	  <Content Include="Assets\Images\Refresh.png" />
 	  <Content Include="Assets\Images\Warning.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Windows\LanguageWindow.xaml.cs">
+	    <DependentUpon>LanguageWindow.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Views\SelectionView.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="Windows\LanguageWindow.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
 	</ItemGroup>
 </Project>
