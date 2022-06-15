@@ -1,4 +1,4 @@
-<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
