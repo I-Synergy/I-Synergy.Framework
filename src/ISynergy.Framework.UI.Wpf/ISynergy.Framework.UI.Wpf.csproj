@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
@@ -70,7 +70,7 @@
 	<Choose>
 		<When Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
 			<ItemGroup>
-				<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
+				<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.1" />
 			</ItemGroup>
 		</When>
 		<When Condition="'$(TargetFramework)' == 'net6.0-windows'">
