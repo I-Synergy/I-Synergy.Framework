@@ -255,9 +255,9 @@ namespace ISynergy.Framework.UI.Services
         {
 #if WINDOWS_WPF
             return Application.Current.Dispatcher.InvokeAsync(() => {
-                foreach (var item in (((Frame)Frame)).BackStack)
+                foreach (var item in ((Frame)Frame).BackStack)
 	            {
-                    (((Frame)Frame)).RemoveBackEntry();
+                    ((Frame)Frame).RemoveBackEntry();
 	            }
             }).Task;
 #else
