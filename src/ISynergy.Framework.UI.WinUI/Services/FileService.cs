@@ -1,73 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
+using Microsoft.UI.Xaml;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using System.IO;
 using Windows.System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using WinRT;
-using Microsoft.UI.Xaml;
 
 namespace ISynergy.Framework.UI.Services
 {
-    /// <summary>
-    /// IInitializeWithWindow interface.
-    /// </summary>
-    [ComImport]
-    [Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IInitializeWithWindow
-    {
-        /// <summary>
-        /// Initialize with window.
-        /// </summary>
-        /// <param name="hwnd"></param>
-        void Initialize(IntPtr hwnd);
-    }
-
-    /// <summary>
-    /// IWindowNative interface.
-    /// </summary>
-    [ComImport]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    [Guid("EECDBF0E-BAE9-4CB6-A68E-9598E1CB57BB")]
-    internal interface IWindowNative
-    {
-        /// <summary>
-        /// Get window handle.
-        /// </summary>
-        IntPtr WindowHandle { get; }
-    }
-
     /// <summary>
     /// Base class for file services.
     /// </summary>
     public class FileService : IFileService
     {
         /// <summary>
-        /// The dialog service
+        /// The dialog service.
         /// </summary>
         private readonly IDialogService _dialogService;
+
         /// <summary>
-        /// The language service
+        /// The language service.
         /// </summary>
         private readonly ILanguageService _languageService;
 
         /// <summary>
+        /// Main window reference.
+        /// </summary>
+        private readonly Window _mainWindow;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FileService" /> class.
         /// </summary>
+        /// <param name="mainWindow"></param>
         /// <param name="dialogService">The dialog service.</param>
         /// <param name="languageService">The language service.</param>
         public FileService(
+            Window mainWindow,
             IDialogService dialogService,
             ILanguageService languageService)
         {
+            _mainWindow = mainWindow;
             _dialogService = dialogService;
             _languageService = languageService;
             
@@ -252,7 +230,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>
         /// File data object, or null when user cancelled picking file
         /// </returns>
-        private static async Task<FileResult> PickFileAsync(string[] allowedTypes = null)
+        private async Task<FileResult> PickFileAsync(string[] allowedTypes = null)
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker
             {
@@ -260,9 +238,8 @@ namespace ISynergy.Framework.UI.Services
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
             };
 
-            var hwnd = Window.Current.CoreWindow.As<IWindowNative>().WindowHandle;
-            var initializeWithWindow = picker.As<IInitializeWithWindow>();
-            initializeWithWindow.Initialize(hwnd);
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 
             if (allowedTypes is not null)
             {

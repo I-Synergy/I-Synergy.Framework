@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
-using ISynergy.Framework.AspNetCore.Startup;
+﻿using ISynergy.Framework.AspNetCore.Startup;
+using ISynergy.Framework.Core.Converters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Sample.Api
 {
@@ -19,12 +22,19 @@ namespace Sample.Api
 
             services
                 .AddMvc()
-                .AddNewtonsoftJson(options =>
+                .AddJsonOptions(options =>
                 {
-                    //Use the default property(Pascal) casing.
-                    options.UseMemberCasing();
-                    options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
-                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+                    options.JsonSerializerOptions.AllowTrailingCommas = true;
+                    options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.Converters.Add(new IsoDateTimeConverter());
+                    options.JsonSerializerOptions.Converters.Add(new IsoDateTimeOffsetConverter());
                 });
         }
     }

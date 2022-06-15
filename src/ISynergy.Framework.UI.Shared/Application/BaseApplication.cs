@@ -519,7 +519,16 @@ namespace ISynergy.Framework.UI
             services.AddScoped<IBusyService, BusyService>();
             services.AddScoped<IDialogService, DialogService>();
             services.AddScoped<IDispatcherService, DispatcherService>();
+
+#if WINDOWS_WINUI
+            services.AddScoped<IFileService>(provider => 
+                new FileService(
+                    MainWindow, 
+                    provider.GetRequiredService<IDialogService>(), 
+                    provider.GetRequiredService<ILanguageService>()));
+#else
             services.AddScoped<IFileService, FileService>();
+#endif
 
             //Register functions
             services.AddScoped<LocalizationFunctions>();
