@@ -19,8 +19,8 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-	  <PackageReference Include="Syncfusion.SfInput.WPF" Version="20.1.0.58" />
-	  <PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="20.1.0.58" />
+	  <PackageReference Include="Syncfusion.SfInput.WPF" Version="20.1.0.60" />
+	  <PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="20.1.0.60" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Clipboard.Wpf\ISynergy.Framework.Clipboard.Wpf.csproj" />

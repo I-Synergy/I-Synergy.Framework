@@ -326,7 +326,7 @@ namespace ISynergy.Framework.UI.Services
 #if WINDOWS_WPF
             _activeDialog.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
-            if (System.Windows.Application.Current.MainWindow != null && System.Windows.Application.Current.MainWindow.IsLoaded) { }
+            if (System.Windows.Application.Current.MainWindow != null && System.Windows.Application.Current.MainWindow.IsLoaded)
                 _activeDialog.Owner = System.Windows.Application.Current.MainWindow;
 
             return Task.FromResult(_activeDialog.ShowDialog());
