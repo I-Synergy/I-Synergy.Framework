@@ -164,33 +164,30 @@ namespace ISynergy.Framework.UI.Services
                 }
                 else
                 {
-                    if (page.GetInterfaces(true).Any(q => q == typeof(IView)))
+                    if (page.GetInterfaces(true).Any(q => q == typeof(IView)) && parameter is not null && !string.IsNullOrEmpty(parameter.ToString()))
                     {
-                        if (parameter is not null && !string.IsNullOrEmpty(parameter.ToString()))
+                        Type genericPropertyType = null;
+
+                        // Has class GenericTypeArguments?
+                        if (viewmodel.GetType().GenericTypeArguments.Any())
                         {
-                            Type genericPropertyType = null;
+                            genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
+                        }
 
-                            // Has class GenericTypeArguments?
-                            if (viewmodel.GetType().GenericTypeArguments.Any())
+                        // Has BaseType GenericTypeArguments?
+                        else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
+                        {
+                            genericPropertyType = baseType.GetGenericArguments().First();
+                        }
+
+                        if (genericPropertyType is not null && parameter.GetType() == genericPropertyType)
+                        {
+                            var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
+
+                            // Check if instanceVM implements genericInterfaceType.
+                            if (genericInterfaceType.IsInstanceOfType(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
                             {
-                                genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
-                            }
-
-                            // Has BaseType GenericTypeArguments?
-                            else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
-                            {
-                                genericPropertyType = baseType.GetGenericArguments().First();
-                            }
-
-                            if (genericPropertyType is not null && parameter.GetType() == genericPropertyType)
-                            {
-                                var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
-
-                                // Check if instanceVM implements genericInterfaceType.
-                                if (genericInterfaceType.IsAssignableFrom(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
-                                {
-                                    method.Invoke(viewmodel, new[] { parameter });
-                                }
+                                method.Invoke(viewmodel, new[] { parameter });
                             }
                         }
                     }

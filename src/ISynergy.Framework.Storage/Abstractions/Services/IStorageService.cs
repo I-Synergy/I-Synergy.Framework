@@ -8,8 +8,7 @@ namespace ISynergy.Framework.Storage.Abstractions.Services
     /// <summary>
     /// Interface IStorageService
     /// </summary>
-    public interface IStorageService<TStorageOptions>
-        where TStorageOptions : class, IStorageOptions, new()
+    public interface IStorageService
     {
         /// <summary>
         /// Uploads the file asynchronous.

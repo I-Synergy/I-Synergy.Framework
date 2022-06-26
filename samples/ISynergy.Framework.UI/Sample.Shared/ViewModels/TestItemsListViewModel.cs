@@ -113,7 +113,7 @@ namespace Sample.ViewModels
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public override Task EditAsync(TestItem e) => throw new NotImplementedException();
+        public override Task EditAsync(TestItem e) => Task.CompletedTask;
 
         /// <summary>
         /// Retrieves the items asynchronous.
@@ -136,7 +136,7 @@ namespace Sample.ViewModels
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public override Task RemoveAsync(TestItem e) => throw new NotImplementedException();
+        public override Task RemoveAsync(TestItem e) => Task.CompletedTask;
 
 
         /// <summary>

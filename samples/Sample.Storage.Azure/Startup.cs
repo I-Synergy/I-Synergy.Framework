@@ -8,13 +8,13 @@ namespace Sample.Storage.Azure
 {
     public class Startup
     {
-        private readonly IStorageService<AzureBlobOptions> _storageService;
+        private readonly IStorageService _storageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="storageService">The Storage service.</param>
-        public Startup(IStorageService<AzureBlobOptions> storageService)
+        public Startup(IStorageService storageService)
         {
             _storageService = storageService;
         }
