@@ -15,6 +15,17 @@ namespace ISynergy.Framework.UI.Markup
     [MarkupExtensionReturnType(ReturnType = typeof(string))]
     public partial class LanguageResource : MarkupExtension
     {
+        public LanguageResource()
+            : base()
+        {
+        }
+
+        public LanguageResource(string key)
+            : this()
+        {
+            Key = key;
+        }
+
         /// <summary>
         /// Provides the value.
         /// </summary>
