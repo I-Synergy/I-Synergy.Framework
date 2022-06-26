@@ -279,9 +279,9 @@ namespace ISynergy.Framework.UI.Services
 #if WINDOWS_WPF
             dialog.DataContext = viewmodel;
 
-            viewmodel.Submitted += (sender, e) => CloseDialog(dialog);
-            viewmodel.Cancelled += (sender, e) => CloseDialog(dialog);
-            viewmodel.Closed += (sender, e) => CloseDialog(dialog);
+            viewmodel.Submitted += (sender, e) => CloseDialog();
+            viewmodel.Cancelled += (sender, e) => CloseDialog();
+            viewmodel.Closed += (sender, e) => CloseDialog();
 
             if (!viewmodel.IsInitialized)
                 await viewmodel.InitializeAsync();
@@ -301,9 +301,9 @@ namespace ISynergy.Framework.UI.Services
             dialog.SecondaryButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
             dialog.CloseButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
 
-            viewmodel.Submitted += (sender, e) => CloseDialog(dialog);
-            viewmodel.Cancelled += (sender, e) => CloseDialog(dialog);
-            viewmodel.Closed += (sender, e) => CloseDialog(dialog);
+            viewmodel.Submitted += (sender, e) => CloseDialog();
+            viewmodel.Cancelled += (sender, e) => CloseDialog();
+            viewmodel.Closed += (sender, e) => CloseDialog();
 
             if (!viewmodel.IsInitialized)
                 await viewmodel.InitializeAsync();
@@ -319,7 +319,7 @@ namespace ISynergy.Framework.UI.Services
 #endif
         {
             if (_activeDialog is not null)
-                CloseDialog(_activeDialog);
+                CloseDialog();
 
             _activeDialog = dialog;
 
@@ -335,12 +335,12 @@ namespace ISynergy.Framework.UI.Services
 #endif
         }
 
-        private void CloseDialog(Window dialog)
+        private void CloseDialog()
         {
 #if WINDOWS_WPF
             _activeDialog.Hide();
 #else
-            dialog.Close();
+            _activeDialog.Close();
 #endif
             _activeDialog = null;
         }

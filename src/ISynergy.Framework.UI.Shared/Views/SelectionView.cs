@@ -78,7 +78,7 @@ namespace ISynergy.Framework.UI
                 {
                     foreach (var item in viewModel.SelectedItem)
                     {
-                        var index = DataSummary.Items.IndexOf(item);
+                        _ = DataSummary.Items.IndexOf(item);
                     }
                 }
             }
