@@ -15,7 +15,7 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             var responseObject = JsonSerializer.Deserialize<Result<T>>(responseAsString, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
-                ReferenceHandler = ReferenceHandler.Preserve,
+                ReferenceHandler = null,
             });
             return responseObject;
         }
@@ -26,7 +26,7 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             var responseObject = JsonSerializer.Deserialize<Result>(responseAsString, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
-                ReferenceHandler = ReferenceHandler.Preserve
+                ReferenceHandler = null
             });
             return responseObject;
         }
@@ -36,7 +36,8 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             var responseAsString = await response.Content.ReadAsStringAsync();
             var responseObject = JsonSerializer.Deserialize<PaginatedResult<T>>(responseAsString, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true,
+                ReferenceHandler = null
             });
             return responseObject;
         }
