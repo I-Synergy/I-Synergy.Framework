@@ -133,6 +133,12 @@ namespace ISynergy.Framework.UI
             _logger = _serviceProvider.GetRequiredService<ILogger>();
             _logger.LogInformation("Starting application");
 
+#if WINDOWS_WPF
+            Application.Current.DispatcherUnhandledException += Current_UnhandledException;
+#else
+            this.UnhandledException += Current_UnhandledException;
+#endif
+
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
