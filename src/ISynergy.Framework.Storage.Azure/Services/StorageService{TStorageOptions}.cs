@@ -14,11 +14,11 @@ namespace ISynergy.Framework.Storage.Azure.Services
 {
     /// <summary>
     /// Class StorageService.
-    /// Implements the <see cref="IStorageService{TStorageOptions}" />
+    /// Implements the <see cref="IStorageService" />
     /// </summary>
     /// <typeparam name="TStorageOptions">The type of the t azure BLOB options.</typeparam>
-    /// <seealso cref="IStorageService{TStorageOptions}" />
-    internal class StorageService<TStorageOptions> : IStorageService<TStorageOptions>
+    /// <seealso cref="IStorageService" />
+    internal class StorageService<TStorageOptions> : IStorageService
         where TStorageOptions : class, IStorageOptions, new()
     {
         /// <summary>
