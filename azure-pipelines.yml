@@ -28,6 +28,12 @@ stages:
       displayName: 'Build, pack and test assemblies'
       timeoutInMinutes: 120
       steps:
+        - bash: |
+            git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
+                +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
+          displayName: 'Copy to Github'
+          condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+
         - task: PowerShell@2
           displayName: Set the Version variables
           inputs:

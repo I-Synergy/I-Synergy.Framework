@@ -22,5 +22,19 @@ namespace ISynergy.Framework.MessageBus.Abstractions
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task UnSubscribeFromMessageBusAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Processes the data asynchronous.
+        /// </summary>
+        /// <param name="queueMessage">The queue message.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
+        Task<bool> ProcessDataAsync(TEntity queueMessage);
+
+        /// <summary>
+        /// Validates the message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        bool ValidateMessage(TEntity message);
     }
 }

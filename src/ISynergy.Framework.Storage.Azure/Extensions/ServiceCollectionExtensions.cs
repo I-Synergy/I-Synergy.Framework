@@ -23,7 +23,7 @@ namespace ISynergy.Framework.Storage.Azure.Extensions
         public static IServiceCollection AddStorageAzureIntegration<TStorageOptions>(this IServiceCollection services, IConfiguration configuration, string containerName)
             where TStorageOptions : class, IStorageOptions, new()
         {
-            services.AddSingleton<IStorageService<TStorageOptions>, StorageService<TStorageOptions>>(e =>
+            services.AddSingleton<IStorageService, StorageService<TStorageOptions>>(e =>
                 new StorageService<TStorageOptions>(e.GetService<IOptions<TStorageOptions>>(), containerName));
 
             return services;
@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Storage.Azure.Extensions
         public static IServiceCollection AddTenantStorageAzureIntegration<TStorageOptions>(this IServiceCollection services, IConfiguration configuration)
             where TStorageOptions : class, IStorageOptions, new()
         {
-            services.AddSingleton<IStorageService<TStorageOptions>, StorageService<TStorageOptions>>(e =>
+            services.AddSingleton<IStorageService, StorageService<TStorageOptions>>(e =>
                 new StorageService<TStorageOptions>(e.GetService<IOptions<TStorageOptions>>(), e.GetService<ITenantService>().TenantId.ToString()));
 
             return services;

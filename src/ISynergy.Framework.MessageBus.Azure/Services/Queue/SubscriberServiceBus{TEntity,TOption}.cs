@@ -58,15 +58,14 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue
         /// </summary>
         /// <param name="queueMessage">The queue message.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
-        protected abstract Task<bool> ProcessDataAsync(TEntity queueMessage);
-
+        public abstract Task<bool> ProcessDataAsync(TEntity queueMessage);
 
         /// <summary>
         /// Validates the message.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        protected abstract bool ValidateMessage(TEntity message);
+        public abstract bool ValidateMessage(TEntity message);
 
         /// <summary>
         /// Subscriber to message queue.
