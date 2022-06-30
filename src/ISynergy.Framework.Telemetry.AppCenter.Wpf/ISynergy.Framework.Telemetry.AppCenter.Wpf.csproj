@@ -3,7 +3,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net472;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net472;net48;net6.0-windows10.0.18362</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Telemetry.AppCenter.Wpf</PackageId>
 		<Description>I-Synergy Framework Telemetry library for AppCenter Wpf</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Wpf</PackageTags>

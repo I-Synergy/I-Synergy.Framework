@@ -6,15 +6,6 @@
     public interface IConfigurationOptions
     {
         /// <summary>
-        /// Gets or sets the application.
-        /// </summary>
-        /// <value>The application.</value>
-        string Application { get; }
-        /// <summary>
-        /// Gets or sets the application icon (*.ico) file.  
-        /// </summary>
-        string Icon { get; set; }
-        /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
         /// <value>The client identifier.</value>

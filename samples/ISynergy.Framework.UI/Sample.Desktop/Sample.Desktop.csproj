@@ -13,6 +13,7 @@
 		<CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 		<StartupObject></StartupObject>
 		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+		<Product>Sample WinUI Desktop</Product>
 	</PropertyGroup>
 
 	<ItemGroup>
