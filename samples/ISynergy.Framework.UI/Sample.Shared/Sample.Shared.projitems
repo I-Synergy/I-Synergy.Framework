@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\QueryTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ApplicationSetting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Measurement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MediaItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
