@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net6.0-windows10.0.18362</TargetFramework>
         <UseWPF>true</UseWPF>
         <AssemblyName>Sample</AssemblyName>
         <ApplicationIcon>Icon.ico</ApplicationIcon>

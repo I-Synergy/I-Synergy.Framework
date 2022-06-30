@@ -3,14 +3,8 @@ using ISynergy.Framework.Core.Locators;
 using System;
 using System.ComponentModel;
 using System.Windows;
-
-#if NET6_0
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Markup;
-#else
 using System.Windows.Data;
 using System.Windows.Markup;
-#endif
 
 namespace ISynergy.Framework.UI.Markup
 {
@@ -21,9 +15,7 @@ namespace ISynergy.Framework.UI.Markup
     /// <seealso cref="MarkupExtension" />
     public partial class LanguageResource : MarkupExtension
     {
-#if !NET6_0
         [ConstructorArgument("key")]
-#endif
         public string ResourceKey { get; protected set; }
 
         public LanguageResource(string key)
@@ -31,12 +23,6 @@ namespace ISynergy.Framework.UI.Markup
             ResourceKey = key;
         }
 
-#if NET6_0
-        protected override object ProvideValue()
-        {
-            return GetResource();
-        }
-#else
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             var binding = new Binding()
@@ -47,7 +33,6 @@ namespace ISynergy.Framework.UI.Markup
 
             return binding.ProvideValue(serviceProvider);
         }
-#endif
 
         private object GetResource()
         {
