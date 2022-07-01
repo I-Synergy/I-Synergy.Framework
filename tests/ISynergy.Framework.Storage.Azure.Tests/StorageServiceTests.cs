@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Storage.Azure.Tests
         /// <summary>
         /// The storage service
         /// </summary>
-        private readonly IStorageService<AzureBlobOptions> _storageService;
+        private readonly IStorageService _storageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StorageServiceTests"/> class.
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Storage.Azure.Tests
             _storageBlobOptions = configMock.Object;
             _storageBlobOptions.ConnectionString = "https://aka.ms/bloburl";
 
-            var storageMock = new Mock<IStorageService<AzureBlobOptions>>();
+            var storageMock = new Mock<IStorageService>();
             storageMock.Setup(x => x.UploadFileAsync(
                     It.IsAny<byte[]>(),
                     It.IsAny<string>(),
