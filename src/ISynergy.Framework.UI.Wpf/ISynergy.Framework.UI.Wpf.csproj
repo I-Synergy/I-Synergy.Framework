@@ -2,7 +2,7 @@
 	<Import Project="..\ISynergy.Framework.UI.Shared\ISynergy.Framework.UI.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFrameworks>net472;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net472;net48;net6.0-windows10.0.18362</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.UI.Wpf</PackageId>
 		<Description>I-Synergy Framework UI for Wpf</Description>
 		<PackageTags>I-Synergy, Framework, UI, Wpf</PackageTags>
@@ -73,13 +73,7 @@
 				<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.1" />
 			</ItemGroup>
 		</When>
-		<When Condition="'$(TargetFramework)' == 'net6.0-windows'">
-			<ItemGroup>
-				<PackageReference Include="Uno.UI" Version="4.3.8" />
-			</ItemGroup>
-		</When>
 	</Choose>
-	
 	
 	<ItemGroup>
 		<Page Include="Controls\ErrorPresenter\ErrorPresenter.xaml">

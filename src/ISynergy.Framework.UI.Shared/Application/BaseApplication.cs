@@ -204,19 +204,6 @@ namespace ISynergy.Framework.UI
             {
                 appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
             }
-
-            var config = ServiceLocator.Default.GetInstance<IOptions<ConfigurationOptions>>();
-            
-            if (config.Value is ConfigurationOptions options)
-            {
-                appWindow.Title = options.Application;
-
-                var iconPath = Path.Combine(System.AppContext.BaseDirectory, options.Icon);
-                if (File.Exists(iconPath))
-                {
-                    appWindow.SetIcon(iconPath);
-                }
-            }           
 #elif WINDOWS_UWP
             MainWindow = Window.Current;
 #endif

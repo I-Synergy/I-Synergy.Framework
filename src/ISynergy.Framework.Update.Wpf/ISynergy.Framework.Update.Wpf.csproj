@@ -2,7 +2,7 @@
 	<Import Project="..\ISynergy.Framework.Update.Shared\ISynergy.Framework.Update.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFrameworks>net472;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net472;net48;net6.0-windows10.0.18362</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Update.Wpf</PackageId>
 		<Description>I-Synergy Update Framework for Wpf</Description>
 		<PackageTags>I-Synergy, Framework, Update, Wpf</PackageTags>

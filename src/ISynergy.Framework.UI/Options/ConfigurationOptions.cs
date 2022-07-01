@@ -8,15 +8,6 @@ namespace ISynergy.Framework.UI.Options
     public class ConfigurationOptions : IConfigurationOptions
     {
         /// <summary>
-        /// Gets or sets the application.
-        /// </summary>
-        /// <value>The application title.</value>
-        public string Application { get; set; }
-        /// <summary>
-        /// Gets or sets the application icon (*.ico) file.  
-        /// </summary>
-        public string Icon { get; set; }
-        /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
         /// <value>The client identifier.</value>
@@ -51,26 +42,5 @@ namespace ISynergy.Framework.UI.Options
         /// </summary>
         /// <value>The web endpoint.</value>
         public string WebEndpoint { get; set; }
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public ConfigurationOptions()
-        {
-        }
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="application"></param>
-        /// <param name="clientId"></param>
-        /// <param name="clientSecret"></param>
-        public ConfigurationOptions(string application, string clientId, string clientSecret)
-            : this()
-        {
-            Application = application;
-            ClientId = clientId;
-            ClientSecret = clientSecret;
-        }
     }
 }
