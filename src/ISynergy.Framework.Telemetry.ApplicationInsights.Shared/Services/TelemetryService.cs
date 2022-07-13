@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Telemetry.Options;
+﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Validation;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,30 +15,45 @@ namespace ISynergy.Framework.Telemetry.Services
     internal class TelemetryService : ITelemetryService
     {
         /// <summary>
-        /// The application insights options
+        /// The context
         /// </summary>
-        private readonly ApplicationInsightsOptions _applicationInsightsOptions;
-
+        private readonly IContext _context;
         /// <summary>
         /// Telemetry client for Application Insights.
         /// </summary>
-        private TelemetryClient Client { get; }
+        private readonly TelemetryClient _client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryService"/> class.
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="infoService">The information service.</param>
-        /// <param name="options"></param>
-        public TelemetryService(IInfoService infoService, IOptions<ApplicationInsightsOptions> options)
+        /// <param name="telemetryClient"></param>
+        public TelemetryService(IContext context, IInfoService infoService, TelemetryClient telemetryClient)
         {
-            _applicationInsightsOptions = options.Value;
+            _context = context;
+            _client = telemetryClient;
+            _client.Context.User.UserAgent = infoService.ProductName;
+            _client.Context.Component.Version = infoService.ProductVersion.ToString();
+            _client.Context.Session.Id = Guid.NewGuid().ToString();
+            _client.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+        }
 
-            var config = new TelemetryConfiguration(_applicationInsightsOptions.Key);
-            Client = new TelemetryClient(config);
-            Client.Context.User.UserAgent = infoService.ProductName;
-            Client.Context.Component.Version = infoService.ProductVersion.ToString();
-            Client.Context.Session.Id = Guid.NewGuid().ToString();
-            Client.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+        /// <summary>
+        /// Sets profile in telemetry context.
+        /// </summary>
+        private void GetUserProfile()
+        {
+            if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
+            {
+                _client.Context.User.Id = profile.Username;
+                _client.Context.User.AccountId = profile.AccountDescription;
+            }
+            else
+            {
+                _client.Context.User.Id = string.Empty;
+                _client.Context.User.AccountId = string.Empty;
+            }
         }
 
         /// <summary>
@@ -47,7 +61,8 @@ namespace ISynergy.Framework.Telemetry.Services
         /// </summary>
         public void Flush()
         {
-            Client?.Flush();
+            GetUserProfile();
+            _client?.Flush();
         }
 
         /// <summary>
@@ -55,10 +70,10 @@ namespace ISynergy.Framework.Telemetry.Services
         /// </summary>
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
-        public Task TrackEventAsync(string e)
+        public void TrackEvent(string e)
         {
-            Client.TrackEvent(e);
-            return Task.CompletedTask;
+            GetUserProfile();
+            _client.TrackEvent(e);
         }
 
         /// <summary>
@@ -67,10 +82,10 @@ namespace ISynergy.Framework.Telemetry.Services
         /// <param name="e">The e.</param>
         /// <param name="props">The props.</param>
         /// <returns>Task.</returns>
-        public Task TrackEventAsync(string e, Dictionary<string, string> props)
+        public void TrackEvent(string e, Dictionary<string, string> props)
         {
-            Client.TrackEvent(e, props, null);
-            return Task.CompletedTask;
+            GetUserProfile();
+            _client.TrackEvent(e, props, null);
         }
 
         /// <summary>
@@ -79,13 +94,13 @@ namespace ISynergy.Framework.Telemetry.Services
         /// <param name="ex">The ex.</param>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
-        public Task TrackExceptionAsync(Exception ex, string message)
+        public void TrackException(Exception ex, string message)
         {
             if (ex is not null)
             {
-                Client.TrackException(new ExceptionTelemetry { Exception = ex, Message = message });
+                GetUserProfile();
+                _client.TrackException(new ExceptionTelemetry { Exception = ex, Message = message });
             }
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -93,10 +108,10 @@ namespace ISynergy.Framework.Telemetry.Services
         /// </summary>
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
-        public Task TrackPageViewAsync(string e)
+        public void TrackPageView(string e)
         {
-            Client.TrackPageView(e);
-            return Task.CompletedTask;
+            GetUserProfile();
+            _client.TrackPageView(e);
         }
     }
 }
