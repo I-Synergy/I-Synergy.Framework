@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\ISynergy.Framework.Telemetry.ApplicationInsights.Shared\ISynergy.Framework.Telemetry.ApplicationInsights.Shared.projitems" Label="Shared" />
+	<Import Project="..\ISynergy.Framework.Telemetry.Sentry.Shared\ISynergy.Framework.Telemetry.Sentry.Shared.projitems" Label="Shared" />
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
@@ -26,7 +26,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.20.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+		<PackageReference Include="Sentry" Version="3.19.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -34,3 +35,4 @@
 		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 	</ItemGroup>
 </Project>
+

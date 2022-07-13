@@ -3,10 +3,10 @@
   <PropertyGroup>
     <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>683b22aa-de6f-4ac5-9c4e-1defd47c37a2</SharedGUID>
+    <SharedGUID>57040c28-4f83-4dfc-818e-00ea732bca61</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>ISynergy.Framework.Telemetry.ApplicationInsights</Import_RootNamespace>
+    <Import_RootNamespace>ISynergy.Framework.Telemetry.Sentry</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ServiceCollectionExtensions.cs" />

@@ -1,16 +1,13 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Validation;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
+using Sentry;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Telemetry.Services
 {
     /// <summary>
-    /// See https://www.meziantou.net/use-application-insights-in-a-desktop-application.htm
+    /// Telemetry Service for Sentry.io
     /// </summary>
     internal class TelemetryService : ITelemetryService
     {
@@ -21,22 +18,18 @@ namespace ISynergy.Framework.Telemetry.Services
         /// <summary>
         /// Telemetry client for Application Insights.
         /// </summary>
-        private readonly TelemetryClient _client;
+        private readonly ISentryClient _client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryService"/> class.
         /// </summary>
         /// <param name="context"></param>
         /// <param name="infoService">The information service.</param>
-        /// <param name="telemetryClient"></param>
-        public TelemetryService(IContext context, IInfoService infoService, TelemetryClient telemetryClient)
+        /// <param name="sentryClient"></param>
+        public TelemetryService(IContext context, IInfoService infoService, ISentryClient sentryClient)
         {
             _context = context;
-            _client = telemetryClient;
-            _client.Context.User.UserAgent = infoService.ProductName;
-            _client.Context.Component.Version = infoService.ProductVersion.ToString();
-            _client.Context.Session.Id = Guid.NewGuid().ToString();
-            _client.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+            _client = sentryClient;
         }
 
         /// <summary>
@@ -46,13 +39,26 @@ namespace ISynergy.Framework.Telemetry.Services
         {
             if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
             {
-                _client.Context.User.Id = profile.Username;
-                _client.Context.User.AccountId = profile.AccountDescription;
+                SentrySdk.ConfigureScope(scope =>
+                {
+                    scope.User = new User
+                    {
+                        Username = profile.Username,
+                        Id = profile.UserId.ToString(),
+                        Other = new Dictionary<string, string>()
+                        {
+                            { "AccountId", profile.AccountId.ToString() },
+                            { "AccountDescription", profile.AccountDescription }
+                        }
+                    };
+                });
             }
             else
             {
-                _client.Context.User.Id = string.Empty;
-                _client.Context.User.AccountId = string.Empty;
+                SentrySdk.ConfigureScope(scope =>
+                {
+                    scope.User = null;
+                });
             }
         }
 
@@ -62,7 +68,7 @@ namespace ISynergy.Framework.Telemetry.Services
         public void Flush()
         {
             GetUserProfile();
-            _client?.Flush();
+            _client.FlushAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -73,7 +79,9 @@ namespace ISynergy.Framework.Telemetry.Services
         public void TrackEvent(string e)
         {
             GetUserProfile();
-            _client.TrackEvent(e);
+            var sentryEvent = new SentryEvent();
+            sentryEvent.Message = e;
+            _client.CaptureEvent(sentryEvent);
         }
 
         /// <summary>
@@ -85,7 +93,15 @@ namespace ISynergy.Framework.Telemetry.Services
         public void TrackEvent(string e, Dictionary<string, string> props)
         {
             GetUserProfile();
-            _client.TrackEvent(e, props, null);
+            var sentryEvent = new SentryEvent();
+            sentryEvent.Message = e;
+
+            foreach (var item in props)
+            {
+                sentryEvent.SetExtra(item.Key, item.Value); 
+            }
+            
+            _client.CaptureEvent(sentryEvent);
         }
 
         /// <summary>
@@ -99,7 +115,7 @@ namespace ISynergy.Framework.Telemetry.Services
             if (ex is not null)
             {
                 GetUserProfile();
-                _client.TrackException(new ExceptionTelemetry { Exception = ex, Message = message });
+                _client.CaptureException(new Exception(message, ex));
             }
         }
 
@@ -111,7 +127,7 @@ namespace ISynergy.Framework.Telemetry.Services
         public void TrackPageView(string e)
         {
             GetUserProfile();
-            _client.TrackPageView(e);
+            _client.CaptureEvent(new SentryEvent { Message = e });
         }
     }
 }
