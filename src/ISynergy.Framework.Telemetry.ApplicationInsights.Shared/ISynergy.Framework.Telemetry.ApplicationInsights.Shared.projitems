@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ServiceCollectionExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Options\ApplicationInsightsOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\TelemetryService.cs" />
   </ItemGroup>
 </Project>

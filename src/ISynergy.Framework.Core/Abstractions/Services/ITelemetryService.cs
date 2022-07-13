@@ -15,26 +15,26 @@ namespace ISynergy.Framework.Core.Abstractions.Services
         /// <param name="e">The e.</param>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
-        Task TrackExceptionAsync(Exception e, string message);
+        void TrackException(Exception e, string message);
         /// <summary>
         /// Tracks the event asynchronous.
         /// </summary>
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
-        Task TrackEventAsync(string e);
+        void TrackEvent(string e);
         /// <summary>
         /// Tracks the event asynchronous.
         /// </summary>
         /// <param name="e">The e.</param>
         /// <param name="prop">The property.</param>
         /// <returns>Task.</returns>
-        Task TrackEventAsync(string e, Dictionary<string, string> prop);
+        void TrackEvent(string e, Dictionary<string, string> prop);
         /// <summary>
         /// Tracks the page view asynchronous.
         /// </summary>
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
-        Task TrackPageViewAsync(string e);
+        void TrackPageView(string e);
         /// <summary>
         /// Flushes this instance.
         /// </summary>

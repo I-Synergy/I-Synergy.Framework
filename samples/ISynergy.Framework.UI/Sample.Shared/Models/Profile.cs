@@ -38,7 +38,7 @@ namespace Sample.Shared.Models
         /// Gets the username.
         /// </summary>
         /// <value>The username.</value>
-        public string Username => "Anonimous";
+        public string Username => "Anonymous";
 
         /// <summary>
         /// Gets the email.

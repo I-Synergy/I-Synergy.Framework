@@ -130,6 +130,7 @@ namespace Sample
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
+            //services.AddTelemetrySentryIntegration(configurationRoot);
             services.AddTelemetryApplicationInsightsIntegration(configurationRoot);
 
 #if WINDOWS || WINDOWS_UWP
@@ -157,6 +158,8 @@ namespace Sample
         {
             try
             {
+                _telemetryService.TrackException(exception, message);
+
                 _logger.LogDebug(message);
 
                 if(exception.InnerException is WebSocketException)
@@ -197,6 +200,10 @@ namespace Sample
             catch (Exception ex)
             {
                 _logger.LogTrace(ex.Message, ex);
+            }
+            finally
+            {
+                _telemetryService.Flush();
             }
         }
     }
