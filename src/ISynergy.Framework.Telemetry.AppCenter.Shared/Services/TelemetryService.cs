@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Telemetry.Options;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace ISynergy.Framework.Telemetry.Services
 {
     /// <summary>
-    /// Telemetry with AppCenter
+    /// Telemetry for AppCenter
     /// </summary>
     internal class TelemetryService : ITelemetryService
     {
@@ -48,6 +49,13 @@ namespace ISynergy.Framework.Telemetry.Services
         }
 
         /// <summary>
+        /// Sets profile in telemetry context.
+        /// </summary>
+        public void GetUserProfile()
+        {
+        }
+
+        /// <summary>
         /// Gets the metrics.
         /// </summary>
         /// <returns>Dictionary&lt;System.String, System.String&gt;.</returns>
@@ -61,9 +69,10 @@ namespace ISynergy.Framework.Telemetry.Services
                 metrics.Add(nameof(profile.UserId), profile.UserId.ToString());
                 metrics.Add(nameof(profile.AccountId), profile.AccountId.ToString());
                 metrics.Add(nameof(profile.AccountDescription), profile.AccountDescription);
-                metrics.Add(nameof(_infoService.ProductName), _infoService.ProductName);
-                metrics.Add(nameof(_infoService.ProductVersion), _infoService.ProductVersion.ToString());
             }
+
+            metrics.Add(nameof(_infoService.ProductName), _infoService.ProductName);
+            metrics.Add(nameof(_infoService.ProductVersion), _infoService.ProductVersion.ToString());
 
             return metrics;
         }
@@ -71,19 +80,16 @@ namespace ISynergy.Framework.Telemetry.Services
         /// <summary>
         /// Flushes this instance.
         /// </summary>
-        public void Flush()
-        {
-        }
+        public void Flush() { }
 
         /// <summary>
         /// Tracks the event asynchronous.
         /// </summary>
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
-        public Task TrackEventAsync(string e)
+        public void TrackEvent(string e)
         {
             Analytics.TrackEvent(e, GetMetrics());
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -92,13 +98,12 @@ namespace ISynergy.Framework.Telemetry.Services
         /// <param name="e">The e.</param>
         /// <param name="props">The props.</param>
         /// <returns>Task.</returns>
-        public Task TrackEventAsync(string e, Dictionary<string, string> props)
+        public void TrackEvent(string e, Dictionary<string, string> props)
         {
             var metrics = GetMetrics();
             props.ForEach(p => metrics.Add(p.Key, p.Value));
 
             Analytics.TrackEvent(e, metrics);
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -107,7 +112,7 @@ namespace ISynergy.Framework.Telemetry.Services
         /// <param name="ex">The ex.</param>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
-        public Task TrackExceptionAsync(Exception ex, string message)
+        public void TrackException(Exception ex, string message)
         {
             if (ex is not null)
             {
@@ -117,7 +122,6 @@ namespace ISynergy.Framework.Telemetry.Services
                 //Send AppCenter exception.
                 Crashes.TrackError(ex, metrics);
             }
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -125,10 +129,9 @@ namespace ISynergy.Framework.Telemetry.Services
         /// </summary>
         /// <param name="e">The e.</param>
         /// <returns>Task.</returns>
-        public Task TrackPageViewAsync(string e)
+        public void TrackPageView(string e)
         {
             Analytics.TrackEvent(e, GetMetrics());
-            return Task.CompletedTask;
         }
     }
 }

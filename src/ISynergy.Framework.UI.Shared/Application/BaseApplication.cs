@@ -30,6 +30,7 @@ using ISynergy.Framework.Core.Validation;
 using System.IO;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Options;
+using Windows.ApplicationModel.Core;
 
 #if WINDOWS_UWP || HAS_UNO
 using Windows.ApplicationModel;
@@ -102,6 +103,8 @@ namespace ISynergy.Framework.UI
         /// <value>The logger.</value>
         protected readonly ILogger _logger;
 
+        protected readonly ITelemetryService _telemetryService;
+
         /// <summary>
         /// Gets the context.
         /// </summary>
@@ -130,15 +133,15 @@ namespace ISynergy.Framework.UI
 
             ServiceLocator.SetLocatorProvider(_serviceProvider);
 
+            _telemetryService = _serviceProvider.GetRequiredService<ITelemetryService>();
             _logger = _serviceProvider.GetRequiredService<ILogger>();
             _logger.LogInformation("Starting application");
 
 #if WINDOWS_WPF
             Application.Current.DispatcherUnhandledException += Current_UnhandledException;
 #else
-            this.UnhandledException += Current_UnhandledException;
+            Application.Current.UnhandledException += Current_UnhandledException;
 #endif
-
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
@@ -160,10 +163,14 @@ namespace ISynergy.Framework.UI
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
         private void Current_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            e.Handled = true;
-            HandleException(e.Exception, e.Exception.Message);
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                HandleException(e.Exception, e.Exception.Message);
+            }
         }
 #else
+
         /// <summary>
         /// Handles the UnhandledException event of the Current control.
         /// </summary>
@@ -171,8 +178,11 @@ namespace ISynergy.Framework.UI
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
         private void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            e.Handled = true;
-            HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
+            }
         }
 
         /// <summary>
@@ -182,6 +192,30 @@ namespace ISynergy.Framework.UI
         protected override void OnLaunched(LaunchActivatedEventArgs e) =>
             OnLaunchApplication(e);
 #endif
+
+        /// <summary>
+        /// Handles the UnobservedTaskException event of the TaskScheduler control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs" /> instance containing the event data.</param>
+        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            HandleException(e.Exception, e.Exception.Message);
+            e.SetObserved();
+        }
+
+        /// <summary>
+        /// Handles the UnhandledException event of the CurrentDomain control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs" /> instance containing the event data.</param>
+        private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception exception)
+            {
+                HandleException(exception, exception.Message);
+            }
+        }
 
         /// <summary>
         /// On launch of application.
@@ -408,30 +442,6 @@ namespace ISynergy.Framework.UI
             }
         }
 #endif
-
-        /// <summary>
-        /// Handles the UnobservedTaskException event of the TaskScheduler control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs" /> instance containing the event data.</param>
-        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
-        {
-            HandleException(e.Exception, e.Exception.Message);
-            e.SetObserved();
-        }
-
-        /// <summary>
-        /// Handles the UnhandledException event of the CurrentDomain control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs" /> instance containing the event data.</param>
-        private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
-        {
-            if (e.ExceptionObject is Exception exception)
-            {
-                HandleException(exception, exception.Message);
-            }
-        }
 
         /// <summary>
         /// Configures the logger.
