@@ -146,7 +146,7 @@ namespace Sample.ViewModels
         {
             var imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
-            if (await CommonServices.FileService.BrowseFileAsync(imageFilter, 0) is FileResult file)
+            if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is FileResult file)
                 await CommonServices.DialogService.ShowInformationAsync($"File '{file.FileName}' is selected.");
         }
 

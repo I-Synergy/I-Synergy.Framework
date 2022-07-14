@@ -121,12 +121,12 @@ namespace ISynergy.Framework.UI.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<FileResult> BrowseFileAsync(string filefilter, long maxfilesize)
+        public Task<FileResult> BrowseFileAsync(string filefilter)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<byte[]> BrowseImageAsync(string[] filter, long maxfilesize = 0)
+        public Task<byte[]> BrowseImageAsync(string[] filter)
         {
             throw new System.NotImplementedException();
         }

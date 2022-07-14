@@ -15,5 +15,7 @@
                   SelectedValuePath="Key" 
                   SelectedValue="{Binding SelectedSoftwareEnvironment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="{Binding SelectedSoftwareEnvironment, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}"/>
+
+        <c:ImageBrowser />
     </StackPanel>
 </c:View>
