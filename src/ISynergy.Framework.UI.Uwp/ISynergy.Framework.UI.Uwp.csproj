@@ -93,6 +93,11 @@
 	  </Compile>
 	</ItemGroup>
 	<ItemGroup>
+	  <None Update="Controls\ImageBrowser\ImageBrowser.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
 	  <Page Update="Views\SelectionView.xaml">
 	    <SubType>Designer</SubType>
 	  </Page>

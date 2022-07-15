@@ -41,6 +41,7 @@
 	  <Page Include="Controls\ErrorPresenter\ErrorPresenter.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 	  </Page>
+	  <Page Include="Controls\ImageBrowser\ImageBrowser.xaml" />
 	  <Page Include="Controls\ImageView\ImageView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 	  </Page>
@@ -68,6 +69,7 @@
 		<None Remove="Controls\Buttons\BaseDialogButtons.xaml" />
 		<None Remove="Controls\Console\Console.xaml" />
 		<None Remove="Controls\ErrorPresenter\ErrorPresenter.xaml" />
+		<None Remove="Controls\ImageBrowser\ImageBrowser.xaml" />
 		<None Remove="Controls\ImageView\ImageView.xaml" />
 		<None Remove="Controls\Menu\BaseMenu.xaml" />
 		<None Remove="Controls\Tiles\Tile.xaml" />
@@ -84,6 +86,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Compile Update="Controls\ImageBrowser\ImageBrowser.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\SelectionView.xaml.cs">
 	    <DependentUpon>SelectionView.xaml</DependentUpon>
 	  </Compile>

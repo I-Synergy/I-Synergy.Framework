@@ -7,7 +7,9 @@
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     mc:Ignorable="d" 
     Background="Transparent" 
-    IsDynamicOverflowEnabled="False">
+    DefaultLabelPosition="Right"
+    OverflowButtonVisibility="Collapsed"
+    Style="{ThemeResource DefaultCommandBarStyle}">
 
     <CommandBar.Content>
         <TextBlock x:Name="TextBlockTitle" 
