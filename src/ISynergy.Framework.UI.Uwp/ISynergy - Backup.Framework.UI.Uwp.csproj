@@ -64,10 +64,12 @@
 	  <None Remove="Assets\Images\Question.png" />
 	  <None Remove="Assets\Images\Refresh.png" />
 	  <None Remove="Assets\Images\Warning.png" />
+	  <None Remove="Controls\ImageBrowser\ImageBrowser.xaml" />
 	  <None Remove="Views\SelectionView.xaml" />
 	  <None Remove="Windows\LanguageWindow.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <UpToDateCheckInput Remove="Controls\ImageBrowser\ImageBrowser.xaml" />
 	  <UpToDateCheckInput Remove="Views\SelectionView.xaml" />
 	</ItemGroup>
 	<ItemGroup>
@@ -93,11 +95,9 @@
 	  </Compile>
 	</ItemGroup>
 	<ItemGroup>
-	  <None Update="Controls\ImageBrowser\ImageBrowser.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </None>
-	</ItemGroup>
-	<ItemGroup>
+	  <Page Update="Controls\ImageBrowser\ImageBrowser.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
 	  <Page Update="Views\SelectionView.xaml">
 	    <SubType>Designer</SubType>
 	  </Page>

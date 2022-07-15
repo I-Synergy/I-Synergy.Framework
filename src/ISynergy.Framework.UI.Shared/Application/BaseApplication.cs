@@ -533,6 +533,10 @@ namespace ISynergy.Framework.UI
             services.AddScoped<IFileService, FileService>();
 #endif
 
+#if WINDOWS_UWP
+            services.AddScoped<ICameraService, CameraService>();
+#endif
+
             //Register functions
             services.AddScoped<LocalizationFunctions>();
         }

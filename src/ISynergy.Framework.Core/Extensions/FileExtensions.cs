@@ -1,11 +1,15 @@
-﻿using System.Text.RegularExpressions;
+﻿using ISynergy.Framework.Core.Constants;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Extensions
 {
     /// <summary>
     /// Class FileNameExtensions.
     /// </summary>
-    public static class FileNameExtensions
+    public static class FileExtensions
     {
         /// <summary>
         /// The invalid chars
@@ -31,5 +35,23 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns>System.String.</returns>
         public static string MakeValidFileName(this string _self) =>
             Regex.Replace(_self, invalidRegStr, "_");
+
+        /// <summary>
+        /// Converts filename to contenttype.
+        /// </summary>
+        /// <param name="self">The full filename.</param>
+        /// <returns>System.String.</returns>
+        /// <exception cref="NotSupportedException">$"File: {self} has an unsupported extension.</exception>
+        public static string ToContentType(this string self)
+        {
+            var result = MasterData.FileTypes.Where(q => q.Extension.Equals(Path.GetExtension(self))).SingleOrDefault();
+
+            if (result is not null)
+            {
+                return result.ContentType;
+            }
+
+            throw new NotSupportedException($"File: {self} has an unsupported extension.");
+        }
     }
 }
