@@ -16,6 +16,9 @@
                   SelectedValue="{Binding SelectedSoftwareEnvironment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="{Binding SelectedSoftwareEnvironment, Converter={StaticResource EnumToStringConverter}, ConverterParameter='ISynergy.Framework.Core.Enumerations.SoftwareEnvironments, ISynergy.Framework.Core'}"/>
 
-        <c:ImageBrowser />
+        <c:ImageBrowser MaxHeight="500"
+                        FileBytes="{Binding FileBytes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Description="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        ContentType="{Binding ContentType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </StackPanel>
 </c:View>

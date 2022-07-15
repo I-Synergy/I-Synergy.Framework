@@ -6,6 +6,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using ISynergy.Framework.Clipboard.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Models;
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -37,6 +38,15 @@ namespace ISynergy.Framework.UI.Controls
         // Using a DependencyProperty as the backing store for ContentType.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContentTypeProperty = DependencyProperty.Register(nameof(ContentType), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
 
+        public string Description
+        {
+            get { return (string)GetValue(DescriptionProperty); }
+            set { SetValue(DescriptionProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Description.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
+
         /// <summary>
         /// ImageBrowser constructor.
         /// </summary>
@@ -54,13 +64,13 @@ namespace ISynergy.Framework.UI.Controls
             if (ServiceLocator.Default.GetInstance<ILanguageService>() is ILanguageService languageService && 
                 ServiceLocator.Default.GetInstance<IFileService>() is IFileService fileService)
             {
-                var result = await fileService.BrowseFileAsync(
-                languageService.GetString("Filetypes_Images"));
+                var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png");
 
                 if (result is not null)
                 {
                     FileBytes = result.File;
                     ContentType = result.FilePath.ToContentType();
+                    Description = result.FileName;
                 }
             };
         }
@@ -79,6 +89,7 @@ namespace ISynergy.Framework.UI.Controls
                 {
                     FileBytes = result.File;
                     ContentType = result.FilePath.ToContentType();
+                    Description= result.FileName;
                 }
             };
         }
@@ -106,6 +117,7 @@ namespace ISynergy.Framework.UI.Controls
                 {
                     FileBytes = result;
                     ContentType = "image/png";
+                    Description = $"FROM_CLIPBOARD_{DateTime.Now}";
                 }
             }
         }
