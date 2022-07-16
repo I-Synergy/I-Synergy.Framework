@@ -189,7 +189,6 @@ namespace ISynergy.Framework.UI.Services
         /// get image as an asynchronous operation.
         /// </summary>
         /// <param name="filter"></param>
-        /// <param name="maxfilesize">The maxfilesize.</param>
         /// <returns>System.Byte[].</returns>
         public async Task<byte[]> BrowseImageAsync(string[] filter)
         {

@@ -17,6 +17,34 @@ namespace Sample.ViewModels
         /// <value>The title.</value>
         public override string Title { get { return BaseCommonServices.LanguageService.GetString("Converters"); } }
 
+
+        /// <summary>
+        /// Gets or sets the File property value.
+        /// </summary>
+        public byte[] FileBytes
+        {
+            get => GetValue<byte[]>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the FileDescription property value.
+        /// </summary>
+        public string Description
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the FileContentType property value.
+        /// </summary>
+        public string ContentType
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
         /// </summary>
