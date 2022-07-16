@@ -56,17 +56,20 @@
             </AppBarButton>
         </StackPanel>
 
-        <Border x:Name="BorderImage"
+        <ScrollViewer x:Name="BorderImage"
                 RelativePanel.AlignTopWithPanel="True"
                 RelativePanel.AlignBottomWithPanel="True"
                 RelativePanel.AlignLeftWithPanel="True"
                 RelativePanel.LeftOf="ImageToolButtonLayout"
                 Margin="2" 
-                BorderBrush="{StaticResource TextBoxBorderThemeBrush}" 
+                VerticalScrollMode="Auto"
+                HorizontalScrollMode="Auto" >
+            <Border BorderBrush="{StaticResource TextBoxBorderThemeBrush}" 
                 BorderThickness="1">
-            <Image x:Name="UploadImage" 
-                   Stretch="Uniform" 
+                <Image x:Name="UploadImage" 
+                   Stretch="UniformToFill" 
                    Source="{Binding ElementName=ImageBrowserUserControl, Path=FileBytes, Mode=TwoWay, Converter={StaticResource BytesToImageSourceConverter}}"/>
-        </Border>
+            </Border>
+        </ScrollViewer>
     </RelativePanel>
 </UserControl>

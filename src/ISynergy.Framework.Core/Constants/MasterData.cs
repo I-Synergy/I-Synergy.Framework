@@ -24,8 +24,9 @@ namespace ISynergy.Framework.Core.Constants
             new FileType(4, "Microsoft Excel (*.xlsx)", ".xlsx", false, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
             new FileType(5, "Adobe PDF", ".pdf", false, "application/pdf"),
             new FileType(6, "JPEG Image", ".jpg", true, "image/jpeg"),
-            new FileType(7, "PNG Image", ".png", true, "image/png"),
-            new FileType(8, "GIF Image", ".gif", true, "image/gif")
+            new FileType(7, "JPEG Image", ".jpeg", true, "image/jpeg"),
+            new FileType(8, "PNG Image", ".png", true, "image/png"),
+            new FileType(9, "GIF Image", ".gif", true, "image/gif")
         }.AsReadOnly();
     }
 }

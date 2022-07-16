@@ -44,7 +44,11 @@ namespace ISynergy.Framework.Core.Extensions
         /// <exception cref="NotSupportedException">$"File: {self} has an unsupported extension.</exception>
         public static string ToContentType(this string self)
         {
-            var result = MasterData.FileTypes.Where(q => q.Extension.Equals(Path.GetExtension(self))).SingleOrDefault();
+            var result = MasterData
+                .FileTypes
+                .Where(q => 
+                    q.Extension.Equals(Path.GetExtension(self)))
+                .SingleOrDefault();
 
             if (result is not null)
             {
