@@ -229,7 +229,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ISynergy.Framework.Telemetr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Telemetry.Sentry.WinUI", "src\ISynergy.Framework.Telemetry.Sentry.WinUI\ISynergy.Framework.Telemetry.Sentry.WinUI.csproj", "{2C2FA0B5-710D-40F9-8F3F-1F61FCC1926A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.Telemetry.Sentry.Uwp", "src\ISynergy.Framework.Telemetry.Sentry.Uwp\ISynergy.Framework.Telemetry.Sentry.Uwp.csproj", "{B363CBE2-486E-4062-AAF6-8356F3D95E70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Telemetry.Sentry.Uwp", "src\ISynergy.Framework.Telemetry.Sentry.Uwp\ISynergy.Framework.Telemetry.Sentry.Uwp.csproj", "{B363CBE2-486E-4062-AAF6-8356F3D95E70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -3712,8 +3712,8 @@ Global
 		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|x64.Build.0 = Debug|Any CPU
+		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|x64.ActiveCfg = Debug|x64
+		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|x64.Build.0 = Debug|x64
 		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C34330E3-87EB-4550-B538-CC99BD72884B}.Debug|x86.Build.0 = Debug|Any CPU
 		{C34330E3-87EB-4550-B538-CC99BD72884B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -3768,8 +3768,8 @@ Global
 		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|x64.Build.0 = Debug|Any CPU
+		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|x64.ActiveCfg = Debug|x64
+		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|x64.Build.0 = Debug|x64
 		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Debug|x86.Build.0 = Debug|Any CPU
 		{5D108CE8-3390-4F69-B929-37E0D85EEEB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
