@@ -1,12 +1,11 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Clipboard.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using ISynergy.Framework.Clipboard.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
 
 namespace ISynergy.Framework.UI.Controls
 {
