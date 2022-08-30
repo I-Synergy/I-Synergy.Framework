@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
         <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Product>Sample</Product>
         <Copyright>Copyright (c) 2008-2021 International Intelligence</Copyright>
         <Company>International Intelligence</Company>

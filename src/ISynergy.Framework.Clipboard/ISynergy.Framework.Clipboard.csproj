@@ -1,26 +1,40 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows10.0.18362;netstandard2.0;net6.0-android</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Clipboard</PackageId>
-		<Description>I-Synergy Framework Clipboard for .Net Standard 2.0</Description>
-		<PackageTags>I-Synergy, Framework, Clipboard</PackageTags>
+		<Description>I-Synergy Framework Clipboard for Windows, Linux, Android and WebAssembly</Description>
+		<PackageTags>I-Synergy, Framework, Clipboard, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<EnableDefaultPageItems>false</EnableDefaultPageItems>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.4" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22000.24" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22000.24" />
+	</ItemGroup>
+	
 	<ItemGroup>
-	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+		<PackageReference Include="Uno.WinUI" Version="4.4.20" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.18362'">
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 </Project>

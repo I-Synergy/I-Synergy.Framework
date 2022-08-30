@@ -12,7 +12,6 @@
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>

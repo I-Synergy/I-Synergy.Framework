@@ -1,19 +1,11 @@
-﻿#if WINDOWS_UWP || WINDOWS_WINUI
-using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System.Collections.Generic;
 using System.Linq;
-
-
-#if WINDOWS_UWP
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-#elif WINDOWS_WINUI
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
-#endif
 
 namespace ISynergy.Framework.UI
 {

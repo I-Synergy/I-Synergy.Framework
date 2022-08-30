@@ -8,8 +8,4 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>ISynergy.Framework.Telemetry.ApplicationInsights</Import_RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ServiceCollectionExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\TelemetryService.cs" />
-  </ItemGroup>
 </Project>
