@@ -13,24 +13,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-
-#if WINDOWS_UWP || HAS_UNO
-using Windows.System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media.Animation;
-#elif WINDOWS_WINUI
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Animation;
-#elif WINDOWS_WPF
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -61,11 +48,7 @@ namespace ISynergy.Framework.UI.Services
         /// <value>The frame.</value>
         public object Frame
         {
-#if WINDOWS_WPF
-            get => _frame ??= (Frame)Application.Current.MainWindow.Content;
-#else
             get => _frame ??= (Frame)Window.Current.Content;
-#endif
             set => _frame = (Frame)value;
         }
 
@@ -156,11 +139,7 @@ namespace ISynergy.Framework.UI.Services
                 {
                     viewmodel.IsInitialized = false;
                     await InitializeViewModelAsync(viewmodel);
-#if WINDOWS_WPF
-                    return ((Frame)Frame).NavigateToView(page, viewmodel);
-#else
                     return ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
-#endif
                 }
                 else
                 {
@@ -193,11 +172,7 @@ namespace ISynergy.Framework.UI.Services
                     }
 
                     await InitializeViewModelAsync(viewmodel);
-#if WINDOWS_WPF
-                    return ((Frame)Frame).NavigateToView(page, viewmodel);
-#else
                     return ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
-#endif
                 }
             }
             finally
@@ -250,19 +225,10 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public Task CleanBackStackAsync()
         {
-#if WINDOWS_WPF
-            return Application.Current.Dispatcher.InvokeAsync(() => {
-                foreach (var item in ((Frame)Frame).BackStack)
-	            {
-                    ((Frame)Frame).RemoveBackEntry();
-	            }
-            }).Task;
-#else
             DispatcherQueue.GetForCurrentThread().TryEnqueue(() => { 
                 ((Frame)Frame).BackStack.Clear();
             });
             return Task.CompletedTask;
-#endif
         }
 
         /// <summary>

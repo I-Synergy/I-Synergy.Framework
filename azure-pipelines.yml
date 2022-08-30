@@ -61,8 +61,6 @@ stages:
              src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj
              src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj
              src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj
-             #src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj
-             #src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj
              src\ISynergy.Framework.Documents\ISynergy.Framework.Documents.csproj
              src\ISynergy.Framework.Documents.Syncfusion\ISynergy.Framework.Documents.Syncfusion.csproj
              src\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj

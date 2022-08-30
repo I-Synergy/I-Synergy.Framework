@@ -1,16 +1,22 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Clipboard.Extensions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Telemetry.ApplicationInsights.Extensions;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Options;
+using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Sample.Abstractions.Services;
 using Sample.Services;
 using Sample.ViewModels;
@@ -21,23 +27,6 @@ using System.IO;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Resources;
-using ISynergy.Framework.Telemetry.Extensions;
-using ISynergy.Framework.UI.Options;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
-
-#if WINDOWS || WINDOWS_UWP
-using ISynergy.Framework.Clipboard.Extensions;
-#endif
-
-#if HAS_UNO
-using Uno.Material;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Xaml;
-#elif WINDOWS_UWP
-using Windows.UI.Xaml;
-#else
-using Microsoft.UI.Xaml;
-#endif
 
 namespace Sample
 {
@@ -56,17 +45,6 @@ namespace Sample
             InitializeComponent();
         }
 
-#if WINDOWS_UWP || HAS_UNO
-        /// <summary>
-        /// Add additional resource dictionaries.
-        /// </summary>
-        /// <returns></returns>
-        protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
-            new List<ResourceDictionary>()
-            {
-                new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Uwp.xaml") }
-            };
-#elif WINDOWS
         /// <summary>
         /// Add additional resource dictionaries.
         /// </summary>
@@ -76,28 +54,6 @@ namespace Sample
             {
                 new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Desktop.xaml") }
             };
-#endif
-#if HAS_UNO
-        /// <summary>
-        /// On loanched event handler.
-        /// </summary>
-        /// <param name="args"></param>
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
-        {
-
-            // Set a default palette to make sure all colors used by MaterialResources exist
-            //Application.Current.Resources.MergedDictionaries.Add(new MaterialColorPalette());
-
-            // Add all the material resources. Those resources depend on the colors above, which is why this one must be added last.
-            Application.Current.Resources.MergedDictionaries.Add(new MaterialResources());
-
-            //Application.Current.Resources["MaterialPrimaryColor"] = _themeSelector.AccentColor;
-            //Application.Current.Resources["MaterialPrimaryVariantLightColor"] = _themeSelector.LightAccentColor;
-            //Application.Current.Resources["MaterialPrimaryVariantDarkColor"] = _themeSelector.DarkAccentColor;
-
-            base.OnLaunched(args);
-        }
-#endif
 
         /// <summary>
         /// Configures the services.
@@ -120,9 +76,7 @@ namespace Sample
             services.AddSingleton<IContext, Context>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
-#if WINDOWS_UWP
-            services.AddSingleton<IUpdateService, UpdateService>();
-#endif
+            services.AddUpdatesIntegration();
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService, SettingsService>());
@@ -131,11 +85,9 @@ namespace Sample
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
             //services.AddTelemetrySentryIntegration(configurationRoot);
-            services.AddTelemetryApplicationInsightsIntegration(configurationRoot);
+            services.AddApplicationInsightsTelemetryIntegration(configurationRoot);
 
-#if WINDOWS || WINDOWS_UWP
             services.AddClipboardIntegration();
-#endif
 
             services.AddScoped<IShellViewModel, ShellViewModel>();
             services.AddScoped<IShellView, ShellView>();

@@ -7,32 +7,18 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Controls;
 using System;
 using System.Threading.Tasks;
-
-#if WINDOWS_UWP || HAS_UNO
-using Windows.UI.Xaml.Controls;
-using Application = Windows.UI.Xaml.Application;
-using Style = Windows.UI.Xaml.Style;
-using Window = ISynergy.Framework.UI.Controls.Window;
-#elif WINDOWS_WINUI
 using Microsoft.UI.Xaml.Controls;
 using Application = Microsoft.UI.Xaml.Application;
 using Style = Microsoft.UI.Xaml.Style;
 using Setter = Microsoft.UI.Xaml.Setter;
 using Window = ISynergy.Framework.UI.Controls.Window;
-#elif WINDOWS_WPF
-using System.Windows.Media;
-using Window = System.Windows.Window;
-#endif
 
 namespace ISynergy.Framework.UI.Services
 {
     public class DialogService : IDialogService
     {
-#if WINDOWS_WPF
-        private System.Windows.Window _activeDialog = null;
-#else
         private Window _activeDialog = null;
-#endif
+
         /// <summary>
         /// Gets the language service.
         /// </summary>
@@ -57,23 +43,6 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="image">The image.</param>
         /// <returns>MessageBoxResult.</returns>
 
-#if WINDOWS_WPF
-        public virtual Task<MessageBoxResult> ShowMessageAsync(
-            string message,
-            string title = "",
-            MessageBoxButton buttons = MessageBoxButton.OK,
-            MessageBoxImage image = MessageBoxImage.Information)
-        {
-            var result = System.Windows.MessageBox.Show(
-                message,
-                title,
-                (System.Windows.MessageBoxButton)buttons,
-                (System.Windows.MessageBoxImage)image,
-                (System.Windows.MessageBoxResult)MessageBoxResult.Cancel);
-
-            return Task.FromResult((MessageBoxResult)result);
-        }
-#else
         public virtual async Task<MessageBoxResult> ShowMessageAsync(
             string message,
             string title = "",
@@ -154,8 +123,6 @@ namespace ISynergy.Framework.UI.Services
 
             return MessageBoxResult.Cancel;
         }
-#endif
-
 
         /// <summary>
         /// Shows the error asynchronous.
@@ -276,18 +243,6 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="viewmodel">The viewmodel.</param>
         private async Task CreateDialogAsync<TEntity>(Window dialog, IViewModelDialog<TEntity> viewmodel)
         {
-#if WINDOWS_WPF
-            dialog.DataContext = viewmodel;
-
-            viewmodel.Submitted += (sender, e) => CloseDialog();
-            viewmodel.Cancelled += (sender, e) => CloseDialog();
-            viewmodel.Closed += (sender, e) => CloseDialog();
-
-            if (!viewmodel.IsInitialized)
-                await viewmodel.InitializeAsync();
-
-            await OpenDialogAsync(dialog);
-#else
             if (Application.Current is BaseApplication baseApplication)
                 dialog.XamlRoot = baseApplication.MainWindow.Content.XamlRoot;
 
@@ -309,39 +264,21 @@ namespace ISynergy.Framework.UI.Services
                 await viewmodel.InitializeAsync();
 
             await OpenDialogAsync(dialog);
-#endif
         }
 
-#if WINDOWS_WPF
-        private Task<bool?> OpenDialogAsync(System.Windows.Window dialog)
-#else
         private Task<ContentDialogResult> OpenDialogAsync(Window dialog)
-#endif
         {
             if (_activeDialog is not null)
                 CloseDialog();
 
             _activeDialog = dialog;
 
-#if WINDOWS_WPF
-            _activeDialog.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-
-            if (System.Windows.Application.Current.MainWindow != null && System.Windows.Application.Current.MainWindow.IsLoaded)
-                _activeDialog.Owner = System.Windows.Application.Current.MainWindow;
-
-            return Task.FromResult(_activeDialog.ShowDialog());
-#else
             return _activeDialog.ShowAsync().AsTask();
-#endif
         }
 
         private void CloseDialog()
         {
-#if WINDOWS_WPF
-            _activeDialog.Hide();
-#else
             _activeDialog.Close();
-#endif
             _activeDialog = null;
         }
     }

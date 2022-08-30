@@ -1,0 +1,45 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-windows10.0.18362</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Telemetry.AppCenter</PackageId>
+		<Description>I-Synergy Framework AppCenter Telemetry library for Windows</Description>
+		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Windows</PackageTags>
+		<RootNamespace>ISynergy.Framework.Telemetry.AppCenter</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Uno.WinUI" Version="4.4.20" />
+		<PackageReference Include="Microsoft.AppCenter" Version="4.5.3" />
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.3" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.3" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.4" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22000.24" />
+		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22000.24" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.18362'">
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+	</ItemGroup>
+  <ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+    <ProjectReference Include="..\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj" />
+  </ItemGroup>
+</Project>
