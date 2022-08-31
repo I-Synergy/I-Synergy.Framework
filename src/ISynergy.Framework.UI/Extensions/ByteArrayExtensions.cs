@@ -18,9 +18,14 @@ namespace ISynergy.Framework.UI.Extensions
 
         public static ImageSource ToImageSource(this byte[] _self)
         {
-            var bitmap = new BitmapImage();
-            bitmap.SetSource(_self.ToMemoryStream().AsRandomAccessStream());
-            return bitmap;
+            if(_self.ToMemoryStream() is not null)
+            {
+                var bitmap = new BitmapImage();
+                bitmap.SetSource(_self.ToMemoryStream().AsRandomAccessStream());
+                return bitmap;
+            }
+
+            return null;
         }
     }
 }
