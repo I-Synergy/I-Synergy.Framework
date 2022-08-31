@@ -72,7 +72,7 @@ namespace ISynergy.Framework.UI.Services
                 Color = applicationSettingsService.Settings.Color
             };
 
-            SetStyle(_style);
+            //SetStyle(_style);
         }
 
         /// <summary>

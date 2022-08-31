@@ -175,6 +175,11 @@ namespace ISynergy.Framework.UI.Services
                     return ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
                 }
             }
+            catch (Exception ex)
+            {
+                await ServiceLocator.Default.GetInstance<IExceptionHandlerService>().HandleExceptionAsync(ex);
+                return null;
+            }
             finally
             {
                 _semaphore.Release();

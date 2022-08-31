@@ -88,6 +88,8 @@ namespace ISynergy.Framework.UI
 
         protected readonly ITelemetryService _telemetryService;
 
+        protected readonly IExceptionHandlerService _exceptionHandlerService;
+
         /// <summary>
         /// Gets the context.
         /// </summary>
@@ -115,6 +117,7 @@ namespace ISynergy.Framework.UI
             ServiceLocator.SetLocatorProvider(_serviceProvider);
 
             _telemetryService = _serviceProvider.GetRequiredService<ITelemetryService>();
+            _exceptionHandlerService = _serviceProvider.GetRequiredService<IExceptionHandlerService>();
             _logger = _serviceProvider.GetRequiredService<ILogger>();
             _logger.LogInformation("Starting application");
 
@@ -130,12 +133,12 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
-        private void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (!e.Handled)
             {
                 e.Handled = true;
-                HandleException(e.Exception, $"{e.Exception.Message}{Environment.NewLine}{e.Message}");
+                await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
             }
         }
 
@@ -151,9 +154,9 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs" /> instance containing the event data.</param>
-        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            HandleException(e.Exception, e.Exception.Message);
+            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
             e.SetObserved();
         }
 
@@ -162,12 +165,10 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs" /> instance containing the event data.</param>
-        private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        private async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
-            {
-                HandleException(exception, exception.Message);
-            }
+                await _exceptionHandlerService.HandleExceptionAsync(exception);
         }
 
         /// <summary>
@@ -367,6 +368,8 @@ namespace ISynergy.Framework.UI
 
             //Register functions
             services.AddScoped<LocalizationFunctions>();
+
+            services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
         }
 
         /// <summary>
@@ -538,13 +541,5 @@ namespace ISynergy.Framework.UI
         /// </summary>
         public virtual void AddResourceManager(ResourceManager resourceManager) =>
             _languageService.AddResourceManager(resourceManager);
-
-        /// <summary>
-        /// Handles the exception.
-        /// </summary>
-        /// <param name="exception">The ex.</param>
-        /// <param name="message">The message.</param>
-        /// <returns>Task.</returns>
-        public abstract void HandleException(Exception exception, string message);
     }
 }
