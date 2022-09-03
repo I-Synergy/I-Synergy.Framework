@@ -145,7 +145,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Telemetr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Update", "src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj", "{6C952A06-C3E0-48F2-8F6B-8928EDDA51A1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinUI", "WinUI", "{F526B17A-0B52-4E36-997E-1B07F341E764}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Desktop", "Desktop", "{F526B17A-0B52-4E36-997E-1B07F341E764}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{02A8452B-7A16-4A70-849A-12125F9A9DFF}"
 EndProject
@@ -167,19 +167,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.AspNetCore.Proxy.Tests", "tests\ISynergy.Framework.AspNetCore.Proxy.Tests\ISynergy.Framework.AspNetCore.Proxy.Tests.csproj", "{EC5D5046-0B6D-420F-BE8D-7725CCCE56E1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{0215A1A2-63E2-4E5B-B9B6-9F5CDB6E188D}"
-	ProjectSection(SolutionItems) = preProject
-		templates\isynergy.framework.clipboard.yml = templates\isynergy.framework.clipboard.yml
-		templates\isynergy.framework.telemetry.yml = templates\isynergy.framework.telemetry.yml
-		templates\isynergy.framework.ui.yml = templates\isynergy.framework.ui.yml
-		templates\isynergy.framework.update.yml = templates\isynergy.framework.update.yml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Telemetry.AppCenter", "src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj", "{DD562EE5-F8FF-43D2-82FF-C65AD3382119}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Telemetry.ApplicationInsights", "src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj", "{4FC29CBA-FB76-4404-A43B-8BF51F3C7C39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Telemetry.Sentry", "src\ISynergy.Framework.Telemetry.Sentry\ISynergy.Framework.Telemetry.Sentry.csproj", "{D8D1E5B8-5044-46C5-813A-7B84FD71EE6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Mobile", "samples\ISynergy.Framework.UI\Sample.Mobile\Sample.Mobile.csproj", "{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{4E2F79C1-2EC5-4A5F-8590-17323C90129C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -3677,6 +3673,63 @@ Global
 		{D8D1E5B8-5044-46C5-813A-7B84FD71EE6C}.Release|x64.Build.0 = Release|Any CPU
 		{D8D1E5B8-5044-46C5-813A-7B84FD71EE6C}.Release|x86.ActiveCfg = Release|Any CPU
 		{D8D1E5B8-5044-46C5-813A-7B84FD71EE6C}.Release|x86.Build.0 = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|Any CPU.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|Any CPU.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|ARM.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|ARM.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|ARM64.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|ARM64.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|x64.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|x86.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Ad-Hoc|x86.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|Any CPU.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|Any CPU.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|ARM.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|ARM.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|ARM64.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|ARM64.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|iPhone.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|x64.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|x64.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|x86.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.AppStore|x86.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|ARM.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|x64.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Debug|x86.Build.0 = Debug|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|ARM.ActiveCfg = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|ARM.Build.0 = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|ARM64.Build.0 = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|iPhone.Build.0 = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|x64.ActiveCfg = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|x64.Build.0 = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|x86.ActiveCfg = Release|Any CPU
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -3754,11 +3807,14 @@ Global
 		{DD562EE5-F8FF-43D2-82FF-C65AD3382119} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{4FC29CBA-FB76-4404-A43B-8BF51F3C7C39} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
 		{D8D1E5B8-5044-46C5-813A-7B84FD71EE6C} = {C36AA9CF-0BE2-45AD-95B3-5B28F55E7C6F}
+		{09BDDBA5-7FE6-463F-BFBB-895B7284AA02} = {4E2F79C1-2EC5-4A5F-8590-17323C90129C}
+		{4E2F79C1-2EC5-4A5F-8590-17323C90129C} = {748C5FD2-1F73-4289-BC5C-4AC0F7FECB1B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E1277E6-952C-4650-83D5-16EB364C4FC7}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{09bddba5-7fe6-463f-bfbb-895b7284aa02}*SharedItemsImports = 5
 		samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.projitems*{58ac244e-38e5-4165-a25e-fedad3ad26c2}*SharedItemsImports = 13
 		samples\ISynergy.Framework.UI\Sample.Shared\Sample.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		samples\Sample.MessageBus.Shared\Sample.MessageBus.Shared.projitems*{81924ac4-c08f-4e9b-bd05-fb7f75291609}*SharedItemsImports = 5

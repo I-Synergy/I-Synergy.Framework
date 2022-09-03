@@ -35,7 +35,7 @@
 		</FrameworkNavigation:MenuItemTemplateSelector>
 	</c:View.Resources>
 
-	<Grid>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
             <RowDefinition/>

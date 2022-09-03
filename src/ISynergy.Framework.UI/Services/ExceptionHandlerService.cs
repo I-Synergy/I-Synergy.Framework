@@ -84,7 +84,7 @@ namespace ISynergy.Framework.UI.Services
                 if (connections?.GetNetworkConnectivityLevel() != NetworkConnectivityLevel.InternetAccess)
                 {
                     await _dialogService.ShowInformationAsync(
-                        _languageService.GetString("EX_DEFAULT_INTERNET"));
+                        _languageService.GetString("ExceptionInternetConnection"));
                 }
                 else
                 {
@@ -94,7 +94,7 @@ namespace ISynergy.Framework.UI.Services
                     }
                     else if (exception is NotImplementedException)
                     {
-                        await _dialogService.ShowInformationAsync(_languageService.GetString("EX_FUTURE_MODULE"));
+                        await _dialogService.ShowInformationAsync(_languageService.GetString("ExceptionFutureModule"));
                     }
                     else if (exception is UnauthorizedAccessException accessException)
                     {
@@ -104,26 +104,27 @@ namespace ISynergy.Framework.UI.Services
                     {
                         if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
                         {
-                            await _dialogService.ShowErrorAsync(_languageService.GetString("EX_FILEINUSE"));
+                            await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionFileInUse"));
                         }
                         else
                         {
-                            await _dialogService.ShowErrorAsync(_languageService.GetString("EX_DEFAULT"));
+                            await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionDefault"));
                         }
                     }
                     else if (exception is ArgumentException argumentException)
                     {
-                        await _dialogService.ShowWarningAsync(string.Format(_languageService.GetString("EX_ARGUMENTNULL"), argumentException.ParamName));
+                        await _dialogService.ShowWarningAsync(string.Format(_languageService.GetString("ExceptionArgumentIsNull"), argumentException.ParamName));
                     }
                     else
                     {
-                        await _dialogService.ShowErrorAsync(_languageService.GetString("EX_DEFAULT"));
+                        await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionDefault"));
                     }
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogCritical(ex.Message, ex);
+                _telemetryService.TrackException(ex, ex.Message);
             }
             finally
             {

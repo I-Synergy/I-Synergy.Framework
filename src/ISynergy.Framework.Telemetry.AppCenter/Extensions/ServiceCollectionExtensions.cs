@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ISynergy.Framework.Telemetry.AppCenter.Extensions
+namespace ISynergy.Framework.Telemetry.Extensions
 {
     /// <summary>
     /// Service collection extensions for AppCenter telemetry.

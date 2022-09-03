@@ -2,11 +2,12 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows10.0.18362</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows10.0.18362;netstandard2.0;net6.0-android</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Update</PackageId>
 		<Description>I-Synergy Framework Update for Windows</Description>
 		<PackageTags>I-Synergy, Framework, Update, Windows</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>

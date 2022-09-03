@@ -2,12 +2,13 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows10.0.18362</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows10.0.18362;net6.0-android</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Telemetry.AppCenter</PackageId>
-		<Description>I-Synergy Framework AppCenter Telemetry library for Windows</Description>
-		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Windows</PackageTags>
+		<Description>I-Synergy Framework AppCenter Telemetry library for Windows and Android</Description>
+		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Windows, Android, Uno</PackageTags>
 		<RootNamespace>ISynergy.Framework.Telemetry.AppCenter</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>

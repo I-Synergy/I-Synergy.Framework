@@ -18,6 +18,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Animation;
+using ISynergy.Framework.Core.Models;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -124,7 +125,7 @@ namespace ISynergy.Framework.UI.Services
 
                 if (!_pages.ContainsKey(viewModelKey))
                 {
-                    throw new ArgumentException($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?", viewModelKey);
+                    throw new Exception($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?");
                 }
 
                 var page = _pages[viewModelKey];
@@ -203,7 +204,7 @@ namespace ISynergy.Framework.UI.Services
 
                 if (!_pages.ContainsKey(viewModelKey))
                 {
-                    throw new ArgumentException($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?", nameof(viewModel));
+                    throw new Exception($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?");
                 }
 
                 if (!viewModel.IsInitialized)
@@ -217,7 +218,7 @@ namespace ISynergy.Framework.UI.Services
                     return view;
                 }
 
-                throw new ArgumentException($"Instance could not be created from {viewModelKey}");
+                throw new Exception($"Instance could not be created from {viewModelKey}");
             }
             finally
             {

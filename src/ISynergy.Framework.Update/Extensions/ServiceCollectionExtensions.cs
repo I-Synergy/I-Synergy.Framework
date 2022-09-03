@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Update.Abstractions.Services;
+﻿#if NET6_0_OR_GREATER && WINDOWS && !HAS_UNO
+using ISynergy.Framework.Update.Abstractions.Services;
 using ISynergy.Framework.Update.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,3 +22,4 @@ namespace ISynergy.Framework.Update.Extensions
         }
     }
 }
+#endif

@@ -42,7 +42,7 @@ using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
 using Windows.UI.Core;
 
-#if WINDOWS10_0_18362_0_OR_GREATER
+#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
 using WinRT.Interop;
 #endif
 
@@ -237,7 +237,7 @@ namespace ISynergy.Framework.UI
             MainWindow.Activate();
         }
 
-#if WINDOWS10_0_18362_0_OR_GREATER
+#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
         protected virtual AppWindow GetAppWindowForCurrentWindow(Window window)
         {
             var hWnd = WindowNative.GetWindowHandle(window);
@@ -257,7 +257,8 @@ namespace ISynergy.Framework.UI
             _context.ViewModels = ViewModelTypes;
 
             var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
-            localizationFunctions.SetLocalizationLanguage(_serviceProvider.GetRequiredService<IBaseApplicationSettingsService>().Settings.Culture);
+            var settingsService = _serviceProvider.GetRequiredService<IBaseApplicationSettingsService>();
+            localizationFunctions.SetLocalizationLanguage(settingsService.Settings.Culture);
 
             // Bootstrap all registered modules.
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
