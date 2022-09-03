@@ -74,23 +74,12 @@ stages:
              src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj
              src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj
              src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj
-             src\ISynergy.Framework.Telemetry.AppCenter.Uwp\ISynergy.Framework.Telemetry.AppCenter.Uwp.csproj
-             src\ISynergy.Framework.Telemetry.AppCenter.WinUI\ISynergy.Framework.Telemetry.AppCenter.WinUI.csproj
-             src\ISynergy.Framework.Telemetry.AppCenter.Wpf\ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj
-             src\ISynergy.Framework.Telemetry.ApplicationInsights.Uwp\ISynergy.Framework.Telemetry.ApplicationInsights.Uwp.csproj
-             src\ISynergy.Framework.Telemetry.ApplicationInsights.WinUI\ISynergy.Framework.Telemetry.ApplicationInsights.WinUI.csproj
+             src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj
+             src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj
+             src\ISynergy.Framework.Telemetry.Sentry\ISynergy.Framework.Telemetry.Sentry.csproj
              src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj
-             src\ISynergy.Framework.Clipboard.Uwp\ISynergy.Framework.Clipboard.Uwp.csproj
-             src\ISynergy.Framework.Clipboard.WinUI\ISynergy.Framework.Clipboard.WinUI.csproj
-             src\ISynergy.Framework.Clipboard.Wpf\ISynergy.Framework.Clipboard.Wpf.csproj
              src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
-             src\ISynergy.Framework.UI.Uwp\ISynergy.Framework.UI.Uwp.csproj
-             src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj
-             src\ISynergy.Framework.UI.Wpf\ISynergy.Framework.UI.Wpf.csproj
              src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj
-             src\ISynergy.Framework.Update.Uwp\ISynergy.Framework.Update.Uwp.csproj
-             src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj
-             src\ISynergy.Framework.Update.Wpf\ISynergy.Framework.Update.Wpf.csproj
             InsertAttributes: true
             WriteBOM: true
             GeneratePackageOnBuild: true
@@ -104,34 +93,13 @@ stages:
           inputs:
             versionSpec: 6.0.0
 
-        - task: UseDotNet@2
-          displayName: 'Install .Net SDK'
-          inputs:
-            packageType: 'sdk'
-            useGlobalJson: true
-
-        - task: PowerShell@2
-          displayName: 'Install Windows 10.0.18362 SDK'
-          inputs:
-            targetType: 'inline'
-            script: |
-              $sdkUrl = "https://isynergy.blob.core.windows.net/sdk/windows_sdk_10.0.18362.exe"
-              $sdkPath = Join-Path $env:TEMP "windows_sdk_10.0.18362.exe"
-                             
-              # Download the files to local temp folder
-              Write-Output "downloading $sdkUrl�"
-              Invoke-WebRequest -Uri $sdkUrl -OutFile $sdkPath
-                             
-              # Install the SDKs (use the "qn" flag to install silently)
-              Write-Output "installing $sdkPath�"
-              Start-Process $sdkPath -ArgumentList "/q" -Wait
-
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
           inputs:
             secureFile: 'i-synergy.pfx'
 
         - task: SonarCloudPrepare@1
+          displayName: 'Prepare sonarcloud'
           inputs:
             SonarCloud: 'SonarCloud'
             organization: 'i-synergy'
@@ -141,14 +109,14 @@ stages:
             projectVersion: '$(GitVersion.FullSemVer)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Core'
+          displayName: 'Build Core Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Core'
+          displayName: 'Pack Core Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj'
@@ -158,14 +126,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.IO'
+          displayName: 'Build IO Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.IO'
+          displayName: 'Pack IO Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.IO\ISynergy.Framework.IO.csproj'
@@ -175,14 +143,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Automations'
+          displayName: 'Build Automations Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Automations'
+          displayName: 'Pack Automations Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Automations\ISynergy.Framework.Automations.csproj'
@@ -192,14 +160,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore'
+          displayName: 'Build AspNetCore Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.AspNetCore'
+          displayName: 'Pack AspNetCore Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj'
@@ -209,14 +177,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Authentication'
+          displayName: 'Build AspNetCore Authentication Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.AspNetCore.Authentication'
+          displayName: 'Pack AspNetCore Authentication Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj'
@@ -226,14 +194,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Globalization'
+          displayName: 'Build AspNetCore Globalization Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.AspNetCore.Globalization\ISynergy.Framework.AspNetCore.Globalization.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.AspNetCore.Globalization'
+          displayName: 'Pack AspNetCore Globalization Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.AspNetCore.Globalization\ISynergy.Framework.AspNetCore.Globalization.csproj'
@@ -243,14 +211,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.MultiTenancy'
+          displayName: 'Build AspNetCore MultiTenancy Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.AspNetCore.MultiTenancy\ISynergy.Framework.AspNetCore.MultiTenancy.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.AspNetCore.MultiTenancy'
+          displayName: 'Pack AspNetCore MultiTenancy Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.AspNetCore.MultiTenancy\ISynergy.Framework.AspNetCore.MultiTenancy.csproj'
@@ -260,14 +228,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.AspNetCore.Proxy'
+          displayName: 'Build AspNetCore Proxy Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.AspNetCore.Proxy\ISynergy.Framework.AspNetCore.Proxy.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.AspNetCore.Proxy'
+          displayName: 'Pack AspNetCore Proxy Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.AspNetCore.Proxy\ISynergy.Framework.AspNetCore.Proxy.csproj'
@@ -277,14 +245,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Documents'
+          displayName: 'Build Documents Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Documents\ISynergy.Framework.Documents.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Documents'
+          displayName: 'Pack Documents Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Documents\ISynergy.Framework.Documents.csproj'
@@ -294,14 +262,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Documents.Syncfusion'
+          displayName: 'Build Documents Syncfusion Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Documents.Syncfusion\ISynergy.Framework.Documents.Syncfusion.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Documents.Syncfusion'
+          displayName: 'Pack Documents Syncfusion Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Documents.Syncfusion\ISynergy.Framework.Documents.Syncfusion.csproj'
@@ -311,14 +279,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.EntityFramework'
+          displayName: 'Build EntityFramework Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.EntityFramework'
+          displayName: 'Pack EntityFramework Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj'
@@ -328,14 +296,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Financial'
+          displayName: 'Build Financial Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Financial'
+          displayName: 'Pack Financial Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Financial\ISynergy.Framework.Financial.csproj'
@@ -345,14 +313,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Geography'
+          displayName: 'Build Geography Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Geography'
+          displayName: 'Pack Geography Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Geography\ISynergy.Framework.Geography.csproj'
@@ -362,14 +330,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Mail'
+          displayName: 'Build Mail Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Mail'
+          displayName: 'Pack Mail Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj'
@@ -379,14 +347,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Mail.SendGrid'
+          displayName: 'Build Mail SendGrid Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Mail.SendGrid\ISynergy.Framework.Mail.SendGrid.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Mail.SendGrid'
+          displayName: 'Pack Mail SendGrid Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Mail.SendGrid\ISynergy.Framework.Mail.SendGrid.csproj'
@@ -396,14 +364,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Physics'
+          displayName: 'Build Physics Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Physics'
+          displayName: 'Pack Physics Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj'
@@ -413,14 +381,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Mathematics'
+          displayName: 'Build Mathematics Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Mathematics'
+          displayName: 'Pack Mathematics Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Mathematics\ISynergy.Framework.Mathematics.csproj'
@@ -430,14 +398,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.MessageBus'
+          displayName: 'Build MessageBus Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.MessageBus'
+          displayName: 'Pack MessageBus Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj'
@@ -447,14 +415,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.MessageBus.Azure'
+          displayName: 'Build MessageBus Azure Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.MessageBus.Azure'
+          displayName: 'Pack MessageBus Azure Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.MessageBus.Azure\ISynergy.Framework.MessageBus.Azure.csproj'
@@ -464,14 +432,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Monitoring'
+          displayName: 'Build Monitoring Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Monitoring'
+          displayName: 'Pack Monitoring Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Monitoring\ISynergy.Framework.Monitoring.csproj'
@@ -481,14 +449,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Monitoring.Client.SignalR'
+          displayName: 'Build Monitoring Client SignalR Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Monitoring.Client.SignalR\ISynergy.Framework.Monitoring.Client.SignalR.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Monitoring.Client.SignalR'
+          displayName: 'Pack Monitoring Client SignalR Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Monitoring.Client.SignalR\ISynergy.Framework.Monitoring.Client.SignalR.csproj'
@@ -498,14 +466,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Monitoring.Common'
+          displayName: 'Build Monitoring Common Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Monitoring.Common'
+          displayName: 'Pack Monitoring Common Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Monitoring.Common\ISynergy.Framework.Monitoring.Common.csproj'
@@ -515,14 +483,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Monitoring.SignalR'
+          displayName: 'Build Monitoring SignalR Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Monitoring.SignalR\ISynergy.Framework.Monitoring.SignalR.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Monitoring.SignalR'
+          displayName: 'Pack Monitoring SignalR Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Monitoring.SignalR\ISynergy.Framework.Monitoring.SignalR.csproj'
@@ -532,14 +500,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Mvvm'
+          displayName: 'Build Mvvm Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Mvvm'
+          displayName: 'Pack Mvvm Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj'
@@ -549,14 +517,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Printer.Label'
+          displayName: 'Build Printer Label Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Printer.Label'
+          displayName: 'Pack Printer Label Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Printer.Label\ISynergy.Framework.Printer.Label.csproj'
@@ -566,14 +534,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Printer.Label.Dymo'
+          displayName: 'Build Printer Label Dymo Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Printer.Label.Dymo'
+          displayName: 'Pack Printer Label Dymo Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Printer.Label.Dymo\ISynergy.Framework.Printer.Label.Dymo.csproj'
@@ -583,14 +551,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Storage'
+          displayName: 'Build Storage Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Storage'
+          displayName: 'Pack Storage Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Storage\ISynergy.Framework.Storage.csproj'
@@ -600,14 +568,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Storage.Azure'
+          displayName: 'Build Storage Azure Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Storage.Azure'
+          displayName: 'Pack Storage Azure Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Storage.Azure\ISynergy.Framework.Storage.Azure.csproj'
@@ -617,14 +585,14 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         #- task: DotNetCoreCLI@2
-        #  displayName: 'Dotnet build: I-Synergy.Framework.Payment'
+        #  displayName: 'Build Payment Project'
         #  inputs:
         #    command: build
         #    projects: 'src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj'
         #    arguments: '-c $(BuildConfiguration)'
 
         #- task: DotNetCoreCLI@2
-        #  displayName: 'Dotnet pack: I-Synergy.Framework.Payment'
+        #  displayName: 'Pack Payment Project'
         #  inputs:
         #    command: 'pack'
         #    packagesToPack: 'src\ISynergy.Framework.Payment\ISynergy.Framework.Payment.csproj'
@@ -634,14 +602,14 @@ stages:
         #    versionEnvVar: 'VersionPackage'
 
         #- task: DotNetCoreCLI@2
-        #  displayName: 'Dotnet build: I-Synergy.Framework.Payment.Mollie'
+        #  displayName: 'Build Payment.Mollie Project'
         #  inputs:
         #    command: build
         #    projects: 'src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj'
         #    arguments: '-c $(BuildConfiguration)'
 
         #- task: DotNetCoreCLI@2
-        #  displayName: 'Dotnet pack: I-Synergy.Framework.Payment.Mollie'
+        #  displayName: 'Pack Payment.Mollie Project'
         #  inputs:
         #    command: 'pack'
         #    packagesToPack: 'src\ISynergy.Framework.Payment.Mollie\ISynergy.Framework.Payment.Mollie.csproj'
@@ -651,14 +619,14 @@ stages:
         #    versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Telemetry'
+          displayName: 'Build Telemetry Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Telemetry'
+          displayName: 'Pack Telemetry Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Telemetry\ISynergy.Framework.Telemetry.csproj'
@@ -667,17 +635,66 @@ stages:
             versioningScheme: 'byEnvVar'
             versionEnvVar: 'VersionPackage'
 
-        - template: templates/isynergy.framework.telemetry.yml
+        - task: DotNetCoreCLI@2
+          displayName: 'Build Telemetry AppCenter Project'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj'
+            arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Clipboard'
+          displayName: 'Pack Telemetry AppCenter Project'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Build Telemetry ApplicationInsights Project'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Pack Telemetry ApplicationInsights Project'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Build Telemetry Sentry Project'
+          inputs:
+            command: build
+            projects: 'src\ISynergy.Framework.Telemetry.Sentry\ISynergy.Framework.Telemetry.Sentry.csproj'
+            arguments: '-c $(BuildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Pack Telemetry Sentry Project'
+          inputs:
+            command: 'pack'
+            packagesToPack: 'src\ISynergy.Framework.Telemetry.Sentry\ISynergy.Framework.Telemetry.Sentry.csproj'
+            nobuild: true
+            includesymbols: true
+            versioningScheme: 'byEnvVar'
+            versionEnvVar: 'VersionPackage'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Build Clipboard Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Clipboard'
+          displayName: 'Pack Clipboard Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj'
@@ -686,17 +703,15 @@ stages:
             versioningScheme: 'byEnvVar'
             versionEnvVar: 'VersionPackage'
 
-        - template: templates/isynergy.framework.clipboard.yml
-
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.Update'
+          displayName: 'Build Update Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj'
             arguments: '-c $(BuildConfiguration)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.Update'
+          displayName: 'Pack Update Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj'
@@ -705,17 +720,15 @@ stages:
             versioningScheme: 'byEnvVar'
             versionEnvVar: 'VersionPackage'
 
-        - template: templates/isynergy.framework.update.yml
-
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy.Framework.UI'
+          displayName: 'Build UI Project'
           inputs:
             command: build
             projects: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
             arguments: '-c $(BuildConfiguration)'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet pack: I-Synergy.Framework.UI'
+          displayName: 'Pack UI Project'
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
@@ -723,8 +736,6 @@ stages:
             includesymbols: true
             versioningScheme: 'byEnvVar'
             versionEnvVar: 'VersionPackage'
-
-        - template: templates/isynergy.framework.ui.yml
 
         - task: NuGetCommand@2
           displayName: 'Sign Nuget packages'
@@ -740,56 +751,56 @@ stages:
             publishLocation: 'Container'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Core'
+          displayName: 'Run Core Tests'
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.Core.Tests\ISynergy.Framework.Core.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.IO'
+          displayName: 'Run IO Tests'
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.IO.Tests\ISynergy.Framework.IO.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Automations'
+          displayName: 'Run Automations Tests'
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.Automations.Tests\ISynergy.Framework.Automations.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.AspNetCore'
+          displayName: 'Run AspNetCore Tests'
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.AspNetCore.Tests\ISynergy.Framework.AspNetCore.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Financial'
+          displayName: 'Run Financial Tests'
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.Financial.Tests\ISynergy.Framework.Financial.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Geography'
+          displayName: 'Run Geography Tests'
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.Geography.Tests\ISynergy.Framework.Geography.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
       
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Physics'
+          displayName: 'Run Physics Tests'
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.Physics.Tests\ISynergy.Framework.Physics.Tests.csproj'
             arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Run Test: I-Synergy.Framework.Mathematics'
+          displayName: 'Run Mathematics Tests'
           inputs:
             command: test
             projects: 'tests\ISynergy.Framework.Mathematics.Tests\ISynergy.Framework.Mathematics.Tests.csproj'
@@ -803,11 +814,12 @@ stages:
         #    arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
         - task: SonarCloudAnalyze@1
+          displayName: 'Run SonarCloud analyzer'
 
         - bash: |
             git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
                 +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
-          displayName: 'Copy to Github'
+          displayName: 'Copy source to Github'
           condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
 
   - stage: DocStage
@@ -823,12 +835,6 @@ stages:
           inputs:
             versionSpec: 6.0.0
 
-        - task: UseDotNet@2
-          displayName: 'Install .Net SDK'
-          inputs:
-            packageType: 'sdk'
-            useGlobalJson: true
-
         - task: ChocolateyToolInstaller@0
           inputs:
             force: true
@@ -839,7 +845,7 @@ stages:
             installPackageId: 'wkhtmltopdf'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Dotnet build: I-Synergy Framework Documentation'
+          displayName: 'Build Framework Documentation'
           inputs:
             command: build
             projects: 'docs\ISynergy.Framework\ISynergy.Framework.csproj'

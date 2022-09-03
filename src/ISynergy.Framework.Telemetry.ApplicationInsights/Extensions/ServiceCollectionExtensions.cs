@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace ISynergy.Framework.Telemetry.ApplicationInsights.Extensions
+namespace ISynergy.Framework.Telemetry.Extensions
 {
     /// <summary>
     /// Service collection extensions for Application Insights telemetry.

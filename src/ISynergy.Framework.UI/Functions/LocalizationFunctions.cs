@@ -41,8 +41,10 @@ namespace ISynergy.Framework.UI.Functions
 
             ApplicationLanguages.PrimaryLanguageOverride = isoLanguage;
 
+#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
             // After setting PrimaryLanguageOverride ResourceContext should be reset
             ResourceContext.GetForViewIndependentUse().Reset();
+#endif
 
             CultureInfo.CurrentCulture = new CultureInfo(isoLanguage);
             CultureInfo.CurrentUICulture = new CultureInfo(isoLanguage);

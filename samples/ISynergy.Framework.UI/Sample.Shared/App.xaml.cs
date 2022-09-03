@@ -1,9 +1,12 @@
-﻿using ISynergy.Framework.Clipboard.Extensions;
+﻿#if NET6_0_OR_GREATER && WINDOWS && !HAS_UNO
+using ISynergy.Framework.Update.Extensions;
+#endif
+
+using ISynergy.Framework.Clipboard.Extensions;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -11,11 +14,9 @@ using ISynergy.Framework.Telemetry.ApplicationInsights.Extensions;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Options;
-using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions.Services;
 using Sample.Services;
@@ -23,8 +24,6 @@ using Sample.ViewModels;
 using Sample.Views;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.WebSockets;
 using System.Reflection;
 using System.Resources;
 
@@ -44,6 +43,7 @@ namespace Sample
         {
             InitializeComponent();
         }
+
 
         /// <summary>
         /// Add additional resource dictionaries.
@@ -76,7 +76,9 @@ namespace Sample
             services.AddSingleton<IContext, Context>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
+#if NET6_0_OR_GREATER && WINDOWS && !HAS_UNO
             services.AddUpdatesIntegration();
+#endif
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService, SettingsService>());
