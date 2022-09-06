@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Options;
 
-namespace ISynergy.Framework.UI.Options
+namespace Sample.Options
 {
     /// <summary>
     /// Base configuration options

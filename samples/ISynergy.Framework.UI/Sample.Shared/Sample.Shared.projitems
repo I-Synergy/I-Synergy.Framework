@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\MediaItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\ConfigurationOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>

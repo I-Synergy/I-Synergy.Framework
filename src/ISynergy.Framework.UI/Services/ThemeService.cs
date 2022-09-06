@@ -1,10 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Options;
-using Microsoft.Extensions.Options;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using System;
@@ -23,7 +20,6 @@ namespace ISynergy.Framework.UI.Services
     public class ThemeService : IThemeService
     {
         private Style _style;
-        private ConfigurationOptions _options;
         private Window _window;
 
         /// <summary>
@@ -59,13 +55,8 @@ namespace ISynergy.Framework.UI.Services
         /// Default constructor.
         /// </summary>
         /// <param name="applicationSettingsService"></param>
-        /// <param name="options"></param>
-        public ThemeService(
-            IBaseApplicationSettingsService applicationSettingsService,
-            IOptions<ConfigurationOptions> options)
+        public ThemeService(IBaseApplicationSettingsService applicationSettingsService)
         {
-            _options = options.Value;
-
             _style = new Style
             {
                 Theme = applicationSettingsService.Settings.Theme,
