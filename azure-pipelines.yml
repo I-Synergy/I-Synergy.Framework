@@ -18,7 +18,7 @@ variables:
     - group: PROD
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'windows-latest'
 
 stages:
   - stage: BuildStage
@@ -99,7 +99,7 @@ stages:
             secureFile: 'i-synergy.pfx'
 
         - task: SonarCloudPrepare@1
-          displayName: 'Prepare sonarcloud'
+          displayName: 'Prepare SonarCloud'
           inputs:
             SonarCloud: 'SonarCloud'
             organization: 'i-synergy'
