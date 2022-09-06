@@ -147,14 +147,22 @@ namespace ISynergy.Framework.UI.Services
         /// browse file as an asynchronous operation.
         /// </summary>
         /// <param name="filefilter">The filefilter.</param>
+        /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
         /// <returns>FileResult.</returns>
-        public async Task<FileResult> BrowseFileAsync(string filefilter)
+        public async Task<FileResult> BrowseFileAsync(string filefilter, long maxFileSize = 1 * 1024 * 1024)
         {
             var filters = GetFilters(filefilter);
 
             if (await PickFileAsync(filters.ToArray()) is FileResult file)
             {
-                return file;
+                if (file.File.Length <= maxFileSize || maxFileSize == 0)
+                {
+                    return file;
+                }
+                else
+                {
+                    await _dialogService.ShowErrorAsync(string.Format(_languageService.GetString("WarningDocumentSizeTooBig"), $"{maxFileSize} bytes"));
+                }
             }
 
             return null;
@@ -199,10 +207,11 @@ namespace ISynergy.Framework.UI.Services
         /// get image as an asynchronous operation.
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
         /// <returns>System.Byte[].</returns>
-        public async Task<byte[]> BrowseImageAsync(string[] filter)
+        public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
         {
-            if(await BrowseFileAsync(string.Join(";", filter)) is FileResult result)
+            if(await BrowseFileAsync(string.Join(";", filter), maxFileSize) is FileResult result)
             {
                 return result.File;
             }
