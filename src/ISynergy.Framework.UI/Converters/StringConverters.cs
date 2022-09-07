@@ -407,7 +407,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is string color && string.IsNullOrEmpty(color))
+            if (value is string color && !string.IsNullOrEmpty(color))
                 return ColorHelper.HexStringToColor(color);
 
             return null;
@@ -443,7 +443,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is string color && string.IsNullOrEmpty(color))
+            if (value is string color && !string.IsNullOrEmpty(color))
             {
                 return new SolidColorBrush(ColorHelper.HexStringToColor(color));
             }
