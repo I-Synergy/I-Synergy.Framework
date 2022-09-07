@@ -16,6 +16,7 @@
 
     <c:Window.Resources>
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ISynergy.Framework.Core.Enumerations.Themes, ISynergy.Framework.Core"/>
+        <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter" />
     </c:Window.Resources>
     
     <StackPanel Orientation="Vertical">
@@ -34,7 +35,7 @@
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{Binding}" 
+                    <Border Background="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
                         Height="28" 
                         Width="28" 
                         CornerRadius="14"

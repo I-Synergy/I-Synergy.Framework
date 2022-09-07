@@ -14,6 +14,8 @@ namespace ISynergy.Framework.UI
         /// </summary>
         public ThemeWindow()
         {
+            InitializeComponent();
+
             PrimaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Save");
             SecondaryButtonText = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Close");
         }
