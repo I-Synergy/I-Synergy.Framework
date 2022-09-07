@@ -721,21 +721,12 @@ stages:
             versionEnvVar: 'VersionPackage'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Build UI Project'
+          displayName: 'Build and pack UI Project'
           inputs:
-            command: build
+            command: 'custom'
             projects: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
-            arguments: '-c $(BuildConfiguration)'
-      
-        - task: DotNetCoreCLI@2
-          displayName: 'Pack UI Project'
-          inputs:
-            command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
-            nobuild: true
-            includesymbols: true
-            versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
+            custom: 'msbuild'
+            arguments: '/p:Configuration=$(BuildConfiguration) /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:PackageVersion=$(VersionPackage) /t:restore,build,pack'
 
         - task: NuGetCommand@2
           displayName: 'Sign Nuget packages'
