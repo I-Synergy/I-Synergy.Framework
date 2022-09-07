@@ -3,7 +3,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0-windows10.0.18362;netstandard2.0;net6.0-android</TargetFrameworks>
-		<PackageId>I-Synergy.Framework.Telemetry.ApplicationInsights</PackageId>
+		<PackageId>I-Synergy.Framework.Telemetry.Sentry</PackageId>
 		<Description>I-Synergy Framework Sentry Telemetry library for Windows, Linux, Android and WebAssembly</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, Sentry, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
 		<RootNamespace>ISynergy.Framework.Telemetry.Sentry</RootNamespace>
