@@ -2,8 +2,8 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Options;
+using Sample.Options;
 using Sample.Shared.Models;
 using System;
 using System.Collections.Generic;

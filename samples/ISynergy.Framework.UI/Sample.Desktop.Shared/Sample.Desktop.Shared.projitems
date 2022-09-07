@@ -23,6 +23,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\SelectionTestView.xaml.cs">
       <DependentUpon>SelectionTestView.xaml</DependentUpon>
     </Compile>

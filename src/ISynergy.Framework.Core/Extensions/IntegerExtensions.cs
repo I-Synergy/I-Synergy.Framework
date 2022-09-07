@@ -64,5 +64,21 @@ namespace ISynergy.Framework.Core.Extensions
 
             return result.ToString();
         }
+
+        /// <summary>
+        /// Converts int to uint.
+        /// </summary>
+        /// <param name="_self">The value.</param>
+        /// <returns>uint</returns>
+        public static uint ToUInt(this int _self) =>
+            unchecked((uint)(_self - int.MinValue));
+
+        /// <summary>
+        /// Converts uint to int.
+        /// </summary>
+        /// <param name="_self"></param>
+        /// <returns>int</returns>
+        public static int ToInt(this uint _self) =>
+            unchecked((int)_self + int.MinValue);
     }
 }

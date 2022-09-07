@@ -260,4 +260,26 @@ Enregistrez votre travail et redémarrez l’application.</value>
 	<data name="Select" xml:space="preserve">
 		<value>Choisir</value>
 	</data>
+	<data name="ExceptionInternetConnection" xml:space="preserve">
+		<value>Nous voyons qu’il y a un problème avec votre connexion internet. 
+Vérifiez votre connexion Internet. Tout va bien ? 
+Veuillez communiquer avec I-Synergy Service et Support.</value>
+	</data>
+	<data name="ExceptionFileInUse" xml:space="preserve">
+		<value>Quelque chose a mal tourné.
+Vous tentez d’ouvrir un fichier qui est déjà ouvert.
+Vérifiez si ce fichier est déjà ouvert dans Microsoft Word ou Excel.</value>
+	</data>
+	<data name="ExceptionFutureModule" xml:space="preserve">
+		<value>Cette fonctionnalité sera disponible bientôt.
+Pour plus d’informations aller à http//www.i-synergy.net</value>
+	</data>
+	<data name="ExceptionDefault" xml:space="preserve">
+		<value>Quelque chose a mal tourné ! 
+L’équipe de je-Synergy a été informé et nous corrigerons l’erreur dès que possible. 
+Si cela se produit fréquemment, contactez j’ai-synergie Service et Support.</value>
+	</data>
+	<data name="ExceptionArgumentIsNull" xml:space="preserve">
+		<value>{0} ne peut pas être vide ou null.</value>
+	</data>
 </root>

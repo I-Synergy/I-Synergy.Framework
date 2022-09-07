@@ -22,6 +22,7 @@
 		<NoWarn>1701;1702;CS1591;CS8002</NoWarn>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
+		<UnoUIDisableLongPathWarning>true</UnoUIDisableLongPathWarning>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
