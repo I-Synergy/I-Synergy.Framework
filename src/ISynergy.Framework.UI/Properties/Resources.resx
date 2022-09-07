@@ -280,4 +280,26 @@ Save your work and restart the application.</value>
 	<data name="Select" xml:space="preserve">
     <value>Select</value>
   </data>
+	<data name="ExceptionInternetConnection" xml:space="preserve">
+		<value>We see that there is something wrong with your internet connection. 
+Check your Internet connection. Is everything okay? 
+Please contact I-Synergy Service and Support.</value>
+	</data>
+	<data name="ExceptionFileInUse" xml:space="preserve">
+		<value>Something went wrong.
+You are attempting to open a file that is already open.
+Check whether this file is already opened in Microsoft Word or Excel.</value>
+	</data>
+	<data name="ExceptionFutureModule" xml:space="preserve">
+		<value>This feature will be available soon.
+For more information go to http//www.i-synergy.net</value>
+	</data>
+	<data name="ExceptionDefault" xml:space="preserve">
+		<value>Something went wrong! 
+The I-Synergy Team has been informed and we will correct the error as soon as possible. 
+Should this happen frequently, please contact I-Synergy Service and Support.</value>
+	</data>
+	<data name="ExceptionArgumentIsNull" xml:space="preserve">
+		<value>{0} cannot be empty or null.</value>
+	</data>
 </root>

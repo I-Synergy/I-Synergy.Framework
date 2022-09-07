@@ -1,11 +1,8 @@
 ﻿using System.Globalization;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-
-#if WINDOWS_UWP || WINDOWS
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
-#endif
 
 namespace ISynergy.Framework.UI.Functions
 {
@@ -42,9 +39,9 @@ namespace ISynergy.Framework.UI.Functions
         {
             SettingsService.Settings.Culture = isoLanguage;
 
-#if WINDOWS_UWP || WINDOWS
             ApplicationLanguages.PrimaryLanguageOverride = isoLanguage;
 
+#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
             // After setting PrimaryLanguageOverride ResourceContext should be reset
             ResourceContext.GetForViewIndependentUse().Reset();
 #endif

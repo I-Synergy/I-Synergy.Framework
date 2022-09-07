@@ -77,7 +77,7 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             Copyrights = commonServices.InfoService.Copyrights;
 
-            throw new Exception("Test exception for telemetry!");
+            //throw new Exception("Test exception for telemetry!");
         }
     }
 }

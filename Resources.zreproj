@@ -61,7 +61,7 @@
   &lt;property name="#LayoutVersion" /&gt;
   &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items /&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="2902574589" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="ReadOnlyFileOverwriteBehaviour">0</globalSetting>
     <globalSetting name="OmitEmptyItems">True</globalSetting>
     <globalSetting name="ShowCommentsColumnInGrid">False</globalSetting>
@@ -81,33 +81,32 @@
     <userSetting name="IsmailHassani@AzureAD.filesInitialDir">C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties</userSetting>
     <userSetting name="IsmailHassani@AzureAD.FindText">
     </userSetting>
-    <userSetting name="IsmailHassani@AzureAD.RecentFiles">
-    </userSetting>
+    <userSetting name="IsmailHassani@AzureAD.RecentFiles">C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.resx;C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.de.resx;C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.fr.resx;C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.nl.resx</userSetting>
     <description>
     </description>
   </configuration>
   <fileGroups>
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="f5d1643a-fbba-4ce3-a919-09caec015e29">
-      <file filePath="src\ISynergy.Framework.Core\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.resx" uniqueID="c286b794-abbd-45c0-946e-8941ab072a61" />
-      <file filePath="src\ISynergy.Framework.Core\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.de.resx" uniqueID="e4004782-c1fb-4678-9e15-ebd065703e60" />
-      <file filePath="src\ISynergy.Framework.Core\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.fr.resx" uniqueID="b3c3d97c-158b-4d70-93d3-f1ae9eb6b052" />
-      <file filePath="src\ISynergy.Framework.Core\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.nl.resx" uniqueID="fa686fa2-f06c-492e-825b-a41b35ec17f0" />
+      <file filePath="src\ISynergy.Framework.Core\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.resx" uniqueID="c286b794-abbd-45c0-946e-8941ab072a61" />
+      <file filePath="src\ISynergy.Framework.Core\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.de.resx" uniqueID="e4004782-c1fb-4678-9e15-ebd065703e60" />
+      <file filePath="src\ISynergy.Framework.Core\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.fr.resx" uniqueID="b3c3d97c-158b-4d70-93d3-f1ae9eb6b052" />
+      <file filePath="src\ISynergy.Framework.Core\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.nl.resx" uniqueID="fa686fa2-f06c-492e-825b-a41b35ec17f0" />
       <remarks>
       </remarks>
     </fileGroup>
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="fb79e552-c09b-4dcd-aef7-85085695f220">
-      <file filePath="src\ISynergy.Framework.Mvvm\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.resx" uniqueID="8421a27d-960a-45dc-a751-2ebea8b8bcb7" />
-      <file filePath="src\ISynergy.Framework.Mvvm\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.de.resx" uniqueID="56ebe1e4-37ef-4d54-835b-870966703f16" />
-      <file filePath="src\ISynergy.Framework.Mvvm\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.fr.resx" uniqueID="01ec4ab2-0df4-41d5-8648-0ca4ec03a2ee" />
-      <file filePath="src\ISynergy.Framework.Mvvm\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.nl.resx" uniqueID="566960c2-f5de-4c1c-bfb0-a753d380288d" />
+      <file filePath="src\ISynergy.Framework.Mvvm\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.resx" uniqueID="8421a27d-960a-45dc-a751-2ebea8b8bcb7" />
+      <file filePath="src\ISynergy.Framework.Mvvm\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.de.resx" uniqueID="56ebe1e4-37ef-4d54-835b-870966703f16" />
+      <file filePath="src\ISynergy.Framework.Mvvm\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.fr.resx" uniqueID="01ec4ab2-0df4-41d5-8648-0ca4ec03a2ee" />
+      <file filePath="src\ISynergy.Framework.Mvvm\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.nl.resx" uniqueID="566960c2-f5de-4c1c-bfb0-a753d380288d" />
       <remarks>
       </remarks>
     </fileGroup>
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="0ed20932-5dec-41ae-9385-d51099745c7f">
-      <file filePath="src\ISynergy.Framework.UI\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.resx" uniqueID="7488105b-1ff4-4dff-8560-e8b6e44f58d4" />
-      <file filePath="src\ISynergy.Framework.UI\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.de.resx" uniqueID="d2c5094a-1f99-482e-b41e-2d5f2909ebac" />
-      <file filePath="src\ISynergy.Framework.UI\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.fr.resx" uniqueID="bf7aea7b-0409-4660-ae5b-20f0f98a70f2" />
-      <file filePath="src\ISynergy.Framework.UI\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.nl.resx" uniqueID="aaa84944-c440-4461-8f13-d4cef976c1fd" />
+      <file filePath="src\ISynergy.Framework.UI\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.resx" uniqueID="7488105b-1ff4-4dff-8560-e8b6e44f58d4" />
+      <file filePath="src\ISynergy.Framework.UI\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.de.resx" uniqueID="d2c5094a-1f99-482e-b41e-2d5f2909ebac" />
+      <file filePath="src\ISynergy.Framework.UI\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.fr.resx" uniqueID="bf7aea7b-0409-4660-ae5b-20f0f98a70f2" />
+      <file filePath="src\ISynergy.Framework.UI\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.nl.resx" uniqueID="aaa84944-c440-4461-8f13-d4cef976c1fd" />
       <remarks>
       </remarks>
     </fileGroup>

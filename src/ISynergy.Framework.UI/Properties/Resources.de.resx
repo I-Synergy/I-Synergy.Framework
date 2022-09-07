@@ -260,4 +260,26 @@ Speichern Sie Ihre Arbeit, und starten Sie die Anwendung neu.</value>
 	<data name="Select" xml:space="preserve">
 		<value>Auswählen</value>
 	</data>
+	<data name="ExceptionInternetConnection" xml:space="preserve">
+		<value>Wir sehen, dass es etwas falsch mit Ihrer Internet-Verbindung. 
+Überprüfen Sie Ihre Internetverbindung. Ist alles in Ordnung? 
+Bitte kontaktieren Sie-Synergie-Service und Support.</value>
+	</data>
+	<data name="ExceptionFileInUse" xml:space="preserve">
+		<value>Etwas ist schief gelaufen.
+Sie versuchen, eine Datei zu öffnen, die bereits geöffnet ist.
+Überprüfen Sie, ob diese Datei in Microsoft Word oder Excel bereits geöffnet ist.</value>
+	</data>
+	<data name="ExceptionFutureModule" xml:space="preserve">
+		<value>Diese Funktion werd bald zur Verfügung gestellt.
+Weitere Informationen finden Sie auf http//www.i-synergy.net</value>
+	</data>
+	<data name="ExceptionDefault" xml:space="preserve">
+		<value>Etwas schief gelaufen! 
+Synergie-Team informiert worden und wir werden den Fehler so schnell wie möglich korrigieren. 
+Dies häufig der Fall, bitte kontaktieren Sie-Synergie-Service und Support.</value>
+	</data>
+	<data name="ExceptionArgumentIsNull" xml:space="preserve">
+		<value>{0} kann nicht leer oder null sein.</value>
+	</data>
 </root>

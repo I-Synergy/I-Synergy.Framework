@@ -67,15 +67,17 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// Browses the file asynchronous.
         /// </summary>
         /// <param name="filefilter">The filefilter.</param>
+        /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
         /// <returns>Task&lt;FileResult&gt;.</returns>
-        Task<FileResult> BrowseFileAsync(string filefilter);
+        Task<FileResult> BrowseFileAsync(string filefilter, long maxFileSize = 1 * 1024 * 1024);
 
         /// <summary>
         /// Browses the image asynchronous.
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
         /// <returns>Task&lt;System.Byte[]&gt;.</returns>
-        Task<byte[]> BrowseImageAsync(string[] filter);
+        Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024);
 
         /// <summary>
         /// UWP implementation of OpenFile(), opening a file already stored in the app's local
