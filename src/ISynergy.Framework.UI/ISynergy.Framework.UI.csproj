@@ -24,7 +24,7 @@
 	<ItemGroup>
 		<PackageReference Include="Flurl.Http" Version="3.2.4" />
 		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.3.0" />
-		<PackageReference Include="Uno.WinUI" Version="4.4.20" />
+		<PackageReference Include="Uno.WinUI" Version="4.5.9" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
 	</ItemGroup>
