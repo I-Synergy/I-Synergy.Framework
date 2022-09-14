@@ -25,6 +25,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Android\Resources\drawable\splash.xml" />
+	  <None Remove="Android\Resources\drawable\splashscreen.png" />
 	  <None Remove="App.xaml" />
 	</ItemGroup>
 	<ItemGroup>
@@ -34,9 +35,9 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.CommunityToolkit.WinUI.UI.Controls" Version="7.1.100-dev.15.g12261e2626" />
-		<PackageReference Include="Uno.WinUI" Version="4.4.20" />
-		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.4.20" Condition="'$(Configuration)'=='Debug'" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.4.20" />
+		<PackageReference Include="Uno.WinUI" Version="4.5.9" />
+		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.5.9" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.5.9" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
@@ -89,5 +90,8 @@
 	<Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
 	<ItemGroup>
 	  <None Remove="Views\ShellView.xaml.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Android\Resources\drawable\splashscreen.png" />
 	</ItemGroup>
 </Project>
