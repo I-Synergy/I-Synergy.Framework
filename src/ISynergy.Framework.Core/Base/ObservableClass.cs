@@ -29,6 +29,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value>The validation trigger.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [Display(AutoGenerateField = false)]
         public bool AutomaticValidationTrigger
         {
             get { return GetValue<bool>(); }
@@ -41,6 +42,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value>The properties.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [Display(AutoGenerateField = false)]
         public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
             = new ObservableConcurrentDictionary<string, IProperty>();
 
@@ -50,6 +52,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value>The errors.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [Display(AutoGenerateField = false)]
         public ObservableCollection<string> Errors { get; }
             = new ObservableCollection<string>();
 
@@ -59,6 +62,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value>The validator.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [Display(AutoGenerateField = false)]
         public Action<IObservableClass> Validator { set; get; }
 
         /// <summary>
@@ -67,6 +71,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [Display(AutoGenerateField = false)]
         public bool IsValid => !Errors.Any();
 
         /// <summary>
@@ -75,6 +80,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [Display(AutoGenerateField = false)]
         public bool IsDirty
         {
             get { return Properties.Any(x => x.Value.IsDirty); }
