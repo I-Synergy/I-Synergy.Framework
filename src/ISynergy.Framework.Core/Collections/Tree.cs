@@ -1,25 +1,28 @@
-﻿using ISynergy.Framework.Core.Abstractions.Collections;
-using System;
+﻿using System;
 
 namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     /// Base class for tree structures.
     /// </summary>
-    [Serializable]
-    public class Tree<T> : TreeNode<T>
-        where T : class
+    /// <typeparam name="TKey">The type of the t identifier.</typeparam>
+    /// <typeparam name="TModel">The type of the t model.</typeparam>
+    public class Tree<TKey, TModel> : TreeNode<TKey, TModel>, IDisposable
+        where TKey : struct
+        where TModel : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Tree{T}"/> class.
+        /// Initializes a new instance of the <see cref="Tree{TKey, TModel}" /> class.
         /// </summary>
-        public Tree() : base() { }
+        public Tree() 
+            : base() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Tree{T}"/> class.
+        /// Initializes a new instance of the <see cref="Tree{TKey, TModel}" /> class.
         /// </summary>
-        /// <param name="rootValue">The root value.</param>
-        public Tree(T rootValue)
-            : base(rootValue) { }
+        /// <param name="key"></param>
+        /// <param name="data">The data.</param>
+        public Tree(TKey key, TModel data)
+            : base(key, data) { }
     }
 }
