@@ -1,84 +1,87 @@
 ﻿using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Core.Collections
 {
-    public class TreeNode<T> : ObservableClass, IDisposable
-        where T : class
+    /// <summary>
+    /// Class TreeNode.
+    /// Implements the <see cref="ObservableClass" />
+    /// Implements the <see cref="IDisposable" />
+    /// </summary>
+    /// <typeparam name="TKey">The type of the t identifier.</typeparam>
+    /// <typeparam name="TModel">The type of the t model.</typeparam>
+    /// <seealso cref="ObservableClass" />
+    /// <seealso cref="IDisposable" />
+    public class TreeNode<TKey, TModel> : ObservableClass, IDisposable
+        where TKey : struct
+        where TModel : class
     {
         /// <summary>
-        /// Occurs when [ancestor changed].
+        /// Gets or sets the IsSelected property value.
         /// </summary>
-        public event Action<NodeChangeTypes, TreeNode<T>> AncestorChanged;
+        /// <value><c>true</c> if this instance is selected; otherwise, <c>false</c>.</value>
+        public bool IsSelected
+        {
+            get => GetValue<bool>();
+            set => SetValue(value);
+        }
+
         /// <summary>
-        /// Occurs when [descendant changed].
+        /// Gets or sets the IsExpanded property value.
         /// </summary>
-        public event Action<NodeChangeTypes, TreeNode<T>> DescendantChanged;
-        
+        /// <value><c>true</c> if this instance is expanded; otherwise, <c>false</c>.</value>
+        public bool IsExpanded
+        {
+            get => GetValue<bool>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the Key property value.
+        /// </summary>
+        public TKey Key
+        {
+            get => GetValue<TKey>();
+            set => SetValue(value);
+        }
+
         /// <summary>
         /// Gets or sets the Data property value.
         /// </summary>
-        public T Data
+        /// <value>The data.</value>
+        public TModel Data
         {
-            get { return GetValue<T>(); }
-            set { SetValue(value); }
+            get => GetValue<TModel>();
+            set => SetValue(value);
         }
 
         /// <summary>
         /// Gets or sets the Parent property value.
         /// </summary>
         /// <value>The parent.</value>
-        public TreeNode<T> Parent
+        public TreeNode<TKey,TModel> Parent
         {
-            get { return GetValue<TreeNode<T>>(); }
-            set { SetParent(value); }
+            get => GetValue<TreeNode<TKey,TModel>>();
+            set
+            {
+                SetValue(value);
+
+                if (value != null)
+                    ParentKey = value.Key;
+                else
+                    ParentKey = default(TKey);
+            }
         }
 
         /// <summary>
-        /// Gets or sets the Children property value.
+        /// Gets or sets the ParentKey property value.
         /// </summary>
-        /// <value>The children.</value>
-        public TreeNodeList<T> Children
+        public TKey ParentKey
         {
-            get { return GetValue<TreeNodeList<T>>(); }
-            set { SetValue(value); }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TreeNode{T}"/> class.
-        /// </summary>
-        public TreeNode()
-        {
-            Parent = null;
-            Children = new TreeNodeList<T>(this);
-            DisposeTraversal = UpDownTraversalTypes.BottomUp;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TreeNode{T}"/> class.
-        /// </summary>
-        /// <param name="data">The value.</param>
-        public TreeNode(T data)
-            : this()
-        {
-            Data = data;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TreeNode{T}"/> class.
-        /// </summary>
-        /// <param name="data">The value.</param>
-        /// <param name="parent">The parent.</param>
-        public TreeNode(T data, TreeNode<T> parent)
-            : this(data)
-        {
-            Parent = parent;
+            get => GetValue<TKey>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -86,226 +89,119 @@ namespace ISynergy.Framework.Core.Collections
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="updateChildNodes">if set to <c>true</c> [update child nodes].</param>
-        public void SetParent(TreeNode<T> node, bool updateChildNodes = true)
+        public void SetParent(TreeNode<TKey, TModel> node, bool updateChildNodes = true)
         {
             if (node == Parent)
                 return;
 
             var oldParent = Parent;
-            var oldParentHeight = Parent != null ? Parent.Height : 0;
-            var oldDepth = Depth;
 
             // if oldParent isn't null
             // remove this node from its newly ex-parent's children
             if (oldParent != null && oldParent.Children.Contains(this))
-                oldParent.Children.Remove(this, updateParent: false);
+                oldParent.RemoveChild(this);
 
             // update the backing field
-            SetValue(node, false, nameof(Parent));
+            Parent = node;
 
             // add this node to its new parent's children
             if (Parent != null && updateChildNodes)
-                Parent.Children.Add(this, updateParent: false);
-
-            // signal the old parent that it has lost this child
-            if (oldParent != null)
-                oldParent.OnDescendantChanged(NodeChangeTypes.NodeRemoved, this);
-
-            if (oldDepth != Depth)
-                OnDepthChanged();
-
-            // if this operation has changed the height of any parent, initiate the bubble-up height changed event
-            if (Parent != null)
-            {
-                var newParentHeight = Parent != null ? Parent.Height : 0;
-                if (newParentHeight != oldParentHeight)
-                    Parent.OnHeightChanged();
-
-                Parent.OnDescendantChanged(NodeChangeTypes.NodeAdded, this);
-            }
-
-            OnParentChanged(oldParent, Parent);
+                Parent.AddChild(this);
         }
 
         /// <summary>
-        /// Called when [parent changed].
+        /// Gets or sets the Children property value.
         /// </summary>
-        /// <param name="oldValue">The old value.</param>
-        /// <param name="newValue">The new value.</param>
-        public virtual void OnParentChanged(TreeNode<T> oldValue, TreeNode<T> newValue)
+        /// <value>The children.</value>
+        public ObservableCollection<TreeNode<TKey,TModel>> Children
         {
-            OnPropertyChanged(nameof(Parent));
+            get => GetValue<ObservableCollection<TreeNode<TKey, TModel>>>();
+            set => SetValue(value);
         }
 
         /// <summary>
-        /// Called when [ancestor changed].
+        /// Initializes a new instance of the <see cref="TreeNode{TKey, TModel}"/> class.
         /// </summary>
-        /// <param name="changeType">Type of the change.</param>
+        public TreeNode()
+        {
+            IsSelected = false;
+            DisposeTraversal = UpDownTraversalTypes.BottomUp;
+            Parent = null;
+            Children = new ObservableCollection<TreeNode<TKey, TModel>>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TreeNode{TKey, TModel}"/> class.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="data">The data.</param>
+        public TreeNode(TKey key, TModel data)
+            : this()
+        {
+            Key = key;
+            Data = data;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TreeNode{TKey, TModel}"/> class.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="data">The data.</param>
+        /// <param name="parent">The parent.</param>
+        public TreeNode(TKey key, TModel data, TreeNode<TKey, TModel> parent)
+            : this(key, data)
+        {
+            Parent = parent;
+        }
+
+        /// <summary>
+        /// Adds the child.
+        /// </summary>
         /// <param name="node">The node.</param>
-        public virtual void OnAncestorChanged(NodeChangeTypes changeType, TreeNode<T> node)
+        public TreeNode<TKey, TModel> AddChild(TreeNode<TKey, TModel> node)
         {
-            if (AncestorChanged != null)
-                AncestorChanged(changeType, node);
-
-            foreach (var child in Children)
-                child.OnAncestorChanged(changeType, node);
+            node.Parent = this;
+            Children.Add(node);
+            return node;
         }
 
         /// <summary>
-        /// Called when [descendant changed].
+        /// Removes the child.
         /// </summary>
-        /// <param name="changeType">Type of the change.</param>
         /// <param name="node">The node.</param>
-        public virtual void OnDescendantChanged(NodeChangeTypes changeType, TreeNode<T> node)
+        public bool RemoveChild(TreeNode<TKey, TModel> node)
         {
-            if (DescendantChanged != null)
-                DescendantChanged(changeType, node);
-
-            if (Parent != null)
-                Parent.OnDescendantChanged(changeType, node);
-        }
-
-        /// <summary>
-        /// Gets the height.
-        /// </summary>
-        /// <value>The height.</value>
-        public int Height
-        {
-            get { return Children.Count == 0 ? 0 : Children.Max(n => n.Height) + 1; }
-        }
-
-        /// <summary>
-        /// Called when [height changed].
-        /// </summary>
-        public virtual void OnHeightChanged()
-        {
-            OnPropertyChanged(nameof(Height));
-
-            foreach (var child in Children)
-                child.OnHeightChanged();
-        }
-
-        /// <summary>
-        /// Gets the depth.
-        /// </summary>
-        /// <value>The depth.</value>
-        public int Depth
-        {
-            get { return (Parent == null ? 0 : Parent.Depth + 1); }
-        }
-
-        /// <summary>
-        /// Called when [depth changed].
-        /// </summary>
-        public virtual void OnDepthChanged()
-        {
-            OnPropertyChanged(nameof(Depth));
-
-            if (Parent != null)
-                Parent.OnDepthChanged();
-        }
-
-        /// <summary>
-        /// Gets the child nodes.
-        /// </summary>
-        /// <value>The child nodes.</value>
-        public List<TreeNode<T>> ChildNodes
-        {
-            get
+            if (Children.Contains(node))
             {
-                var result = new List<TreeNode<T>>();
-
-                foreach (var node in Children)
-                    result.Add(node);
-
-                return result;
+                node.Parent = null;
+                return Children.Remove(node);
             }
-        }
-
-        /// <summary>
-        /// Gets the descendants.
-        /// </summary>
-        /// <value>The descendants.</value>
-        public List<TreeNode<T>> Descendants
-        {
-            get
-            {
-                var result = new List<TreeNode<T>>();
-
-                foreach (var node in ChildNodes)
-                {
-                    result.Add(node);
-
-                    foreach (var descendant in node.Descendants)
-                        result.Add(descendant);
-                }
-
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Gets the subtree.
-        /// </summary>
-        /// <value>The subtree.</value>
-        public List<TreeNode<T>> Subtree
-        {
-            get
-            {
-                var result = new List<TreeNode<T>>();
-                result.Add(this);
-
-                foreach (var node in Descendants)
-                    result.Add(node);
-
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Gets the ancestors.
-        /// </summary>
-        /// <value>The ancestors.</value>
-        public List<TreeNode<T>> Ancestors
-        {
-            get
-            {
-                var result = new List<TreeNode<T>>();
-
-                if (Parent is null)
-                    return result;
-
-                result.Add(Parent);
-
-                foreach (var node in Parent.Ancestors)
-                    result.Add(node);
-
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the DisposeTraversal property value.
-        /// </summary>
-        public UpDownTraversalTypes DisposeTraversal
-        {
-            get { return GetValue<UpDownTraversalTypes>(); }
-            set { SetValue(value); }
+                
+            return false;
         }
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString() =>
-            $"Depth={Depth}, Height={Height}, Children={Children.Count}";
+        public override string ToString() => Data.ToString();
+
+        /// <summary>
+        /// Gets or sets the DisposeTraversal property value.
+        /// </summary>
+        /// <value>The dispose traversal.</value>
+        public UpDownTraversalTypes DisposeTraversal
+        {
+            get { return GetValue<UpDownTraversalTypes>(); }
+            set { SetValue(value); }
+        }
 
         #region IDisposable
-        // The bulk of the clean-up code is implemented in Dispose(bool)
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        /// The bulk of the clean-up code is implemented in Dispose(bool)
         protected override void Dispose(bool disposing)
         {
             if (disposing)
