@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Converters
 {
-    public class IsoDateTimeConverter : JsonConverter<DateTime>
+    public class IsoDateTimeJsonConverter : JsonConverter<DateTime>
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
             DateTime.ParseExact(reader.GetString(), StringFormats.IsoDateTimeFormat, null);

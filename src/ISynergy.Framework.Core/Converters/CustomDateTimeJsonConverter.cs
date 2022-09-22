@@ -4,11 +4,11 @@ using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Converters
 {
-    public class CustomDateTimeConverter : JsonConverter<DateTime>
+    public class CustomDateTimeJsonConverter : JsonConverter<DateTime>
     {
         private readonly string Format;
         
-        public CustomDateTimeConverter(string format)
+        public CustomDateTimeJsonConverter(string format)
         {
             Format = format;
         }

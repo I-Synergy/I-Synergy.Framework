@@ -4,39 +4,25 @@ using System.Collections.Generic;
 namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
-    ///   Tree enumeration method delegate.
+    /// Tree enumeration method delegate.
     /// </summary>
-    /// 
     /// <typeparam name="TNode">The class type for the nodes of the tree.</typeparam>
-    /// 
     /// <param name="tree">The binary tree to be traversed.</param>
-    /// 
     /// <returns>An enumerator traversing the tree.</returns>
-    /// 
     public delegate IEnumerator<TNode> BinaryTraversalMethod<TNode>(BinaryTree<TNode> tree)
         where TNode : BinaryNode<TNode>;
 
     /// <summary>
-    ///   Tree enumeration method delegate.
+    /// Static class with tree traversal methods.
     /// </summary>
-    /// 
-    /// <typeparam name="TNode">The class type for the nodes of the tree.</typeparam>
-    /// 
-    /// <returns>An enumerator traversing the tree.</returns>
-    /// 
-    public delegate IEnumerator<TNode> TraversalMethod<TNode>(Tree<TNode> tree)
-        where TNode : TreeNode<TNode>;
-
-    /// <summary>
-    ///   Static class with tree traversal methods.
-    /// </summary>
-    /// 
     public static class TreeTraversal
     {
         /// <summary>
-        ///   Breadth-first tree traversal method.
+        /// Breadth-first tree traversal method.
         /// </summary>
-        /// 
+        /// <typeparam name="TNode">The type of the t node.</typeparam>
+        /// <param name="tree">The tree.</param>
+        /// <returns>IEnumerator&lt;TNode&gt;.</returns>
         public static IEnumerator<TNode> BreadthFirst<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>, new()
         {
@@ -61,9 +47,11 @@ namespace ISynergy.Framework.Core.Collections
         }
 
         /// <summary>
-        ///   Pre-order tree traversal method.
+        /// Pre-order tree traversal method.
         /// </summary>
-        /// 
+        /// <typeparam name="TNode">The type of the t node.</typeparam>
+        /// <param name="tree">The tree.</param>
+        /// <returns>IEnumerator&lt;TNode&gt;.</returns>
         public static IEnumerator<TNode> PreOrder<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>, new()
         {
@@ -91,9 +79,11 @@ namespace ISynergy.Framework.Core.Collections
         }
 
         /// <summary>
-        ///   In-order tree traversal method.
+        /// In-order tree traversal method.
         /// </summary>
-        /// 
+        /// <typeparam name="TNode">The type of the t node.</typeparam>
+        /// <param name="tree">The tree.</param>
+        /// <returns>IEnumerator&lt;TNode&gt;.</returns>
         public static IEnumerator<TNode> InOrder<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>, new()
         {
@@ -121,9 +111,12 @@ namespace ISynergy.Framework.Core.Collections
         }
 
         /// <summary>
-        ///   Post-order tree traversal method.
+        /// Post-order tree traversal method.
         /// </summary>
-        /// 
+        /// <typeparam name="TNode">The type of the t node.</typeparam>
+        /// <param name="tree">The tree.</param>
+        /// <returns>IEnumerator&lt;TNode&gt;.</returns>
+        /// <exception cref="System.InvalidOperationException"></exception>
         public static IEnumerator<TNode> PostOrder<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>, new()
         {
@@ -172,9 +165,11 @@ namespace ISynergy.Framework.Core.Collections
         }
 
         /// <summary>
-        ///   Depth-first tree traversal method.
+        /// Depth-first tree traversal method.
         /// </summary>
-        /// 
+        /// <typeparam name="TNode">The type of the t node.</typeparam>
+        /// <param name="tree">The tree.</param>
+        /// <returns>IEnumerator&lt;TNode&gt;.</returns>
         public static IEnumerator<TNode> DepthFirst<TNode>(BinaryTree<TNode> tree)
             where TNode : BinaryNode<TNode>
         {
@@ -195,35 +190,6 @@ namespace ISynergy.Framework.Core.Collections
 
                     if (current.Right is TNode rightNode)
                         stack.Push(rightNode);
-                }
-            }
-        }
-
-        /// <summary>
-        ///   Depth-first tree traversal method.
-        /// </summary>
-        /// 
-        public static IEnumerator<TNode> DepthFirst<TNode>(Tree<TNode> tree)
-            where TNode : TreeNode<TNode>
-        {
-            if (tree.Root is null)
-                yield break;
-
-            TNode node = tree.Root;
-
-            while (node is not null)
-            {
-                yield return node;
-
-                if (node.IsLeaf)
-                {
-                    while (node.Next is null && node.Parent is not null)
-                        node = node.Parent;
-                    node = node.Next;
-                }
-                else
-                {
-                    node = node.Children[0];
                 }
             }
         }

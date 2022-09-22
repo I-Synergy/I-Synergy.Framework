@@ -12,8 +12,8 @@ namespace ISynergy.Framework.Core.Abstractions.Collections
     /// <seealso cref="TreeNode{TNode}"/>
     /// <seealso cref="RedBlackTree{T}"/>
     /// 
-    public interface ITreeNode<TNode>
-        where TNode : ITreeNode<TNode>
+    public interface IBinaryTreeNode<TNode>
+        where TNode : IBinaryTreeNode<TNode>
     {
         /// <summary>
         ///   Gets or sets the collection of child nodes
