@@ -24,10 +24,10 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.2.0.49" />
-        <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="20.2.0.49" />
-        <PackageReference Include="Syncfusion.Licensing" Version="20.2.0.49" />
-        <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="20.2.0.49" />
-        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.2.0.49" />
+        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.2.0.50" />
+        <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="20.2.0.50" />
+        <PackageReference Include="Syncfusion.Licensing" Version="20.2.0.50" />
+        <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="20.2.0.50" />
+        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.2.0.50" />
     </ItemGroup>
 </Project>

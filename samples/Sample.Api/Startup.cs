@@ -33,8 +33,8 @@ namespace Sample.Api
                     options.JsonSerializerOptions.ReferenceHandler = null;
 
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    options.JsonSerializerOptions.Converters.Add(new IsoDateTimeConverter());
-                    options.JsonSerializerOptions.Converters.Add(new IsoDateTimeOffsetConverter());
+                    options.JsonSerializerOptions.Converters.Add(new IsoDateTimeJsonConverter());
+                    options.JsonSerializerOptions.Converters.Add(new IsoDateTimeOffsetJsonConverter());
                 });
         }
     }

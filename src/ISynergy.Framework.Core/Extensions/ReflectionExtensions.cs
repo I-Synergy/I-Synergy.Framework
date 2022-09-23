@@ -24,13 +24,9 @@ namespace ISynergy.Framework.Core.Extensions
                     e => e.IsDefined(typeof(IdentityAttribute)));
 
             if (result.Any())
-            {
                 return result.First().Name;
-            }
             else
-            {
                 return null;
-            }
         }
 
         /// <summary>
@@ -46,13 +42,30 @@ namespace ISynergy.Framework.Core.Extensions
                 );
 
             if (result.Any())
-            {
                 return result.First().GetValue(_self);
-            }
             else
-            {
                 return null;
-            }
+        }
+
+        /// <summary>
+        /// Gets the identity value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult">The type of the t result.</typeparam>
+        /// <param name="_self">The self.</param>
+        /// <returns>TResult.</returns>
+        public static TResult GetIdentityValue<T, TResult>(this T _self) 
+            where T : class
+            where TResult : struct
+        {
+            var result = _self.GetType().GetProperties().Where(
+                    e => e.IsDefined(typeof(IdentityAttribute))
+                );
+
+            if (result.Any())
+                return (TResult)result.First().GetValue(_self);
+            else
+                return default(TResult);
         }
 
         /// <summary>
@@ -78,13 +91,9 @@ namespace ISynergy.Framework.Core.Extensions
                 );
 
             if (result.Any())
-            {
                 return result.First();
-            }
             else
-            {
                 return null;
-            }
         }
 
         /// <summary>
@@ -120,13 +129,9 @@ namespace ISynergy.Framework.Core.Extensions
                 );
 
             if (result.Any())
-            {
                 return result.First().Name;
-            }
             else
-            {
                 return null;
-            }
         }
 
         /// <summary>
@@ -141,13 +146,9 @@ namespace ISynergy.Framework.Core.Extensions
                 );
 
             if (result.Any())
-            {
                 return result.First().PropertyType;
-            }
             else
-            {
                 return typeof(object);
-            }
         }
 
         /// <summary>
@@ -167,9 +168,7 @@ namespace ISynergy.Framework.Core.Extensions
             var prop = propInfo.GetValue(_self, null);
 
             if(prop is TResult result)
-            {
                 return result;
-            }
 
             return defaultValue;
         }
@@ -221,6 +220,24 @@ namespace ISynergy.Framework.Core.Extensions
             }
 
             throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// Gets the identity value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="_self">The self.</param>
+        /// <returns>System.Object.</returns>
+        public static string GetTitleValue<T>(this T _self) where T : class
+        {
+            var result = _self.GetType().GetProperties().Where(
+                    e => e.IsDefined(typeof(TitleAttribute))
+                );
+
+            if (result.Any())
+                return result.First().GetValue(_self).ToString();
+            else
+                return string.Empty;
         }
     }
 }

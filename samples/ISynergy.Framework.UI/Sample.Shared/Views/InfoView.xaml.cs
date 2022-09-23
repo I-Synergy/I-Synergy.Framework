@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 
-namespace Sample.Shared.Views
+namespace Sample.Views
 {
     /// <summary>
     /// Class InfoView. This class cannot be inherited.
