@@ -17,11 +17,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ISettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IUpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Context\Context.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ProductionItemTemplateSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumerations\PublicationItemTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumerations\QueryTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ApplicationSetting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Measurement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MediaItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Publication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PublicationItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Options\ConfigurationOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.cs" />
@@ -41,6 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TestItemsListViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TreeNodeViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ValidationViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Controls\BaseList.xaml.cs">
       <DependentUpon>BaseList.xaml</DependentUpon>
@@ -56,6 +61,10 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\SlideShowView.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\TreeNodeView.xaml.cs">
+      <DependentUpon>TreeNodeView.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\ValidationView.xaml.cs">
       <DependentUpon>ValidationView.xaml</DependentUpon>
@@ -88,6 +97,10 @@
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\SlideShowView.xaml">
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Views\TreeNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\ValidationView.xaml">
       <SubType>Designer</SubType>

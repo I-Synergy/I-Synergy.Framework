@@ -1,8 +1,11 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Tests.Data;
 using ISynergy.Framework.Core.Tests.Enumerations;
+using KellermanSoftware.CompareNetObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Collections.Tests
 {
@@ -47,23 +50,27 @@ namespace ISynergy.Framework.Core.Collections.Tests
             //var aa = y.ToTree();
             //var bb = building.Equals(aa);
 
-            //try
-            //{
-            //    var json = JsonSerializer.Serialize(building, new JsonSerializerOptions
-            //    {
-            //        WriteIndented = true,
-            //        PropertyNameCaseInsensitive = true,
-            //        ReferenceHandler = ReferenceHandler.IgnoreCycles
-            //    });
+            try
+            {
+                var json = JsonSerializer.Serialize(building, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNameCaseInsensitive = true,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles
+                });
 
-            //    var test = JsonSerializer.Deserialize<Tree<Guid, Space>>(json);
-            //    var same = test.Equals(building);
+                var test = JsonSerializer.Deserialize<Tree<Guid, Space>>(json);
 
-            //}
-            //catch (System.Exception ex)
-            //{
-            //    throw ex;
-            //}
+                var compare = new CompareLogic();
+                var same = compare.Compare(building, test);
+
+                if (!same.AreEqual)
+                    Console.WriteLine(same.DifferencesString);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
 
             Assert.AreEqual(1, building.Children.Count);
             Assert.IsNull(building.Parent);
