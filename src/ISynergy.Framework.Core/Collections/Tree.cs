@@ -20,9 +20,8 @@ namespace ISynergy.Framework.Core.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="Tree{TKey, TModel}" /> class.
         /// </summary>
-        /// <param name="key"></param>
         /// <param name="data">The data.</param>
-        public Tree(TKey key, TModel data)
-            : base(key, data) { }
+        public Tree(TModel data)
+            : base(data) { }
     }
 }

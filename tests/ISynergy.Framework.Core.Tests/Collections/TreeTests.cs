@@ -1,11 +1,8 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Tests.Data;
 using ISynergy.Framework.Core.Tests.Enumerations;
-using KellermanSoftware.CompareNetObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Collections.Tests
 {
@@ -30,47 +27,54 @@ namespace ISynergy.Framework.Core.Collections.Tests
         [TestMethod]
         public void SingleNode()
         {
-            using var building = new Tree<Guid, Space>(buildingSpace.Id, buildingSpace);
-            //var x = building.Flatten();
+            using var building = new Tree<Guid, Space>(buildingSpace);
 
             Assert.AreEqual(0, building.Children.Count);
-            Assert.IsNull(building.Parent);
+            Assert.AreEqual(building.ParentKey, Guid.Empty);
+        }
+
+        [TestMethod]
+        public void FindNodeTest()
+        {
+            using var building = new Tree<Guid, Space>(buildingSpace);
+            using var storage = building.AddChild(storageSpace);
+            using var bin = storage.AddChild(binSpace);
+
+            var node = bin.FindNode(storage.Key);
+
+            Assert.IsNotNull(node);
+            Assert.AreEqual(storage, node);
+        }
+
+        [TestMethod]
+        public void FindRootNodeTest()
+        {
+            using var building = new Tree<Guid, Space>(buildingSpace);
+            using var storage = building.AddChild(storageSpace);
+            using var bin = storage.AddChild(binSpace);
+
+            var binRoot = bin.GetRootNode();
+
+            Assert.IsNotNull(binRoot);
+            Assert.AreEqual(building, binRoot);
+
+            var storageRoot = bin.GetRootNode();
+
+            Assert.IsNotNull(storageRoot);
+            Assert.AreEqual(building, storageRoot);
+
+            var buildingRoot = bin.GetRootNode();
+
+            Assert.IsNotNull(buildingRoot);
+            Assert.AreEqual(building, buildingRoot);
         }
 
         [TestMethod]
         public void AddChildNodes()
         {
-            using var building = new Tree<Guid, Space>(buildingSpace.Id, buildingSpace);
-            using var storage = building.AddChild(new TreeNode<Guid, Space>(storageSpace.Id, storageSpace));
-            using var bin = storage.AddChild(new TreeNode<Guid, Space>(binSpace.Id, binSpace));
-
-            //var x = building.Flatten();
-            //var y = building.FlattenList();
-            //var z = building.FlattenValuesList();
-            //var aa = y.ToTree();
-            //var bb = building.Equals(aa);
-
-            try
-            {
-                var json = JsonSerializer.Serialize(building, new JsonSerializerOptions
-                {
-                    WriteIndented = true,
-                    PropertyNameCaseInsensitive = true,
-                    ReferenceHandler = ReferenceHandler.IgnoreCycles
-                });
-
-                var test = JsonSerializer.Deserialize<Tree<Guid, Space>>(json);
-
-                var compare = new CompareLogic();
-                var same = compare.Compare(building, test);
-
-                if (!same.AreEqual)
-                    Console.WriteLine(same.DifferencesString);
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            using var building = new Tree<Guid, Space>(buildingSpace);
+            using var storage = building.AddChild(storageSpace);
+            using var bin = storage.AddChild(binSpace);
 
             Assert.AreEqual(1, building.Children.Count);
             Assert.IsNull(building.Parent);
@@ -85,9 +89,9 @@ namespace ISynergy.Framework.Core.Collections.Tests
         [TestMethod]
         public void RemoveNodeBySettingParentToNull()
         {
-            using var building = new Tree<Guid, Space>(buildingSpace.Id, buildingSpace);
-            using var storage = building.AddChild(new TreeNode<Guid, Space>(storageSpace.Id, storageSpace));
-            using var bin = storage.AddChild(new TreeNode<Guid, Space>(binSpace.Id, binSpace));
+            using var building = new Tree<Guid, Space>(buildingSpace);
+            using var storage = building.AddChild(storageSpace);
+            using var bin = storage.AddChild(binSpace);
 
             bin.SetParent(null);
 
@@ -104,10 +108,10 @@ namespace ISynergy.Framework.Core.Collections.Tests
         [TestMethod]
         public void SwapNodeParent()
         {
-            using var building = new Tree<Guid, Space>(buildingSpace.Id, buildingSpace);
-            using var storage = building.AddChild(new TreeNode<Guid, Space>(storageSpace.Id, storageSpace));
-            using var bin = storage.AddChild(new TreeNode<Guid, Space>(binSpace.Id, binSpace));
-            using var kitchen = building.AddChild(new TreeNode<Guid, Space>(kitchenSpace.Id, kitchenSpace));
+            using var building = new Tree<Guid, Space>(buildingSpace);
+            using var storage = building.AddChild(storageSpace);
+            using var bin = storage.AddChild(binSpace);
+            using var kitchen = building.AddChild(kitchenSpace);
 
             bin.SetParent(kitchen);
 
@@ -127,9 +131,9 @@ namespace ISynergy.Framework.Core.Collections.Tests
         [TestMethod]
         public void RemoveNodeByCallingRemove()
         {
-            using var building = new Tree<Guid, Space>(buildingSpace.Id, buildingSpace);
-            using var storage = building.AddChild(new TreeNode<Guid, Space>(storageSpace.Id, storageSpace));
-            using var bin = storage.AddChild(new TreeNode<Guid, Space>(binSpace.Id, binSpace));
+            using var building = new Tree<Guid, Space>(buildingSpace);
+            using var storage = building.AddChild(storageSpace);
+            using var bin = storage.AddChild(binSpace);
             
             storage.RemoveChild(bin);
 
@@ -146,21 +150,17 @@ namespace ISynergy.Framework.Core.Collections.Tests
         [TestMethod]
         public void ComplexInitialState()
         {
-            var property = new Tree<Guid, Space>(propertySpace.Id, propertySpace);
-            var buildingA = property.AddChild(new TreeNode<Guid, Space>(buildingASpace.Id, buildingASpace));
-            var laundryRoom = buildingA.AddChild(new TreeNode<Guid, Space>(laundryRoomSpace.Id, laundryRoomSpace));
-            var bathroomA = buildingA.AddChild(new TreeNode<Guid, Space>(bathroomASpace.Id, bathroomASpace));
-            var storageA = buildingA.AddChild(new TreeNode<Guid, Space>(storageASpace.Id, storageASpace));
-            var buildingB = property.AddChild(new TreeNode<Guid, Space>(buildingBSpace.Id, buildingBSpace));
-            var bathroomB = buildingB.AddChild(new TreeNode<Guid, Space>(bathroomBSpace.Id, bathroomBSpace));
-            var storageB = buildingB.AddChild(new TreeNode<Guid, Space>(storageBSpace.Id, storageBSpace));
-            var meetingRoom = buildingB.AddChild(new TreeNode<Guid, Space>(meetingRoomSpace.Id, meetingRoomSpace));
-            var meetingRoomCloset = meetingRoom.AddChild(new TreeNode<Guid, Space>(meetingRoomClosetSpace.Id, meetingRoomClosetSpace));
+            var property = new Tree<Guid, Space>(propertySpace);
+            var buildingA = property.AddChild(buildingASpace);
+            var laundryRoom = buildingA.AddChild(laundryRoomSpace);
+            var bathroomA = buildingA.AddChild(bathroomASpace);
+            var storageA = buildingA.AddChild(storageASpace);
+            var buildingB = property.AddChild(buildingBSpace);
+            var bathroomB = buildingB.AddChild(bathroomBSpace);
+            var storageB = buildingB.AddChild(storageBSpace);
+            var meetingRoom = buildingB.AddChild(meetingRoomSpace);
+            var meetingRoomCloset = meetingRoom.AddChild(meetingRoomClosetSpace);
             
-            var x = property.Flatten();
-            var y = property.FlattenList();
-            var z = property.FlattenDataList();
-
             Assert.AreEqual(2, property.Children.Count);
             Assert.IsNull(property.Parent);
 
@@ -195,8 +195,8 @@ namespace ISynergy.Framework.Core.Collections.Tests
         [TestMethod]
         public void IncrementalChanges()
         {
-            var property = new Tree<Guid, Space>(propertySpace.Id, propertySpace);
-            var buildingA = property.AddChild(new TreeNode<Guid, Space>(buildingASpace.Id, buildingASpace));
+            var property = new Tree<Guid, Space>(propertySpace);
+            var buildingA = property.AddChild(buildingASpace);
 
             Assert.AreEqual(1, property.Children.Count);
             Assert.AreEqual(0, buildingA.Children.Count);

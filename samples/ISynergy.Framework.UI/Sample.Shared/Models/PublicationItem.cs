@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Base;
 using Sample.Enumerations;
 using System;
 
@@ -13,6 +14,7 @@ namespace Sample.Models
         /// Gets or sets the ItemId property value.
         /// </summary>
         /// <value>The item identifier.</value>
+        [Identity]
         public Guid ItemId
         {
             get => GetValue<Guid>();
@@ -53,6 +55,7 @@ namespace Sample.Models
         /// Gets or sets the Title property value.
         /// </summary>
         /// <value>The title.</value>
+        [Title]
         public string Title
         {
             get => GetValue<string>();
