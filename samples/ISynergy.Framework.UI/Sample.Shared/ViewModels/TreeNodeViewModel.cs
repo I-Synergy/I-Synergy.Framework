@@ -1,14 +1,11 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Collections;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels
@@ -64,26 +61,26 @@ namespace Sample.ViewModels
             var documentC4Model = new PublicationItem(publication.PublicationId, "Document C4", PublicationItemTypes.Document);
             var documentC5Model = new PublicationItem(publication.PublicationId, "Document C5", PublicationItemTypes.Document);
 
-            var chapter1 = publication.AddChild(new TreeNode<Guid, PublicationItem>(chapter1Model.ItemId, chapter1Model));
-            var topicA = chapter1.AddChild(new TreeNode<Guid, PublicationItem>(topicAModel.ItemId, topicAModel));
-            topicA.AddChild(new TreeNode<Guid, PublicationItem>(documentA1Model.ItemId, documentA1Model));
-            topicA.AddChild(new TreeNode<Guid, PublicationItem>(documentA2Model.ItemId, documentA2Model));
-            topicA.AddChild(new TreeNode<Guid, PublicationItem>(documentA3Model.ItemId, documentA3Model));
+            var chapter1 = publication.AddChild(chapter1Model);
+            var topicA = chapter1.AddChild(topicAModel);
+            topicA.AddChild(documentA1Model);
+            topicA.AddChild(documentA2Model);
+            topicA.AddChild(documentA3Model);
 
-            var topicB = chapter1.AddChild(new TreeNode<Guid, PublicationItem>(topicBModel.ItemId, topicBModel));
-            topicB.AddChild(new TreeNode<Guid, PublicationItem>(documentB1Model.ItemId, documentB1Model));
-            topicB.AddChild(new TreeNode<Guid, PublicationItem>(documentB2Model.ItemId, documentB2Model));
-            topicB.AddChild(new TreeNode<Guid, PublicationItem>(documentB3Model.ItemId, documentB3Model));
-            topicB.AddChild(new TreeNode<Guid, PublicationItem>(documentB4Model.ItemId, documentB4Model));
+            var topicB = chapter1.AddChild(topicBModel);
+            topicB.AddChild(documentB1Model);
+            topicB.AddChild(documentB2Model);
+            topicB.AddChild(documentB3Model);
+            topicB.AddChild(documentB4Model);
 
-            var chapter2 = publication.AddChild(new TreeNode<Guid, PublicationItem>(chapter2Model.ItemId, chapter2Model));
+            var chapter2 = publication.AddChild(chapter2Model);
 
-            var topicC = chapter2.AddChild(new TreeNode<Guid, PublicationItem>(topicCModel.ItemId, topicCModel));
-            topicC.AddChild(new TreeNode<Guid, PublicationItem>(documentC1Model.ItemId, documentC1Model));
-            topicC.AddChild(new TreeNode<Guid, PublicationItem>(documentC2Model.ItemId, documentC2Model));
-            topicC.AddChild(new TreeNode<Guid, PublicationItem>(documentC3Model.ItemId, documentC3Model));
-            topicC.AddChild(new TreeNode<Guid, PublicationItem>(documentC4Model.ItemId, documentC4Model));
-            topicC.AddChild(new TreeNode<Guid, PublicationItem>(documentC5Model.ItemId, documentC5Model));
+            var topicC = chapter2.AddChild(topicCModel);
+            topicC.AddChild(documentC1Model);
+            topicC.AddChild(documentC2Model);
+            topicC.AddChild(documentC3Model);
+            topicC.AddChild(documentC4Model);
+            topicC.AddChild(documentC5Model);
 
             Publication.Add(publication);
         }

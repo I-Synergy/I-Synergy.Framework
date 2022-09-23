@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Validation;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,19 +11,72 @@ namespace ISynergy.Framework.Core.Extensions
     public static class TreeExtensions
     {
         /// <summary>
+        /// Gets the root node.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the t key.</typeparam>
+        /// <typeparam name="TModel">The type of the t model.</typeparam>
+        /// <param name="node">The node.</param>
+        /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
+        public static TreeNode<TKey, TModel> GetRootNode<TKey, TModel>(this TreeNode<TKey, TModel> node)
+            where TKey : struct
+            where TModel : class
+        {
+            Argument.IsNotNull(node);
+
+            if (node.Parent is null)
+                return node;
+
+            return node.Parent.GetRootNode();
+        }
+
+        /// <summary>
+        /// Finds the node.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the t key.</typeparam>
+        /// <typeparam name="TModel">The type of the t model.</typeparam>
+        /// <param name="node">The node.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>TreeNode&lt;TKey, TModel&gt;.</returns>
+        public static TreeNode<TKey, TModel> FindNode<TKey, TModel>(this TreeNode<TKey, TModel> node, TKey key)
+            where TKey : struct
+            where TModel : class
+        {
+            Argument.IsNotNull(node);
+
+            return node.FlattenAll().Where(q => q.Key.Equals(key)).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Flattens all.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the t key.</typeparam>
+        /// <typeparam name="TModel">The type of the t model.</typeparam>
+        /// <param name="node">The node.</param>
+        /// <returns>IEnumerable&lt;TreeNode&lt;TKey, TModel&gt;&gt;.</returns>
+        public static IEnumerable<TreeNode<TKey, TModel>> FlattenAll<TKey, TModel>(this TreeNode<TKey, TModel> node)
+            where TKey : struct
+            where TModel : class
+        {
+            Argument.IsNotNull(node);
+
+            var parent = node.GetRootNode();
+            return parent.Flatten();
+        }
+
+        /// <summary>
         /// Flattens the specified node.
         /// </summary>
         /// <typeparam name="TKey">The type of the t identifier.</typeparam>
         /// <typeparam name="TModel">The type of the t model.</typeparam>
-        /// <param name="tree">The node.</param>
+        /// <param name="node">The node.</param>
         /// <returns>IEnumerable&lt;ITreeNode&gt;.</returns>
-        public static IEnumerable<TreeNode<TKey, TModel>> Flatten<TKey, TModel>(this TreeNode<TKey, TModel> tree)
+        public static IEnumerable<TreeNode<TKey, TModel>> Flatten<TKey, TModel>(this TreeNode<TKey, TModel> node)
             where TKey : struct
             where TModel : class
         {
-            yield return tree;
+            yield return node;
 
-            var flattened = tree.Children
+            var flattened = node.Children
                                 .SelectMany(child => Flatten(child));
 
             foreach (var flattenedNode in flattened)
@@ -36,24 +90,24 @@ namespace ISynergy.Framework.Core.Extensions
         /// </summary>
         /// <typeparam name="TKey">The type of the t identifier.</typeparam>
         /// <typeparam name="TModel">The type of the t model.</typeparam>
-        /// <param name="tree">The tree.</param>
+        /// <param name="node">The tree.</param>
         /// <returns>IEnumerable&lt;ITreeNode&gt;.</returns>
-        public static IEnumerable<TreeNode<TKey, TModel>> FlattenList<TKey, TModel>(this TreeNode<TKey, TModel> tree)
+        public static IEnumerable<TreeNode<TKey, TModel>> FlattenList<TKey, TModel>(this TreeNode<TKey, TModel> node)
             where TKey : struct
             where TModel : class =>
-            tree.Flatten().ToList();
+            node.Flatten().ToList();
 
         /// <summary>
         /// Flattens the values to list.
         /// </summary>
         /// <typeparam name="TKey">The type of the t identifier.</typeparam>
         /// <typeparam name="TModel">The type of the t model.</typeparam>
-        /// <param name="tree">The tree.</param>
+        /// <param name="node">The tree.</param>
         /// <returns>IEnumerable&lt;System.Object&gt;.</returns>
-        public static IEnumerable<TModel> FlattenDataList<TKey, TModel>(this TreeNode<TKey, TModel> tree)
+        public static IEnumerable<TModel> FlattenDataList<TKey, TModel>(this TreeNode<TKey, TModel> node)
             where TKey : struct
             where TModel : class =>
-            tree.Flatten().Select(s => s.Data).ToList();
+            node.Flatten().Select(s => s.Data).ToList();
 
 
         /// <summary>
@@ -61,13 +115,13 @@ namespace ISynergy.Framework.Core.Extensions
         /// </summary>
         /// <typeparam name="TKey">The type of the t identifier.</typeparam>
         /// <typeparam name="TModel">The type of the t model.</typeparam>
-        /// <param name="data">The data.</param>
+        /// <param name="nodes">The data.</param>
         /// <returns>TreeNode&lt;T&gt;.</returns>
-        public static TreeNode<TKey, TModel> ToTree<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> data)
+        public static TreeNode<TKey, TModel> ToTree<TKey, TModel>(this IEnumerable<TreeNode<TKey, TModel>> nodes)
             where TKey : struct
             where TModel : class
         {
-            var array = data.ToArray();
+            var array = nodes.ToArray();
 
             if(array.Length > 0)
             {
@@ -75,9 +129,9 @@ namespace ISynergy.Framework.Core.Extensions
                 var parents = new Stack<TreeNode<TKey, TModel>>();
                 parents.Push(tree);
 
-                for (int i = 1; i < data.Count() - 1; i++)
+                for (int i = 1; i < nodes.Count() - 1; i++)
                 {
-                    while (array[i].Parent != parents.Peek())
+                    while (array[i].FindNode(array[i].ParentKey) != parents.Peek())
                     {
                         parents.Pop();
                     }
@@ -139,41 +193,6 @@ namespace ISynergy.Framework.Core.Extensions
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Expands the parent nodes.
-        /// </summary>
-        /// <typeparam name="TKey">The type of the t identifier.</typeparam>
-        /// <typeparam name="TModel">The type of the t model.</typeparam>
-        /// <param name="node">The node.</param>
-        public static void ExpandParentNodes<TKey, TModel>(this TreeNode<TKey, TModel> node)
-            where TKey : struct
-            where TModel : class
-        {
-            if (node.Parent != null)
-            {
-                node.Parent.IsExpanded = true;
-                ExpandParentNodes(node.Parent);
-            }
-        }
-
-        /// <summary>
-        /// Toggles the expanded.
-        /// </summary>
-        /// <typeparam name="TKey">The type of the t identifier.</typeparam>
-        /// <typeparam name="TModel">The type of the t model.</typeparam>
-        /// <param name="nodes">The nodes.</param>
-        /// <param name="isExpanded">if set to <c>true</c> [is expanded].</param>
-        public static void ToggleExpanded<TKey, TModel>(IEnumerable<TreeNode<TKey, TModel>> nodes, bool isExpanded)
-            where TKey : struct
-            where TModel : class
-        {
-            foreach (var node in nodes)
-            {
-                node.IsExpanded = isExpanded;
-                ToggleExpanded(node.Children, isExpanded);
-            }
         }
     }
 }

@@ -1,5 +1,6 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using System;
 using System.Collections.ObjectModel;
 
@@ -104,6 +105,11 @@ namespace ISynergy.Framework.Core.Collections
             // update the backing field
             Parent = node;
 
+            if(Parent is null)
+                ParentKey = default;
+            else
+                ParentKey = node.Key;
+
             // add this node to its new parent's children
             if (Parent != null && updateChildNodes)
                 Parent.AddChild(this);
@@ -133,34 +139,46 @@ namespace ISynergy.Framework.Core.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode{TKey, TModel}"/> class.
         /// </summary>
-        /// <param name="key"></param>
         /// <param name="data">The data.</param>
-        public TreeNode(TKey key, TModel data)
+        public TreeNode(TModel data)
             : this()
         {
-            Key = key;
             Data = data;
+
+            if (Data.HasIdentityProperty())
+                Key = Data.GetIdentityValue<TModel, TKey>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode{TKey, TModel}"/> class.
         /// </summary>
-        /// <param name="key"></param>
         /// <param name="data">The data.</param>
         /// <param name="parent">The parent.</param>
-        public TreeNode(TKey key, TModel data, TreeNode<TKey, TModel> parent)
-            : this(key, data)
+        public TreeNode(TModel data, TreeNode<TKey, TModel> parent)
+            : this(data)
         {
             Parent = parent;
+            ParentKey = parent.Key; 
         }
 
         /// <summary>
         /// Adds the child.
         /// </summary>
         /// <param name="node">The node.</param>
-        public TreeNode<TKey, TModel> AddChild(TreeNode<TKey, TModel> node)
+        private TreeNode<TKey, TModel> AddChild(TreeNode<TKey, TModel> node)
         {
             node.Parent = this;
+            Children.Add(node);
+            return node;
+        }
+
+        /// <summary>
+        /// Adds the child.
+        /// </summary>
+        /// <param name="model">The node.</param>
+        public TreeNode<TKey, TModel> AddChild(TModel model)
+        {
+            var node = new TreeNode<TKey, TModel>(model, this);
             Children.Add(node);
             return node;
         }
