@@ -1446,9 +1446,9 @@
 
             char[] sep = new char[] { ',' };
             string[] parts = str[0].Split(sep, StringSplitOptions.RemoveEmptyEntries);
-            double[,] v = new double[str.Count(), parts.Length];
+            double[,] v = new double[str.Length, parts.Length];
             
-            for (int i = 0; i < str.Count(); i++)
+            for (int i = 0; i < str.Length; i++)
             {
                 parts = str[i].Split(sep, StringSplitOptions.RemoveEmptyEntries);
                 
@@ -1467,9 +1467,9 @@
         {
             var str = File.ReadAllLines(path);
             char[] sep = new char[] { ',' };
-            double[] v = new double[str.Count()];
+            double[] v = new double[str.Length];
             string[] parts = str[0].Split(sep);
-            for (int i = 0; i < str.Count(); i++)
+            for (int i = 0; i < str.Length; i++)
             {
                 parts = str[i].Split(sep);
                 double prtdbl = double.Parse(parts[0], CultureInfo.GetCultureInfo("en-US"));

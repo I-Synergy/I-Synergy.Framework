@@ -7,10 +7,10 @@ namespace ISynergy.Framework.Core.Converters
 {
     /// <summary>
     /// Class IsoDateTimeOffsetConverter.
-    /// Implements the <see cref="IsoDateTimeConverter" />
+    /// Implements the <see cref="IsoDateTimeJsonConverter" />
     /// </summary>
-    /// <seealso cref="IsoDateTimeConverter" />
-    public class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
+    /// <seealso cref="IsoDateTimeJsonConverter" />
+    public class IsoDateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
     {
         public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
             DateTimeOffset.ParseExact(reader.GetString(), StringFormats.IsoDateTimeFormat, null);

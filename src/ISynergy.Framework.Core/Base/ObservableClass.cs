@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using System.Xml.Serialization;
 
 namespace ISynergy.Framework.Core.Base
 {
@@ -29,6 +30,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value>The validation trigger.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [XmlIgnore]
         [Display(AutoGenerateField = false)]
         public bool AutomaticValidationTrigger
         {
@@ -42,6 +44,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value>The properties.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [XmlIgnore]
         [Display(AutoGenerateField = false)]
         public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
             = new ObservableConcurrentDictionary<string, IProperty>();
@@ -52,6 +55,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value>The errors.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [XmlIgnore]
         [Display(AutoGenerateField = false)]
         public ObservableCollection<string> Errors { get; }
             = new ObservableCollection<string>();
@@ -62,6 +66,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value>The validator.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [XmlIgnore]
         [Display(AutoGenerateField = false)]
         public Action<IObservableClass> Validator { set; get; }
 
@@ -71,6 +76,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [XmlIgnore]
         [Display(AutoGenerateField = false)]
         public bool IsValid => !Errors.Any();
 
@@ -80,6 +86,7 @@ namespace ISynergy.Framework.Core.Base
         /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
         [JsonIgnore]
         [DataTableIgnore]
+        [XmlIgnore]
         [Display(AutoGenerateField = false)]
         public bool IsDirty
         {
@@ -96,7 +103,7 @@ namespace ISynergy.Framework.Core.Base
             if (obj is IObservableClass observable && observable.HasIdentityProperty())
                 return observable.GetIdentityValue().Equals(this.GetIdentityValue());
 
-            return false;
+            return base.Equals(obj);
         }
 
 
@@ -142,6 +149,10 @@ namespace ISynergy.Framework.Core.Base
         /// broadcast messages to other objects. If null, this class will
         /// attempt to broadcast using the Messenger's default instance.
         /// </summary>
+        [JsonIgnore]
+        [DataTableIgnore]
+        [XmlIgnore]
+        [Display(AutoGenerateField = false)]
         protected IMessageService MessengerInstance
         {
             get
@@ -347,7 +358,7 @@ namespace ISynergy.Framework.Core.Base
         /// Called when [property changed].
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

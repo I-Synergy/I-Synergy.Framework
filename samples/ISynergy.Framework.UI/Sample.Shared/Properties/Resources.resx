@@ -199,4 +199,7 @@ Check the viewmodel to see how the validation is set.
 
 Also the TextBox has an additional behavior attached which changes the border to red if validation on property "Test" has failed.</value>
   </data>
+  <data name="TreeNode" xml:space="preserve">
+    <value>TreeView with TreeNode </value>
+  </data>
 </root>
