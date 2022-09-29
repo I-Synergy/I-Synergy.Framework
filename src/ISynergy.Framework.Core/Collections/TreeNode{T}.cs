@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Core.Collections
     /// <typeparam name="TModel">The type of the t model.</typeparam>
     /// <seealso cref="ObservableClass" />
     /// <seealso cref="IDisposable" />
-    public class TreeNode<TKey, TModel> : ObservableClass, IDisposable
+    public class TreeNode<TKey, TModel> : ObservableClass
         where TKey : struct
         where TModel : class
     {
@@ -222,20 +222,17 @@ namespace ISynergy.Framework.Core.Collections
         /// The bulk of the clean-up code is implemented in Dispose(bool)
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && Data is IDisposable)
             {
-                if (Data is IDisposable)
-                {
-                    if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
-                        foreach (var node in Children)
-                            node.Dispose();
+                if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
+                    foreach (var node in Children)
+                        node.Dispose();
 
-                    (Data as IDisposable).Dispose();
+                (Data as IDisposable).Dispose();
 
-                    if (DisposeTraversal == UpDownTraversalTypes.TopDown)
-                        foreach (var node in Children)
-                            node.Dispose();
-                }
+                if (DisposeTraversal == UpDownTraversalTypes.TopDown)
+                    foreach (var node in Children)
+                        node.Dispose();
             }
 
             // free native resources if there are any.
