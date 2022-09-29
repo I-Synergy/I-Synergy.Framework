@@ -43,7 +43,7 @@ namespace ISynergy.Framework.Core.Extensions
         {
             Argument.IsNotNull(node);
 
-            return node.FlattenAll().Where(q => q.Key.Equals(key)).SingleOrDefault();
+            return node.FlattenAll().SingleOrDefault(q => q.Key.Equals(key));
         }
 
         /// <summary>
