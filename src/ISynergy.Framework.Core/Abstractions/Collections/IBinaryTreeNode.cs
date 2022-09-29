@@ -3,13 +3,12 @@
 namespace ISynergy.Framework.Core.Abstractions.Collections
 {
     /// <summary>
-    ///   Common interface for tree nodes, such as <see cref="BinaryTree{TNode}"/> and <see cref="TreeNode{TNode}"/>.
+    ///   Common interface for tree nodes, such as <see cref="BinaryTree{TNode}"/> and <see cref="RedBlackTree{T}"/>.
     /// </summary>
     /// 
     /// <typeparam name="TNode">The type of the tree node.</typeparam>
     /// 
     /// <seealso cref="BinaryTree{TNode}"/>
-    /// <seealso cref="TreeNode{TNode}"/>
     /// <seealso cref="RedBlackTree{T}"/>
     /// 
     public interface IBinaryTreeNode<TNode>
