@@ -103,7 +103,10 @@ namespace ISynergy.Framework.Core.Base
             if (obj is IObservableClass observable && observable.HasIdentityProperty())
                 return observable.GetIdentityValue().Equals(this.GetIdentityValue());
 
-            return base.Equals(obj);
+            if (base.Equals(obj))
+                return true;
+
+            return false;
         }
 
 
@@ -115,6 +118,7 @@ namespace ISynergy.Framework.Core.Base
         {
             if (this.GetIdentityValue() is not null)
                 return this.GetIdentityValue().GetHashCode();
+
             return new HashCode().ToHashCode();
         }
 
