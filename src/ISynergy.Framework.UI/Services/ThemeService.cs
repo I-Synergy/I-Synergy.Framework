@@ -89,7 +89,7 @@ namespace ISynergy.Framework.UI.Services
 
             _style = style;
 
-            if (_window.Content is FrameworkElement frameworkElement && !new AccessibilitySettings().HighContrast)
+            if (_window.Content is FrameworkElement frameworkElement)
             {
                 var palette = FindColorPaletteResourcesForTheme(_style.Theme.ToString());
 
