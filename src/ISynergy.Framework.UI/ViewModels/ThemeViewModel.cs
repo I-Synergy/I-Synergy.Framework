@@ -1,13 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
@@ -21,12 +18,6 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <value>The title.</value>
         public override string Title => BaseCommonServices.LanguageService.GetString("Colors");
-
-        /// <summary>
-        /// The settings service.
-        /// </summary>
-        private readonly IThemeService _themeService;
-        private readonly IBaseApplicationSettingsService _applicationSettingsService;
 
         /// <summary>
         /// Gets or sets the Items property value.
@@ -51,39 +42,17 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="applicationSettingsService"></param>
-        /// <param name="themeService">The settings services.</param>
+        /// <param name="style">The style settings.</param>
         /// <param name="logger">The logger factory.</param>
         public ThemeViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            IBaseApplicationSettingsService applicationSettingsService,
-            IThemeService themeService,
-            ILogger logger)
+            ILogger logger,
+            Style style)
             : base(context, commonServices, logger)
         {
-            _applicationSettingsService = applicationSettingsService;
-            _themeService = themeService;
-
             ThemeColors = new ThemeColors();
-
-            SelectedItem.Color = _themeService.Style.Color;
-            SelectedItem.Theme = _themeService.Style.Theme;
-        }
-
-        /// <summary>
-        /// Submits the asynchronous.
-        /// </summary>
-        /// <param name="e">if set to <c>true</c> [e].</param>
-        /// <returns>Task.</returns>
-        public override async Task SubmitAsync(Style e)
-        {
-            _applicationSettingsService.Settings.Theme = e.Theme;
-            _applicationSettingsService.Settings.Color = e.Color;
-            await _applicationSettingsService.SaveSettingsAsync();
-
-            _themeService.SetStyle(e);
-            await base.SubmitAsync(e);
+            SelectedItem = style;
         }
     }
 }

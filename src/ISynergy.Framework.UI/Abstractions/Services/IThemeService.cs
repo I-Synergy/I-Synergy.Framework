@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Models;
-using System;
-using System.Threading.Tasks;
+﻿using ISynergy.Framework.Core.Enumerations;
+using Microsoft.UI.Xaml;
+using Style = ISynergy.Framework.Core.Models.Style;
 
 namespace ISynergy.Framework.UI.Abstractions.Services
 {
@@ -28,9 +28,21 @@ namespace ISynergy.Framework.UI.Abstractions.Services
         void SetStyle(Style style);
 
         /// <summary>
+        /// Sets the style.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="theme">The theme.</param>
+        void SetStyle(string color, Themes theme);
+
+        /// <summary>
         /// Ininitialize main window for service.
         /// </summary>
-        /// <param name="mainWindow"></param>
+        /// <param name="mainWindow">The main window.</param>
         void InitializeMainWindow(object mainWindow);
+
+        /// <summary>
+        /// Setups the titlebar.
+        /// </summary>
+        void SetTitlebar(Window window);
     }
 }
