@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -9,7 +10,6 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Windows;
-using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Navigation;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
@@ -129,7 +129,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <summary>
         /// The settings service.
         /// </summary>
-        private readonly IBaseApplicationSettingsService _appSettingsService;
+        private readonly IBaseApplicationSettingsService _settingsService;
 
         /// <summary>
         /// The theme selector
@@ -139,7 +139,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <summary>
         /// The localization functions
         /// </summary>
-        private readonly LocalizationFunctions _localizationFunctions;
+        private readonly ILocalizationService _localizationFunctions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModelBase"/> class.
@@ -156,10 +156,10 @@ namespace ISynergy.Framework.UI.ViewModels
             IBaseApplicationSettingsService appSettingsService,
             ILogger logger,
             IThemeService themeService,
-            LocalizationFunctions localizationFunctions)
+            ILocalizationService localizationFunctions)
             : base(context, commonServices, logger)
         {
-            _appSettingsService = appSettingsService;
+            _settingsService = appSettingsService;
             _themeService = themeService;
             _localizationFunctions = localizationFunctions;
 
@@ -410,7 +410,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (sender is not null && sender is byte[])
             {
-                _appSettingsService.Settings.Wallpaper = sender as byte[];
+                _settingsService.Settings.Wallpaper = sender as byte[];
             }
         }
 
@@ -420,7 +420,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenLanguageAsync()
         {
-            var languageVM = new LanguageViewModel(Context, BaseCommonServices, _appSettingsService, _localizationFunctions, Logger);
+            var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _settingsService.Settings.Culture);
             languageVM.Submitted += LanguageVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, string>(languageVM);
         }
@@ -434,6 +434,13 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (sender is LanguageViewModel vm)
                 vm.Submitted -= LanguageVM_Submitted;
+
+            if (!string.IsNullOrEmpty(e.Result))
+            {
+                _settingsService.Settings.Culture = e.Result;
+                _settingsService.SaveSettings();
+                _localizationFunctions.SetLocalizationLanguage(e.Result);
+            }
 
             if (await BaseCommonServices.DialogService.ShowMessageAsync(
                         BaseCommonServices.LanguageService.GetString("WarningLanguageChange") +
@@ -452,7 +459,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenColorsAsync()
         {
-            var themeVM = new ThemeViewModel(Context, BaseCommonServices, _appSettingsService, _themeService, Logger);
+            var style = new Style(_settingsService.Settings.Color, _settingsService.Settings.Theme);
+            var themeVM = new ThemeViewModel(Context, BaseCommonServices, Logger, style);
             themeVM.Submitted += ThemeVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, Style>(themeVM);
         }
@@ -466,6 +474,14 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (sender is ThemeViewModel vm)
                 vm.Submitted -= ThemeVM_Submitted;
+
+            if (e.Result is Style style)
+            {
+                _settingsService.Settings.Theme = style.Theme;
+                _settingsService.Settings.Color = style.Color;
+                _settingsService.SaveSettings();
+                _themeService.SetStyle(style);
+            }
         }
 
         /// <summary>
