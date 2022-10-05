@@ -41,12 +41,6 @@ namespace ISynergy.Framework.UI
     public abstract class BaseApplication : Application
     {
         /// <summary>
-        /// Gets the theme selector.
-        /// </summary>
-        /// <value>The theme selector.</value>
-        private IThemeService _themeService;
-
-        /// <summary>
         /// The settings service
         /// </summary>
         private IBaseApplicationSettingsService _settingsService;
@@ -222,10 +216,10 @@ namespace ISynergy.Framework.UI
                 }
             }
 
-            _themeService = _serviceProvider.GetRequiredService<IThemeService>();
-            _themeService.InitializeMainWindow(MainWindow);
-            _themeService.SetStyle(_settingsService.Settings.Color, _settingsService.Settings.Theme);
-            _themeService.SetTitlebar(MainWindow);
+            var themeService = _serviceProvider.GetRequiredService<IThemeService>();
+            themeService.InitializeMainWindow(MainWindow);
+            themeService.SetStyle(_settingsService.Settings.Color, _settingsService.Settings.Theme);
+            themeService.SetTitlebar(MainWindow);
 
             MainWindow.Activate();
         }
