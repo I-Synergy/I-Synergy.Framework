@@ -3,12 +3,15 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
 using Style = ISynergy.Framework.Core.Models.Style;
+
+#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
+using WinRT.Interop;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -19,14 +22,20 @@ namespace ISynergy.Framework.UI.Services
     /// <seealso cref="IThemeService" />
     public class ThemeService : IThemeService
     {
+        /// <summary>
+        /// The style
+        /// </summary>
         private Style _style;
+        /// <summary>
+        /// The window
+        /// </summary>
         private Window _window;
 
         /// <summary>
         /// Ininitialize main window for service.
         /// </summary>
-        /// <param name="mainWindow"></param>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="mainWindow">The main window.</param>
+        /// <exception cref="System.ArgumentException">MainWindow could not be set.</exception>
         public void InitializeMainWindow(object mainWindow)
         {
             if (mainWindow is Window window)
@@ -54,17 +63,21 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="applicationSettingsService"></param>
+        /// <param name="applicationSettingsService">The application settings service.</param>
         public ThemeService(IBaseApplicationSettingsService applicationSettingsService)
         {
-            _style = new Style
-            {
-                Theme = applicationSettingsService.Settings.Theme,
-                Color = applicationSettingsService.Settings.Color
-            };
-
-            //SetStyle(_style);
+            _style = new Style(
+                applicationSettingsService.Settings.Color, 
+                applicationSettingsService.Settings.Theme);
         }
+
+        /// <summary>
+        /// Sets the style.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="theme">The theme.</param>
+        public void SetStyle(string color, Themes theme) =>
+            SetStyle(new Style(color, theme));
 
         /// <summary>
         /// Sets the theme.
@@ -76,7 +89,7 @@ namespace ISynergy.Framework.UI.Services
 
             _style = style;
 
-            if (Window.Current.Content is FrameworkElement frameworkElement && !new AccessibilitySettings().HighContrast)
+            if (_window.Content is FrameworkElement frameworkElement && !new AccessibilitySettings().HighContrast)
             {
                 var palette = FindColorPaletteResourcesForTheme(_style.Theme.ToString());
 
@@ -95,13 +108,16 @@ namespace ISynergy.Framework.UI.Services
                 Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = style.Color;
             }
 
-            SetupTitlebar();
             ReloadPageTheme(style.Theme);
         }
 
+        /// <summary>
+        /// Reloads the page theme.
+        /// </summary>
+        /// <param name="theme">The theme.</param>
         private void ReloadPageTheme(Themes theme)
         {
-            if (Window.Current.Content is FrameworkElement frameworkElement)
+            if (_window.Content is FrameworkElement frameworkElement)
             {
                 switch (theme)
                 {
@@ -122,6 +138,11 @@ namespace ISynergy.Framework.UI.Services
             }
         }
 
+        /// <summary>
+        /// Finds the color palette resources for theme.
+        /// </summary>
+        /// <param name="theme">The theme.</param>
+        /// <returns>ColorPaletteResources.</returns>
         private ColorPaletteResources FindColorPaletteResourcesForTheme(string theme)
         {
             foreach (var themeDictionary in Application.Current.Resources.ThemeDictionaries)
@@ -144,35 +165,43 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Setups the titlebar.
         /// </summary>
-        private void SetupTitlebar()
+        public void SetTitlebar(Window window)
         {
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+#if WINDOWS10_0_18362_0_OR_GREATER
+            var appWindow = GetAppWindowForCurrentWindow(window);
+
+            if (AppWindowTitleBar.IsCustomizationSupported())
             {
-                var coreTitleBra = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBra.ExtendViewIntoTitleBar = true;
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
 
-                if (titleBar is not null)
+                appWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+
+                if (_style.Theme == Themes.Dark)
                 {
-                    titleBar.ButtonBackgroundColor = Colors.Transparent;
-
-                    if (_style.Theme == Themes.Dark)
-                    {
-                        titleBar.ButtonForegroundColor = Colors.White;
-                        titleBar.ForegroundColor = Colors.White;
-                    }
-                    else
-                    {
-                        titleBar.ButtonForegroundColor = Colors.Black;
-                        titleBar.ForegroundColor = Colors.Black;
-                    }
-
-                    titleBar.BackgroundColor = Colors.Black;
-
-                    titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                    titleBar.ButtonInactiveForegroundColor = Colors.LightGray;
+                    appWindow.TitleBar.ButtonForegroundColor = Colors.White;
+                    appWindow.TitleBar.ForegroundColor = Colors.White;
                 }
+                else
+                {
+                    appWindow.TitleBar.ButtonForegroundColor = Colors.Black;
+                    appWindow.TitleBar.ForegroundColor = Colors.Black;
+                }
+
+                appWindow.TitleBar.BackgroundColor = Colors.Black;
+
+                appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.LightGray;
             }
+#endif
         }
+
+#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
+        protected virtual AppWindow GetAppWindowForCurrentWindow(Window window)
+        {
+            var hWnd = WindowNative.GetWindowHandle(window);
+            var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            return AppWindow.GetFromWindowId(wndId);
+        }
+#endif
     }
 }

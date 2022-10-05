@@ -10,7 +10,6 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,27 +23,15 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.UI.Abstractions.Views;
-using ISynergy.Framework.UI.Extensions;
-using System.Globalization;
-using ISynergy.Framework.Core.Validation;
-using System.IO;
-using ISynergy.Framework.UI.Options;
-using Microsoft.Extensions.Options;
-using Windows.ApplicationModel.Core;
 using Microsoft.UI.Windowing;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Activation;
-using Windows.UI.ViewManagement;
 using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
-using Windows.UI.Core;
-
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
-using WinRT.Interop;
-#endif
+using ISynergy.Framework.Core.Enumerations;
 
 namespace ISynergy.Framework.UI
 {
@@ -57,8 +44,13 @@ namespace ISynergy.Framework.UI
         /// Gets the theme selector.
         /// </summary>
         /// <value>The theme selector.</value>
-        private IThemeService _themeSelector;
-        
+        private IThemeService _themeService;
+
+        /// <summary>
+        /// The settings service
+        /// </summary>
+        private IBaseApplicationSettingsService _settingsService;
+
         /// <summary>
         /// The services
         /// </summary>
@@ -86,8 +78,14 @@ namespace ISynergy.Framework.UI
         /// <value>The logger.</value>
         protected readonly ILogger _logger;
 
+        /// <summary>
+        /// The telemetry service
+        /// </summary>
         protected readonly ITelemetryService _telemetryService;
 
+        /// <summary>
+        /// The exception handler service
+        /// </summary>
         protected readonly IExceptionHandlerService _exceptionHandlerService;
 
         /// <summary>
@@ -99,6 +97,7 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Main Application Window.
         /// </summary>
+        /// <value>The main window.</value>
         public Window MainWindow { get; private set; }
 
         /// <summary>
@@ -132,7 +131,7 @@ namespace ISynergy.Framework.UI
         /// Handles the UnhandledException event of the Current control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="UnhandledExceptionEventArgs" /> instance containing the event data.</param>
         private async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (!e.Handled)
@@ -174,19 +173,11 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// On launch of application.
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">The <see cref="LaunchActivatedEventArgs"/> instance containing the event data.</param>
         public virtual void OnLaunchApplication(LaunchActivatedEventArgs e)
         {
             MainWindow = new Window();
 
-#if WINDOWS10_0_18362_0_OR_GREATER
-            var appWindow = GetAppWindowForCurrentWindow(MainWindow);
-
-            if (AppWindowTitleBar.IsCustomizationSupported())
-            {
-                appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-            }
-#endif
             var rootFrame = MainWindow.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -231,20 +222,13 @@ namespace ISynergy.Framework.UI
                 }
             }
 
-            _themeSelector = _serviceProvider.GetRequiredService<IThemeService>();
-            _themeSelector.InitializeMainWindow(MainWindow);
+            _themeService = _serviceProvider.GetRequiredService<IThemeService>();
+            _themeService.InitializeMainWindow(MainWindow);
+            _themeService.SetStyle(_settingsService.Settings.Color, _settingsService.Settings.Theme);
+            _themeService.SetTitlebar(MainWindow);
 
             MainWindow.Activate();
         }
-
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
-        protected virtual AppWindow GetAppWindowForCurrentWindow(Window window)
-        {
-            var hWnd = WindowNative.GetWindowHandle(window);
-            var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-            return AppWindow.GetFromWindowId(wndId);
-        }
-#endif
 
         /// <summary>
         /// Sets the context.
@@ -272,7 +256,7 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Get a new list of additional resource dictionaries which can be merged.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
         protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>();
 
@@ -281,14 +265,15 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
-        /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
-        /// <exception cref="Exception">Failed to load Page " + e.SourcePageType.FullName</exception>
+        /// <exception cref="ISynergy.Framework.UI.Common.Result.Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
         private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
             throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
 
         /// <summary>
         /// Configures the logger.
         /// </summary>
+        /// <param name="loglevel">The loglevel.</param>
+        /// <returns>ILoggerFactory.</returns>
         protected virtual ILoggerFactory ConfigureLogger(LogLevel loglevel = LogLevel.Information)
         {
             var factory =  LoggerFactory.Create(builder =>
@@ -375,7 +360,7 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <value>The view model types.</value>
         public List<Type> ViewModelTypes { get; private set; }
-        
+
         /// <summary>
         /// Gets the view types.
         /// </summary>
@@ -391,13 +376,14 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Bootstrapper types
         /// </summary>
+        /// <value>The bootstrapper types.</value>
         public List<Type> BootstrapperTypes { get; private set; }
 
         /// <summary>
         /// Registers the assemblies.
         /// </summary>
-        /// <param name="mainAssembly"></param>
-        /// <param name="assemblyFilter"></param>
+        /// <param name="mainAssembly">The main assembly.</param>
+        /// <param name="assemblyFilter">The assembly filter.</param>
         protected void RegisterAssemblies(Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
         {
             var assemblies = new List<Assembly>();
@@ -537,6 +523,7 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Add resource managers to languageservice.
         /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
         public virtual void AddResourceManager(ResourceManager resourceManager) =>
             _languageService.AddResourceManager(resourceManager);
     }
