@@ -4,13 +4,14 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.UI.Functions;
 using ISynergy.Framework.UI.Navigation;
 using Sample.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using System;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
+using Sample.Services;
 
 #if WINDOWS_UWP || HAS_UNO
 using Windows.UI.Xaml;
@@ -40,6 +41,7 @@ namespace Sample.ViewModels
         /// </summary>
         /// <value>The common services.</value>
         public ICommonServices CommonServices { get; }
+        public IBaseApplicationSettingsService SettingsService { get; }
 
         /// <summary>
         /// Gets or sets the display command.
@@ -102,10 +104,11 @@ namespace Sample.ViewModels
             IBaseApplicationSettingsService settingsService,
             ILogger logger,
             IThemeService themeService,
-            LocalizationFunctions localizationFunctions)
+            ILocalizationService localizationFunctions)
             : base(context, commonServices, settingsService, logger, themeService, localizationFunctions)
         {
             CommonServices = commonServices;
+            SettingsService = settingsService;
 
             Title = commonServices.InfoService.ProductName;
             Version = commonServices.InfoService.ProductVersion;

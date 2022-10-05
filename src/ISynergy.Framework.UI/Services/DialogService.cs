@@ -256,10 +256,6 @@ namespace ISynergy.Framework.UI.Services
             dialog.SecondaryButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
             dialog.CloseButtonStyle = (Style)Application.Current.Resources["DefaultDialogButtonStyle"];
 
-            viewmodel.Submitted += (sender, e) => CloseDialog();
-            viewmodel.Cancelled += (sender, e) => CloseDialog();
-            viewmodel.Closed += (sender, e) => CloseDialog();
-
             if (!viewmodel.IsInitialized)
                 await viewmodel.InitializeAsync();
 
@@ -278,7 +274,7 @@ namespace ISynergy.Framework.UI.Services
 
         private void CloseDialog()
         {
-            _activeDialog.Close();
+            _activeDialog?.Close();
             _activeDialog = null;
         }
     }
