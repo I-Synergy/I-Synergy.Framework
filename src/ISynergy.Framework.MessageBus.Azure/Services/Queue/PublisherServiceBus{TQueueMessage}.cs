@@ -80,7 +80,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue
             }
             else
             {
-                throw new ArgumentException($"Entity should be type of IQueueMessage<TModel> instead of {queueMessage.GetType().FullName}");
+                throw new ArgumentException("Entity should be type of IQueueMessage<TModel>");
             }
         }
     }
