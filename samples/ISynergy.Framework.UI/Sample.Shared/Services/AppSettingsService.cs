@@ -2,27 +2,76 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using Sample.Models;
 using System;
-using System.Threading.Tasks;
+using System.IO;
+using System.Text.Json;
 
 namespace Sample.Services
 {
     public class AppSettingsService : IBaseApplicationSettingsService
     {
-        public IBaseApplicationSettings Settings { get; set; }
+        private const string _fileName = "settings.json";
 
+        /// <summary>
+        /// The global settings folder.
+        /// </summary>
+        private readonly string _settingsFolder;
+
+        /// <summary>
+        /// Settings used globally.
+        /// </summary>
+        private ApplicationSetting _settings;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RoamingSettingsService"/> class.
+        /// </summary>
         public AppSettingsService()
         {
-            Settings = new ApplicationSetting();
+            _settings = new ApplicationSetting();
+            _settingsFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "I-Synergy Framework UI Sample",
+                "Settings");
         }
 
-        public Task LoadSettingsAsync()
+        /// <summary>
+        /// Loads the settings json file.
+        /// </summary>
+        public void LoadSettings()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var file = Path.Combine(_settingsFolder, _fileName);
+
+                if (!File.Exists(file))
+                {
+                    SaveSettings();
+                }
+
+                var json = File.ReadAllText(file);
+                _settings = JsonSerializer.Deserialize<ApplicationSetting>(json);
+            }
+            catch (FileNotFoundException)
+            {
+                _settings = new ApplicationSetting();
+            }
         }
 
-        public Task SaveSettingsAsync()
+        /// <summary>
+        /// Saves all changes to the json file.
+        /// </summary>
+        public void SaveSettings()
         {
-            throw new NotImplementedException();
+            if (!Directory.Exists(_settingsFolder))
+                Directory.CreateDirectory(_settingsFolder);
+
+            var file = Path.Combine(_settingsFolder, _fileName);
+            var json = JsonSerializer.Serialize(_settings);
+            File.WriteAllText(file, json);
         }
+
+        /// <summary>
+        /// Settings used globally.
+        /// </summary>
+        public IBaseApplicationSettings Settings => _settings;
     }
 }
