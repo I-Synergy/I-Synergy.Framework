@@ -255,10 +255,12 @@ namespace ISynergy.Framework.UI
 
             _context = _serviceProvider.GetRequiredService<IContext>();
             _context.ViewModels = ViewModelTypes;
+                       
+            _settingsService = _serviceProvider.GetRequiredService<IBaseApplicationSettingsService>();
+            _settingsService.LoadSettings();
 
-            var localizationFunctions = _serviceProvider.GetRequiredService<LocalizationFunctions>();
-            var settingsService = _serviceProvider.GetRequiredService<IBaseApplicationSettingsService>();
-            localizationFunctions.SetLocalizationLanguage(settingsService.Settings.Culture);
+            var localizationFunctions = _serviceProvider.GetRequiredService<ILocalizationService>();
+            localizationFunctions.SetLocalizationLanguage(_settingsService.Settings.Culture);
 
             // Bootstrap all registered modules.
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
@@ -351,26 +353,21 @@ namespace ISynergy.Framework.UI
             services.AddSingleton((s) => _languageService);
             services.AddSingleton((s) => _navigationService);
             services.AddSingleton<ILogger>((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+            services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
             services.AddSingleton<IMessageService, MessageService>();
-            
-            // Register scoped services
-            services.AddScoped<IThemeService, ThemeService>();
-            services.AddScoped<IAuthenticationProvider, AuthenticationProvider>();
-            services.AddScoped<IConverterService, ConverterService>();
-            services.AddScoped<IBusyService, BusyService>();
-            services.AddScoped<IDialogService, DialogService>();
-            services.AddScoped<IDispatcherService, DispatcherService>();
+            services.AddSingleton<IThemeService, ThemeService>();
+            services.AddSingleton<ILocalizationService, LocalizationService>();
+            services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
+            services.AddSingleton<IConverterService, ConverterService>();
+            services.AddSingleton<IBusyService, BusyService>();
+            services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<IDispatcherService, DispatcherService>();
 
-            services.AddScoped<IFileService>(provider => 
+            services.AddSingleton<IFileService>(provider => 
                 new FileService(
                     MainWindow, 
                     provider.GetRequiredService<IDialogService>(), 
                     provider.GetRequiredService<ILanguageService>()));
-
-            //Register functions
-            services.AddScoped<LocalizationFunctions>();
-
-            services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
         }
 
         /// <summary>
