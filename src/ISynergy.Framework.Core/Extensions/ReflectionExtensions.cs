@@ -239,5 +239,17 @@ namespace ISynergy.Framework.Core.Extensions
             else
                 return string.Empty;
         }
+
+        public static bool HasParentIdentityProperty<T>() where T : class =>
+            typeof(T).HasParentIdentityProperty();
+
+        public static bool HasParentIdentityProperty<T>(this T _self) where T : class =>
+            _self.GetType().GetProperties().Any(e => e.IsDefined(typeof(ParentIdentityAttribute)));
+
+        public static PropertyInfo GetParentIdentityProperty<T>() where T : class =>
+            typeof(T).GetParentIdentityProperty();
+
+        public static PropertyInfo GetParentIdentityProperty<T>(this T _self) where T : class =>
+            _self.GetType().GetProperties().FirstOrDefault(e => e.IsDefined(typeof(ParentIdentityAttribute)));
     }
 }

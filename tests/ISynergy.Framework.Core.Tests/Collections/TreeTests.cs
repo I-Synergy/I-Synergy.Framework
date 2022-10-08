@@ -81,9 +81,15 @@ namespace ISynergy.Framework.Core.Collections.Tests
 
             Assert.AreEqual(1, storage.Children.Count);
             Assert.AreSame(storage.Parent, building);
-
+            
             Assert.AreEqual(0, bin.Children.Count);
             Assert.AreSame(bin.Parent, storage);
+
+            Assert.AreEqual(building.Key, storage.ParentKey);
+            Assert.AreEqual(building.Data.Id, storage.Data.ParentId);
+
+            Assert.AreEqual(storage.Key, bin.ParentKey);
+            Assert.AreEqual(storage.Data.Id, bin.Data.ParentId);
         }
 
         [TestMethod]
@@ -103,6 +109,12 @@ namespace ISynergy.Framework.Core.Collections.Tests
 
             Assert.AreEqual(0, bin.Children.Count);
             Assert.IsNull(bin.Parent);
+
+            Assert.AreEqual(building.Key, storage.ParentKey);
+            Assert.AreEqual(building.Data.Id, storage.Data.ParentId);
+
+            Assert.AreEqual(Guid.Empty, bin.ParentKey);
+            Assert.AreEqual(Guid.Empty, bin.Data.ParentId);
         }
 
         [TestMethod]
@@ -126,6 +138,15 @@ namespace ISynergy.Framework.Core.Collections.Tests
 
             Assert.AreEqual(0, bin.Children.Count);
             Assert.AreSame(bin.Parent, kitchen);
+
+            Assert.AreEqual(building.Key, storage.ParentKey);
+            Assert.AreEqual(building.Data.Id, storage.Data.ParentId);
+
+            Assert.AreNotEqual(storage.Key, bin.ParentKey);
+            Assert.AreNotEqual(storage.Data.Id, bin.Data.ParentId);
+
+            Assert.AreEqual(kitchen.Key, bin.ParentKey);
+            Assert.AreEqual(kitchen.Data.Id, bin.Data.ParentId);
         }
 
         [TestMethod]
@@ -145,6 +166,12 @@ namespace ISynergy.Framework.Core.Collections.Tests
 
             Assert.AreEqual(0, bin.Children.Count);
             Assert.IsNull(bin.Parent);
+
+            Assert.AreEqual(building.Key, storage.ParentKey);
+            Assert.AreEqual(building.Data.Id, storage.Data.ParentId);
+
+            Assert.AreEqual(Guid.Empty, bin.ParentKey);
+            Assert.AreEqual(Guid.Empty, bin.Data.ParentId);
         }
 
         [TestMethod]
