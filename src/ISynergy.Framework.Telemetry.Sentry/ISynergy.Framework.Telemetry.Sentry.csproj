@@ -17,7 +17,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.WinUI" Version="4.5.12" />
-		<PackageReference Include="Sentry" Version="3.21.0" />
+		<PackageReference Include="Sentry" Version="3.22.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
