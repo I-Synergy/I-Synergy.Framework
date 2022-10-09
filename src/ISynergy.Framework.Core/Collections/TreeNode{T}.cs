@@ -116,7 +116,7 @@ namespace ISynergy.Framework.Core.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode{TKey, TModel}"/> class.
         /// </summary>
-        protected TreeNode()
+        public TreeNode()
         {
             PropertyChanged += TreeNode_PropertyChanged;
             
