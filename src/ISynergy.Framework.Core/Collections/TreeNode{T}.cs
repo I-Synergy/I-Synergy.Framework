@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using System;
 using System.Collections.ObjectModel;
 
@@ -65,15 +66,7 @@ namespace ISynergy.Framework.Core.Collections
         public TreeNode<TKey,TModel> Parent
         {
             get => GetValue<TreeNode<TKey,TModel>>();
-            set
-            {
-                SetValue(value);
-
-                if (value != null)
-                    ParentKey = value.Key;
-                else
-                    ParentKey = default(TKey);
-            }
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -105,11 +98,6 @@ namespace ISynergy.Framework.Core.Collections
             // update the backing field
             Parent = node;
 
-            if(Parent is null)
-                ParentKey = default;
-            else
-                ParentKey = node.Key;
-
             // add this node to its new parent's children
             if (Parent != null && updateChildNodes)
                 Parent.AddChild(this);
@@ -128,12 +116,37 @@ namespace ISynergy.Framework.Core.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode{TKey, TModel}"/> class.
         /// </summary>
-        public TreeNode()
+        protected TreeNode()
         {
+            PropertyChanged += TreeNode_PropertyChanged;
+            
             IsSelected = false;
             DisposeTraversal = UpDownTraversalTypes.BottomUp;
             Parent = null;
             Children = new ObservableCollection<TreeNode<TKey, TModel>>();
+        }
+
+        private void TreeNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(Parent)))
+            {
+                if (Parent is not null)
+                {
+                    ParentKey = Parent.Key;
+                }
+                else
+                {
+                    ParentKey = default;
+                }
+
+                if (Data is not null && Data.HasParentIdentityProperty())
+                    Data.GetParentIdentityProperty().SetValue(Data, ParentKey);
+            }
+            else if (e.PropertyName.Equals(nameof(Data)))
+            {
+                if (Data is not null && Data.HasIdentityProperty())
+                    Key = Data.GetIdentityValue<TModel, TKey>();
+            }
         }
 
         /// <summary>
@@ -143,10 +156,9 @@ namespace ISynergy.Framework.Core.Collections
         public TreeNode(TModel data)
             : this()
         {
-            Data = data;
+            Argument.IsNotNull(data);
 
-            if (Data.HasIdentityProperty())
-                Key = Data.GetIdentityValue<TModel, TKey>();
+            Data = data;
         }
 
         /// <summary>
@@ -157,8 +169,10 @@ namespace ISynergy.Framework.Core.Collections
         public TreeNode(TModel data, TreeNode<TKey, TModel> parent)
             : this(data)
         {
+            Argument.IsNotNull(parent);
+
             Parent = parent;
-            ParentKey = parent.Key; 
+            ParentKey = parent.Key;
         }
 
         /// <summary>
@@ -167,6 +181,8 @@ namespace ISynergy.Framework.Core.Collections
         /// <param name="node">The node.</param>
         private TreeNode<TKey, TModel> AddChild(TreeNode<TKey, TModel> node)
         {
+            Argument.IsNotNull(node);
+
             node.Parent = this;
             Children.Add(node);
             return node;
@@ -178,6 +194,8 @@ namespace ISynergy.Framework.Core.Collections
         /// <param name="model">The node.</param>
         public TreeNode<TKey, TModel> AddChild(TModel model)
         {
+            Argument.IsNotNull(model);
+
             var node = new TreeNode<TKey, TModel>(model, this);
             Children.Add(node);
             return node;

@@ -44,12 +44,12 @@ namespace ISynergy.Framework.UI
         /// Gets the theme selector.
         /// </summary>
         /// <value>The theme selector.</value>
-        private IThemeService _themeService;
+        private readonly IThemeService _themeService;
 
         /// <summary>
         /// The settings service
         /// </summary>
-        private IBaseApplicationSettingsService _settingsService;
+        private readonly IBaseApplicationSettingsService _settingsService;
 
         /// <summary>
         /// The services
@@ -115,16 +115,29 @@ namespace ISynergy.Framework.UI
 
             ServiceLocator.SetLocatorProvider(_serviceProvider);
 
+            Application.Current.UnhandledException += Current_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
+            _settingsService = _serviceProvider.GetRequiredService<IBaseApplicationSettingsService>();
+            _settingsService.LoadSettings();
+
+            var localizationFunctions = _serviceProvider.GetRequiredService<ILocalizationService>();
+            localizationFunctions.SetLocalizationLanguage(_settingsService.Settings.Culture);
+
+            _themeService = _serviceProvider.GetRequiredService<IThemeService>();
             _telemetryService = _serviceProvider.GetRequiredService<ITelemetryService>();
             _exceptionHandlerService = _serviceProvider.GetRequiredService<IExceptionHandlerService>();
             _logger = _serviceProvider.GetRequiredService<ILogger>();
             _logger.LogInformation("Starting application");
 
-            Application.Current.UnhandledException += Current_UnhandledException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            _context = _serviceProvider.GetRequiredService<IContext>();
+            _context.ViewModels = ViewModelTypes;
 
-            Initialize();
+            // Bootstrap all registered modules.
+            foreach (var bootstrapper in BootstrapperTypes.Distinct())
+                if (_serviceProvider.GetService(bootstrapper) is IBootstrap instance)
+                    instance.Bootstrap();
         }
 
         /// <summary>
@@ -178,6 +191,10 @@ namespace ISynergy.Framework.UI
         {
             MainWindow = new Window();
 
+            _themeService.InitializeMainWindow(MainWindow);
+            _themeService.SetStyle(_settingsService.Settings.Color, _settingsService.Settings.Theme);
+            _themeService.SetTitlebar(MainWindow);
+
             var rootFrame = MainWindow.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -222,36 +239,8 @@ namespace ISynergy.Framework.UI
                 }
             }
 
-            _themeService = _serviceProvider.GetRequiredService<IThemeService>();
-            _themeService.InitializeMainWindow(MainWindow);
-            _themeService.SetStyle(_settingsService.Settings.Color, _settingsService.Settings.Theme);
-            _themeService.SetTitlebar(MainWindow);
-
             MainWindow.Activate();
         }
-
-        /// <summary>
-        /// Sets the context.
-        /// </summary>
-        public virtual void Initialize()
-        {
-            Current.UnhandledException += Current_UnhandledException;
-
-            _context = _serviceProvider.GetRequiredService<IContext>();
-            _context.ViewModels = ViewModelTypes;
-                       
-            _settingsService = _serviceProvider.GetRequiredService<IBaseApplicationSettingsService>();
-            _settingsService.LoadSettings();
-
-            var localizationFunctions = _serviceProvider.GetRequiredService<ILocalizationService>();
-            localizationFunctions.SetLocalizationLanguage(_settingsService.Settings.Culture);
-
-            // Bootstrap all registered modules.
-            foreach (var bootstrapper in BootstrapperTypes.Distinct())
-                if (_serviceProvider.GetService(bootstrapper) is IBootstrap instance)
-                    instance.Bootstrap();
-        }
-
 
         /// <summary>
         /// Get a new list of additional resource dictionaries which can be merged.

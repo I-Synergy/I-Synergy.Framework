@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Validation;
+using System;
 using System.IO;
 using System.Linq;
-using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.IO.Models
 {
@@ -24,20 +24,16 @@ namespace ISynergy.Framework.IO.Models
             Argument.IsMinimal(fileSize, 1);
 
             if (!Path.IsPathRooted(path))
-            {
                 throw new ArgumentException($"The path '{path}' was not a rooted path and IsFreeSpaceAvailable does not support relative paths.");
-            }
 
             if (path.StartsWith(@"\\"))
-            {
                 return true;
-            }
 
             // Get just the drive letter for WMI call
-            string driveletter = GetDriveName(path);
-            var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
+            if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive)
+                return drive.TotalFreeSpace > fileSize;
 
-            return drive.TotalFreeSpace > fileSize;
+            return false;
         }
 
         /// <summary>
@@ -57,14 +53,8 @@ namespace ISynergy.Framework.IO.Models
                 return true;
 
             // Get just the drive letter for WMI call
-            string driveletter = GetDriveName(path);
-
-            var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
-
-            if (drive is not null && drive.DriveType == DriveType.Network)
-            {
+            if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive && drive.DriveType == DriveType.Network)
                 return true;
-            }
 
             return false;
         }
@@ -103,28 +93,16 @@ namespace ISynergy.Framework.IO.Models
             Argument.IsNotNullOrEmpty(path);
 
             if (!Path.IsPathRooted(path))
-            {
                 throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToRootUNC does not support relative paths.");
-            }
 
             if (path.StartsWith(@"\\"))
-            {
                 return Directory.GetDirectoryRoot(path);
-            }
 
             // Get just the drive letter for WMI call
-            string driveletter = GetDriveName(path);
-
-            var drive = DriveInfo.GetDrives().SingleOrDefault(q => q.Name == driveletter);
-
-            if (drive is not null && drive.DriveType == DriveType.Network)
-            {
+            if (DriveInfo.GetDrives().SingleOrDefault(q => q.Name == GetDriveName(path)) is DriveInfo drive && drive.DriveType == DriveType.Network)
                 return drive.RootDirectory.ToString();
-            }
-            else
-            {
-                return driveletter;
-            }
+
+            return GetDriveName(path);
         }
 
         /// <summary>
@@ -139,15 +117,11 @@ namespace ISynergy.Framework.IO.Models
             Argument.IsNotNullOrEmpty(path);
 
             if (!Path.IsPathRooted(path))
-            {
                 throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToUNC does not support relative paths.");
-            }
 
             // Is the path already in the UNC format?
             if (path.StartsWith(@"\\"))
-            {
                 return path;
-            }
 
             string rootPath = ResolveToRootUNC(path);
 
