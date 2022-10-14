@@ -583,25 +583,22 @@ namespace ISynergy.Framework.Core.Extensions
         }
 
         /// <summary>
-        ///   Replaces the format item in a specified string with the string
-        ///   representation of a corresponding object in a specified array.
+        /// Replaces the format item in a specified string with the string
+        /// representation of a corresponding object in a specified array.
         /// </summary>
-        /// 
         /// <param name="str">A composite format string.</param>
         /// <param name="args">An object array that contains zero or more objects to format.</param>
-        /// 
-        /// <returns>
-        ///   A copy of str in which the format items have been replaced by
-        ///   the string representation of the corresponding objects in args.
-        /// </returns>
-        /// 
+        /// <returns>A copy of str in which the format items have been replaced by
+        /// the string representation of the corresponding objects in args.</returns>
         public static string Format(this string str, params object[] args) =>
             String.Format(str, args);
 
         /// <summary>
-        ///   Checks whether a type implements a method with the given name.
+        /// Checks whether a type implements a method with the given name.
         /// </summary>
-        /// 
+        /// <typeparam name="T"></typeparam>
+        /// <param name="methodName">Name of the method.</param>
+        /// <returns><c>true</c> if the specified method name has method; otherwise, <c>false</c>.</returns>
         public static bool HasMethod<T>(string methodName)
         {
             try
@@ -618,9 +615,90 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Convert string to snake casing.
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="input">The input.</param>
+        /// <returns>System.String.</returns>
         public static string ToSnakeCase(this string input) =>
             string.Concat(input.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
+
+
+        /// <summary>
+        /// Converts string to a capitalized one where delimiter starts an new capitalization.
+        /// Default delimiter is a dot.
+        /// </summary>
+        /// <param name="_self">The self.</param>
+        /// <param name="delimiter">The delimiter.</param>
+        /// <returns>System.String.</returns>
+        public static string ToCapitalized(this string _self, char delimiter = '.')
+        {
+            _self = _self.ToLower();
+
+            var result = new StringBuilder();
+            var parts = _self.SplitAndKeep(delimiter);
+
+            foreach (var part in parts)
+            {
+                var characters = part.ToCharArray();
+
+                for (int i = 0; i < characters.Length; i++)
+                {
+                    if (!characters[i].Equals(' ') && !characters[i].ToString().IsInteger())
+                    {
+                        characters[i] = char.ToUpper(characters[i]);
+                        break;
+                    }
+                }
+
+                result.Append(new string(characters));
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Converts string to a capitalized one where delimiter starts an new capitalization.
+        /// Default delimiter is a space.
+        /// </summary>
+        /// <param name="_self">The self.</param>
+        /// <returns>System.String.</returns>
+        public static string ToCapitalizedFirstLetter(this string _self) =>
+            _self.ToCapitalized(' ');
+
+        /// <summary>
+        /// Splits the string by delimiter, but keeps the delimiter.
+        /// </summary>
+        /// <param name="_self">The self.</param>
+        /// <param name="delimiters">The delimiters.</param>
+        /// <returns>IList&lt;System.String&gt;.</returns>
+        public static IList<string> SplitAndKeep(this string _self, params char[] delimiters)
+        {
+            var parts = new List<string>();
+            
+            if (!string.IsNullOrEmpty(_self))
+            {
+                var firstChar = 0;
+                do
+                {
+                    var lastChar = _self.IndexOfAny(delimiters, firstChar);
+                    
+                    if (lastChar >= 0)
+                    {
+                        if (lastChar > firstChar)
+                            parts.Add(_self.Substring(firstChar, lastChar - firstChar)); //part before the delimiter
+                        
+                        parts.Add(new string(_self[lastChar], 1));//the delimiter
+                        
+                        firstChar = lastChar + 1;
+                        continue;
+                    }
+
+                    //No delimiters were found, but at least one character remains. Add the rest and stop.
+                    parts.Add(_self.Substring(firstChar, _self.Length - firstChar));
+                    break;
+
+                } while (firstChar < _self.Length);
+            }
+
+            return parts;
+        }
     }
 }
