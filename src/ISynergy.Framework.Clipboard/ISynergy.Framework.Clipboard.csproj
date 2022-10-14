@@ -22,7 +22,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Uno.WinUI" Version="4.5.12" />
+		<PackageReference Include="Uno.WinUI" Version="4.5.14" />
 	</ItemGroup>
 
 	<ItemGroup>

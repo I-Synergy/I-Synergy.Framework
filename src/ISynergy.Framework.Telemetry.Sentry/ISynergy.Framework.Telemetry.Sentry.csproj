@@ -16,7 +16,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Uno.WinUI" Version="4.5.12" />
+		<PackageReference Include="Uno.WinUI" Version="4.5.14" />
 		<PackageReference Include="Sentry" Version="3.22.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
 	</ItemGroup>
