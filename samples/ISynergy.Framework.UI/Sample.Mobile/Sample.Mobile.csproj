@@ -22,6 +22,7 @@
 		<Product>I-Synergy Framework Sample</Product>
 		<Copyright>Copyright (c) 2008-2022 International Intelligence</Copyright>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Android\Resources\drawable\splash.xml" />
@@ -35,9 +36,9 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.CommunityToolkit.WinUI.UI.Controls" Version="7.1.100-dev.15.g12261e2626" />
-		<PackageReference Include="Uno.WinUI" Version="4.5.12" />
-		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.5.12" Condition="'$(Configuration)'=='Debug'" />
-		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.5.12" />
+		<PackageReference Include="Uno.WinUI" Version="4.5.14" />
+		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.5.14" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.5.14" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
@@ -92,6 +93,7 @@
 	  <None Remove="Views\ShellView.xaml.cs" />
 	</ItemGroup>
 	<ItemGroup>
+	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	  <Content Include="Android\Resources\drawable\splashscreen.png" />
 	</ItemGroup>
 </Project>

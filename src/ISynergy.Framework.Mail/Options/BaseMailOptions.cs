@@ -5,10 +5,10 @@ namespace ISynergy.Framework.Mail.Options
     /// <summary>
     /// Mail service options.
     /// </summary>
-    public class MailOptions
+    public abstract class BaseMailOptions
     {
         /// <summary>
-        /// Gets or sets the email address.
+        /// Gets or sets the email address of the sender.
         /// </summary>
         /// <value>The email address.</value>
         public string EmailAddress { get; set; } = string.Empty;

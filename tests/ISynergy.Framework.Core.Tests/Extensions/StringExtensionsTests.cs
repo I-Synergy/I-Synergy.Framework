@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ISynergy.Framework.Core.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
@@ -76,6 +79,37 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         {
             var result = "9999992016001".CovertString2Numeric();
             Assert.AreEqual(0, result);
+        }
+
+        [TestMethod()]
+        public void ToCapitalizedTest()
+        {
+            var source = "hallo ik ben ismail. ik ben software developer.";
+            var result = "Hallo ik ben ismail. Ik ben software developer.";
+
+            Assert.AreEqual(result, source.ToCapitalized());
+        }
+
+        [TestMethod()]
+        public void ToCapitalizedFirstLetterTest()
+        {
+            var source = "hallo ik ben ISMAIL. ik ben SOFTWARE DEVELOPER.";
+            var result = "Hallo Ik Ben Ismail. Ik Ben Software Developer.";
+
+            Assert.AreEqual(result, source.ToCapitalizedFirstLetter());
+        }
+
+        [TestMethod()]
+        public void SplitAndKeepTest()
+        {
+            var text = "[a link|http://www.google.com]";
+            var result = text.SplitAndKeep('[', '|', ']');
+            Assert.AreEqual(5, result.Count());
+            Assert.AreEqual("[", result[0]);
+            Assert.AreEqual("a link", result[1]);
+            Assert.AreEqual("|", result[2]);
+            Assert.AreEqual("http://www.google.com", result[3]);
+            Assert.AreEqual("]", result[4]);
         }
     }
 }

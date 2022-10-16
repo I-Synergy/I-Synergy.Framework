@@ -8,9 +8,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Mail.Extensions
 {
-    /// <summary>
-    /// Service collection extensions for Sendgrid
-    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
@@ -19,7 +16,7 @@ namespace ISynergy.Framework.Mail.Extensions
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMailSendGridIntegration(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddMicrosoft365MailIntegration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions();
             services.Configure<MailOptions>(configuration.GetSection(nameof(MailOptions)).BindWithReload);
