@@ -3,7 +3,7 @@
     /// <summary>
     /// Sendgrid options.
     /// </summary>
-    internal class SendGridOptions
+    internal class MailOptions : BaseMailOptions
     {
         /// <summary>
         /// Sendgrid Api key

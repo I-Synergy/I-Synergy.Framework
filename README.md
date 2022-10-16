@@ -29,6 +29,7 @@ ___
 | [I-Synergy.Framework.Geography](https://www.nuget.org/packages/I-Synergy.Framework.Geography/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Geography) |
 | [I-Synergy.Framework.IO](https://www.nuget.org/packages/I-Synergy.Framework.IO/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.IO) |
 | [I-Synergy.Framework.Mail](https://www.nuget.org/packages/I-Synergy.Framework.Mail/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mail) |
+| [I-Synergy.Framework.Mail.Microsoft365](https://www.nuget.org/packages/I-Synergy.Framework.Mail.Microsoft365/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mail.Microsoft365) |
 | [I-Synergy.Framework.Mail.SendGrid](https://www.nuget.org/packages/I-Synergy.Framework.Mail.SendGrid/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mail.SendGrid) |
 | [I-Synergy.Framework.Mathematics](https://www.nuget.org/packages/I-Synergy.Framework.Mathematics/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mathematics) |
 | [I-Synergy.Framework.MessageBus](https://www.nuget.org/packages/I-Synergy.Framework.MessageBus/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.MessageBus) |

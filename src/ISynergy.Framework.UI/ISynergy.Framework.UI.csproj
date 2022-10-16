@@ -13,6 +13,7 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
@@ -95,6 +96,9 @@
 		<UpToDateCheckInput Remove="Windows\ThemeWindow.xaml" />
 		<UpToDateCheckInput Remove="Windows\LanguageWindow.xaml" />
 		<UpToDateCheckInput Remove="Views\SelectionView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Include="Controls\Buttons\BaseDialogButtons.xaml">

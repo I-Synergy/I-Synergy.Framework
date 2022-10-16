@@ -22,6 +22,7 @@
 		<Product>I-Synergy Framework Sample</Product>
 		<Copyright>Copyright (c) 2008-2022 International Intelligence</Copyright>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Android\Resources\drawable\splash.xml" />
@@ -92,6 +93,7 @@
 	  <None Remove="Views\ShellView.xaml.cs" />
 	</ItemGroup>
 	<ItemGroup>
+	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	  <Content Include="Android\Resources\drawable\splashscreen.png" />
 	</ItemGroup>
 </Project>
