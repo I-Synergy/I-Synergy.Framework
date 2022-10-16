@@ -104,7 +104,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         {
             var text = "[a link|http://www.google.com]";
             var result = text.SplitAndKeep('[', '|', ']');
-            Assert.AreEqual(5, result.Count());
+            Assert.AreEqual(5, result.Count);
             Assert.AreEqual("[", result[0]);
             Assert.AreEqual("a link", result[1]);
             Assert.AreEqual("|", result[2]);
