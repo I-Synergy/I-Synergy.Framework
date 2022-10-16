@@ -194,10 +194,9 @@ namespace ISynergy.Framework.Core.Collections
                 if (Data is not null && Data.HasParentIdentityProperty())
                     Data.GetParentIdentityProperty().SetValue(Data, ParentKey);
             }
-            else if (e.PropertyName.Equals(nameof(Data)))
+            else if (e.PropertyName.Equals(nameof(Data)) && Data is not null && Data.HasIdentityProperty())
             {
-                if (Data is not null && Data.HasIdentityProperty())
-                    Key = Data.GetIdentityValue<TModel, TKey>();
+                Key = Data.GetIdentityValue<TModel, TKey>();
             }
         }
 
