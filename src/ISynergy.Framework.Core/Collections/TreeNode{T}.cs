@@ -79,74 +79,16 @@ namespace ISynergy.Framework.Core.Collections
         }
 
         /// <summary>
-        /// Sets the parent.
-        /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="updateChildNodes">if set to <c>true</c> [update child nodes].</param>
-        public void SetParent(TreeNode<TKey, TModel> node, bool updateChildNodes = true)
-        {
-            if (node == Parent)
-                return;
-
-            var oldParent = Parent;
-
-            // if oldParent isn't null
-            // remove this node from its newly ex-parent's children
-            if (oldParent != null && oldParent.Children.Contains(this))
-                oldParent.RemoveChild(this);
-
-            // update the backing field
-            Parent = node;
-
-            // add this node to its new parent's children
-            if (Parent != null && updateChildNodes)
-                Parent.AddChild(this);
-        }
-
-        /// <summary>
-        /// Gets or sets the Children property value.
-        /// </summary>
-        /// <value>The children.</value>
-        public ObservableCollection<TreeNode<TKey,TModel>> Children
-        {
-            get => GetValue<ObservableCollection<TreeNode<TKey, TModel>>>();
-            set => SetValue(value);
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode{TKey, TModel}"/> class.
         /// </summary>
         public TreeNode()
         {
             PropertyChanged += TreeNode_PropertyChanged;
-            
+
             IsSelected = false;
             DisposeTraversal = UpDownTraversalTypes.BottomUp;
             Parent = null;
             Children = new ObservableCollection<TreeNode<TKey, TModel>>();
-        }
-
-        private void TreeNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Equals(nameof(Parent)))
-            {
-                if (Parent is not null)
-                {
-                    ParentKey = Parent.Key;
-                }
-                else
-                {
-                    ParentKey = default;
-                }
-
-                if (Data is not null && Data.HasParentIdentityProperty())
-                    Data.GetParentIdentityProperty().SetValue(Data, ParentKey);
-            }
-            else if (e.PropertyName.Equals(nameof(Data)))
-            {
-                if (Data is not null && Data.HasIdentityProperty())
-                    Key = Data.GetIdentityValue<TModel, TKey>();
-            }
         }
 
         /// <summary>
@@ -199,6 +141,63 @@ namespace ISynergy.Framework.Core.Collections
             var node = new TreeNode<TKey, TModel>(model, this);
             Children.Add(node);
             return node;
+        }
+
+        /// <summary>
+        /// Sets the parent.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="updateChildNodes">if set to <c>true</c> [update child nodes].</param>
+        public void SetParent(TreeNode<TKey, TModel> node, bool updateChildNodes = true)
+        {
+            if (node == Parent)
+                return;
+
+            var oldParent = Parent;
+
+            // if oldParent isn't null
+            // remove this node from its newly ex-parent's children
+            if (oldParent != null && oldParent.Children.Contains(this))
+                oldParent.RemoveChild(this);
+
+            // update the backing field
+            Parent = node;
+
+            // add this node to its new parent's children
+            if (Parent != null && updateChildNodes)
+                Parent.AddChild(this);
+        }
+
+        /// <summary>
+        /// Gets or sets the Children property value.
+        /// </summary>
+        /// <value>The children.</value>
+        public ObservableCollection<TreeNode<TKey,TModel>> Children
+        {
+            get => GetValue<ObservableCollection<TreeNode<TKey, TModel>>>();
+            set => SetValue(value);
+        }
+        
+        private void TreeNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(Parent)))
+            {
+                if (Parent is not null)
+                {
+                    ParentKey = Parent.Key;
+                }
+                else
+                {
+                    ParentKey = default;
+                }
+
+                if (Data is not null && Data.HasParentIdentityProperty())
+                    Data.GetParentIdentityProperty().SetValue(Data, ParentKey);
+            }
+            else if (e.PropertyName.Equals(nameof(Data)) && Data is not null && Data.HasIdentityProperty())
+            {
+                Key = Data.GetIdentityValue<TModel, TKey>();
+            }
         }
 
         /// <summary>
