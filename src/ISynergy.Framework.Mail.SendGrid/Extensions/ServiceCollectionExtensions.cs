@@ -22,11 +22,8 @@ namespace ISynergy.Framework.Mail.Extensions
         public static IServiceCollection AddMailSendGridIntegration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions();
-            services.Configure<SendGridOptions>(configuration.GetSection(nameof(SendGridOptions)).BindWithReload);
             services.Configure<MailOptions>(configuration.GetSection(nameof(MailOptions)).BindWithReload);
-
             services.TryAddSingleton<IMailService, MailService>();
-
             return services;
         }
     }

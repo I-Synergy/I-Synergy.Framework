@@ -13,6 +13,7 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
@@ -24,7 +25,7 @@
 	<ItemGroup>
 		<PackageReference Include="Flurl.Http" Version="3.2.4" />
 		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.3.0" />
-		<PackageReference Include="Uno.WinUI" Version="4.5.12" />
+		<PackageReference Include="Uno.WinUI" Version="4.5.14" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
 	</ItemGroup>
@@ -95,6 +96,9 @@
 		<UpToDateCheckInput Remove="Windows\ThemeWindow.xaml" />
 		<UpToDateCheckInput Remove="Windows\LanguageWindow.xaml" />
 		<UpToDateCheckInput Remove="Views\SelectionView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Include="Controls\Buttons\BaseDialogButtons.xaml">

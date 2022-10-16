@@ -2,7 +2,6 @@
 using ISynergy.Framework.Mail.Abstractions.Services;
 using ISynergy.Framework.Mail.Models;
 using ISynergy.Framework.Mail.Options;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid;
@@ -10,6 +9,7 @@ using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mail.Services
@@ -19,27 +19,23 @@ namespace ISynergy.Framework.Mail.Services
     /// </summary>
     internal class MailService : IMailService
     {
-        private readonly MailOptions _mailOptions;
-        private readonly SendGridOptions _sendGridOptions;
+        private readonly MailOptions _sendGridOptions;
         private readonly ILogger _logger;
 
         /// <summary>
         /// Constructor of Email Service.
         /// </summary>
         /// <param name="sendGridOptions">The configuration.</param>
-        /// <param name="mailOptions">The options.</param>
         /// <param name="logger">The logger.</param>
         public MailService(
-            IOptions<SendGridOptions> sendGridOptions,
-            IOptions<MailOptions> mailOptions,
+            IOptions<MailOptions> sendGridOptions,
             ILogger logger)
         {
-            _mailOptions = mailOptions.Value;
             _sendGridOptions = sendGridOptions.Value;
             _logger = logger;
 
-            Argument.IsNotNullOrEmpty(_mailOptions.EmailAddress);
-            Argument.IsNotNullOrEmpty(_mailOptions.Sender);
+            Argument.IsNotNullOrEmpty(_sendGridOptions.EmailAddress);
+            Argument.IsNotNullOrEmpty(_sendGridOptions.Sender);
             Argument.IsNotNullOrEmpty(_sendGridOptions.Key);
         }
 
@@ -47,8 +43,9 @@ namespace ISynergy.Framework.Mail.Services
         /// Sends e-mail from external e-mail address(From) to other external e-mail address(To).
         /// </summary>
         /// <param name="emailMessage">The email message.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public async Task<bool> SendEmailAsync(MailMessage emailMessage)
+        public async Task<bool> SendEmailAsync(MailMessage emailMessage, CancellationToken cancellationToken = default)
         {
             bool result = false;
 
