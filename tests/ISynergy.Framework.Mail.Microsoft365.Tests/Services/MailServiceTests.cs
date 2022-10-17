@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Mail.Models;
+using ISynergy.Framework.Mail.Models;
 using ISynergy.Framework.Mail.Options;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace ISynergy.Framework.Mail.Services.Tests
 {
     public class MailServiceTests
     {
-        private MailOptions _mailOptions;
+        private readonly MailOptions _mailOptions;
 
         public MailServiceTests()
         {
@@ -35,6 +34,50 @@ namespace ISynergy.Framework.Mail.Services.Tests
                 "Test subject",
                 "Test body",
                 false);
+            ;
+
+            Assert.IsTrue(await service.SendEmailAsync(message));
+        }
+
+        [TestMethod()]
+        public async Task SendEmailWithCopyAsyncTest()
+        {
+            var service = new MailService(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
+            var message = new MailMessage(
+                new List<string> { "ismail.hassani@i-synergy.nl" },
+                "Test subject",
+                "Test body",
+                true);
+            ;
+
+            Assert.IsTrue(await service.SendEmailAsync(message));
+        }
+
+        [TestMethod()]
+        public async Task SendEmailWithFromAsyncTest()
+        {
+            var service = new MailService(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
+            var message = new MailMessage(
+                "info@i-synergy.nl",
+                new List<string> { "support@i-synergy.nl" },
+                "Test subject",
+                "Test body",
+                false);
+            ;
+
+            Assert.IsTrue(await service.SendEmailAsync(message));
+        }
+
+        [TestMethod()]
+        public async Task SendEmailWithFromAndCopyAsyncTest()
+        {
+            var service = new MailService(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
+            var message = new MailMessage(
+                "info@i-synergy.nl",
+                new List<string> { "support@i-synergy.nl" },
+                "Test subject",
+                "Test body",
+                true);
             ;
 
             Assert.IsTrue(await service.SendEmailAsync(message));

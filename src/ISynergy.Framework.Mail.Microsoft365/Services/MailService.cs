@@ -60,7 +60,10 @@ namespace ISynergy.Framework.Mail.Services
             {
                 var message = new Message();
 
-                message.From = new Recipient { EmailAddress = new EmailAddress { Address = _mailOptions.EmailAddress, Name = _mailOptions.Sender } };
+                if(emailMessage.EmailAddressFrom is not null)
+                    message.From = new Recipient { EmailAddress = new EmailAddress { Address = emailMessage.EmailAddressFrom } };
+                else
+                    message.From = new Recipient { EmailAddress = new EmailAddress { Address = _mailOptions.EmailAddress, Name = _mailOptions.Sender } };
 
                 if (emailMessage.EmailAddressesTo.Count > 0)
                 {
@@ -90,7 +93,7 @@ namespace ISynergy.Framework.Mail.Services
                         recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
 
                     if (emailMessage.SendCopy)
-                        recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = emailMessage.EmailAddressFrom } });
+                        recipients.Add(message.From);
 
                     message.BccRecipients = recipients;
                 }
@@ -123,12 +126,10 @@ namespace ISynergy.Framework.Mail.Services
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex, ex.Message);
+                throw;
             }
-
-            return false;
         }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ISynergy.Framework.AspNetCore.Proxy.Extensions
+namespace ISynergy.Framework.AspNetCore.Extensions
 {
     /// <summary>
     /// Service collection extensions for proxy service
