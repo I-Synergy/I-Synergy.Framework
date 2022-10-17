@@ -47,8 +47,6 @@ namespace ISynergy.Framework.Mail.Services
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public async Task<bool> SendEmailAsync(MailMessage emailMessage, CancellationToken cancellationToken = default)
         {
-            bool result = false;
-
             try
             {
                 // Plug in your email service here to send an email.
@@ -86,15 +84,15 @@ namespace ISynergy.Framework.Mail.Services
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    result = true;
+                    return true;
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-            }
 
-            return result;
+                return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
