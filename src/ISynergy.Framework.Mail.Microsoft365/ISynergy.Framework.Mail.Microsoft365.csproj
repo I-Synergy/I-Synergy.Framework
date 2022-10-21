@@ -19,7 +19,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Graph" Version="4.44.0" />
+		<PackageReference Include="Microsoft.Graph" Version="4.45.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj" />
