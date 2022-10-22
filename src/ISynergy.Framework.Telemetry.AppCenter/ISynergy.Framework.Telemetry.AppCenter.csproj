@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows10.0.18362;net6.0-android</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows10.0.22621;net6.0-android</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Telemetry.AppCenter</PackageId>
 		<Description>I-Synergy Framework AppCenter Telemetry library for Windows and Android</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, AppCenter, Windows, Android, Uno</PackageTags>
@@ -16,7 +16,9 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
-	
+	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.22621'">
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.WinUI" Version="4.5.14" />
 		<PackageReference Include="Microsoft.AppCenter" Version="4.5.3" />
@@ -25,13 +27,11 @@
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
 	</ItemGroup>
 	
-	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.18362'">
+	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.22621'">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
-		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22000.24" />
-		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22000.24" />
 	</ItemGroup>
 	
-	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.18362'">
+	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.22621'">
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 		<Compile Update="**\*.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>

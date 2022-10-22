@@ -25,7 +25,7 @@ stages:
     displayName: 'Build'
     jobs:
     - job: BuildJob
-      displayName: 'Build, pack and test assemblies'
+      displayName: 'Build and pack assemblies'
       timeoutInMinutes: 120
       steps:
         - task: PowerShell@2
@@ -90,9 +90,9 @@ stages:
             PackageVersion: '$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
-          displayName: 'Install NuGet 6.0.0'
+          displayName: 'Install NuGet 6.3.1'
           inputs:
-            versionSpec: 6.0.0
+            versionSpec: 6.3.1
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
@@ -758,7 +758,25 @@ stages:
             pathtoPublish: '$(Build.ArtifactStagingDirectory)'
             artifactName: Output
             publishLocation: 'Container'
+        
+        - task: SonarCloudAnalyze@1
+          displayName: 'Run SonarCloud analyzer'
 
+        - bash: |
+            git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
+                +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
+          displayName: 'Copy source to Github'
+          condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+
+  - stage: TestStage
+    displayName: 'Test'
+    dependsOn: BuildStage
+    condition: succeeded()
+    jobs:
+    - job: TestJob
+      displayName: 'Test assemblies'
+      timeoutInMinutes: 120
+      steps:
         - task: DotNetCoreCLI@2
           displayName: 'Run Core Tests'
           inputs:
@@ -822,28 +840,14 @@ stages:
         #    projects: 'tests\ISynergy.Framework.Payment.Tests\ISynergy.Framework.Payment.Tests.csproj'
         #    arguments: '--configuration $(BuildConfiguration) --test-adapter-path:. --collect:"Code Coverage" --settings:codecoverage.runsettings'
 
-        - task: SonarCloudAnalyze@1
-          displayName: 'Run SonarCloud analyzer'
-
-        - bash: |
-            git push --prune https://$(GithubPAT)@github.com/I-Synergy/I-Synergy.Framework \
-                +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
-          displayName: 'Copy source to Github'
-          condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-
   - stage: DocStage
     displayName: 'Documentation'
-    dependsOn: BuildStage
+    dependsOn: TestStage
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     jobs:
     - job: DocJob
       displayName: 'Create API Documentation'
       steps:
-        - task: NuGetToolInstaller@1
-          displayName: 'Use NuGet 6.0.0'
-          inputs:
-            versionSpec: 6.0.0
-
         - task: ChocolateyToolInstaller@0
           inputs:
             force: true
@@ -890,7 +894,7 @@ stages:
 
   - stage: Release
     displayName: 'Release'
-    dependsOn: BuildStage
+    dependsOn: TestStage
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
     jobs:
     - job: ArtifactsJob
