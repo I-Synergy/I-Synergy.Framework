@@ -115,9 +115,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         public virtual Task InitializeAsync()
         {
             if (!IsInitialized)
-            {
-                Logger.LogTrace($"ViewModel: {GetType().Name.Replace("ViewModel", "")}.");
-            }
+                BaseCommonServices.TelemetryService.TrackEvent($"{GetType().Name.Replace("ViewModel", "")}");
 
             return Task.CompletedTask;
         }
