@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
@@ -10,10 +11,14 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,17 +26,9 @@ using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.UI.Abstractions.Views;
-using Microsoft.UI.Windowing;
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Activation;
 using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
-using ISynergy.Framework.Core.Enumerations;
 
 namespace ISynergy.Framework.UI
 {
@@ -145,7 +142,7 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs" /> instance containing the event data.</param>
-        private async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        protected virtual async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (!e.Handled)
             {
@@ -155,18 +152,11 @@ namespace ISynergy.Framework.UI
         }
 
         /// <summary>
-        /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
-        /// </summary>
-        /// <param name="e">Event data for the event.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e) =>
-            OnLaunchApplication(e);
-
-        /// <summary>
         /// Handles the UnobservedTaskException event of the TaskScheduler control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs" /> instance containing the event data.</param>
-        private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
             e.SetObserved();
@@ -177,19 +167,20 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs" /> instance containing the event data.</param>
-        private async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        protected virtual async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
                 await _exceptionHandlerService.HandleExceptionAsync(exception);
         }
 
         /// <summary>
-        /// On launch of application.
+        /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
         /// </summary>
-        /// <param name="e">The <see cref="LaunchActivatedEventArgs"/> instance containing the event data.</param>
-        public virtual void OnLaunchApplication(LaunchActivatedEventArgs e)
+        /// <param name="e">Event data for the event.</param>
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             MainWindow = new Window();
+            MainWindow.Activated += OnActivated;
 
             _themeService.InitializeMainWindow(MainWindow);
             _themeService.SetStyle(_settingsService.Settings.Color, _settingsService.Settings.Theme);
@@ -226,20 +217,21 @@ namespace ISynergy.Framework.UI
                 MainWindow.Content = rootFrame;
             }
 
-            if (e.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Launch)
+            if (rootFrame.Content is null)
             {
-                if (rootFrame.Content is null)
-                {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
 
-                    var view = _serviceProvider.GetRequiredService<IShellView>();
-                    rootFrame.Navigate(view.GetType(), e.Arguments);
-                }
+                var view = _serviceProvider.GetRequiredService<IShellView>();
+                rootFrame.Navigate(view.GetType(), e.Arguments);
             }
 
             MainWindow.Activate();
+        }
+
+        protected virtual void OnActivated(object sender, WindowActivatedEventArgs args)
+        {
         }
 
         /// <summary>

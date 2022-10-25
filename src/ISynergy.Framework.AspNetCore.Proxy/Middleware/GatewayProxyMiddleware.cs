@@ -103,7 +103,7 @@ namespace ISynergy.Framework.AspNetCore.Proxy.Middleware
             requestTrace.AppendLine($"QueryString: {request.QueryString.ToString()}");
             requestTrace.AppendLine($"Scheme: {request.Scheme?.ToString()}");
 
-            _logger.LogTrace(requestTrace.ToString());
+            _logger.LogInformation(requestTrace.ToString());
         }
     }
 }

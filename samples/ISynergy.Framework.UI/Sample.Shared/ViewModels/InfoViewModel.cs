@@ -3,6 +3,13 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Text;
+using Windows.ApplicationModel.Activation;
+using System.Web;
+
+#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
+using Microsoft.Windows.AppLifecycle;
+#endif
 
 namespace Sample.ViewModels
 {
@@ -59,6 +66,14 @@ namespace Sample.ViewModels
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets or sets the Startup property value.
+        /// </summary>
+        public string Startup
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -76,7 +91,7 @@ namespace Sample.ViewModels
             ProductName = commonServices.InfoService.ProductName;
             Version = commonServices.InfoService.ProductVersion;
             Copyrights = commonServices.InfoService.Copyrights;
-
+            Startup = ((Context)context).Environment.ToString();
             //throw new Exception("Test exception for telemetry!");
         }
     }
