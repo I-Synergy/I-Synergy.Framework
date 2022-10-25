@@ -81,8 +81,7 @@ namespace Sample
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
-            //services.AddTelemetrySentryIntegration(configurationRoot);
-            services.AddApplicationInsightsTelemetryIntegration(configurationRoot);
+            services.AddAppCenterTelemetryIntegration(configurationRoot);
 
             services.AddClipboardIntegration();
 

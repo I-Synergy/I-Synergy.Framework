@@ -21,7 +21,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.WinUI" Version="4.5.14" />
-		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.22621'">

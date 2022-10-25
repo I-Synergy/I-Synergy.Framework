@@ -96,7 +96,7 @@
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj" />
 	</ItemGroup>
