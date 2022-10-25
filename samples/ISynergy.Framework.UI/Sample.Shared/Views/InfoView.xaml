@@ -12,6 +12,7 @@
             <TextBox Header="Product name" Text="{Binding ProductName}" IsReadOnly="True"/>
             <TextBox Header="Version" Text="{Binding Version}" IsReadOnly="True"/>
             <TextBox Header="Copyrights" Text="{Binding Copyrights}" IsReadOnly="True"/>
+            <TextBox Header="Activation" Text="{Binding Startup}" IsReadOnly="True"/>
         </StackPanel>
     </Grid>
 </c:View>
