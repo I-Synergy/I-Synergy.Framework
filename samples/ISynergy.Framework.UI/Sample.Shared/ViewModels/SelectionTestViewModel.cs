@@ -64,15 +64,6 @@ namespace Sample.ViewModels
         public ObservableCollection<TestItem> SelectedTestItems { get; set; }
 
         /// <summary>
-        /// Gets or sets the categories with least demand property value.
-        /// </summary>
-        public List<Measurement> CategoriesWithLeastDemand
-        {
-            get => GetValue<List<Measurement>>();
-            set => SetValue(value);
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -91,15 +82,6 @@ namespace Sample.ViewModels
             ShowDialogYesNoCancel = new Command(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
             ShowDialogOk = new Command(async () => await ShowDialogAsync(MessageBoxButton.OK));
             ShowDialogOkCancel = new Command(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
-
-            CategoriesWithLeastDemand = new List<Measurement>()
-            {
-                new Measurement(Guid.NewGuid(), "Category 5", 40),
-                new Measurement(Guid.NewGuid(), "Category 4", 55),
-                new Measurement(Guid.NewGuid(), "Category 3", 60),
-                new Measurement(Guid.NewGuid(), "Category 2", 75),
-                new Measurement(Guid.NewGuid(), "Category 1", 100)
-            };
         }
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)

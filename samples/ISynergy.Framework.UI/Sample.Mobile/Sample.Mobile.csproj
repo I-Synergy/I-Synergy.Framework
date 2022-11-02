@@ -35,9 +35,9 @@
 	  </ApplicationDefinition>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Uno.CommunityToolkit.WinUI.UI.Controls" Version="7.1.100-dev.15.g12261e2626" />
-		<PackageReference Include="Uno.WinUI" Version="4.5.14" />
-		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.5.14" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.CommunityToolkit.WinUI.UI.Controls" Version="7.1.100" />
+		<PackageReference Include="Uno.WinUI" Version="4.6.19" />
+		<PackageReference Include="Uno.WinUI.RemoteControl" Version="4.6.19" Condition="'$(Configuration)'=='Debug'" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
@@ -50,7 +50,7 @@
 	<Choose>
 		<When Condition="'$(TargetFramework)'=='net6.0-android'">
 			<ItemGroup>
-				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.6.1.1" />
+				<PackageReference Include="Xamarin.Google.Android.Material" Version="1.7.0.1" />
 				<PackageReference Include="Uno.UniversalImageLoader" Version="1.9.36" />
 			</ItemGroup>
 			<ItemGroup>

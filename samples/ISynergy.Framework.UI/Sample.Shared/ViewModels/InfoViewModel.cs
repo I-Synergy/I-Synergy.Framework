@@ -92,6 +92,7 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             Copyrights = commonServices.InfoService.Copyrights;
             Startup = ((Context)context).Environment.ToString();
+            
             //throw new Exception("Test exception for telemetry!");
         }
     }
