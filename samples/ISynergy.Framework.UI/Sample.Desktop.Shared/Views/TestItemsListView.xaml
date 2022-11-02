@@ -1,12 +1,12 @@
-﻿<c:View xmlns:c="using:ISynergy.Framework.UI.Controls" x:Class="Sample.Views.TestItemsListView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:base_controls="using:Sample.Views.Controls"
-        xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
-        xmlns:m="using:ISynergy.Framework.UI.Markup"
-        mc:Ignorable="d">
+﻿<c:View  x:Class="Sample.Views.TestItemsListView"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
+         xmlns:c="using:ISynergy.Framework.UI.Controls"
+         xmlns:base_controls="using:Sample.Views.Controls"
+         mc:Ignorable="d">
 
     <RelativePanel>
         <c:BaseMenu x:Name="MenuLayout" 

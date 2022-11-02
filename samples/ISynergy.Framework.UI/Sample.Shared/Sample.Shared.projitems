@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommonServices.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ChartsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InfoViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SelectionTestViewModel.cs" />
