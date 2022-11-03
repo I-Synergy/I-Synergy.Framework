@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ISynergy.Framework.Core.Models
+namespace ISynergy.Framework.Core.Models.Result
 {
     public class PaginatedResult<T> : Result
     {

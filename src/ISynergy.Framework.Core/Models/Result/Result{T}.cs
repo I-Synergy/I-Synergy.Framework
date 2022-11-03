@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Core.Models
+namespace ISynergy.Framework.Core.Models.Result
 {
     public class Result<T> : Result, IResult<T>
     {

@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 		
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows10.0.22621;netstandard2.0;net6.0-android</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows10.0.19041;netstandard2.0;net6.0-android</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Windows, Linux, Android and WebAssembly</Description>
@@ -16,18 +16,21 @@
 		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.22621'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.19041'">
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.22621'">
+	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.19041'">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Flurl.Http" Version="3.2.4" />
+	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.19041'">
 		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.3.0" />
-		<PackageReference Include="Uno.WinUI" Version="4.5.14" />
+		<PackageReference Include="Uno.WinUI" Version="4.6.19" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
 	</ItemGroup>
@@ -51,7 +54,7 @@
 		</Compile>
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.22621'">
+	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.19041'">
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 		<Compile Update="**\*.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>

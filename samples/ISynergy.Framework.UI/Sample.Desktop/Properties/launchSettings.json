@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Sample.Desktop": {
-      "commandName": "MsixPackage"
+      "commandName": "MsixPackage",
+      "commandLineArgs": "--environment Local"
     }
   }
 }

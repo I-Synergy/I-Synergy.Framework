@@ -18,11 +18,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <value>The language service.</value>
         ILanguageService LanguageService { get; }
         /// <summary>
-        /// Gets the telemetry service.
-        /// </summary>
-        /// <value>The telemetry service.</value>
-        ITelemetryService TelemetryService { get; }
-        /// <summary>
         /// Gets the dialog service.
         /// </summary>
         /// <value>The dialog service.</value>

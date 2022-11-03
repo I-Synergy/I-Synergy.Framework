@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Core.Models
+namespace ISynergy.Framework.Core.Models.Result
 {
     public class Result : IResult
     {
@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Models
         public bool Succeeded { get; set; }
 
         public static IResult Fail() => new Result { Succeeded = false };
-    
+
         public static IResult Fail(string message) => new Result { Succeeded = false, Messages = new List<string> { message } };
 
         public static IResult Fail(List<string> messages) => new Result { Succeeded = false, Messages = messages };

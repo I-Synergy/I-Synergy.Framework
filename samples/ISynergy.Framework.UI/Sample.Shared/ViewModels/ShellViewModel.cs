@@ -89,6 +89,8 @@ namespace Sample.ViewModels
         /// </summary>
         public Command TreeNodeTest_Command { get; set; }
 
+        public Command Chart_Command { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
         /// </summary>
@@ -122,9 +124,13 @@ namespace Sample.ViewModels
             ListViewTest_Command = new Command(async () => await OpenListViewTestAsync());
             ValidationTest_Command = new Command(async () => await OpenValidationTestAsync());
             TreeNodeTest_Command = new Command(async () => await OpenTreenNodeTestAsync());
+            Chart_Command = new Command(async () => await OpenChartTestAsync());
 
             PopulateNavItems();
         }
+
+        private Task OpenChartTestAsync() =>
+            CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
 
         private Task OpenTreenNodeTestAsync() =>
             CommonServices.NavigationService.NavigateAsync<TreeNodeViewModel>();
@@ -206,6 +212,7 @@ namespace Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"] as string, ForegroundColor, ListViewTest_Command));
             PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"] as string, ForegroundColor, ValidationTest_Command));
             PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"] as string, ForegroundColor, TreeNodeTest_Command));
+            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"] as string, ForegroundColor, Chart_Command));
 
             SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"] as string, ForegroundColor, Help_Command));

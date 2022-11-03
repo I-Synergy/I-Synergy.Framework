@@ -1,8 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models.Result;
 using System.Net.Http;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Extensions

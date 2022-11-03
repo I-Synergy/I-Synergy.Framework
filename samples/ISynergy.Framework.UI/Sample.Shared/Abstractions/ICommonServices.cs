@@ -13,7 +13,7 @@ namespace Sample.Abstractions.Services
         /// Gets the authentication service.
         /// </summary>
         /// <value>The authentication service.</value>
-        IAuthenticationService AuthenticationService { get; }
+        IBaseAuthenticationService AuthenticationService { get; }
         /// <summary>
         /// Gets the file service.
         /// </summary>
