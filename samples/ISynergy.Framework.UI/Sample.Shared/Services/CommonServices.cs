@@ -14,7 +14,7 @@ namespace Sample.Services
         /// Gets the authentication service.
         /// </summary>
         /// <value>The authentication service.</value>
-        public IAuthenticationService AuthenticationService { get; }
+        public IBaseAuthenticationService AuthenticationService { get; }
         /// <summary>
         /// Gets the file service.
         /// </summary>
@@ -27,7 +27,6 @@ namespace Sample.Services
         /// <param name="busyService">The busy indicator service.</param>
         /// <param name="messageService">The messaging service</param>
         /// <param name="languageService">The language service.</param>
-        /// <param name="telemetryService">The telemetry service.</param>
         /// <param name="dialogService">The dialog service.</param>
         /// <param name="navigationService">The navigation service.</param>
         /// <param name="fileService">The file service.</param>
@@ -39,18 +38,16 @@ namespace Sample.Services
             IBusyService busyService,
             IMessageService messageService,
             ILanguageService languageService,
-            ITelemetryService telemetryService,
             IDialogService dialogService,
             INavigationService navigationService,
             IFileService fileService,
             IInfoService infoService,
             IConverterService converterService,
             IDispatcherService dispatcherService,
-            IAuthenticationService authenticationService)
+            IBaseAuthenticationService authenticationService)
             :base(busyService,
                  messageService,
                  languageService, 
-                 telemetryService, 
                  dialogService, 
                  navigationService, 
                  infoService, 

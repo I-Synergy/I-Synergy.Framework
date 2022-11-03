@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Options
+﻿using ISynergy.Framework.Core.Enumerations;
+
+namespace ISynergy.Framework.Core.Abstractions.Options
 {
     /// <summary>
     /// Configuration options interface.
@@ -21,14 +23,9 @@
         /// <value>The service endpoint.</value>
         string ServiceEndpoint { get; set; }
         /// <summary>
-        /// Gets or sets the signal r endpoint.
+        /// Gets or sets the environment.
         /// </summary>
-        /// <value>The signal r endpoint.</value>
-        string SignalREndpoint { get; set; }
-        /// <summary>
-        /// Gets or sets the authentication endpoint.
-        /// </summary>
-        /// <value>The authentication endpoint.</value>
-        string AuthenticationEndpoint { get; set; }
+        /// <value>The environment.</value>
+        SoftwareEnvironments Environment { get; set; }
     }
 }

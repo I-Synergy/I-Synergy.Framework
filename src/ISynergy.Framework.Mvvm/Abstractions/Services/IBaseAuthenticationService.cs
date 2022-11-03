@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     /// <summary>
     /// Interface IAuthenticationService
     /// </summary>
-    public interface IAuthenticationService
+    public interface IBaseAuthenticationService
     {
         /// <summary>
         /// Checks for expired token.

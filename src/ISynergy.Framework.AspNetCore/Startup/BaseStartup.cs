@@ -99,11 +99,11 @@ namespace ISynergy.Framework.AspNetCore.Startup
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
             app.ConfigureExceptionHandlerMiddleware();
-
-            app.UseHttpsRedirection();
+            
             app.UseStaticFiles();
 
             app.UseRequestLocalization(

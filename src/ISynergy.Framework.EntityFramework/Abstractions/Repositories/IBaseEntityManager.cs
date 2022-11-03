@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.EntityFramework.Abstractions
+namespace ISynergy.Framework.EntityFramework.Abstractions.Repositories
 {
     /// <summary>
     /// Interface IBaseEntityManager

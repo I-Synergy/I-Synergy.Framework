@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
 using System.Threading.Tasks;
 
-namespace ISynergy.Framework.Clipboard.Abstractions.Services
+namespace ISynergy.Framework.UI.Abstractions.Services
 {
     /// <summary>
     /// Interface IClipboardService

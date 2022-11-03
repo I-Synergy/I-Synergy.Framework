@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Options;
+using ISynergy.Framework.Core.Enumerations;
 
 namespace Sample.Options
 {
@@ -42,5 +43,6 @@ namespace Sample.Options
         /// </summary>
         /// <value>The web endpoint.</value>
         public string WebEndpoint { get; set; }
+        public SoftwareEnvironments Environment { get; set; }
     }
 }

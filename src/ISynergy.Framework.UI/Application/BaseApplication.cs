@@ -76,11 +76,6 @@ namespace ISynergy.Framework.UI
         protected readonly ILogger _logger;
 
         /// <summary>
-        /// The telemetry service
-        /// </summary>
-        protected readonly ITelemetryService _telemetryService;
-
-        /// <summary>
         /// The exception handler service
         /// </summary>
         protected readonly IExceptionHandlerService _exceptionHandlerService;
@@ -123,7 +118,6 @@ namespace ISynergy.Framework.UI
             localizationFunctions.SetLocalizationLanguage(_settingsService.Settings.Culture);
 
             _themeService = _serviceProvider.GetRequiredService<IThemeService>();
-            _telemetryService = _serviceProvider.GetRequiredService<ITelemetryService>();
             _exceptionHandlerService = _serviceProvider.GetRequiredService<IExceptionHandlerService>();
             _logger = _serviceProvider.GetRequiredService<ILogger>();
             _logger.LogInformation("Starting application");
@@ -319,7 +313,7 @@ namespace ISynergy.Framework.UI
             services.AddSingleton((s) => _languageService);
             services.AddSingleton((s) => _navigationService);
             services.AddSingleton<ILogger>((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
-            services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
+            services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
             services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
@@ -328,6 +322,7 @@ namespace ISynergy.Framework.UI
             services.AddSingleton<IBusyService, BusyService>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IDispatcherService, DispatcherService>();
+            services.AddSingleton<IClipboardService, ClipboardService>();
 
             services.AddSingleton<IFileService>(provider => 
                 new FileService(

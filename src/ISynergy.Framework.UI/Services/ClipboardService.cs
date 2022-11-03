@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Clipboard.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -8,7 +8,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 
-namespace ISynergy.Framework.Clipboard.Services
+namespace ISynergy.Framework.UI.Services
 {
     /// <summary>
     /// Class ClipboardService.

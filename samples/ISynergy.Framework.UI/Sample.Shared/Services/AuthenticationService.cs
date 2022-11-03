@@ -6,10 +6,10 @@ namespace Sample.Services
 {
     /// <summary>
     /// Class AuthenticationService.
-    /// Implements the <see cref="IAuthenticationService" />
+    /// Implements the <see cref="IBaseAuthenticationService" />
     /// </summary>
-    /// <seealso cref="IAuthenticationService" />
-    public class AuthenticationService : IAuthenticationService
+    /// <seealso cref="IBaseAuthenticationService" />
+    public class AuthenticationService : IBaseAuthenticationService
     {
         /// <summary>
         /// Authenticates the with API key asynchronous.

@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Clipboard.Extensions;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
@@ -108,7 +107,7 @@ namespace Sample
             services.AddSingleton<IVersionService>((s) => new VersionService(assembly));
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();
-            services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            services.AddSingleton<IBaseAuthenticationService, AuthenticationService>();
 
             services.AddUpdatesIntegration();
 
@@ -119,8 +118,6 @@ namespace Sample
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
             services.AddAppCenterTelemetryIntegration(configurationRoot);
-
-            services.AddClipboardIntegration();
 
             services.AddScoped<IShellViewModel, ShellViewModel>();
             services.AddScoped<IShellView, ShellView>();
