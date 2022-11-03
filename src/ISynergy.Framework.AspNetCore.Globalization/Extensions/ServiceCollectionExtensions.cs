@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace ISynergy.Framework.AspNetCore.Extensions
+namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
 {
     /// <summary>
     /// Service collection extensions for globalization service

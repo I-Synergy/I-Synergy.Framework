@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Extensions;
+﻿using ISynergy.Framework.AspNetCore.Proxy.Extensions;
 using ISynergy.Framework.AspNetCore.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

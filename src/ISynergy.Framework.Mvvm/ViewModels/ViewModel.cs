@@ -112,13 +112,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Initializes the asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        public virtual Task InitializeAsync()
-        {
-            if (!IsInitialized)
-                BaseCommonServices.TelemetryService.TrackEvent($"{GetType().Name.Replace("ViewModel", "")}");
-
-            return Task.CompletedTask;
-        }
+        public virtual Task InitializeAsync() => Task.CompletedTask;
 
         /// <summary>
         /// Gets the enum description.

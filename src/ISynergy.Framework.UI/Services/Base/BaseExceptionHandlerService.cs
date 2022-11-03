@@ -12,11 +12,10 @@ using Windows.Networking.Connectivity;
 
 namespace ISynergy.Framework.UI.Services
 {
-    public class ExceptionHandlerService : IExceptionHandlerService
+    public class BaseExceptionHandlerService : IExceptionHandlerService
     {
         private readonly IBusyService _busyService;
         private readonly ILanguageService _languageService;
-        private readonly ITelemetryService _telemetryService;
         private readonly IDialogService _dialogService;
         private readonly ILogger _logger;
 
@@ -26,19 +25,16 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="busyService"></param>
         /// <param name="dialogService"></param>
         /// <param name="languageService"></param>
-        /// <param name="telemetryService"></param>
         /// <param name="logger"></param>
-        public ExceptionHandlerService(
+        public BaseExceptionHandlerService(
             IBusyService busyService,
             IDialogService dialogService,
             ILanguageService languageService,
-            ITelemetryService telemetryService,
-            ILogger<ExceptionHandlerService> logger)
+            ILogger<BaseExceptionHandlerService> logger)
         {
             _busyService = busyService;
             _languageService = languageService;
             _dialogService = dialogService;
-            _telemetryService = telemetryService;
             _logger = logger;
         }
 
@@ -46,12 +42,10 @@ namespace ISynergy.Framework.UI.Services
         /// Handles the exception.
         /// </summary>
         /// <param name="exception"></param>
-        public async Task HandleExceptionAsync(Exception exception)
+        public virtual async Task HandleExceptionAsync(Exception exception)
         {
             try
             {
-                _telemetryService.TrackException(exception, exception.Message);
-
                 _logger.LogError(exception.Message);
 
                 if (exception.InnerException is WebSocketException)
@@ -124,11 +118,6 @@ namespace ISynergy.Framework.UI.Services
             catch (Exception ex)
             {
                 _logger.LogCritical(ex.Message, ex);
-                _telemetryService.TrackException(ex, ex.Message);
-            }
-            finally
-            {
-                _telemetryService.Flush();
             }
         }
     }

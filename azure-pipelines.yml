@@ -78,7 +78,6 @@ stages:
              src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj
              src\ISynergy.Framework.Telemetry.ApplicationInsights\ISynergy.Framework.Telemetry.ApplicationInsights.csproj
              src\ISynergy.Framework.Telemetry.Sentry\ISynergy.Framework.Telemetry.Sentry.csproj
-             src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj
              src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
              src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj
             InsertAttributes: true
@@ -699,23 +698,6 @@ stages:
           inputs:
             command: 'pack'
             packagesToPack: 'src\ISynergy.Framework.Telemetry.Sentry\ISynergy.Framework.Telemetry.Sentry.csproj'
-            nobuild: true
-            includesymbols: true
-            versioningScheme: 'byEnvVar'
-            versionEnvVar: 'VersionPackage'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Build Clipboard Project'
-          inputs:
-            command: build
-            projects: 'src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj'
-            arguments: '-c $(BuildConfiguration)'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Pack Clipboard Project'
-          inputs:
-            command: 'pack'
-            packagesToPack: 'src\ISynergy.Framework.Clipboard\ISynergy.Framework.Clipboard.csproj'
             nobuild: true
             includesymbols: true
             versioningScheme: 'byEnvVar'
