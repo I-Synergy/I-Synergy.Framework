@@ -20,6 +20,7 @@ namespace ISynergy.Framework.Telemetry.AppCenter.Services
         /// The context
         /// </summary>
         private readonly IContext _context;
+
         /// <summary>
         /// The information service
         /// </summary>

@@ -19,6 +19,18 @@ namespace Sample.Models
         /// </summary>
         public double Value { get; set; }
 
+        public Measurement()
+        {
+            Id = Guid.NewGuid();
+        }
+
+        public Measurement(string description, double value)
+            : this()
+        {
+            Description = description;
+            Value = value;
+        }
+
         /// <summary>
         /// Default constructor.    
         /// </summary>
@@ -26,10 +38,9 @@ namespace Sample.Models
         /// <param name="description"></param>
         /// <param name="value"></param>
         public Measurement(Guid id, string description, double value)
+            : this(description, value)
         {
             Id = id;
-            Description = description;
-            Value = value;
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Telemetry.ApplicationInsights.Options;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 
@@ -20,21 +23,28 @@ namespace ISynergy.Framework.Telemetry.ApplicationInsights.Services
         /// Telemetry client for Application Insights.
         /// </summary>
         private readonly TelemetryClient _client;
-
+        private readonly ApplicationInsightsOptions _applicationInsightsOptions;
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryService"/> class.
         /// </summary>
         /// <param name="context"></param>
         /// <param name="infoService">The information service.</param>
-        /// <param name="telemetryClient"></param>
-        public TelemetryService(IContext context, IInfoService infoService, TelemetryClient telemetryClient)
+        /// <param name="options"></param>
+        public TelemetryService(IContext context, IInfoService infoService, IOptions<ApplicationInsightsOptions> options)
         {
             _context = context;
-            _client = telemetryClient;
+            _applicationInsightsOptions = options.Value;
+
+            var config = TelemetryConfiguration.CreateDefault();
+            config.ConnectionString = _applicationInsightsOptions.ConnectionString;
+
+            _client = new TelemetryClient(config);
             _client.Context.User.UserAgent = infoService.ProductName;
             _client.Context.Component.Version = infoService.ProductVersion.ToString();
             _client.Context.Session.Id = Guid.NewGuid().ToString();
             _client.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => _client.Flush();
         }
 
         /// <summary>
