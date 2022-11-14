@@ -50,12 +50,13 @@ namespace ISynergy.Framework.AspNetCore.Proxy.Middleware
                     {
                         _logger.LogDebug($"TargetUri: {proxy.DestinationUri.AbsoluteUri}");
 
-                        var url = new Url(proxy.DestinationUri)
-                            .AppendPathSegment(context.Request.Path)
-                            .SetQueryParam(context.Request.QueryString.ToString().Replace("?", ""))
-                            .ToUri();
+                        var url = new Url(proxy.DestinationUri);
+                        url.AppendPathSegment(context.Request.Path);
 
-                        var targetRequestMessage = context.CreateProxyHttpRequest(url);
+                        if (!string.IsNullOrEmpty(context.Request.QueryString.ToString()))
+                            url.SetQueryParam(context.Request.QueryString.ToString().Replace("?", ""));
+
+                        var targetRequestMessage = context.CreateProxyHttpRequest(url.ToUri());
 
                         using var httpClient = httpClientFactory.CreateClient();
                         using var responseMessage = await httpClient.SendAsync(targetRequestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted);
