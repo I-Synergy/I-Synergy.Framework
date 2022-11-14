@@ -108,6 +108,11 @@ stages:
             projectName: 'I-Synergy.Framework'
             projectVersion: '$(GitVersion.FullSemVer)'
 
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'sdk'
+            version: '7.x'
+
         - task: DotNetCoreCLI@2
           displayName: 'Build Core Project'
           inputs:
@@ -759,6 +764,11 @@ stages:
       displayName: 'Test assemblies'
       timeoutInMinutes: 120
       steps:
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'sdk'
+            version: '7.x'
+
         - task: DotNetCoreCLI@2
           displayName: 'Run Core Tests'
           inputs:
@@ -830,6 +840,11 @@ stages:
     - job: DocJob
       displayName: 'Create API Documentation'
       steps:
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'sdk'
+            version: '7.x'
+
         - task: ChocolateyToolInstaller@0
           inputs:
             force: true
