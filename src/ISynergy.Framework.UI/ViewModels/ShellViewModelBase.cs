@@ -160,7 +160,10 @@ namespace ISynergy.Framework.UI.ViewModels
             : base(context, commonServices, logger)
         {
             _settingsService = appSettingsService;
+            
             _themeService = themeService;
+            _themeService.SetStyle(new Style(_settingsService.Settings.Color, _settingsService.Settings.Theme));
+            
             _localizationFunctions = localizationFunctions;
 
             InitializeUI();
