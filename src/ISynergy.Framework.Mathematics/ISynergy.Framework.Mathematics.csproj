@@ -10,7 +10,7 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Mathematics.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>
