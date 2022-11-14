@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows10.0.19041;netstandard2.0;net6.0-android</TargetFrameworks>
+		<TargetFrameworks>net7.0-windows10.0.19041;netstandard2.0;net7.0-android</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Update</PackageId>
 		<Description>I-Synergy Framework Update for Windows</Description>
 		<PackageTags>I-Synergy, Framework, Update, Windows</PackageTags>
@@ -14,23 +14,23 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Update.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.19041'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 	
-	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.19041'">
+	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.19041'">
+	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
 		<PackageReference Include="Uno.WinUI" Version="4.6.19" />
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
 
@@ -39,7 +39,7 @@
 		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.19041'">
+	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 		<Compile Update="**\*.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>

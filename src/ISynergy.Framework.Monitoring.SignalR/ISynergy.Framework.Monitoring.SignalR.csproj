@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Monitoring.SignalR</PackageId>
-		<Description>I-Synergy Framework SignalR Monitoring for .Net 6.0</Description>
+		<Description>I-Synergy Framework SignalR Monitoring for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, SignalR</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -12,7 +12,7 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>ISynergy.Framework.Monitoring</RootNamespace>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Monitoring.SignalR.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>

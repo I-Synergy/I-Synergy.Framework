@@ -9,7 +9,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet>ISynergy.Framework.Geography.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="SonarQube - I-Synergy.Framework Sonar way" ToolsVersion="17.0">
+  <Include Path="..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset" Action="Default" />
+  <Include Path="..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset" Action="Default" />
+</RuleSet>

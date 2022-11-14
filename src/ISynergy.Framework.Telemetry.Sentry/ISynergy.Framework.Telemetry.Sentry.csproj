@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows10.0.19041;netstandard2.0;net6.0-android</TargetFrameworks>
+		<TargetFrameworks>net7.0-windows10.0.19041;netstandard2.0;net7.0-android</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Telemetry.Sentry</PackageId>
 		<Description>I-Synergy Framework Sentry Telemetry library for Windows, Linux, Android and WebAssembly</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, Sentry, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
@@ -14,26 +14,26 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Telemetry.Sentry.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	
-	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.19041'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 	
-	<ItemGroup Condition="'$(TargetFramework)'=='net6.0-windows10.0.19041'">
+	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
 	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.19041'">
+	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
 		<PackageReference Include="Uno.WinUI" Version="4.6.19" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Sentry" Version="3.23.1" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
 	</ItemGroup>
 	
-	<ItemGroup Condition="'$(TargetFramework)'!='net6.0-windows10.0.19041'">
+	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 		<Compile Update="**\*.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
