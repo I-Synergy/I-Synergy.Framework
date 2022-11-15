@@ -9,7 +9,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet>ISynergy.Framework.Storage.Azure.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,8 +18,8 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-		<PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+		<PackageReference Include="System.Text.Encodings.Web" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

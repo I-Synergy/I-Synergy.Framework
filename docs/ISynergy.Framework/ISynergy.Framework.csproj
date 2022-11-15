@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<TargetFramework>net7.0</TargetFramework>
+		<CodeAnalysisRuleSet>ISynergy.Framework.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>

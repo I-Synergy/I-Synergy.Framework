@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.AspNetCore.MultiTenancy</PackageId>
-		<Description>I-Synergy Framework MultiTenancy for .Net 6.0</Description>
+		<Description>I-Synergy Framework MultiTenancy for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, MultiTenancy, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -11,7 +11,7 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.MultiTenancy.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />

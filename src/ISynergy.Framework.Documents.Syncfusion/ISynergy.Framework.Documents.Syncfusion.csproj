@@ -12,7 +12,7 @@
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>ISynergy.Framework.Documents</RootNamespace>
-		<CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Documents.Syncfusion.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>
       <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
@@ -23,11 +23,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.3.0.52" />
-        <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="20.3.0.52" />
-        <PackageReference Include="Syncfusion.Licensing" Version="20.3.0.52" />
-        <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="20.3.0.52" />
-        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.3.0.52" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.3.0.56" />
+        <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="20.3.0.56" />
+        <PackageReference Include="Syncfusion.Licensing" Version="20.3.0.56" />
+        <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="20.3.0.56" />
+        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.3.0.56" />
     </ItemGroup>
 </Project>

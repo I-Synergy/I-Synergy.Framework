@@ -96,35 +96,35 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
             Model = GetTestObject(file);
         }
 
-        private byte[] SerializeToByteArray(object obj)
-        {
-            if (obj is null)
-            {
-                return null;
-            }
-            var bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                bf.Serialize(ms, obj);
-                return ms.ToArray();
-            }
-        }
+        //private byte[] SerializeToByteArray(object obj)
+        //{
+        //    if (obj is null)
+        //    {
+        //        return null;
+        //    }
+        //    var bf = new BinaryFormatter();
+        //    using (var ms = new MemoryStream())
+        //    {
+        //        bf.Serialize(ms, obj);
+        //        return ms.ToArray();
+        //    }
+        //}
 
-        private T Deserialize<T>(byte[] byteArray) where T : class
-        {
-            if (byteArray is null)
-            {
-                return null;
-            }
-            using (var memStream = new MemoryStream())
-            {
-                var binForm = new BinaryFormatter();
-                memStream.Write(byteArray, 0, byteArray.Length);
-                memStream.Seek(0, SeekOrigin.Begin);
-                var obj = (T)binForm.Deserialize(memStream);
-                return obj;
-            }
-        }
+        //private T Deserialize<T>(byte[] byteArray) where T : class
+        //{
+        //    if (byteArray is null)
+        //    {
+        //        return null;
+        //    }
+        //    using (var memStream = new MemoryStream())
+        //    {
+        //        var binForm = new BinaryFormatter();
+        //        memStream.Write(byteArray, 0, byteArray.Length);
+        //        memStream.Seek(0, SeekOrigin.Begin);
+        //        var obj = (T)binForm.Deserialize(memStream);
+        //        return obj;
+        //    }
+        //}
 
 
         /// <summary>
@@ -143,24 +143,24 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
         /// <summary>
         /// Binaries the formatter.
         /// </summary>
-        [Benchmark]
-        public void BinaryFormatter()
-        {
-            byte[] result = null;
+        //[Benchmark]
+        //public void BinaryFormatter()
+        //{
+        //    byte[] result = null;
 
-            using (MemoryStream ms = new MemoryStream())
-            {
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(ms, Model);
-                result = ms.ToArray();
-            }
+        //    using (MemoryStream ms = new MemoryStream())
+        //    {
+        //        BinaryFormatter serializer = new BinaryFormatter();
+        //        serializer.Serialize(ms, Model);
+        //        result = ms.ToArray();
+        //    }
 
-            using (MemoryStream ms2 = new MemoryStream(result))
-            {
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Deserialize(ms2);
-            };
-        }
+        //    using (MemoryStream ms2 = new MemoryStream(result))
+        //    {
+        //        BinaryFormatter serializer = new BinaryFormatter();
+        //        serializer.Deserialize(ms2);
+        //    };
+        //}
 
         ///// <summary>
         ///// Bsons this instance.

@@ -9,7 +9,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <CodeAnalysisRuleSet>..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet>ISynergy.Framework.MessageBus.Azure.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     
     <ItemGroup>
@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.11.0" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.11.1" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     </ItemGroup>
     <ItemGroup>
