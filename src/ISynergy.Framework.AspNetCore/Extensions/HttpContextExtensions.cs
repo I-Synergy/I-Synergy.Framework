@@ -25,14 +25,10 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             response.StatusCode = (int)responseMessage.StatusCode;
 
             foreach (var header in responseMessage.Headers)
-            {
                 response.Headers[header.Key] = header.Value.ToArray();
-            }
 
             foreach (var header in responseMessage.Content.Headers)
-            {
                 response.Headers[header.Key] = header.Value.ToArray();
-            }
 
             response.Headers.Remove("transfer-encoding");
 

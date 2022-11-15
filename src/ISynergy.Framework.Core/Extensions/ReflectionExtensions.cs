@@ -251,5 +251,23 @@ namespace ISynergy.Framework.Core.Extensions
 
         public static PropertyInfo GetParentIdentityProperty<T>(this T _self) where T : class =>
             _self.GetType().GetProperties().FirstOrDefault(e => e.IsDefined(typeof(ParentIdentityAttribute)));
+
+        /// <summary>
+        /// Gets the identity value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="_self">The self.</param>
+        /// <returns>System.Object.</returns>
+        public static bool IsFreeApplication<T>(this T _self) where T : class
+        {
+            var result = _self.GetType().GetProperties().Where(
+                    e => e.IsDefined(typeof(FreeAttribute))
+                );
+
+            if (result.Any())
+                return (bool)result.First().GetValue(_self);
+            else
+                return false;
+        }
     }
 }
