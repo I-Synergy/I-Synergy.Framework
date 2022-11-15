@@ -113,6 +113,10 @@ stages:
             packageType: 'sdk'
             version: '7.x'
 
+        - task: CmdLine@2
+          inputs:
+            script: 'dotnet workload install android'
+
         - task: DotNetCoreCLI@2
           displayName: 'Build Core Project'
           inputs:
