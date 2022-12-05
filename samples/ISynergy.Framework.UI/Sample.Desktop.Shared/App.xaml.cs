@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -15,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.UI.Xaml;
-using Microsoft.Windows.AppLifecycle;
 using Sample.Abstractions.Services;
 using Sample.Options;
 using Sample.Services;
@@ -23,11 +20,8 @@ using Sample.ViewModels;
 using Sample.Views;
 using System;
 using System.Collections.Generic;
-using System.CommandLine;
 using System.Reflection;
 using System.Resources;
-using System.Web;
-using Windows.ApplicationModel.Activation;
 
 namespace Sample
 {
@@ -44,38 +38,6 @@ namespace Sample
             : base()
         {
             InitializeComponent();
-        }
-
-        protected override void OnActivated(object sender, WindowActivatedEventArgs args)
-        {
-            var context = ServiceLocator.Default.GetInstance<IContext>();
-            var activationArguments = AppInstance.GetCurrent().GetActivatedEventArgs();
-
-            if (activationArguments.Kind == ExtendedActivationKind.Launch && activationArguments.Data is ILaunchActivatedEventArgs launchArguments)
-            {
-                var environmentOption = new Option<SoftwareEnvironments>(
-                name: "--environment",
-                description: "The environment (Local, Test or Production) to use.",
-                getDefaultValue: () => SoftwareEnvironments.Production);
-
-                var environmentCommand = new RootCommand();
-                environmentCommand.AddOption(environmentOption);
-                environmentCommand.AddAlias("--Environment");
-                environmentCommand.AddAlias("-e");
-                environmentCommand.SetHandler((environment) =>
-                {
-                    context.Environment = environment;
-                }, environmentOption);
-
-                environmentCommand.Invoke(launchArguments.Arguments);
-            }
-            else if (activationArguments.Kind == ExtendedActivationKind.Protocol && activationArguments.Data is IProtocolActivatedEventArgs protocolArguments)
-            {
-                var env = HttpUtility.ParseQueryString(protocolArguments.Uri.Query).Get("environment");
-                
-                if (!string.IsNullOrEmpty(env))
-                    context.Environment = env.ToEnum<SoftwareEnvironments>(SoftwareEnvironments.Production);
-            }
         }
 
         /// <summary>
@@ -107,7 +69,7 @@ namespace Sample
             services.AddSingleton<IVersionService>((s) => new VersionService(assembly));
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();
-            services.AddSingleton<IBaseAuthenticationService, AuthenticationService>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
             services.AddUpdatesIntegration();
 
@@ -122,13 +84,13 @@ namespace Sample
             services.AddScoped<IShellViewModel, ShellViewModel>();
             services.AddScoped<IShellView, ShellView>();
 
-            //Add current resource manager.
-            AddResourceManager(new ResourceManager(typeof(Resources)));
-
             //Add current assembly.
             //Add current assembly.
             RegisterAssemblies(assembly, x =>
                 x.Name.StartsWith(GetType().Namespace));
         }
+
+        public override void AddResourceManager(ILanguageService languageService) =>
+            languageService.AddResourceManager(new ResourceManager(typeof(Resources)));
     }
 }

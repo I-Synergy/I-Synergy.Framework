@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
@@ -8,6 +9,7 @@ using Sample.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.CommandLine;
 using System.Globalization;
 using System.Linq;
 
@@ -26,14 +28,37 @@ namespace Sample
         /// The configuration options
         /// </summary>
         private readonly ConfigurationOptions _configurationOptions;
+        private readonly IInfoService _infoService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Context" /> class.
         /// </summary>
         /// <param name="configurationOptions">The configuration options.</param>
-        public Context(IOptions<ConfigurationOptions> configurationOptions)
+        public Context(
+            IOptions<ConfigurationOptions> configurationOptions,
+            IInfoService infoService)
         {
             _configurationOptions = configurationOptions.Value;
+            _infoService = infoService;
+
+            var arguments = System.Environment.GetCommandLineArgs().ToList();
+            arguments.Remove(arguments.First());
+
+            var environmentOption = new Option<SoftwareEnvironments>(
+                name: "--environment",
+                description: "The environment (Local, Test or Production) to use.",
+                getDefaultValue: () => SoftwareEnvironments.Production);
+
+            var environmentCommand = new RootCommand();
+            environmentCommand.AddOption(environmentOption);
+            environmentCommand.AddAlias("--Environment");
+            environmentCommand.AddAlias("-e");
+            environmentCommand.SetHandler((environment) =>
+            {
+                Environment = environment;
+            }, environmentOption);
+
+            environmentCommand.Invoke(string.Join(" ", arguments));
 
             Profiles = new ObservableCollection<IProfile>() {  new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();
@@ -41,6 +66,12 @@ namespace Sample
 
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
+        }
+
+        public string Title
+        {
+            get { return GetValue<string>(); }
+            private set { SetValue(value); }
         }
 
         /// <summary>
@@ -115,6 +146,8 @@ namespace Sample
         /// <param name="value">The value.</param>
         private void ApplyEnvironment(SoftwareEnvironments value)
         {
+            Title = $"{_infoService.ProductName} v{_infoService.ProductVersion} ({value})";
+
             switch (value)
             {
                 case SoftwareEnvironments.Local:
@@ -181,7 +214,7 @@ namespace Sample
             {
                 if (CurrentProfile != null)
                 {
-                    return CurrentProfile.IsAuthenticated;
+                    return CurrentProfile.IsAuthenticated();
                 }
 
                 return false;

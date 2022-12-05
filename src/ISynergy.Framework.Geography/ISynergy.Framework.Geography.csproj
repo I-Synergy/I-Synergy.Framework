@@ -2,13 +2,10 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net7.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Geography</PackageId>
-        <Description>I-Synergy Framework Geography for .Net Standard 2.0</Description>
+        <Description>I-Synergy Framework Geography for .Net 7.0</Description>
         <PackageTags>I-Synergy, Framework, Geography</PackageTags>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <CodeAnalysisRuleSet>ISynergy.Framework.Geography.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 

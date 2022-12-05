@@ -43,6 +43,6 @@ namespace ISynergy.Framework.UI.Abstractions.Services
         /// <summary>
         /// Setups the titlebar.
         /// </summary>
-        void SetTitlebar(Window window);
+        void SetTitlebar();
     }
 }

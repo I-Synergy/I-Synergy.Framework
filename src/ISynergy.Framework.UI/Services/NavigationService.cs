@@ -6,19 +6,10 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using ISynergy.Framework.UI.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Media.Animation;
-using ISynergy.Framework.Core.Models;
+using System.Reflection;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -57,21 +48,20 @@ namespace ISynergy.Framework.UI.Services
         /// Gets a value indicating whether this instance can go back.
         /// </summary>
         /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-        public bool CanGoBack => ((Frame)Frame).CanGoBack;
+        public bool CanGoBack => _frame.CanGoBack;
         /// <summary>
         /// Gets a value indicating whether this instance can go forward.
         /// </summary>
         /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
-        public bool CanGoForward => ((Frame)Frame).CanGoForward;
-
+        public bool CanGoForward => _frame.CanGoForward;
 
         /// <summary>
         /// Goes the back.
         /// </summary>
         public void GoBack()
         {
-            if (((Frame)Frame).CanGoBack)
-                ((Frame)Frame).GoBack();
+            if (_frame.CanGoBack)
+                _frame.GoBack();
         }
 
         /// <summary>
@@ -79,20 +69,8 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public void GoForward()
         {
-            if (((Frame)Frame).CanGoForward)
-                ((Frame)Frame).GoForward();
-        }
-
-        /// <summary>
-        /// initialize view model as an asynchronous operation.
-        /// </summary>
-        /// <param name="viewModel">The view model.</param>
-        private async Task InitializeViewModelAsync(IViewModel viewModel)
-        {
-            if (!viewModel.IsInitialized)
-            {
-                await viewModel.InitializeAsync();
-            }
+            if (_frame.CanGoForward)
+                _frame.GoForward();
         }
 
         /// <summary>
@@ -100,47 +78,36 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
         /// <param name="parameter">The parameter.</param>
-        /// <param name="infoOverride">The information override.</param>
         /// <returns>Task&lt;IView&gt;.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewmodel.GetType().FullName}. Did you forget to call NavigationService.Configure?</exception>
-        public async Task<IView> NavigateAsync<TViewModel>(object parameter = null, object infoOverride = null)
+        public void Navigate<TViewModel>(object parameter = null)
             where TViewModel : class, IViewModel
         {
-            await _semaphore.WaitAsync();
+            _semaphore.Wait();
 
             try
             {
                 IViewModel viewmodel = default;
 
-                if (parameter is IViewModel instanceVM)
-                {
-                    viewmodel = instanceVM;
-                }
+                if (parameter is IViewModel instance)
+                    viewmodel = instance;
                 else
-                {
                     viewmodel = ServiceLocator.Default.GetInstance<TViewModel>();
-                }
 
                 var viewModelKey = viewmodel.GetViewModelFullName();
 
                 if (!_pages.ContainsKey(viewModelKey))
-                {
                     throw new Exception($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?");
-                }
 
                 var page = _pages[viewModelKey];
 
                 // Check if actual page is the same as destination page.
-                if (((Frame)Frame).Content is not null && ((Frame)Frame).Content.GetType().Equals(page))
-                {
-                    return ((Frame)Frame).Content as IView;
-                }
+                if (_frame.Content is not null && _frame.Content.GetType().Equals(page))
+                    return;
 
                 if (parameter is IViewModel)
                 {
-                    viewmodel.IsInitialized = false;
-                    await InitializeViewModelAsync(viewmodel);
-                    return ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
+                    _frame.Navigate(page, viewmodel);
                 }
                 else
                 {
@@ -150,36 +117,23 @@ namespace ISynergy.Framework.UI.Services
 
                         // Has class GenericTypeArguments?
                         if (viewmodel.GetType().GenericTypeArguments.Any())
-                        {
                             genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
-                        }
-
                         // Has BaseType GenericTypeArguments?
                         else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
-                        {
                             genericPropertyType = baseType.GetGenericArguments().First();
-                        }
 
                         if (genericPropertyType is not null && parameter.GetType() == genericPropertyType)
                         {
                             var genericInterfaceType = typeof(IViewModelSelectedItem<>).MakeGenericType(genericPropertyType);
 
-                            // Check if instanceVM implements genericInterfaceType.
+                            // Check if instance implements genericInterfaceType.
                             if (genericInterfaceType.IsInstanceOfType(viewmodel.GetType()) && viewmodel.GetType().GetMethod("SetSelectedItem") is MethodInfo method)
-                            {
                                 method.Invoke(viewmodel, new[] { parameter });
-                            }
                         }
                     }
 
-                    await InitializeViewModelAsync(viewmodel);
-                    return ((Frame)Frame).NavigateToView(page, viewmodel, (NavigationTransitionInfo)infoOverride);
+                    _frame.Navigate(page, viewmodel);
                 }
-            }
-            catch (Exception ex)
-            {
-                await ServiceLocator.Default.GetInstance<IExceptionHandlerService>().HandleExceptionAsync(ex);
-                return null;
             }
             finally
             {
@@ -194,23 +148,19 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>IView.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure? - viewModel</exception>
         /// <exception cref="ArgumentException">Instance could not be created from {viewModelKey}</exception>
-        private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
+        private IView GetNavigationBlade(IViewModel viewModel)
         {
-            await _semaphore.WaitAsync();
+            _semaphore.Wait();
 
             try
             {
                 var viewModelKey = viewModel.GetViewModelFullName();
 
                 if (!_pages.ContainsKey(viewModelKey))
-                {
                     throw new Exception($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?");
-                }
 
-                if (!viewModel.IsInitialized)
-                {
-                    await viewModel.InitializeAsync();
-                }
+                //if (!viewModel.IsInitialized)
+                //    await viewModel.InitializeAsync();
 
                 if (TypeActivator.CreateInstance(_pages[viewModelKey]) is ISynergy.Framework.UI.Controls.View view)
                 {
@@ -229,12 +179,9 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// clean back stack as an asynchronous operation.
         /// </summary>
-        public Task CleanBackStackAsync()
+        public void CleanBackStack()
         {
-            DispatcherQueue.GetForCurrentThread().TryEnqueue(() => { 
-                ((Frame)Frame).BackStack.Clear();
-            });
-            return Task.CompletedTask;
+            _frame.BackStack.Clear();
         }
 
         /// <summary>
@@ -243,14 +190,14 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModelBlade viewmodel)
+        public void OpenBlade(IViewModelBladeView owner, IViewModelBlade viewmodel)
         {
             Argument.IsNotNull(owner);
 
             viewmodel.Owner = owner;
             viewmodel.Closed += Viewmodel_Closed;
 
-            var view = await GetNavigationBladeAsync(viewmodel);
+            var view = GetNavigationBlade(viewmodel);
 
             if (!owner.Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
             {
@@ -270,10 +217,10 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void Viewmodel_Closed(object sender, EventArgs e)
+        private void Viewmodel_Closed(object sender, EventArgs e)
         {
             if (sender is IViewModelBlade viewModel)
-                await RemoveBladeAsync(viewModel.Owner, viewModel);
+                RemoveBlade(viewModel.Owner, viewModel);
         }
 
         /// <summary>
@@ -282,7 +229,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public Task RemoveBladeAsync(IViewModelBladeView owner, IViewModelBlade viewmodel)
+        public void RemoveBlade(IViewModelBladeView owner, IViewModelBlade viewmodel)
         {
             Argument.IsNotNull(owner);
 
@@ -296,17 +243,11 @@ namespace ISynergy.Framework.UI.Services
                     )
                 {
                     if (owner.Blades.Count < 1)
-                    {
                         owner.IsPaneVisible = false;
-                    }
                     else if (owner.Blades.Last() is IView blade)
-                    {
                         blade.IsEnabled = true;
-                    }
                 }
             }
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -323,14 +264,10 @@ namespace ISynergy.Framework.UI.Services
             try
             {
                 if (_pages.ContainsKey(key))
-                {
                     throw new ArgumentException($"The key {key} is already configured in NavigationService");
-                }
 
                 if (_pages.Any(p => p.Value == pageType))
-                {
                     throw new ArgumentException($"This type is already configured with key {_pages.First(p => p.Value == pageType).Key}");
-                }
 
                 _pages.Add(key, pageType);
             }
@@ -353,13 +290,9 @@ namespace ISynergy.Framework.UI.Services
             try
             {
                 if (_pages.ContainsValue(page))
-                {
                     return _pages.FirstOrDefault(p => p.Value == page).Key;
-                }
                 else
-                {
                     throw new ArgumentException($"The page '{page.Name}' is unknown by the NavigationService");
-                }
             }
             finally
             {

@@ -9,11 +9,6 @@
 		<RootNamespace>ISynergy.Framework.Telemetry.ApplicationInsights</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeBuildOutput>true</IncludeBuildOutput>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Telemetry.ApplicationInsights.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
@@ -21,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
 		<PackageReference Include="Uno.WinUI" Version="4.6.19" />

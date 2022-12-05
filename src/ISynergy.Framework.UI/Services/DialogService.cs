@@ -12,6 +12,7 @@ using Application = Microsoft.UI.Xaml.Application;
 using Style = Microsoft.UI.Xaml.Style;
 using Setter = Microsoft.UI.Xaml.Setter;
 using Window = ISynergy.Framework.UI.Controls.Window;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -24,13 +25,16 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The language service.</value>
         private readonly ILanguageService _languageService;
+        private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
+        /// <param name="serviceProvider"></param>
         /// <param name="languageService">The language service.</param>
-        public DialogService(ILanguageService languageService)
+        public DialogService(IServiceProvider serviceProvider, ILanguageService languageService)
         {
+            _serviceProvider = serviceProvider;
             _languageService = languageService;
         }
 
@@ -210,9 +214,9 @@ namespace ISynergy.Framework.UI.Services
             where TViewModel : IViewModelDialog<TEntity>
         {
             if (viewmodel is null)
-                viewmodel = (IViewModelDialog<TEntity>)ServiceLocator.Default.GetInstance(typeof(TViewModel));
+                viewmodel = (IViewModelDialog<TEntity>)_serviceProvider.GetRequiredService(typeof(TViewModel));
 
-            return CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(typeof(TWindow)), viewmodel);
+            return CreateDialogAsync((Window)_serviceProvider.GetRequiredService(typeof(TWindow)), viewmodel);
         }
 
         /// <summary>
@@ -223,7 +227,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel) =>
-            CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(window.GetType()), viewmodel);
+            CreateDialogAsync((Window)_serviceProvider.GetRequiredService(window.GetType()), viewmodel);
 
         /// <summary>
         /// Shows the dialog asynchronous.
@@ -233,7 +237,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task&lt;System.Boolean&gt;.</returns>
         public Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel) =>
-            CreateDialogAsync((Window)ServiceLocator.Default.GetInstance(type), viewmodel);
+            CreateDialogAsync((Window)_serviceProvider.GetRequiredService(type), viewmodel);
 
         /// <summary>
         /// Shows dialog as an asynchronous operation.

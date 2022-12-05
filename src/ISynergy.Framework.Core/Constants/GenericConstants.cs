@@ -16,7 +16,7 @@
         /// <summary>
         /// The rest retry count
         /// </summary>
-        public const int RestRetryCount = 3;
+        public const int RestRetryCount = 1;
         /// <summary>
         /// The rest retry delay in seconds
         /// </summary>
@@ -127,6 +127,7 @@
         /// The shell view model
         /// </summary>
         public const string ShellViewModel = "ShellViewModel";
+        public const string ShellView = "ShellView";
 
         /// <summary>
         /// The documents

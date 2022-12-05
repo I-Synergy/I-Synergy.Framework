@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace Sample.Services
@@ -9,7 +11,7 @@ namespace Sample.Services
     /// Implements the <see cref="IBaseAuthenticationService" />
     /// </summary>
     /// <seealso cref="IBaseAuthenticationService" />
-    public class AuthenticationService : IBaseAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         /// <summary>
         /// Authenticates the with API key asynchronous.
@@ -17,7 +19,7 @@ namespace Sample.Services
         /// <param name="apiKey">The API key.</param>
         /// <returns>Task.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task AuthenticateWithApiKeyAsync(string apiKey)
+        public Task<IProfile> AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -27,7 +29,7 @@ namespace Sample.Services
         /// </summary>
         /// <returns>Task.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task AuthenticateWithClientCredentialsAsync()
+        public Task<IProfile> AuthenticateWithClientCredentialsAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -38,7 +40,7 @@ namespace Sample.Services
         /// <param name="refreshtoken">The refreshtoken.</param>
         /// <returns>Task.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task AuthenticateWithRefreshTokenAsync(string refreshtoken)
+        public Task<IProfile> AuthenticateWithRefreshTokenAsync(string refreshtoken, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -50,7 +52,7 @@ namespace Sample.Services
         /// <param name="password">The password.</param>
         /// <returns>Task.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task AuthenticateWithUsernamePasswordAsync(string username, string password)
+        public Task<IProfile> AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -60,7 +62,7 @@ namespace Sample.Services
         /// </summary>
         /// <returns>Task.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task CheckForExpiredToken()
+        public Task CheckForExpiredTokenAsync(IProfile profile, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

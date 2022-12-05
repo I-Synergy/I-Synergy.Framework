@@ -2,14 +2,11 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net7.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Mathematics</PackageId>
-        <Description>I-Synergy Mathematics Framework for .Net Standard 2.0</Description>
+        <Description>I-Synergy Mathematics Framework for .Net 7.0</Description>
         <PackageTags>I-Synergy, Framework, Mathematics</PackageTags>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Mathematics.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 

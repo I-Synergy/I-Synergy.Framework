@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Abstractions.Services.Base
 {
@@ -15,10 +16,10 @@ namespace ISynergy.Framework.Core.Abstractions.Services.Base
         /// <summary>
         /// Loads the settings.
         /// </summary>
-        void LoadSettings();
+        Task LoadSettingsAsync();
         /// <summary>
         /// Saves the settings.
         /// </summary>
-        void SaveSettings();
+        Task SaveSettingsAsync();
     }
 }

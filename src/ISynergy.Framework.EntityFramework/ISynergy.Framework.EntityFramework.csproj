@@ -6,9 +6,6 @@
         <PackageId>I-Synergy.Framework.EntityFramework</PackageId>
         <Description>I-Synergy Entity Framework for .Net 7.0</Description>
         <PackageTags>I-Synergy, Entity, Framework</PackageTags>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <CodeAnalysisRuleSet>ISynergy.Framework.EntityFramework.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 

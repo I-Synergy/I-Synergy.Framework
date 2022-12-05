@@ -1,16 +1,12 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -59,7 +55,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public Command<string> Search_Command { get; set; }
+        public AsyncRelayCommand<string> Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionViewModel{TEntity}"/> class.
@@ -102,7 +98,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Search_Command = new Command<string>(async (e) => await QueryItemsAsync(e));
+            Search_Command = new AsyncRelayCommand<string>(async (e) => await QueryItemsAsync(e));
             RawItems = items;
             Items = new ObservableCollection<TEntity>(items);
             SelectedItem = new List<object>(selectedItems);

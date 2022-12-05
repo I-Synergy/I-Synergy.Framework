@@ -1,10 +1,10 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -12,14 +12,11 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Navigation;
 using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using Windows.System;
+using Application = Microsoft.UI.Xaml.Application;
 using Style = ISynergy.Framework.Core.Models.Style;
 
 namespace ISynergy.Framework.UI.ViewModels
@@ -82,54 +79,54 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets or sets the restart update command.
         /// </summary>
         /// <value>The restart update command.</value>
-        public Command RestartUpdate_Command { get; set; }
+        public AsyncRelayCommand RestartUpdate_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the login command.
         /// </summary>
         /// <value>The login command.</value>
-        public Command Login_Command { get; set; }
+        public RelayCommand Login_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the language command.
         /// </summary>
         /// <value>The language command.</value>
-        public Command Language_Command { get; set; }
+        public AsyncRelayCommand Language_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
-        public Command Color_Command { get; set; }
+        public AsyncRelayCommand Color_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the help command.
         /// </summary>
         /// <value>The help command.</value>
-        public Command Help_Command { get; set; }
+        public AsyncRelayCommand Help_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the settings command.
         /// </summary>
         /// <value>The settings command.</value>
-        public Command Settings_Command { get; set; }
+        public AsyncRelayCommand Settings_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the background command.
         /// </summary>
         /// <value>The background command.</value>
-        public Command Background_Command { get; set; }
+        public AsyncRelayCommand Background_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the feedback command.
         /// </summary>
         /// <value>The feedback command.</value>
-        public Command Feedback_Command { get; set; }
+        public AsyncRelayCommand Feedback_Command { get; set; }
 
         /// <summary>
         /// The settings service.
         /// </summary>
-        private readonly IBaseApplicationSettingsService _settingsService;
+        private readonly IBaseApplicationSettingsService _applicationSettingsService;
 
         /// <summary>
         /// The theme selector
@@ -146,23 +143,23 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="appSettingsService">The settings services.</param>
+        /// <param name="applicationSettingsService">The settings services.</param>
         /// <param name="logger">The logger factory.</param>
         /// <param name="themeService">The theme selector service.</param>
         /// <param name="localizationFunctions">The localization functions.</param>
         protected ShellViewModelBase(
             IContext context,
             IBaseCommonServices commonServices,
-            IBaseApplicationSettingsService appSettingsService,
+            IBaseApplicationSettingsService applicationSettingsService,
             ILogger logger,
             IThemeService themeService,
             ILocalizationService localizationFunctions)
             : base(context, commonServices, logger)
         {
-            _settingsService = appSettingsService;
+            _applicationSettingsService = applicationSettingsService;
             
             _themeService = themeService;
-            _themeService.SetStyle(new Style(_settingsService.Settings.Color, _settingsService.Settings.Theme));
+            _themeService.SetStyle(new Style(_applicationSettingsService.Settings.Color, _applicationSettingsService.Settings.Theme));
             
             _localizationFunctions = localizationFunctions;
 
@@ -171,13 +168,12 @@ namespace ISynergy.Framework.UI.ViewModels
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
-            RestartUpdate_Command = new Command(async () => await ShowDialogRestartAfterUpdateAsync());
-
-            Language_Command = new Command(async () => await OpenLanguageAsync());
-            Color_Command = new Command(async () => await OpenColorsAsync());
-            Help_Command = new Command(async () => await OpenHelpAsync());
-            Feedback_Command = new Command(async () => await CreateFeedbackAsync());
-            Settings_Command = new Command(async () => await OpenSettingsAsync());
+            RestartUpdate_Command = new AsyncRelayCommand(async () => await ShowDialogRestartAfterUpdateAsync());
+            Language_Command = new AsyncRelayCommand(async () => await OpenLanguageAsync());
+            Color_Command = new AsyncRelayCommand(async () => await OpenColorsAsync());
+            Help_Command = new AsyncRelayCommand(async () => await OpenHelpAsync());
+            Feedback_Command = new AsyncRelayCommand(async () => await CreateFeedbackAsync());
+            Settings_Command = new AsyncRelayCommand(async () => await OpenSettingsAsync());
         }
 
         /// <summary>
@@ -200,17 +196,17 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        /// <summary>
-        /// Gets or sets the state changed command.
-        /// </summary>
-        /// <value>The state changed command.</value>
-        public Command<VisualStateChangedEventArgs> StateChanged_Command { get; set; }
-
         private void InitializeUI()
         {
             ForegroundColor = new SolidColorBrush(ISynergy.Framework.UI.Helpers.ColorHelper.HexStringToColor(_themeService.Style.Color));
-            StateChanged_Command = new Command<VisualStateChangedEventArgs>(args => GoToState(args.NewState.Name));
         }
+
+        /// <summary>
+        /// Sets the view root frame.
+        /// </summary>
+        /// <param name="frame">The frame.</param>
+        /// <returns>Task.</returns>
+        public abstract void SetRootFrame(object frame);
 
         /// <summary>
         /// Gets the standard text color brush.
@@ -271,17 +267,10 @@ namespace ISynergy.Framework.UI.ViewModels
         protected abstract Task OpenSettingsAsync();
 
         /// <summary>
-        /// Initializes the asynchronous.
-        /// </summary>
-        /// <param name="parameter">The parameter.</param>
-        /// <returns>Task.</returns>
-        public abstract Task InitializeAsync(object parameter);
-
-        /// <summary>
         /// Processes the authentication changed asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        public Task ProcessAuthenticationChangedAsync()
+        public void ProcessAuthenticationChanged()
         {
             PopulateNavItems();
 
@@ -289,28 +278,20 @@ namespace ISynergy.Framework.UI.ViewModels
             {
                 DisplayName = Context.CurrentProfile.Username;
 
-                if (PrimaryItems is not null && PrimaryItems.Count > 0)
-                {
-                    if (PrimaryItems.First().Command.CanExecute(PrimaryItems.First().CommandParameter))
-                        PrimaryItems.First().Command.Execute(PrimaryItems.First().CommandParameter);
+                //if (PrimaryItems is not null && PrimaryItems.Count > 0)
+                //{
+                //    if (PrimaryItems.First().Command.CanExecute(PrimaryItems.First().CommandParameter))
+                //        PrimaryItems.First().Command.Execute(PrimaryItems.First().CommandParameter);
 
-                    SelectedItem = PrimaryItems.First();
-                }
+                //    SelectedItem = PrimaryItems.First();
+                //}
             }
             else
             {
                 DisplayName = string.Empty;
                 PrimaryItems?.Clear();
             }
-
-            return Task.CompletedTask;
         }
-
-        /// <summary>
-        /// process authentication request as an asynchronous operation.
-        /// </summary>
-        /// <returns>Task.</returns>
-        public abstract Task ProcessAuthenticationRequestAsync();
 
         /// <summary>
         /// Populates the nav items.
@@ -413,7 +394,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (sender is not null && sender is byte[])
             {
-                _settingsService.Settings.Wallpaper = sender as byte[];
+                _applicationSettingsService.Settings.Wallpaper = sender as byte[];
             }
         }
 
@@ -423,7 +404,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenLanguageAsync()
         {
-            var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _settingsService.Settings.Culture);
+            var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Culture);
             languageVM.Submitted += LanguageVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, string>(languageVM);
         }
@@ -440,8 +421,8 @@ namespace ISynergy.Framework.UI.ViewModels
 
             if (!string.IsNullOrEmpty(e.Result))
             {
-                _settingsService.Settings.Culture = e.Result;
-                _settingsService.SaveSettings();
+                _applicationSettingsService.Settings.Culture = e.Result;
+                await _applicationSettingsService.SaveSettingsAsync();
                 _localizationFunctions.SetLocalizationLanguage(e.Result);
             }
 
@@ -462,7 +443,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <returns>Task.</returns>
         protected Task OpenColorsAsync()
         {
-            var style = new Style(_settingsService.Settings.Color, _settingsService.Settings.Theme);
+            var style = new Style(_applicationSettingsService.Settings.Color, _applicationSettingsService.Settings.Theme);
             var themeVM = new ThemeViewModel(Context, BaseCommonServices, Logger, style);
             themeVM.Submitted += ThemeVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, Style>(themeVM);
@@ -480,9 +461,9 @@ namespace ISynergy.Framework.UI.ViewModels
 
             if (e.Result is Style style)
             {
-                _settingsService.Settings.Theme = style.Theme;
-                _settingsService.Settings.Color = style.Color;
-                _settingsService.SaveSettings();
+                _applicationSettingsService.Settings.Theme = style.Theme;
+                _applicationSettingsService.Settings.Color = style.Color;
+                _applicationSettingsService.SaveSettingsAsync();
                 _themeService.SetStyle(style);
             }
         }
