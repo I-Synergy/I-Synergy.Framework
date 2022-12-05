@@ -7,11 +7,6 @@
         <Description>I-Synergy Framework Authentication for .Net 7.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeBuildOutput>true</IncludeBuildOutput>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Authentication.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
@@ -20,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
     </ItemGroup>
 
     <ItemGroup>

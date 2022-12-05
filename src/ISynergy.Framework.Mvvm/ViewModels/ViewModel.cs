@@ -1,14 +1,12 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -62,7 +60,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the close command.
         /// </summary>
         /// <value>The close command.</value>
-        public Command Close_Command { get; protected set; }
+        public RelayCommand Close_Command { get; protected set; }
 
         /// <summary>
         /// Gets or sets the Title property value.
@@ -105,7 +103,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             PropertyChanged += OnPropertyChanged;
             IsInitialized = false;
 
-            Close_Command = new Command(async () => await CloseAsync());
+            Close_Command = new RelayCommand(Close);
         }
 
         /// <summary>
@@ -164,24 +162,23 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         }
 
         /// <summary>
-        /// Cancels the asynchronous.
+        /// Cancels the synchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        public virtual Task CancelAsync()
+        public virtual void Cancel()
         {
             IsCancelled = true;
             OnCancelled(EventArgs.Empty);
-            return CloseAsync();
+            Close();
         }
 
         /// <summary>
-        /// Closes the asynchronous.
+        /// Closes the synchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        public virtual Task CloseAsync()
+        public virtual void Close()
         {
             OnClosed(EventArgs.Empty);
-            return Task.CompletedTask;
         }
 
         /// <summary>

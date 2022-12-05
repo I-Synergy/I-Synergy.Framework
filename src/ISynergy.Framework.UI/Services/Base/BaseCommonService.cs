@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -20,10 +20,6 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The language service.</value>
         public ILanguageService LanguageService { get; }
-        /// <summary>
-        /// Gets the messaging service.
-        /// </summary>
-        public IMessageService MessageService { get; }
         /// <summary>
         /// Gets the dialog service.
         /// </summary>
@@ -53,7 +49,6 @@ namespace ISynergy.Framework.UI.Services
         /// Initializes a new instance of the <see cref="BaseCommonService"/> class.
         /// </summary>
         /// <param name="busyService">The busy.</param>
-        /// <param name="messageService"></param>
         /// <param name="languageService">The language.</param>
         /// <param name="dialogService">The dialog.</param>
         /// <param name="navigationService">The navigation.</param>
@@ -62,7 +57,6 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="dispatcherService"></param>
         protected BaseCommonService(
             IBusyService busyService,
-            IMessageService messageService,
             ILanguageService languageService,
             IDialogService dialogService,
             INavigationService navigationService,
@@ -71,7 +65,6 @@ namespace ISynergy.Framework.UI.Services
             IDispatcherService dispatcherService)
         {
             BusyService = busyService;
-            MessageService = messageService;
             LanguageService = languageService;
             DialogService = dialogService;
             NavigationService = navigationService;

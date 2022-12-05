@@ -1,16 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net7.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Monitoring.Client.SignalR</PackageId>
-		<Description>I-Synergy Framework SignalR Monitoring Client for .Net Standard 2.0</Description>
+		<Description>I-Synergy Framework SignalR Monitoring Client for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, Client, SignalR</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeBuildOutput>true</IncludeBuildOutput>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>ISynergy.Framework.Monitoring.Client</RootNamespace>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Monitoring.Client.SignalR.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

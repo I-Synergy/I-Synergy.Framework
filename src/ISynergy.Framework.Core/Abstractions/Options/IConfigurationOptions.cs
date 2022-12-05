@@ -23,6 +23,16 @@ namespace ISynergy.Framework.Core.Abstractions.Options
         /// <value>The service endpoint.</value>
         string ServiceEndpoint { get; set; }
         /// <summary>
+        /// Gets or sets the account endpoint.
+        /// </summary>
+        /// <value>The account endpoint.</value>
+        string AccountEndpoint { get; set; }
+        /// <summary>
+        /// Gets or sets the authentication endpoint.
+        /// </summary>
+        /// <value>The authentication endpoint.</value>
+        string AuthenticationEndpoint { get; set; }
+        /// <summary>
         /// Gets or sets the environment.
         /// </summary>
         /// <value>The environment.</value>

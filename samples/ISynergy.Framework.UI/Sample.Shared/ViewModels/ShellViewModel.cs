@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Navigation;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using Sample.Services;
+using CommunityToolkit.Mvvm.Input;
 
 #if WINDOWS_UWP || HAS_UNO
 using Windows.UI.Xaml;
@@ -47,49 +46,49 @@ namespace Sample.ViewModels
         /// Gets or sets the display command.
         /// </summary>
         /// <value>The display command.</value>
-        public Command Display_Command { get; set; }
+        public RelayCommand Display_Command { get; set; }
         
         /// <summary>
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public Command Info_Command { get; set; }
+        public RelayCommand Info_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public Command Browse_Command { get; set; }
+        public AsyncRelayCommand Browse_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the converter command.
         /// </summary>
         /// <value>The converter command.</value>
-        public Command Converter_Command { get; set; }
+        public RelayCommand Converter_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the selection test command.
         /// </summary>
         /// <value>The selection test command.</value>
-        public Command SelectionTest_Command { get; set; }
+        public RelayCommand SelectionTest_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the ListView test command.
         /// </summary>
         /// <value>The ListView test command.</value>
-        public Command ListViewTest_Command { get; set; }
+        public RelayCommand ListViewTest_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public Command ValidationTest_Command { get; set; }
+        public RelayCommand ValidationTest_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the TreeNode test command.
         /// </summary>
-        public Command TreeNodeTest_Command { get; set; }
+        public RelayCommand TreeNodeTest_Command { get; set; }
 
-        public Command Chart_Command { get; set; }
+        public RelayCommand Chart_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -116,45 +115,46 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             DisplayName = "User";
 
-            Display_Command = new Command(async () => await OpenDisplayAsync());
-            Info_Command = new Command(async () => await OpenInfoAsync());
-            Browse_Command = new Command(async () => await BrowseFileAsync());
-            Converter_Command = new Command(async () => await OpenConvertersAsync());
-            SelectionTest_Command = new Command(async () => await OpenSelectionTestAsync());
-            ListViewTest_Command = new Command(async () => await OpenListViewTestAsync());
-            ValidationTest_Command = new Command(async () => await OpenValidationTestAsync());
-            TreeNodeTest_Command = new Command(async () => await OpenTreenNodeTestAsync());
-            Chart_Command = new Command(async () => await OpenChartTestAsync());
+            Display_Command = new RelayCommand(OpenDisplay);
+            Info_Command = new RelayCommand(OpenInfo);
+            Browse_Command = new AsyncRelayCommand(async () => await BrowseFileAsync());
+            Converter_Command = new RelayCommand(OpenConverters);
+            SelectionTest_Command = new RelayCommand(OpenSelectionTest);
+            ListViewTest_Command = new RelayCommand(OpenListViewTest);
+            ValidationTest_Command = new RelayCommand(OpenValidationTest);
+            TreeNodeTest_Command = new RelayCommand(OpenTreenNodeTest);
+            Chart_Command = new RelayCommand(OpenChartTest);
+            Login_Command = new RelayCommand(PopulateNavItems);
 
             PopulateNavItems();
         }
 
-        private Task OpenChartTestAsync() =>
-            CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();
+        private void OpenChartTest() =>
+            CommonServices.NavigationService.Navigate<ChartsViewModel>();
 
-        private Task OpenTreenNodeTestAsync() =>
-            CommonServices.NavigationService.NavigateAsync<TreeNodeViewModel>();
+        private void OpenTreenNodeTest() =>
+            CommonServices.NavigationService.Navigate<TreeNodeViewModel>();
 
         /// <summary>
         /// Opens the validation test asynchronous.
         /// </summary>
         /// <returns></returns>
-        private Task OpenValidationTestAsync() =>
-            CommonServices.NavigationService.NavigateAsync<ValidationViewModel>();
+        private void OpenValidationTest() =>
+            CommonServices.NavigationService.Navigate<ValidationViewModel>();
 
         /// <summary>
         /// Opens the ListView test asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        private Task OpenListViewTestAsync() =>
-            CommonServices.NavigationService.NavigateAsync<TestItemsListViewModel>();
+        private void OpenListViewTest() =>
+            CommonServices.NavigationService.Navigate<TestItemsListViewModel>();
 
         /// <summary>
         /// Opens the converters asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        private Task OpenConvertersAsync() =>
-            CommonServices.NavigationService.NavigateAsync<ConvertersViewModel>();
+        private void OpenConverters() =>
+            CommonServices.NavigationService.Navigate<ConvertersViewModel>();
 
         /// <summary>
         /// browse file as an asynchronous operation.
@@ -172,22 +172,22 @@ namespace Sample.ViewModels
         /// Opens the information asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        private Task OpenInfoAsync() =>
-            CommonServices.NavigationService.NavigateAsync<InfoViewModel>();
+        private void OpenInfo() =>
+            CommonServices.NavigationService.Navigate<InfoViewModel>();
 
         /// <summary>
         /// Opens the display asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        private Task OpenDisplayAsync() =>
-            CommonServices.NavigationService.NavigateAsync<SlideShowViewModel>();
+        private void OpenDisplay() =>
+            CommonServices.NavigationService.Navigate<SlideShowViewModel>();
 
         /// <summary>
         /// Opens the selection test asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        private Task OpenSelectionTestAsync() =>
-           CommonServices.NavigationService.NavigateAsync<SelectionTestViewModel>();
+        private void OpenSelectionTest() =>
+           CommonServices.NavigationService.Navigate<SelectionTestViewModel>();
 
         /// <summary>
         /// initialize as an asynchronous operation.
@@ -225,32 +225,17 @@ namespace Sample.ViewModels
         /// Creates the feedback asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected override Task CreateFeedbackAsync() => ThrowFeatureNotEnabledWarning();
+        protected override Task CreateFeedbackAsync() => 
+            ThrowFeatureNotEnabledWarning();
 
         /// <summary>
         /// Opens the settings asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected override Task OpenSettingsAsync() => ThrowFeatureNotEnabledWarning();
+        protected override Task OpenSettingsAsync() => 
+            ThrowFeatureNotEnabledWarning();
 
-        /// <summary>
-        /// Initializes the asynchronous.
-        /// </summary>
-        /// <param name="parameter">The parameter.</param>
-        /// <returns>Task.</returns>
-        public override Task InitializeAsync(object parameter)
-        {
-            CommonServices.NavigationService.Frame = parameter;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Processes the authentication request asynchronous.
-        /// </summary>
-        /// <returns>Task.</returns>
-        public override Task ProcessAuthenticationRequestAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public override void SetRootFrame(object frame) =>
+            CommonServices.NavigationService.Frame = frame;
     }
 }

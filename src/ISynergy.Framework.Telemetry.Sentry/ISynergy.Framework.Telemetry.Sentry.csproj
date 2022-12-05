@@ -2,18 +2,13 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-windows10.0.19041;netstandard2.0;net7.0-android</TargetFrameworks>
+		<TargetFrameworks>net7.0-windows10.0.19041;net7.0;net7.0-android</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Telemetry.Sentry</PackageId>
 		<Description>I-Synergy Framework Sentry Telemetry library for Windows, Linux, Android and WebAssembly</Description>
 		<PackageTags>I-Synergy, Framework, Telemetry, Sentry, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
 		<RootNamespace>ISynergy.Framework.Telemetry.Sentry</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeBuildOutput>true</IncludeBuildOutput>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Telemetry.Sentry.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	
@@ -22,14 +17,14 @@
 	</PropertyGroup>
 	
 	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
 		<PackageReference Include="Uno.WinUI" Version="4.6.19" />
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Sentry" Version="3.23.1" />
+		<PackageReference Include="Sentry" Version="3.24.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
 	</ItemGroup>
 	

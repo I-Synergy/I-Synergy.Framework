@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -88,9 +88,9 @@ namespace Sample.ViewModels
         {
             CommonServices = commonService;
 
-            Submit_Command = new Command<TestItem>(async (e) => await SubmitAsync(e));
-            Search_Command = new Command<object>(async (e) => await SearchAsync(e));
-            Clear_Command = new Command(ClearItems);
+            Submit_Command = new AsyncRelayCommand<TestItem>(async (e) => await SubmitAsync(e));
+            Search_Command = new AsyncRelayCommand<object>(async (e) => await SearchAsync(e));
+            Clear_Command = new RelayCommand(ClearItems);
 
             Query = string.Empty;
             Items = new ObservableCollection<TestItem>();
@@ -100,7 +100,7 @@ namespace Sample.ViewModels
         /// Gets or sets the clear command.
         /// </summary>
         /// <value>The clear command.</value>
-        public Command Clear_Command { get; set; }
+        public RelayCommand Clear_Command { get; set; }
 
         /// <summary>
         /// The search cancellationtoken
@@ -181,7 +181,8 @@ namespace Sample.ViewModels
         {
             var selectionVM = new SelectionViewModel<TestItem>(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
             selectionVM.Submitted += SelectionVM_Submitted;
-            return CommonServices.NavigationService.OpenBladeAsync(this, selectionVM);
+            CommonServices.NavigationService.OpenBlade(this, selectionVM);
+            return Task.CompletedTask;
         }
 
         /// <summary>

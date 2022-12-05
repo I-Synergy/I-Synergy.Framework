@@ -1,6 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -30,32 +30,32 @@ namespace Sample.ViewModels
         /// Gets or sets the select single command.
         /// </summary>
         /// <value>The select single command.</value>
-        public Command SelectSingle_Command { get; set; }
+        public AsyncRelayCommand SelectSingle_Command { get; set; }
         /// <summary>
         /// Gets or sets the select multiple command.
         /// </summary>
         /// <value>The select multiple command.</value>
-        public Command SelectMultiple_Command { get; set; }
+        public AsyncRelayCommand SelectMultiple_Command { get; set; }
 
         /// <summary>
         /// Show Yes/No dialog.
         /// </summary>
-        public Command ShowDialogYesNo { get; set; }
+        public AsyncRelayCommand ShowDialogYesNo { get; set; }
 
         /// <summary>
         /// Show Yes/No/Cancel dialog.
         /// </summary>
-        public Command ShowDialogYesNoCancel { get; set; }
+        public AsyncRelayCommand ShowDialogYesNoCancel { get; set; }
 
         /// <summary>
         /// Show Ok dialog.
         /// </summary>
-        public Command ShowDialogOk { get; set; }
+        public AsyncRelayCommand ShowDialogOk { get; set; }
 
         /// <summary>
         /// Show Ok/Cancel dialog.
         /// </summary>
-        public Command ShowDialogOkCancel { get; set; }
+        public AsyncRelayCommand ShowDialogOkCancel { get; set; }
 
         /// <summary>
         /// Gets or sets the selected test items.
@@ -75,13 +75,13 @@ namespace Sample.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            SelectSingle_Command = new Command(async () => await SelectSingleAsync());
-            SelectMultiple_Command = new Command(async () => await SelectMultipleAsync());
+            SelectSingle_Command = new AsyncRelayCommand(async () => await SelectSingleAsync());
+            SelectMultiple_Command = new AsyncRelayCommand(async () => await SelectMultipleAsync());
 
-            ShowDialogYesNo = new Command(async () => await ShowDialogAsync(MessageBoxButton.YesNo));
-            ShowDialogYesNoCancel = new Command(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
-            ShowDialogOk = new Command(async () => await ShowDialogAsync(MessageBoxButton.OK));
-            ShowDialogOkCancel = new Command(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
+            ShowDialogYesNo = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNo));
+            ShowDialogYesNoCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
+            ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
+            ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
         }
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)
@@ -103,7 +103,8 @@ namespace Sample.ViewModels
         {
             var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-            return BaseCommonServices.NavigationService.OpenBladeAsync(this, selectionVm);
+            BaseCommonServices.NavigationService.OpenBlade(this, selectionVm);
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -114,7 +115,8 @@ namespace Sample.ViewModels
         {
             var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
-            return BaseCommonServices.NavigationService.OpenBladeAsync(this, selectionVm);
+            BaseCommonServices.NavigationService.OpenBlade(this, selectionVm);
+            return Task.CompletedTask;
         }
 
         /// <summary>

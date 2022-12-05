@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
@@ -33,27 +31,26 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// </summary>
         void GoForward();
         /// <summary>
-        /// Navigates the asynchronous.
+        /// Navigates to a new page.
         /// </summary>
         /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
         /// <param name="parameter">The parameter.</param>
-        /// <param name="infoOverride">The information override.</param>
         /// <returns>Task&lt;IView&gt;.</returns>
-        Task<IView> NavigateAsync<TViewModel>(object parameter = null, object infoOverride = null) where TViewModel : class, IViewModel;
+        void Navigate<TViewModel>(object parameter = null) where TViewModel : class, IViewModel;
         /// <summary>
-        /// Removes the blade asynchronous.
+        /// Removes the blade.
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        Task RemoveBladeAsync(IViewModelBladeView owner, IViewModelBlade viewmodel);
+        void RemoveBlade(IViewModelBladeView owner, IViewModelBlade viewmodel);
         /// <summary>
         /// Opens the blade asynchronous.
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        Task OpenBladeAsync(IViewModelBladeView owner, IViewModelBlade viewmodel);
+        void OpenBlade(IViewModelBladeView owner, IViewModelBlade viewmodel);
         /// <summary>
         /// Configures the specified key.
         /// </summary>
@@ -70,6 +67,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// Cleans the back stack asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        Task CleanBackStackAsync();
+        void CleanBackStack();
     }
 }

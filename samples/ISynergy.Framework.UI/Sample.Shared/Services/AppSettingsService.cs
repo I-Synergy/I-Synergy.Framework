@@ -4,6 +4,7 @@ using Sample.Models;
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Sample.Services
 {
@@ -36,7 +37,7 @@ namespace Sample.Services
         /// <summary>
         /// Loads the settings json file.
         /// </summary>
-        public void LoadSettings()
+        public async Task LoadSettingsAsync()
         {
             try
             {
@@ -44,7 +45,7 @@ namespace Sample.Services
 
                 if (!File.Exists(file))
                 {
-                    SaveSettings();
+                    await SaveSettingsAsync();
                 }
 
                 var json = File.ReadAllText(file);
@@ -59,7 +60,7 @@ namespace Sample.Services
         /// <summary>
         /// Saves all changes to the json file.
         /// </summary>
-        public void SaveSettings()
+        public Task SaveSettingsAsync()
         {
             if (!Directory.Exists(_settingsFolder))
                 Directory.CreateDirectory(_settingsFolder);
@@ -67,6 +68,8 @@ namespace Sample.Services
             var file = Path.Combine(_settingsFolder, _fileName);
             var json = JsonSerializer.Serialize(_settings);
             File.WriteAllText(file, json);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

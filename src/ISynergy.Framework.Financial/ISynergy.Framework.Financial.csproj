@@ -2,13 +2,10 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net7.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Financial</PackageId>
-        <Description>I-Synergy Financial Framework for .Net Standard 2.0</Description>
+        <Description>I-Synergy Financial Framework for .Net 7.0</Description>
         <PackageTags>I-Synergy, Financial, Framework</PackageTags>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <CodeAnalysisRuleSet>ISynergy.Framework.Financial.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 

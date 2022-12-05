@@ -2,12 +2,11 @@
 	<Import Project="..\..\project.props" />
 		
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-windows10.0.19041;netstandard2.0;net7.0-android</TargetFrameworks>
+		<TargetFrameworks>net7.0-windows10.0.19041;net7.0;net7.0-android</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Windows, Linux, Android and WebAssembly</Description>
 		<PackageTags>I-Synergy, Framework, UI, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
@@ -21,7 +20,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 	</ItemGroup>
 

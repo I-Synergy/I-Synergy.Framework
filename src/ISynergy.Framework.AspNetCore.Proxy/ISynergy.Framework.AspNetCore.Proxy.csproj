@@ -6,11 +6,6 @@
 		<Description>I-Synergy Framework Proxy for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Proxy, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeBuildOutput>true</IncludeBuildOutput>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Proxy.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>

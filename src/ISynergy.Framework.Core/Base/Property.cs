@@ -1,16 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
+using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Base
 {
@@ -134,9 +127,6 @@ namespace ISynergy.Framework.Core.Base
                 Set(ref _Value, value);
                 IsDirty = true;
                 ValueChanged?.Invoke(this, EventArgs.Empty);
-
-                if (_broadCastChanges)
-                    Broadcast(OriginalValue, value);
             }
         }
 
@@ -211,40 +201,6 @@ namespace ISynergy.Framework.Core.Base
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private IMessageService _messengerInstance;
-
-        /// <summary>
-        /// Gets or sets an instance of a <see cref="IMessageService" /> used to
-        /// broadcast messages to other objects. If null, this class will
-        /// attempt to broadcast using the Messenger's default instance.
-        /// </summary>
-        protected IMessageService MessengerInstance
-        {
-            get
-            {
-                return _messengerInstance ?? MessageService.Default;
-            }
-            set
-            {
-                _messengerInstance = value;
-            }
-        }
-
-        /// <summary>
-        /// Broadcasts a PropertyChangedMessage using either the instance of
-        /// the Messenger that was passed to this class (if available) 
-        /// or the Messenger's default instance.
-        /// </summary>
-        /// <param name="oldValue">The value of the property before it
-        /// changed.</param>
-        /// <param name="newValue">The value of the property after it
-        /// changed.</param>
-        protected virtual void Broadcast(T oldValue, T newValue)
-        {
-            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, Name);
-            MessengerInstance.Send(message);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Sample.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ((IShellViewModel)ViewModel).InitializeAsync(ContentRootFrame);
+            await ((IShellViewModel)ViewModel).InitializeAsync();
         }
 
         /// <summary>

@@ -109,11 +109,13 @@ stages:
             projectVersion: '$(GitVersion.FullSemVer)'
 
         - task: UseDotNet@2
+          displayName: 'Install .Net 7.0 SDK'
           inputs:
             packageType: 'sdk'
             version: '7.x'
 
         - task: CmdLine@2
+          displayName: 'Install dotnet android workload'
           inputs:
             script: 'dotnet workload install android'
 
@@ -769,6 +771,7 @@ stages:
       timeoutInMinutes: 120
       steps:
         - task: UseDotNet@2
+          displayName: 'Install .Net 7.0 SDK'
           inputs:
             packageType: 'sdk'
             version: '7.x'
@@ -845,6 +848,7 @@ stages:
       displayName: 'Create API Documentation'
       steps:
         - task: UseDotNet@2
+          displayName: 'Install .Net 7.0 SDK'
           inputs:
             packageType: 'sdk'
             version: '7.x'

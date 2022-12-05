@@ -1,11 +1,9 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
-using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
@@ -46,7 +44,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets the close command.
         /// </summary>
         /// <value>The close command.</value>
-        Command Close_Command { get; }
+        RelayCommand Close_Command { get; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance can close.
         /// </summary>

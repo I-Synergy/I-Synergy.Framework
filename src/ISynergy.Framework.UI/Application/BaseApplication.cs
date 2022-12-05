@@ -2,9 +2,10 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -19,16 +20,19 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
 using System.Reflection;
-using System.Resources;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Web;
 using Windows.ApplicationModel.Activation;
+using Application = Microsoft.UI.Xaml.Application;
 using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
+
+#if WINDOWS10_0_18362_0_OR_GREATER
+using Microsoft.Windows.AppLifecycle;
+#endif
+
 
 namespace ISynergy.Framework.UI
 {
@@ -90,37 +94,55 @@ namespace ISynergy.Framework.UI
         /// Main Application Window.
         /// </summary>
         /// <value>The main window.</value>
-        public Window MainWindow { get; private set; }
+        public Window MainWindow { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseApplication" /> class.
         /// </summary>
         protected BaseApplication()
         {
-            _services = new ServiceCollection();
-            _navigationService = new NavigationService();
-            _languageService = new LanguageService();
-
-            ConfigureServices(_services);
-
-            _serviceProvider = _services.BuildServiceProvider();
-
-            ServiceLocator.SetLocatorProvider(_serviceProvider);
+            _logger = ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName);
 
             Application.Current.UnhandledException += Current_UnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
+            _services = new ServiceCollection();
+
+            _logger.LogDebug("Registering services for dependency injection.");
+            
+            ConfigureServices(_services);
+
+            _serviceProvider = _services.BuildServiceProvider();
+
+            _logger.LogDebug("Attach IServiceProvider to ServiceLocator.");
+            
+            ServiceLocator.SetLocatorProvider(_serviceProvider);
+
+            _languageService = new LanguageService();
+
+            _logger.LogDebug("Add language resource dictionaries.");
+            
+            AddResourceManager(_languageService);
+
+            _navigationService = new NavigationService();
+
+            _logger.LogDebug("Configure NavigationService view-viewmodel mapping.");
+            
+            ConfigureNavigationService(_navigationService);
+
             _settingsService = _serviceProvider.GetRequiredService<IBaseApplicationSettingsService>();
-            _settingsService.LoadSettings();
+
+            _logger.LogInformation("Loading application settings...");
+            
+            _settingsService.LoadSettingsAsync();
 
             var localizationFunctions = _serviceProvider.GetRequiredService<ILocalizationService>();
             localizationFunctions.SetLocalizationLanguage(_settingsService.Settings.Culture);
 
             _themeService = _serviceProvider.GetRequiredService<IThemeService>();
             _exceptionHandlerService = _serviceProvider.GetRequiredService<IExceptionHandlerService>();
-            _logger = _serviceProvider.GetRequiredService<ILogger>();
-            _logger.LogInformation("Starting application");
+            _logger.LogInformation("Starting application...");
 
             _context = _serviceProvider.GetRequiredService<IContext>();
             _context.ViewModels = ViewModelTypes;
@@ -136,12 +158,16 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs" /> instance containing the event data.</param>
-        protected virtual async void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        protected virtual void Current_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (!e.Handled)
             {
                 e.Handled = true;
-                await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+
+                if (_exceptionHandlerService is not null)
+                    _exceptionHandlerService.HandleExceptionAsync(e.Exception).Await();
+                else
+                    _logger.LogCritical(e.Exception, e.Message);
             }
         }
 
@@ -150,9 +176,13 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs" /> instance containing the event data.</param>
-        protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        protected virtual void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+            if (_exceptionHandlerService is not null)
+                _exceptionHandlerService.HandleExceptionAsync(e.Exception).Await();
+            else
+                _logger.LogCritical(e.Exception, e.Exception.Message);
+
             e.SetObserved();
         }
 
@@ -161,10 +191,13 @@ namespace ISynergy.Framework.UI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs" /> instance containing the event data.</param>
-        protected virtual async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        protected virtual void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
-                await _exceptionHandlerService.HandleExceptionAsync(exception);
+                if (_exceptionHandlerService is not null)
+                    _exceptionHandlerService.HandleExceptionAsync(exception).Await();
+                else
+                    _logger.LogCritical(exception, exception.Message);
         }
 
         /// <summary>
@@ -174,26 +207,18 @@ namespace ISynergy.Framework.UI
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             MainWindow = new Window();
-            MainWindow.Activated += OnActivated;
+            //MainWindow.Activated += OnActivated;
 
             _themeService.InitializeMainWindow(MainWindow);
             _themeService.SetStyle(_settingsService.Settings.Color, _settingsService.Settings.Theme);
-            _themeService.SetTitlebar(MainWindow);
+            _themeService.SetTitlebar();
 
             var rootFrame = MainWindow.Content as Frame;
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
             if (rootFrame is null)
             {
-                // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
                 rootFrame.NavigationFailed += OnNavigationFailed;
-
-                if (e.UWPLaunchActivatedEventArgs.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Load state from previously suspended application
-                }
 
                 // Add custom resourcedictionaries from code.
                 var dictionary = Application.Current.Resources?.MergedDictionaries;
@@ -211,21 +236,39 @@ namespace ISynergy.Framework.UI
                 MainWindow.Content = rootFrame;
             }
 
+            var shellView = _serviceProvider.GetRequiredService<IShellView>();
+            var shellViewModel = _serviceProvider.GetRequiredService<IShellViewModel>();
+            var context = _serviceProvider.GetRequiredService<IContext>();
+
+            Argument.IsNotNull(context);
+            Argument.IsNotNull(shellView);
+
+#if WINDOWS10_0_18362_0_OR_GREATER
+            var args = AppInstance.GetCurrent().GetActivatedEventArgs();
+
+            if (args.Kind == ExtendedActivationKind.Protocol &&
+                args.Data is IProtocolActivatedEventArgs protocolActivatedEventArgs &&
+                protocolActivatedEventArgs.Uri != null &&
+                HttpUtility.ParseQueryString(protocolActivatedEventArgs.Uri.Query) is NameValueCollection query &&
+                query.HasKeys() &&
+                !string.IsNullOrEmpty(query["environment"]))
+            {
+                if (Enum.TryParse<SoftwareEnvironments>(query["environment"].ToCapitalized(), out SoftwareEnvironments environment))
+                    context.Environment = environment;
+            }
+#endif
+            
             if (rootFrame.Content is null)
             {
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-
-                var view = _serviceProvider.GetRequiredService<IShellView>();
-                rootFrame.Navigate(view.GetType(), e.Arguments);
+                rootFrame.Navigate(shellView.GetType());
             }
 
+            MainWindow.Title = context.Title;
+            //MainWindow.Content = (UIElement)shellView;
             MainWindow.Activate();
-        }
-
-        protected virtual void OnActivated(object sender, WindowActivatedEventArgs args)
-        {
         }
 
         /// <summary>
@@ -234,6 +277,10 @@ namespace ISynergy.Framework.UI
         /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
         protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>();
+
+        protected virtual void OnActivated(object sender, WindowActivatedEventArgs args)
+        {
+        }
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails
@@ -312,9 +359,8 @@ namespace ISynergy.Framework.UI
             // Register singleton services
             services.AddSingleton((s) => _languageService);
             services.AddSingleton((s) => _navigationService);
-            services.AddSingleton<ILogger>((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+            services.AddSingleton<ILogger>((s) => _logger);
             services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
-            services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
@@ -332,15 +378,15 @@ namespace ISynergy.Framework.UI
         }
 
         /// <summary>
-        /// Gets the view model types.
+        /// Gets the shellView model types.
         /// </summary>
-        /// <value>The view model types.</value>
+        /// <value>The shellView model types.</value>
         public List<Type> ViewModelTypes { get; private set; }
 
         /// <summary>
-        /// Gets the view types.
+        /// Gets the shellView types.
         /// </summary>
-        /// <value>The view types.</value>
+        /// <value>The shellView types.</value>
         public List<Type> ViewTypes { get; private set; }
 
         /// <summary>
@@ -359,14 +405,21 @@ namespace ISynergy.Framework.UI
         /// Registers the assemblies.
         /// </summary>
         /// <param name="mainAssembly">The main assembly.</param>
+        protected void RegisterAssemblies(Assembly mainAssembly) => RegisterAssemblies(mainAssembly, null);
+
+        /// <summary>
+        /// Registers the assemblies.
+        /// </summary>
+        /// <param name="mainAssembly">The main assembly.</param>
         /// <param name="assemblyFilter">The assembly filter.</param>
         protected void RegisterAssemblies(Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
         {
             var assemblies = new List<Assembly>();
             assemblies.Add(mainAssembly);
 
-            foreach (var item in mainAssembly.GetReferencedAssemblies().Where(assemblyFilter))
-                assemblies.Add(Assembly.Load(item));
+            if (assemblyFilter is not null)
+                foreach (var item in mainAssembly.GetReferencedAssemblies().Where(assemblyFilter).EnsureNotNull())
+                    assemblies.Add(Assembly.Load(item));
 
             foreach (var item in mainAssembly.GetReferencedAssemblies().Where(x => 
                 x.Name.StartsWith("ISynergy.Framework.UI") ||
@@ -401,11 +454,10 @@ namespace ISynergy.Framework.UI
 
                 ViewTypes.AddRange(assembly.GetTypes()
                     .Where(q =>
-                        q.GetInterface(nameof(IView), false) is not null && (
-                        q.Name.EndsWith(GenericConstants.View)
-                        || q.Name.EndsWith(GenericConstants.Page))
+                        q.GetInterface(nameof(IView), false) is not null
+                        && !q.Name.Equals(GenericConstants.ShellView)
+                        && (q.Name.EndsWith(GenericConstants.View) || q.Name.EndsWith(GenericConstants.Page))
                         && q.Name != GenericConstants.View
-                        && q.Name != nameof(ISynergy.Framework.UI.Controls.View)
                         && q.Name != GenericConstants.Page
                         && !q.IsAbstract
                         && !q.IsInterface)
@@ -416,7 +468,6 @@ namespace ISynergy.Framework.UI
                         q.GetInterface(nameof(IWindow), false) is not null
                         && q.Name.EndsWith(GenericConstants.Window)
                         && q.Name != GenericConstants.Window
-                        && q.Name != nameof(ISynergy.Framework.UI.Controls.Window)
                         && !q.IsAbstract
                         && !q.IsInterface)
                     .ToList());
@@ -435,11 +486,11 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction is not null && !viewmodel.IsGenericType)
                 {
-                    _services.AddScoped(abstraction, viewmodel);
+                    _services.AddSingleton(abstraction, viewmodel);
                 }
                 else
                 {
-                    _services.AddScoped(viewmodel);
+                    _services.AddSingleton(viewmodel);
                 }
             }
 
@@ -453,22 +504,11 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction is not null)
                 {
-                    _services.AddScoped(abstraction, view);
+                    _services.AddSingleton(abstraction, view);
                 }
                 else
                 {
-                    _services.AddScoped(view);
-                }
-
-                var viewmodel = ViewModelTypes.Find(q =>
-                {
-                    var name = view.Name.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
-                    return q.GetViewModelName().Equals(name) || q.Name.Equals(name);
-                });
-
-                if (viewmodel is not null)
-                {
-                    _navigationService.Configure(viewmodel.GetViewModelFullName(), view);
+                    _services.AddSingleton(view);
                 }
             }
 
@@ -482,25 +522,40 @@ namespace ISynergy.Framework.UI
 
                 if (abstraction is not null)
                 {
-                    _services.AddScoped(abstraction, window);
+                    _services.AddSingleton(abstraction, window);
                 }
                 else
                 {
-                    _services.AddScoped(window);
+                    _services.AddSingleton(window);
                 }
             }
 
             foreach (var bootstrapper in BootstrapperTypes.Distinct())
             {
-                _services.AddScoped(bootstrapper);
+                _services.AddSingleton(bootstrapper);
             }
         }
 
         /// <summary>
         /// Add resource managers to languageservice.
         /// </summary>
-        /// <param name="resourceManager">The resource manager.</param>
-        public virtual void AddResourceManager(ResourceManager resourceManager) =>
-            _languageService.AddResourceManager(resourceManager);
+        /// <param name="languageService"></param>
+        /// <example>_languageService.AddResourceManager(resourceManager)</example>
+        public abstract void AddResourceManager(ILanguageService languageService);
+
+        private void ConfigureNavigationService(INavigationService navigationService)
+        {
+            foreach (var view in ViewTypes.Distinct())
+            {
+                var viewmodel = ViewModelTypes.Find(q =>
+                {
+                    var name = view.Name.ReplaceLastOf(GenericConstants.View, GenericConstants.ViewModel);
+                    return q.GetViewModelName().Equals(name) || q.Name.Equals(name);
+                });
+
+                if (viewmodel is not null)
+                    navigationService.Configure(viewmodel.GetViewModelFullName(), view);
+            }
+        }
     }
 }

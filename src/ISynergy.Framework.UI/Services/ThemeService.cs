@@ -8,6 +8,9 @@ using Microsoft.UI.Xaml;
 using System;
 using Windows.UI.ViewManagement;
 using Style = ISynergy.Framework.Core.Models.Style;
+using Windows.ApplicationModel;
+using System.IO;
+using Application = Microsoft.UI.Xaml.Application;
 
 #if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
 using WinRT.Interop;
@@ -165,10 +168,15 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Setups the titlebar.
         /// </summary>
-        public void SetTitlebar(Window window)
+        public void SetTitlebar()
         {
 #if WINDOWS10_0_18362_0_OR_GREATER
-            var appWindow = GetAppWindowForCurrentWindow(window);
+            var appWindow = GetAppWindowForCurrentWindow(_window);
+
+            var iconPath = Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico");
+            
+            if (File.Exists(iconPath))
+                appWindow.SetIcon(iconPath);
 
             if (AppWindowTitleBar.IsCustomizationSupported())
             {

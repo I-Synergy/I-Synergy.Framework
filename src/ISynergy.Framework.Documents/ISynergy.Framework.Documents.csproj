@@ -1,16 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net7.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Documents</PackageId>
-		<Description>I-Synergy Framework Documents for .Net Standard 2.0</Description>
+		<Description>I-Synergy Framework Documents for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Documents</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeBuildOutput>true</IncludeBuildOutput>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Documents.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>

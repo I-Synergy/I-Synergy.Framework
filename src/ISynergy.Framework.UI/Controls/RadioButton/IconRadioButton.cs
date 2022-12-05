@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using RadioButton = Microsoft.UI.Xaml.Controls.RadioButton;
 
 namespace ISynergy.Framework.UI.Controls
 {

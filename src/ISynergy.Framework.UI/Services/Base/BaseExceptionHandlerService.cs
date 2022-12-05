@@ -1,11 +1,9 @@
-﻿using Flurl.Http;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using System.Net;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Windows.Networking.Connectivity;
@@ -57,21 +55,6 @@ namespace ISynergy.Framework.UI.Services
 
                 // Set busyIndicator to false if it's true.
                 _busyService.EndBusy();
-
-                if (exception is FlurlHttpException flurlHttpException && flurlHttpException.Call.Response is not null)
-                {
-                    if (flurlHttpException.Call.Response.StatusCode == (int)HttpStatusCode.BadRequest)
-                    {
-                        if (flurlHttpException.InnerException is UnauthorizedAccessException accessException)
-                        {
-                            exception = accessException;
-                        }
-                        else if (flurlHttpException.InnerException is Exception genericException)
-                        {
-                            exception = genericException;
-                        }
-                    }
-                }
 
                 var connections = NetworkInformation.GetInternetConnectionProfile();
 
