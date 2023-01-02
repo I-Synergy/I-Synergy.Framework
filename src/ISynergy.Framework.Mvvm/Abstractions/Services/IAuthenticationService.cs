@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Models.Accounts;
-
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
     /// <summary>
     /// Interface IAuthenticationService
@@ -9,27 +6,19 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     public interface IAuthenticationService
     {
         /// <summary>
-        /// Checks for expired token.
-        /// </summary>
-        /// <param name="profile"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>System.Threading.Tasks.Task.</returns>
-        Task CheckForExpiredTokenAsync(IProfile profile, CancellationToken cancellationToken = default);
-
-        /// <summary>
         /// authenticate with username password as an asynchronous operation.
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-        Task<IProfile> AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default);
+        Task AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// authenticate with client credentials as an asynchronous operation.
         /// </summary>
         /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-        Task<IProfile> AuthenticateWithClientCredentialsAsync(CancellationToken cancellationToken = default);
+        Task AuthenticateWithClientCredentialsAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// authenticate with refresh token as an asynchronous operation.
@@ -45,7 +34,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// when handling the second request.
         /// The previous default behavior is still supported but is now an opt-in option. To enable it, call options.UseRollingTokens() from the OpenIddict configuration
         /// delegate, in ConfigureServices().
-        Task<IProfile> AuthenticateWithRefreshTokenAsync(string refreshtoken, CancellationToken cancellationToken = default);
+        Task AuthenticateWithRefreshTokenAsync(string refreshtoken, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// authenticate with API key as an asynchronous operation.
@@ -53,6 +42,8 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <param name="apiKey">The API key.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
-        Task<IProfile> AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default);
+        Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default);
+        void SignOut();
+        string GetEnvironmentalAuthToken(string token);
     }
 }
