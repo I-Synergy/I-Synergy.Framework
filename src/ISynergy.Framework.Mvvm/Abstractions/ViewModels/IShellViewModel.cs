@@ -14,11 +14,5 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// </summary>
         /// <value>The settings command.</value>
         AsyncRelayCommand Settings_Command { get; set; }
-
-        /// <summary>
-        /// Sets the view root frame.
-        /// </summary>
-        /// <param name="parameter"></param>
-        void SetRootFrame(object parameter);
     }
 }

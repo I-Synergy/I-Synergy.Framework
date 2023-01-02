@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>net7.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Mvvm</PackageId>
-        <Description>I-Synergy Framework Mvvm for .Net 7.0</Description>
+        <Description>I-Synergy Framework Mvvm for .net Standard, .net 6.0 and .net 7.0</Description>
         <PackageTags>I-Synergy, Framework, Mvvm</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.Mvvm.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
@@ -14,8 +14,11 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+		<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
