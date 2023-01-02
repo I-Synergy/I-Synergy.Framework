@@ -1,8 +1,11 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -167,7 +170,8 @@ namespace ISynergy.Framework.Core.Base
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
+        /// <param name="broadcast"></param>
+        protected void SetValue<T>(T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName);
 
@@ -184,6 +188,9 @@ namespace ISynergy.Framework.Core.Base
 
                     OnPropertyChanged(propertyName);
 
+                    if (broadcast)
+                        Broadcast(previous, value, propertyName);
+
                     if (AutomaticValidationTrigger)
                         Validate();
                 }
@@ -197,7 +204,8 @@ namespace ISynergy.Framework.Core.Base
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        /// <param name="broadcast"></param>
+        protected void SetValue<T>(ref T field, T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
 
@@ -213,6 +221,9 @@ namespace ISynergy.Framework.Core.Base
                     field = value;
 
                     OnPropertyChanged(propertyName);
+
+                    if (broadcast)
+                        Broadcast(previous, value, propertyName);
 
                     if (AutomaticValidationTrigger)
                         Validate();
@@ -281,9 +292,31 @@ namespace ISynergy.Framework.Core.Base
             foreach (var property in Properties)
                 property.Value.MarkAsClean();
 
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+
             if (AutomaticValidationTrigger)
                 Validate();
         }
+
+        /// <summary>
+        /// Broadcasts a PropertyChangedMessage using either the instance of
+        /// the Messenger that was passed to this class (if available) 
+        /// or the Messenger's default instance.
+        /// </summary>
+        /// <typeparam name="T">The type of the property that
+        /// changed.</typeparam>
+        /// <param name="oldValue">The value of the property before it
+        /// changed.</param>
+        /// <param name="newValue">The value of the property after it
+        /// changed.</param>
+        /// <param name="propertyName">The name of the property that
+        /// changed.</param>
+        protected virtual void Broadcast<T>(T oldValue, T newValue, string propertyName)
+        {
+            var message = new PropertyChangedMessage<T>(this, propertyName, oldValue, newValue);
+            WeakReferenceMessenger.Default.Send(message);
+        }
+
         #region INotifyPropertyChanged
         /// <summary>
         /// Occurs when a property value changes.

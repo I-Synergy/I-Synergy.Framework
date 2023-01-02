@@ -16,10 +16,10 @@ namespace ISynergy.Framework.Core.Abstractions.Services.Base
         /// <summary>
         /// Loads the settings.
         /// </summary>
-        Task LoadSettingsAsync();
+        void LoadSettings();
         /// <summary>
         /// Saves the settings.
         /// </summary>
-        Task SaveSettingsAsync();
+        void SaveSettings();
     }
 }
