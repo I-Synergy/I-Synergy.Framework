@@ -80,10 +80,10 @@ namespace ISynergy.Framework.Core.Models
         /// <summary>
         /// The password
         /// </summary>
-        public const string Password = "openid offline_access";
+        public const string Password = "openid offline_access profile";
         /// <summary>
         /// The client credentials
         /// </summary>
-        public const string ClientCredentials = "openid";
+        public const string ClientCredentials = "openid profile";
     }
 }

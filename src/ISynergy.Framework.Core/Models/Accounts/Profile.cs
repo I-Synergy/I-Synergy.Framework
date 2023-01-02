@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
         public bool IsAuthenticated()
         {
-            if (Token is not null && Expiration.CompareTo(DateTime.Now) >= 0)
+            if (Token is not null && Expiration.CompareTo(DateTime.Now) >= 0 && LicenseExpration.CompareTo(DateTime.Now) >= 0)
                 return true;
             return false;
         }

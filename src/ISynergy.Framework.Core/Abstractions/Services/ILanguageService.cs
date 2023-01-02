@@ -1,6 +1,4 @@
-﻿using System.Resources;
-
-namespace ISynergy.Framework.Core.Abstractions.Services
+﻿namespace ISynergy.Framework.Core.Abstractions.Services
 {
     /// <summary>
     /// Interface ILanguageService
@@ -17,7 +15,7 @@ namespace ISynergy.Framework.Core.Abstractions.Services
         /// <summary>
         /// Adds the resource manager.
         /// </summary>
-        /// <param name="resourceManager">The resource manager.</param>
-        void AddResourceManager(ResourceManager resourceManager);
+        /// <param name="resourceType">The resource manager.</param>
+        void AddResourceManager(Type resourceType);
     }
 }
