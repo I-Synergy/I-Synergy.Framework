@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ISynergy.Framework.AspNetCore.Globalization.Services
+﻿namespace ISynergy.Framework.AspNetCore.Globalization.Services
 {
     /// <summary>
     /// Class LanguageService.
@@ -33,10 +30,9 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Services
         /// <summary>
         /// Adds the resource manager.
         /// </summary>
-        /// <param name="resourceManager">The resource manager.</param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void AddResourceManager(ResourceManager resourceManager) =>
-            _managers.Add(resourceManager);
+        /// <param name="resourceType">The resource manager.</param>
+        public void AddResourceManager(Type resourceType) =>
+            _managers.Add(new ResourceManager(resourceType));
 
         /// <summary>
         /// Gets the string.

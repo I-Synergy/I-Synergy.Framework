@@ -9,7 +9,6 @@ using Sample.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.CommandLine;
 using System.Globalization;
 using System.Linq;
 
@@ -40,25 +39,6 @@ namespace Sample
         {
             _configurationOptions = configurationOptions.Value;
             _infoService = infoService;
-
-            var arguments = System.Environment.GetCommandLineArgs().ToList();
-            arguments.Remove(arguments.First());
-
-            var environmentOption = new Option<SoftwareEnvironments>(
-                name: "--environment",
-                description: "The environment (Local, Test or Production) to use.",
-                getDefaultValue: () => SoftwareEnvironments.Production);
-
-            var environmentCommand = new RootCommand();
-            environmentCommand.AddOption(environmentOption);
-            environmentCommand.AddAlias("--Environment");
-            environmentCommand.AddAlias("-e");
-            environmentCommand.SetHandler((environment) =>
-            {
-                Environment = environment;
-            }, environmentOption);
-
-            environmentCommand.Invoke(string.Join(" ", arguments));
 
             Profiles = new ObservableCollection<IProfile>() {  new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();

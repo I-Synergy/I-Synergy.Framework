@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ISynergy.Framework.UI.Theme.BaseTheme"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup">
+
+    <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
+    <converters:CurrencyConverter x:Key="CurrencyConverter" />
+    <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter"/>
+    <converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
+    <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
+    <converters:StringFormatConverter x:Key="StringFormatConverter" />
+    <converters:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
+    <converters:StringToIntegerConverter x:Key="StringToIntegerConverter"/>
+    <converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
+    <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
+    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+    <converters:StringToEnabledConverter x:Key="StringToEnabledConverter"/>
+    <converters:DateTimeOffsetToLocalDateTimeConverter x:Key="DateTimeOffsetToLocalDateTimeConverter"/>
+    <converters:DateTimeOffsetToLocalDateTimeOffsetConverter x:Key="DateTimeOffsetToLocalDateTimeOffsetConverter" />
+    <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter" />
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
+    <converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
+    <converters:BooleanToVisibilityConverter x:Key="IsEditableToVisibilityConverter" True="Visible" False="Collapsed" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters"/>
+    <converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter"/>
+    <converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter"/>
+    <converters:DecimalToDoubleConverter x:Key="DecimalToDoubleConverter"/>
+    <converters:IntegerToDoubleConverter x:Key="IntegerToDoubleConverter"/>
+    <converters:BooleanToStringConverter x:Key="BooleanToYesNoConverter" True="{m:GetString Yes}" False="{m:GetString No}" />
+    <converters:SelectionModeConverter x:Key="SelectionModeConverter"/>
+    <converters:ListToStringConverter x:Key="ListToStringConverter"/>
+
+    <Style TargetType="Border" x:Key="DefaultBorderStyle">
+        <Setter Property="StrokeShape" Value="Rectangle"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+    </Style>
+
+    <Style TargetType="Button" x:Key="DefaultButtonStyle">
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="125"/>
+    </Style>
+
+    <Style TargetType="CheckBox" x:Key="DefaultCheckBoxStyle">
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+    </Style>
+
+    <Style TargetType="DatePicker" x:Key="DefaultDatePickerStyle">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+    </Style>
+
+    <Style TargetType="Editor" x:Key="DefaultEditorStyle">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+    </Style>
+
+    <Style TargetType="Entry" x:Key="DefaultEntryStyle">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+    </Style>
+
+    <Style TargetType="Frame" x:Key="DefaultFrameStyle">
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <Style TargetType="ImageButton" x:Key="DefaultRoundImageButtonStyle">
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="HeightRequest" Value="100"/>
+        <Setter Property="WidthRequest" Value="100"/>
+        <Setter Property="HorizontalOptions" Value="End"/>
+        <Setter Property="VerticalOptions" Value="End"/>
+        <Setter Property="CornerRadius" Value="50"/>
+    </Style>
+
+    <Style TargetType="ImageButton" x:Key="DefaultImageButtonStyle">
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="Aspect" Value="Center"/>
+        <Setter Property="Scale" Value="0.8"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="DefaultLabelStyle">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Margin" Value="4,10,0,4"/>
+    </Style>
+    
+    <Style TargetType="Picker" x:Key="DefaultPickerStyle">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+    </Style>
+
+    <Style TargetType="RadioButton" x:Key="DefaultRadioButtonStyle">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+    </Style>
+
+    <Style TargetType="SearchBar" x:Key="DefaultSearchBarStyle">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+    </Style>
+
+    <Style TargetType="SearchHandler" x:Key="DefaultSearchHandlerStyle">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="11" />
+    </Style>
+
+    <Style TargetType="Shadow" x:Key="DefaultShadowStyle">
+        <Setter Property="Radius" Value="15" />
+        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Offset" Value="10,10" />
+    </Style>
+
+    <Style TargetType="TimePicker" x:Key="DefaultTimePickerStyle">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+    </Style>
+
+    <Style TargetType="Page"  x:Key="DefaultPageStyle" ApplyToDerivedTypes="True">
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+</ResourceDictionary>

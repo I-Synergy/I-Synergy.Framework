@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using System.IO;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Services

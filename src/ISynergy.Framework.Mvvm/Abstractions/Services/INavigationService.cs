@@ -7,66 +7,33 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     /// </summary>
     public interface INavigationService
     {
-        /// <summary>
-        /// Gets or sets the frame.
-        /// </summary>
-        /// <value>The frame.</value>
         object Frame { get; set; }
-        /// <summary>
-        /// Gets a value indicating whether this instance can go back.
-        /// </summary>
-        /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
         bool CanGoBack { get; }
-        /// <summary>
-        /// Gets a value indicating whether this instance can go forward.
-        /// </summary>
-        /// <value><c>true</c> if this instance can go forward; otherwise, <c>false</c>.</value>
         bool CanGoForward { get; }
-        /// <summary>
-        /// Goes the back.
-        /// </summary>
         void GoBack();
-        /// <summary>
-        /// Goes the forward.
-        /// </summary>
         void GoForward();
+        void OpenBlade(IViewModelBladeView owner, IViewModel viewmodel);
+        void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel);
+
         /// <summary>
-        /// Navigates to a new page.
+        /// Navigates the asynchronous.
         /// </summary>
         /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
-        /// <param name="parameter">The parameter.</param>
-        /// <returns>Task&lt;IView&gt;.</returns>
-        void Navigate<TViewModel>(object parameter = null) where TViewModel : class, IViewModel;
-        /// <summary>
-        /// Removes the blade.
-        /// </summary>
-        /// <param name="owner">The owner.</param>
-        /// <param name="viewmodel">The viewmodel.</param>
-        /// <returns>Task.</returns>
-        void RemoveBlade(IViewModelBladeView owner, IViewModelBlade viewmodel);
-        /// <summary>
-        /// Opens the blade asynchronous.
-        /// </summary>
-        /// <param name="owner">The owner.</param>
-        /// <param name="viewmodel">The viewmodel.</param>
-        /// <returns>Task.</returns>
-        void OpenBlade(IViewModelBladeView owner, IViewModelBlade viewmodel);
-        /// <summary>
-        /// Configures the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="pageType">Type of the page.</param>
-        void Configure(string key, Type pageType);
-        /// <summary>
-        /// Gets the name of registered page.
-        /// </summary>
-        /// <param name="page">The page.</param>
-        /// <returns>System.String.</returns>
-        string GetNameOfRegisteredPage(Type page);
+        /// <returns>Task</returns>
+        Task NavigateAsync<TViewModel>() 
+            where TViewModel : class, IViewModel;
+        
+        Task NavigateAsync<TViewModel>(object parameter) 
+            where TViewModel : class, IViewModel;
+
+        Task NavigateAsync(Type viewModel);
+
         /// <summary>
         /// Cleans the back stack asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        void CleanBackStack();
+        Task CleanBackStackAsync();
+
+        void Configure(string key, Type pageType);
     }
 }

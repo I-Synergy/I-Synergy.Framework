@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.AspNetCore.Proxy</PackageId>
-		<Description>I-Synergy Framework Proxy for .Net 7.0</Description>
+		<Description>I-Synergy Framework Proxy for .net 6.0 and .net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Proxy, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Proxy.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Flurl" Version="3.0.6" />
+	  <PackageReference Include="Flurl" Version="3.0.7" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />

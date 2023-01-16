@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions
 {
@@ -13,15 +12,5 @@ namespace ISynergy.Framework.Mvvm.Abstractions
         /// </summary>
         /// <value>The data context.</value>
         IViewModel ViewModel { get; set; }
-        /// <summary>
-        /// Shows the asynchronous.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-        /// <returns>Task&lt;System.Boolean&gt;.</returns>
-        Task<bool> ShowAsync<TEntity>();
-        /// <summary>
-        /// Closes this instance.
-        /// </summary>
-        void Close();
     }
 }

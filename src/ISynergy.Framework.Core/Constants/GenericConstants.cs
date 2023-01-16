@@ -27,6 +27,8 @@
         /// </summary>
         public const int AutoSuggestBoxDelay = 500;
 
+        public const string Parameter = "parameter";
+
         /// <summary>
         /// The authorization
         /// </summary>
@@ -153,11 +155,11 @@
         /// <summary>
         /// The username prefix test
         /// </summary>
-        public const string UsernamePrefixTest = "test:";
+        public const string UsernamePrefixTest = "test?";
         /// <summary>
         /// The username prefix local
         /// </summary>
-        public const string UsernamePrefixLocal = "local:";
+        public const string UsernamePrefixLocal = "local?";
 
         /// <summary>
         /// The temporary URL

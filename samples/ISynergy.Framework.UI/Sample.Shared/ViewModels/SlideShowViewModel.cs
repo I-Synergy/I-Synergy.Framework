@@ -90,11 +90,11 @@ namespace Sample.ViewModels
         /// <summary>
         /// slideshow time out timer tick as an asynchronous operation.
         /// </summary>
-        private async void SlideshowTimer_Tick(object sender, ElapsedEventArgs e)
+        private void SlideshowTimer_Tick(object sender, ElapsedEventArgs e)
         {
             SlideshowTimer.Enabled = false;
 
-            await BaseCommonServices.DispatcherService.InvokeAsync(() =>
+            BaseCommonServices.DispatcherService.Invoke(() =>
             {
                 if (SelectedItem is null || SelectedItem.Index == Items.Count - 1)
                 {
@@ -102,7 +102,7 @@ namespace Sample.ViewModels
                 }
                 else if (SelectedItem.Index < Items.Count - 1)
                 {
-                    SelectedItem = Items.Where(q => q.Index == SelectedItem.Index + 1).Single();
+                    SelectedItem = Items.Single(q => q.Index == SelectedItem.Index + 1);
                 }
             });
 

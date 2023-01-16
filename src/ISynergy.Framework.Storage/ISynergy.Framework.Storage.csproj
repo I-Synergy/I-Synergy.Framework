@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-		<TargetFrameworks>net7.0</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Storage</PackageId>
-        <Description>I-Synergy Framework Storage for .Net 7.0</Description>
+        <Description>I-Synergy Framework Storage for .net Standard 2.0</Description>
         <PackageTags>I-Synergy, Framework, Storage</PackageTags>
         <CodeAnalysisRuleSet>ISynergy.Framework.Storage.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

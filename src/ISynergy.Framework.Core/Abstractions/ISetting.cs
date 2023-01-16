@@ -14,16 +14,16 @@
         /// Gets or sets the default decimals.
         /// </summary>
         /// <value>The default decimals.</value>
-        int DefaultDecimals { get; set; }
+        int Decimals { get; set; }
         /// <summary>
         /// Gets or sets the default currency identifier.
         /// </summary>
         /// <value>The default currency identifier.</value>
-        int DefaultCurrencyId { get; set; }
+        int CurrencyId { get; set; }
         /// <summary>
         /// Gets or sets the default country identifier.
         /// </summary>
         /// <value>The default country identifier.</value>
-        int DefaultCountryId { get; set; }
+        int CountryId { get; set; }
     }
 }

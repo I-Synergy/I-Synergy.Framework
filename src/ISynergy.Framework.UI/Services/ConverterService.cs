@@ -1,7 +1,6 @@
-﻿using System;
-using System.Globalization;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -44,11 +43,8 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>System.String.</returns>
         public string ConvertDecimalToCurrency(decimal value)
         {
-            var currencySymbol = "$";
-
-            currencySymbol = Context.CurrencySymbol;
-
-            var info = CultureInfo.CurrentCulture.NumberFormat;
+            var currencySymbol = Context.CurrencySymbol ?? "$";
+            var info = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
             info.CurrencySymbol = $"{currencySymbol} ";
             info.CurrencyNegativePattern = 1;
 

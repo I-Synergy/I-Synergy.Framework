@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using System.Globalization;
 using System.Resources;
-using ISynergy.Framework.Core.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services
 {
     /// <summary>
-    /// Class LanguageService.
+    /// Class _languageService.
     /// </summary>
     public class LanguageService : ILanguageService
     {
@@ -31,9 +30,9 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Adds the resource manager.
         /// </summary>
-        /// <param name="resourceManager">The resource manager.</param>
-        public void AddResourceManager(ResourceManager resourceManager) =>
-            _managers.Add(resourceManager);
+        /// <param name="resourceType">The resource manager.</param>
+        public void AddResourceManager(Type resourceType) =>
+            _managers.Add(new ResourceManager(resourceType));
 
         /// <summary>
         /// Gets the string.

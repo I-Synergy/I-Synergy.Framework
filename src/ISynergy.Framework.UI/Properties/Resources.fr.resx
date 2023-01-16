@@ -260,26 +260,107 @@ Enregistrez votre travail et redémarrez l’application.</value>
 	<data name="Select" xml:space="preserve">
 		<value>Choisir</value>
 	</data>
-	<data name="ExceptionInternetConnection" xml:space="preserve">
-		<value>Nous voyons qu’il y a un problème avec votre connexion internet. 
-Vérifiez votre connexion Internet. Tout va bien ? 
-Veuillez communiquer avec I-Synergy Service et Support.</value>
+	<data name="SignOut" xml:space="preserve">
+		<value>Se déconnecter</value>
 	</data>
-	<data name="ExceptionFileInUse" xml:space="preserve">
-		<value>Quelque chose a mal tourné.
-Vous tentez d’ouvrir un fichier qui est déjà ouvert.
-Vérifiez si ce fichier est déjà ouvert dans Microsoft Word ou Excel.</value>
+	<data name="SignIn" xml:space="preserve">
+		<value>Connexion</value>
 	</data>
-	<data name="ExceptionFutureModule" xml:space="preserve">
-		<value>Cette fonctionnalité sera disponible bientôt.
-Pour plus d’informations aller à http//www.i-synergy.net</value>
+	<data name="Register" xml:space="preserve">
+		<value>Registre</value>
 	</data>
-	<data name="ExceptionDefault" xml:space="preserve">
-		<value>Quelque chose a mal tourné ! 
-L’équipe de je-Synergy a été informé et nous corrigerons l’erreur dès que possible. 
-Si cela se produit fréquemment, contactez j’ai-synergie Service et Support.</value>
+	<data name="Settings" xml:space="preserve">
+		<value>Paramètres</value>
 	</data>
-	<data name="ExceptionArgumentIsNull" xml:space="preserve">
-		<value>{0} ne peut pas être vide ou null.</value>
+	<data name="Light" xml:space="preserve">
+		<value>Lumière</value>
+	</data>
+	<data name="Dark" xml:space="preserve">
+		<value>Sombre</value>
+	</data>
+	<data name="Default" xml:space="preserve">
+		<value>Standard</value>
+	</data>
+	<data name="NoItems" xml:space="preserve">
+		<value>Aucun article disponible</value>
+	</data>
+	<data name="Username" xml:space="preserve">
+		<value>Nom d’utilisateur</value>
+	</data>
+	<data name="Password" xml:space="preserve">
+		<value>Mot de passe</value>
+	</data>
+	<data name="LoginAccount" xml:space="preserve">
+		<value>Vous avez déjà un compte ?</value>
+	</data>
+	<data name="LoginNoAccount" xml:space="preserve">
+		<value>Vous n’avez pas de compte ?</value>
+	</data>
+	<data name="LoginText" xml:space="preserve">
+		<value>Si vous avez déjà un compte, vous pouvez utiliser votre adresse e-mail et votre mot de passe pour vous connecter.</value>
+	</data>
+	<data name="LoginTitle" xml:space="preserve">
+		<value>Vous avez un compte ?</value>
+	</data>
+	<data name="SignInHere" xml:space="preserve">
+		<value>Connectez-vous ici</value>
+	</data>
+	<data name="SignupHere" xml:space="preserve">
+		<value>Inscrivez-vous ici</value>
+	</data>
+	<data name="SignupText" xml:space="preserve">
+		<value>Si vous n’avez pas de compte, remplissez les champs obligatoires et inscrivez-vous. 
+Après confirmation de votre inscription, vous pouvez utiliser votre adresse e-mail et votre mot de passe pour vous connecter.</value>
+	</data>
+	<data name="SignupTitle" xml:space="preserve">
+		<value>Vous n’avez pas de compte ?</value>
+	</data>
+	<data name="WarningNoModulesSelected" xml:space="preserve">
+		<value>Aucun module n’est sélectionné. Sélectionnez-en au moins un.</value>
+	</data>
+	<data name="WarningPasswordMatch" xml:space="preserve">
+		<value>Les mots de passe ne correspondent pas!</value>
+	</data>
+	<data name="WarningPasswordSize" xml:space="preserve">
+		<value>Le mot de passe doit comporter au moins 6 caractères et au moins 1 lettre minuscule, 1 lettre majuscule et 1 chiffre.</value>
+	</data>
+	<data name="WarningResetPassword" xml:space="preserve">
+		<value>Vous recevrez un e-mail avec un lien pour réinitialiser votre mot de passe.</value>
+	</data>
+	<data name="PasswordForgot" xml:space="preserve">
+		<value>Vous avez oublié votre mot de passe ?</value>
+	</data>
+	<data name="PasswordRetype" xml:space="preserve">
+		<value>Retaper le mot de passe</value>
+	</data>
+	<data name="EmailAddress" xml:space="preserve">
+		<value>Adresse courriel</value>
+	</data>
+	<data name="Country" xml:space="preserve">
+		<value>Pays</value>
+	</data>
+	<data name="Modules" xml:space="preserve">
+		<value>Modules</value>
+	</data>
+	<data name="TimeZone" xml:space="preserve">
+		<value>Fuseau horaire</value>
+	</data>
+	<data name="WarningNoCountrySelected" xml:space="preserve">
+		<value>Aucun pays n’est sélectionné.</value>
+	</data>
+	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
+		<value>Aucun fuseau horaire n’est sélectionné.</value>
+	</data>
+	<data name="WarningInvalidEmail" xml:space="preserve">
+		<value>L’adresse e-mail saisie n’est pas valide.</value>
+	</data>
+	<data name="WarningLicenseNameSize" xml:space="preserve">
+		<value>Vous devez entrer un nom (de société) existant d’au moins 3 caractères.</value>
+	</data>
+	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
+		<value>Vous recevrez un e-mail que vous devez d’abord confirmer avant de pouvoir vous connecter.</value>
+	</data>
+	<data name="Fullname" xml:space="preserve">
+		<value>Nom complet</value>
 	</data>
 </root>

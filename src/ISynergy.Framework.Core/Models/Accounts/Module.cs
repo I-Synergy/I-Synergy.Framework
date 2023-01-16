@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Base;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.Core.Models.Accounts
@@ -53,5 +52,7 @@ namespace ISynergy.Framework.Core.Models.Accounts
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
+
+        public override string ToString() => Description;
     }
 }

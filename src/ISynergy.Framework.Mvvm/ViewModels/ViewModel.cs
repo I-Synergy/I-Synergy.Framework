@@ -68,8 +68,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <value>The title.</value>
         public virtual string Title
         {
-            get { return GetValue<string>(); }
-            set { SetValue(value); }
+            get => GetValue<string>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -78,8 +78,17 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <value><c>true</c> if this instance is initialized; otherwise, <c>false</c>.</value>
         public bool IsInitialized
         {
-            get { return GetValue<bool>(); }
-            set { SetValue(value); }
+            get => GetValue<bool>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the IsRefreshing property value.
+        /// </summary>
+        public bool IsRefreshing
+        {
+            get => GetValue<bool>();
+            set => SetValue(value);
         }
 
         /// <summary>

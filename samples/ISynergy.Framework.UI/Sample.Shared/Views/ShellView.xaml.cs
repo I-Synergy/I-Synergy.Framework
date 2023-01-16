@@ -1,7 +1,10 @@
 ﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
+using System.Threading.Tasks;
 
 namespace Sample.Views
 {
@@ -13,14 +16,52 @@ namespace Sample.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellView" /> class.
         /// </summary>
-        public ShellView()
+        public void InitializeView()
         {
-            InitializeComponent();
+            var navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
+            navigationService.Frame = ContentRootFrame;
 
-            var shellViewModel = ServiceLocator.Default.GetInstance<IShellViewModel>();
-            shellViewModel.SetRootFrame(ContentRootFrame);
+            ViewModel = ServiceLocator.Default.GetInstance<IShellViewModel>();
 
-            ViewModel = shellViewModel;
+            RootNavigationView.Loaded += RootNavigationViewLoaded;
+            RootNavigationView.BackRequested += RootNavigationViewBackRequested;
+            RootNavigationView.ItemInvoked += NavigationItemInvoked;
+            ContentRootFrame.Navigated += ContentRootFrameNavigated;
+        }
+
+        /// <summary>
+        /// Executes settings command if authenticated.
+        /// Otherwise authenticate first.
+        /// </summary>
+        /// <returns></returns>
+        private async Task ExecuteCommandAsync()
+        {
+            Argument.IsNotNull(ViewModel);
+
+            if (ViewModel.Context.IsAuthenticated)
+            {
+                if (((IShellViewModel)ViewModel).Settings_Command.CanExecute(null))
+                    ((IShellViewModel)ViewModel).Settings_Command.Execute(null);
+            }
+            else
+            {
+                //await ((IShellViewModel)ViewModel).ProcessAuthenticationRequestAsync();
+            }
+        }
+
+        /// <summary>
+        /// Called when [back requested].
+        /// </summary>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        private bool OnBackRequested()
+        {
+            if (ViewModel.BaseCommonServices.NavigationService.CanGoBack)
+            {
+                ViewModel.BaseCommonServices.NavigationService.GoBack();
+                return true;
+            }
+
+            return false;
         }
     }
 }

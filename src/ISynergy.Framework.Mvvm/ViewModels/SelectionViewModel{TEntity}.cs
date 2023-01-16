@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
@@ -13,11 +14,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
     /// <summary>
     /// Class SelectionViewModel.
     /// Implements the <see name="ViewModelBlade{IList{TEntity}}" />
-    /// Implements the <see cref="IViewModelBlade" />
     /// </summary>
     /// <seealso name="ViewModelBlade{IList{TEntity}}" />
-    /// <seealso cref="IViewModelBlade" />
-    public class SelectionViewModel<TEntity> : ViewModelBlade<List<object>>, IViewModelBlade, ISelectionViewModel
+    public class SelectionViewModel : ViewModelDialog<List<object>>, ISelectionViewModel
     {
         /// <summary>
         /// Gets the title.
@@ -29,7 +28,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the raw items.
         /// </summary>
         /// <value>The raw items.</value>
-        private IEnumerable<TEntity> RawItems { get; set; }
+        private IEnumerable<object> RawItems { get; set; }
 
         /// <summary>
         /// Gets or sets the SelectionMode property value.
@@ -45,10 +44,19 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Item property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableCollection<TEntity> Items
+        public ObservableCollection<object> Items
         {
-            get { return GetValue<ObservableCollection<TEntity>>(); }
+            get { return GetValue<ObservableCollection<object>>(); }
             set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the SelectedItems property value.
+        /// </summary>
+        public List<object> SelectedItems
+        {
+            get => GetValue<List<object>>();
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -58,7 +66,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         public AsyncRelayCommand<string> Search_Command { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelectionViewModel{TEntity}"/> class.
+        /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
@@ -71,7 +79,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             IContext context,
             IBaseCommonServices commonServices,
             ILogger logger,
-            IEnumerable<TEntity> items,
+            IEnumerable<object> items,
             IEnumerable<object> selectedItems,
             SelectionModes selectionMode = SelectionModes.Single,
             bool automaticValidation = false)
@@ -87,21 +95,21 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             Validator = new Action<IObservableClass>(arg =>
             {
-                if (SelectionMode == SelectionModes.Single && SelectedItem.Count != 1)
+                if (SelectionMode == SelectionModes.Single && SelectedItems.Count != 1)
                 {
-                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
+                    Properties[nameof(SelectedItems)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
                 }
 
-                if (SelectionMode == SelectionModes.Multiple && SelectedItem.Count < 1)
+                if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
                 {
-                    Properties[nameof(SelectedItem)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
+                    Properties[nameof(SelectedItems)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
                 }
             });
 
-            Search_Command = new AsyncRelayCommand<string>(async (e) => await QueryItemsAsync(e));
+            Search_Command = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
             RawItems = items;
-            Items = new ObservableCollection<TEntity>(items);
-            SelectedItem = new List<object>(selectedItems);
+            Items = new ObservableCollection<object>(items);
+            SelectedItems = new List<object>(selectedItems);
             IsInitialized = true;
         }
 
@@ -113,11 +121,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         {
             if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
             {
-                Items = new ObservableCollection<TEntity>(RawItems);
+                Items = new ObservableCollection<object>(RawItems);
             }
             else
             {
-                var filteredList = new List<TEntity>();
+                var filteredList = new List<object>();
 
                 foreach (var item in RawItems)
                 {
@@ -131,7 +139,18 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                     }
                 }
 
-                Items = new ObservableCollection<TEntity>(filteredList);
+                Items = new ObservableCollection<object>(filteredList);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public override Task SubmitAsync(List<object> e)
+        {
+            if (Validate())
+            {
+                OnSubmitted(new SubmitEventArgs<List<object>>(SelectedItems));
+                Close();
             }
 
             return Task.CompletedTask;

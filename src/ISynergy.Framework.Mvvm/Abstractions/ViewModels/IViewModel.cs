@@ -24,7 +24,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Occurs when [closed].
         /// </summary>
         event EventHandler Closed;
-
         /// <summary>
         /// Gets the context.
         /// </summary>
@@ -82,6 +81,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// </summary>
         /// <value><c>true</c> if this instance is initialized; otherwise, <c>false</c>.</value>
         bool IsInitialized { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating that viewmodel is refreshing.
+        /// </summary>
+        bool IsRefreshing { get; set; }
         /// <summary>
         /// Handles the <see cref="E:PropertyChanged" /> event.
         /// </summary>

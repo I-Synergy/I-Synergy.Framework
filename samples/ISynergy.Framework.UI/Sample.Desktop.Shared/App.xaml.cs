@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Telemetry.Extensions;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.Update.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,8 @@ namespace Sample
     /// </summary>
     public sealed partial class App : BaseApplication
     {
+        private readonly IServiceCollection _services;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -38,6 +41,28 @@ namespace Sample
             : base()
         {
             InitializeComponent();
+
+            _services = new ServiceCollection();
+            _services.ConfigureServices<App, Context, Sample.Properties.Resources>(x => x.Name.StartsWith(typeof(App).Namespace));
+
+            _services.AddSingleton<IAuthenticationService, AuthenticationService>();
+
+            _services.AddUpdatesIntegration();
+
+            _services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
+            _services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService, SettingsService>());
+
+            _services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
+            _services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
+
+            //_services.AddAppCenterTelemetryIntegration(configurationRoot);
+
+            _services.AddScoped<IShellViewModel, ShellViewModel>();
+            _services.AddScoped<IShellView, ShellView>();
+
+            _services.BuildServiceProvider();
+
+            InitializeApplication();
         }
 
         /// <summary>
@@ -49,48 +74,5 @@ namespace Sample
             {
                 new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Desktop.xaml") }
             };
-
-        /// <summary>
-        /// Configures the services.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        protected override void ConfigureServices(IServiceCollection services)
-        {
-            base.ConfigureServices(services);
-
-            var assembly = Assembly.GetAssembly(typeof(App));
-
-            var configurationRoot = new ConfigurationBuilder()
-                .AddJsonStream(assembly.GetManifestResourceStream("appsettings.json"))
-                .Build();
-
-            services.Configure<ConfigurationOptions>(configurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
-
-            services.AddSingleton<IVersionService>((s) => new VersionService(assembly));
-            services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
-            services.AddSingleton<IContext, Context>();
-            services.AddSingleton<IAuthenticationService, AuthenticationService>();
-
-            services.AddUpdatesIntegration();
-
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService, SettingsService>());
-
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
-
-            services.AddAppCenterTelemetryIntegration(configurationRoot);
-
-            services.AddScoped<IShellViewModel, ShellViewModel>();
-            services.AddScoped<IShellView, ShellView>();
-
-            //Add current assembly.
-            //Add current assembly.
-            RegisterAssemblies(assembly, x =>
-                x.Name.StartsWith(GetType().Namespace));
-        }
-
-        public override void AddResourceManager(ILanguageService languageService) =>
-            languageService.AddResourceManager(new ResourceManager(typeof(Resources)));
     }
 }

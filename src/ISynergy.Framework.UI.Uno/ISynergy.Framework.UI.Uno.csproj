@@ -1,0 +1,55 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0-windows10.0.19041;net7.0;net7.0-android</TargetFrameworks>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<PackageId>I-Synergy.Framework.UI.Uno</PackageId>
+		<Description>I-Synergy UI Framework for the Uno Platform</Description>
+		<PackageTags>I-Synergy, Framework, UI, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
+		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<CodeAnalysisRuleSet>ISynergy.Framework.UI.Uno.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
+		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.3.0" />
+		<PackageReference Include="Uno.WinUI" Version="4.6.41" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Remove="Assets\Fonts\FluentSystemIcons.ttf" />
+	  <Content Remove="Assets\Fonts\uno-fluentui-assets.ttf" />
+	  <Content Remove="Assets\Fonts\uno-fluentui-assets.woff2" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+</Project>
