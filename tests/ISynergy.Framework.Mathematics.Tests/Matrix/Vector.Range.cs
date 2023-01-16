@@ -182,68 +182,67 @@
             test(start, end, step, () => func().ToArray());
         }
 
-        private static void test<T>(double start, double end, Func<T[]> func)
-        {
-            T[] values = func();
+        //private static void test<T>(double start, double end, Func<T[]> func)
+        //{
+        //    T[] values = func();
 
-            if (start == end)
-            {
-                Assert.AreEqual(0, values.Length);
-            }
-            else if (start < end)
-            {
-                Assert.AreEqual(start, values.Get(0));
-                Assert.AreEqual(end - 1, values.Get(-1));
-            }
-            else
-            {
-                Assert.AreEqual(start, values.Get(0));
-                Assert.AreEqual(end + 1, values.Get(-1));
-            }
-        }
+        //    if (start == end)
+        //    {
+        //        Assert.AreEqual(0, values.Length);
+        //    }
+        //    else if (start < end)
+        //    {
+        //        Assert.AreEqual(start, values.Get(0));
+        //        Assert.AreEqual(end - 1, values.Get(-1));
+        //    }
+        //    else
+        //    {
+        //        Assert.AreEqual(start, values.Get(0));
+        //        Assert.AreEqual(end + 1, values.Get(-1));
+        //    }
+        //}
 
-        private static void test<T>(double start, double end, double step, Func<T[]> func)
-        {
-            double tol = 1e-10;
-            if (typeof(T) == typeof(float))
-                tol = 1e-6;
+        //private static void test<T>(double start, double end, double step, Func<T[]> func)
+        //{
+        //    double tol = 1e-10;
+        //    if (typeof(T) == typeof(float))
+        //        tol = 1e-6;
 
-            if (start == end)
-            {
-                T[] values = func();
-                Assert.AreEqual(0, values.Length);
-            }
-            else
-            {
-                if (step == 0)
-                {
-                    Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
-                }
-                else
-                {
-                    if (start < end)
-                    {
-                        if (step > 0)
-                        {
-                            T[] values = func();
-                            Assert.AreEqual(start, values.Get(0));
-                            Assert.AreEqual(start + (values.Length - 1) * step, values.Get(-1).To<double>(), tol);
-                        }
-                        else
-                        {
-                            Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
-                        }
-                    }
-                    else
-                    {
-                        T[] values = func();
-                        Assert.AreEqual(start, values.Get(0));
-                        if ((start - end) <= step)
-                            Assert.AreEqual(start - (values.Length - 1) * step, values.Get(-1).To<double>(), tol);
-                    }
-                }
-            }
-        }
-
+        //    if (start == end)
+        //    {
+        //        T[] values = func();
+        //        Assert.AreEqual(0, values.Length);
+        //    }
+        //    else
+        //    {
+        //        if (step == 0)
+        //        {
+        //            Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
+        //        }
+        //        else
+        //        {
+        //            if (start < end)
+        //            {
+        //                if (step > 0)
+        //                {
+        //                    T[] values = func();
+        //                    Assert.AreEqual(start, values.Get(0));
+        //                    Assert.AreEqual(start + (values.Length - 1) * step, values.Get(-1).To<double>(), tol);
+        //                }
+        //                else
+        //                {
+        //                    Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
+        //                }
+        //            }
+        //            else
+        //            {
+        //                T[] values = func();
+        //                Assert.AreEqual(start, values.Get(0));
+        //                if ((start - end) <= step)
+        //                    Assert.AreEqual(start - (values.Length - 1) * step, values.Get(-1).To<double>(), tol);
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

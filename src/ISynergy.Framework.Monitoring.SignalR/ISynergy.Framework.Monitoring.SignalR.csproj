@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Monitoring.SignalR</PackageId>
-		<Description>I-Synergy Framework SignalR Monitoring for .Net 7.0</Description>
+		<Description>I-Synergy Framework SignalR Monitoring for .net 6.0 and .net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, SignalR</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>ISynergy.Framework.Monitoring</RootNamespace>

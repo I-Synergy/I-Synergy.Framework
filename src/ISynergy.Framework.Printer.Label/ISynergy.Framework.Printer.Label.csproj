@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>net7.0</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Printer.Label</PackageId>
-		<Description>I-Synergy Framework Label printer library for .Net 7.0</Description>
+		<Description>I-Synergy Framework Label printer library for .net Standard 2.0</Description>
 		<PackageTags>I-Synergy, Framework, Printer, Label</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Printer.Label.ruleset</CodeAnalysisRuleSet>

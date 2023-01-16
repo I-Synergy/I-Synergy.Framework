@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project>
+  <configuration createBackupFiles="False" hideEmptyRows="False" hideTranslatedRows="False" useSpellChecker="True" resXIndentChar="	" neutralLanguageCode="en" languagesToDisplay="">
+    <globalSetting name="ReadOnlyFileOverwriteBehaviour">0</globalSetting>
+    <globalSetting name="OmitEmptyItems">True</globalSetting>
+    <globalSetting name="ShowCommentsColumnInGrid">False</globalSetting>
+    <globalSetting name="IgnoreWindowsFormsResourcesWithDesignerFiles">True</globalSetting>
+    <globalSetting name="HideInternalDesignerRows">True</globalSetting>
+    <globalSetting name="UseShallowGridDataCumulation">True</globalSetting>
+    <globalSetting name="HideFileGroupFilesInTree">True</globalSetting>
+    <globalSetting name="DisplayFileGroupWithoutFolder">False</globalSetting>
+    <globalSetting name="NeutralLanguageFileNamePattern">[basename][optionaldefaulttypes].[extension]</globalSetting>
+    <globalSetting name="NonNeutralLanguageFileNamePattern">[basename][optionaldefaulttypes].[languagecode].[extension]</globalSetting>
+    <globalSetting name="BaseNameDotCount">0</globalSetting>
+    <globalSetting name="DefaultFileTypesToIgnore">.aspx;.ascx;.asmx;.master;.sitemap</globalSetting>
+    <globalSetting name="Project-PersistGridSettings">True</globalSetting>
+    <globalSetting name="ColorifyNullCells">True</globalSetting>
+    <globalSetting name="EnableExcelExportSnapshots">True</globalSetting>
+    <globalSetting name="KeepFolderStructureOnImport">False</globalSetting>
+    <globalSetting name="Filter-ResourceEditorGrid">&lt;XtraSerializer version="1.0" application="View"&gt;
+  &lt;property name="#LayoutVersion" /&gt;
+  &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
+  &lt;property name="ActiveFilterString" /&gt;
+&lt;/XtraSerializer&gt;</globalSetting>
+    <globalSetting name="Sort-ResourceEditorGrid">&lt;XtraSerializer version="1.0" application="View"&gt;
+  &lt;property name="#LayoutVersion" /&gt;
+  &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
+&lt;/XtraSerializer&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="4352268387" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="autoTranslateForm.prefixTextBox.Text">####</globalSetting>
+    <globalSetting name="autoTranslateForm.prefixCheckBox.Checked">True</globalSetting>
+    <globalSetting name="autoTranslateForm.useExistingTranslationsCheckBox.Checked">False</globalSetting>
+    <globalSetting name="autoTranslateForm.useOnlyExistingTranslationsCheckEdit.Checked">False</globalSetting>
+    <globalSetting name="autoTranslateForm.referenceLanguageComboBoxEdit.SelectedIndex">1</globalSetting>
+    <globalSetting name="autoTranslateForm.languagesToTranslateCheckListBox">0;1;2</globalSetting>
+    <userSetting name="ismai@ISYNERGY-ISMAIL.filesInitialDir">C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties</userSetting>
+    <userSetting name="ismai@ISYNERGY-ISMAIL.FindText">
+    </userSetting>
+    <userSetting name="ismai@ISYNERGY-ISMAIL.RecentFiles">C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.resx;C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.de.resx;C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.fr.resx;C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.nl.resx</userSetting>
+    <description>
+    </description>
+  </configuration>
+  <fileGroups>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="8dd649cf-3a95-47e6-b5c9-997c1bade1cd">
+      <file filePath="..\src\ISynergy.Framework.Core\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.resx" uniqueID="5e6860e1-452f-4086-a313-8f5c1745d7f9" />
+      <file filePath="..\src\ISynergy.Framework.Core\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.de.resx" uniqueID="8ec4da77-47e8-4d20-949a-a629f8b77ca0" />
+      <file filePath="..\src\ISynergy.Framework.Core\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.fr.resx" uniqueID="9518eebe-a945-43e3-bec1-e38fd6b2a8f8" />
+      <file filePath="..\src\ISynergy.Framework.Core\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Core\Properties\Resources.nl.resx" uniqueID="bdc7a45c-3c3d-4bc9-b06d-4dd4b6d327ba" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="ccce088c-c6ce-4c59-b35c-49b3c0e20a20">
+      <file filePath="..\src\ISynergy.Framework.Mvvm\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.resx" uniqueID="c84a63ae-59d4-4f18-b039-3ab666ebcb47" />
+      <file filePath="..\src\ISynergy.Framework.Mvvm\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.de.resx" uniqueID="0acd4d78-1ce0-4551-8c83-c5ef66517bc4" />
+      <file filePath="..\src\ISynergy.Framework.Mvvm\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.fr.resx" uniqueID="4189eb39-9c14-416d-909d-1cc3b31dd0d3" />
+      <file filePath="..\src\ISynergy.Framework.Mvvm\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Mvvm\Properties\Resources.nl.resx" uniqueID="45690698-c21d-4841-a15c-dd952c4f78cb" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="6e39439f-aabd-4d9a-965d-ef2a90d5590e">
+      <file filePath="..\src\ISynergy.Framework.UI\Properties\Resources.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.resx" uniqueID="8da3c046-4dd8-4f29-ad6c-7a6c760a3002" />
+      <file filePath="..\src\ISynergy.Framework.UI\Properties\Resources.de.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.de.resx" uniqueID="d2a9ae15-0c97-4f5a-9af3-ab66a0136801" />
+      <file filePath="..\src\ISynergy.Framework.UI\Properties\Resources.fr.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.fr.resx" uniqueID="3c448d45-9882-4086-ab8d-a82df80406e7" />
+      <file filePath="..\src\ISynergy.Framework.UI\Properties\Resources.nl.resx" absoluteFilePath="C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties\Resources.nl.resx" uniqueID="f59c45a7-2153-4a6f-9359-7c243ad4c575" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+  </fileGroups>
+  <projectFolders />
+</project>

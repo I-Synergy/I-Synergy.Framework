@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Models.Result;
+using ISynergy.Framework.Core.Models.Results;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;

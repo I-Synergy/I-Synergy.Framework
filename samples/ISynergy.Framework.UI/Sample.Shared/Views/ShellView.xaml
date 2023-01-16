@@ -7,6 +7,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:Converters="using:ISynergy.Framework.UI.Converters"
 	xmlns:FrameworkNavigation="using:ISynergy.Framework.UI.Navigation"
+    xmlns:models="using:ISynergy.Framework.UI.Models"
 	xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
 	xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
@@ -18,7 +19,7 @@
         
 		<FrameworkNavigation:MenuItemTemplateSelector x:Key="ItemSelector">
 			<FrameworkNavigation:MenuItemTemplateSelector.ItemTemplate>
-				<DataTemplate x:DataType="FrameworkNavigation:NavigationItem">
+				<DataTemplate x:DataType="models:NavigationItem">
                     <NavigationViewItem Content="{x:Bind Name}">
                         <NavigationViewItem.Icon>
 							<PathIcon Data="{x:Bind Symbol}" />

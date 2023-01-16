@@ -23,6 +23,10 @@ namespace ISynergy.Framework.Core.Abstractions
         /// <value>The time zone identifier.</value>
         string TimeZoneId { get; }
         /// <summary>
+        /// Gets the country ISO2 code.
+        /// </summary>
+        //string CountryISO2 { get; set; }
+        /// <summary>
         /// Gets the user identifier.
         /// </summary>
         /// <value>The user identifier.</value>

@@ -218,7 +218,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             if (await BaseCommonServices.DialogService.ShowMessageAsync(
                                 string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
                                 BaseCommonServices.LanguageService.GetString("Delete"),
-                                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 await RemoveAsync(e);
                 await RefreshAsync();

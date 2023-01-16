@@ -260,26 +260,107 @@ Speichern Sie Ihre Arbeit, und starten Sie die Anwendung neu.</value>
 	<data name="Select" xml:space="preserve">
 		<value>Auswählen</value>
 	</data>
-	<data name="ExceptionInternetConnection" xml:space="preserve">
-		<value>Wir sehen, dass es etwas falsch mit Ihrer Internet-Verbindung. 
-Überprüfen Sie Ihre Internetverbindung. Ist alles in Ordnung? 
-Bitte kontaktieren Sie-Synergie-Service und Support.</value>
+	<data name="SignOut" xml:space="preserve">
+		<value>Abmelden</value>
 	</data>
-	<data name="ExceptionFileInUse" xml:space="preserve">
-		<value>Etwas ist schief gelaufen.
-Sie versuchen, eine Datei zu öffnen, die bereits geöffnet ist.
-Überprüfen Sie, ob diese Datei in Microsoft Word oder Excel bereits geöffnet ist.</value>
+	<data name="SignIn" xml:space="preserve">
+		<value>Anmelden</value>
 	</data>
-	<data name="ExceptionFutureModule" xml:space="preserve">
-		<value>Diese Funktion werd bald zur Verfügung gestellt.
-Weitere Informationen finden Sie auf http//www.i-synergy.net</value>
+	<data name="Register" xml:space="preserve">
+		<value>Registrieren</value>
 	</data>
-	<data name="ExceptionDefault" xml:space="preserve">
-		<value>Etwas schief gelaufen! 
-Synergie-Team informiert worden und wir werden den Fehler so schnell wie möglich korrigieren. 
-Dies häufig der Fall, bitte kontaktieren Sie-Synergie-Service und Support.</value>
+	<data name="Settings" xml:space="preserve">
+		<value>Einstellungen</value>
 	</data>
-	<data name="ExceptionArgumentIsNull" xml:space="preserve">
-		<value>{0} kann nicht leer oder null sein.</value>
+	<data name="Light" xml:space="preserve">
+		<value>Licht</value>
+	</data>
+	<data name="Dark" xml:space="preserve">
+		<value>Dunkel</value>
+	</data>
+	<data name="Default" xml:space="preserve">
+		<value>Norm</value>
+	</data>
+	<data name="NoItems" xml:space="preserve">
+		<value>Keine Artikel verfügbar</value>
+	</data>
+	<data name="Username" xml:space="preserve">
+		<value>Nutzername</value>
+	</data>
+	<data name="Password" xml:space="preserve">
+		<value>Passwort</value>
+	</data>
+	<data name="LoginAccount" xml:space="preserve">
+		<value>Sie haben bereits ein Konto?</value>
+	</data>
+	<data name="LoginNoAccount" xml:space="preserve">
+		<value>Sie haben noch kein Konto?</value>
+	</data>
+	<data name="LoginText" xml:space="preserve">
+		<value>Wenn Sie bereits ein Konto haben, können Sie sich mit Ihrer E-Mail-Adresse und Ihrem Passwort anmelden.</value>
+	</data>
+	<data name="LoginTitle" xml:space="preserve">
+		<value>Haben Sie ein Konto?</value>
+	</data>
+	<data name="SignInHere" xml:space="preserve">
+		<value>Melden Sie sich hier an</value>
+	</data>
+	<data name="SignupHere" xml:space="preserve">
+		<value>Registrieren Sie sich hier</value>
+	</data>
+	<data name="SignupText" xml:space="preserve">
+		<value>Wenn Sie noch kein Konto haben, füllen Sie die erforderlichen Felder aus und registrieren Sie sich. 
+Nach Bestätigung Ihrer Anmeldung können Sie sich mit Ihrer E-Mail-Adresse und Ihrem Passwort anmelden.</value>
+	</data>
+	<data name="SignupTitle" xml:space="preserve">
+		<value>Sie haben noch kein Konto?</value>
+	</data>
+	<data name="WarningNoModulesSelected" xml:space="preserve">
+		<value>Es sind keine Module ausgewählt. Wählen Sie mindestens eine aus.</value>
+	</data>
+	<data name="WarningPasswordMatch" xml:space="preserve">
+		<value>Passwörter stimmen nicht überein!</value>
+	</data>
+	<data name="WarningPasswordSize" xml:space="preserve">
+		<value>Das Passwort sollte mindestens 6 Zeichen und mindestens 1 Kleinbuchstabe, 1 Großbuchstabe und 1 Zahl haben.</value>
+	</data>
+	<data name="WarningResetPassword" xml:space="preserve">
+		<value>Sie erhalten eine E-Mail mit einem Link zum Zurücksetzen Ihres Passworts.</value>
+	</data>
+	<data name="PasswordForgot" xml:space="preserve">
+		<value>Passwort vergessen?</value>
+	</data>
+	<data name="PasswordRetype" xml:space="preserve">
+		<value>Kennwort erneut eingeben</value>
+	</data>
+	<data name="EmailAddress" xml:space="preserve">
+		<value>E-Mail-Adresse</value>
+	</data>
+	<data name="Country" xml:space="preserve">
+		<value>Land</value>
+	</data>
+	<data name="Modules" xml:space="preserve">
+		<value>Module</value>
+	</data>
+	<data name="TimeZone" xml:space="preserve">
+		<value>Zeitzone</value>
+	</data>
+	<data name="WarningNoCountrySelected" xml:space="preserve">
+		<value>Es ist kein Land ausgewählt.</value>
+	</data>
+	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
+		<value>Es ist keine Zeitzone ausgewählt.</value>
+	</data>
+	<data name="WarningInvalidEmail" xml:space="preserve">
+		<value>Die eingegebene E-Mail-Adresse ist ungültig.</value>
+	</data>
+	<data name="WarningLicenseNameSize" xml:space="preserve">
+		<value>Sie müssen einen (Firmen-)Namen eingeben, der aus mindestens 3 Zeichen besteht.</value>
+	</data>
+	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
+		<value>Sie erhalten eine E-Mail, die Sie zuerst bestätigen müssen, bevor Sie sich anmelden können.</value>
+	</data>
+	<data name="Fullname" xml:space="preserve">
+		<value>Vollständiger Name</value>
 	</data>
 </root>

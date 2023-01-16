@@ -2,9 +2,9 @@
     <Import Project="..\..\project.props" />
 
     <PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.AspNetCore.Authentication</PackageId>
-        <Description>I-Synergy Framework Authentication for .Net 7.0</Description>
+        <Description>I-Synergy Framework Authentication for .net 6.0 and .net 7.0</Description>
         <PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<CodeAnalysisRuleSet>ISynergy.Framework.AspNetCore.Authentication.ruleset</CodeAnalysisRuleSet>

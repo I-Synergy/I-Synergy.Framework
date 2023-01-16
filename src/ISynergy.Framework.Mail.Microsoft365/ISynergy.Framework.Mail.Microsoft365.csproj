@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 	<PropertyGroup>
-		<TargetFrameworks>net7.0</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Mail.Microsoft365</PackageId>
-		<Description>I-Synergy Framework Mail with Microsoft 365 for .Net 7.0</Description>
+		<Description>I-Synergy Framework Mail with Microsoft 365 for .net Standard 2.0</Description>
 		<PackageTags>I-Synergy, Framework, Mail, Microsoft, Graph, Office, 365</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>ISynergy.Framework.Mail</RootNamespace>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Mail.Microsoft365.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Azure.Identity" Version="1.8.0" />
+		<PackageReference Include="Azure.Identity" Version="1.8.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Graph" Version="4.48.0" />
+		<PackageReference Include="Microsoft.Graph" Version="4.50.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Mail\ISynergy.Framework.Mail.csproj" />

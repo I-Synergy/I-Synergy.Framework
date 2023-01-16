@@ -55,7 +55,7 @@ namespace Sample
             services.AddSingleton<IVersionService>((s) => new VersionService(assembly));
             services.AddSingleton<IInfoService>((s) => new InfoService(assembly));
             services.AddSingleton<IContext, Context>();
-            services.AddSingleton<IBaseAuthenticationService, AuthenticationService>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService, SettingsService>());

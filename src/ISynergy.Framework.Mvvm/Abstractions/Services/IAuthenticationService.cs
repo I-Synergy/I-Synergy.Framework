@@ -1,4 +1,7 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.Services
+﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models.Accounts;
+
+namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {
     /// <summary>
     /// Interface IAuthenticationService
@@ -45,5 +48,51 @@
         Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default);
         void SignOut();
         string GetEnvironmentalAuthToken(string token);
+
+        /// <summary>
+        /// Gets the modules asynchronous.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Task&lt;List&lt;Module&gt;&gt;.</returns>
+        Task<List<Module>> GetModulesAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Get all countries from masterdata.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<List<Country>> GetCountriesAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Checks if license name is available.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
+        Task<bool> CheckRegistrationNameAsync(string name, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Checks if email address is available.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
+        Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Registers a new account.
+        /// </summary>
+        /// <param name="registration">The e.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
+        Task<bool> RegisterNewAccountAsync(RegistrationData registration, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Requests a password reset.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Task&lt;System.Boolean&gt;.</returns>
+        Task<bool> ResetPasswordAsync(string email, CancellationToken cancellationToken = default);
     }
 }

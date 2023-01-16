@@ -89,7 +89,7 @@ namespace Sample.ViewModels
             if (await BaseCommonServices.DialogService.ShowMessageAsync(
                                 $"Testing {buttons.ToString()} Dialog",
                                 "Test",
-                                buttons, MessageBoxImage.Question) is MessageBoxResult result)
+                                buttons) is MessageBoxResult result)
             {
                 await BaseCommonServices.DialogService.ShowInformationAsync($"{result.ToString()} selected.", "Result...");
             };
@@ -101,7 +101,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         private Task SelectMultipleAsync()
         {
-            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
+            var selectionVm = new SelectionViewModel(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
             BaseCommonServices.NavigationService.OpenBlade(this, selectionVm);
             return Task.CompletedTask;
@@ -113,7 +113,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         private Task SelectSingleAsync()
         {
-            var selectionVm = new SelectionViewModel<TestItem>(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
+            var selectionVm = new SelectionViewModel(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
             BaseCommonServices.NavigationService.OpenBlade(this, selectionVm);
             return Task.CompletedTask;
@@ -126,7 +126,7 @@ namespace Sample.ViewModels
         /// <param name="e">The e.</param>
         private async void SelectionVm_MultipleSubmitted(object sender, SubmitEventArgs<List<object>> e)
         {
-            if (sender is SelectionViewModel<TestItem> vm)
+            if (sender is SelectionViewModel vm)
                 vm.Submitted -= SelectionVm_MultipleSubmitted;
 
             SelectedTestItems = new ObservableCollection<TestItem>(e.Result.Cast<TestItem>());
@@ -141,7 +141,7 @@ namespace Sample.ViewModels
         /// <param name="e">The e.</param>
         private async void SelectionVm_SingleSubmitted(object sender, SubmitEventArgs<List<object>> e)
         {
-            if (sender is SelectionViewModel<TestItem> vm)
+            if (sender is SelectionViewModel vm)
                 vm.Submitted -= SelectionVm_SingleSubmitted;
 
             await BaseCommonServices.DialogService.ShowInformationAsync($"{e.Result.Cast<TestItem>().Single().Description} selected.");

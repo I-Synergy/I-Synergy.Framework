@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:Window xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+          xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+          xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
+          x:Class="ISynergy.Framework.UI.Windows.LanguageWindow"
+          Title="{Binding Title}">
+
+    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}">
+        <StackLayout Margin="10">
+            <RadioButton x:Name="Button_Language_nl" Content="{m:GetString Key=Language_Dutch}" GroupName="Language" >
+                <RadioButton.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding SetLanguage_Command}" CommandParameter="nl" />
+                </RadioButton.Behaviors>
+            </RadioButton>
+            <RadioButton x:Name="Button_Language_en" Content="{m:GetString Key=Language_English}" GroupName="Language">
+                <RadioButton.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding SetLanguage_Command}" CommandParameter="en" />
+                </RadioButton.Behaviors>
+            </RadioButton>
+            <RadioButton x:Name="Button_Language_de" Content="{m:GetString Key=Language_German}" GroupName="Language" IsEnabled="False">
+                <RadioButton.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding SetLanguage_Command}" CommandParameter="de" />
+                </RadioButton.Behaviors>
+            </RadioButton>
+            <RadioButton x:Name="Button_Language_fr" Content="{m:GetString Key=Language_French}" GroupName="Language" IsEnabled="False">
+                <RadioButton.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding SetLanguage_Command}" CommandParameter="fr" />
+                </RadioButton.Behaviors>
+            </RadioButton>
+        </StackLayout>
+    </ContentView>
+</c:Window>

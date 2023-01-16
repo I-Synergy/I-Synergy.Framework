@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Services;
 using Sample.Abstractions.Services;
 
@@ -19,7 +20,7 @@ namespace Sample.Services
         /// Gets the file service.
         /// </summary>
         /// <value>The file service.</value>
-        public IFileService FileService { get; }
+        public IFileService<FileResult> FileService { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommonServices" /> class.
@@ -43,7 +44,7 @@ namespace Sample.Services
             IConverterService converterService,
             IDispatcherService dispatcherService,
             IAuthenticationService authenticationService,
-            IFileService fileService)
+            IFileService<FileResult> fileService)
             :base(busyService,
                  languageService, 
                  dialogService, 

@@ -83,17 +83,18 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Submit_Command = new AsyncRelayCommand<TEntity>(async (e) => await SubmitAsync(e));
+            Submit_Command = new AsyncRelayCommand<TEntity>((e) => SubmitAsync(e));
         }
 
         /// <summary>
         /// Sets the selected item.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public virtual void SetSelectedItem(TEntity entity)
+        public virtual Task SetSelectedItemAsync(TEntity entity)
         {
             SelectedItem = entity;
             IsNew = false;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -115,10 +116,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <returns>Task.</returns>
         public override void Close()
         {
-            if (BaseCommonServices.NavigationService.CanGoBack)
-                BaseCommonServices.NavigationService.GoBack();
-
             base.Close();
         }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query) { }
     }
 }

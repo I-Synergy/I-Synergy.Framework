@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Models;
 
 namespace Sample.Abstractions.Services
 {
@@ -18,6 +19,6 @@ namespace Sample.Abstractions.Services
         /// Gets the file service.
         /// </summary>
         /// <value>The file service.</value>
-        IFileService FileService { get; }
+        IFileService<FileResult> FileService { get; }
     }
 }

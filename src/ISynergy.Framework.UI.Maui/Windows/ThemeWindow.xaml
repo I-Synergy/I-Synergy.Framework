@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:Window xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+          xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+          xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+          xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+          x:Class="ISynergy.Framework.UI.Windows.ThemeWindow"
+          Title="{Binding Title}">
+
+    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}">
+        <VerticalStackLayout>
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <RadioButton GroupName="Theme" Content="{m:GetString Default}" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource ThemeToBooleanConverter}, ConverterParameter=Default}"/>
+                <RadioButton GroupName="Theme" Content="{m:GetString Light}" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource ThemeToBooleanConverter}, ConverterParameter=Light}"/>
+                <RadioButton GroupName="Theme" Content="{m:GetString Dark}" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource ThemeToBooleanConverter}, ConverterParameter=Dark}"/>
+            </HorizontalStackLayout>
+
+            <CollectionView ItemsSource="{Binding ThemeColors.Colors}"
+                            SelectedItem="{Binding SelectedItem.Color}"
+                            SelectionMode="Single"
+                            HorizontalOptions="Center">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="8" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Fill="{Binding Converter={StaticResource StringToColorBrushConverter}}" 
+                                 WidthRequest="28"
+                                 HeightRequest="28"
+                                 ToolTipProperties.Text="{Binding}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ContentView>
+</c:Window>

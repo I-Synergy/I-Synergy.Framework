@@ -31,8 +31,8 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="culture">The localization culture.</param>
         /// <param name="logger">The logger factory.</param>
+        /// <param name="culture"></param>
         public LanguageViewModel(
             IContext context,
             IBaseCommonServices commonServices,

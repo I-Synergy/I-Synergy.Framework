@@ -1,8 +1,10 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models.Accounts;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 namespace Sample.Services
 {
@@ -13,77 +15,62 @@ namespace Sample.Services
     /// <seealso cref="IBaseAuthenticationService" />
     public class AuthenticationService : IAuthenticationService
     {
-        /// <summary>
-        /// Authenticates the with API key asynchronous.
-        /// </summary>
-        /// <param name="apiKey">The API key.</param>
-        /// <returns>Task.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<IProfile> AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
+        public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Authenticates the with client credentials asynchronous.
-        /// </summary>
-        /// <returns>Task.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<IProfile> AuthenticateWithClientCredentialsAsync(CancellationToken cancellationToken = default)
+        public Task AuthenticateWithClientCredentialsAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Authenticates the with refresh token asynchronous.
-        /// </summary>
-        /// <param name="refreshtoken">The refreshtoken.</param>
-        /// <returns>Task.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<IProfile> AuthenticateWithRefreshTokenAsync(string refreshtoken, CancellationToken cancellationToken = default)
+        public Task AuthenticateWithRefreshTokenAsync(string refreshtoken, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Authenticates the with username password asynchronous.
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <returns>Task.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<IProfile> AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default)
+        public Task AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Checks for expired token.
-        /// </summary>
-        /// <returns>Task.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task CheckForExpiredTokenAsync(IProfile profile, CancellationToken cancellationToken = default)
+        public Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Determines whether the specified e is transient.
-        /// </summary>
-        /// <param name="e">The e.</param>
-        /// <returns>Task&lt;System.Boolean&gt;.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<bool> IsTransient(Exception e)
+        public Task<bool> CheckRegistrationNameAsync(string name, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Logouts the asynchronous.
-        /// </summary>
-        /// <returns>Task.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task LogoutAsync()
+        public Task<List<Country>> GetCountriesAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetEnvironmentalAuthToken(string token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Module>> GetModulesAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> RegisterNewAccountAsync(RegistrationData registration, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ResetPasswordAsync(string email, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SignOut()
         {
             throw new NotImplementedException();
         }

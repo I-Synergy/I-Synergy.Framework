@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mvvm.Events;
-using System;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {

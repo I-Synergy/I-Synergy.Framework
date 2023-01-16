@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <seealso cref="IViewModel" />
-    public interface IViewModelSelectedItem<TEntity> : IViewModel 
+    public interface IViewModelSelectedItem<TEntity> : IViewModel
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is new.
@@ -18,8 +18,8 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// <summary>
         /// Sets the selected item.
         /// </summary>
-        /// <param name="entity">The entity.</param>
-        void SetSelectedItem(TEntity entity);
+        /// <param name="e">The entity.</param>
+        Task SetSelectedItemAsync(TEntity e);
         /// <summary>
         /// Gets the selected item.
         /// </summary>
