@@ -37,9 +37,8 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
-		<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
 		<PackageReference Include="Syncfusion.Chart.WinUI">
 			<Version>20.4.0.44</Version>
 		</PackageReference>
@@ -51,7 +50,7 @@
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Logging.AppCenter\ISynergy.Framework.Logging.AppCenter.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
-		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

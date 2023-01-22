@@ -94,9 +94,9 @@ stages:
             PackageVersion: '$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
-          displayName: 'Install NuGet 6.3.1'
+          displayName: 'Install NuGet 6.4.0'
           inputs:
-            versionSpec: 6.3.1
+            versionSpec: 6.4.0
 
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
@@ -125,8 +125,8 @@ stages:
             targetType: 'inline'
             script: |
               dotnet nuget locals all --clear 
-              dotnet workload install maui --source https://aka.ms/dotnet7/nuget/index.json --source https://api.nuget.org/v3/index.json
-              dotnet workload install android ios maccatalyst tvos macos maui wasm-tools --source https://aka.ms/dotnet7/nuget/index.json --source https://api.nuget.org/v3/index.json
+              dotnet workload install maui --source https://api.nuget.org/v3/index.json
+              dotnet workload install android ios maccatalyst tvos macos maui wasm-tools --source https://api.nuget.org/v3/index.json
 
         - task: DotNetCoreCLI@2
           displayName: 'Build Core Project'
@@ -421,6 +421,12 @@ stages:
             command: 'build'
             projects: 'src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage)'
+
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(Build.SourcesDirectory)\packages'
+            Contents: '*'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
         - task: NuGetCommand@2
           displayName: 'Sign Nuget packages'

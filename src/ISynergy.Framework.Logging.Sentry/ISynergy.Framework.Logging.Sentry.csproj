@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Logging.Sentry</PackageId>
 		<Description>I-Synergy Framework Sentry Logging library for Windows, Linux, Android and WebAssembly</Description>
 		<PackageTags>I-Synergy, Framework, Logging, Sentry, Windows, Linux, Android, WebAssembly, Uno</PackageTags>

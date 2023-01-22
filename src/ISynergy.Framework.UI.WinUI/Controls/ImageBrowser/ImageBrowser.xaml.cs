@@ -65,11 +65,11 @@ namespace ISynergy.Framework.UI.Controls
             {
                 var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png");
 
-                if (result is not null)
+                if (result is not null && result.Count > 0)
                 {
-                    FileBytes = result.File;
-                    ContentType = result.FilePath.ToContentType();
-                    Description = result.FileName;
+                    FileBytes = result.First().File;
+                    ContentType = result.First().FilePath.ToContentType();
+                    Description = result.First().FileName;
                 }
             };
         }

@@ -14,9 +14,7 @@ using Sample.Abstractions.Services;
 using Sample.Services;
 using Sample.ViewModels;
 using Sample.Views;
-using System;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Sample
 {

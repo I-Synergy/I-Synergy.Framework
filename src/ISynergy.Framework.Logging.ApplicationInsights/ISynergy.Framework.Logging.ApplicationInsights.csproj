@@ -2,7 +2,7 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Logging.ApplicationInsights</PackageId>
 		<Description>I-Synergy Framework ApplicationInsights Logging library for Windows</Description>
 		<PackageTags>I-Synergy, Framework, Logging, ApplicationInsights, Windows, Uno</PackageTags>
