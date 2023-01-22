@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.UI;
-using Microsoft.UI.Xaml;
-using System;
-using System.Collections.Generic;
 
 namespace Sample
 {
@@ -19,15 +16,5 @@ namespace Sample
         {
             InitializeComponent();
         }
-
-        /// <summary>
-        /// Add additional resource dictionaries.
-        /// </summary>
-        /// <returns></returns>
-        protected override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
-            new List<ResourceDictionary>()
-            {
-                new ResourceDictionary() { Source = new Uri("ms-appx:///Styles/Style.Desktop.xaml") }
-            };
     }
 }

@@ -23,7 +23,7 @@
 				<DataTemplate x:DataType="models:NavigationItem">
                     <NavigationViewItem Content="{x:Bind Name}">
                         <NavigationViewItem.Icon>
-							<PathIcon Data="{x:Bind Symbol}" />
+							<PathIcon Data="{x:Bind Symbol,Converter={StaticResource StringToGeometryConverter}}" />
 						</NavigationViewItem.Icon>
                         <i:Interaction.Behaviors>
                             <ic:EventTriggerBehavior EventName="Tapped">
