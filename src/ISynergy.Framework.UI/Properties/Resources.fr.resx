@@ -363,4 +363,37 @@ Après confirmation de votre inscription, vous pouvez utiliser votre adresse e-m
 	<data name="Fullname" xml:space="preserve">
 		<value>Nom complet</value>
 	</data>
+	<data name="WarningBuildCalled" xml:space="preserve">
+		<value>Build ne peut être appelé qu’une seule fois.</value>
+	</data>
+	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+		<value>CreateBuilder doit être appelé avant CreateServiceProvider.</value>
+	</data>
+	<data name="WarningNullIServiceProvider" xml:space="preserve">
+		<value>IServiceProviderFactory a renvoyé un IServiceProvider NULL.</value>
+	</data>
+	<data name="WarningResolverReturnedNull" xml:space="preserve">
+		<value>Le résolveur a renvoyé une valeur NULL IServiceProviderFactory.</value>
+	</data>
+	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+		<value>Le remplacement de IHostApplicationLifetime n’est pas pris en charge.</value>
+	</data>
+	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
+		<value>Le nom de fichier est nul ou vide. Spécifiez un nom de fichier valide.</value>
+	</data>
+	<data name="CannotFindUpdateFile" xml:space="preserve">
+		<value>Impossible de trouver le fichier de mise à jour.</value>
+	</data>
+	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
+		<value>Impossible de récupérer les informations de version.</value>
+	</data>
+	<data name="NoInternetConnectionAvailable" xml:space="preserve">
+		<value>Aucune connexion Internet n’est disponible.</value>
+	</data>
+	<data name="CannotInstallUpdate" xml:space="preserve">
+		<value>Impossible d’installer la mise à jour.</value>
+	</data>
+	<data name="MandatoryUpdateFailed" xml:space="preserve">
+		<value>La mise à jour obligatoire a échoué !</value>
+	</data>
 </root>

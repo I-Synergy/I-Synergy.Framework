@@ -5,7 +5,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Telemetry.Extensions;
+using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.UI;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Configuration;
@@ -63,9 +63,9 @@ namespace Sample
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
-            //services.AddTelemetrySentryIntegration(configurationRoot);
-            //services.AddApplicationInsightsTelemetryIntegration(configurationRoot);
-            services.AddSentryTelemetryIntegration(configurationRoot);
+            //services.AddLoggingSentryIntegration(configurationRoot);
+            //services.AddApplicationInsightsLoggingIntegration(configurationRoot);
+            services.AddSentryLoggingIntegration(configurationRoot);
 
             services.AddScoped<IShellViewModel, ShellViewModel>();
             services.AddScoped<IShellView, ShellView>();

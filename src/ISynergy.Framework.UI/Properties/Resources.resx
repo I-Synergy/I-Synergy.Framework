@@ -383,4 +383,37 @@ After confirmation of your registration you can use your e-mail address and pass
 	<data name="Fullname" xml:space="preserve">
 		<value>Full name</value>
 	</data>
+	<data name="WarningBuildCalled" xml:space="preserve">
+		<value>Build can only be called once.</value>
+	</data>
+	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+		<value>CreateBuilder must be called before CreateServiceProvider.</value>
+	</data>
+	<data name="WarningNullIServiceProvider" xml:space="preserve">
+		<value>The IServiceProviderFactory returned a null IServiceProvider.</value>
+	</data>
+	<data name="WarningResolverReturnedNull" xml:space="preserve">
+		<value>The resolver returned a null IServiceProviderFactory.</value>
+	</data>
+	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+		<value>Replacing IHostApplicationLifetime is not supported.</value>
+	</data>
+	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
+		<value>File name is null or empty. Specify a valid file name.</value>
+	</data>
+	<data name="CannotFindUpdateFile" xml:space="preserve">
+		<value>Cannot find update file.</value>
+	</data>
+	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
+		<value>Could not retrieve version information.</value>
+	</data>
+	<data name="NoInternetConnectionAvailable" xml:space="preserve">
+		<value>No internet connection is available.</value>
+	</data>
+	<data name="CannotInstallUpdate" xml:space="preserve">
+		<value>Cannot install update.</value>
+	</data>
+	<data name="MandatoryUpdateFailed" xml:space="preserve">
+		<value>Mandatory update has failed!</value>
+	</data>
 </root>

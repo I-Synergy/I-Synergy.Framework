@@ -55,9 +55,10 @@ namespace ISynergy.Framework.UI.Extensions
         /// <typeparam name="TContext"></typeparam>
         /// <typeparam name="TResource"></typeparam>
         /// <param name="services"></param>
+        /// <param name="configuration"></param>
         /// <param name="assemblyFilter"></param>
         /// <returns></returns>
-        public static IServiceCollection ConfigureServices<TApplication, TContext, TResource>(this IServiceCollection services, Func<AssemblyName, bool> assemblyFilter)
+        public static IServiceCollection ConfigureServices<TApplication, TContext, TResource>(this IServiceCollection services, IConfiguration configuration, Func<AssemblyName, bool> assemblyFilter)
             where TApplication : Microsoft.UI.Xaml.Application
             where TContext : class, IContext
             where TResource : class
@@ -67,24 +68,24 @@ namespace ISynergy.Framework.UI.Extensions
 
             var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
 
-            var configurationRoot = new ConfigurationBuilder()
-                .AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.{_appSetting}"))
-                .Build();
-
-            services.Configure<ConfigurationOptions>(configurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
+            services.Configure<ConfigurationOptions>(configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
             var navigationService = new NavigationService();
             var languageService = new LanguageService();
 
             // Register singleton services
-            services.AddSingleton<ILogger>((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+            services.AddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
+            {
+                builder.AddDebug();
+                builder.SetMinimumLevel(LogLevel.Trace);
+            }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+
             services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
             services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
             services.AddSingleton<ILanguageService>((s) => languageService);
             services.AddSingleton<INavigationService>((s) => navigationService);
             services.AddSingleton<IContext, TContext>();
             services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
-            services.AddTransient<IThemeService, ThemeService>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IConverterService, ConverterService>();
@@ -92,7 +93,9 @@ namespace ISynergy.Framework.UI.Extensions
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IDispatcherService, DispatcherService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
-            services.AddSingleton<IFileService<FileResult>, FileService>();
+
+            services.AddTransient<IThemeService, ThemeService>();
+            services.AddTransient<IFileService<FileResult>, FileService>();
 
             languageService.AddResourceManager(typeof(TResource));
 
@@ -256,20 +259,6 @@ namespace ISynergy.Framework.UI.Extensions
                 if (viewmodel is not null)
                     navigationService.Configure(viewmodel.GetViewModelFullName(), view);
             }
-        }
-
-        /// <summary>
-        /// Configures the logger.
-        /// </summary>
-        private static ILoggerFactory ConfigureLogger(LogLevel loglevel = LogLevel.Information)
-        {
-            var factory = LoggerFactory.Create(builder =>
-            {
-                builder.AddDebug();
-                builder.SetMinimumLevel(loglevel);
-            });
-
-            return factory;
         }
     }
 }

@@ -34,7 +34,7 @@ ___
 | [I-Synergy.Framework.MessageBus](https://www.nuget.org/packages/I-Synergy.Framework.MessageBus/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.MessageBus) |
 | [I-Synergy.Framework.MessageBus.Azure](https://www.nuget.org/packages/I-Synergy.Framework.MessageBus.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.MessageBus.Azure) |
 | [I-Synergy.Framework.Monitoring](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring) |
-| [I-Synergy.Framework.Monitoring.Client.SignalR](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Client.SignalR/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.Client.SignalR) |
+| [I-Synergy.Framework.Monitoring.Client](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Client/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.Client) |
 | [I-Synergy.Framework.Monitoring.Common](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.Common/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.Common) |
 | [I-Synergy.Framework.Monitoring.SignalR](https://www.nuget.org/packages/I-Synergy.Framework.Monitoring.SignalR/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Monitoring.SignalR) |
 | [I-Synergy.Framework.Mvvm](https://www.nuget.org/packages/I-Synergy.Framework.Mvvm/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Mvvm) |
@@ -43,8 +43,14 @@ ___
 | [I-Synergy.Framework.Printer.Label.Dymo](https://www.nuget.org/packages/I-Synergy.Framework.Printer.Label.Dymo/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Printer.Label.Dymo) |
 | [I-Synergy.Framework.Storage](https://www.nuget.org/packages/I-Synergy.Framework.Storage/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage) |
 | [I-Synergy.Framework.Storage.Azure](https://www.nuget.org/packages/I-Synergy.Framework.Storage.Azure/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Storage.Azure) |
-| [I-Synergy.Framework.Telemetry](https://www.nuget.org/packages/I-Synergy.Framework.Telemetry/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Telemetry) |
-| [I-Synergy.Framework.Telemetry.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Telemetry.AppCenter/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Telemetry.AppCenter) |
-| [I-Synergy.Framework.Telemetry.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Telemetry.ApplicationInsights/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Telemetry.ApplicationInsights) |
+| [I-Synergy.Framework.Logging](https://www.nuget.org/packages/I-Synergy.Framework.Logging/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Logging) |
+| [I-Synergy.Framework.Logging.AppCenter](https://www.nuget.org/packages/I-Synergy.Framework.Logging.AppCenter/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Logging.AppCenter) |
+| [I-Synergy.Framework.Logging.Sentry](https://www.nuget.org/packages/I-Synergy.Framework.Logging.Sentry/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Logging.Sentry) |
+| [I-Synergy.Framework.Logging.ApplicationInsights](https://www.nuget.org/packages/I-Synergy.Framework.Logging.ApplicationInsights/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Logging.ApplicationInsights) |
 | [I-Synergy.Framework.UI](https://www.nuget.org/packages/I-Synergy.Framework.UI/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI) |
+| [I-Synergy.Framework.UI.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.UI.WinUI/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI.WinUI) |
+| [I-Synergy.Framework.UI.Maui](https://www.nuget.org/packages/I-Synergy.Framework.UI.Maui/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI.Maui) |
+| [I-Synergy.Framework.UI.WPF](https://www.nuget.org/packages/I-Synergy.Framework.UI.WPF/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.UI.WPF) |
 | [I-Synergy.Framework.Update](https://www.nuget.org/packages/I-Synergy.Framework.Update/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update) |
+| [I-Synergy.Framework.Update.WinUI](https://www.nuget.org/packages/I-Synergy.Framework.Update.WinUI/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update.WinUI) |
+| [I-Synergy.Framework.Update.WPF](https://www.nuget.org/packages/I-Synergy.Framework.Update.WPF/) | ![NuGet Badge](https://buildstats.info/nuget/I-Synergy.Framework.Update.WPF) |

@@ -8,11 +8,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
     public interface IFileService<T>
     {
         /// <summary>
-        /// Gets or sets the name of the file.
-        /// </summary>
-        /// <value>The name of the file.</value>
-        string FileName { get; set; }
-        /// <summary>
         /// Gets or sets the filter.
         /// </summary>
         /// <value>The filter.</value>
@@ -53,7 +48,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <value><c>true</c> if [validate names]; otherwise, <c>false</c>.</value>
         bool ValidateNames { get; set; }
 
-
         /// <summary>
         /// Saves the file asynchronous.
         /// </summary>
@@ -66,9 +60,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// Browses the file asynchronous.
         /// </summary>
         /// <param name="filefilter">The filefilter.</param>
+        /// <param name="multiple"></param>
         /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
         /// <returns>Task&lt;FileResult&gt;.</returns>
-        Task<T> BrowseFileAsync(string filefilter, long maxFileSize = 1 * 1024 * 1024);
+        Task<List<T>> BrowseFileAsync(string filefilter, bool multiple = false, long maxFileSize = 1 * 1024 * 1024);
 
         /// <summary>
         /// Browses the image asynchronous.

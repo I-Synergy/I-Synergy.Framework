@@ -41,7 +41,7 @@ namespace ISynergy.Framework.UI.Models
         /// Gets or sets the symbol.
         /// </summary>
         /// <value>The symbol.</value>
-        public string Symbol { get; set; }
+        public object Symbol { get; set; }
 
         /// <summary>
         /// Gets or sets the foreground.
@@ -57,7 +57,7 @@ namespace ISynergy.Framework.UI.Models
         /// <param name="foreground">The foreground.</param>
         /// <param name="command">The command.</param>
         /// <param name="commandParameter">The command parameter.</param>
-        public NavigationItem(string name, string symbol, string foreground, ICommand command, object commandParameter = null)
+        public NavigationItem(string name, object symbol, string foreground, ICommand command, object commandParameter = null)
         {
             Name = name;
             ToolTipMenu = name;

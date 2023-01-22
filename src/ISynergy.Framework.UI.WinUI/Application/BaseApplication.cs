@@ -7,24 +7,21 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.AppLifecycle;
 using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Globalization;
 using System.Web;
 using Windows.ApplicationModel.Activation;
 using Application = Microsoft.UI.Xaml.Application;
 using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
-using ISynergy.Framework.UI.Models;
-using ISynergy.Framework.UI.Abstractions;
-using System.Diagnostics;
-using System.Globalization;
-
-#if WINDOWS10_0_18362_0_OR_GREATER
-using Microsoft.Windows.AppLifecycle;
-#endif
 
 
 namespace ISynergy.Framework.UI
@@ -167,7 +164,10 @@ namespace ISynergy.Framework.UI
             MainWindow = new Window();
             //MainWindow.Activated += OnActivated;
 
-            _themeService.SetStyle();
+            _themeService.InitializeMainWindow(MainWindow);
+            _themeService.SetTitlebar();
+
+            InitializeApplication();
 
             var rootFrame = MainWindow.Content as Frame;
 
@@ -199,7 +199,6 @@ namespace ISynergy.Framework.UI
             Argument.IsNotNull(context);
             Argument.IsNotNull(shellView);
 
-#if WINDOWS10_0_18362_0_OR_GREATER
             var args = AppInstance.GetCurrent().GetActivatedEventArgs();
 
             if (args.Kind == ExtendedActivationKind.Protocol &&
@@ -212,7 +211,6 @@ namespace ISynergy.Framework.UI
                 if (Enum.TryParse<SoftwareEnvironments>(query["environment"].ToCapitalized(), out SoftwareEnvironments environment))
                     context.Environment = environment;
             }
-#endif
             
             if (rootFrame.Content is null)
             {
@@ -223,7 +221,6 @@ namespace ISynergy.Framework.UI
             }
 
             MainWindow.Title = context.Title;
-            //MainWindow.Content = (UIElement)shellView;
             MainWindow.Activate();
         }
 

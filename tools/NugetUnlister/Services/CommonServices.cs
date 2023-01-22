@@ -13,7 +13,7 @@ namespace NugetUnlister.Services
         /// <param name="busyService">The busy indicator service.</param>
         /// <param name="messageService">The messaging service</param>
         /// <param name="languageService">The language service.</param>
-        /// <param name="telemetryService">The telemetry service.</param>
+        /// <param name="loggingService">The logging service.</param>
         /// <param name="dialogService">The dialog service.</param>
         /// <param name="navigationService">The navigation service.</param>
         /// <param name="fileService">The file service.</param>
@@ -24,7 +24,7 @@ namespace NugetUnlister.Services
             IBusyService busyService,
             IMessageService messageService,
             ILanguageService languageService,
-            ITelemetryService telemetryService,
+            ILoggingService loggingService,
             IDialogService dialogService,
             INavigationService navigationService,
             IFileService fileService,
@@ -34,7 +34,7 @@ namespace NugetUnlister.Services
             : base(busyService,
                  messageService,
                  languageService,
-                 telemetryService,
+                 loggingService,
                  dialogService,
                  navigationService,
                  infoService,
