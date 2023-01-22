@@ -43,7 +43,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.Sentry\ISynergy.Framework.Telemetry.Sentry.csproj" />
+	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Logging.Sentry\ISynergy.Framework.Logging.Sentry.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj" />
 	</ItemGroup>

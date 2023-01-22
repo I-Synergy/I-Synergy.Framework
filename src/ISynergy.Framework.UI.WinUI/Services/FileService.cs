@@ -32,15 +32,11 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="FileService" /> class.
         /// </summary>
-        /// <param name="mainWindow"></param>
         /// <param name="dialogService">The dialog service.</param>
         /// <param name="languageService">The language service.</param>
-        public FileService(
-            Window mainWindow,
-            IDialogService dialogService,
-            ILanguageService languageService)
+        public FileService(IDialogService dialogService, ILanguageService languageService)
         {
-            _mainWindow = mainWindow;
+            _mainWindow = ((BaseApplication)Application.Current)?.MainWindow;
             _dialogService = dialogService;
             _languageService = languageService;
             
@@ -50,12 +46,6 @@ namespace ISynergy.Framework.UI.Services
             FilterIndex = 1;
             ValidateNames = true;
         }
-
-        /// <summary>
-        /// Gets or sets the name of the file.
-        /// </summary>
-        /// <value>The name of the file.</value>
-        public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the filter to use when opening or saving the file.
@@ -122,8 +112,6 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="filename">The filename.</param>
         /// <param name="file">The file.</param>
         /// <returns>FileResult.</returns>
-        /// <remarks>If this method returns <c>true</c>, the <see cref="FileName" /> property will be filled with the filename. Otherwise,
-        /// no changes will occur to the data of this object.</remarks>
         public async Task<FileResult> SaveFileAsync(string filename, byte[] file)
         {
             var createdFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(
@@ -142,17 +130,19 @@ namespace ISynergy.Framework.UI.Services
         /// browse file as an asynchronous operation.
         /// </summary>
         /// <param name="filefilter">The filefilter.</param>
+        /// <param name="multiple"></param>
         /// <param name="maxFileSize">Maximum filesize, default 1Mb (1 * 1024 * 1024)</param>
         /// <returns>FileResult.</returns>
-        public async Task<FileResult> BrowseFileAsync(string filefilter, long maxFileSize = 1 * 1024 * 1024)
+        public async Task<List<FileResult>> BrowseFileAsync(string filefilter, bool multiple = false, long maxFileSize = 1 * 1024 * 1024)
         {
+            var result = new List<FileResult>();
             var filters = GetFilters(filefilter);
 
-            if (await PickFileAsync(filters.ToArray()) is FileResult file)
+            foreach (var file in await PickFileAsync(filters.ToArray(), multiple))
             {
                 if (file.File.Length <= maxFileSize || maxFileSize == 0)
                 {
-                    return file;
+                    result.Add(file);
                 }
                 else
                 {
@@ -160,7 +150,7 @@ namespace ISynergy.Framework.UI.Services
                 }
             }
 
-            return null;
+            return result;
         }
 
         private List<string> GetFilters(string filter)
@@ -206,10 +196,8 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>System.Byte[].</returns>
         public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
         {
-            if(await BrowseFileAsync(string.Join(";", filter), maxFileSize) is FileResult result)
-            {
-                return result.File;
-            }
+            if(await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result)
+                return result.First().File;
 
             return null;
         }
@@ -222,18 +210,21 @@ namespace ISynergy.Framework.UI.Services
         /// can be selected while picking.
         /// On UWP, specify a list of extensions, like this: ".jpg", ".png".
         /// </param>
+        /// <param name="multiple"></param>
         /// <returns>
         /// File data object, or null when user cancelled picking file
         /// </returns>
-        private async Task<FileResult> PickFileAsync(string[] allowedTypes = null)
+        private async Task<List<FileResult>> PickFileAsync(string[] allowedTypes = null, bool multiple = false)
         {
+            var result = new List<FileResult>();    
+
             var picker = new Windows.Storage.Pickers.FileOpenPicker
             {
                 ViewMode = Windows.Storage.Pickers.PickerViewMode.List,
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
             };
 
-#if WINDOWS10_0_18362_0_OR_GREATER
+#if WINDOWS10_0_17763_0_OR_GREATER
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow);
             WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 #endif
@@ -258,17 +249,35 @@ namespace ISynergy.Framework.UI.Services
                 picker.FileTypeFilter.Add("*");
             }
 
-            if (await picker.PickSingleFileAsync() is StorageFile file)
+            if(multiple)
             {
-                StorageApplicationPermissions.FutureAccessList.Add(file);
+                if (await picker.PickMultipleFilesAsync() is IReadOnlyList<StorageFile> files)
+                {
+                    foreach (var file in files)
+                    {
+                        StorageApplicationPermissions.FutureAccessList.Add(file);
 
-                return new FileResult(
-                    file.Path,
-                    file.Name,
-                    () => file.OpenStreamForReadAsync().GetAwaiter().GetResult());
+                        result.Add(new FileResult(
+                            file.Path,
+                            file.Name,
+                            () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
+                    }
+                }
             }
+            else
+            {
+                if (await picker.PickSingleFileAsync() is StorageFile file)
+                {
+                    StorageApplicationPermissions.FutureAccessList.Add(file);
 
-            return null;
+                    result.Add(new FileResult(
+                        file.Path,
+                        file.Name,
+                        () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
+                }
+            }
+            
+            return result;
         }
 
         /// <summary>

@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<PackageId>I-Synergy.Framework.Logging.AppCenter</PackageId>
+		<Description>I-Synergy Framework AppCenter Logging library for Windows and Android</Description>
+		<PackageTags>I-Synergy, Framework, Logging, AppCenter, Windows, Android, Uno</PackageTags>
+		<RootNamespace>ISynergy.Framework.Logging</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Logging.AppCenter.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AppCenter" Version="5.0.1" />
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.1" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+  <ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+    <ProjectReference Include="..\ISynergy.Framework.Logging\ISynergy.Framework.Logging.csproj" />
+  </ItemGroup>
+</Project>

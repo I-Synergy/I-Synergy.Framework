@@ -84,14 +84,18 @@ namespace ISynergy.Framework.UI.Extensions
             var languageService = new LanguageService();
 
             // Register singleton services
-            appBuilder.Services.AddSingleton<ILogger>((s) => ConfigureLogger().CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+            appBuilder.Services.AddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>
+            {
+                builder.AddDebug();
+                builder.SetMinimumLevel(LogLevel.Trace);
+            }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
+
             appBuilder.Services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
             appBuilder.Services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
             appBuilder.Services.AddSingleton<ILanguageService>((s) => languageService);
             appBuilder.Services.AddSingleton<INavigationService>((s) => navigationService);
             appBuilder.Services.AddSingleton<IContext, TContext>();
             appBuilder.Services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
-            appBuilder.Services.AddTransient<IThemeService, ThemeService>();
             appBuilder.Services.AddSingleton<ILocalizationService, LocalizationService>();
             appBuilder.Services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             appBuilder.Services.AddSingleton<IConverterService, ConverterService>();
@@ -99,8 +103,11 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<IDialogService, DialogService>();
             appBuilder.Services.AddSingleton<IDispatcherService, DispatcherService>();
             appBuilder.Services.AddSingleton<IClipboardService, ClipboardService>();
-            appBuilder.Services.AddSingleton<IFileService<FileResult>, FileService>();
             appBuilder.Services.AddSingleton<IPopupNavigation>((s) => MopupService.Instance);
+
+            appBuilder.Services.AddTransient<IThemeService, ThemeService>();
+            appBuilder.Services.AddTransient<IFileService<FileResult>, FileService>();
+
 
             languageService.AddResourceManager(typeof(TResource));
 

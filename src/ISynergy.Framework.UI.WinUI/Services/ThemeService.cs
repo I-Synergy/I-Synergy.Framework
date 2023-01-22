@@ -76,7 +76,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public void SetStyle()
         {
-            if (_window.Content is FrameworkElement frameworkElement)
+            if ( _window.Content is FrameworkElement frameworkElement)
             {
                 var palette = FindColorPaletteResourcesForTheme(Style.Theme.ToString());
 

@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Utilities
 {
@@ -20,9 +19,7 @@ namespace ISynergy.Framework.Core.Utilities
             var reply = ping.Send("8.8.8.8", 1000, new byte[32], new PingOptions());
 
             if (reply.Status == IPStatus.Success)
-            {
                 return Task.FromResult(true);
-            }
 
             return Task.FromResult(false);
         }
