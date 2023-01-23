@@ -450,11 +450,7 @@ namespace ISynergy.Framework.UI.Controls.Validators
             if (oldSelectionStart >= oldText.Length && !isDeleteOrBackspace)
             {
                 textBox.Text = textBox.Text.Substring(0, oldText.Length);
-                if (oldText.Length >= 0)
-                {
-                    textBox.SelectionStart = oldText.Length;
-                }
-
+                textBox.SelectionStart = oldText.Length;
                 return;
             }
 
