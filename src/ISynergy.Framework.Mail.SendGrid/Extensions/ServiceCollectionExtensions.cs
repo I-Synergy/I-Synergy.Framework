@@ -23,7 +23,7 @@ namespace ISynergy.Framework.Mail.Extensions
         {
             services.AddOptions();
             services.Configure<MailOptions>(configuration.GetSection(nameof(MailOptions)).BindWithReload);
-            services.TryAddSingleton<IMailService, MailService>();
+            services.AddSingleton<IMailService, MailService>();
             return services;
         }
     }

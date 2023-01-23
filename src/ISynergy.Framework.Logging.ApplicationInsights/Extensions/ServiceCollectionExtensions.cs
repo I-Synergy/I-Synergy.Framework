@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Logging.ApplicationInsights.Options;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Logging.Extensions
@@ -15,13 +16,13 @@ namespace ISynergy.Framework.Logging.Extensions
         /// Adds Application Insights logging integration.
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="configure"></param>
+        /// <param name="configuration"></param>
         /// <returns></returns>
-        public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, Action<ApplicationInsightsOptions> configure)
+        public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, IConfiguration configuration)
         {
             builder.AddApplicationInsights();
-            builder.Services.TryAddSingleton<ILogger, Logger>();
-            builder.Services.Configure(configure);
+            builder.Services.Configure<ApplicationInsightsOptions>(configuration.GetSection(nameof(ApplicationInsightsOptions)).BindWithReload);
+            builder.Services.AddSingleton<ILogger, Logger>();
 
             return builder;
         }

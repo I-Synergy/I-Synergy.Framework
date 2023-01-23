@@ -23,7 +23,7 @@ namespace ISynergy.Framework.Monitoring.Client.Extensions
         {
             services.AddOptions();
             services.Configure<ClientMonitorOptions>(configuration.GetSection(nameof(ClientMonitorOptions)).BindWithReload);
-            services.TryAddSingleton<IClientMonitorService, ClientMonitorService>();
+            services.AddSingleton<IClientMonitorService, ClientMonitorService>();
             return services;
         }
     }
