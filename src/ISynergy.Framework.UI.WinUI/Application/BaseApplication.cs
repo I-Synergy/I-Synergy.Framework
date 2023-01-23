@@ -69,6 +69,10 @@ namespace ISynergy.Framework.UI
 
             _logger.LogInformation("Starting application");
 
+            // Pass a timeout to limit the execution time.
+            // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
+            AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
+
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
