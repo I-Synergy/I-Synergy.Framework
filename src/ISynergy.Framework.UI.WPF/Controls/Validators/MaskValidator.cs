@@ -202,10 +202,7 @@ namespace ISynergy.Framework.UI.Controls.Validators
 
             var customDictionaryValue = string.Empty;
 
-            if (_control is null)
-                customDictionaryValue = textBox.GetValue(CustomMaskProperty).ToString();
-            else
-                customDictionaryValue = textBox.GetValue(CustomMaskProperty).ToString();
+            customDictionaryValue = textBox.GetValue(CustomMaskProperty).ToString();
 
             if (!string.IsNullOrWhiteSpace(customDictionaryValue))
             {
