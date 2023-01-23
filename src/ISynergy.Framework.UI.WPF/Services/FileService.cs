@@ -121,7 +121,7 @@ namespace ISynergy.Framework.UI.Services
                         () => File.OpenRead(fileDialog.FileName)));
             }
 
-            return null;
+            return Task.FromResult<FileResult>(null);
         }
 
         /// <summary>
