@@ -79,7 +79,7 @@ namespace ISynergy.Framework.UI.Services
                 return Task.FromResult<object>(BitmapFrame.Create(stream));
             }
 
-            return null;
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
