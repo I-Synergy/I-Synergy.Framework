@@ -164,7 +164,7 @@
         }
 
         /*
-        [Test, Ignore("This test was comparing against the old Munkres implementation.")]
+        [Test, Ignore("This Test was comparing against the old Munkres implementation.")]
         public void minimize_index_out_of_range1()
         {
             double[][] costMatrix = new double[][]

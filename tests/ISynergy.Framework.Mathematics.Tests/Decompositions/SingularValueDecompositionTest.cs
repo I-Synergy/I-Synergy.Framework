@@ -87,7 +87,7 @@
         [TestMethod]
         public void SingularValueDecompositionConstructorTest1()
         {
-            // This test catches the bug in SingularValueDecomposition in the line
+            // This Test catches the bug in SingularValueDecomposition in the line
             //   for (int j = k + 1; j < nu; j++)
             // where it should be
             //   for (int j = k + 1; j < n; j++)
@@ -212,7 +212,7 @@
         [TestMethod]
         public void SingularValueDecompositionConstructorTest2()
         {
-            // test for m-x-n matrices where m > n (4 > 2)
+            // Test for m-x-n matrices where m > n (4 > 2)
 
             double[,] value = new double[,]
              {

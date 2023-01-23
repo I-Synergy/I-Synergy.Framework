@@ -37,25 +37,25 @@
             // Deep tests
             for (double end = 0; end < 10; end++)
             {
-                test(0, end, () => Vector.Range(end));
-                //test(0, end, () => Vector.Range((short)end));
-                //test(0, end, () => Vector.Range((byte)end));
-                //test(0, end, () => Vector.Range((double)end));
-                //test(0, end, () => Vector.Range((float)end));
-                //test(0, end, () => Vector.Range((long)end));
-                //test(0, end, () => Vector.Range((ulong)end));
-                //test(0, end, () => Vector.Range((ushort)end));
+                TestArray(0, end, () => Vector.Range(end));
+                //Test(0, end, () => Vector.Range((short)end));
+                //Test(0, end, () => Vector.Range((byte)end));
+                //Test(0, end, () => Vector.Range((double)end));
+                //Test(0, end, () => Vector.Range((float)end));
+                //Test(0, end, () => Vector.Range((long)end));
+                //Test(0, end, () => Vector.Range((ulong)end));
+                //Test(0, end, () => Vector.Range((ushort)end));
 
                 for (double start = 0; start < 10; start++)
                 {
-                    test(start, end, () => Vector.Range(start, end, stepSize: 1));
-                    //test(start, end, () => Vector.Range((short)start, (short)end, (short)1));
-                    //test(start, end, () => Vector.Range((byte)start, (byte)end, stepSize: (byte)1));
-                    //test(start, end, () => Vector.Range((double)start, (double)end, (double)1));
-                    //test(start, end, () => Vector.Range((float)start, (float)end, (float)1));
-                    //test(start, end, () => Vector.Range((long)start, (long)end, (long)1));
-                    //test(start, end, () => Vector.Range((ulong)start, (ulong)end, (ulong)1));
-                    //test(start, end, () => Vector.Range((ushort)start, (ushort)end, (ushort)1));
+                    TestArray(start, end, () => Vector.Range(start, end, stepSize: 1));
+                    //Test(start, end, () => Vector.Range((short)start, (short)end, (short)1));
+                    //Test(start, end, () => Vector.Range((byte)start, (byte)end, stepSize: (byte)1));
+                    //Test(start, end, () => Vector.Range((double)start, (double)end, (double)1));
+                    //Test(start, end, () => Vector.Range((float)start, (float)end, (float)1));
+                    //Test(start, end, () => Vector.Range((long)start, (long)end, (long)1));
+                    //Test(start, end, () => Vector.Range((ulong)start, (ulong)end, (ulong)1));
+                    //Test(start, end, () => Vector.Range((ushort)start, (ushort)end, (ushort)1));
                 }
             }
         }
@@ -74,11 +74,11 @@
             // Deep tests
             for (double end = 0; end < 10; end++)
             {
-                test(0, end, () => Vector.EnumerableRange(end));
+                Test(0, end, () => Vector.EnumerableRange(end));
 
                 for (double start = 0; start < 10; start++)
                 {
-                    test(start, end, () => Vector.EnumerableRange(start, end, stepSize: 1));
+                    Test(start, end, () => Vector.EnumerableRange(start, end, stepSize: 1));
                 }
             }
         }
@@ -132,7 +132,7 @@
                 {
                     for (double start = 0; start < 5; start++)
                     {
-                        test(start, end, step, () => Vector.Range(start, end, step));
+                        Test(start, end, step, (Func<IEnumerable<double>>)(() => Vector.Range(start, end, step)));
                     }
                 }
             }
@@ -163,86 +163,81 @@
                 {
                     for (double start = 0; start < 5; start++)
                     {
-                        test(start, end, step, () => Vector.EnumerableRange(start, end, step));
+                        Test(start, end, step, () => Vector.EnumerableRange(start, end, step));
                     }
                 }
             }
         }
 
-
-
-
-        private static void test<T>(double start, double end, Func<IEnumerable<T>> func)
+        private static void Test(double start, double end, Func<IEnumerable<double>> func)
         {
-            test(start, end, () => func().ToArray());
+            TestArray(start, end, () => func().ToArray());
         }
 
-        private static void test<T>(double start, double end, double step, Func<IEnumerable<T>> func)
+        private static void Test(double start, double end, double step, Func<IEnumerable<double>> func)
         {
-            test(start, end, step, () => func().ToArray());
+            TestArray(start, end, step, () => func().ToArray());
         }
 
-        //private static void test<T>(double start, double end, Func<T[]> func)
-        //{
-        //    T[] values = func();
+        private static void TestArray(double start, double end, Func<double[]> func)
+        {
+            double[] values = func();
 
-        //    if (start == end)
-        //    {
-        //        Assert.AreEqual(0, values.Length);
-        //    }
-        //    else if (start < end)
-        //    {
-        //        Assert.AreEqual(start, values.Get(0));
-        //        Assert.AreEqual(end - 1, values.Get(-1));
-        //    }
-        //    else
-        //    {
-        //        Assert.AreEqual(start, values.Get(0));
-        //        Assert.AreEqual(end + 1, values.Get(-1));
-        //    }
-        //}
+            if (start == end)
+            {
+                Assert.AreEqual(0, values.Length);
+            }
+            else if (start < end)
+            {
+                Assert.AreEqual(start, values.Get(0));
+                Assert.AreEqual(end - 1, values.Get(-1));
+            }
+            else
+            {
+                Assert.AreEqual(start, values.Get(0));
+                Assert.AreEqual(end + 1, values.Get(-1));
+            }
+        }
 
-        //private static void test<T>(double start, double end, double step, Func<T[]> func)
-        //{
-        //    double tol = 1e-10;
-        //    if (typeof(T) == typeof(float))
-        //        tol = 1e-6;
+        private static void TestArray(double start, double end, double step, Func<double[]> func)
+        {
+            double tol = 1e-10;
 
-        //    if (start == end)
-        //    {
-        //        T[] values = func();
-        //        Assert.AreEqual(0, values.Length);
-        //    }
-        //    else
-        //    {
-        //        if (step == 0)
-        //        {
-        //            Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
-        //        }
-        //        else
-        //        {
-        //            if (start < end)
-        //            {
-        //                if (step > 0)
-        //                {
-        //                    T[] values = func();
-        //                    Assert.AreEqual(start, values.Get(0));
-        //                    Assert.AreEqual(start + (values.Length - 1) * step, values.Get(-1).To<double>(), tol);
-        //                }
-        //                else
-        //                {
-        //                    Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
-        //                }
-        //            }
-        //            else
-        //            {
-        //                T[] values = func();
-        //                Assert.AreEqual(start, values.Get(0));
-        //                if ((start - end) <= step)
-        //                    Assert.AreEqual(start - (values.Length - 1) * step, values.Get(-1).To<double>(), tol);
-        //            }
-        //        }
-        //    }
-        //}
+            if (start == end)
+            {
+                double[] values = func();
+                Assert.AreEqual(0, values.Length);
+            }
+            else
+            {
+                if (step == 0)
+                {
+                    Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
+                }
+                else
+                {
+                    if (start < end)
+                    {
+                        if (step > 0)
+                        {
+                            double[] values = func();
+                            Assert.AreEqual(start, values.Get(0));
+                            Assert.AreEqual(start + (values.Length - 1) * step, values.Get(-1).To<double>(), tol);
+                        }
+                        else
+                        {
+                            Assert.ThrowsException<ArgumentOutOfRangeException>(() => func());
+                        }
+                    }
+                    else
+                    {
+                        double[] values = func();
+                        Assert.AreEqual(start, values.Get(0));
+                        if ((start - end) <= step)
+                            Assert.AreEqual(start - (values.Length - 1) * step, values.Get(-1).To<double>(), tol);
+                    }
+                }
+            }
+        }
     }
 }

@@ -106,7 +106,7 @@
             Assert.AreEqual(2, solution[1], 1e-3);
         }
 
-        // The famous Rosenbrock test function.
+        // The famous Rosenbrock Test function.
         public static double rosenbrockFunction(double[] x)
         {
             // f(x, y) = (1 - x)^2 + 100(y - x^2)^2
@@ -115,7 +115,7 @@
             return b * b + 100 * a * a;
         }
 
-        // Gradient of the Rosenbrock test function.
+        // Gradient of the Rosenbrock Test function.
         public static double[] rosenbrockGradient(double[] x)
         {
             double a = x[1] - x[0] * x[0];
