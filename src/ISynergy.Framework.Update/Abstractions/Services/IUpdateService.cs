@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Update.Abstractions.Services
+﻿namespace ISynergy.Framework.Update.Abstractions.Services
 {
     /// <summary>
     /// Interface IUpdateService

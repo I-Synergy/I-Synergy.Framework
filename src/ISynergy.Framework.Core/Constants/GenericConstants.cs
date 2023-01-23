@@ -16,7 +16,7 @@
         /// <summary>
         /// The rest retry count
         /// </summary>
-        public const int RestRetryCount = 3;
+        public const int RestRetryCount = 1;
         /// <summary>
         /// The rest retry delay in seconds
         /// </summary>
@@ -26,6 +26,8 @@
         /// The automatic suggest box delay
         /// </summary>
         public const int AutoSuggestBoxDelay = 500;
+
+        public const string Parameter = "parameter";
 
         /// <summary>
         /// The authorization
@@ -127,6 +129,7 @@
         /// The shell view model
         /// </summary>
         public const string ShellViewModel = "ShellViewModel";
+        public const string ShellView = "ShellView";
 
         /// <summary>
         /// The documents
@@ -152,11 +155,11 @@
         /// <summary>
         /// The username prefix test
         /// </summary>
-        public const string UsernamePrefixTest = "test:";
+        public const string UsernamePrefixTest = "test?";
         /// <summary>
         /// The username prefix local
         /// </summary>
-        public const string UsernamePrefixLocal = "local:";
+        public const string UsernamePrefixLocal = "local?";
 
         /// <summary>
         /// The temporary URL

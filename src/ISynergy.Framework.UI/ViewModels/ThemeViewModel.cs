@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -17,7 +18,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets the title.
         /// </summary>
         /// <value>The title.</value>
-        public override string Title => BaseCommonServices.LanguageService.GetString("Colors");
+        public override string Title => BaseCommonServices.LanguageService.GetString("Theme");
 
         /// <summary>
         /// Gets or sets the Items property value.
@@ -42,17 +43,21 @@ namespace ISynergy.Framework.UI.ViewModels
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
-        /// <param name="style">The style settings.</param>
+        /// <param name="applicationSettingsService"></param>
         /// <param name="logger">The logger factory.</param>
         public ThemeViewModel(
             IContext context,
             IBaseCommonServices commonServices,
-            ILogger logger,
-            Style style)
+            IBaseApplicationSettingsService applicationSettingsService,
+            ILogger logger)
             : base(context, commonServices, logger)
         {
+            applicationSettingsService.LoadSettings();
+
             ThemeColors = new ThemeColors();
-            SelectedItem = style;
+
+            SelectedItem.Color = applicationSettingsService.Settings.Color;
+            SelectedItem.Theme = applicationSettingsService.Settings.Theme;
         }
     }
 }

@@ -1,16 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\project.props" />
     <PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Printer.Label.Dymo</PackageId>
-		<Description>I-Synergy Framework Dymo Label printer library for .Net Standard 2.0</Description>
+		<Description>I-Synergy Framework Dymo Label printer library for .net Standard 2.0</Description>
 		<PackageTags>I-Synergy, Framework, Printer, Label, Dymo</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeBuildOutput>true</IncludeBuildOutput>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Printer.Label.Dymo.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
     <ItemGroup>

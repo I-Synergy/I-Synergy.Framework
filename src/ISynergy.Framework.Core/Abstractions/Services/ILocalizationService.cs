@@ -3,5 +3,6 @@
     public interface ILocalizationService
     {
         void SetLocalizationLanguage(string language);
+        List<string> GetTimeZoneIds(string iso2country);
     }
 }

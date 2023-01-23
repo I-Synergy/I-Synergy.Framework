@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\project.props" />
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<PackageId>I-Synergy.Framework.Logging.Sentry</PackageId>
+		<Description>I-Synergy Framework Sentry Logging library for Windows, Linux, Android and WebAssembly</Description>
+		<PackageTags>I-Synergy, Framework, Logging, Sentry, Windows, Linux, Android, WebAssembly, Uno</PackageTags>
+		<RootNamespace>ISynergy.Framework.Logging</RootNamespace>
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Logging.Sentry.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Sentry" Version="3.26.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Logging\ISynergy.Framework.Logging.csproj" />
+	</ItemGroup>
+</Project>

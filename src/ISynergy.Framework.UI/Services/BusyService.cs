@@ -14,31 +14,30 @@ namespace ISynergy.Framework.UI.Services
     public class BusyService : ObservableClass, IBusyService
     {
         /// <summary>
-        /// The language service
+        /// The languageService service
         /// </summary>
-        protected readonly ILanguageService LanguageService;
+        private readonly ILanguageService _languageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BusyService"/> class.
         /// </summary>
-        /// <param name="language">The language.</param>
-        public BusyService(ILanguageService language)
+        /// <param name="languageService">The languageService.</param>
+        public BusyService(ILanguageService languageService)
         {
-            LanguageService = language;
+            _languageService = languageService;
             IsBusy = false;
         }
 
         /// <summary>
         /// Gets or sets the IsBusy property value.
         /// </summary>
-        /// <value><c>true</c> if this instance is busy; otherwise, <c>false</c>.</value>
         public bool IsBusy
         {
             get => GetValue<bool>();
             set
             {
                 SetValue(value);
-                IsEnabled = !value;
+                OnPropertyChanged(nameof(IsEnabled));
             }
         }
 
@@ -48,8 +47,7 @@ namespace ISynergy.Framework.UI.Services
         /// <value><c>true</c> if this instance is enabled; otherwise, <c>false</c>.</value>
         public bool IsEnabled
         {
-            get => GetValue<bool>();
-            set => SetValue(value);
+            get => !IsBusy;
         }
 
         /// <summary>
@@ -75,7 +73,7 @@ namespace ISynergy.Framework.UI.Services
             }
             else
             {
-                BusyMessage = LanguageService.GetString("PleaseWait");
+                BusyMessage = _languageService.GetString("PleaseWait");
             }
 
             IsBusy = true;
@@ -86,7 +84,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <returns>Task.</returns>
         public void StartBusy() =>
-            StartBusy(LanguageService.GetString("PleaseWait"));
+            StartBusy(_languageService.GetString("PleaseWait"));
 
         /// <summary>
         /// Ends the busy asynchronous.

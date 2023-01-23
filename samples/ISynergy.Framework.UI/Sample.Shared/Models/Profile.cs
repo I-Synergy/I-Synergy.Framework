@@ -89,7 +89,7 @@ namespace Sample.Shared.Models
         /// Gets a value indicating whether this instance is authenticated.
         /// </summary>
         /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
-        public bool IsAuthenticated => true;
+        public bool IsAuthenticated() => true;
 
         /// <summary>
         /// Determines whether [is in role] [the specified role].

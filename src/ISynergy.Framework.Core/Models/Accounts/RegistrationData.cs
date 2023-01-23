@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Base;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISynergy.Framework.Core.Models.Accounts
@@ -72,6 +70,13 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// <value>The email.</value>
         [Required]
         public string Email
+        {
+            get { return GetValue<string>(); }
+            set { SetValue(value); }
+        }
+
+        [Required]
+        public string CountryISO2Code
         {
             get { return GetValue<string>(); }
             set { SetValue(value); }

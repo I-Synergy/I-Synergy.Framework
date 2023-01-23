@@ -2,14 +2,6 @@
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Text;
-using Windows.ApplicationModel.Activation;
-using System.Web;
-
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
-using Microsoft.Windows.AppLifecycle;
-#endif
 
 namespace Sample.ViewModels
 {
@@ -93,7 +85,7 @@ namespace Sample.ViewModels
             Copyrights = commonServices.InfoService.Copyrights;
             Startup = ((Context)context).Environment.ToString();
             
-            //throw new Exception("Test exception for telemetry!");
+            //throw new Exception("Test exception for logging!");
         }
     }
 }

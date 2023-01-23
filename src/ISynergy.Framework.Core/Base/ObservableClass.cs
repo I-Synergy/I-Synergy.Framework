@@ -1,16 +1,14 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
@@ -129,6 +127,7 @@ namespace ISynergy.Framework.Core.Base
         protected ObservableClass(bool automaticValidation = false)
         {
             AutomaticValidationTrigger = automaticValidation;
+
             Validator = new Action<IObservableClass>(_ =>
             {
                 foreach (var item in GetType().GetProperties())
@@ -146,29 +145,6 @@ namespace ISynergy.Framework.Core.Base
             });
         }
 
-        private IMessageService _messengerInstance;
-
-        /// <summary>
-        /// Gets or sets an instance of a <see cref="IMessageService" /> used to
-        /// broadcast messages to other objects. If null, this class will
-        /// attempt to broadcast using the Messenger's default instance.
-        /// </summary>
-        [JsonIgnore]
-        [DataTableIgnore]
-        [XmlIgnore]
-        [Display(AutoGenerateField = false)]
-        protected IMessageService MessengerInstance
-        {
-            get
-            {
-                return _messengerInstance ?? MessageService.Default;
-            }
-            set
-            {
-                _messengerInstance = value;
-            }
-        }
-
         /// <summary>
         /// Gets the value.
         /// </summary>
@@ -183,9 +159,7 @@ namespace ISynergy.Framework.Core.Base
                 Properties.Add(propertyName, new Property<T>(propertyName));
 
             if (Properties[propertyName] is IProperty<T> property)
-            {
                 return property.Value;
-            }
 
             return default;
         }
@@ -211,6 +185,7 @@ namespace ISynergy.Framework.Core.Base
                 if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType() && value is null)
                 {
                     property.Value = value;
+
                     OnPropertyChanged(propertyName);
 
                     if (broadcast)
@@ -244,6 +219,7 @@ namespace ISynergy.Framework.Core.Base
                 if (!property.IsOriginalSet || !Equals(value, previous) || typeof(T).IsNullableType() && value is null)
                 {
                     field = value;
+
                     OnPropertyChanged(propertyName);
 
                     if (broadcast)
@@ -275,26 +251,20 @@ namespace ISynergy.Framework.Core.Base
         public bool Validate()
         {
             foreach (var property in Properties)
-            {
                 property.Value.Errors.Clear();
-            }
 
             Validator?.Invoke(this);
 
             foreach (var error in Errors.ToList())
             {
                 if (!Properties.Values.SelectMany(x => x.Errors).Contains(error))
-                {
                     Errors.Remove(error);
-                }
             }
 
             foreach (var error in Properties.Values.SelectMany(x => x.Errors).ToList())
             {
                 if (!Errors.Contains(error))
-                {
                     Errors.Add(error);
-                }
             }
 
             OnPropertyChanged(nameof(IsValid));
@@ -308,9 +278,7 @@ namespace ISynergy.Framework.Core.Base
         public void Revert()
         {
             foreach (var property in Properties)
-            {
                 property.Value.ResetChanges();
-            }
 
             if (AutomaticValidationTrigger)
                 Validate();
@@ -322,11 +290,9 @@ namespace ISynergy.Framework.Core.Base
         public void MarkAsClean()
         {
             foreach (var property in Properties)
-            {
                 property.Value.MarkAsClean();
-            }
 
-            MessengerInstance.Unregister(this);
+            WeakReferenceMessenger.Default.UnregisterAll(this);
 
             if (AutomaticValidationTrigger)
                 Validate();
@@ -347,8 +313,8 @@ namespace ISynergy.Framework.Core.Base
         /// changed.</param>
         protected virtual void Broadcast<T>(T oldValue, T newValue, string propertyName)
         {
-            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, propertyName);
-            MessengerInstance.Send(message);
+            var message = new PropertyChangedMessage<T>(this, propertyName, oldValue, newValue);
+            WeakReferenceMessenger.Default.Send(message);
         }
 
         #region INotifyPropertyChanged
@@ -358,13 +324,28 @@ namespace ISynergy.Framework.Core.Base
         /// <returns></returns>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        //private SynchronizationContext _synchronizationContext;
+
+        //[JsonIgnore]
+        //[DataTableIgnore]
+        //[XmlIgnore]
+        //[Display(AutoGenerateField = false)]
+        //protected SynchronizationContext SynchronizationContextInstance
+        //{
+        //    get => _synchronizationContext ?? AsyncOperationManager.SynchronizationContext;
+        //    set => _synchronizationContext = value;
+        //}
+
         /// <summary>
         /// Called when [property changed].
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            //if (SynchronizationContextInstance != null)
+            //    SynchronizationContextInstance.Post(_ => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)), null);
+            //else
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
 

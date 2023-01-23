@@ -1,18 +1,14 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -90,7 +86,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public Command<TEntity> Submit_Command { get; set; }
+        public AsyncRelayCommand<TEntity> Submit_Command { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether [refresh on initialization].
@@ -102,27 +98,27 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the add command.
         /// </summary>
         /// <value>The add command.</value>
-        public Command Add_Command { get; set; }
+        public AsyncRelayCommand Add_Command { get; set; }
         /// <summary>
         /// Gets or sets the edit command.
         /// </summary>
         /// <value>The edit command.</value>
-        public Command<TEntity> Edit_Command { get; set; }
+        public AsyncRelayCommand<TEntity> Edit_Command { get; set; }
         /// <summary>
         /// Gets or sets the delete command.
         /// </summary>
         /// <value>The delete command.</value>
-        public Command<TEntity> Delete_Command { get; set; }
+        public AsyncRelayCommand<TEntity> Delete_Command { get; set; }
         /// <summary>
         /// Gets or sets the refresh command.
         /// </summary>
         /// <value>The refresh command.</value>
-        public Command Refresh_Command { get; set; }
+        public AsyncRelayCommand Refresh_Command { get; set; }
         /// <summary>
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public Command<object> Search_Command { get; set; }
+        public AsyncRelayCommand<object> Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}"/> class.
@@ -160,12 +156,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             Items = new ObservableCollection<TEntity>();
             Blades = new ObservableCollection<IView>();
 
-            Add_Command = new Command(async () => await AddAsync());
-            Edit_Command = new Command<TEntity>(async (e) => await EditAsync(e.Clone()));
-            Delete_Command = new Command<TEntity>(async (e) => await DeleteAsync(e));
-            Refresh_Command = new Command(async () => await RefreshAsync());
-            Search_Command = new Command<object>(async (e) => await SearchAsync(e));
-            Submit_Command = new Command<TEntity>(async (e) => await SubmitAsync(e));
+            Add_Command = new AsyncRelayCommand(async () => await AddAsync());
+            Edit_Command = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));
+            Delete_Command = new AsyncRelayCommand<TEntity>(async (e) => await DeleteAsync(e));
+            Refresh_Command = new AsyncRelayCommand(async () => await RefreshAsync());
+            Search_Command = new AsyncRelayCommand<object>(async (e) => await SearchAsync(e));
+            Submit_Command = new AsyncRelayCommand<TEntity>(async (e) => await SubmitAsync(e));
         }
 
         /// <summary>
@@ -176,8 +172,6 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         {
             if (!IsInitialized)
             {
-                await base.InitializeAsync();
-
                 if (RefreshOnInitialization)
                     IsInitialized = await RefreshAsync();
             }
@@ -224,7 +218,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             if (await BaseCommonServices.DialogService.ShowMessageAsync(
                                 string.Format(BaseCommonServices.LanguageService.GetString("WarningItemRemove"), item),
                                 BaseCommonServices.LanguageService.GetString("Delete"),
-                                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 await RemoveAsync(e);
                 await RefreshAsync();

@@ -11,65 +11,18 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
 		<CodeAnalysisRuleSet>Sample.Desktop.ruleset</CodeAnalysisRuleSet>
-		<StartupObject></StartupObject>
+		<StartupObject>Sample.Program</StartupObject>
 		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
 		<Product>Sample WinUI Desktop</Product>
+		<DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+		<AssemblyName>Sample</AssemblyName>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<None Remove="Assets\LargeTile.scale-100.png" />
-		<None Remove="Assets\LargeTile.scale-125.png" />
-		<None Remove="Assets\LargeTile.scale-150.png" />
-		<None Remove="Assets\LargeTile.scale-200.png" />
-		<None Remove="Assets\LargeTile.scale-400.png" />
-		<None Remove="Assets\SmallTile.scale-100.png" />
-		<None Remove="Assets\SmallTile.scale-125.png" />
-		<None Remove="Assets\SmallTile.scale-150.png" />
-		<None Remove="Assets\SmallTile.scale-200.png" />
-		<None Remove="Assets\SmallTile.scale-400.png" />
-		<None Remove="Assets\SplashScreen.scale-100.png" />
-		<None Remove="Assets\SplashScreen.scale-125.png" />
-		<None Remove="Assets\SplashScreen.scale-150.png" />
-		<None Remove="Assets\SplashScreen.scale-200.png" />
-		<None Remove="Assets\SplashScreen.scale-400.png" />
-		<None Remove="Assets\Square150x150Logo.scale-100.png" />
-		<None Remove="Assets\Square150x150Logo.scale-125.png" />
-		<None Remove="Assets\Square150x150Logo.scale-150.png" />
-		<None Remove="Assets\Square150x150Logo.scale-200.png" />
-		<None Remove="Assets\Square150x150Logo.scale-400.png" />
-		<None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
-		<None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
-		<None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
-		<None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
-		<None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-		<None Remove="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
-		<None Remove="Assets\Square44x44Logo.altform-unplated_targetsize-24.png" />
-		<None Remove="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
-		<None Remove="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
-		<None Remove="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
-		<None Remove="Assets\Square44x44Logo.scale-100.png" />
-		<None Remove="Assets\Square44x44Logo.scale-125.png" />
-		<None Remove="Assets\Square44x44Logo.scale-150.png" />
-		<None Remove="Assets\Square44x44Logo.scale-200.png" />
-		<None Remove="Assets\Square44x44Logo.scale-400.png" />
-		<None Remove="Assets\Square44x44Logo.targetsize-16.png" />
-		<None Remove="Assets\Square44x44Logo.targetsize-24.png" />
-		<None Remove="Assets\Square44x44Logo.targetsize-256.png" />
-		<None Remove="Assets\Square44x44Logo.targetsize-32.png" />
-		<None Remove="Assets\Square44x44Logo.targetsize-48.png" />
-		<None Remove="Assets\StoreLogo.scale-100.png" />
-		<None Remove="Assets\StoreLogo.scale-125.png" />
-		<None Remove="Assets\StoreLogo.scale-150.png" />
-		<None Remove="Assets\StoreLogo.scale-200.png" />
-		<None Remove="Assets\StoreLogo.scale-400.png" />
-		<None Remove="Assets\Wide310x150Logo.scale-100.png" />
-		<None Remove="Assets\Wide310x150Logo.scale-125.png" />
-		<None Remove="Assets\Wide310x150Logo.scale-150.png" />
-		<None Remove="Assets\Wide310x150Logo.scale-200.png" />
-		<None Remove="Assets\Wide310x150Logo.scale-400.png" />
-		<None Remove="icon.ico" />
-		<None Remove="Package.appxmanifest" />
+	  <None Remove="Views\Controls\BaseList.xaml" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 		<AppxManifest Include="Package.appxmanifest">
@@ -84,11 +37,10 @@
 		<PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.1.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
-		<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
 		<PackageReference Include="Syncfusion.Chart.WinUI">
-			<Version>20.3.0.56</Version>
+			<Version>20.4.0.44</Version>
 		</PackageReference>
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
@@ -96,18 +48,18 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Telemetry.AppCenter\ISynergy.Framework.Telemetry.AppCenter.csproj" />
-		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
-		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Logging.AppCenter\ISynergy.Framework.Logging.AppCenter.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj" />
+		<ProjectReference Include="..\..\..\src\ISynergy.Framework.Update.WinUI\ISynergy.Framework.Update.WinUI.csproj" />
 	</ItemGroup>
 
-	<Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
-	<Import Project="..\Sample.Desktop.Shared\Sample.Desktop.Shared.projitems" Label="Shared" />
 	<ItemGroup>
-	  <Compile Update="..\Sample.Shared\Properties\Resources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	  </Compile>
+		<Using Include="Microsoft.UI.Xaml.Application">
+			<Alias>Application</Alias>
+		</Using>
 	</ItemGroup>
+	
+	<Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
 
 	<!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
        Tools extension to be activated for this project even if the Windows App SDK Nuget

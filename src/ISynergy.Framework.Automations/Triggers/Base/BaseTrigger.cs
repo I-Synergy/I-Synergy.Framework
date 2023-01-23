@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Base;
-using System;
 
 namespace ISynergy.Framework.Automations.Triggers.Base
 {

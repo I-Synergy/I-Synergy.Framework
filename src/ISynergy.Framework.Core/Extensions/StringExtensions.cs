@@ -700,5 +700,16 @@ namespace ISynergy.Framework.Core.Extensions
 
             return parts;
         }
+
+        public static string ToEndingWithDirectorySeparator(this string path)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                    return path += Path.DirectorySeparatorChar;
+            }
+
+            return path;
+        }
     }
 }

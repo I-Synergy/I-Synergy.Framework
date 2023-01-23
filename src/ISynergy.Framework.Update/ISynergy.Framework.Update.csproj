@@ -1,53 +1,17 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-windows10.0.19041;netstandard2.0;net7.0-android</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Update</PackageId>
-		<Description>I-Synergy Framework Update for Windows</Description>
-		<PackageTags>I-Synergy, Framework, Update, Windows</PackageTags>
+		<Description>I-Synergy Framework Update</Description>
+		<PackageTags>I-Synergy, Framework, Update</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-		<IncludeSymbols>true</IncludeSymbols>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeBuildOutput>true</IncludeBuildOutput>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Update.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
-		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-	</PropertyGroup>
-	
-	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041'">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
-		<PackageReference Include="Uno.WinUI" Version="4.6.19" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'!='net7.0-windows10.0.19041'">
-		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-		<Compile Update="**\*.xaml.cs">
-			<DependentUpon>%(Filename)</DependentUpon>
-		</Compile>
-	</ItemGroup>
-	<ItemGroup>
-		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-	</ItemGroup>
 	<ItemGroup>
 	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>

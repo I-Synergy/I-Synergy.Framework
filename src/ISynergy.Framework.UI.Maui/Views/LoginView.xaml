@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:View xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        x:Class="ISynergy.Framework.UI.Views.LoginView"
+        xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+        Title="{Binding Title}">
+
+    <Grid HorizontalOptions="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Image
+            Grid.Row="0"
+            Source="{AppThemeBinding Light=logo_light.png, Dark=logo_dark.png}"
+            SemanticProperties.Description="Logo"
+            Margin="10"
+            WidthRequest="400"
+            VerticalOptions="Start"
+            HorizontalOptions="Center"/>
+
+        <VerticalStackLayout Spacing="5" Grid.Row="1">
+            <Label
+                Text="{m:GetString LoginTitle}"
+                SemanticProperties.HeadingLevel="Level1"
+                HorizontalOptions="Center"
+                FontSize="24" 
+                FontAttributes="Bold" 
+                TextColor="{DynamicResource Primary}"
+                LineBreakMode="WordWrap" />
+            <Label
+                Text="{m:GetString LoginText}"
+                SemanticProperties.HeadingLevel="Level2"
+                HorizontalOptions="Center"
+                TextColor="{DynamicResource Primary}"
+                LineBreakMode="WordWrap"/>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="2" Spacing="10" VerticalOptions="Center">
+            <Entry Text="{Binding Username}" Placeholder="{m:GetString Username}" Keyboard="Email" MinimumWidthRequest="250" HorizontalOptions="Center" />
+            <Entry Text="{Binding Password}" Placeholder="{m:GetString Password}" IsPassword="True" MinimumWidthRequest="250" HorizontalOptions="Center" />
+
+            <Button Text="{m:GetString SignIn}" Command="{Binding Login_Command}" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <StackLayout
+            Grid.Row="3"
+            Orientation="Horizontal" 
+            Spacing="5" 
+            HorizontalOptions="Center" 
+            Margin="30" 
+            VerticalOptions="End">
+            <Label Text="{m:GetString LoginNoAccount}" TextColor="{DynamicResource Gray600}"/>
+            <Label Text="{m:GetString SignupHere}" TextColor="{DynamicResource Primary}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Register_Command}" />
+                </Label.GestureRecognizers>
+            </Label>
+        </StackLayout>
+    </Grid>
+</c:View>

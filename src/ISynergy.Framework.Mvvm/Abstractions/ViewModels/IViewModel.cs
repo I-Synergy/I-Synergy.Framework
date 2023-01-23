@@ -1,11 +1,9 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
-using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
@@ -26,7 +24,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Occurs when [closed].
         /// </summary>
         event EventHandler Closed;
-
         /// <summary>
         /// Gets the context.
         /// </summary>
@@ -46,7 +43,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets the close command.
         /// </summary>
         /// <value>The close command.</value>
-        Command Close_Command { get; }
+        RelayCommand Close_Command { get; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance can close.
         /// </summary>
@@ -84,6 +81,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// </summary>
         /// <value><c>true</c> if this instance is initialized; otherwise, <c>false</c>.</value>
         bool IsInitialized { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating that viewmodel is refreshing.
+        /// </summary>
+        bool IsRefreshing { get; set; }
         /// <summary>
         /// Handles the <see cref="E:PropertyChanged" /> event.
         /// </summary>

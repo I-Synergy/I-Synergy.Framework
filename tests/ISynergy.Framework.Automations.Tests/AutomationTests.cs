@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions;
 using ISynergy.Framework.Automations.Conditions;
 using ISynergy.Framework.Automations.Enumerations;
@@ -8,8 +9,6 @@ using ISynergy.Framework.Automations.Tests.Data;
 using ISynergy.Framework.Automations.Triggers;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -118,13 +117,13 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public async Task AutomationScenario2TestAsync()
         {
-            var command = new Command<Customer>((e) =>
+            var command = new RelayCommand<Customer>((e) =>
             {
                 e.Age = 16;
                 _defaultAutomation.IsActive = false;
             });
 
-            var command2 = new Command<Customer>((e) =>
+            var command2 = new RelayCommand<Customer>((e) =>
             {
                 e.Age += 1;
             });
@@ -166,7 +165,7 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public async Task AutomationScenario3TestAsync()
         {
-            var command = new Command<Customer>((e) =>
+            var command = new RelayCommand<Customer>((e) =>
             {
                 e.Age = 16;
             });
@@ -189,7 +188,7 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public Task AutomationScenario4TestAsync()
         {
-            var command = new Command<Customer>((e) =>
+            var command = new RelayCommand<Customer>((e) =>
             {
                 e.Age = 16;
             });

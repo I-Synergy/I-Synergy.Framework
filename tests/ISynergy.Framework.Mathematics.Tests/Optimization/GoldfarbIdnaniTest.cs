@@ -1093,7 +1093,7 @@
         [TestMethod]
         public void GoldfarbIdnaniMinimizeWithEqualityTest()
         {
-            // This test reproduces Issue #33 at Google Code Tracker
+            // This Test reproduces Issue #33 at Google Code Tracker
             // https://code.google.com/p/accord/issues/detail?id=33
 
             // Create objective function using the
@@ -1166,7 +1166,7 @@
         [TestMethod]
         public void GoldfarbIdnaniMinimizeLessThanWithEqualityTest()
         {
-            // This test reproduces Issue #33 at Google Code Tracker
+            // This Test reproduces Issue #33 at Google Code Tracker
             // https://code.google.com/p/accord/issues/detail?id=33
 
             // Create objective function using the
@@ -1585,7 +1585,7 @@
         [TestMethod]
         public void GoldfarbIdnaniMinimizeWithEqualityTest2()
         {
-            // This test reproduces Issue #171 at GitHub
+            // This Test reproduces Issue #171 at GitHub
             // Solve the following optimization problem:
             //
             //  min f(x) = a² + b² + c² + d² + e² + f² + 10a + 10b + 30c + 20d + 30e + 20f
