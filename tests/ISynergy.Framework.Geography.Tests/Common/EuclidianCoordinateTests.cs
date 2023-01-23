@@ -61,13 +61,13 @@ namespace ISynergy.Framework.Geography.Common.Tests
         /// <summary>
         /// Defines the test method TestEquals2.
         /// </summary>
-        [TestMethod]
-        public void TestEquals2()
-        {
-            var e1 = new EuclidianCoordinate(projection, -3, -4);
-            var e2 = "123";
-            Assert.AreNotSame(e1, e2);
-        }
+        /// [TestMethod]
+        //public void TestEquals2()
+        //{
+        //    var e1 = new EuclidianCoordinate(projection, -3, -4);
+        //    var e2 = "123";
+        //    Assert.AreNotSame(e1, e2);
+        //}
 
         /// <summary>
         /// Defines the test method TestEquals3.

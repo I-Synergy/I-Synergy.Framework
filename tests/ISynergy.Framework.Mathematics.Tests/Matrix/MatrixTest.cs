@@ -2510,7 +2510,7 @@
         }
 
         /// <summary>
-        ///A test for Floor
+        ///A Test for Floor
         ///</summary>
         [TestMethod]
         public void FloorTest1()
@@ -2522,7 +2522,7 @@
         }
 
         /// <summary>
-        ///A test for Floor
+        ///A Test for Floor
         ///</summary>
         [TestMethod]
         public void FloorTest()
@@ -3348,7 +3348,7 @@
                 Assert.IsTrue(expected.IsEqual(actual, 1e-10));
             }
 
-            // test with more columns than rows
+            // Test with more columns than rows
             {
                 double[,] matrix = a;
                 double[,] rightSide = b;
@@ -3401,7 +3401,7 @@
                 Assert.IsTrue(expected.IsEqual(actual, 1e-10));
             }
 
-            // test with more columns than rows
+            // Test with more columns than rows
             {
                 double[,] matrix =
                 {
@@ -3454,7 +3454,7 @@
                 Assert.IsTrue(expected.IsEqual(actual, 1e-10));
             }
 
-            // test with more columns than rows
+            // Test with more columns than rows
             {
                 double[,] matrix =
                 {

@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Models;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Abstractions
 {
@@ -24,6 +22,10 @@ namespace ISynergy.Framework.Core.Abstractions
         /// </summary>
         /// <value>The time zone identifier.</value>
         string TimeZoneId { get; }
+        /// <summary>
+        /// Gets the country ISO2 code.
+        /// </summary>
+        /// string CountryISO2 { get; set; }
         /// <summary>
         /// Gets the user identifier.
         /// </summary>
@@ -73,7 +75,7 @@ namespace ISynergy.Framework.Core.Abstractions
         /// Gets a value indicating whether this instance is authenticated.
         /// </summary>
         /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
-        bool IsAuthenticated { get; }
+        bool IsAuthenticated();
         /// <summary>
         /// Determines whether [is in role] [the specified role].
         /// </summary>

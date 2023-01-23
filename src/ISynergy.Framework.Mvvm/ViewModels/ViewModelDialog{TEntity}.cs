@@ -1,13 +1,11 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -55,7 +53,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public Command<TEntity> Submit_Command { get; set; }
+        public AsyncRelayCommand<TEntity> Submit_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelDialog{TEntity}"/> class.
@@ -89,17 +87,19 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             SelectedItem = TypeActivator.CreateInstance<TEntity>();
             IsNew = true;
 
-            Submit_Command = new Command<TEntity>(async e => await SubmitAsync(e));
+            Submit_Command = new AsyncRelayCommand<TEntity>(e => SubmitAsync(e));
         }
 
         /// <summary>
         /// Sets the selected item.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public virtual void SetSelectedItem(TEntity entity)
+        public virtual Task SetSelectedItemAsync(TEntity entity)
         {
             SelectedItem = entity;
             IsNew = false;
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -112,10 +112,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             if (Validate())
             {
                 OnSubmitted(new SubmitEventArgs<TEntity>(e));
-                return CloseAsync();
+                Close();
             }
 
             return Task.CompletedTask;
         }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query) { }
     }
 }

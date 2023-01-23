@@ -31,7 +31,7 @@
         [TestMethod]
         public void EigenvalueDecompositionConstructorTest()
         {
-            // Symmetric test
+            // Symmetric Test
             double[,] A =
             {
                 { 4, 2 },
@@ -76,7 +76,7 @@
         [TestMethod]
         public void EigenvalueDecompositionConstructorTest2()
         {
-            // Asymmetric test
+            // Asymmetric Test
             double[,] A =
             {
                 {  5, 2, 1 },

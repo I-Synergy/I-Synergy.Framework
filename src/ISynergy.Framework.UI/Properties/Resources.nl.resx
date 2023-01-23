@@ -260,26 +260,140 @@ Sla uw werk op en start de toepassing opnieuw.</value>
 	<data name="Select" xml:space="preserve">
 		<value>Selecteren</value>
 	</data>
-	<data name="ExceptionInternetConnection" xml:space="preserve">
-		<value>We zien dat er iets mis is met de internetverbinding. 
-Controleer uw internetverbinding.
-Neem anders contact op met I-Synergy Service en Support.</value>
+	<data name="SignOut" xml:space="preserve">
+		<value>Afmelden</value>
 	</data>
-	<data name="ExceptionFileInUse" xml:space="preserve">
-		<value>Er is iets mis gegaan.
-U probeert een bestand te openen dat reeds geopend is.
-Controlleer of u het bestand in Microsoft Word of Excel geopend heeft.</value>
+	<data name="SignIn" xml:space="preserve">
+		<value>Aanmelden</value>
 	</data>
-	<data name="ExceptionFutureModule" xml:space="preserve">
-		<value>Deze functie wordt binnenkort beschikbaar gesteld.
-Kijk voor meer informatie op http//www.i-synergy.net</value>
+	<data name="Register" xml:space="preserve">
+		<value>Registreren</value>
 	</data>
-	<data name="ExceptionDefault" xml:space="preserve">
-		<value>Er is iets mis gegaan!
-Het I-Synergy Team is op de hoogte gesteld en wij zullen de fout zo spoedig mogelijk oplossen.
-Mocht dit vaak gebeuren, neem dan contact op met I-Synergy Service en Support.</value>
+	<data name="Settings" xml:space="preserve">
+		<value>Instellingen</value>
 	</data>
-	<data name="ExceptionArgumentIsNull" xml:space="preserve">
-		<value>{0} kan niet leeg of null zijn.</value>
+	<data name="Default" xml:space="preserve">
+		<value>Standaard</value>
+	</data>
+	<data name="Light" xml:space="preserve">
+		<value>Licht</value>
+	</data>
+	<data name="Dark" xml:space="preserve">
+		<value>Donker</value>
+	</data>
+	<data name="NoItems" xml:space="preserve">
+		<value>Geen items beschikbaar</value>
+	</data>
+	<data name="Username" xml:space="preserve">
+		<value>Gebruikersnaam</value>
+	</data>
+	<data name="Password" xml:space="preserve">
+		<value>Wachtwoord</value>
+	</data>
+	<data name="LoginAccount" xml:space="preserve">
+		<value>Heb je al een account?</value>
+	</data>
+	<data name="LoginNoAccount" xml:space="preserve">
+		<value>Heb je nog geen account?</value>
+	</data>
+	<data name="LoginText" xml:space="preserve">
+		<value>Als u al een account hebt, kunt u uw e-mailadres en wachtwoord gebruiken om in te loggen.</value>
+	</data>
+	<data name="LoginTitle" xml:space="preserve">
+		<value>Heb je een account?</value>
+	</data>
+	<data name="SignInHere" xml:space="preserve">
+		<value>Meld u hier aan</value>
+	</data>
+	<data name="SignupHere" xml:space="preserve">
+		<value>Schrijf je hier in</value>
+	</data>
+	<data name="SignupText" xml:space="preserve">
+		<value>Als u geen account hebt, vult u de verplichte velden in en registreert u zich. 
+Na bevestiging van uw registratie kunt u uw e-mailadres en wachtwoord gebruiken om in te loggen.</value>
+	</data>
+	<data name="SignupTitle" xml:space="preserve">
+		<value>Heb je nog geen account?</value>
+	</data>
+	<data name="WarningNoModulesSelected" xml:space="preserve">
+		<value>Er zijn geen modules geselecteerd. Selecteer er ten minste één.</value>
+	</data>
+	<data name="WarningPasswordMatch" xml:space="preserve">
+		<value>Wachtwoorden komen niet overeen!</value>
+	</data>
+	<data name="WarningPasswordSize" xml:space="preserve">
+		<value>Het wachtwoord moet ten minste 6 tekens en ten minste 1 kleine letter, 1 hoofdletter en 1 cijfer bevatten.</value>
+	</data>
+	<data name="WarningResetPassword" xml:space="preserve">
+		<value>U ontvangt een e-mail met een link om uw wachtwoord opnieuw in te stellen.</value>
+	</data>
+	<data name="PasswordForgot" xml:space="preserve">
+		<value>Wachtwoord vergeten?</value>
+	</data>
+	<data name="PasswordRetype" xml:space="preserve">
+		<value>Typ het wachtwoord opnieuw</value>
+	</data>
+	<data name="EmailAddress" xml:space="preserve">
+		<value>E-mailadres</value>
+	</data>
+	<data name="Country" xml:space="preserve">
+		<value>Land</value>
+	</data>
+	<data name="Modules" xml:space="preserve">
+		<value>Modules</value>
+	</data>
+	<data name="TimeZone" xml:space="preserve">
+		<value>Tijdzone</value>
+	</data>
+	<data name="WarningNoCountrySelected" xml:space="preserve">
+		<value>Er is geen land geselecteerd.</value>
+	</data>
+	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
+		<value>Er is geen tijdzone geselecteerd.</value>
+	</data>
+	<data name="WarningInvalidEmail" xml:space="preserve">
+		<value>Ingevoerd e-mailadres is ongeldig.</value>
+	</data>
+	<data name="WarningLicenseNameSize" xml:space="preserve">
+		<value>U moet een (bedrijfs)naam invoeren die bestaat uit minimaal 3 tekens.</value>
+	</data>
+	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
+		<value>U ontvangt een e-mail die u eerst moet bevestigen voordat u kunt inloggen.</value>
+	</data>
+	<data name="Fullname" xml:space="preserve">
+		<value>Volledige naam</value>
+	</data>
+	<data name="WarningBuildCalled" xml:space="preserve">
+		<value>Build kan maar één keer worden aangeroepen.</value>
+	</data>
+	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+		<value>CreateBuilder moet vóór CreateServiceProvider worden aangeroepen.</value>
+	</data>
+	<data name="WarningNullIServiceProvider" xml:space="preserve">
+		<value>De IServiceProviderFactory retourneerde een null IServiceProvider.</value>
+	</data>
+	<data name="WarningResolverReturnedNull" xml:space="preserve">
+		<value>De resolver retourneerde een null IServiceProviderFactory.</value>
+	</data>
+	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+		<value>IHostApplicationLifetime vervangen wordt niet ondersteund.</value>
+	</data>
+	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
+		<value>Bestandsnaam is null of leeg. Geef een geldige bestandsnaam op.</value>
+	</data>
+	<data name="CannotFindUpdateFile" xml:space="preserve">
+		<value>Kan het updatebestand niet vinden.</value>
+	</data>
+	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
+		<value>Kan geen versiegegevens ophalen.</value>
+	</data>
+	<data name="NoInternetConnectionAvailable" xml:space="preserve">
+		<value>Er is geen internetverbinding beschikbaar.</value>
+	</data>
+	<data name="CannotInstallUpdate" xml:space="preserve">
+		<value>Kan update niet installeren.</value>
+	</data>
+	<data name="MandatoryUpdateFailed" xml:space="preserve">
+		<value>Verplichte update is mislukt!</value>
 	</data>
 </root>

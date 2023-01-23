@@ -106,7 +106,7 @@
             CollectionAssert.AreEqual(actual1, expected1);
             CollectionAssert.AreEqual(actual2, expected2);
 
-            // test squeeze
+            // Test squeeze
             CollectionAssert.AreEqual(a, expected0.Squeeze());
             CollectionAssert.AreEqual(a, expected1.Squeeze());
             CollectionAssert.AreEqual(a, expected2.Squeeze());

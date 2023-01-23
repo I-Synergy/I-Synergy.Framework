@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>True</UseWPF>
     <ApplicationIcon>icon_tools.ico</ApplicationIcon>
 	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-    <ProjectReference Include="..\..\src\ISynergy.Framework.Telemetry.AppCenter.Wpf\ISynergy.Framework.Telemetry.AppCenter.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\ISynergy.Framework.Logging.AppCenter.Wpf\ISynergy.Framework.Logging.AppCenter.Wpf.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.UI.Wpf\ISynergy.Framework.UI.Wpf.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
     <ProjectReference Include="..\NugetUnlister.Common\NugetUnlister.Common.csproj" />

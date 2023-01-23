@@ -1,12 +1,10 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -54,7 +52,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public Command<TEntity> Submit_Command { get; set; }
+        public AsyncRelayCommand<TEntity> Submit_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelNavigation{TEntity}"/> class.
@@ -85,17 +83,18 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Submit_Command = new Command<TEntity>(async (e) => await SubmitAsync(e));
+            Submit_Command = new AsyncRelayCommand<TEntity>((e) => SubmitAsync(e));
         }
 
         /// <summary>
         /// Sets the selected item.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        public virtual void SetSelectedItem(TEntity entity)
+        public virtual Task SetSelectedItemAsync(TEntity entity)
         {
             SelectedItem = entity;
             IsNew = false;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -115,12 +114,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Closes the asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        public override Task CloseAsync()
+        public override void Close()
         {
-            if (BaseCommonServices.NavigationService.CanGoBack)
-                BaseCommonServices.NavigationService.GoBack();
-
-            return base.CloseAsync();
+            base.Close();
         }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query) { }
     }
 }

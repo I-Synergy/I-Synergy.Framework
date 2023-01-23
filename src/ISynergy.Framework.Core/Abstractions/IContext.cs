@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Models.Accounts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -71,5 +72,9 @@ namespace ISynergy.Framework.Core.Abstractions
         /// </summary>
         /// <value>The view models.</value>
         List<Type> ViewModels { get; set; }
+        /// <summary>
+        /// Gets the title of the application.
+        /// </summary>
+        string Title { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
@@ -26,14 +27,18 @@ namespace Sample
         /// The configuration options
         /// </summary>
         private readonly ConfigurationOptions _configurationOptions;
+        private readonly IInfoService _infoService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Context" /> class.
         /// </summary>
         /// <param name="configurationOptions">The configuration options.</param>
-        public Context(IOptions<ConfigurationOptions> configurationOptions)
+        public Context(
+            IOptions<ConfigurationOptions> configurationOptions,
+            IInfoService infoService)
         {
             _configurationOptions = configurationOptions.Value;
+            _infoService = infoService;
 
             Profiles = new ObservableCollection<IProfile>() {  new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();
@@ -41,6 +46,12 @@ namespace Sample
 
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
+        }
+
+        public string Title
+        {
+            get { return GetValue<string>(); }
+            private set { SetValue(value); }
         }
 
         /// <summary>
@@ -115,6 +126,8 @@ namespace Sample
         /// <param name="value">The value.</param>
         private void ApplyEnvironment(SoftwareEnvironments value)
         {
+            Title = $"{_infoService.ProductName} v{_infoService.ProductVersion} ({value})";
+
             switch (value)
             {
                 case SoftwareEnvironments.Local:
@@ -181,7 +194,7 @@ namespace Sample
             {
                 if (CurrentProfile != null)
                 {
-                    return CurrentProfile.IsAuthenticated;
+                    return CurrentProfile.IsAuthenticated();
                 }
 
                 return false;

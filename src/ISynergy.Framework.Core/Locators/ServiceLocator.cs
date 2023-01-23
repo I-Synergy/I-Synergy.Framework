@@ -64,5 +64,7 @@ namespace ISynergy.Framework.Core.Locators
         /// <returns>TService.</returns>
         public TService GetInstance<TService>() =>
             _currentServiceProvider.GetService<TService>();
+
+        public IServiceProvider GetServiceProvider() => _serviceProvider;
     }
 }

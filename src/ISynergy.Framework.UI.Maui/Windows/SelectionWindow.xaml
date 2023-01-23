@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<c:Window xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+          xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          x:Class="ISynergy.Framework.UI.Windows.SelectionWindow"
+          xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+          Title="{Binding Title}">
+
+    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Margin="25,4">
+                <HorizontalStackLayout VerticalOptions="Center" Spacing="4" HorizontalOptions="Start">
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout VerticalOptions="Center" Spacing="4" HorizontalOptions="End">
+                    <Button Command="{Binding Refresh_Command}" Style="{StaticResource RefreshButtonStyle}" IsVisible="{OnPlatform WinUI=true, Default=false}"/>
+                </HorizontalStackLayout>
+            </Grid>
+
+            <RefreshView 
+                Grid.Row="1" 
+                Command="{Binding Refresh_Command}" 
+                IsRefreshing="{Binding CommonServices.BusyService.IsBusy}" >
+
+                <CollectionView
+                    x:Name="DataSummary"
+                    ItemsSource="{Binding Items}"
+                    SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
+                    SelectionChanged="DataSummary_SelectionChanged">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding Description}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+    </ContentView>
+</c:Window>

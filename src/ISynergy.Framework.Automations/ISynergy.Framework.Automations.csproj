@@ -2,14 +2,11 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.Automations</PackageId>
-		<Description>I-Synergy Automations Framework for .Net Standard 2.0</Description>
+		<Description>I-Synergy Automations Framework for .net Standard 2.0</Description>
 		<PackageTags>I-Synergy, Framework, Automations</PackageTags>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<CodeAnalysisRuleSet>ISynergy.Framework.Automations.ruleset</CodeAnalysisRuleSet>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>

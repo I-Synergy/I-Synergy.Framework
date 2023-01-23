@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-
-namespace ISynergy.Framework.Mvvm.Models
+﻿namespace ISynergy.Framework.Mvvm.Models
 {
     /// <summary>
     /// Theme colors.
@@ -70,20 +66,6 @@ namespace ISynergy.Framework.Mvvm.Models
             _colors.Add("#525e54");
             _colors.Add("#847545");
             _colors.Add("#7e735f");
-        }
-
-        /// <summary>
-        /// Get
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public Color GetColor(string key)
-        {
-            if (_colors.Any(q => q.Equals(key)))
-                return ColorTranslator.FromHtml(_colors.Where(q => q.Equals(key)).Single());
-
-            // default i-synergy color = #3399ff
-            return ColorTranslator.FromHtml(Default);
         }
 
         /// <summary>

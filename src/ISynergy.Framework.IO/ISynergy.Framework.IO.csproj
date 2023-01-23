@@ -2,13 +2,10 @@
 	<Import Project="..\..\project.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.IO</PackageId>
-		<Description>I-Synergy IO Framework for .Net Standard 2.0</Description>
+		<Description>I-Synergy IO Framework for .net Standard 2.0</Description>
 		<PackageTags>I-Synergy, Framework, IO</PackageTags>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<CodeAnalysisRuleSet>ISynergy.Framework.IO.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 

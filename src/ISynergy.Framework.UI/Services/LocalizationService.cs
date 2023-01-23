@@ -1,8 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using NodaTime.TimeZones;
 using System.Globalization;
-using Windows.ApplicationModel.Resources.Core;
-using Windows.Globalization;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -25,21 +24,40 @@ namespace ISynergy.Framework.UI.Services
             _context = context;
         }
 
+        public List<string> GetTimeZoneIds(string iso2country)
+        {
+            if (TzdbDateTimeZoneSource.Default is TzdbDateTimeZoneSource source)
+            {
+                var locations = source.ZoneLocations?
+                    .Where(key => key.CountryCode.Equals(iso2country.ToUpper()));
+
+                return locations.Select(s => s.ZoneId).ToList();
+            }
+
+            return default;
+        }
+
         /// <summary>
         /// Sets the localization language.
         /// </summary>
         /// <param name="language">The iso language.</param>
         public void SetLocalizationLanguage(string language)
         {
-            ApplicationLanguages.PrimaryLanguageOverride = language;
+            var systemCulture = CultureInfo.CurrentCulture;
 
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
-            // After setting PrimaryLanguageOverride ResourceContext should be reset
-            ResourceContext.GetForViewIndependentUse().Reset();
-#endif
+            if (systemCulture.TwoLetterISOLanguageName.Equals(language))
+            {
+                CultureInfo.CurrentCulture = systemCulture;
+                CultureInfo.CurrentUICulture = systemCulture;
+            }
+            else
+            {
+                var applicationCulture = new CultureInfo(language);
+                applicationCulture.NumberFormat = systemCulture.NumberFormat;
 
-            CultureInfo.CurrentCulture = new CultureInfo(language);
-            CultureInfo.CurrentUICulture = new CultureInfo(language);
+                CultureInfo.CurrentCulture = applicationCulture;
+                CultureInfo.CurrentUICulture = applicationCulture;
+            }
 
             // Currency Symbol is retrieved from Current Culture. 
             // Alternatively, could be also a deployment wide setting. 

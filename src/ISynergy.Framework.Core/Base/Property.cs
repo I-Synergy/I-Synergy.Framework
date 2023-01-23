@@ -1,16 +1,11 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Services;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Validation;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
+using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Base
 {
@@ -213,25 +208,6 @@ namespace ISynergy.Framework.Core.Base
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private IMessageService _messengerInstance;
-
-        /// <summary>
-        /// Gets or sets an instance of a <see cref="IMessageService" /> used to
-        /// broadcast messages to other objects. If null, this class will
-        /// attempt to broadcast using the Messenger's default instance.
-        /// </summary>
-        protected IMessageService MessengerInstance
-        {
-            get
-            {
-                return _messengerInstance ?? MessageService.Default;
-            }
-            set
-            {
-                _messengerInstance = value;
-            }
-        }
-
         /// <summary>
         /// Broadcasts a PropertyChangedMessage using either the instance of
         /// the Messenger that was passed to this class (if available) 
@@ -243,8 +219,8 @@ namespace ISynergy.Framework.Core.Base
         /// changed.</param>
         protected virtual void Broadcast(T oldValue, T newValue)
         {
-            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, Name);
-            MessengerInstance.Send(message);
+            var message = new PropertyChangedMessage<T>(this, Name, oldValue, newValue);
+            WeakReferenceMessenger.Default.Send(message);
         }
     }
 }

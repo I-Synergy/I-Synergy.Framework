@@ -43,9 +43,7 @@ namespace Sample.Services
                 var file = Path.Combine(_settingsFolder, _fileName);
 
                 if (!File.Exists(file))
-                {
                     SaveSettings();
-                }
 
                 var json = File.ReadAllText(file);
                 _settings = JsonSerializer.Deserialize<ApplicationSetting>(json);
