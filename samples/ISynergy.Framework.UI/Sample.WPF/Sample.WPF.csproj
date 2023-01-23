@@ -10,6 +10,7 @@
 		<CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
 		<AssemblyName>Sample</AssemblyName>
 		<StartupObject>Sample.Program</StartupObject>
+		<Product>Sample WPF Desktop</Product>
 	</PropertyGroup>
 
 	<ItemGroup>
