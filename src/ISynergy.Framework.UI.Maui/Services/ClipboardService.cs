@@ -14,7 +14,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>Task&lt;System.Object&gt;.</returns>
         public Task<object> GetBitmapSourceFromClipboardAsync()
         {
-            return null;
+            return Task.FromResult<object>(null);
         }
 
         /// <summary>
