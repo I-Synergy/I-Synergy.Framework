@@ -458,7 +458,7 @@
         public void ConstructorTest8()
         {
             // This problem is taken from page 66 of Hock and Schittkowski's book Test
-            // Examples for Nonlinear Programming Codes. It is their test problem Number
+            // Examples for Nonlinear Programming Codes. It is their Test problem Number
             // 43, and has the name Rosen-Suzuki.
             var function = new NonlinearObjectiveFunction(4, x => x[0] * x[0]
                 + x[1] * x[1] + 2.0 * x[2] * x[2]
@@ -501,7 +501,7 @@
         {
             // This problem is taken from page 111 of Hock and Schittkowski's
             // book Test Examples for Nonlinear Programming Codes. It is their
-            // test problem Number 100.
+            // Test problem Number 100.
             // 
             var function = new NonlinearObjectiveFunction(7, x =>
                 Math.Pow(x[0] - 10.0, 2.0) + 5.0 * Math.Pow(x[1] - 12.0, 2.0) + Math.Pow(x[2], 4.0) +

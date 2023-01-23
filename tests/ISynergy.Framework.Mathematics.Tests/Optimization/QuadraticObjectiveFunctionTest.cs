@@ -41,7 +41,7 @@
             };
 
 
-            { // Function test
+            { // Function Test
                 for (int i = 0; i < x.Length; i++)
                 {
                     double expected = 0.5 *
@@ -54,7 +54,7 @@
                 }
             }
 
-            { // Gradient test
+            { // Gradient Test
                 for (int i = 0; i < x.Length; i++)
                 {
                     double[] expected = fd.Gradient(x[i]);
@@ -95,7 +95,7 @@
             };
 
 
-            { // Function test
+            { // Function Test
                 for (int i = 0; i < x.Length; i++)
                 {
                     double expected = 0.5 *
@@ -110,7 +110,7 @@
                 }
             }
 
-            { // Gradient test
+            { // Gradient Test
                 for (int i = 0; i < x.Length; i++)
                 {
                     double[] expected = fd.Gradient(x[i]);
@@ -150,7 +150,7 @@
                 new double[] { -0.102, 0, 10 },
             };
 
-            { // Gradient test
+            { // Gradient Test
                 for (int i = 0; i < x.Length; i++)
                 {
                     double[] expected = fd.Gradient(x[i]);
@@ -190,7 +190,7 @@
                 new double[] { -0.102, 0, 10 },
             };
 
-            { // Gradient test
+            { // Gradient Test
                 for (int i = 0; i < x.Length; i++)
                 {
                     double[] expected = fd.Gradient(x[i]);
@@ -577,7 +577,7 @@
             // In code, we can write this:
             QuadraticObjectiveFunction f = f1 + (2 * f2); // 8x² -4y² +10xy +6x +4y +6
 
-            // And now we can test our new objective function:
+            // And now we can Test our new objective function:
             double[] x = { 1, 2 };
 
             double result1 = f1.Function(x);

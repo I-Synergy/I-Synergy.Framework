@@ -189,7 +189,7 @@
 
             var pinv = covX.PseudoInverse();
 
-            // Run actual test
+            // Run actual Test
             double expected = 0.14285714285714282;
             double actual = Distance.SquareMahalanobis(x, y, pinv);
 

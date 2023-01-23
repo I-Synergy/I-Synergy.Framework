@@ -5,7 +5,7 @@ using ISynergy.Framework.Mathematics.Statistics;
 namespace ISynergy.Framework.Mathematics.Tests
 {
     /// <summary>
-    /// Quantiles test.
+    /// Quantiles Test.
     /// </summary>
     [TestClass]
     public class QuantilesTest
@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         private static readonly double[] TEST_PROBABILITIES = new double[] { 0.0, 0.25, 0.5, 0.75, 1.0 };
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile1_Even()
@@ -26,7 +26,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile1_Odd()
@@ -37,7 +37,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile2_Even()
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile2_Odd()
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile3_Even()
@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile3_Odd()
@@ -81,7 +81,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile4_Even()
@@ -92,7 +92,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile4_Odd()
@@ -103,7 +103,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile5_Even()
@@ -114,7 +114,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile5_Odd()
@@ -125,7 +125,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile6_Even()
@@ -136,7 +136,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile6_Odd()
@@ -147,7 +147,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile7_Even()
@@ -158,7 +158,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile7_Odd()
@@ -169,7 +169,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile8_Even()
@@ -180,7 +180,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile8_Odd()
@@ -191,7 +191,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile even test
+        /// Quantile even Test
         /// </summary>
         [TestMethod]
         public void Quantile9_Even()
@@ -202,7 +202,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Quantile odd test
+        /// Quantile odd Test
         /// </summary>
         [TestMethod]
         public void Quantile9_Odd()
@@ -213,7 +213,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         }
 
         /// <summary>
-        /// Assert equal test.
+        /// Assert equal Test.
         /// </summary>
         /// <param name="expected"></param>
         /// <param name="actual"></param>
