@@ -11,47 +11,35 @@ namespace ISynergy.Framework.Core.Extensions
         /// <summary>
         /// Awaits the specified self.
         /// </summary>
-        /// <param name="_self">The self.</param>
-        public async static void Await(this Task _self)
-        {
-            try
-            {
-                await _self;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        /// <param name="task">The self.</param>
+        public static void Await(this Task task) => task.AwaitTask();
 
         /// <summary>
         /// Awaits the specified error action.
         /// </summary>
-        /// <param name="_self">The self.</param>
+        /// <param name="task">The self.</param>
         /// <param name="errorAction">The error action.</param>
-        public async static void Await(this Task _self, Action<Exception> errorAction)
-        {
-            try
-            {
-                await _self;
-            }
-            catch (Exception ex)
-            {
-                errorAction?.Invoke(ex);
-            }
-        }
+        public static void Await(this Task task, Action<Exception> errorAction = null) => task.AwaitTask(errorAction: errorAction);
+
+        /// <summary>
+        /// Awaits the specified error action.
+        /// </summary>
+        /// <param name="task">The self.</param>
+        /// <param name="completedAction"></param>
+        /// <param name="errorAction">The error action.</param>
+        public static void Await(this Task task, Action completedAction = null, Action<Exception> errorAction = null) => task.AwaitTask(completedAction, errorAction);
 
         /// <summary>
         /// Awaits the specified completed action.
         /// </summary>
-        /// <param name="_self">The self.</param>
+        /// <param name="task">The self.</param>
         /// <param name="completedAction">The completed action.</param>
         /// <param name="errorAction">The error action.</param>
-        public async static void Await(this Task _self, Action completedAction, Action<Exception> errorAction)
+        private async static void AwaitTask(this Task task, Action completedAction = null, Action<Exception> errorAction = null)
         {
             try
             {
-                await _self;
+                await task;
                 completedAction?.Invoke();
             }
             catch (Exception ex)

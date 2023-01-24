@@ -21,7 +21,7 @@ namespace ISynergy.Framework.Monitoring.Hubs
         /// Constructor of MonitorHub.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public MonitorHub(ILogger<MonitorHub> logger)
+        public MonitorHub(ILogger logger)
         {
             _logger = logger;
         }

@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IClientMonitorService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ICommonServices.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IMasterDataService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPrintingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IReportingService.cs" />
@@ -34,7 +33,6 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AuthenticationService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CommonServices.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />

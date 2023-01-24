@@ -48,7 +48,8 @@ namespace Sample
                 })
                 .ConfigureLogging((context, logging) =>
                 {
-                    logging.AddAppCenterLogging(context.Configuration);
+                    //logging.AddAppCenterLogging(context.Configuration);
+                    logging.AddSentryLogging(context.Configuration);
                 })
                 .Build();
 

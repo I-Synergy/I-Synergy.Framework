@@ -23,8 +23,8 @@ namespace ISynergy.Framework.Automations.Extensions
         {
             services.Configure<AutomationOptions>(configuration.GetSection(nameof(AutomationOptions)).BindWithReload);
 
-            services.TryAddSingleton<IActionService, ActionService>();
-            services.TryAddSingleton<IAutomationService, AutomationService>();
+            services.AddSingleton<IActionService, ActionService>();
+            services.AddSingleton<IAutomationService, AutomationService>();
 
             services.AddHostedService<ActionQueuingBackgroundService>();
             services.AddHostedService<AutomationBackgroundService>();

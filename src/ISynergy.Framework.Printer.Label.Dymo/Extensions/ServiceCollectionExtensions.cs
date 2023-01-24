@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Printer.Label.Dymo.Extensions
         /// <returns></returns>
         public static IServiceCollection AddPrinterLabelDymoIntegration(this IServiceCollection services)
         {
-            services.TryAddSingleton<ILabelPrinterService, LabelPrinterService>();
+            services.AddSingleton<ILabelPrinterService, LabelPrinterService>();
             return services;
         }
     }
