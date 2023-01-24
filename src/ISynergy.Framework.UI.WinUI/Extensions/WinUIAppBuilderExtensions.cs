@@ -22,8 +22,6 @@ namespace ISynergy.Framework.UI.Extensions
 {
     public static class WinUIAppBuilderExtensions
     {
-        private const string _appSetting = "appsettings.json";
-
         /// <summary>
         /// Gets the shellView model types.
         /// </summary>

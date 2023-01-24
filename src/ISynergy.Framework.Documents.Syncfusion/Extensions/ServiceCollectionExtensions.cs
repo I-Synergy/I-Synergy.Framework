@@ -23,7 +23,7 @@ namespace ISynergy.Framework.Documents.Extensions
         {
             services.AddOptions();
             services.Configure<SyncfusionLicenseOptions>(configuration.GetSection(nameof(SyncfusionLicenseOptions)).BindWithReload);
-            services.TryAddSingleton<IDocumentService, DocumentService>();
+            services.AddSingleton<IDocumentService, DocumentService>();
 
             return services;
         }

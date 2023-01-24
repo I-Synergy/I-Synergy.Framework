@@ -28,8 +28,6 @@ namespace ISynergy.Framework.UI.Extensions
 {
     public static class MauiAppBuilderExtensions
     {
-        private const string _appSetting = "appsettings.json";
-
         /// <summary>
         /// Gets the shellView model types.
         /// </summary>
@@ -74,11 +72,7 @@ namespace ISynergy.Framework.UI.Extensions
 
             var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
 
-            var configurationRoot = new ConfigurationBuilder()
-                .AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.{_appSetting}"))
-                .Build();
-
-            appBuilder.Services.Configure<ConfigurationOptions>(configurationRoot.GetSection(nameof(ConfigurationOptions)).BindWithReload);
+            appBuilder.Services.Configure<ConfigurationOptions>(appBuilder.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
             var navigationService = new NavigationService();
             var languageService = new LanguageService();

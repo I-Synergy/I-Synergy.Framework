@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Logging.Extensions
         public static ILoggingBuilder AddAppCenterLogging(this ILoggingBuilder builder, IConfiguration configuration)
         {
             builder.Services.Configure<AppCenterOptions>(configuration.GetSection(nameof(AppCenterOptions)).BindWithReload);
-            builder.Services.TryAddSingleton<ILogger, Logger>();
+            builder.Services.AddSingleton<ILogger, Logger>();
 
             return builder;
         }

@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Logging.Services;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Logging.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Sentry;
 
@@ -15,12 +16,12 @@ namespace ISynergy.Framework.Logging.Extensions
         /// Adds Application Insights logging integration.
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="configure"></param>
+        /// <param name="configuration"></param>
         /// <returns></returns>
-        public static ILoggingBuilder AddApplicationInsightsLogging(this ILoggingBuilder builder, Action<SentryOptions> configure)
+        public static ILoggingBuilder AddSentryLogging(this ILoggingBuilder builder, IConfiguration configuration)
         {
-            builder.Services.TryAddSingleton<ILogger, Logger>();
-            builder.Services.Configure(configure);
+            builder.Services.Configure<SentryOptions>(configuration.GetSection(nameof(SentryOptions)).BindWithReload);
+            builder.Services.AddSingleton<ILogger, Logger>();
             return builder;
         }
     }

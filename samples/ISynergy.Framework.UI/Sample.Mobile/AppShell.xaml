@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Sample.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Sample.Views"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    Shell.FlyoutBehavior="Flyout">
+
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent Title="Info" ContentTemplate="{DataTemplate views:InfoView}" Route="Dashboard"/>
+    </FlyoutItem>
+
+    <MenuFlyoutItem Text="{m:GetString Help}" Command="{Binding Help_Command}">
+        <MenuFlyoutItem.IconImageSource>
+            <FontImageSource Glyph="{DynamicResource help}" FontFamily="FontAwesome" />
+        </MenuFlyoutItem.IconImageSource>
+    </MenuFlyoutItem>
+    <MenuFlyoutItem Text="{m:GetString Language}" Command="{Binding Language_Command}">
+        <MenuFlyoutItem.IconImageSource>
+            <FontImageSource Glyph="{DynamicResource language}" FontFamily="FontAwesome" />
+        </MenuFlyoutItem.IconImageSource>
+    </MenuFlyoutItem>
+    <MenuFlyoutItem Text="{m:GetString Theme}" Command="{Binding Color_Command}">
+        <MenuFlyoutItem.IconImageSource>
+            <FontImageSource Glyph="{DynamicResource theme}" FontFamily="FontAwesome" />
+        </MenuFlyoutItem.IconImageSource>
+    </MenuFlyoutItem>
+    <MenuFlyoutItem Text="{m:GetString Settings}" Command="{Binding Settings_Command}">
+        <MenuFlyoutItem.IconImageSource>
+            <FontImageSource Glyph="{DynamicResource settings}" FontFamily="FontAwesome" />
+        </MenuFlyoutItem.IconImageSource>
+    </MenuFlyoutItem>
+</Shell>
