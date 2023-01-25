@@ -1,18 +1,14 @@
 ﻿using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sample.Services
 {
     /// <summary>
     /// Class AuthenticationService.
-    /// Implements the <see cref="IBaseAuthenticationService" />
+    /// Implements the <see cref="IAuthenticationService" />
     /// </summary>
-    /// <seealso cref="IBaseAuthenticationService" />
+    /// <seealso cref="IAuthenticationService" />
     public class AuthenticationService : IAuthenticationService
     {
         public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)

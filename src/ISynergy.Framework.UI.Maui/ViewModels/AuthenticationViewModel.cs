@@ -3,13 +3,15 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Views;
 using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
-    public class LoginViewModel : ViewModel
+    public class AuthenticationViewModel : ViewModel
     {
         private readonly IAuthenticationService _authenticationService;
 
@@ -34,7 +36,7 @@ namespace ISynergy.Framework.UI.ViewModels
         public Command Login_Command { get; set; }
         public Command Register_Command { get; set; }
 
-        public LoginViewModel(
+        public AuthenticationViewModel(
             IContext context, 
             IBaseCommonServices commonServices,
             IAuthenticationService authenticationService,
@@ -49,7 +51,7 @@ namespace ISynergy.Framework.UI.ViewModels
         }
 
         private void Register() =>
-            Application.Current.MainPage = new NavigationPage(ServiceLocator.Default.GetInstance<RegisterView>());
+            Application.Current.MainPage.ReplaceMainWindow<IRegistrationView>();
 
         private async Task SignInAsync()
         {

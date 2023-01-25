@@ -1,11 +1,11 @@
 ﻿namespace ISynergy.Framework.Mvvm.Abstractions.Views
 {
     /// <summary>
-    /// Interface ILoginView
+    /// Interface of the Authentication View
     /// Implements the <see cref="IView" />
     /// </summary>
     /// <seealso cref="IView" />
-    public interface ILoginView : IView
+    public interface IAuthenticationView : IView
     {
     }
 }
