@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions.Views;
 
 namespace ISynergy.Framework.UI.Extensions
 {
@@ -56,6 +57,15 @@ namespace ISynergy.Framework.UI.Extensions
             var resolvedPage = ActivatorUtilities.CreateInstance<T>(ServiceLocator.Default.GetServiceProvider(), parameters);
             await navigation.PushModalAsync(resolvedPage);
             return resolvedPage;
+        }
+
+        public static void ReplaceMainWindow<T>(this Page? mainWindow)
+            where T : IView
+        {
+            if (mainWindow is not null && ServiceLocator.Default.GetInstance<T>() is Page page)
+                mainWindow = new NavigationPage(page);
+            else
+                throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
         }
     }
 }

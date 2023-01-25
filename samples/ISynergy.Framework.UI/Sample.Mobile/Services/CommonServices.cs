@@ -25,7 +25,6 @@ namespace Sample.Services
         /// Initializes a new instance of the <see cref="CommonServices" /> class.
         /// </summary>
         /// <param name="busyService">The busy indicator service.</param>
-        /// <param name="messageService">The messaging service</param>
         /// <param name="languageService">The language service.</param>
         /// <param name="dialogService">The dialog service.</param>
         /// <param name="navigationService">The navigation service.</param>

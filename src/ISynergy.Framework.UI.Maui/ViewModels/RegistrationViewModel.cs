@@ -9,6 +9,7 @@ using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -21,7 +22,7 @@ using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
-    public class RegisterViewModel : ViewModel
+    public class RegistrationViewModel : ViewModel
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly ILocalizationService _localizationService;
@@ -137,7 +138,7 @@ namespace ISynergy.Framework.UI.ViewModels
         public Command Login_Command { get; set; }
         public Command SelectModules_Command { get; set; }
 
-        public RegisterViewModel(
+        public RegistrationViewModel(
             IContext context,
             IBaseCommonServices commonServices,
             IAuthenticationService authenticationService,
@@ -253,7 +254,7 @@ namespace ISynergy.Framework.UI.ViewModels
         }
 
         private void Login() =>
-            Application.Current.MainPage = new NavigationPage(ServiceLocator.Default.GetInstance<LoginView>());
+            Application.Current.MainPage.ReplaceMainWindow<IAuthenticationView>();
 
         public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

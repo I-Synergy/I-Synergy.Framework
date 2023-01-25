@@ -4,7 +4,9 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Views;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -116,8 +118,8 @@ namespace ISynergy.Framework.UI
 
             _logger.LogInformation("Setting up main page.");
 
-            MainPage = new NavigationPage(ServiceLocator.Default.GetInstance<LoginView>());
-
+            MainPage.ReplaceMainWindow<IAuthenticationView>();
+            
             var refreshToken = string.Empty;
 
             if (Preferences.ContainsKey(nameof(Token.RefreshToken)))

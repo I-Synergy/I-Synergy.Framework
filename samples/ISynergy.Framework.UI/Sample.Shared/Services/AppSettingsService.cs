@@ -22,7 +22,7 @@ namespace Sample.Services
         private ApplicationSetting _settings;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RoamingSettingsService"/> class.
+        /// Initializes a new instance of the <see cref="AppSettingsService"/> class.
         /// </summary>
         public AppSettingsService()
         {

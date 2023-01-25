@@ -583,7 +583,7 @@ stages:
             scriptType: 'ps'
             scriptLocation: 'inlineScript'
             inlineScript: |
-              az cdn endpoint purge --resource-group 'I-Synergy' --name framework --profile-name Framework --content-paths '/*'
+              az cdn endpoint purge -g 'i-synergy' -n '$(AzureCdnEndpoint)' --profile-name '$(AzureCdnProfile)' --content-paths '/*' --no-wait
           continueOnError: true
 
   - stage: Release
