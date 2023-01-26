@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.AspNetCore.Globalization.Services
+﻿using Microsoft.AspNetCore.Localization;
+
+namespace ISynergy.Framework.AspNetCore.Globalization.Services
 {
     /// <summary>
     /// Class LanguageService.
@@ -41,8 +43,6 @@
         /// <returns>System.String.</returns>
         public string GetString(string key)
         {
-            var languages = _httpContextAccessor.HttpContext.Request.GetTypedHeaders().AcceptLanguage;
-
             foreach (var manager in _managers)
             {
                 var result = manager.GetString(key, CultureInfo.CurrentCulture);
