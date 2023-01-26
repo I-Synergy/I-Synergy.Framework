@@ -86,8 +86,8 @@ namespace ISynergy.Framework.UI.Extensions
 
             appBuilder.Services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
             appBuilder.Services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
-            appBuilder.Services.AddSingleton<ILanguageService>((s) => languageService);
-            appBuilder.Services.AddSingleton<INavigationService>((s) => navigationService);
+            appBuilder.Services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
+            appBuilder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
             appBuilder.Services.AddSingleton<IContext, TContext>();
             appBuilder.Services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
             appBuilder.Services.AddSingleton<ILocalizationService, LocalizationService>();
@@ -268,20 +268,6 @@ namespace ISynergy.Framework.UI.Extensions
                 if (viewmodel is not null)
                     Routing.RegisterRoute(viewmodel.GetViewModelFullName(), view);
             }
-        }
-
-        /// <summary>
-        /// Configures the logger.
-        /// </summary>
-        private static ILoggerFactory ConfigureLogger(LogLevel loglevel = LogLevel.Information)
-        {
-            var factory = LoggerFactory.Create(builder =>
-            {
-                builder.AddDebug();
-                builder.SetMinimumLevel(loglevel);
-            });
-
-            return factory;
         }
 
         /// <summary>

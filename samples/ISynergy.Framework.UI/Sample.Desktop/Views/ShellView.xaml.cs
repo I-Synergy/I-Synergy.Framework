@@ -64,7 +64,9 @@ namespace Sample.Views
         /// <param name="e">The <see cref="NavigationEventArgs" /> instance containing the event data.</param>
         private void ContentRootFrameNavigated(object sender, NavigationEventArgs e)
         {
-            RootNavigationView.IsBackEnabled = ViewModel.BaseCommonServices.NavigationService.CanGoBack;
+            var navigationService = ServiceLocator.Default.GetInstance<INavigationServiceExtended>();
+            if (navigationService is not null)
+                RootNavigationView.IsBackEnabled = navigationService.CanGoBack;
         }
 
         /// <summary>
@@ -91,7 +93,7 @@ namespace Sample.Views
         /// </summary>
         public void InitializeView()
         {
-            var navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
+            var navigationService = ServiceLocator.Default.GetInstance<INavigationServiceExtended>();
             navigationService.Frame = ContentRootFrame;
 
             ViewModel = ServiceLocator.Default.GetInstance<IShellViewModel>();
@@ -128,9 +130,10 @@ namespace Sample.Views
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         private bool OnBackRequested()
         {
-            if (ViewModel.BaseCommonServices.NavigationService.CanGoBack)
+            var navigationService = ServiceLocator.Default.GetInstance<INavigationServiceExtended>();
+            if (navigationService is not null && navigationService.CanGoBack)
             {
-                ViewModel.BaseCommonServices.NavigationService.GoBack();
+                navigationService.GoBack();
                 return true;
             }
 

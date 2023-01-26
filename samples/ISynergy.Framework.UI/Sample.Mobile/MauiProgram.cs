@@ -2,12 +2,14 @@
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
+using Sample.Models;
 using Sample.Services;
 using Sample.Views;
 using System.Reflection;
@@ -39,8 +41,8 @@ namespace Sample
             
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
-            //builder.Services.AddSingleton<IBaseApplicationSettingsService, GlobalSettingsService>();
-            //builder.Services.AddSingleton<ISettingsService<Setting>, SettingsService>();
+            builder.Services.AddSingleton<IBaseApplicationSettingsService, AppSettingsService>();
+            builder.Services.AddSingleton<ISettingsService<Setting>, SettingsService>();
 
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());

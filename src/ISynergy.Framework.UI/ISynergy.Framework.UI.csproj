@@ -20,11 +20,6 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="NodaTime" Version="3.1.6" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
-	</ItemGroup>
 	
 	<ItemGroup>
 		<Compile Update="Properties\Resources.Designer.cs">
@@ -36,5 +31,9 @@
 
 	<ItemGroup>
 	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 	</ItemGroup>
 </Project>
