@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+namespace ISynergy.Framework.Mvvm.Abstractions.Services.Base
 {
     /// <summary>
     /// Interface IBaseCommonServices

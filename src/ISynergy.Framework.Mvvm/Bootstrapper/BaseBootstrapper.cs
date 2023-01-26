@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Mvvm.Bootstrapper

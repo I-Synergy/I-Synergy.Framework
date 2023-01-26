@@ -57,6 +57,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="2.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -89,5 +90,27 @@
 	</ItemGroup>
 
 	<Import Project="..\Sample.Shared\Sample.Shared.projitems" Label="Shared" />
+
+	<ItemGroup>
+		<Using Include="ISynergy.Framework.Core.Models.Style">
+			<Alias>Style</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.IView">
+			<Alias>IView</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.Mvvm.Abstractions.IWindow">
+			<Alias>IWindow</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Controls.Window">
+			<Alias>Window</Alias>
+		</Using>
+		<Using Include="ISynergy.Framework.UI.Controls.View">
+			<Alias>View</Alias>
+		</Using>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Properties\" />
+	</ItemGroup>
 
 </Project>

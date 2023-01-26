@@ -14,10 +14,10 @@ namespace ISynergy.Framework.UI.Services
 {
     /// <summary>
     /// Class NavigationService.
-    /// Implements the <see cref="INavigationService" />
+    /// Implements the <see cref="INavigationServiceExtended" />
     /// </summary>
-    /// <seealso cref="INavigationService" />
-    public class NavigationService : INavigationService
+    /// <seealso cref="INavigationServiceExtended" />
+    public class NavigationService : INavigationService, INavigationServiceExtended
     {
         /// <summary>
         /// The frame

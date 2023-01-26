@@ -20,7 +20,7 @@ namespace Sample.Views
 
             ViewModel = ServiceLocator.Default.GetInstance<IShellViewModel>();
 
-            var navigationService = ServiceLocator.Default.GetInstance<INavigationService>();
+            var navigationService = ServiceLocator.Default.GetInstance<INavigationServiceExtended>();
             navigationService.Frame = ContentRootFrame;
         }
 

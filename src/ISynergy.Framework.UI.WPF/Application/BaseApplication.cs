@@ -25,24 +25,24 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Gets the ExceptionHandler service.
         /// </summary>
-        private readonly IExceptionHandlerService _exceptionHandlerService;
+        protected readonly IExceptionHandlerService _exceptionHandlerService;
 
         /// <summary>
         /// Gets the logger.
         /// </summary>
         /// <value>The logger.</value>
-        private readonly ILogger _logger;
+        protected readonly ILogger _logger;
 
         /// <summary>
         /// Gets the context.
         /// </summary>
         /// <value>The context.</value>
-        private readonly IContext _context;
+        protected readonly IContext _context;
 
-        private readonly IThemeService _themeService;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IBaseApplicationSettingsService _applicationSettingsService;
+        protected readonly IThemeService _themeService;
+        protected readonly IAuthenticationService _authenticationService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IBaseApplicationSettingsService _applicationSettingsService;
 
         private Task Initialize { get; set; }
 
@@ -104,33 +104,7 @@ namespace ISynergy.Framework.UI
 
         public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
-        public virtual async Task InitializeApplicationAsync()
-        {
-            _logger.LogInformation("Starting initialization of application");
-
-            var culture = CultureInfo.CurrentCulture;
-            var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
-            numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
-            numberFormat.CurrencyNegativePattern = 1;
-            _context.NumberFormat = numberFormat;
-
-            _logger.LogInformation("Loading theme");
-            _themeService.SetStyle();
-
-            _logger.LogInformation("Setting up main page.");
-
-            //MainPage = new NavigationPage(ServiceLocator.Default.GetInstance<LoginView>());
-
-            //var refreshToken = string.Empty;
-
-            //if (Preferences.ContainsKey(nameof(Token.RefreshToken)))
-            //    refreshToken = Preferences.Get(nameof(Token.RefreshToken), string.Empty);
-
-            //if (!_context.IsAuthenticated && !string.IsNullOrEmpty(refreshToken))
-            //    await _authenticationService.AuthenticateWithRefreshTokenAsync(refreshToken);
-
-            _logger.LogInformation("Finishing initialization of application");
-        }
+        public abstract Task InitializeApplicationAsync();
 
         /// <summary>
         /// Get a new list of additional resource dictionaries which can be merged.
@@ -147,8 +121,6 @@ namespace ISynergy.Framework.UI
         {
             MainWindow = new Window();
             MainWindow.Activate();
-
-            //MainWindow.Activated += OnActivated;
 
             _themeService.InitializeMainWindow(MainWindow);
             _themeService.SetTitlebar();
@@ -192,9 +164,6 @@ namespace ISynergy.Framework.UI
                 // parameter
                 rootFrame.Navigate(shellView, e.Args);
             }
-
-            //MainWindow.Title = context.Title;
-            //MainWindow.Content = (UIElement)shellView;
             
             MainWindow.Show();
             MainWindow.Activate();
@@ -208,61 +177,5 @@ namespace ISynergy.Framework.UI
         /// <exception cref="Result.Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
         private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) =>
             throw new Exception($"Failed to load {e.Uri}: {e.Exception}");
-
-        /// <summary>
-        /// Configures the logger.
-        /// </summary>
-        /// <param name="loglevel">The loglevel.</param>
-        /// <returns>ILoggerFactory.</returns>
-        protected virtual ILoggerFactory ConfigureLogger(LogLevel loglevel = LogLevel.Information)
-        {
-            var factory = LoggerFactory.Create(builder =>
-            {
-#if __WASM__
-                builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
-#elif __IOS__
-                builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
-#elif WINDOWS_UWP || WINDOWS
-                builder.AddDebug();
-#endif
-
-                // Exclude logs below this level
-                builder.SetMinimumLevel(loglevel);
-
-                // Default filters for Uno Platform namespaces
-                builder.AddFilter("Uno", LogLevel.Warning);
-                builder.AddFilter("Windows", LogLevel.Warning);
-                builder.AddFilter("Microsoft", LogLevel.Warning);
-
-                // Generic Xaml events
-                builder.AddFilter("Microsoft.UI.Xaml", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.VisualStateGroup", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.StateTriggerBase", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.UIElement", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace);
-
-                // Layouter specific messages
-                builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug);
-
-                builder.AddFilter("Windows.Storage", LogLevel.Debug);
-
-                // Binding related messages
-                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
-                builder.AddFilter("Microsoft.UI.Xaml.Data", LogLevel.Debug);
-
-                // Binder memory references tracking
-                builder.AddFilter("Uno.UI.DataBinding.BinderReferenceHolder", LogLevel.Debug);
-
-                // RemoteControl and HotReload related
-                builder.AddFilter("Uno.UI.RemoteControl", LogLevel.Information);
-
-                // Debug JS interop
-                builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug);
-            });
-
-            return factory;
-        }
     }
 }
