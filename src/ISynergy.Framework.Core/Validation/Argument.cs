@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (string.IsNullOrEmpty(value))
             {
-                var error = string.Format("Argument '{0}' cannot be null or empty", name.ToString());
+                var error = $"Argument '{name}' cannot be null or empty";
                 throw new ArgumentNullException(error, name);
             }
         }
@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (value == Guid.Empty)
             {
-                var error = string.Format("Argument '{0}' cannot be Guid.Empty", name.ToString());
+                var error = $"Argument '{name}' cannot be Guid.Empty";
                 throw new ArgumentException(error, name);
             }
         }
@@ -71,7 +71,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!value.HasValue || value.Value == Guid.Empty)
             {
-                var error = string.Format("Argument '{0}' cannot be null or Guid.Empty", name.ToString());
+                var error = $"Argument '{name}' cannot be null or Guid.Empty";
                 throw new ArgumentNullException(error, name);
             }
         }
@@ -88,7 +88,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (string.IsNullOrEmpty(value) || (string.CompareOrdinal(value.Trim(), string.Empty) == 0))
             {
-                var error = string.Format("Argument '{0}' cannot be null or whitespace", name.ToString());
+                var error = $"Argument '{name}' cannot be null or whitespace";
                 throw new ArgumentNullException(error, name);
             }
         }
@@ -105,7 +105,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if ((value is null) || (value.Length == 0))
             {
-                var error = string.Format("Argument '{0}' cannot be null or an empty array", name.ToString());
+                var error = $"Argument '{name}' cannot be null or an empty array";
                 throw new ArgumentNullException(error, name);
             }
         }
@@ -123,7 +123,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if ((value is null) || (value.Count == 0))
             {
-                var error = string.Format("Argument '{0}' cannot be null or an empty list", name.ToString());
+                var error = $"Argument '{name}' cannot be null or an empty list";
                 throw new ArgumentNullException(error, name);
             }
         }
@@ -140,7 +140,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!typeof(T).IsEnum)
             {
-                var error = string.Format("Argument '{0}' can only be an Enum", name.ToString());
+                var error = $"Argument '{name}' can only be an Enum";
                 throw new ArgumentException(error, name);
             }
         }
@@ -187,7 +187,7 @@ namespace ISynergy.Framework.Core.Validation
 
             if (!validation(value, minimumValue, maximumValue))
             {
-                var error = string.Format("Argument '{0}' should be between {1} and {2}", name.ToString(), minimumValue, maximumValue);
+                var error = $"Argument '{name}' should be between {minimumValue} and {maximumValue}";
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }
@@ -227,7 +227,7 @@ namespace ISynergy.Framework.Core.Validation
 
             if (!validation(value, minimumValue))
             {
-                var error = string.Format("Argument '{0}' should be minimal {1}", name.ToString(), minimumValue);
+                var error = $"Argument '{name}' should be minimal {minimumValue}";
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }
@@ -264,7 +264,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!validation(value, maximumValue))
             {
-                var error = string.Format("Argument '{0}' should be at maximum {1}", name.ToString(), maximumValue);
+                var error = $"Argument '{name}' should be at maximum {maximumValue}";
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }

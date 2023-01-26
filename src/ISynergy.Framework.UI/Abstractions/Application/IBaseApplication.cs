@@ -2,6 +2,6 @@
 {
     public interface IBaseApplication
     {
-        void InitializeApplication();
+        Task InitializeApplicationAsync();
     }
 }

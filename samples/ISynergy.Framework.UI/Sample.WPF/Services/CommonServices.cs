@@ -39,7 +39,7 @@ namespace Sample.Services
             IBusyService busyService,
             ILanguageService languageService,
             IDialogService dialogService,
-            INavigationService navigationService,
+            INavigationServiceExtended navigationService,
             IInfoService infoService,
             IConverterService converterService,
             IDispatcherService dispatcherService,

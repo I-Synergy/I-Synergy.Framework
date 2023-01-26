@@ -576,15 +576,15 @@ stages:
               $sourcePath = "docs\ISynergy.Framework\_site"
               az storage blob upload-batch --destination '$web' --source $sourcePath --account-name '$(AzureStorageAccountName)' --account-key '$(AzureStorageAccountKey)'
 
-        - task: AzureCLI@2
-          displayName: 'Purge CDN'
-          inputs:
-            azureSubscription: 'Azure'
-            scriptType: 'ps'
-            scriptLocation: 'inlineScript'
-            inlineScript: |
-              az cdn endpoint purge -g 'i-synergy' -n '$(AzureCdnEndpoint)' --profile-name '$(AzureCdnProfile)' --content-paths '/*' --no-wait
-          continueOnError: true
+        #- task: AzureCLI@2
+        #  displayName: 'Purge CDN'
+        #  inputs:
+        #    azureSubscription: 'Azure'
+        #    scriptType: 'ps'
+        #    scriptLocation: 'inlineScript'
+        #    inlineScript: |
+        #      az cdn endpoint purge -g 'i-synergy' -n '$(AzureCdnEndpoint)' --profile-name '$(AzureCdnProfile)' --content-paths '/*' --no-wait
+        #  continueOnError: true
 
   - stage: Release
     displayName: 'Release'

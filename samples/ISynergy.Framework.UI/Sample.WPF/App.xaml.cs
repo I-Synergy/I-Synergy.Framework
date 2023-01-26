@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.UI;
-using System.Windows;
+using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace Sample
 {
@@ -13,13 +14,24 @@ namespace Sample
         {
         }
 
-        //protected override void OnStartup(StartupEventArgs e)
-        //{
-        //    //Application.Current.MainWindow = new Window() { Title = "I-Synergy UI Framework Sample" };
+        public override Task InitializeApplicationAsync()
+        {
+            _logger.LogInformation("Starting initialization of application");
 
-        //    base.OnStartup(e);
-            
-        //    //Application.Current.MainWindow.Show();
-        //}
+            var culture = CultureInfo.CurrentCulture;
+            var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
+            numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+            numberFormat.CurrencyNegativePattern = 1;
+
+            _context.NumberFormat = numberFormat;
+
+            _logger.LogInformation("Loading theme");
+            _themeService.SetStyle();
+
+            _logger.LogInformation("Setting up main page.");
+            _logger.LogInformation("Finishing initialization of application");
+
+            return Task.CompletedTask;
+        }
     }
 }

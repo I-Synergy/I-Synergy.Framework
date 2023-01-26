@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 
 namespace Sample.Abstractions.Services
 {

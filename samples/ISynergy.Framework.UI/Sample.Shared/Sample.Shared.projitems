@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Profile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Publication.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PublicationItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Setting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TestItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Options\ConfigurationOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">
@@ -32,7 +33,6 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\AuthenticationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\UpdateService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />

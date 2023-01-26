@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
