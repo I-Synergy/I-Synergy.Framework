@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Services;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Sample.Abstractions.Services;
+using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using Sample.Views;
@@ -41,7 +43,7 @@ namespace Sample
                     services.AddSingleton<IUnitConversionService, UnitConversionService>();
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
-                    services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService, SettingsService>());
+                    services.TryAddEnumerable(ServiceDescriptor.Singleton<ISettingsService<Setting>, SettingsService>());
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());

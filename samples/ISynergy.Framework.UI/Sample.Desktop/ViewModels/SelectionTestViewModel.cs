@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions.Services;
 using Sample.Models;
 using System;
 using System.Collections.Generic;
@@ -71,7 +73,7 @@ namespace Sample.ViewModels
         /// <param name="logger">The logger factory.</param>
         public SelectionTestViewModel(
             IContext context,
-            IBaseCommonServices commonServices,
+            ICommonServices commonServices,
             ILogger logger)
             : base(context, commonServices, logger)
         {
@@ -103,7 +105,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new SelectionViewModel(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-            BaseCommonServices.NavigationService.OpenBlade(this, selectionVm);
+            (BaseCommonServices.NavigationService as INavigationServiceExtended)?.OpenBlade(this, selectionVm);
             return Task.CompletedTask;
         }
 
@@ -115,7 +117,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new SelectionViewModel(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
-            BaseCommonServices.NavigationService.OpenBlade(this, selectionVm);
+            (BaseCommonServices.NavigationService as INavigationServiceExtended)?.OpenBlade(this, selectionVm);
             return Task.CompletedTask;
         }
 
