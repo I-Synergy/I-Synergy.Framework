@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Update.Options
+﻿namespace ISynergy.Framework.Update.Options
 {
     public class UpdateOptions
     {

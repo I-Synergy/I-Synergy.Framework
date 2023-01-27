@@ -4,9 +4,9 @@
 	<PropertyGroup>
 		<TargetFrameworks>net472;net48;net6.0-windows;net7.0-windows</TargetFrameworks>
 		<UseWPF>true</UseWPF>
-		<RootNamespace>ISynergy.Framework.UI.Update</RootNamespace>
+		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<PackageId>I-Synergy.Framework.UI.Update.WPF</PackageId>
+		<PackageId>I-Synergy.Framework.Update.WPF</PackageId>
 		<Description>I-Synergy Update Framework for WPF</Description>
 		<PackageTags>I-Synergy, Framework, Update, Windows, WPF</PackageTags>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
