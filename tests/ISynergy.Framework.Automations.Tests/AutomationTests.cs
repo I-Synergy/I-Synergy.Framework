@@ -107,7 +107,7 @@ namespace ISynergy.Framework.Automations.Tests
             // Assert should fail because condition is not met. Age is below 18.
             Assert.IsFalse(result2.Succeeded);
             // Assert should fail because no condition is met to run the action.
-            Assert.IsFalse(stopwatch.Elapsed > TimeSpan.FromSeconds(1));
+            Assert.IsFalse(stopwatch.Elapsed >= TimeSpan.FromSeconds(1));
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace ISynergy.Framework.Automations.Tests
             Assert.IsTrue(result1.Succeeded);
             Assert.AreEqual(27, ((Customer)result1.Result).Age);
             // Assert should succeed because condition is met and delay is applied.
-            Assert.IsTrue(stopwatch.Elapsed > TimeSpan.FromSeconds(5 * 2));
+            Assert.IsTrue(stopwatch.Elapsed >= TimeSpan.FromSeconds(5 * 2));
 
             stopwatch.Reset();
 
@@ -155,7 +155,7 @@ namespace ISynergy.Framework.Automations.Tests
             // Assert should fail because condition is not met. Age is below 18.
             Assert.IsFalse(result2.Succeeded);
             // Assert should fail because no condition is met to run the action.
-            Assert.IsFalse(stopwatch.Elapsed > TimeSpan.FromSeconds(1));
+            Assert.IsFalse(stopwatch.Elapsed >= TimeSpan.FromSeconds(1));
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace ISynergy.Framework.Automations.Tests
             
             Assert.IsTrue(result.Succeeded);
             // Assert should succeed because condition is met and delay is applied.
-            Assert.IsTrue(stopwatch.Elapsed > TimeSpan.FromSeconds(3 * 2));
+            Assert.IsTrue(stopwatch.Elapsed >= TimeSpan.FromSeconds(3 * 2));
         }
 
         /// <summary>
