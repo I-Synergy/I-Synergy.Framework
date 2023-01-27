@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -67,6 +68,9 @@ namespace Sample.ViewModels
             set => SetValue(value);
         }
 
+        public RelayCommand BusyOn_Command { get; set; }
+        public RelayCommand BusyOff_Command { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
         /// </summary>
@@ -85,6 +89,9 @@ namespace Sample.ViewModels
             Copyrights = commonServices.InfoService.Copyrights;
             Startup = ((Context)context).Environment.ToString();
             
+            BusyOn_Command = new RelayCommand(() => commonServices.BusyService.StartBusy());
+            BusyOff_Command = new RelayCommand(() => commonServices.BusyService.EndBusy());
+
             //throw new Exception("Test exception for logging!");
         }
     }

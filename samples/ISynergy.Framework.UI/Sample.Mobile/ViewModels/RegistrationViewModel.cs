@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
@@ -134,10 +135,10 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        public Command Register_Command { get; set; }
-        public Command ValidateMail_Command { get; set; }
-        public Command Login_Command { get; set; }
-        public Command SelectModules_Command { get; set; }
+        public AsyncRelayCommand Register_Command { get; set; }
+        public AsyncRelayCommand ValidateMail_Command { get; set; }
+        public AsyncRelayCommand Login_Command { get; set; }
+        public AsyncRelayCommand SelectModules_Command { get; set; }
 
         public RegistrationViewModel(
             IContext context,
@@ -198,10 +199,10 @@ namespace ISynergy.Framework.UI.ViewModels
                     Properties[nameof(SelectedCountry)].Errors.Add(commonServices.LanguageService.GetString("WarningNoCountrySelected"));
             });
 
-            Register_Command = new Command(async () => await RegisterAsync());
-            ValidateMail_Command = new Command(async () => await ValidateMailAsync());
-            Login_Command = new Command(Login);
-            SelectModules_Command = new Command(async () => await SelectModulesAsync());
+            Register_Command = new AsyncRelayCommand(async () => await RegisterAsync());
+            ValidateMail_Command = new AsyncRelayCommand(async () => await ValidateMailAsync());
+            Login_Command = new AsyncRelayCommand(async () => await SignInAsync());
+            SelectModules_Command = new AsyncRelayCommand(async () => await SelectModulesAsync());
 
             ArePickersAvailable = false;
         }
@@ -254,8 +255,8 @@ namespace ISynergy.Framework.UI.ViewModels
                 ArePickersAvailable = false;
         }
 
-        private void Login() =>
-            Application.Current.MainPage.ReplaceMainWindow<IAuthenticationView>();
+        private Task SignInAsync() =>
+            BaseCommonServices.NavigationService.ReplaceMainWindowAsync<IAuthenticationView>();
 
         public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -325,7 +326,7 @@ namespace ISynergy.Framework.UI.ViewModels
                     if (await _authenticationService.RegisterNewAccountAsync(registrationData))
                     {
                         await BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("WarningRegistrationConfirmEmail"));
-                        Login();
+                        SignInAsync();
                     }
                 }
             }
