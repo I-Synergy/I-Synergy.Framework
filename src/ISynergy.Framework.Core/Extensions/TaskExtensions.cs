@@ -6,34 +6,6 @@
     public static class TaskExtensions
     {
         /// <summary>
-        /// Awaits the specified task.
-        /// </summary>
-        /// <param name="task">The self.</param>
-        public static void Await(this Task task) => task.AwaitTask();
-
-        /// <summary>
-        /// Awaits the specified task.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="task"></param>
-        public static void Await<T>(this Task<T> task) => task.AwaitTask();
-
-        /// <summary>
-        /// Awaits the specified task with error action.
-        /// </summary>
-        /// <param name="task">The self.</param>
-        /// <param name="completedAction">The error action.</param>
-        public static void Await(this Task task, Action completedAction = null) => task.AwaitTask(completedAction);
-
-        /// <summary>
-        /// Awaits the specified task with error action.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="task"></param>
-        /// <param name="completedAction"></param>
-        public static void Await<T>(this Task<T> task, Action completedAction = null) => task.AwaitTask(completedAction);
-
-        /// <summary>
         /// Awaits the specified task with competed and error action.
         /// </summary>
         /// <param name="task">The self.</param>
