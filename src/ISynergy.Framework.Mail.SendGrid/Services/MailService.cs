@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Mail.Services
         /// <param name="logger">The logger.</param>
         public MailService(
             IOptions<MailOptions> sendGridOptions,
-            ILogger logger)
+            ILogger<MailService> logger)
         {
             _sendGridOptions = sendGridOptions.Value;
             _logger = logger;
