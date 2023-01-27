@@ -2,8 +2,8 @@
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Update.Options;
 using ISynergy.Framework.Update.Abstractions.Services;
+using ISynergy.Framework.Update.Options;
 using Microsoft.Extensions.Options;
 using System.IO;
 using System.Net.Http;

@@ -4,9 +4,9 @@
 	<PropertyGroup>
 		<TargetFramework>net7.0-windows10.0.19041</TargetFramework>
 		<UseWinUI>true</UseWinUI>
-		<RootNamespace>ISynergy.Framework.UI.Update</RootNamespace>
+		<RootNamespace>ISynergy.Framework.Update</RootNamespace>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<PackageId>I-Synergy.Framework.UI.Update.WinUI</PackageId>
+		<PackageId>I-Synergy.Framework.Update.WinUI</PackageId>
 		<Description>I-Synergy Update Framework for Windows</Description>
 		<PackageTags>I-Synergy, Framework, Update, Windows, WinUI, WinUI3</PackageTags>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
