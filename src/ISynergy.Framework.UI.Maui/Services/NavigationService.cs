@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
@@ -15,5 +16,15 @@ namespace ISynergy.Framework.UI.Services
 
         public Task NavigateAsync(Type viewModel) =>
             Shell.Current.GoToAsync(viewModel.GetViewModelFullName(), true);
+
+        public Task ReplaceMainWindowAsync<T>() where T : IView
+        {
+            if (ServiceLocator.Default.GetInstance<T>() is Page page)
+                Application.Current.MainPage.Dispatcher.Dispatch(() => Application.Current.MainPage = new NavigationPage(page));
+            else
+                throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
+
+            return Task.CompletedTask;
+        }
     }
 }
