@@ -16,5 +16,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
             where TViewModel : class, IViewModel;
 
         Task NavigateAsync(Type viewModel);
+
+        Task ReplaceMainWindowAsync<T>() where T : IView;
     }
 }
