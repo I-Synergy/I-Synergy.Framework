@@ -50,7 +50,7 @@ namespace ISynergy.Framework.Monitoring.Client.Services
             IDialogService dialogService,
             ILanguageService languageService,
             IOptions<ClientMonitorOptions> configurationOptions,
-            ILogger logger)
+            ILogger<ClientMonitorService> logger)
         {
             _dialogService = dialogService;
             _languageService = languageService;

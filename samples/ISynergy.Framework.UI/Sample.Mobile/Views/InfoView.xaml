@@ -21,6 +21,10 @@
 
             <Label Text="Activation"/>
             <Entry Text="{Binding Startup}" IsReadOnly="True"/>
+
+            <Button Text="Set Busy On" Command="{Binding BusyOn_Command}"/>
+            <Button Text="Set Busy Off" Command="{Binding BusyOff_Command}"/>
         </VerticalStackLayout>
+        <ActivityIndicator IsRunning="{Binding BaseCommonServices.BusyService.IsBusy}"/>
     </Grid>
 </c:View>

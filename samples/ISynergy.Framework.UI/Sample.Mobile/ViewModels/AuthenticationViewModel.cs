@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using CommunityToolkit.Mvvm.Input;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Validation;
@@ -34,8 +35,8 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        public Command Login_Command { get; set; }
-        public Command Register_Command { get; set; }
+        public AsyncRelayCommand Login_Command { get; set; }
+        public AsyncRelayCommand Register_Command { get; set; }
 
         public AuthenticationViewModel(
             IContext context, 
@@ -47,12 +48,12 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             _authenticationService = authenticationService;
 
-            Login_Command = new Command(async () => await SignInAsync());
-            Register_Command = new Command(Register);
+            Login_Command = new AsyncRelayCommand(async () => await SignInAsync());
+            Register_Command = new AsyncRelayCommand(SignUpAsync);
         }
 
-        private void Register() =>
-            Application.Current.MainPage.ReplaceMainWindow<IRegistrationView>();
+        private Task SignUpAsync() =>
+            BaseCommonServices.NavigationService.ReplaceMainWindowAsync<IRegistrationView>();
 
         private async Task SignInAsync()
         {

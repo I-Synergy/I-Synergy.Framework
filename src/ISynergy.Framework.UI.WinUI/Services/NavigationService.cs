@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Reflection;
@@ -17,7 +18,7 @@ namespace ISynergy.Framework.UI.Services
     /// Implements the <see cref="INavigationServiceExtended" />
     /// </summary>
     /// <seealso cref="INavigationServiceExtended" />
-    public class NavigationService : INavigationService, INavigationServiceExtended
+    public class NavigationService : INavigationServiceExtended
     {
         /// <summary>
         /// The frame
@@ -317,6 +318,18 @@ namespace ISynergy.Framework.UI.Services
         public Task CleanBackStackAsync()
         {
             _frame.BackStack.Clear();
+            return Task.CompletedTask;
+        }
+
+        public Task ReplaceMainWindowAsync<T>() where T : IView
+        {
+            if (ServiceLocator.Default.GetInstance<T>() is Page page && 
+                Application.Current is BaseApplication baseApplication && 
+                baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
+                    dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => baseApplication.MainWindow.Content = page);
+            else
+                throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
+
             return Task.CompletedTask;
         }
     }
