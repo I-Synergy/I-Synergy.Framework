@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
@@ -13,6 +13,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets or sets the settings command.
         /// </summary>
         /// <value>The settings command.</value>
-        AsyncRelayCommand Settings_Command { get; set; }
+        Command Settings_Command { get; set; }
     }
 }

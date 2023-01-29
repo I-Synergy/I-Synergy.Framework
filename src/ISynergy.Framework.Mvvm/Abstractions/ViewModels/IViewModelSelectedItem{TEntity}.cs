@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
@@ -29,6 +29,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        AsyncRelayCommand<TEntity> Submit_Command { get; }
+        Command<TEntity> Submit_Command { get; }
     }
 }

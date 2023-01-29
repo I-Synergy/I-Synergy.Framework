@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Constants;
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public AsyncRelayCommand<TEntity> Submit_Command { get; set; }
+        public Command<TEntity> Submit_Command { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether [refresh on initialization].
@@ -71,27 +71,27 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the add command.
         /// </summary>
         /// <value>The add command.</value>
-        public AsyncRelayCommand Add_Command { get; set; }
+        public Command Add_Command { get; set; }
         /// <summary>
         /// Gets or sets the edit command.
         /// </summary>
         /// <value>The edit command.</value>
-        public AsyncRelayCommand<TEntity> Edit_Command { get; set; }
+        public Command<TEntity> Edit_Command { get; set; }
         /// <summary>
         /// Gets or sets the delete command.
         /// </summary>
         /// <value>The delete command.</value>
-        public AsyncRelayCommand<TEntity> Delete_Command { get; set; }
+        public Command<TEntity> Delete_Command { get; set; }
         /// <summary>
         /// Gets or sets the refresh command.
         /// </summary>
         /// <value>The refresh command.</value>
-        public AsyncRelayCommand Refresh_Command { get; set; }
+        public Command Refresh_Command { get; set; }
         /// <summary>
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public AsyncRelayCommand<object> Search_Command { get; set; }
+        public Command<object> Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelSummary{TEntity}"/> class.
@@ -128,12 +128,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             Items = new ObservableCollection<TEntity>();
 
-            Add_Command = new AsyncRelayCommand(() => AddAsync());
-            Edit_Command = new AsyncRelayCommand<TEntity>((e) => EditAsync(e.Clone()));
-            Delete_Command = new AsyncRelayCommand<TEntity>((e) => DeleteAsync(e));
-            Refresh_Command = new AsyncRelayCommand(() => RefreshAsync());
-            Search_Command = new AsyncRelayCommand<object>((e) => SearchAsync(e));
-            Submit_Command = new AsyncRelayCommand<TEntity>((e) => SubmitAsync(e));
+            Add_Command = new Command(async () => await AddAsync());
+            Edit_Command = new Command<TEntity>(async (e) => await EditAsync(e.Clone()));
+            Delete_Command = new Command<TEntity>(async (e) => await DeleteAsync(e));
+            Refresh_Command = new Command(async () => await RefreshAsync());
+            Search_Command = new Command<object>(async (e) => await SearchAsync(e));
+            Submit_Command = new Command<TEntity>(async (e) => await SubmitAsync(e));
         }
 
         /// <summary>
