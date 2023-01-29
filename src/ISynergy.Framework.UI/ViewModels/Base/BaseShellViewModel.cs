@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Models;
@@ -7,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -40,52 +40,53 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// Gets or sets the restart update command.
         /// </summary>
         /// <value>The restart update command.</value>
-        public AsyncRelayCommand RestartUpdate_Command { get; set; }
+        public RelayCommand RestartUpdate_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the login command.
         /// </summary>
         /// <value>The login command.</value>
-        public AsyncRelayCommand Login_Command { get; set; }
+        public RelayCommand Login_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the language command.
         /// </summary>
         /// <value>The language command.</value>
-        public AsyncRelayCommand Language_Command { get; set; }
+        public RelayCommand Language_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the color command.
         /// </summary>
         /// <value>The color command.</value>
-        public AsyncRelayCommand Color_Command { get; set; }
+        public RelayCommand Color_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the help command.
         /// </summary>
         /// <value>The help command.</value>
-        public AsyncRelayCommand Help_Command { get; set; }
+        public RelayCommand Help_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the settings command.
         /// </summary>
         /// <value>The settings command.</value>
-        public AsyncRelayCommand Settings_Command { get; set; }
+        public RelayCommand Settings_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the background command.
         /// </summary>
         /// <value>The background command.</value>
-        public AsyncRelayCommand Background_Command { get; set; }
+        public RelayCommand Background_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the feedback command.
         /// </summary>
         /// <value>The feedback command.</value>
-        public AsyncRelayCommand Feedback_Command { get; set; }
+        public RelayCommand Feedback_Command { get; set; }
 
-
-
+        /// <summary>
+        /// Authentication service.
+        /// </summary>
         protected readonly IAuthenticationService _authenticationService;
 
         /// <summary>
@@ -133,14 +134,14 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
-            RestartUpdate_Command = new AsyncRelayCommand(() => ShowDialogRestartAfterUpdateAsync());
+            RestartUpdate_Command = new RelayCommand(() => ShowDialogRestartAfterUpdateAsync());
 
-            Login_Command = new AsyncRelayCommand(() => Task.Run(() => _authenticationService.SignOut()));
-            Language_Command = new AsyncRelayCommand(() => OpenLanguageAsync());
-            Color_Command = new AsyncRelayCommand(() => OpenColorsAsync());
-            Help_Command = new AsyncRelayCommand(() => OpenHelpAsync());
-            Feedback_Command = new AsyncRelayCommand(() => OpenFeedbackAsync());
-            Settings_Command = new AsyncRelayCommand(() => OpenSettingsAsync());
+            Login_Command = new RelayCommand(() => Task.Run(() => _authenticationService.SignOut()));
+            Language_Command = new RelayCommand(() => OpenLanguageAsync());
+            Color_Command = new RelayCommand(() => OpenColorsAsync());
+            Help_Command = new RelayCommand(() => OpenHelpAsync());
+            Feedback_Command = new RelayCommand(() => OpenFeedbackAsync());
+            Settings_Command = new RelayCommand(() => OpenSettingsAsync());
         }
 
         /// <summary>

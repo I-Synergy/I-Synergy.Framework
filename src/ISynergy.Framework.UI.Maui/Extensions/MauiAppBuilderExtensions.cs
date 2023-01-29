@@ -88,6 +88,7 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
             appBuilder.Services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
             appBuilder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
+            appBuilder.Services.AddSingleton<IMessageService, MessageService>();
             appBuilder.Services.AddSingleton<IContext, TContext>();
             appBuilder.Services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
             appBuilder.Services.AddSingleton<ILocalizationService, LocalizationService>();

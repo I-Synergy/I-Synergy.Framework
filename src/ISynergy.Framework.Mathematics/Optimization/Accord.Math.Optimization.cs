@@ -19,7 +19,7 @@
     ///   <see cref="ConjugateGradient">Conjugate Gradient (CG)</see>, <see cref="BoundedBroydenFletcherGoldfarbShanno">
     ///   Bounded</see> and <see cref="BroydenFletcherGoldfarbShanno">Unbounded Broyden–Fletcher–Goldfarb–Shanno (BFGS)</see>,
     ///   <see cref="ResilientBackpropagation">Resilient Backpropagation</see> and a simplified implementation of the 
-    ///   <see cref="TrustRegionNewtonMethod">Trust Region Newton Method (TRON)</see>.</para>
+    ///   <see cref="TrustRegionNewtonMethod">Trust Region Newton _method (TRON)</see>.</para>
     ///   
     /// <para>
     ///   For constrained optimization problems, methods available include the <see cref="AugmentedLagrangian">

@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
@@ -38,49 +38,49 @@ namespace Sample.ViewModels
         /// Gets or sets the display command.
         /// </summary>
         /// <value>The display command.</value>
-        public AsyncRelayCommand Display_Command { get; set; }
+        public RelayCommand Display_Command { get; set; }
         
         /// <summary>
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public AsyncRelayCommand Info_Command { get; set; }
+        public RelayCommand Info_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public AsyncRelayCommand Browse_Command { get; set; }
+        public RelayCommand Browse_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the converter command.
         /// </summary>
         /// <value>The converter command.</value>
-        public AsyncRelayCommand Converter_Command { get; set; }
+        public RelayCommand Converter_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the selection test command.
         /// </summary>
         /// <value>The selection test command.</value>
-        public AsyncRelayCommand SelectionTest_Command { get; set; }
+        public RelayCommand SelectionTest_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the ListView test command.
         /// </summary>
         /// <value>The ListView test command.</value>
-        public AsyncRelayCommand ListViewTest_Command { get; set; }
+        public RelayCommand ListViewTest_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public AsyncRelayCommand ValidationTest_Command { get; set; }
+        public RelayCommand ValidationTest_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the TreeNode test command.
         /// </summary>
-        public AsyncRelayCommand TreeNodeTest_Command { get; set; }
+        public RelayCommand TreeNodeTest_Command { get; set; }
 
-        public AsyncRelayCommand Chart_Command { get; set; }
+        public RelayCommand Chart_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -108,16 +108,16 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             DisplayName = "User";
 
-            Display_Command = new AsyncRelayCommand(OpenDisplayAsync);
-            Info_Command = new AsyncRelayCommand(OpenInfoAsync);
-            Browse_Command = new AsyncRelayCommand(async () => await BrowseFileAsync());
-            Converter_Command = new AsyncRelayCommand(OpenConvertersAsync);
-            SelectionTest_Command = new AsyncRelayCommand(OpenSelectionTestAsync);
-            ListViewTest_Command = new AsyncRelayCommand(OpenListViewTestAsync);
-            ValidationTest_Command = new AsyncRelayCommand(OpenValidationTestAsync);
-            TreeNodeTest_Command = new AsyncRelayCommand(OpenTreenNodeTestAsync);
-            Chart_Command = new AsyncRelayCommand(OpenChartTestAsync);
-            Login_Command = new AsyncRelayCommand(() => Task.Run(() => PopulateNavItems()));
+            Display_Command = new RelayCommand(async ()=> await OpenDisplayAsync());
+            Info_Command = new RelayCommand(async () => await OpenInfoAsync());
+            Browse_Command = new RelayCommand(async () => await BrowseFileAsync());
+            Converter_Command = new RelayCommand(async () => await OpenConvertersAsync());
+            SelectionTest_Command = new RelayCommand(async () => await OpenSelectionTestAsync());
+            ListViewTest_Command = new RelayCommand(async () => await OpenListViewTestAsync());
+            ValidationTest_Command = new RelayCommand(async () => await OpenValidationTestAsync());
+            TreeNodeTest_Command = new RelayCommand(async () => await OpenTreenNodeTestAsync());
+            Chart_Command = new RelayCommand(async () => await OpenChartTestAsync());
+            Login_Command = new RelayCommand(() => Task.Run(() => PopulateNavItems()));
 
             PopulateNavItems();
         }

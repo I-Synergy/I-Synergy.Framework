@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Events;
+using System.Reflection;
 
 namespace ISynergy.Framework.Core.Events
 {
@@ -11,7 +12,7 @@ namespace ISynergy.Framework.Core.Events
     /// <typeparam name="TResult">The type of the t result.</typeparam>
     /// <seealso cref="WeakFunc{TResult}" />
     /// <seealso cref="IExecuteWithObjectAndResult" />
-    public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResult
+    public class WeakFunc<T, TResult> : IExecuteWithObjectAndResult
     {
         /// <summary>
         /// The static function
@@ -19,47 +20,53 @@ namespace ISynergy.Framework.Core.Events
         private Func<T, TResult> _staticFunc;
 
         /// <summary>
-        /// Gets the name of the method.
+        /// Gets or sets the method.
         /// </summary>
-        /// <value>The name of the method.</value>
-        public override string MethodName
+        /// <value>The method.</value>
+        private MethodInfo _method;
+
+        /// <summary>
+        /// Gets or sets the function reference.
+        /// </summary>
+        /// <value>The function reference.</value>
+        private WeakReference _funcReference;
+
+        /// <summary>
+        /// Gets or sets the live reference.
+        /// </summary>
+        /// <value>The live reference.</value>
+        private object _liveReference;
+
+        /// <summary>
+        /// Gets or sets the reference.
+        /// </summary>
+        /// <value>The reference.</value>
+        private WeakReference _reference;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is static.
+        /// </summary>
+        /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
+        public bool IsStatic
         {
             get
             {
-                if (_staticFunc is not null)
-                {
-                    return _staticFunc.Method.Name;
-                }
-
-                return Method.Name;
+                return _staticFunc is not null;
             }
         }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is alive.
+        /// Gets the name of the method.
         /// </summary>
-        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
-        public override bool IsAlive
+        /// <value>The name of the method.</value>
+        public string MethodName
         {
             get
             {
-                if (_staticFunc is null
-                    && Reference is null)
-                {
-                    return false;
-                }
-
                 if (_staticFunc is not null)
-                {
-                    if (Reference is not null)
-                    {
-                        return Reference.IsAlive;
-                    }
+                    return _staticFunc.Method.Name;
 
-                    return true;
-                }
-
-                return Reference.IsAlive;
+                return _method.Name;
             }
         }
 
@@ -89,23 +96,103 @@ namespace ISynergy.Framework.Core.Events
                 {
                     // Keep a reference to the target to control the
                     // WeakAction's lifetime.
-                    Reference = new WeakReference(target);
+                    _reference = new WeakReference(target);
                 }
 
                 return;
             }
 
-            Method = func.Method;
-            FuncReference = new WeakReference(func.Target);
-            LiveReference = keepTargetAlive ? func.Target : null;
-            Reference = new WeakReference(target);
+            _method = func.Method;
+            _funcReference = new WeakReference(func.Target);
+            _liveReference = keepTargetAlive ? func.Target : null;
+            _reference = new WeakReference(target);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is alive.
+        /// </summary>
+        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
+        public bool IsAlive
+        {
+            get
+            {
+                if (_staticFunc is null
+                    && _reference is null
+                    && _liveReference is null)
+                {
+                    return false;
+                }
+
+                if (_staticFunc is not null)
+                {
+                    if (_reference is not null)
+                    {
+                        return _reference.IsAlive;
+                    }
+
+                    return true;
+                }
+
+                // Non static action
+
+                if (_liveReference is not null)
+                {
+                    return true;
+                }
+
+                if (_reference is not null)
+                {
+                    return _reference.IsAlive;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the target.
+        /// </summary>
+        /// <value>The target.</value>
+        public object Target
+        {
+            get
+            {
+                if (_reference is null)
+                {
+                    return null;
+                }
+
+                return _reference.Target;
+            }
+        }
+
+        /// <summary>
+        /// Gets the function target.
+        /// </summary>
+        /// <value>The function target.</value>
+        private object FuncTarget
+        {
+            get
+            {
+                if (_liveReference is not null)
+                {
+                    return _liveReference;
+                }
+
+                if (_funcReference is null)
+                {
+                    return null;
+                }
+
+                return _funcReference.Target;
+            }
         }
 
         /// <summary>
         /// Executes this instance.
         /// </summary>
         /// <returns>T.</returns>
-        public new TResult Execute()
+        public TResult Execute()
         {
             return Execute(default(T));
         }
@@ -126,12 +213,12 @@ namespace ISynergy.Framework.Core.Events
 
             if (IsAlive)
             {
-                if (Method is not null
-                    && (LiveReference is not null
-                        || FuncReference is not null)
+                if (_method is not null
+                    && (_liveReference is not null
+                        || _funcReference is not null)
                     && funcTarget is not null)
                 {
-                    return (TResult)Method.Invoke(
+                    return (TResult)_method.Invoke(
                         funcTarget,
                         new object[]
                         {
@@ -158,10 +245,14 @@ namespace ISynergy.Framework.Core.Events
         /// <summary>
         /// Marks for deletion.
         /// </summary>
-        public new void MarkForDeletion()
+        public void MarkForDeletion()
         {
             _staticFunc = null;
-            base.MarkForDeletion();
+            _reference = null;
+            _funcReference = null;
+            _liveReference = null;
+            _method = null;
+            _staticFunc = null;
         }
     }
 }

@@ -25,6 +25,7 @@ namespace ISynergy.Framework.UI.Controls
         /// Initializes a new instance of the view class.
         /// </summary>
         protected View()
+            : this(null)
         {
         }
 
@@ -33,7 +34,6 @@ namespace ISynergy.Framework.UI.Controls
         /// </summary>
         /// <param name="viewModel"></param>
         protected View(IViewModel viewModel)
-            : this()
         {
             ViewModel = viewModel;
             Loaded += View_Loaded;

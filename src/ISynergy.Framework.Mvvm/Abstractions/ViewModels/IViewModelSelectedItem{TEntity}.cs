@@ -29,6 +29,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        Command<TEntity> Submit_Command { get; }
+        RelayCommand<TEntity> Submit_Command { get; }
     }
 }

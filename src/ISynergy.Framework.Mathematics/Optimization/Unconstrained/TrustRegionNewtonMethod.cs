@@ -41,7 +41,7 @@ using System.Diagnostics;
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {
     /// <summary>
-    ///     Simplified Trust Region Newton Method (TRON) for non-linear optimization.
+    ///     Simplified Trust Region Newton _method (TRON) for non-linear optimization.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -91,7 +91,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
     ///             <item>
     ///                 <description>
     ///                     <a href="http://www.cs.iastate.edu/~honavar/keerthi-svm.pdf">
-    ///                         Chih-Jen Lin and Jorge J. Moré. 1999. Newton's Method for Large Bound-Constrained
+    ///                         Chih-Jen Lin and Jorge J. Moré. 1999. Newton's _method for Large Bound-Constrained
     ///                         Optimization Problems. SIAM J. on Optimization 9, 4 (April 1999), 1100-1127.
     ///                     </a>
     ///                 </description>

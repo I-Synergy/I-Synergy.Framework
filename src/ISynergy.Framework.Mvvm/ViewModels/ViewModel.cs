@@ -60,7 +60,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the close command.
         /// </summary>
         /// <value>The close command.</value>
-        public Command Close_Command { get; protected set; }
+        public RelayCommand Close_Command { get; protected set; }
 
         /// <summary>
         /// Gets or sets the Title property value.
@@ -112,7 +112,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             PropertyChanged += OnPropertyChanged;
             IsInitialized = false;
 
-            Close_Command = new Command(Close);
+            Close_Command = new RelayCommand(Close);
         }
 
         /// <summary>

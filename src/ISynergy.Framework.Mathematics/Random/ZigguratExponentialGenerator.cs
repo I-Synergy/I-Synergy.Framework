@@ -26,7 +26,7 @@ namespace ISynergy.Framework.Mathematics.Random
     ///             </item>
     ///             <item>
     ///                 <description>
-    ///                     George Marsaglia, Wai Wan Tsang, The Ziggurat Method for Generating Random Variables,
+    ///                     George Marsaglia, Wai Wan Tsang, The Ziggurat _method for Generating Random Variables,
     ///                     Journal of Statistical Software, Volume 5, Number 8, October 2000, seven pages.
     ///                 </description>
     ///             </item>
