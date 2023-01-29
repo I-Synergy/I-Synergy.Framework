@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -219,8 +219,8 @@ namespace ISynergy.Framework.Core.Base
         /// changed.</param>
         protected virtual void Broadcast(T oldValue, T newValue)
         {
-            var message = new PropertyChangedMessage<T>(this, Name, oldValue, newValue);
-            WeakReferenceMessenger.Default.Send(message);
+            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, Name);
+            MessageService.Default.Send(message);
         }
     }
 }
