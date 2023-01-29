@@ -32,32 +32,32 @@ namespace Sample.ViewModels
         /// Gets or sets the select single command.
         /// </summary>
         /// <value>The select single command.</value>
-        public RelayCommand SelectSingle_Command { get; set; }
+        public AsyncRelayCommand SelectSingle_Command { get; set; }
         /// <summary>
         /// Gets or sets the select multiple command.
         /// </summary>
         /// <value>The select multiple command.</value>
-        public RelayCommand SelectMultiple_Command { get; set; }
+        public AsyncRelayCommand SelectMultiple_Command { get; set; }
 
         /// <summary>
         /// Show Yes/No dialog.
         /// </summary>
-        public RelayCommand ShowDialogYesNo { get; set; }
+        public AsyncRelayCommand ShowDialogYesNo { get; set; }
 
         /// <summary>
         /// Show Yes/No/Cancel dialog.
         /// </summary>
-        public RelayCommand ShowDialogYesNoCancel { get; set; }
+        public AsyncRelayCommand ShowDialogYesNoCancel { get; set; }
 
         /// <summary>
         /// Show Ok dialog.
         /// </summary>
-        public RelayCommand ShowDialogOk { get; set; }
+        public AsyncRelayCommand ShowDialogOk { get; set; }
 
         /// <summary>
         /// Show Ok/Cancel dialog.
         /// </summary>
-        public RelayCommand ShowDialogOkCancel { get; set; }
+        public AsyncRelayCommand ShowDialogOkCancel { get; set; }
 
         /// <summary>
         /// Gets or sets the selected test items.
@@ -77,13 +77,12 @@ namespace Sample.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            SelectSingle_Command = new RelayCommand(async () => await SelectSingleAsync());
-            SelectMultiple_Command = new RelayCommand(async () => await SelectMultipleAsync());
-
-            ShowDialogYesNo = new RelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNo));
-            ShowDialogYesNoCancel = new RelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
-            ShowDialogOk = new RelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
-            ShowDialogOkCancel = new RelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
+            SelectSingle_Command = new AsyncRelayCommand(SelectSingleAsync);
+            SelectMultiple_Command = new AsyncRelayCommand(SelectMultipleAsync);
+            ShowDialogYesNo = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNo));
+            ShowDialogYesNoCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
+            ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));
+            ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
         }
 
         private async Task ShowDialogAsync(MessageBoxButton buttons)

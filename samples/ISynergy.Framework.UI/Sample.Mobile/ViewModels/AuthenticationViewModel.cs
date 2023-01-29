@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 
@@ -31,8 +32,8 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        public Command Login_Command { get; set; }
-        public Command Register_Command { get; set; }
+        public AsyncRelayCommand Login_Command { get; set; }
+        public AsyncRelayCommand Register_Command { get; set; }
 
         public AuthenticationViewModel(
             IContext context, 
@@ -44,8 +45,8 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             _authenticationService = authenticationService;
 
-            Login_Command = new Command(async () => await SignInAsync());
-            Register_Command = new Command(async () => await SignUpAsync());
+            Login_Command = new AsyncRelayCommand(SignInAsync);
+            Register_Command = new AsyncRelayCommand(SignUpAsync);
         }
 
         private Task SignUpAsync() =>

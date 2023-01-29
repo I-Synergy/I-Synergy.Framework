@@ -89,8 +89,8 @@ namespace Sample.ViewModels
             Copyrights = commonServices.InfoService.Copyrights;
             Startup = ((Context)context).Environment.ToString();
             
-            BusyOn_Command = new RelayCommand(() => commonServices.BusyService.StartBusy());
-            BusyOff_Command = new RelayCommand(() => commonServices.BusyService.EndBusy());
+            BusyOn_Command = new RelayCommand(commonServices.BusyService.StartBusy);
+            BusyOff_Command = new RelayCommand(commonServices.BusyService.EndBusy);
 
             //throw new Exception("Test exception for logging!");
         }

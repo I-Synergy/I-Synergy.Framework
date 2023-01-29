@@ -51,7 +51,7 @@ namespace Sample.MessageBus.Publisher
 
             await Task.WhenAll(
                 Task.WhenAny(
-                    Task.Run(() => Console.ReadKey()),
+                    Task.Run(Console.ReadKey),
                     Task.Delay(TimeSpan.FromSeconds(10))
                 ).ContinueWith((t) => cancellationTokenSource.Cancel()),
                 allPublishes);

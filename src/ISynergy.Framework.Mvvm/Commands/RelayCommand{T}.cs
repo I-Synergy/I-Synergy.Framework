@@ -1,135 +1,167 @@
-﻿using ISynergy.Framework.Core.Events;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Abstractions.Commands;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace ISynergy.Framework.Mvvm.Commands
 {
     /// <summary>
-    /// Class RelayCommand.
-    /// Implements the <see cref="ICommand" />
+    /// A generic _command whose sole purpose is to relay its functionality to other
+    /// objects by invoking delegates. The default return value for the CanExecute
+    /// method is <see langword="true"/>. This class allows you to accept _command parameters
+    /// in the <see cref="Execute(T)"/> and <see cref="CanExecute(T)"/> callback methods.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <seealso cref="ICommand" />
-    public class RelayCommand<T> : ICommand
+    /// <typeparam name="T">The type of parameter being passed as input to the callbacks.</typeparam>
+    public sealed class RelayCommand<T> : IRelayCommand<T>
     {
         /// <summary>
-        /// The execute
+        /// The <see cref="Action"/> to invoke when <see cref="Execute(T)"/> is used.
         /// </summary>
-        private readonly WeakAction<T> _execute;
+        private readonly Action<T?> _execute;
 
         /// <summary>
-        /// The can execute
+        /// The optional action to invoke when <see cref="CanExecute(T)"/> is used.
         /// </summary>
-        private readonly WeakFunc<T, bool> _canExecute;
+        private readonly Predicate<T?>? _canExecute;
+
+        /// <inheritdoc/>
+        public event EventHandler? CanExecuteChanged;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
+        /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class that can always _execute.
         /// </summary>
-        /// <param name="execute">The execute.</param>
-        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-        public RelayCommand(Action<T> execute, bool keepTargetAlive = false)
-            : this(execute, null, keepTargetAlive)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
-        /// </summary>
-        /// <param name="execute">The execute.</param>
-        /// <param name="canExecute">The can execute.</param>
-        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-        /// <exception cref="ArgumentNullException">execute</exception>
-        public RelayCommand(Action<T> execute, Func<T, bool> canExecute, bool keepTargetAlive = false)
+        /// <param name="execute">The execution logic.</param>
+        /// <remarks>
+        /// Due to the fact that the <see cref="System.Windows.Input.ICommand"/> interface exposes methods that accept a
+        /// nullable <see cref="object"/> parameter, it is recommended that if <typeparamref name="T"/> is a reference type,
+        /// you should always declare it as nullable, and to always perform checks within <paramref name="execute"/>.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
+        public RelayCommand(Action<T?> execute)
         {
             Argument.IsNotNull(execute);
 
-            _execute = new WeakAction<T>(execute, keepTargetAlive);
+            _execute = execute;
+        }
 
-            if (canExecute is not null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
+        /// </summary>
+        /// <param name="execute">The execution logic.</param>
+        /// <param name="canExecute">The execution status logic.</param>
+        /// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
+        public RelayCommand(Action<T?> execute, Predicate<T?> canExecute)
+            : this(execute)
+        {
+            Argument.IsNotNull(canExecute);
+
+            _canExecute = canExecute;
+        }
+
+        /// <inheritdoc/>
+        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool CanExecute(T? parameter) => _canExecute?.Invoke(parameter) != false;
+
+        /// <inheritdoc/>
+        public bool CanExecute(object? parameter)
+        {
+            // Special case a null value for a value type argument type.
+            // This ensures that no exceptions are thrown during initialization.
+            if (parameter is null && default(T) is not null)
+                return false;
+
+            if (!TryGetCommandArgument(parameter, out T? result))
+                ThrowArgumentExceptionForInvalidCommandArgument(parameter);
+
+            return CanExecute(result);
+        }
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Execute(T? parameter)
+        {
+            try
             {
-                _canExecute = new WeakFunc<T, bool>(canExecute, keepTargetAlive);
+                _execute(parameter);
+            }
+            catch (Exception ex)
+            {
+                var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+                
+                if (ex.InnerException != null)
+                    exceptionHandlerService.HandleExceptionAsync(ex.InnerException).Await();    
+                else
+                    exceptionHandlerService.HandleExceptionAsync(ex).Await();
             }
         }
 
-        /// <summary>
-        /// Occurs when changes occur that affect whether or not the command should execute.
-        /// </summary>
-        public event EventHandler CanExecuteChanged;
-
-        /// <summary>
-        /// Raises the can execute changed.
-        /// </summary>
-        public void RaiseCanExecuteChanged()
+        /// <inheritdoc/>
+        public void Execute(object? parameter)
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            if (!TryGetCommandArgument(parameter, out T? result))
+                ThrowArgumentExceptionForInvalidCommandArgument(parameter);
+
+            Execute(result);
         }
 
         /// <summary>
-        /// Defines the method that determines whether the command can execute in its current state.
+        /// Tries to get a _command argument of compatible type <typeparamref name="T"/> from an input <see cref="object"/>.
         /// </summary>
-        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
-        /// <returns><see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.</returns>
-        public bool CanExecute(object parameter)
+        /// <param name="parameter">The input parameter.</param>
+        /// <param name="result">The resulting <typeparamref name="T"/> value, if any.</param>
+        /// <returns>Whether or not a compatible _command argument could be retrieved.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool TryGetCommandArgument(object? parameter, out T? result)
         {
-            if (_canExecute is null)
+            // If the argument is null and the default value of T is also null, then the
+            // argument is valid. T might be a reference type or a nullable value type.
+            if (parameter is null && default(T) is null)
             {
+                result = default;
+
                 return true;
             }
 
-            if (_canExecute.IsStatic || _canExecute.IsAlive)
+            // Check if the argument is a T value, so either an instance of a type or a derived
+            // type of T is a reference type, an interface implementation if T is an interface,
+            // or a boxed value type in case T was a value type.
+            if (parameter is T argument)
             {
-                if (parameter is null
-                    && typeof(T).IsValueType)
-                {
-                    return _canExecute.Execute(default);
-                }
+                result = argument;
 
-                if (parameter is null || parameter is T)
-                {
-                    return _canExecute.Execute((T)parameter);
-                }
+                return true;
             }
+
+            result = default;
 
             return false;
         }
 
         /// <summary>
-        /// Defines the method to be called when the command is invoked.
+        /// Throws an <see cref="ArgumentException"/> if an invalid _command argument is used.
         /// </summary>
-        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
-        public virtual void Execute(object parameter)
+        /// <param name="parameter">The input parameter.</param>
+        /// <exception cref="ArgumentException">Thrown with an error message to give info on the invalid parameter.</exception>
+        internal static void ThrowArgumentExceptionForInvalidCommandArgument(object? parameter)
         {
-            var val = parameter;
-
-            if (parameter is not null
-                && parameter.GetType() != typeof(T))
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static Exception GetException(object? parameter)
             {
-                if (parameter is IConvertible)
-                {
-                    val = Convert.ChangeType(parameter, typeof(T), null);
-                }
+                if (parameter is null)
+                    return new ArgumentException($"Parameter \"{nameof(parameter)}\" (object) must not be null, as the command type requires an argument of type {typeof(T)}.", nameof(parameter));
+
+                return new ArgumentException($"Parameter \"{nameof(parameter)}\" (object) cannot be of type {parameter.GetType()}, as the command type requires an argument of type {typeof(T)}.", nameof(parameter));
             }
 
-            if (CanExecute(val)
-                && _execute is not null
-                && (_execute.IsStatic || _execute.IsAlive))
-            {
-                if (val is null)
-                {
-                    if (typeof(T).IsValueType)
-                    {
-                        _execute.Execute(default);
-                    }
-                    else
-                    {
-                        _execute.Execute((T)val);
-                    }
-                }
-                else
-                {
-                    _execute.Execute((T)val);
-                }
-            }
+            throw GetException(parameter);
         }
     }
 }

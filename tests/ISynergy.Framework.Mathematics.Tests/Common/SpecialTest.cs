@@ -181,7 +181,7 @@
         [TestMethod]
         public void SoftmaxTest()
         {
-            Func<double, double> e = (z) => System.Math.Exp(z);
+            Func<double, double> e = System.Math.Exp;
 
             double[] x = { 1.6793491276384929E-12, 0.014072312433917435 };
             double[] expected = new[]

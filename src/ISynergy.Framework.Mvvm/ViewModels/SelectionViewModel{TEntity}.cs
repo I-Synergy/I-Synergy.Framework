@@ -63,7 +63,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public RelayCommand<string> Search_Command { get; set; }
+        public AsyncRelayCommand<string> Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
@@ -106,7 +106,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Search_Command = new RelayCommand<string>((e) => QueryItemsAsync(e));
+            Search_Command = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
             RawItems = items;
             Items = new ObservableCollection<object>(items);
             SelectedItems = new List<object>(selectedItems);

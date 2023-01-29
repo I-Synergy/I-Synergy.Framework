@@ -9,6 +9,7 @@ using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -131,10 +132,10 @@ namespace ISynergy.Framework.UI.ViewModels
             set => SetValue(value);
         }
 
-        public Command Register_Command { get; set; }
-        public Command ValidateMail_Command { get; set; }
-        public Command Login_Command { get; set; }
-        public Command SelectModules_Command { get; set; }
+        public AsyncRelayCommand Register_Command { get; set; }
+        public AsyncRelayCommand ValidateMail_Command { get; set; }
+        public AsyncRelayCommand Login_Command { get; set; }
+        public AsyncRelayCommand SelectModules_Command { get; set; }
 
         public RegistrationViewModel(
             IContext context,
@@ -195,10 +196,10 @@ namespace ISynergy.Framework.UI.ViewModels
                     Properties[nameof(SelectedCountry)].Errors.Add(commonServices.LanguageService.GetString("WarningNoCountrySelected"));
             });
 
-            Register_Command = new Command(async () => await RegisterAsync());
-            ValidateMail_Command = new Command(async () => await ValidateMailAsync());
-            Login_Command = new Command(async () => await SignInAsync());
-            SelectModules_Command = new Command(async () => await SelectModulesAsync());
+            Register_Command = new AsyncRelayCommand(RegisterAsync);
+            ValidateMail_Command = new AsyncRelayCommand(ValidateMailAsync);
+            Login_Command = new AsyncRelayCommand(SignInAsync);
+            SelectModules_Command = new AsyncRelayCommand(SelectModulesAsync);
 
             ArePickersAvailable = false;
         }
