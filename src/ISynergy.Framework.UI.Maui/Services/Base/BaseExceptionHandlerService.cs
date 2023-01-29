@@ -65,7 +65,7 @@ namespace ISynergy.Framework.UI.Services.Base
                     }
                     else if (exception is NotImplementedException)
                     {
-                        await _dialogService.ShowInformationAsync(_languageService.GetString("ExceptionFutureModule"));
+                        await _dialogService.ShowInformationAsync(_languageService.GetString("WarningFutureModule"), "Features");
                     }
                     else if (exception is UnauthorizedAccessException accessException)
                     {

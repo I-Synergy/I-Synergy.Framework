@@ -266,7 +266,7 @@
             };
 
             // Using a convertor:
-            double[,] a = Matrix.Convert(from, x => Double.Parse(x));
+            double[,] a = Matrix.Convert(from, Double.Parse);
 
             // Using a default converter for the type:
             double[,] b = Matrix.Convert<string, double>(from);
@@ -306,7 +306,7 @@
             };
 
             // Using a convertor:
-            double[][] a = Jagged.Convert(from, x => Double.Parse(x));
+            double[][] a = Jagged.Convert(from, Double.Parse);
 
             // Using a default converter for the type:
             double[][] b = Jagged.Convert<string, double>(from);

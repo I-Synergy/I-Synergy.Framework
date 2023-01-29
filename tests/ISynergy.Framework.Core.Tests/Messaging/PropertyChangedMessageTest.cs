@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
-using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Messaging.Base;
+using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -9,6 +9,12 @@ namespace ISynergy.Framework.Core.Messaging.Tests
     [TestClass]
     public class PropertyChangedMessageTest
     {
+        [TestMethod]
+        public void TestPropertyChangedMessage()
+        {
+            ExecuteTest(null, null);
+        }
+
         [TestMethod]
         public void TestPropertyChangedMessageBaseFromViewModelBase()
         {
@@ -29,16 +35,19 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             var testViewModel = new TestViewModel(previousDateTime, (InvalidOperationException)PreviousException);
 
-            WeakReferenceMessenger.Default.Reset();
+            MessageService.Reset();
 
-            WeakReferenceMessenger.Default.Register<PropertyChangedMessage<InvalidOperationException>>(
+            MessageService.Default.Register<PropertyChangedMessageBase>(
                 this,
-                (s, e) =>
+                true,
+                m =>
                 {
-                    receivedSender = e.Sender;
+                    receivedSender = m.Sender;
+                    receivedTarget = m.Target;
                     messageWasReceived = true;
 
-                    var exceptionMessage = e;
+                    var exceptionMessage =
+                        m as PropertyChangedMessage<InvalidOperationException>;
 
                     if (exceptionMessage is not null && exceptionMessage.PropertyName == nameof(TestViewModel.MyException))
                     {
@@ -48,16 +57,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                             exceptionMessage.NewValue;
                         return;
                     }
-                });
 
-            WeakReferenceMessenger.Default.Register<PropertyChangedMessage<DateTime>>(
-                this,
-                (s, e) =>
-                {
-                    receivedSender = e.Sender;
-                    messageWasReceived = true;
-
-                    var dateMessage = e;
+                    var dateMessage = m as PropertyChangedMessage<DateTime>;
 
                     if (dateMessage is not null && dateMessage.PropertyName == nameof(TestViewModel.MyDate))
                     {
@@ -127,38 +128,43 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Exception receivedCurrentException = null;
 
             object receivedSender = null;
+            object receivedTarget = null;
 
             var messageWasReceived = false;
 
             var testViewModel = new TestViewModel(previousDateTime, (InvalidOperationException)PreviousException);
 
-            WeakReferenceMessenger.Default.Reset();
+            MessageService.Reset();
 
-            WeakReferenceMessenger.Default.Register<PropertyChangedMessage<DateTime>>(this,
-                                                                         (s, e) =>
+            MessageService.Default.Register<PropertyChangedMessage<DateTime>>(this,
+                                                                         m =>
                                                                          {
-                                                                             receivedSender = e.Sender;
+                                                                             receivedSender = m.Sender;
+                                                                             receivedTarget = m.Target;
                                                                              messageWasReceived = true;
 
-                                                                             if (e.PropertyName == nameof(TestViewModel.MyDate))
+                                                                             if (m.PropertyName == nameof(TestViewModel.MyDate))
                                                                              {
-                                                                                 receivedPreviousDateTime = e.OldValue;
-                                                                                 receivedCurrentDateTime = e.NewValue;
+                                                                                 receivedPreviousDateTime = m.OldValue;
+                                                                                 receivedCurrentDateTime = m.NewValue;
+                                                                                 return;
                                                                              }
                                                                          });
 
-            WeakReferenceMessenger.Default.Register<PropertyChangedMessage<InvalidOperationException>>(this,
-                (s, e) =>
-                {
-                    receivedSender = e.Sender;
-                    messageWasReceived = true;
+            MessageService.Default.Register<PropertyChangedMessage<InvalidOperationException>>(this,
+                                                                                          m =>
+                                                                                          {
+                                                                                              receivedSender = m.Sender;
+                                                                                              receivedTarget = m.Target;
+                                                                                              messageWasReceived = true;
 
-                    if (e.PropertyName == nameof(TestViewModel.MyException))
-                    {
-                        receivedPreviousException = e.OldValue;
-                        receivedCurrentException = e.NewValue;
-                    }
-                });
+                                                                                              if (m.PropertyName == nameof(TestViewModel.MyException))
+                                                                                              {
+                                                                                                  receivedPreviousException = m.OldValue;
+                                                                                                  receivedCurrentException = m.NewValue;
+                                                                                                  return;
+                                                                                              }
+                                                                                          });
 
             Assert.AreEqual(DateTime.MinValue, receivedPreviousDateTime);
             Assert.AreEqual(DateTime.MinValue, receivedCurrentDateTime);
@@ -169,30 +175,35 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             Assert.IsTrue(messageWasReceived);
             Assert.AreEqual(testViewModel, receivedSender);
+            Assert.AreEqual(null, receivedTarget);
             Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
             Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
             Assert.AreEqual(null, receivedPreviousException);
             Assert.AreEqual(null, receivedCurrentException);
 
             receivedSender = null;
+            receivedTarget = null;
             messageWasReceived = false;
 
             testViewModel.MyException = currentException;
 
             Assert.IsTrue(messageWasReceived);
             Assert.AreEqual(testViewModel, receivedSender);
+            Assert.AreEqual(null, receivedTarget);
             Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
             Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
             Assert.AreEqual(PreviousException, receivedPreviousException);
             Assert.AreEqual(currentException, receivedCurrentException);
 
             receivedSender = null;
+            receivedTarget = null;
             messageWasReceived = false;
 
             testViewModel.AnotherDate = currentDateTime + TimeSpan.FromDays(3);
 
             Assert.IsTrue(messageWasReceived);
             Assert.AreEqual(testViewModel, receivedSender);
+            Assert.AreEqual(null, receivedTarget);
             Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
             Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
             Assert.AreEqual(PreviousException, receivedPreviousException);
@@ -202,12 +213,18 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestPropertyChangedMessageWithSender()
         {
-            ExecuteTest(this);
+            ExecuteTest(this, null);
+        }
+
+        [TestMethod]
+        public void TestPropertyChangedMessageWithSenderAndTarget()
+        {
+            ExecuteTest(this, this);
         }
 
         // Helpers
 
-        private void ExecuteTest(object sender)
+        private void ExecuteTest(object sender, object target)
         {
             const string PropertyName1 = "MyProperty1";
             const string PropertyName2 = "MyProperty2";
@@ -222,24 +239,28 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             string receivedOldContent2 = null;
 
             object receivedSender = null;
+            object receivedTarget = null;
 
-            WeakReferenceMessenger.Default.Reset();
+            MessageService.Reset();
 
-            WeakReferenceMessenger.Default.Register<PropertyChangedMessage<string>>(this,
-                                                                       (s,e )=>
+            MessageService.Default.Register<PropertyChangedMessage<string>>(this,
+                                                                       m =>
                                                                        {
-                                                                           receivedSender = e.Sender;
+                                                                           receivedSender = m.Sender;
+                                                                           receivedTarget = m.Target;
 
-                                                                           if (e.PropertyName == PropertyName1)
+                                                                           if (m.PropertyName == PropertyName1)
                                                                            {
-                                                                               receivedNewContent1 = e.NewValue;
-                                                                               receivedOldContent1 = e.OldValue;
+                                                                               receivedNewContent1 = m.NewValue;
+                                                                               receivedOldContent1 = m.OldValue;
+                                                                               return;
                                                                            }
 
-                                                                           if (e.PropertyName == PropertyName2)
+                                                                           if (m.PropertyName == PropertyName2)
                                                                            {
-                                                                               receivedNewContent2 = e.NewValue;
-                                                                               receivedOldContent2 = e.OldValue;
+                                                                               receivedNewContent2 = m.NewValue;
+                                                                               receivedOldContent2 = m.OldValue;
+                                                                               return;
                                                                            }
                                                                        });
 
@@ -248,22 +269,58 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             Assert.AreEqual(null, receivedNewContent2);
             Assert.AreEqual(null, receivedOldContent2);
 
-            var propertyMessage1 = new PropertyChangedMessage<string>(this, PropertyName1, TestOldContent1, TestNewContent1); ;
-            var propertyMessage2 = new PropertyChangedMessage<string>(this, PropertyName2, TestOldContent2, TestNewContent2);
-            
-            WeakReferenceMessenger.Default.Send(propertyMessage1);
+            PropertyChangedMessage<string> propertyMessage1;
+            PropertyChangedMessage<string> propertyMessage2;
+
+            if (sender is null)
+            {
+                propertyMessage1 = new PropertyChangedMessage<string>(TestOldContent1, TestNewContent1, PropertyName1);
+                propertyMessage2 = new PropertyChangedMessage<string>(TestOldContent2, TestNewContent2, PropertyName2);
+            }
+            else
+            {
+                if (target is null)
+                {
+                    propertyMessage1 = new PropertyChangedMessage<string>(sender,
+                                                                          TestOldContent1,
+                                                                          TestNewContent1,
+                                                                          PropertyName1);
+                    propertyMessage2 = new PropertyChangedMessage<string>(sender,
+                                                                          TestOldContent2,
+                                                                          TestNewContent2,
+                                                                          PropertyName2);
+                }
+                else
+                {
+                    propertyMessage1 = new PropertyChangedMessage<string>(sender,
+                                                                          target,
+                                                                          TestOldContent1,
+                                                                          TestNewContent1,
+                                                                          PropertyName1);
+                    propertyMessage2 = new PropertyChangedMessage<string>(sender,
+                                                                          target,
+                                                                          TestOldContent2,
+                                                                          TestNewContent2,
+                                                                          PropertyName2);
+                }
+            }
+
+            MessageService.Default.Send(propertyMessage1);
 
             Assert.AreEqual(sender, receivedSender);
+            Assert.AreEqual(target, receivedTarget);
             Assert.AreEqual(TestOldContent1, receivedOldContent1);
             Assert.AreEqual(TestNewContent1, receivedNewContent1);
             Assert.AreEqual(null, receivedOldContent2);
             Assert.AreEqual(null, receivedNewContent2);
 
+            receivedTarget = null;
             receivedSender = null;
 
-            WeakReferenceMessenger.Default.Send(propertyMessage2);
+            MessageService.Default.Send(propertyMessage2);
 
             Assert.AreEqual(sender, receivedSender);
+            Assert.AreEqual(target, receivedTarget);
             Assert.AreEqual(TestOldContent1, receivedOldContent1);
             Assert.AreEqual(TestNewContent1, receivedNewContent1);
             Assert.AreEqual(TestOldContent2, receivedOldContent2);

@@ -40,7 +40,7 @@ namespace Sample.MessageBus.Subscriber
 
             await Task.WhenAll(
                 Task.WhenAny(
-                    Task.Run(() => Console.ReadKey()),
+                    Task.Run(Console.ReadKey),
                     Task.Delay(TimeSpan.FromSeconds(60))
                 ).ContinueWith(async (t) =>
                 {

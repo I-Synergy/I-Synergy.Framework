@@ -1,16 +1,15 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using NugetUnlister.Common.Abstractions;
 using NugetUnlister.Common.Models;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using ISynergy.Framework.Core.Extensions;
 
 namespace NugetUnlister.Common.ViewModels
 {

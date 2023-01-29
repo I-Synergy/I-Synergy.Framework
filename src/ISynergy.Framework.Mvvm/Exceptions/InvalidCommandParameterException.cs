@@ -10,8 +10,8 @@ namespace ISynergy.Framework.Mvvm.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidCommandParameterException"/> class.
         /// </summary>
-        /// <param name="expectedType">Expected parameter type for Command.Execute.</param>
-        /// <param name="actualType">Actual parameter type for Command.Execute.</param>
+        /// <param name="expectedType">Expected parameter type for RelayCommand.Execute.</param>
+        /// <param name="actualType">Actual parameter type for RelayCommand.Execute.</param>
         /// <param name="innerException">Inner Exception</param>
         public InvalidCommandParameterException(Type expectedType, Type actualType, Exception innerException) : base(CreateErrorMessage(expectedType, actualType), innerException)
         {
@@ -20,8 +20,8 @@ namespace ISynergy.Framework.Mvvm.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidCommandParameterException"/> class.
         /// </summary>
-        /// <param name="expectedType">Expected parameter type for Command.Execute.</param>
-        /// <param name="actualType">Actual parameter type for Command.Execute.</param>
+        /// <param name="expectedType">Expected parameter type for RelayCommand.Execute.</param>
+        /// <param name="actualType">Actual parameter type for RelayCommand.Execute.</param>
         public InvalidCommandParameterException(Type expectedType, Type actualType) : base(CreateErrorMessage(expectedType, actualType))
         {
         }
@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Mvvm.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidCommandParameterException"/> class.
         /// </summary>
-        /// <param name="expectedType">Expected parameter type for Command.Execute.</param>
+        /// <param name="expectedType">Expected parameter type for RelayCommand.Execute.</param>
         /// <param name="innerException">Inner Exception</param>
         public InvalidCommandParameterException(Type expectedType, Exception innerException) : base(CreateErrorMessage(expectedType), innerException)
         {
@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Mvvm.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidCommandParameterException"/> class.
         /// </summary>
-        /// <param name="expectedType">Expected parameter type for Command.Execute.</param>
+        /// <param name="expectedType">Expected parameter type for RelayCommand.Execute.</param>
         public InvalidCommandParameterException(Type expectedType) : base(CreateErrorMessage(expectedType))
         {
         }

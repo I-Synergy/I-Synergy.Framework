@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -89,8 +89,8 @@ namespace Sample.ViewModels
         {
             CommonServices = commonService;
 
-            Submit_Command = new AsyncRelayCommand<TestItem>(async (e) => await SubmitAsync(e));
-            Search_Command = new AsyncRelayCommand<object>(async (e) => await SearchAsync(e));
+            Submit_Command = new AsyncRelayCommand<TestItem>(SubmitAsync);
+            Search_Command = new AsyncRelayCommand<object>(SearchAsync);
             Clear_Command = new RelayCommand(ClearItems);
 
             Query = string.Empty;

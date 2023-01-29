@@ -1,11 +1,10 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Messaging;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -292,7 +291,7 @@ namespace ISynergy.Framework.Core.Base
             foreach (var property in Properties)
                 property.Value.MarkAsClean();
 
-            WeakReferenceMessenger.Default.UnregisterAll(this);
+            MessageService.Default.Unregister(this);
 
             if (AutomaticValidationTrigger)
                 Validate();
@@ -313,8 +312,8 @@ namespace ISynergy.Framework.Core.Base
         /// changed.</param>
         protected virtual void Broadcast<T>(T oldValue, T newValue, string propertyName)
         {
-            var message = new PropertyChangedMessage<T>(this, propertyName, oldValue, newValue);
-            WeakReferenceMessenger.Default.Send(message);
+            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, propertyName);
+            MessageService.Default.Send(message);
         }
 
         #region INotifyPropertyChanged

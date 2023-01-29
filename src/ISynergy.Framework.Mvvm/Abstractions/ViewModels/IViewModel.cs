@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
@@ -40,9 +40,9 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// <value>The logger.</value>
         ILogger Logger { get; }
         /// <summary>
-        /// Gets the close command.
+        /// Gets the close _command.
         /// </summary>
-        /// <value>The close command.</value>
+        /// <value>The close _command.</value>
         RelayCommand Close_Command { get; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance can close.

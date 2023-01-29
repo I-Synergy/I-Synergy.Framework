@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
@@ -77,9 +77,8 @@ namespace Sample.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            SelectSingle_Command = new AsyncRelayCommand(async () => await SelectSingleAsync());
-            SelectMultiple_Command = new AsyncRelayCommand(async () => await SelectMultipleAsync());
-
+            SelectSingle_Command = new AsyncRelayCommand(SelectSingleAsync);
+            SelectMultiple_Command = new AsyncRelayCommand(SelectMultipleAsync);
             ShowDialogYesNo = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNo));
             ShowDialogYesNoCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.YesNoCancel));
             ShowDialogOk = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OK));

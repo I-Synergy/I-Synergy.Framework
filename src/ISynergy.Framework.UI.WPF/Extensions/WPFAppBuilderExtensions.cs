@@ -85,6 +85,7 @@ namespace ISynergy.Framework.UI.Extensions
             services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
             services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
             services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
+            services.AddSingleton<IMessageService, MessageService>();
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
             services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationServiceExtended, NavigationService>((s) => navigationService));

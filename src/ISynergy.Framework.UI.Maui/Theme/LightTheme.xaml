@@ -395,7 +395,8 @@
                HasShadow="True"
                Padding="8"
                HorizontalOptions="Center"
-               VerticalOptions="Center">
+               VerticalOptions="Center"
+               Margin="10">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

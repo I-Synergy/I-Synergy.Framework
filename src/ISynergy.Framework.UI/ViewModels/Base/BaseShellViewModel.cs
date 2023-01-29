@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Models;
@@ -7,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -84,8 +84,9 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// <value>The feedback command.</value>
         public AsyncRelayCommand Feedback_Command { get; set; }
 
-
-
+        /// <summary>
+        /// Authentication service.
+        /// </summary>
         protected readonly IAuthenticationService _authenticationService;
 
         /// <summary>

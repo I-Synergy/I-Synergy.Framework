@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TResult">The type of the t result.</typeparam>
         /// <param name="_self">The self.</param>
-        /// <returns>TResult.</returns>
+        /// <returns>T.</returns>
         public static TResult GetIdentityValue<T, TResult>(this T _self) 
             where T : class
             where TResult : struct
@@ -159,7 +159,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="_self">The self.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="defaultValue">The default value.</param>
-        /// <returns>TResult.</returns>
+        /// <returns>T.</returns>
         public static TResult GetPropertyValue<T, TResult>(this T _self, string propertyName, TResult defaultValue)
             where T : class
             where TResult : IComparable<TResult>
