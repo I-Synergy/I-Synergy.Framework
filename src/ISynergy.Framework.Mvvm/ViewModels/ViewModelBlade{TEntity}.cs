@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Utilities;
@@ -73,7 +73,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public AsyncRelayCommand Submit_Command { get; }
+        public Command Submit_Command { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelBlade{TEntity}"/> class.
@@ -106,7 +106,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             SelectedItem = TypeActivator.CreateInstance<TEntity>();
             IsNew = true;
-            Submit_Command = new AsyncRelayCommand(async () => await SubmitAsync(SelectedItem));
+            Submit_Command = new Command(async () => await SubmitAsync(SelectedItem));
         }
 
         /// <summary>

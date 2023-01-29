@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
@@ -63,7 +63,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public AsyncRelayCommand<string> Search_Command { get; set; }
+        public Command<string> Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
@@ -106,7 +106,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Search_Command = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
+            Search_Command = new Command<string>((e) => QueryItemsAsync(e));
             RawItems = items;
             Items = new ObservableCollection<object>(items);
             SelectedItems = new List<object>(selectedItems);
