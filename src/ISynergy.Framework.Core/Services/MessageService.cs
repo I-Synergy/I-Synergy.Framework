@@ -183,7 +183,7 @@ namespace ISynergy.Framework.Core.Services
 
                     var weakAction = new WeakAction<TMessage>(recipient, action, keepTargetAlive);
 
-                    var item = new WeakActionAndToken
+                    var item = new WeakActionAndToken<TMessage>
                     {
                         Action = weakAction,
                         Token = token
@@ -610,7 +610,6 @@ namespace ISynergy.Framework.Core.Services
         private struct WeakActionAndToken
         {
             public WeakAction Action;
-
             public object Token;
         }
     }

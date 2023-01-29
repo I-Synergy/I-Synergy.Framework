@@ -17,7 +17,25 @@ namespace ISynergy.Framework.Core.Events
         /// Gets or sets the method.
         /// </summary>
         /// <value>The method.</value>
-        protected MethodInfo Method { get; set; }
+        private MethodInfo _method;
+
+        /// <summary>
+        /// Gets or sets the function reference.
+        /// </summary>
+        /// <value>The function reference.</value>
+        private WeakReference _funcReference;
+
+        /// <summary>
+        /// Gets or sets the live reference.
+        /// </summary>
+        /// <value>The live reference.</value>
+        private object _liveReference;
+
+        /// <summary>
+        /// Gets or sets the reference.
+        /// </summary>
+        /// <value>The reference.</value>
+        private WeakReference _reference;
 
         /// <summary>
         /// Gets a value indicating whether this instance is static.
@@ -35,42 +53,15 @@ namespace ISynergy.Framework.Core.Events
         /// Gets the name of the method.
         /// </summary>
         /// <value>The name of the method.</value>
-        public virtual string MethodName
+        public string MethodName
         {
             get
             {
                 if (_staticFunc is not null)
-                {
                     return _staticFunc.Method.Name;
-                }
 
-                return Method.Name;
+                return _method.Name;
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the function reference.
-        /// </summary>
-        /// <value>The function reference.</value>
-        protected WeakReference FuncReference { get; set; }
-
-        /// <summary>
-        /// Gets or sets the live reference.
-        /// </summary>
-        /// <value>The live reference.</value>
-        protected object LiveReference { get; set; }
-
-        /// <summary>
-        /// Gets or sets the reference.
-        /// </summary>
-        /// <value>The reference.</value>
-        protected WeakReference Reference { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WeakFunc{TResult}"/> class.
-        /// </summary>
-        protected WeakFunc()
-        {
         }
 
         /// <summary>
@@ -99,38 +90,38 @@ namespace ISynergy.Framework.Core.Events
                 {
                     // Keep a reference to the target to control the
                     // WeakAction's lifetime.
-                    Reference = new WeakReference(target);
+                    _reference = new WeakReference(target);
                 }
 
                 return;
             }
 
-            Method = func.Method;
-            FuncReference = new WeakReference(func.Target);
-            LiveReference = keepTargetAlive ? func.Target : null;
-            Reference = new WeakReference(target);
+            _method = func.Method;
+            _funcReference = new WeakReference(func.Target);
+            _liveReference = keepTargetAlive ? func.Target : null;
+            _reference = new WeakReference(target);
         }
 
         /// <summary>
         /// Gets a value indicating whether this instance is alive.
         /// </summary>
         /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
-        public virtual bool IsAlive
+        public bool IsAlive
         {
             get
             {
                 if (_staticFunc is null
-                    && Reference is null
-                    && LiveReference is null)
+                    && _reference is null
+                    && _liveReference is null)
                 {
                     return false;
                 }
 
                 if (_staticFunc is not null)
                 {
-                    if (Reference is not null)
+                    if (_reference is not null)
                     {
-                        return Reference.IsAlive;
+                        return _reference.IsAlive;
                     }
 
                     return true;
@@ -138,14 +129,14 @@ namespace ISynergy.Framework.Core.Events
 
                 // Non static action
 
-                if (LiveReference is not null)
+                if (_liveReference is not null)
                 {
                     return true;
                 }
 
-                if (Reference is not null)
+                if (_reference is not null)
                 {
-                    return Reference.IsAlive;
+                    return _reference.IsAlive;
                 }
 
                 return false;
@@ -160,12 +151,12 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (Reference is null)
+                if (_reference is null)
                 {
                     return null;
                 }
 
-                return Reference.Target;
+                return _reference.Target;
             }
         }
 
@@ -173,21 +164,21 @@ namespace ISynergy.Framework.Core.Events
         /// Gets the function target.
         /// </summary>
         /// <value>The function target.</value>
-        protected object FuncTarget
+        private object FuncTarget
         {
             get
             {
-                if (LiveReference is not null)
+                if (_liveReference is not null)
                 {
-                    return LiveReference;
+                    return _liveReference;
                 }
 
-                if (FuncReference is null)
+                if (_funcReference is null)
                 {
                     return null;
                 }
 
-                return FuncReference.Target;
+                return _funcReference.Target;
             }
         }
 
@@ -206,12 +197,12 @@ namespace ISynergy.Framework.Core.Events
 
             if (IsAlive)
             {
-                if (Method is not null
-                    && (LiveReference is not null
-                        || FuncReference is not null)
+                if (_method is not null
+                    && (_liveReference is not null
+                        || _funcReference is not null)
                     && funcTarget is not null)
                 {
-                    return (T)Method.Invoke(funcTarget, null);
+                    return (T)_method.Invoke(funcTarget, null);
                 }
             }
 
@@ -223,10 +214,10 @@ namespace ISynergy.Framework.Core.Events
         /// </summary>
         public void MarkForDeletion()
         {
-            Reference = null;
-            FuncReference = null;
-            LiveReference = null;
-            Method = null;
+            _reference = null;
+            _funcReference = null;
+            _liveReference = null;
+            _method = null;
             _staticFunc = null;
         }
     }

@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
@@ -39,27 +39,27 @@ namespace Sample.ViewModels
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public AsyncRelayCommand Info_Command { get; set; }
+        public RelayCommand Info_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public AsyncRelayCommand Browse_Command { get; set; }
+        public RelayCommand Browse_Command { get; set; }
 
-        public AsyncRelayCommand EditableCombo_Command { get; set; }
+        public RelayCommand EditableCombo_Command { get; set; }
 
         /// <summary>
         /// gets or sets the Unit Conversion command.
         /// </summary>
-        public AsyncRelayCommand UnitConversion_Command { get; set; }
+        public RelayCommand UnitConversion_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public AsyncRelayCommand ValidationTest_Command { get; set; }
+        public RelayCommand ValidationTest_Command { get; set; }
 
-        public AsyncRelayCommand StitchImage_Command { get; set; }
+        public RelayCommand StitchImage_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -87,12 +87,12 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             DisplayName = "User";
 
-            Info_Command = new AsyncRelayCommand(async () => await OpenInfoAsync());
-            Browse_Command = new AsyncRelayCommand(async () => await BrowseFileAsync());
-            EditableCombo_Command = new AsyncRelayCommand(async () => await OpenEditableComboAsync());
-            ValidationTest_Command = new AsyncRelayCommand(async () => await OpenValidationTestAsync());
-            UnitConversion_Command = new AsyncRelayCommand(async () => await OpenUnitConversionAsync());
-            StitchImage_Command = new AsyncRelayCommand(async () => await OpenImageStitchingAsync());
+            Info_Command = new RelayCommand(async () => await OpenInfoAsync());
+            Browse_Command = new RelayCommand(async () => await BrowseFileAsync());
+            EditableCombo_Command = new RelayCommand(async () => await OpenEditableComboAsync());
+            ValidationTest_Command = new RelayCommand(async () => await OpenValidationTestAsync());
+            UnitConversion_Command = new RelayCommand(async () => await OpenUnitConversionAsync());
+            StitchImage_Command = new RelayCommand(async () => await OpenImageStitchingAsync());
 
             PopulateNavItems();
         }

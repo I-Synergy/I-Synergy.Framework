@@ -7,7 +7,10 @@
           x:Class="ISynergy.Framework.UI.Windows.LanguageWindow"
           Title="{Binding Title}">
 
-    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}">
+    <ContentView 
+        ControlTemplate="{StaticResource DefaultDialogTemplate}"
+        MaximumWidthRequest="500">
+        
         <StackLayout Margin="10">
             <RadioButton x:Name="Button_Language_nl" Content="{m:GetString Key=Language_Dutch}" GroupName="Language" >
                 <RadioButton.Behaviors>

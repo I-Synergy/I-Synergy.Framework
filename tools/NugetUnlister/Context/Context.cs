@@ -138,7 +138,7 @@ namespace NugetUnlister
             {
                 if (CurrentProfile != null)
                 {
-                    return CurrentProfile.IsAuthenticated;
+                    return CurrentProfile.IsAuthenticated();
                 }
 
                 return false;

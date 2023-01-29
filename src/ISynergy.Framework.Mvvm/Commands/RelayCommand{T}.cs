@@ -5,48 +5,49 @@ using System.Windows.Input;
 namespace ISynergy.Framework.Mvvm.Commands
 {
     /// <summary>
-    /// Class Command.
+    /// Class RelayCommand.
     /// Implements the <see cref="ICommand" />
     /// </summary>
+    /// <typeparam name="T"></typeparam>
     /// <seealso cref="ICommand" />
-    public class Command : ICommand
+    public class RelayCommand<T> : ICommand
     {
         /// <summary>
         /// The execute
         /// </summary>
-        private readonly WeakAction _execute;
+        private readonly WeakAction<T> _execute;
 
         /// <summary>
         /// The can execute
         /// </summary>
-        private readonly WeakFunc<bool> _canExecute;
+        private readonly WeakFunc<T, bool> _canExecute;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Command"/> class.
+        /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
         /// </summary>
         /// <param name="execute">The execute.</param>
         /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-        public Command(Action execute, bool keepTargetAlive = false)
+        public RelayCommand(Action<T> execute, bool keepTargetAlive = false)
             : this(execute, null, keepTargetAlive)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Command"/> class.
+        /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
         /// </summary>
         /// <param name="execute">The execute.</param>
         /// <param name="canExecute">The can execute.</param>
         /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
         /// <exception cref="ArgumentNullException">execute</exception>
-        public Command(Action execute, Func<bool> canExecute, bool keepTargetAlive = false)
+        public RelayCommand(Action<T> execute, Func<T, bool> canExecute, bool keepTargetAlive = false)
         {
             Argument.IsNotNull(execute);
 
-            _execute = new WeakAction(execute, keepTargetAlive);
+            _execute = new WeakAction<T>(execute, keepTargetAlive);
 
             if (canExecute is not null)
             {
-                _canExecute = new WeakFunc<bool>(canExecute, keepTargetAlive);
+                _canExecute = new WeakFunc<T, bool>(canExecute, keepTargetAlive);
             }
         }
 
@@ -70,9 +71,26 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <returns><see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.</returns>
         public bool CanExecute(object parameter)
         {
-            return _canExecute is null
-                || (_canExecute.IsStatic || _canExecute.IsAlive)
-                    && _canExecute.Execute();
+            if (_canExecute is null)
+            {
+                return true;
+            }
+
+            if (_canExecute.IsStatic || _canExecute.IsAlive)
+            {
+                if (parameter is null
+                    && typeof(T).IsValueType)
+                {
+                    return _canExecute.Execute(default);
+                }
+
+                if (parameter is null || parameter is T)
+                {
+                    return _canExecute.Execute((T)parameter);
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -81,11 +99,36 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
         public virtual void Execute(object parameter)
         {
-            if (CanExecute(parameter)
+            var val = parameter;
+
+            if (parameter is not null
+                && parameter.GetType() != typeof(T))
+            {
+                if (parameter is IConvertible)
+                {
+                    val = Convert.ChangeType(parameter, typeof(T), null);
+                }
+            }
+
+            if (CanExecute(val)
                 && _execute is not null
                 && (_execute.IsStatic || _execute.IsAlive))
             {
-                _execute.Execute();
+                if (val is null)
+                {
+                    if (typeof(T).IsValueType)
+                    {
+                        _execute.Execute(default);
+                    }
+                    else
+                    {
+                        _execute.Execute((T)val);
+                    }
+                }
+                else
+                {
+                    _execute.Execute((T)val);
+                }
             }
         }
     }

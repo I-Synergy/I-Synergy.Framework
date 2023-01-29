@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
+using Sample.ViewModels;
 using Sample.Views;
 using System.Reflection;
 
@@ -50,6 +52,7 @@ namespace Sample
             builder.Services.AddSingleton<IAuthenticationView, AuthenticationView>();
             builder.Services.AddSingleton<IRegistrationView, RegistrationView>();
 
+            builder.Services.AddSingleton<IShellViewModel, AppShellViewModel>();
             builder.Services.AddSingleton<AppShell>();
 
             builder.Logging.AddAppCenterLogging(builder.Configuration);

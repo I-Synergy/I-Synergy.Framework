@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
+using System.Reflection;
 
 namespace ISynergy.Framework.Core.Events
 {
@@ -16,42 +19,39 @@ namespace ISynergy.Framework.Core.Events
         /// Gets or sets the method.
         /// </summary>
         /// <value>The method.</value>
-        protected MethodInfo Method { get; set; }
-
-        /// <summary>
-        /// Gets the name of the method.
-        /// </summary>
-        /// <value>The name of the method.</value>
-        public virtual string MethodName
-        {
-            get
-            {
-                if (_staticAction is not null)
-                {
-                    return _staticAction.Method.Name;
-                }
-
-                return Method.Name;
-            }
-        }
+        private MethodInfo _method;
 
         /// <summary>
         /// Gets or sets the action reference.
         /// </summary>
         /// <value>The action reference.</value>
-        protected WeakReference ActionReference { get; set; }
-
+        private WeakReference _actionReference;
         /// <summary>
         /// Gets or sets the live reference.
         /// </summary>
         /// <value>The live reference.</value>
-        protected object LiveReference { get; set; }
+        private object _liveReference;
 
         /// <summary>
         /// Gets or sets the reference.
         /// </summary>
         /// <value>The reference.</value>
-        protected WeakReference Reference { get; set; }
+        private WeakReference _reference;
+
+        /// <summary>
+        /// Gets the name of the method.
+        /// </summary>
+        /// <value>The name of the method.</value>
+        public string MethodName
+        {
+            get
+            {
+                if (_staticAction is not null)
+                    return _staticAction.Method.Name;
+
+                return _method.Name;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance is static.
@@ -63,13 +63,6 @@ namespace ISynergy.Framework.Core.Events
             {
                 return _staticAction is not null;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WeakAction"/> class.
-        /// </summary>
-        protected WeakAction()
-        {
         }
 
         /// <summary>
@@ -98,54 +91,46 @@ namespace ISynergy.Framework.Core.Events
                 {
                     // Keep a reference to the target to control the
                     // WeakAction's lifetime.
-                    Reference = new WeakReference(target);
+                    _reference = new WeakReference(target);
                 }
 
                 return;
             }
 
-            Method = action.Method;
-            ActionReference = new WeakReference(action.Target);
-            LiveReference = keepTargetAlive ? action.Target : null;
-            Reference = new WeakReference(target);
+            _method = action.Method;
+            _actionReference = new WeakReference(action.Target);
+            _liveReference = keepTargetAlive ? action.Target : null;
+            _reference = new WeakReference(target);
         }
 
         /// <summary>
         /// Gets a value indicating whether this instance is alive.
         /// </summary>
         /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
-        public virtual bool IsAlive
+        public bool IsAlive
         {
             get
             {
                 if (_staticAction is null
-                    && Reference is null
-                    && LiveReference is null)
-                {
-                    return false;
-                }
+                    && _reference is null
+                    && _liveReference is null)
+                return false;
 
                 if (_staticAction is not null)
                 {
-                    if (Reference is not null)
-                    {
-                        return Reference.IsAlive;
-                    }
+                    if (_reference is not null)
+                        return _reference.IsAlive;
 
                     return true;
                 }
 
                 // Non static action
 
-                if (LiveReference is not null)
-                {
+                if (_liveReference is not null)
                     return true;
-                }
 
-                if (Reference is not null)
-                {
-                    return Reference.IsAlive;
-                }
+                if (_reference is not null)
+                    return _reference.IsAlive;
 
                 return false;
             }
@@ -159,12 +144,10 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (Reference is null)
-                {
+                if (_reference is null)
                     return null;
-                }
 
-                return Reference.Target;
+                return _reference.Target;
             }
         }
 
@@ -176,17 +159,13 @@ namespace ISynergy.Framework.Core.Events
         {
             get
             {
-                if (LiveReference is not null)
-                {
-                    return LiveReference;
-                }
+                if (_liveReference is not null)
+                    return _liveReference;
 
-                if (ActionReference is null)
-                {
+                if (_actionReference is null)
                     return null;
-                }
 
-                return ActionReference.Target;
+                return _actionReference.Target;
             }
         }
 
@@ -195,16 +174,28 @@ namespace ISynergy.Framework.Core.Events
         /// </summary>
         public void Execute()
         {
-            if (_staticAction is not null)
+            try
             {
-                _staticAction();
-                return;
-            }
+                if (_staticAction is not null)
+                {
+                    _staticAction();
+                    return;
+                }
 
-            if (IsAlive && Method is not null && (LiveReference is not null || ActionReference is not null) && ActionTarget is not null)
+                if (IsAlive && _method is not null && (_liveReference is not null || _actionReference is not null) && ActionTarget is not null)
+                {
+                    _method.Invoke(ActionTarget, null);
+                    return;
+                }
+            }
+            catch (Exception ex)
             {
-                Method.Invoke(ActionTarget, null);
-                return;
+                var exceptionService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+
+                if (ex.InnerException != null)
+                    exceptionService.HandleExceptionAsync(ex.InnerException).Await();
+                else
+                    exceptionService.HandleExceptionAsync(ex).Await();
             }
         }
 
@@ -213,10 +204,10 @@ namespace ISynergy.Framework.Core.Events
         /// </summary>
         public void MarkForDeletion()
         {
-            Reference = null;
-            ActionReference = null;
-            LiveReference = null;
-            Method = null;
+            _reference = null;
+            _actionReference = null;
+            _liveReference = null;
+            _method = null;
             _staticAction = null;
         }
     }

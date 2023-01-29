@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
@@ -135,9 +135,9 @@ namespace Sample.ViewModels
         }
 
 
-        public AsyncRelayCommand BrowseFolder_Command { get; set; }
-        public AsyncRelayCommand ClearSettings_Command { get; set; }
-        public AsyncRelayCommand StitchImages_Command { get; set; }
+        public RelayCommand BrowseFolder_Command { get; set; }
+        public RelayCommand ClearSettings_Command { get; set; }
+        public RelayCommand StitchImages_Command { get; set; }
 
         private readonly ICommonServices _commonServices;
 
@@ -155,9 +155,9 @@ namespace Sample.ViewModels
         {
             _commonServices = commonServices;
 
-            BrowseFolder_Command = new AsyncRelayCommand(async () => await BrowseFolderAsync());
-            ClearSettings_Command = new AsyncRelayCommand(async () => await ClearSettingsAsync());
-            StitchImages_Command = new AsyncRelayCommand(async () => await StitchImagesAsync());
+            BrowseFolder_Command = new RelayCommand(async () => await BrowseFolderAsync());
+            ClearSettings_Command = new RelayCommand(async () => await ClearSettingsAsync());
+            StitchImages_Command = new RelayCommand(async () => await StitchImagesAsync());
 
             this.Validator = new Action<IObservableClass>(_ =>
             {
