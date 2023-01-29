@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
@@ -53,8 +54,10 @@ namespace ISynergy.Framework.UI
             // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
             AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            //AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+            //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             _context = ServiceLocator.Default.GetInstance<IContext>();

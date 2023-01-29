@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions;
 using ISynergy.Framework.Automations.Conditions;

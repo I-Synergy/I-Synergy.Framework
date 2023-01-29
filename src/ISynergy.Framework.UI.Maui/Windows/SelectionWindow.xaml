@@ -6,7 +6,10 @@
           xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
           Title="{Binding Title}">
 
-    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}">
+    <ContentView 
+        ControlTemplate="{StaticResource DefaultDialogTemplate}"
+        MaximumWidthRequest="600">
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -18,30 +21,26 @@
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout VerticalOptions="Center" Spacing="4" HorizontalOptions="End">
-                    <Button Command="{Binding Refresh_Command}" Style="{StaticResource RefreshButtonStyle}" IsVisible="{OnPlatform WinUI=true, Default=false}"/>
+                    <Button Command="{Binding Refresh_Command}" Style="{StaticResource RefreshButtonStyle}"/>
                 </HorizontalStackLayout>
             </Grid>
 
-            <RefreshView 
-                Grid.Row="1" 
-                Command="{Binding Refresh_Command}" 
-                IsRefreshing="{Binding CommonServices.BusyService.IsBusy}" >
-
-                <CollectionView
-                    x:Name="DataSummary"
-                    ItemsSource="{Binding Items}"
-                    SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
-                    SelectionChanged="DataSummary_SelectionChanged">
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout Orientation="Vertical"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Label Text="{Binding Description}" />
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </RefreshView>
+            <CollectionView
+                x:Name="DataSummary"
+                ItemsSource="{Binding Items}"
+                SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
+                SelectionChanged="DataSummary_SelectionChanged"
+                Grid.Row="1">
+                
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Description}" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Grid>
     </ContentView>
 </c:Window>

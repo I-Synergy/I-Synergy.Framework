@@ -1,14 +1,11 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Views;
 using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.UI.ViewModels
@@ -48,7 +45,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             _authenticationService = authenticationService;
 
-            Login_Command = new AsyncRelayCommand(async () => await SignInAsync());
+            Login_Command = new AsyncRelayCommand(SignInAsync);
             Register_Command = new AsyncRelayCommand(SignUpAsync);
         }
 

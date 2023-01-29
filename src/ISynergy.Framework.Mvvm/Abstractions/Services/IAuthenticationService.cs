@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// like MVC apps implementing transparent access token renewal (e.g using Microsoft's OIDC client middleware). In such scenario, if two refresh tokens requests
         /// were simultaneously sent with the same refresh token, one of them would be automatically rejected as the refresh token would be already marked as "redeemed"
         /// when handling the second request.
-        /// The previous default behavior is still supported but is now an opt-in option. To enable it, call options.UseRollingTokens() from the OpenIddict configuration
+        /// The previous default behavior is still supported but is now an opt-in option. To enable it, call _options.UseRollingTokens() from the OpenIddict configuration
         /// delegate, in ConfigureServices().
         Task AuthenticateWithRefreshTokenAsync(string refreshtoken, CancellationToken cancellationToken = default);
 

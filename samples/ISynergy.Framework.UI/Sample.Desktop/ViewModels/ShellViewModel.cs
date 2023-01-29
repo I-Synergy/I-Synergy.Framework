@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
@@ -110,7 +110,7 @@ namespace Sample.ViewModels
 
             Display_Command = new AsyncRelayCommand(OpenDisplayAsync);
             Info_Command = new AsyncRelayCommand(OpenInfoAsync);
-            Browse_Command = new AsyncRelayCommand(async () => await BrowseFileAsync());
+            Browse_Command = new AsyncRelayCommand(BrowseFileAsync);
             Converter_Command = new AsyncRelayCommand(OpenConvertersAsync);
             SelectionTest_Command = new AsyncRelayCommand(OpenSelectionTestAsync);
             ListViewTest_Command = new AsyncRelayCommand(OpenListViewTestAsync);

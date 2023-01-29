@@ -8,7 +8,10 @@
           x:Class="ISynergy.Framework.UI.Windows.ThemeWindow"
           Title="{Binding Title}">
 
-    <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}">
+    <ContentView 
+        ControlTemplate="{StaticResource DefaultDialogTemplate}"
+        MaximumWidthRequest="600">
+        
         <VerticalStackLayout>
             <HorizontalStackLayout HorizontalOptions="Center">
                 <RadioButton GroupName="Theme" Content="{m:GetString Default}" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource ThemeToBooleanConverter}, ConverterParameter=Default}"/>

@@ -1,22 +1,19 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Views;
 using ISynergy.Framework.UI.Windows;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
@@ -199,10 +196,10 @@ namespace ISynergy.Framework.UI.ViewModels
                     Properties[nameof(SelectedCountry)].Errors.Add(commonServices.LanguageService.GetString("WarningNoCountrySelected"));
             });
 
-            Register_Command = new AsyncRelayCommand(async () => await RegisterAsync());
-            ValidateMail_Command = new AsyncRelayCommand(async () => await ValidateMailAsync());
-            Login_Command = new AsyncRelayCommand(async () => await SignInAsync());
-            SelectModules_Command = new AsyncRelayCommand(async () => await SelectModulesAsync());
+            Register_Command = new AsyncRelayCommand(RegisterAsync);
+            ValidateMail_Command = new AsyncRelayCommand(ValidateMailAsync);
+            Login_Command = new AsyncRelayCommand(SignInAsync);
+            SelectModules_Command = new AsyncRelayCommand(SelectModulesAsync);
 
             ArePickersAvailable = false;
         }
