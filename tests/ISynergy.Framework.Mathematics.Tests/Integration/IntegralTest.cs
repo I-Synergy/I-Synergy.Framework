@@ -45,7 +45,7 @@
             // Let's say we would like to compute the definite
             // integral of the function f(x) = cos(x) from -1 to 1
 
-            Func<double, double> f = (x) => Math.Cos(x);
+            Func<double, double> f = Math.Cos;
 
             double a = -1;
             double b = +1;

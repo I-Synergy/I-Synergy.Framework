@@ -89,8 +89,8 @@ namespace Sample.ViewModels
         {
             CommonServices = commonService;
 
-            Submit_Command = new RelayCommand<TestItem>(async (e) => await SubmitAsync(e));
-            Search_Command = new RelayCommand<object>(async (e) => await SearchAsync(e));
+            Submit_Command = new AsyncRelayCommand<TestItem>(SubmitAsync);
+            Search_Command = new AsyncRelayCommand<object>(SearchAsync);
             Clear_Command = new RelayCommand(ClearItems);
 
             Query = string.Empty;

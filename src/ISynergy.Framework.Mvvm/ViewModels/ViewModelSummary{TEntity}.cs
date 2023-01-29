@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the submit command.
         /// </summary>
         /// <value>The submit command.</value>
-        public RelayCommand<TEntity> Submit_Command { get; set; }
+        public AsyncRelayCommand<TEntity> Submit_Command { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether [refresh on initialization].
@@ -71,27 +71,27 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the add command.
         /// </summary>
         /// <value>The add command.</value>
-        public RelayCommand Add_Command { get; set; }
+        public AsyncRelayCommand Add_Command { get; set; }
         /// <summary>
         /// Gets or sets the edit command.
         /// </summary>
         /// <value>The edit command.</value>
-        public RelayCommand<TEntity> Edit_Command { get; set; }
+        public AsyncRelayCommand<TEntity> Edit_Command { get; set; }
         /// <summary>
         /// Gets or sets the delete command.
         /// </summary>
         /// <value>The delete command.</value>
-        public RelayCommand<TEntity> Delete_Command { get; set; }
+        public AsyncRelayCommand<TEntity> Delete_Command { get; set; }
         /// <summary>
         /// Gets or sets the refresh command.
         /// </summary>
         /// <value>The refresh command.</value>
-        public RelayCommand Refresh_Command { get; set; }
+        public AsyncRelayCommand Refresh_Command { get; set; }
         /// <summary>
         /// Gets or sets the search command.
         /// </summary>
         /// <value>The search command.</value>
-        public RelayCommand<object> Search_Command { get; set; }
+        public AsyncRelayCommand<object> Search_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelSummary{TEntity}"/> class.
@@ -128,12 +128,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             Items = new ObservableCollection<TEntity>();
 
-            Add_Command = new RelayCommand(async () => await AddAsync());
-            Edit_Command = new RelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));
-            Delete_Command = new RelayCommand<TEntity>(async (e) => await DeleteAsync(e));
-            Refresh_Command = new RelayCommand(async () => await RefreshAsync());
-            Search_Command = new RelayCommand<object>(async (e) => await SearchAsync(e));
-            Submit_Command = new RelayCommand<TEntity>(async (e) => await SubmitAsync(e));
+            Add_Command = new AsyncRelayCommand(async () => await AddAsync());
+            Edit_Command = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));
+            Delete_Command = new AsyncRelayCommand<TEntity>(async (e) => await DeleteAsync(e));
+            Refresh_Command = new AsyncRelayCommand(async () => await RefreshAsync());
+            Search_Command = new AsyncRelayCommand<object>(async (e) => await SearchAsync(e));
+            Submit_Command = new AsyncRelayCommand<TEntity>(async (e) => await SubmitAsync(e));
         }
 
         /// <summary>

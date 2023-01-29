@@ -1,91 +1,82 @@
-﻿using ISynergy.Framework.Core.Events;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Abstractions.Commands;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace ISynergy.Framework.Mvvm.Commands
 {
     /// <summary>
-    /// Class RelayCommand.
-    /// Implements the <see cref="ICommand" />
+    /// A _command whose sole purpose is to relay its functionality to other
+    /// objects by invoking delegates. The default return value for the <see cref="CanExecute"/>
+    /// method is <see langword="true"/>. This type does not allow you to accept _command parameters
+    /// in the <see cref="Execute"/> and <see cref="CanExecute"/> callback methods.
     /// </summary>
-    /// <seealso cref="ICommand" />
-    public class RelayCommand : ICommand
+    public sealed class RelayCommand : IRelayCommand
     {
         /// <summary>
-        /// The execute
+        /// The <see cref="Action"/> to invoke when <see cref="Execute"/> is used.
         /// </summary>
-        private readonly WeakAction _execute;
+        private readonly Action _execute;
 
         /// <summary>
-        /// The can execute
+        /// The optional action to invoke when <see cref="CanExecute"/> is used.
         /// </summary>
-        private readonly WeakFunc<bool> _canExecute;
+        private readonly Func<bool>? _canExecute;
+
+        /// <inheritdoc/>
+        public event EventHandler? CanExecuteChanged;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RelayCommand"/> class.
+        /// Initializes a new instance of the <see cref="RelayCommand"/> class that can always _execute.
         /// </summary>
-        /// <param name="execute">The execute.</param>
-        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-        public RelayCommand(Action execute, bool keepTargetAlive = false)
-            : this(execute, null, keepTargetAlive)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RelayCommand"/> class.
-        /// </summary>
-        /// <param name="execute">The execute.</param>
-        /// <param name="canExecute">The can execute.</param>
-        /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
-        /// <exception cref="ArgumentNullException">execute</exception>
-        public RelayCommand(Action execute, Func<bool> canExecute, bool keepTargetAlive = false)
+        /// <param name="execute">The execution logic.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
+        public RelayCommand(Action execute)
         {
             Argument.IsNotNull(execute);
 
-            _execute = new WeakAction(execute, keepTargetAlive);
+            _execute = execute;
+        }
 
-            if (canExecute is not null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RelayCommand"/> class.
+        /// </summary>
+        /// <param name="execute">The execution logic.</param>
+        /// <param name="canExecute">The execution status logic.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
+        public RelayCommand(Action execute, Func<bool> canExecute)
+            : this(execute)
+        {
+            Argument.IsNotNull(canExecute);
+
+            _canExecute = canExecute;
+        }
+
+        /// <inheritdoc/>
+        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool CanExecute(object? parameter) => _canExecute?.Invoke() != false;
+
+        /// <inheritdoc/>
+        public void Execute(object? parameter)
+        {
+            try
             {
-                _canExecute = new WeakFunc<bool>(canExecute, keepTargetAlive);
+                _execute();
             }
-        }
-
-        /// <summary>
-        /// Occurs when changes occur that affect whether or not the command should execute.
-        /// </summary>
-        public event EventHandler CanExecuteChanged;
-
-        /// <summary>
-        /// Raises the can execute changed.
-        /// </summary>
-        public void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Defines the method that determines whether the command can execute in its current state.
-        /// </summary>
-        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
-        /// <returns><see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.</returns>
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute is null
-                || (_canExecute.IsStatic || _canExecute.IsAlive)
-                    && _canExecute.Execute();
-        }
-
-        /// <summary>
-        /// Defines the method to be called when the command is invoked.
-        /// </summary>
-        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
-        public virtual void Execute(object parameter)
-        {
-            if (CanExecute(parameter)
-                && _execute is not null
-                && (_execute.IsStatic || _execute.IsAlive))
+            catch (Exception ex)
             {
-                _execute.Execute();
+                var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+
+                if (ex.InnerException != null)
+                    exceptionHandlerService.HandleExceptionAsync(ex.InnerException).Await();
+                else
+                    exceptionHandlerService.HandleExceptionAsync(ex).Await();
             }
         }
     }
