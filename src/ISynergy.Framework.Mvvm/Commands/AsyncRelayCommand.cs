@@ -328,7 +328,19 @@ namespace ISynergy.Framework.Mvvm.Commands
             // using the AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler option. That will cause this call to
             // be skipped, and exceptions will just either normally be available through that property, or will otherwise
             // flow to the static TaskScheduler.UnobservedTaskException event if otherwise unobserved (eg. for logging).
-            await executionTask;
+            try
+            {
+                await executionTask;
+            }
+            catch (Exception ex)
+            {
+                var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
+
+                if (ex.InnerException != null)
+                    exceptionHandlerService.HandleExceptionAsync(ex.InnerException).Await();
+                else
+                    exceptionHandlerService.HandleExceptionAsync(ex).Await();
+            }
         }
     }
 }
