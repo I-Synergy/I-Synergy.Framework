@@ -4,6 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
         x:Class="Sample.Views.AuthenticationView"
         xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+        xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
         Title="{Binding Title}">
 
     <Grid HorizontalOptions="Center">
@@ -22,6 +23,8 @@
             WidthRequest="400"
             VerticalOptions="Start"
             HorizontalOptions="Center"/>
+
+        <controls:ErrorPresenter />
 
         <VerticalStackLayout Spacing="5" Grid.Row="1">
             <Label

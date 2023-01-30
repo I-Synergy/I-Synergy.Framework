@@ -1,4 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -7,6 +9,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.ViewModels
 {
@@ -47,6 +50,15 @@ namespace ISynergy.Framework.UI.ViewModels
 
             Login_Command = new AsyncRelayCommand(SignInAsync);
             Register_Command = new AsyncRelayCommand(SignUpAsync);
+
+            Validator = new Action<IObservableClass>(_ =>
+            {
+                if (string.IsNullOrEmpty(Username) || Username.Length <= 3)
+                    Properties[nameof(Username)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
+
+                if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx))
+                    Properties[nameof(Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+            });
         }
 
         private Task SignUpAsync() =>
@@ -57,15 +69,18 @@ namespace ISynergy.Framework.UI.ViewModels
             Argument.IsNotNullOrEmpty(Username);
             Argument.IsNotNullOrEmpty(Password);
 
-            await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
-            
-            if (Context.CurrentProfile is not null && Context.IsAuthenticated)
+            if (Validate())
             {
-                // Save Username in preferences if authentication is successfull.
-                if (Preferences.ContainsKey(nameof(Profile.Username)))
-                    Preferences.Remove(nameof(Profile.Username));
+                await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
 
-                Preferences.Set(nameof(Profile.Username), Username);
+                if (Context.CurrentProfile is not null && Context.IsAuthenticated)
+                {
+                    // Save Username in preferences if authentication is successfull.
+                    if (Preferences.ContainsKey(nameof(Profile.Username)))
+                        Preferences.Remove(nameof(Profile.Username));
+
+                    Preferences.Set(nameof(Profile.Username), Username);
+                }
             }
         }
     }
