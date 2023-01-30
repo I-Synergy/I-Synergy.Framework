@@ -62,6 +62,7 @@ namespace ISynergy.Framework.UI
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
 
             _context = ServiceLocator.Default.GetInstance<IContext>();
             _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
@@ -75,6 +76,16 @@ namespace ISynergy.Framework.UI
 
             if (_applicationSettingsService.Settings is not null)
                 _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Culture);
+        }
+
+        private async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            if (_exceptionHandlerService is not null)
+                await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+            else
+                _logger.LogCritical(e.Exception, e.Exception.Message);
+
+            e.Handled = true;
         }
 
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
