@@ -118,6 +118,45 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="WarningMandatoryProperty" xml:space="preserve">
-    <value>Property {0} is mandatory.</value>
+    <value>{0} is mandatory.</value>
   </data>
+	<data name="WarningNull" xml:space="preserve">
+		<value>cannot be null.</value>
+	</data>
+	<data name="WarningNullOrEmpty" xml:space="preserve">
+		<value>cannot be null or empty.</value>
+	</data>
+	<data name="WarningGuidEmpty" xml:space="preserve">
+		<value>cannot be an emty Guid.</value>
+	</data>
+	<data name="WarningNullGuidEmpty" xml:space="preserve">
+		<value>cannot be null or an empty Guid.</value>
+	</data>
+	<data name="WarningNullWhitespace" xml:space="preserve">
+		<value>cannot be null or contain only whitespaces.</value>
+	</data>
+	<data name="WarningNullEmptyArray" xml:space="preserve">
+		<value>cannot be null or an empty Array.</value>
+	</data>
+	<data name="WarningNullEmptyList" xml:space="preserve">
+		<value>cannot be null or an ampty list.</value>
+	</data>
+	<data name="WarningEnum" xml:space="preserve">
+		<value>can only contain enumerations.</value>
+	</data>
+	<data name="Between" xml:space="preserve">
+		<value>between</value>
+	</data>
+	<data name="And" xml:space="preserve">
+		<value>and</value>
+	</data>
+	<data name="WarningBetween" xml:space="preserve">
+		<value>must have a value between {0} and {1].</value>
+	</data>
+	<data name="WarningMinumum" xml:space="preserve">
+		<value>may be at least {0}.</value>
+	</data>
+	<data name="WarningMaximum" xml:space="preserve">
+		<value>may not exceed {0}.</value>
+	</data>
 </root>
