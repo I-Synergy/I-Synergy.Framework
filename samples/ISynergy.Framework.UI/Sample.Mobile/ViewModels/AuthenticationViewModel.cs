@@ -53,10 +53,10 @@ namespace ISynergy.Framework.UI.ViewModels
 
             Validator = new Action<IObservableClass>(_ =>
             {
-                if (string.IsNullOrEmpty(Username) || Username.Length <= 3)
+                if (string.IsNullOrEmpty(Username) || (!string.IsNullOrEmpty(Username) && Username.Length <= 3))
                     Properties[nameof(Username)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
 
-                if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx))
+                if (string.IsNullOrEmpty(Password) || (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, GenericConstants.PasswordRegEx)))
                     Properties[nameof(Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
             });
         }
@@ -66,9 +66,6 @@ namespace ISynergy.Framework.UI.ViewModels
 
         private async Task SignInAsync()
         {
-            Argument.IsNotNullOrEmpty(Username);
-            Argument.IsNotNullOrEmpty(Password);
-
             if (Validate())
             {
                 await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
