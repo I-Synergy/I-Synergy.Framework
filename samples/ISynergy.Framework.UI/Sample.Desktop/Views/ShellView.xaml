@@ -50,12 +50,11 @@
         <NavigationView x:Name="RootNavigationView"
                              Grid.Row="1"
                              IsTitleBarAutoPaddingEnabled="False"            
-							 IsBackButtonVisible="Visible"           
 							 ExpandedModeThresholdWidth="1920"
 							 MenuItemsSource="{Binding PrimaryItems}"
                              FooterMenuItemsSource="{Binding SecondaryItems}"
 							 MenuItemTemplateSelector="{StaticResource ItemSelector}"
-							 IsSettingsVisible="{Binding Context.IsAuthenticated, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+							 IsSettingsVisible="False"
                              PaneDisplayMode="Left"
                              IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}">
 

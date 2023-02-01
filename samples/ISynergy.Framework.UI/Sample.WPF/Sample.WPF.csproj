@@ -11,10 +11,15 @@
 		<AssemblyName>Sample</AssemblyName>
 		<StartupObject>Sample.Program</StartupObject>
 		<Product>Sample WPF Desktop</Product>
+		<ApplicationIcon>logo.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="logo.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
