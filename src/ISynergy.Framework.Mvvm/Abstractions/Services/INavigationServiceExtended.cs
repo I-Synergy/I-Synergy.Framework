@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         bool CanGoForward { get; }
         void GoBack();
         void GoForward();
-        void OpenBlade(IViewModelBladeView owner, IViewModel viewmodel);
+        Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel);
         void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel);
 
         /// <summary>

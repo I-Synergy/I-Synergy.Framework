@@ -4,9 +4,11 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI
 {
@@ -70,6 +72,19 @@ namespace ISynergy.Framework.UI
 
             if (_applicationSettingsService.Settings is not null)
                 _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Culture);
+
+            _logger.LogInformation("Starting initialization of application");
+
+            _logger.LogInformation("Loading theme");
+            _themeService.SetStyle();
+
+            _logger.LogInformation("Setting up main page.");
+            if (ServiceLocator.Default.GetInstance<IShellView>() is Shell shell)
+                MainPage = shell;
+
+            InitializeApplication();
+
+            _logger.LogInformation("Finishing initialization of application");
         }
 
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
@@ -98,7 +113,16 @@ namespace ISynergy.Framework.UI
 
         public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
-        public abstract Task InitializeApplicationAsync();
+        public virtual Task InitializeApplicationAsync() 
+        {
+            var culture = CultureInfo.CurrentCulture;
+            var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
+            numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+            numberFormat.CurrencyNegativePattern = 1;
+            _context.NumberFormat = numberFormat;
+
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// Get a new list of additional resource dictionaries which can be merged.
