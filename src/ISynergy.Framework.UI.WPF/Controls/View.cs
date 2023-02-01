@@ -35,7 +35,14 @@ namespace ISynergy.Framework.UI.Controls
         /// Initializes a new instance of the <see cref="View"/> class.
         /// </summary>
         protected View()
+            : this(null)
         {
+        }
+
+        protected View(IViewModel viewModel)
+        {
+            ViewModel = viewModel;
+
             Loaded += View_Loaded;
             Unloaded += View_Unloaded;
         }
