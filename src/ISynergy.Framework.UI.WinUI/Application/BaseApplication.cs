@@ -7,12 +7,14 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using System.Collections.Specialized;
@@ -185,19 +187,6 @@ namespace ISynergy.Framework.UI
             Argument.IsNotNull(context);
             Argument.IsNotNull(shellView);
 
-            var args = AppInstance.GetCurrent().GetActivatedEventArgs();
-
-            if (args.Kind == ExtendedActivationKind.Protocol &&
-                args.Data is IProtocolActivatedEventArgs protocolActivatedEventArgs &&
-                protocolActivatedEventArgs.Uri != null &&
-                HttpUtility.ParseQueryString(protocolActivatedEventArgs.Uri.Query) is NameValueCollection query &&
-                query.HasKeys() &&
-                !string.IsNullOrEmpty(query["environment"]))
-            {
-                if (Enum.TryParse<SoftwareEnvironments>(query["environment"].ToCapitalized(), out SoftwareEnvironments environment))
-                    context.Environment = environment;
-            }
-            
             if (rootFrame.Content is null)
             {
                 // When the navigation stack isn't restored navigate to the first page,
