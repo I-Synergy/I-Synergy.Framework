@@ -24,8 +24,6 @@
             VerticalOptions="Start"
             HorizontalOptions="Center"/>
 
-        <controls:ErrorPresenter />
-
         <VerticalStackLayout Spacing="5" Grid.Row="1">
             <Label
                 Text="{m:GetString LoginTitle}"
@@ -64,5 +62,7 @@
                 </Label.GestureRecognizers>
             </Label>
         </StackLayout>
+        
+        <controls:ErrorPresenter />
     </Grid>
 </c:View>
