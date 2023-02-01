@@ -54,9 +54,7 @@ namespace ISynergy.Framework.UI
             // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
             AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-            //AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-            //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 

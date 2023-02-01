@@ -55,18 +55,5 @@ namespace ISynergy.Framework.UI.Services
             //else
             //    Application.Current.Resources.ApplyDarkTheme();
         }
-
-        /// <summary>
-        /// Initializes main window of application.
-        /// </summary>
-        /// <param name="mainWindow"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void InitializeMainWindow(object mainWindow) { }
-
-        /// <summary>
-        /// Sets titlebar to modern UI.
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        public void SetTitlebar() { }
     }
 }

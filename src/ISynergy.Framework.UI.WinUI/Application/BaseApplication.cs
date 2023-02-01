@@ -129,7 +129,7 @@ namespace ISynergy.Framework.UI
         /// Main Application Window.
         /// </summary>
         /// <value>The main window.</value>
-        public Window MainWindow { get; set; }
+        public Window MainWindow { get; private set; }
 
         /// <summary>
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
@@ -138,9 +138,6 @@ namespace ISynergy.Framework.UI
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             MainWindow = new Window();
-
-            _themeService.InitializeMainWindow(MainWindow);
-            _themeService.SetTitlebar();
 
             InitializeApplication();
 
@@ -192,7 +189,7 @@ namespace ISynergy.Framework.UI
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(shellView.GetType());
+                rootFrame.Content = shellView;
             }
 
             MainWindow.Title = context.Title;

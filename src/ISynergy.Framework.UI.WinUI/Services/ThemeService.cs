@@ -34,11 +34,6 @@ namespace ISynergy.Framework.UI.Services
         }
 
         /// <summary>
-        /// The window
-        /// </summary>
-        private Window _window;
-
-        /// <summary>
         /// Gets a value indicating whether this instance is light theme enabled.
         /// </summary>
         /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
@@ -55,28 +50,11 @@ namespace ISynergy.Framework.UI.Services
         }
 
         /// <summary>
-        /// Ininitialize main window for service.
-        /// </summary>
-        /// <param name="mainWindow">The main window.</param>
-        /// <exception cref="System.ArgumentException">MainWindow could not be set.</exception>
-        public void InitializeMainWindow(object mainWindow)
-        {
-            if (mainWindow is Window window)
-            {
-                _window = window;
-            }
-            else
-            {
-                throw new ArgumentException("MainWindow could not be set.");
-            }
-        }
-
-        /// <summary>
         /// Sets the theme.
         /// </summary>
         public void SetStyle()
         {
-            if ( _window.Content is FrameworkElement frameworkElement)
+            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.Content is FrameworkElement frameworkElement)
             {
                 var palette = FindColorPaletteResourcesForTheme(Style.Theme.ToString());
 
@@ -93,9 +71,10 @@ namespace ISynergy.Framework.UI.Services
 
                 Application.Current.Resources["SystemAccentColor"] = Style.Color;
                 Application.Current.Resources["NavigationViewSelectionIndicatorForeground"] = Style.Color;
-            }
 
-            ReloadPageTheme(Style.Theme);
+                ReloadPageTheme(Style.Theme);
+                SetTitlebar(baseApplication.MainWindow);
+            }
         }
 
         /// <summary>
@@ -104,7 +83,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="theme">The theme.</param>
         private void ReloadPageTheme(Themes theme)
         {
-            if (_window.Content is FrameworkElement frameworkElement)
+            if (Application.Current is BaseApplication baseApplication && baseApplication.MainWindow.Content is FrameworkElement frameworkElement)
             {
                 switch (theme)
                 {
@@ -152,10 +131,9 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Setups the titlebar.
         /// </summary>
-        public void SetTitlebar()
+        public void SetTitlebar(Window window)
         {
-#if WINDOWS10_0_18362_0_OR_GREATER
-            var appWindow = GetAppWindowForCurrentWindow(_window);
+            var appWindow = GetAppWindowForCurrentWindow(window);
 
             var iconPath = Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico");
             
@@ -184,16 +162,13 @@ namespace ISynergy.Framework.UI.Services
                 appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
                 appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.LightGray;
             }
-#endif
         }
 
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
         protected virtual AppWindow GetAppWindowForCurrentWindow(Window window)
         {
             var hWnd = WindowNative.GetWindowHandle(window);
             var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             return AppWindow.GetFromWindowId(wndId);
         }
-#endif
     }
 }

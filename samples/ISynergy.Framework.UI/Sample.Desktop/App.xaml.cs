@@ -1,5 +1,7 @@
-﻿using ISynergy.Framework.UI;
+﻿using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.UI;
 using Microsoft.Extensions.Logging;
+using Sample.Views;
 using System.Globalization;
 
 namespace Sample
