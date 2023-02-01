@@ -145,7 +145,7 @@
 		<value>kan alleen opsommingen bevatten.</value>
 	</data>
 	<data name="WarningBetween" xml:space="preserve">
-		<value>moet een waarde hebben tussen {0} en {1].</value>
+		<value>moet een waarde hebben tussen {0} en {1}.</value>
 	</data>
 	<data name="Between" xml:space="preserve">
 		<value>tussen</value>

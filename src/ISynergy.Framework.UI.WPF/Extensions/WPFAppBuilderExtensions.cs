@@ -74,6 +74,8 @@ namespace ISynergy.Framework.UI.Extensions
 
             var navigationService = new NavigationService();
             var languageService = new LanguageService();
+            languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
+            languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
 
             // Register singleton services
             services.AddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>

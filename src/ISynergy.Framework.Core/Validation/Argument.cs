@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,7 +25,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (value is null)
             {
-                var error = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningNull");
+                var error = new LanguageService().GetString("WarningNull");
                 throw new ArgumentNullException(name, error);
             }
         }
@@ -40,8 +41,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (string.IsNullOrEmpty(value))
             {
-                var error = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningNullOrEmpty");
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullOrEmpty");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -56,7 +57,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (value == Guid.Empty)
             {
-                var error = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningGuidEmpty");
+                var error = new LanguageService().GetString("WarningGuidEmpty");
                 throw new ArgumentException(error, name);
             }
         }
@@ -73,8 +74,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!value.HasValue || value.Value == Guid.Empty)
             {
-                var error = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningNullGuidEmpty");
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullGuidEmpty");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -90,8 +91,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (string.IsNullOrEmpty(value) || (string.CompareOrdinal(value.Trim(), string.Empty) == 0))
             {
-                var error = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningNullWhitespace");
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullWhitespace");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -107,8 +108,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if ((value is null) || (value.Length == 0))
             {
-                var error = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningNullEmptyArray");
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullEmptyArray");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -125,8 +126,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if ((value is null) || (value.Count == 0))
             {
-                var error = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningNullEmptyList");
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullEmptyList");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -142,7 +143,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!typeof(T).IsEnum)
             {
-                var error = ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningEnum");
+                var error = new LanguageService().GetString("WarningEnum");
                 throw new ArgumentException(error, name);
             }
         }
@@ -189,7 +190,7 @@ namespace ISynergy.Framework.Core.Validation
 
             if (!validation(value, minimumValue, maximumValue))
             {
-                var error = string.Format(ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningBetween"), minimumValue, maximumValue);
+                var error = string.Format(new LanguageService().GetString("WarningBetween"), minimumValue, maximumValue);
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }
@@ -229,7 +230,7 @@ namespace ISynergy.Framework.Core.Validation
 
             if (!validation(value, minimumValue))
             {
-                var error = string.Format(ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningMinimum"), minimumValue);
+                var error = string.Format(new LanguageService().GetString("WarningMinimum"), minimumValue);
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }
@@ -266,7 +267,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!validation(value, maximumValue))
             {
-                var error = string.Format(ServiceLocator.Default.GetInstance<ILanguageService>().GetString("WarningMaximum"), maximumValue);
+                var error = string.Format(new LanguageService().GetString("WarningMaximum"), maximumValue);
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }

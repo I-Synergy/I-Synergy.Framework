@@ -1,5 +1,9 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using ISynergy.Framework.Core.Locators;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 

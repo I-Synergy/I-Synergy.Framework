@@ -131,7 +131,7 @@
 		<value>und</value>
 	</data>
 	<data name="WarningBetween" xml:space="preserve">
-		<value>muss einen Wert zwischen {0} und {1] haben.</value>
+		<value>muss einen Wert zwischen {0} und {1} haben.</value>
 	</data>
 	<data name="WarningMinumum" xml:space="preserve">
 		<value>kann mindestens {0} sein.</value>
