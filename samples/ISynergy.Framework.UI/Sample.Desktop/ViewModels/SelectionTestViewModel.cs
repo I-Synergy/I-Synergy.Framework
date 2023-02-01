@@ -104,7 +104,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new SelectionViewModel(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-            (BaseCommonServices.NavigationService as INavigationServiceExtended)?.OpenBlade(this, selectionVm);
+            (BaseCommonServices.NavigationService as INavigationServiceExtended)?.OpenBladeAsync(this, selectionVm);
             return Task.CompletedTask;
         }
 
@@ -116,7 +116,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new SelectionViewModel(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
-            (BaseCommonServices.NavigationService as INavigationServiceExtended)?.OpenBlade(this, selectionVm);
+            (BaseCommonServices.NavigationService as INavigationServiceExtended)?.OpenBladeAsync(this, selectionVm);
             return Task.CompletedTask;
         }
 

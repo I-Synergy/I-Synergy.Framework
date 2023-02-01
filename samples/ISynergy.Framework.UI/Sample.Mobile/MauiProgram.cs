@@ -5,6 +5,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -53,7 +54,7 @@ namespace Sample
             builder.Services.AddSingleton<IRegistrationView, RegistrationView>();
 
             builder.Services.AddSingleton<IShellViewModel, AppShellViewModel>();
-            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddSingleton<IShellView, AppShell>();
 
             builder.Logging.AddAppCenterLogging(builder.Configuration);
 

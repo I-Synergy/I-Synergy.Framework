@@ -46,6 +46,8 @@ namespace Sample
 
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
+
+            Title = $"{_infoService.ProductName} v{_infoService.ProductVersion}";
         }
 
         public string Title

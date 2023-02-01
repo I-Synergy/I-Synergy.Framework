@@ -182,7 +182,7 @@ namespace Sample.ViewModels
         {
             var selectionVM = new SelectionViewModel(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
             selectionVM.Submitted += SelectionVM_Submitted;
-            (CommonServices.NavigationService as INavigationServiceExtended)?.OpenBlade(this, selectionVM);
+            (CommonServices.NavigationService as INavigationServiceExtended)?.OpenBladeAsync(this, selectionVM);
             return Task.CompletedTask;
         }
 
