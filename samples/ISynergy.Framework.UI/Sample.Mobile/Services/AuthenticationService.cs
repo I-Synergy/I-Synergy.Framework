@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Views;
 
 namespace Sample.Services
 {
@@ -12,6 +13,13 @@ namespace Sample.Services
     /// <seealso cref="IAuthenticationService" />
     public class AuthenticationService : IAuthenticationService
     {
+        private readonly INavigationService _navigationService;
+
+        public AuthenticationService(INavigationService navigationService)
+        {
+            _navigationService = navigationService;
+        }
+
         public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
@@ -69,7 +77,7 @@ namespace Sample.Services
 
         public void SignOut()
         {
-            throw new NotImplementedException();
+            _navigationService.ReplaceMainWindowAsync<IAuthenticationView>().Await();
         }
     }
 }

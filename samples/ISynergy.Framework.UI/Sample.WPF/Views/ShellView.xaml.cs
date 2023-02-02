@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Controls;
 using Syncfusion.UI.Xaml.NavigationDrawer;
 
 namespace Sample.Views
@@ -9,18 +9,15 @@ namespace Sample.Views
     /// <summary>
     /// Interaction logic for ShellView.xaml
     /// </summary>
-    public partial class ShellView : IShellView
+    public partial class ShellView : View, IShellView
     {
         /// <summary>
         /// Default constructor to initialize the view
         /// </summary>
-        public ShellView()
+        public ShellView(IShellViewModel viewModel, INavigationServiceExtended navigationService)
+            :base(viewModel)
         {
             InitializeComponent();
-
-            ViewModel = ServiceLocator.Default.GetInstance<IShellViewModel>();
-
-            var navigationService = ServiceLocator.Default.GetInstance<INavigationServiceExtended>();
             navigationService.Frame = ContentRootFrame;
         }
 

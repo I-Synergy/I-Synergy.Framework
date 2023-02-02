@@ -21,6 +21,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Views\Controls\BaseList.xaml" />
+	  <None Remove="Views\SlideShowView.xaml" />
 	  <None Remove="Views\TreeNodeView.xaml" />
 	</ItemGroup>
 	
@@ -41,7 +42,7 @@
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230118.102" />
 		<PackageReference Include="Syncfusion.Chart.WinUI">
-			<Version>20.4.0.44</Version>
+			<Version>20.4.0.48</Version>
 		</PackageReference>
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
@@ -67,5 +68,10 @@
        package has not yet been restored -->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnablePreviewMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Views\SlideShowView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 </Project>

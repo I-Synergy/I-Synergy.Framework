@@ -7,16 +7,19 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Globalization;
 using System.Web;
 using Windows.ApplicationModel.Activation;
 using Application = Microsoft.UI.Xaml.Application;
@@ -88,6 +91,12 @@ namespace ISynergy.Framework.UI
 
             if (_applicationSettingsService.Settings is not null)
                 _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Culture);
+
+            _logger.LogInformation("Starting initialization of application");
+
+            InitializeApplication();
+
+            _logger.LogInformation("Finishing initialization of application");
         }
 
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
@@ -116,7 +125,16 @@ namespace ISynergy.Framework.UI
 
         public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
-        public abstract Task InitializeApplicationAsync();
+        public virtual Task InitializeApplicationAsync()
+        {
+            var culture = CultureInfo.CurrentCulture;
+            var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
+            numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+            numberFormat.CurrencyNegativePattern = 1;
+            _context.NumberFormat = numberFormat;
+
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// Get a new list of additional resource dictionaries which can be merged.
@@ -129,7 +147,7 @@ namespace ISynergy.Framework.UI
         /// Main Application Window.
         /// </summary>
         /// <value>The main window.</value>
-        public Window MainWindow { get; set; }
+        public Window MainWindow { get; private set; }
 
         /// <summary>
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
@@ -138,11 +156,6 @@ namespace ISynergy.Framework.UI
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             MainWindow = new Window();
-
-            _themeService.InitializeMainWindow(MainWindow);
-            _themeService.SetTitlebar();
-
-            InitializeApplication();
 
             var rootFrame = MainWindow.Content as Frame;
 
@@ -174,26 +187,16 @@ namespace ISynergy.Framework.UI
             Argument.IsNotNull(context);
             Argument.IsNotNull(shellView);
 
-            var args = AppInstance.GetCurrent().GetActivatedEventArgs();
-
-            if (args.Kind == ExtendedActivationKind.Protocol &&
-                args.Data is IProtocolActivatedEventArgs protocolActivatedEventArgs &&
-                protocolActivatedEventArgs.Uri != null &&
-                HttpUtility.ParseQueryString(protocolActivatedEventArgs.Uri.Query) is NameValueCollection query &&
-                query.HasKeys() &&
-                !string.IsNullOrEmpty(query["environment"]))
-            {
-                if (Enum.TryParse<SoftwareEnvironments>(query["environment"].ToCapitalized(), out SoftwareEnvironments environment))
-                    context.Environment = environment;
-            }
-            
             if (rootFrame.Content is null)
             {
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(shellView.GetType());
+                rootFrame.Content = shellView;
             }
+
+            _logger.LogInformation("Loading theme");
+            _themeService.SetStyle();
 
             MainWindow.Title = context.Title;
             MainWindow.Activate();

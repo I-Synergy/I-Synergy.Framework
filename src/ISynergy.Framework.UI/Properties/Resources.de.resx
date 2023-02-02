@@ -100,9 +100,6 @@
 	<data name="Add" xml:space="preserve">
 		<value>Hinzufügen</value>
 	</data>
-	<data name="And" xml:space="preserve">
-		<value>Und</value>
-	</data>
 	<data name="By" xml:space="preserve">
 		<value>Von</value>
 	</data>
@@ -395,5 +392,8 @@ Nach Bestätigung Ihrer Anmeldung können Sie sich mit Ihrer E-Mail-Adresse und 
 	</data>
 	<data name="MandatoryUpdateFailed" xml:space="preserve">
 		<value>Obligatorisches Update ist fehlgeschlagen!</value>
+	</data>
+	<data name="WarningUsernameSize" xml:space="preserve">
+		<value>Der Benutzername sollte mindestens 3 Zeichen enthalten.</value>
 	</data>
 </root>

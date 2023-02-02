@@ -62,6 +62,7 @@ namespace ISynergy.Framework.UI
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
 
             _context = ServiceLocator.Default.GetInstance<IContext>();
             _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
@@ -75,6 +76,22 @@ namespace ISynergy.Framework.UI
 
             if (_applicationSettingsService.Settings is not null)
                 _localizationService.SetLocalizationLanguage(_applicationSettingsService.Settings.Culture);
+
+            _logger.LogInformation("Starting initialization of application");
+
+            InitializeApplication();
+
+            _logger.LogInformation("Finishing initialization of application");
+        }
+
+        private async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            if (_exceptionHandlerService is not null)
+                await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+            else
+                _logger.LogCritical(e.Exception, e.Exception.Message);
+
+            e.Handled = true;
         }
 
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
@@ -104,7 +121,16 @@ namespace ISynergy.Framework.UI
 
         public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
-        public abstract Task InitializeApplicationAsync();
+        public virtual Task InitializeApplicationAsync()
+        {
+            var culture = CultureInfo.CurrentCulture;
+            var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
+            numberFormat.CurrencySymbol = $"{_context.CurrencySymbol} ";
+            numberFormat.CurrencyNegativePattern = 1;
+            _context.NumberFormat = numberFormat;
+
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// Get a new list of additional resource dictionaries which can be merged.
@@ -121,11 +147,6 @@ namespace ISynergy.Framework.UI
         {
             MainWindow = new Window();
             MainWindow.Activate();
-
-            _themeService.InitializeMainWindow(MainWindow);
-            _themeService.SetTitlebar();
-
-            InitializeApplication();
 
             var rootFrame = MainWindow.Content as Frame;
 
@@ -162,9 +183,13 @@ namespace ISynergy.Framework.UI
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(shellView, e.Args);
+                rootFrame.Content = shellView;
             }
-            
+
+            _logger.LogInformation("Loading theme");
+            _themeService.SetStyle();
+
+            MainWindow.Title = context.Title ?? string.Empty;
             MainWindow.Show();
             MainWindow.Activate();
         }

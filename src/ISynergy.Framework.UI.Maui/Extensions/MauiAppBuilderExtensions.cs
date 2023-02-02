@@ -14,10 +14,8 @@ using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
 using ISynergy.Framework.UI.Services.Base;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Storage;
 using Mopups.Hosting;
 using Mopups.Interfaces;
 using Mopups.Services;
@@ -76,6 +74,8 @@ namespace ISynergy.Framework.UI.Extensions
 
             var navigationService = new NavigationService();
             var languageService = new LanguageService();
+            languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
+            languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
 
             // Register singleton services
             appBuilder.Services.AddSingleton<ILogger>((s) => LoggerFactory.Create(builder =>

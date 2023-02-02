@@ -120,9 +120,6 @@
 	<data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
-	<data name="And" xml:space="preserve">
-    <value>and</value>
-  </data>
 	<data name="By" xml:space="preserve">
     <value>by</value>
   </data>
@@ -415,5 +412,8 @@ After confirmation of your registration you can use your e-mail address and pass
 	</data>
 	<data name="MandatoryUpdateFailed" xml:space="preserve">
 		<value>Mandatory update has failed!</value>
+	</data>
+	<data name="WarningUsernameSize" xml:space="preserve">
+		<value>Username should contain at least 3 characters.</value>
 	</data>
 </root>

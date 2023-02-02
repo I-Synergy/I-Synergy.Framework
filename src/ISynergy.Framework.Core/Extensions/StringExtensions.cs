@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -710,6 +711,19 @@ namespace ISynergy.Framework.Core.Extensions
             }
 
             return path;
+        }
+
+        public static string ToFixedArgumentMessage(this string message)
+        {
+            var parameter = "Parameter";
+
+            if (message.Contains($"({parameter} '"))
+                message = message.Replace($"({parameter} '", "");
+
+            if (message.EndsWith("')"))
+                message = message.Replace("')", "");
+
+            return message;
         }
     }
 }

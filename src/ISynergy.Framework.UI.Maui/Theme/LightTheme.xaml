@@ -50,6 +50,8 @@
     <Color x:Key="Blue100Accent">#3E8EED</Color>
     <Color x:Key="Blue200Accent">#72ACF1</Color>
     <Color x:Key="Blue300Accent">#A7CBF6</Color>
+    <Color x:Key="RedAccent">#ffe63d3d</Color>
+    <Color x:Key="GreenAccent">#ff45e63d</Color>
 
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{DynamicResource Primary}" />

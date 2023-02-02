@@ -100,9 +100,6 @@
 	<data name="Add" xml:space="preserve">
 		<value>Toevoegen</value>
 	</data>
-	<data name="And" xml:space="preserve">
-		<value>en</value>
-	</data>
 	<data name="By" xml:space="preserve">
 		<value>bij</value>
 	</data>
@@ -395,5 +392,8 @@ Na bevestiging van uw registratie kunt u uw e-mailadres en wachtwoord gebruiken 
 	</data>
 	<data name="MandatoryUpdateFailed" xml:space="preserve">
 		<value>Verplichte update is mislukt!</value>
+	</data>
+	<data name="WarningUsernameSize" xml:space="preserve">
+		<value>Gebruikersnaam moet ten minste 3 tekens bevatten.</value>
 	</data>
 </root>
