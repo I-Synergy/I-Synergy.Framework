@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
@@ -84,7 +85,11 @@ namespace ISynergy.Framework.UI.Services.Base
                     }
                     else if (exception is ArgumentException argumentException)
                     {
-                        await _dialogService.ShowWarningAsync(string.Format(_languageService.GetString("ExceptionArgumentIsNull"), argumentException.ParamName));
+                        await _dialogService.ShowWarningAsync(argumentException.Message.ToFixedArgumentMessage());
+                    }
+                    else if (exception is ArgumentNullException argumentNullException)
+                    {
+                        await _dialogService.ShowWarningAsync(argumentNullException.Message.ToFixedArgumentMessage());
                     }
                     else
                     {

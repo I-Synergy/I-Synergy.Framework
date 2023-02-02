@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Resources;
 
-namespace ISynergy.Framework.UI.Services
+namespace ISynergy.Framework.Core.Services
 {
     /// <summary>
     /// Class _languageService.
@@ -21,9 +21,7 @@ namespace ISynergy.Framework.UI.Services
         {
             _managers = new List<ResourceManager>
             {
-                new ResourceManager(typeof(ISynergy.Framework.Core.Properties.Resources)),
-                new ResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources)),
-                new ResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources))
+                new ResourceManager(typeof(ISynergy.Framework.Core.Properties.Resources))
             };
         }
 

@@ -24,8 +24,5 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// Sets the theme.
         /// </summary>
         void SetStyle();
-
-        void InitializeMainWindow(object mainWindow);
-        void SetTitlebar();
     }
 }

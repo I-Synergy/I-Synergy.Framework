@@ -1,6 +1,12 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions;
+using System.IO;
+using System.IO.Packaging;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Style = ISynergy.Framework.Core.Models.Style;
 
 namespace ISynergy.Framework.UI.Services
@@ -55,18 +61,5 @@ namespace ISynergy.Framework.UI.Services
             //else
             //    Application.Current.Resources.ApplyDarkTheme();
         }
-
-        /// <summary>
-        /// Initializes main window of application.
-        /// </summary>
-        /// <param name="mainWindow"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void InitializeMainWindow(object mainWindow) { }
-
-        /// <summary>
-        /// Sets titlebar to modern UI.
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        public void SetTitlebar() { }
     }
 }

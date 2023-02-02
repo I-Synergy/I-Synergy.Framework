@@ -31,4 +31,15 @@
             <FontImageSource Glyph="{DynamicResource settings}" FontFamily="FontAwesome" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
+
+    <Shell.FlyoutFooter>
+        <StackLayout Padding="20" HorizontalOptions="Center">
+            <Button Text="{m:GetString SignOut}" Command="{Binding Login_Command}">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{DynamicResource signin}" Size="16" FontFamily="FontAwesome" Color="{DynamicResource White}" />
+                </Button.ImageSource>
+            </Button>
+            <Label Text="{Binding Context.Title}" Margin="10" />
+        </StackLayout>
+    </Shell.FlyoutFooter>
 </Shell>

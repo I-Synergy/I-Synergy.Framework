@@ -148,7 +148,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>IView.</returns>
         /// <exception cref="ArgumentException">Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure? - viewModel</exception>
         /// <exception cref="ArgumentException">Instance could not be created from {viewModelKey}</exception>
-        private IView GetNavigationBlade(IViewModel viewModel)
+        private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
         {
             _semaphore.Wait();
 
@@ -165,6 +165,7 @@ namespace ISynergy.Framework.UI.Services
                 if (TypeActivator.CreateInstance(_pages[viewModelKey]) is ISynergy.Framework.UI.Controls.View view)
                 {
                     view.ViewModel = viewModel;
+                    await viewModel.InitializeAsync();
                     return view;
                 }
 
@@ -182,7 +183,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="owner">The owner.</param>
         /// <param name="viewmodel">The viewmodel.</param>
         /// <returns>Task.</returns>
-        public void OpenBlade(IViewModelBladeView owner, IViewModel viewmodel)
+        public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
         {
             Argument.IsNotNull(owner);
 
@@ -191,7 +192,7 @@ namespace ISynergy.Framework.UI.Services
                 bladeVm.Owner = owner;
                 bladeVm.Closed += Viewmodel_Closed;
 
-                var view = GetNavigationBlade(bladeVm);
+                var view = await GetNavigationBladeAsync(bladeVm);
 
                 if (!owner.Blades.Any(a => a.GetType().FullName.Equals(view.GetType().FullName)))
                 {

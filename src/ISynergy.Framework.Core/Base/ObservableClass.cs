@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Core.Base
         [DataTableIgnore]
         [XmlIgnore]
         [Display(AutoGenerateField = false)]
-        public ObservableCollection<string> Errors { get; }
+        public ObservableCollection<string> Errors { get; private set; }
             = new ObservableCollection<string>();
 
         /// <summary>
@@ -252,21 +252,17 @@ namespace ISynergy.Framework.Core.Base
             foreach (var property in Properties)
                 property.Value.Errors.Clear();
 
+            var errors = new List<string>();
+
             Validator?.Invoke(this);
 
-            foreach (var error in Errors.ToList())
-            {
-                if (!Properties.Values.SelectMany(x => x.Errors).Contains(error))
-                    Errors.Remove(error);
-            }
+            foreach (var property in Properties)
+                errors.AddRange(property.Value.Errors);
 
-            foreach (var error in Properties.Values.SelectMany(x => x.Errors).ToList())
-            {
-                if (!Errors.Contains(error))
-                    Errors.Add(error);
-            }
+            Errors = new ObservableCollection<string>(errors.Distinct());
 
             OnPropertyChanged(nameof(IsValid));
+            OnPropertyChanged(nameof(Errors));
 
             return IsValid;
         }

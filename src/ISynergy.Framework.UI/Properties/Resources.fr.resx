@@ -100,9 +100,6 @@
 	<data name="Add" xml:space="preserve">
 		<value>Ajouter</value>
 	</data>
-	<data name="And" xml:space="preserve">
-		<value>et</value>
-	</data>
 	<data name="By" xml:space="preserve">
 		<value>par</value>
 	</data>
@@ -395,5 +392,8 @@ Après confirmation de votre inscription, vous pouvez utiliser votre adresse e-m
 	</data>
 	<data name="MandatoryUpdateFailed" xml:space="preserve">
 		<value>La mise à jour obligatoire a échoué !</value>
+	</data>
+	<data name="WarningUsernameSize" xml:space="preserve">
+		<value>Le nom d’utilisateur doit contenir au moins 3 caractères.</value>
 	</data>
 </root>

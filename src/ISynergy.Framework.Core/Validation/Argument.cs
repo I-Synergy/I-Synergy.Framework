@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -22,7 +25,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (value is null)
             {
-                var error = $"Argument '{name}' cannot be null";
+                var error = new LanguageService().GetString("WarningNull");
                 throw new ArgumentNullException(name, error);
             }
         }
@@ -38,8 +41,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (string.IsNullOrEmpty(value))
             {
-                var error = $"Argument '{name}' cannot be null or empty";
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullOrEmpty");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -54,7 +57,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (value == Guid.Empty)
             {
-                var error = $"Argument '{name}' cannot be Guid.Empty";
+                var error = new LanguageService().GetString("WarningGuidEmpty");
                 throw new ArgumentException(error, name);
             }
         }
@@ -71,8 +74,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!value.HasValue || value.Value == Guid.Empty)
             {
-                var error = $"Argument '{name}' cannot be null or Guid.Empty";
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullGuidEmpty");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -88,8 +91,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (string.IsNullOrEmpty(value) || (string.CompareOrdinal(value.Trim(), string.Empty) == 0))
             {
-                var error = $"Argument '{name}' cannot be null or whitespace";
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullWhitespace");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -105,8 +108,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if ((value is null) || (value.Length == 0))
             {
-                var error = $"Argument '{name}' cannot be null or an empty array";
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullEmptyArray");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -123,8 +126,8 @@ namespace ISynergy.Framework.Core.Validation
         {
             if ((value is null) || (value.Count == 0))
             {
-                var error = $"Argument '{name}' cannot be null or an empty list";
-                throw new ArgumentNullException(error, name);
+                var error = new LanguageService().GetString("WarningNullEmptyList");
+                throw new ArgumentNullException(name, error);
             }
         }
 
@@ -140,7 +143,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!typeof(T).IsEnum)
             {
-                var error = $"Argument '{name}' can only be an Enum";
+                var error = new LanguageService().GetString("WarningEnum");
                 throw new ArgumentException(error, name);
             }
         }
@@ -187,7 +190,7 @@ namespace ISynergy.Framework.Core.Validation
 
             if (!validation(value, minimumValue, maximumValue))
             {
-                var error = $"Argument '{name}' should be between {minimumValue} and {maximumValue}";
+                var error = string.Format(new LanguageService().GetString("WarningBetween"), minimumValue, maximumValue);
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }
@@ -227,7 +230,7 @@ namespace ISynergy.Framework.Core.Validation
 
             if (!validation(value, minimumValue))
             {
-                var error = $"Argument '{name}' should be minimal {minimumValue}";
+                var error = string.Format(new LanguageService().GetString("WarningMinimum"), minimumValue);
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }
@@ -264,7 +267,7 @@ namespace ISynergy.Framework.Core.Validation
         {
             if (!validation(value, maximumValue))
             {
-                var error = $"Argument '{name}' should be at maximum {maximumValue}";
+                var error = string.Format(new LanguageService().GetString("WarningMaximum"), maximumValue);
                 throw new ArgumentOutOfRangeException(name, error);
             }
         }
