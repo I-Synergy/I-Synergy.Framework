@@ -79,6 +79,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Page Include="Controls\Buttons\BaseDialogButtons.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
