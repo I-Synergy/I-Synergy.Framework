@@ -316,9 +316,8 @@ namespace ISynergy.Framework.UI.Services
         public Task ReplaceMainWindowAsync<T>() where T : IView
         {
             if (ServiceLocator.Default.GetInstance<T>() is Page page && 
-                Application.Current is BaseApplication baseApplication && 
-                baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
-                    dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => baseApplication.MainWindow.Content = page);
+                Application.Current is BaseApplication baseApplication)
+                    DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, () => baseApplication.MainWindow.Content = page);
             else
                 throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
 
