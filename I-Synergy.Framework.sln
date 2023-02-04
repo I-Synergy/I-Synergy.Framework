@@ -187,11 +187,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Update.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.Monitoring.Client", "src\ISynergy.Framework.Monitoring.Client\ISynergy.Framework.Monitoring.Client.csproj", "{0BEEEF58-8F82-4FF9-869E-E59E491280A6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{ABFDCCFD-FDA6-41CA-8058-F64F12F4D93B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maui", "Maui", "{ABFDCCFD-FDA6-41CA-8058-F64F12F4D93B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Mobile", "samples\ISynergy.Framework.UI\Sample.Mobile\Sample.Mobile.csproj", "{12BE1775-2A2B-4012-AB87-7EDBD7A11FAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISynergy.Framework.UI.Uno", "src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj", "{050A9961-FBA3-4836-9868-B7F46A8A5352}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISynergy.Framework.UI.Uno", "src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj", "{050A9961-FBA3-4836-9868-B7F46A8A5352}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

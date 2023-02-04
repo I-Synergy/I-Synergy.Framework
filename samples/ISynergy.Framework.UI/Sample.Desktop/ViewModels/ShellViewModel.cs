@@ -9,6 +9,8 @@ using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
+using Sample.Views;
+using ISynergy.Framework.Mvvm.Abstractions.Views;
 
 namespace Sample.ViewModels
 {
@@ -117,10 +119,13 @@ namespace Sample.ViewModels
             ValidationTest_Command = new AsyncRelayCommand(OpenValidationTestAsync);
             TreeNodeTest_Command = new AsyncRelayCommand(OpenTreenNodeTestAsync);
             Chart_Command = new AsyncRelayCommand(OpenChartTestAsync);
-            Login_Command = new AsyncRelayCommand(() => Task.Run(() => PopulateNavItems()));
+            Login_Command = new AsyncRelayCommand(OpenLoginAsync);
 
             PopulateNavItems();
         }
+
+        private Task OpenLoginAsync() =>
+            CommonServices.NavigationService.ReplaceMainWindowAsync<IAuthenticationView>();
 
         private Task OpenChartTestAsync() =>
             CommonServices.NavigationService.NavigateAsync<ChartsViewModel>();

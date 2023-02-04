@@ -1,0 +1,65 @@
+<c:View
+    x:Class="Sample.Views.AuthenticationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="using:ISynergy.Framework.UI.Controls"
+    xmlns:Converters="using:ISynergy.Framework.UI.Converters"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
+    xmlns:local="using:Sample.Views.Identity.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Page.Resources>
+        <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed"/>
+        <Converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
+    </Page.Resources>
+
+    <RelativePanel>
+        <Grid x:Name="RootLayout"
+              RelativePanel.AlignTopWithPanel="True"
+              RelativePanel.AlignLeftWithPanel="True"
+              RelativePanel.AlignRightWithPanel="True"
+              RelativePanel.AlignBottomWithPanel="True"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="1" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{m:LanguageResource Key= Register_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <TextBlock Text="{m:LanguageResource Key= Register_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignIn_Command}" Content="{m:LanguageResource Key=Register}" Margin ="5,20,5,5" HorizontalAlignment="Left" Style="{StaticResource DefaultDialogButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Column="3" Margin="10" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{m:LanguageResource Key= Login_Title}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <TextBlock Text="{m:LanguageResource Key= Login_Text}" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
+                    <Button IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Command="{Binding ShowSignIn_Command}" Content="{m:LanguageResource Key=Login}" Margin ="5,20,5,5" HorizontalAlignment="Right" Style="{StaticResource DefaultDialogButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Column="1" Grid.ColumnSpan="3">
+                <local:SignUpControl HorizontalAlignment="Left" Width="300" Margin="0,1" IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}" VerticalAlignment="Stretch"  />
+                <local:SignInControl HorizontalAlignment="Right" Width="300" Margin="0,1" IsEnabled="{Binding BaseCommonServices.BusyService.IsEnabled}" Visibility="{Binding LoginVisible, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Stretch" />
+            </Grid>
+        </Grid>
+
+        <c:ErrorPresenter 
+            x:Name="ErrorPresenter"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignTopWithPanel="True"
+            Margin="10,42"/>
+    </RelativePanel>
+</c:View>
