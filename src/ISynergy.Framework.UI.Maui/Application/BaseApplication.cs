@@ -128,7 +128,7 @@ namespace ISynergy.Framework.UI
         /// Get a new list of additional resource dictionaries which can be merged.
         /// </summary>
         /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
-        protected virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+        public virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>();
     }
 }
