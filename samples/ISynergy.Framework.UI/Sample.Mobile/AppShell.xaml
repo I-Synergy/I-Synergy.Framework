@@ -5,30 +5,45 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:Sample.Views"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
-    Shell.FlyoutBehavior="Flyout">
+    Shell.FlyoutBehavior="Flyout"
+    Shell.NavBarHasShadow="True">
+
+    <Shell.Resources>
+        <x:String x:Key="language">&#xf1ab;</x:String>
+        <x:String x:Key="theme">&#xf53f;</x:String>
+        <x:String x:Key="settings">&#xf013;</x:String>
+        <x:String x:Key="help">&#xe14b;</x:String>
+        <x:String x:Key="signin">&#xe058;</x:String>
+        <x:String x:Key="info">&#xf685;</x:String>
+    </Shell.Resources>
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
-        <ShellContent Title="Info" ContentTemplate="{DataTemplate views:InfoView}" Route="Dashboard"/>
+        <ShellContent Title="Test A" ContentTemplate="{DataTemplate views:InfoView}" Route="Dashboard">
+            <ShellContent.Icon>
+                <FontImageSource Glyph="{StaticResource info}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"/>
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="Test B" ContentTemplate="{DataTemplate views:InfoView}" Route="Dashboard"/>
     </FlyoutItem>
 
     <MenuFlyoutItem Text="{m:GetString Help}" Command="{Binding Help_Command}">
         <MenuFlyoutItem.IconImageSource>
-            <FontImageSource Glyph="{DynamicResource help}" FontFamily="FontAwesome" />
+            <FontImageSource Glyph="{StaticResource help}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
     <MenuFlyoutItem Text="{m:GetString Language}" Command="{Binding Language_Command}">
         <MenuFlyoutItem.IconImageSource>
-            <FontImageSource Glyph="{DynamicResource language}" FontFamily="FontAwesome" />
+            <FontImageSource Glyph="{StaticResource language}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
     <MenuFlyoutItem Text="{m:GetString Theme}" Command="{Binding Color_Command}">
         <MenuFlyoutItem.IconImageSource>
-            <FontImageSource Glyph="{DynamicResource theme}" FontFamily="FontAwesome" />
+            <FontImageSource Glyph="{StaticResource theme}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
     <MenuFlyoutItem Text="{m:GetString Settings}" Command="{Binding Settings_Command}">
         <MenuFlyoutItem.IconImageSource>
-            <FontImageSource Glyph="{DynamicResource settings}" FontFamily="FontAwesome" />
+            <FontImageSource Glyph="{StaticResource settings}" FontFamily="FontAwesome" Color="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
         </MenuFlyoutItem.IconImageSource>
     </MenuFlyoutItem>
 
@@ -36,7 +51,7 @@
         <StackLayout Padding="20" HorizontalOptions="Center">
             <Button Text="{m:GetString SignOut}" Command="{Binding Login_Command}">
                 <Button.ImageSource>
-                    <FontImageSource Glyph="{DynamicResource signin}" Size="16" FontFamily="FontAwesome" Color="{DynamicResource White}" />
+                    <FontImageSource Glyph="{StaticResource signin}" Size="16" FontFamily="FontAwesome" Color="{StaticResource White}" />
                 </Button.ImageSource>
             </Button>
             <Label Text="{Binding Context.Title}" Margin="10" />

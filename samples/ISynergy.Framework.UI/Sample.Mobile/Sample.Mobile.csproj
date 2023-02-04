@@ -53,12 +53,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\FontAwesome.otf" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="2.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -70,6 +74,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Resources\Styles\Style.xaml.cs">
+	    <DependentUpon>Style.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\AuthenticationView.xaml.cs">
 	    <DependentUpon>AuthenticationView.xaml</DependentUpon>
 	  </Compile>
@@ -109,9 +116,4 @@
 			<Alias>View</Alias>
 		</Using>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Properties\" />
-	</ItemGroup>
-
 </Project>
