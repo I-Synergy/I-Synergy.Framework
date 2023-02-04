@@ -6,15 +6,20 @@
           xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
           xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
           x:Class="ISynergy.Framework.UI.Windows.ThemeWindow"
+          xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
           Title="{Binding Title}">
 
+    <c:Window.Resources>
+        <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter"/>
+        <converters:EnumToBooleanConverter x:Key="ThemeToBooleanConverter" EnumType="{x:Type enums:Themes}" />
+    </c:Window.Resources>
+    
     <ContentView 
-        ControlTemplate="{StaticResource DefaultDialogTemplate}"
+        ControlTemplate="{DynamicResource DefaultDialogTemplate}"
         MaximumWidthRequest="600">
         
         <VerticalStackLayout>
             <HorizontalStackLayout HorizontalOptions="Center">
-                <RadioButton GroupName="Theme" Content="{m:GetString Default}" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource ThemeToBooleanConverter}, ConverterParameter=Default}"/>
                 <RadioButton GroupName="Theme" Content="{m:GetString Light}" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource ThemeToBooleanConverter}, ConverterParameter=Light}"/>
                 <RadioButton GroupName="Theme" Content="{m:GetString Dark}" IsChecked="{Binding SelectedItem.Theme, Converter={StaticResource ThemeToBooleanConverter}, ConverterParameter=Dark}"/>
             </HorizontalStackLayout>
