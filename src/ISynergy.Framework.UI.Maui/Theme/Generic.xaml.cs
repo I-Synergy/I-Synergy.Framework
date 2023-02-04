@@ -1,8 +1,8 @@
 namespace ISynergy.Framework.UI.Theme;
 
-public partial class BaseTheme : ResourceDictionary
+public partial class Generic : ResourceDictionary
 {
-	public BaseTheme()
+	public Generic()
 	{
 		InitializeComponent();
 	}
