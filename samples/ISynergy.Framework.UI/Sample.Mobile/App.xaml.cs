@@ -9,5 +9,12 @@ namespace Sample
         {
             InitializeComponent();
         }
+
+        public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
+            new List<ResourceDictionary>()
+            {
+                //new Styles.Colors()
+                //new Styles.Style()
+            };
     }
 }
