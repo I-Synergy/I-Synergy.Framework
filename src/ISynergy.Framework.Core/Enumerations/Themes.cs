@@ -6,10 +6,6 @@
     public enum Themes
     {
         /// <summary>
-        /// Default system theme.
-        /// </summary>
-        Default,
-        /// <summary>
         /// Light theme.
         /// </summary>
         Light,
