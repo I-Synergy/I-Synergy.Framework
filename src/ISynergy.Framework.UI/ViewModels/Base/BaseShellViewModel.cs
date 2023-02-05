@@ -344,12 +344,12 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// Opens the help asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected virtual Task OpenHelpAsync() => ThrowFeatureNotEnabledWarning();
+        protected virtual Task OpenHelpAsync() => throw new NotImplementedException();
 
         /// <summary>
         /// open feedback as an asynchronous operation.
         /// </summary>
-        protected virtual Task OpenFeedbackAsync() => ThrowFeatureNotEnabledWarning();
+        protected virtual Task OpenFeedbackAsync() => throw new NotImplementedException();
 
         /// <summary>
         /// restart application as an asynchronous operation.

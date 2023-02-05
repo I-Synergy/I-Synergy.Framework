@@ -1,9 +1,9 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
@@ -99,8 +99,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new SelectionViewModel(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-            (BaseCommonServices.NavigationService as INavigationServiceExtended)?.OpenBladeAsync(this, selectionVm);
-            return Task.CompletedTask;
+            return (BaseCommonServices.NavigationService as INavigationService)?.OpenBladeAsync(this, selectionVm);
         }
 
         /// <summary>
@@ -111,8 +110,7 @@ namespace Sample.ViewModels
         {
             var selectionVm = new SelectionViewModel(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
-            (BaseCommonServices.NavigationService as INavigationServiceExtended)?.OpenBladeAsync(this, selectionVm);
-            return Task.CompletedTask;
+            return (BaseCommonServices.NavigationService as INavigationService)?.OpenBladeAsync(this, selectionVm);
         }
 
         /// <summary>
