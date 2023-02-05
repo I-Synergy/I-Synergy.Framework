@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿#if NET7_0_WINDOWS10_0_19041 && !HAS_UNO
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -45,3 +46,4 @@ namespace ISynergy.Framework.UI.Hosting
         }
     }
 }
+#endif
