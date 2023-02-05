@@ -37,14 +37,14 @@ namespace ISynergy.Framework.UI.Controls
         // Using a DependencyProperty as the backing store for ContentType.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContentTypeProperty = DependencyProperty.Register(nameof(ContentType), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
 
-        public string Description
+        public string FileName
         {
-            get { return (string)GetValue(DescriptionProperty); }
-            set { SetValue(DescriptionProperty, value); }
+            get { return (string)GetValue(FileNameProperty); }
+            set { SetValue(FileNameProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Description.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
+        // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(nameof(FileName), typeof(string), typeof(ImageBrowser), new PropertyMetadata(string.Empty));
 
         /// <summary>
         /// ImageBrowser constructor.
@@ -69,7 +69,7 @@ namespace ISynergy.Framework.UI.Controls
                 {
                     FileBytes = result.First().File;
                     ContentType = result.First().FilePath.ToContentType();
-                    Description = result.First().FileName;
+                    FileName = result.First().FileName;
                 }
             };
         }
@@ -88,7 +88,7 @@ namespace ISynergy.Framework.UI.Controls
                 {
                     FileBytes = result.File;
                     ContentType = result.FilePath.ToContentType();
-                    Description = result.FileName;
+                    FileName = result.FileName;
                 }
             };
         }
@@ -116,7 +116,7 @@ namespace ISynergy.Framework.UI.Controls
                 {
                     FileBytes = result;
                     ContentType = "image/png";
-                    Description = $"FROM_CLIPBOARD_{DateTime.Now}";
+                    FileName = $"FROM_CLIPBOARD_{DateTime.Now}";
                 }
             }
         }

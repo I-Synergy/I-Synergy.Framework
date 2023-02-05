@@ -1,30 +1,18 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
-using ISynergy.Framework.UI.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.Windows.AppLifecycle;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
-using System.Web;
-using Windows.ApplicationModel.Activation;
-using Application = Microsoft.UI.Xaml.Application;
-using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
-
 
 namespace ISynergy.Framework.UI
 {
@@ -147,7 +135,7 @@ namespace ISynergy.Framework.UI
         /// Main Application Window.
         /// </summary>
         /// <value>The main window.</value>
-        public Window MainWindow { get; private set; }
+        public Microsoft.UI.Xaml.Window MainWindow { get; private set; }
 
         /// <summary>
         /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
@@ -155,7 +143,7 @@ namespace ISynergy.Framework.UI
         /// <param name="e">Event data for the event.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            MainWindow = new Window();
+            MainWindow = new Microsoft.UI.Xaml.Window();
 
             var rootFrame = MainWindow.Content as Frame;
 

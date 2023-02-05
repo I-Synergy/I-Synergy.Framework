@@ -25,86 +25,15 @@ namespace ISynergy.Framework.UI.Services
         private readonly ILanguageService _languageService;
 
         /// <summary>
-        /// Main window reference.
-        /// </summary>
-        private readonly Microsoft.UI.Xaml.Window _mainWindow;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="FileService" /> class.
         /// </summary>
         /// <param name="dialogService">The dialog service.</param>
         /// <param name="languageService">The language service.</param>
         public FileService(IDialogService dialogService, ILanguageService languageService)
         {
-            _mainWindow = ((BaseApplication)Application.Current)?.MainWindow;
             _dialogService = dialogService;
             _languageService = languageService;
-            
-            AddExtension = true;
-            CheckFileExists = false;
-            CheckPathExists = true;
-            FilterIndex = 1;
-            ValidateNames = true;
         }
-
-        /// <summary>
-        /// Gets or sets the filter to use when opening or saving the file.
-        /// </summary>
-        /// <value>The filter.</value>
-        public string Filter { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether a file dialog automatically adds an extension to a file name if the user omits an extension.
-        /// </summary>
-        /// <value><c>true</c> if extensions are added; otherwise, <c>false</c>. The default is <c>true</c>.</value>
-        public bool AddExtension { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether a file dialog displays a warning if the user specifies a file name that does not exist.
-        /// </summary>
-        /// <value><c>true</c> if warnings are displayed; otherwise, <c>false</c>. The default is <c>false</c>.</value>
-        public bool CheckFileExists { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value that specifies whether warnings are displayed if the user types invalid paths and file names.
-        /// </summary>
-        /// <value><c>true</c> if warnings are displayed; otherwise, <c>false</c>. The default is <c>true</c>.</value>
-        public bool CheckPathExists { get; set; }
-
-        /// <summary>
-        /// Gets or sets the index of the filter currently selected in a file dialog.
-        /// </summary>
-        /// <value>The index of the selected filter. The default is <c>1</c>.</value>
-        public int FilterIndex { get; set; }
-
-        /// <summary>
-        /// Gets or sets the initial directory.
-        /// </summary>
-        /// <value>The initial directory.</value>
-        public string InitialDirectory { get; set; }
-
-        /// <summary>
-        /// Gets or sets the title which will be used for display.
-        /// </summary>
-        /// <value>The title.</value>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// Gets the file path.
-        /// </summary>
-        /// <value>The file path.</value>
-        public string FilePath { get; private set; }
-        /// <summary>
-        /// Gets the type of the content.
-        /// </summary>
-        /// <value>The type of the content.</value>
-        public string ContentType { get; private set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the dialog accepts only valid Win32 file names.
-        /// </summary>
-        /// <value><c>true</c> if warnings will be shown when an invalid file name is provided; otherwise, <c>false</c>. The default is <c>true</c>.</value>
-        public bool ValidateNames { get; set; }
 
         /// <summary>
         /// Determines the filename of the file what will be used.
@@ -196,7 +125,7 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>System.Byte[].</returns>
         public async Task<byte[]> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
         {
-            if(await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result)
+            if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is List<FileResult> result)
                 return result.First().File;
 
             return null;
@@ -216,7 +145,7 @@ namespace ISynergy.Framework.UI.Services
         /// </returns>
         private async Task<List<FileResult>> PickFileAsync(string[] allowedTypes = null, bool multiple = false)
         {
-            var result = new List<FileResult>();    
+            var result = new List<FileResult>();
 
             var picker = new Windows.Storage.Pickers.FileOpenPicker
             {
@@ -225,6 +154,7 @@ namespace ISynergy.Framework.UI.Services
             };
 
 #if WINDOWS10_0_17763_0_OR_GREATER
+            var _mainWindow = ((BaseApplication)Application.Current)?.MainWindow;
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_mainWindow);
             WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 #endif
@@ -249,7 +179,7 @@ namespace ISynergy.Framework.UI.Services
                 picker.FileTypeFilter.Add("*");
             }
 
-            if(multiple)
+            if (multiple)
             {
                 if (await picker.PickMultipleFilesAsync() is IReadOnlyList<StorageFile> files)
                 {
@@ -276,7 +206,7 @@ namespace ISynergy.Framework.UI.Services
                         () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
                 }
             }
-            
+
             return result;
         }
 

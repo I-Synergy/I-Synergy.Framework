@@ -9,9 +9,8 @@ namespace Sample.Views
     public sealed partial class AuthenticationView : IAuthenticationView
     {
         public AuthenticationView(AuthenticationViewModel viewModel)
-            : base()
+            : base(viewModel)
         {
-            ViewModel = viewModel;
             this.InitializeComponent();
         }
     }

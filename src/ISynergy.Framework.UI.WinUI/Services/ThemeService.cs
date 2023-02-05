@@ -5,9 +5,10 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel;
+
+#if NET7_0_WINDOWS10_0_19041 && !HAS_UNO
 using WinRT.Interop;
-using Application = Microsoft.UI.Xaml.Application;
-using Style = ISynergy.Framework.Core.Models.Style;
+#endif
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -131,8 +132,9 @@ namespace ISynergy.Framework.UI.Services
         /// <summary>
         /// Setups the titlebar.
         /// </summary>
-        public void SetTitlebar(Window window)
+        public void SetTitlebar(Microsoft.UI.Xaml.Window window)
         {
+#if NET7_0_WINDOWS10_0_19041
             var appWindow = GetAppWindowForCurrentWindow(window);
 
             var iconPath = Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico");
@@ -162,13 +164,16 @@ namespace ISynergy.Framework.UI.Services
                 appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
                 appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.LightGray;
             }
+#endif
         }
 
-        protected virtual AppWindow GetAppWindowForCurrentWindow(Window window)
+#if NET7_0_WINDOWS10_0_19041 && !HAS_UNO
+        protected virtual AppWindow GetAppWindowForCurrentWindow(Microsoft.UI.Xaml.Window window)
         {
             var hWnd = WindowNative.GetWindowHandle(window);
             var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             return AppWindow.GetFromWindowId(wndId);
         }
+#endif
     }
 }
