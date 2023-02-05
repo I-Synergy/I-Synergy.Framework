@@ -12,16 +12,5 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// </summary>
         /// <value>The email address.</value>
         string EmailAddress { get; set; }
-        /// <summary>
-        /// Gets the title.
-        /// </summary>
-        /// <value>The title.</value>
-        string Title { get; }
-
-        /// <summary>
-        /// Resets the password asynchronous.
-        /// </summary>
-        /// <returns>Task&lt;System.Boolean&gt;.</returns>
-        Task<bool> ResetPasswordAsync();
     }
 }

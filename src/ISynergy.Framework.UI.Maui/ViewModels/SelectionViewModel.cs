@@ -1,18 +1,19 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
-namespace ISynergy.Framework.Mvvm.ViewModels
+namespace ISynergy.Framework.UI.ViewModels
 {
     /// <summary>
-    /// Class SelectionViewModel.
+    /// Class ViewModelDialogSelection.
     /// Implements the <see name="ViewModelBlade{IList{TEntity}}" />
     /// </summary>
     /// <seealso name="ViewModelBlade{IList{TEntity}}" />
