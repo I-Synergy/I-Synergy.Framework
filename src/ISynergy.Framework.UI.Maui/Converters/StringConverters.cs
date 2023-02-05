@@ -254,7 +254,9 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value.ToString();
+            if (decimal.TryParse(value.ToString(), out var result))
+                return result;
+            return 0m;
         }
     }
 

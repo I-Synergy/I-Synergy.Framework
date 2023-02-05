@@ -10,6 +10,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -99,9 +100,8 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<IDispatcherService, DispatcherService>();
             appBuilder.Services.AddSingleton<IClipboardService, ClipboardService>();
             appBuilder.Services.AddSingleton<IPopupNavigation>((s) => MopupService.Instance);
-
-            appBuilder.Services.AddTransient<IThemeService, ThemeService>();
-            appBuilder.Services.AddTransient<IFileService<FileResult>, FileService>();
+            appBuilder.Services.AddSingleton<IThemeService, ThemeService>();
+            appBuilder.Services.AddSingleton<IFileService<FileResult>, FileService>();
 
 
             languageService.AddResourceManager(typeof(TResource));
