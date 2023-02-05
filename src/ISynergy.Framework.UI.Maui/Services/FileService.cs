@@ -4,15 +4,6 @@ namespace ISynergy.Framework.UI.Services
 {
     internal class FileService : IFileService<FileResult>
     {
-        public string Filter { get; set; }
-        public bool AddExtension { get; set; }
-        public bool CheckFileExists { get; set; }
-        public bool CheckPathExists { get; set; }
-        public int FilterIndex { get; set; }
-        public string InitialDirectory { get; set; }
-        public string Title { get; set; }
-        public bool ValidateNames { get; set; }
-
         public async Task<List<FileResult>> BrowseFileAsync(string filefilter, bool multiple = false, long maxFileSize = 1048576)
         {
             try
