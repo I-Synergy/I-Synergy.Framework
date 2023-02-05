@@ -1,8 +1,8 @@
 ﻿using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using ISynergy.Framework.UI.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Services
 {
