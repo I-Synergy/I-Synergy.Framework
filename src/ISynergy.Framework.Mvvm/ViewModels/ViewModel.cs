@@ -226,14 +226,5 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             base.Dispose(disposing);
         }
-
-
-        /// <summary>
-        /// Throws a warning that feature is not available.
-        /// </summary>
-        /// <returns></returns>
-        protected Task ThrowFeatureNotEnabledWarning() => BaseCommonServices.DialogService.ShowInformationAsync(
-            BaseCommonServices.LanguageService.GetString("WarningFutureModule"),
-            "Features");
     }
 }

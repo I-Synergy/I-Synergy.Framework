@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using System.Reflection;
 using System.Windows;
@@ -18,7 +19,7 @@ namespace ISynergy.Framework.UI.Services
     /// Implements the <see cref="IBaseNavigationService" />
     /// </summary>
     /// <seealso cref="IBaseNavigationService" />
-    public class NavigationService : IBaseNavigationService
+    public class NavigationService : INavigationService
     {
         /// <summary>
         /// The frame

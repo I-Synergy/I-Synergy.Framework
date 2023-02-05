@@ -9,14 +9,18 @@
 
     <c:View.Resources>
         <converters:StringToDecimalConverter x:Key="StringToDecimalConverter" />
+        <converters:StringToIntegerConverter x:Key="StringToIntegerConverter" />
+        <converters:StringToDoubleConverter x:Key="StringToDoubleConverter" />
     </c:View.Resources>
     
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+    <VerticalStackLayout Spacing="10">
+        <Label Text="Decimal:"/>
+        <c:NumericEntry Type="Decimal" Text="{Binding DecimalValue, Converter={StaticResource StringToDecimalConverter}}" />
 
-        <c:DecimalEntry Text="{Binding DecimalValue, Converter={StaticResource StringToDecimalConverter}}" />
+        <Label Text="Double:"/>
+        <c:NumericEntry Type="Double" Text="{Binding DoubleValue, Converter={StaticResource StringToDoubleConverter}}" />
+
+        <Label Text="Integer:"/>
+        <c:NumericEntry Type="Integer" Text="{Binding IntegerValue, Converter={StaticResource StringToIntegerConverter}}" />
     </VerticalStackLayout>
 </c:View>

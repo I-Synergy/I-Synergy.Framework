@@ -165,7 +165,6 @@ namespace Sample.ViewModels
         /// Opens the settings asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected override Task OpenSettingsAsync() => 
-            ThrowFeatureNotEnabledWarning();
+        protected override Task OpenSettingsAsync() => throw new NotImplementedException();
     }
 }

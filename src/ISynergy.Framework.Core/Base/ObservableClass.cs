@@ -319,28 +319,13 @@ namespace ISynergy.Framework.Core.Base
         /// <returns></returns>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private SynchronizationContext _synchronizationContext;
-
-        [JsonIgnore]
-        [DataTableIgnore]
-        [XmlIgnore]
-        [Display(AutoGenerateField = false)]
-        protected SynchronizationContext SynchronizationContextInstance
-        {
-            get => _synchronizationContext ?? AsyncOperationManager.SynchronizationContext;
-            set => _synchronizationContext = value;
-        }
-
         /// <summary>
         /// Called when [property changed].
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (SynchronizationContextInstance != null)
-                SynchronizationContextInstance.Post(_ => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)), null);
-            else
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
 

@@ -23,6 +23,23 @@ namespace Sample.ViewModels
             set => SetValue(value);
         }
 
+        /// <summary>
+        /// Gets or sets the DoubleValue property value.
+        /// </summary>
+        public double DoubleValue
+        {
+            get => GetValue<double>();
+            set => SetValue(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the IntegerValue property value.
+        /// </summary>
+        public int IntegerValue
+        {
+            get => GetValue<int>();
+            set => SetValue(value);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.

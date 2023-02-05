@@ -23,7 +23,7 @@ using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.Extensions
 {
-    public static class UnoAppBuilderExtensions
+    public static class WinUIAppBuilderExtensions
     {
         /// <summary>
         /// Gets the shellView model types.

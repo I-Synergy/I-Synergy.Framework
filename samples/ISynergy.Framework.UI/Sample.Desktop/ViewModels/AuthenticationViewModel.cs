@@ -8,11 +8,11 @@ using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
-using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -311,8 +311,8 @@ namespace Sample.ViewModels
                 await BaseCommonServices.DialogService
                         .ShowInformationAsync(BaseCommonServices.LanguageService.GetString("Warning_Reset_Password"));
 
-                if (BaseCommonServices.NavigationService is INavigationServiceExtended navigationServiceExtended && navigationServiceExtended.CanGoBack)
-                    navigationServiceExtended.GoBack();
+                if (BaseCommonServices.NavigationService is INavigationService navigationService && navigationService.CanGoBack)
+                    navigationService.GoBack();
             }
         }
 

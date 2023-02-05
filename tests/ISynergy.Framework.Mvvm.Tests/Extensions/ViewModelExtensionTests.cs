@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Models.Tests;
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Mvvm.Extensions.Tests
 {
@@ -10,7 +10,6 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests
         [DataTestMethod]
         [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.MapsViewModel), "MapsViewModel")]
         [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "NoteViewModel")]
-        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.ViewModelDialogSelection), "SelectionViewModel")]
         public void GetNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
         {
             var result = viewModelType.GetViewModelName();
@@ -20,7 +19,6 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests
         [DataTestMethod]
         [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.MapsViewModel), "ISynergy.Framework.Mvvm.ViewModels.MapsViewModel")]
         [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "ISynergy.Framework.Mvvm.ViewModels.NoteViewModel")]
-        [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.ViewModelDialogSelection), "ISynergy.Framework.Mvvm.ViewModels.SelectionViewModel")]
         public void GetFullNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
         {
             var result = viewModelType.GetViewModelFullName();

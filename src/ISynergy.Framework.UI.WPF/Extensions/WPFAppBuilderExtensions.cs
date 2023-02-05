@@ -6,10 +6,12 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -90,7 +92,7 @@ namespace ISynergy.Framework.UI.Extensions
             services.AddSingleton<IMessageService, MessageService>();
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationServiceExtended, NavigationService>((s) => navigationService));
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseNavigationService, NavigationService>((s) => navigationService));
 
             services.AddSingleton<IContext, TContext>();
             services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
@@ -118,7 +120,7 @@ namespace ISynergy.Framework.UI.Extensions
         /// <param name="services"></param>
         /// <param name="mainAssembly">The main assembly.</param>
         /// <param name="navigationService"></param>
-        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, INavigationServiceExtended navigationService) => services.RegisterAssemblies(mainAssembly, navigationService, null);
+        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, INavigationService navigationService) => services.RegisterAssemblies(mainAssembly, navigationService, null);
 
         /// <summary>
         /// Registers the assemblies.
@@ -127,7 +129,7 @@ namespace ISynergy.Framework.UI.Extensions
         /// <param name="mainAssembly">The main assembly.</param>
         /// <param name="navigationService"></param>
         /// <param name="assemblyFilter">The assembly filter.</param>
-        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, INavigationServiceExtended navigationService, Func<AssemblyName, bool> assemblyFilter)
+        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, INavigationService navigationService, Func<AssemblyName, bool> assemblyFilter)
         {
             var assemblies = new List<Assembly>();
             assemblies.Add(mainAssembly);
@@ -254,7 +256,7 @@ namespace ISynergy.Framework.UI.Extensions
             }
         }
 
-        public static void ConfigureNavigationService(INavigationServiceExtended navigationService)
+        public static void ConfigureNavigationService(INavigationService navigationService)
         {
             foreach (var view in ViewTypes.Distinct())
             {
