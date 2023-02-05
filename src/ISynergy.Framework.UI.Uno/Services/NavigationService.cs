@@ -3,12 +3,10 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Reflection;
 
@@ -16,10 +14,10 @@ namespace ISynergy.Framework.UI.Services
 {
     /// <summary>
     /// Class NavigationService.
-    /// Implements the <see cref="INavigationServiceExtended" />
+    /// Implements the <see cref="INavigationService" />
     /// </summary>
-    /// <seealso cref="INavigationServiceExtended" />
-    public class NavigationService : INavigationServiceExtended
+    /// <seealso cref="INavigationService" />
+    public class NavigationService : INavigationService
     {
         /// <summary>
         /// The frame
@@ -235,7 +233,7 @@ namespace ISynergy.Framework.UI.Services
         public Task NavigateAsync<TViewModel>()
             where TViewModel : class, IViewModel => NavigateAsync<TViewModel>(null);
 
-        
+
         /// <summary>
         /// navigate as an asynchronous operation.
         /// </summary>
@@ -315,16 +313,14 @@ namespace ISynergy.Framework.UI.Services
 
         public Task ReplaceMainWindowAsync<T>() where T : IView
         {
-            if (ServiceLocator.Default.GetInstance<T>() is Page page && 
-                Application.Current is BaseApplication baseApplication && 
-                baseApplication.MainWindow.DispatcherQueue is DispatcherQueue dispatcherQueue)
-                    dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => baseApplication.MainWindow.Content = page);
+            if (ServiceLocator.Default.GetInstance<T>() is Page page && Application.Current is BaseApplication baseApplication)
+                DispatcherQueue.GetForCurrentThread().TryEnqueue(DispatcherQueuePriority.Normal, () => baseApplication.MainWindow.Content = page);
             else
                 throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
 
             return Task.CompletedTask;
         }
 
-        
+
     }
 }

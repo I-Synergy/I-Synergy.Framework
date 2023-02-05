@@ -26,7 +26,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services.Base
         /// Gets the navigation service.
         /// </summary>
         /// <value>The navigation service.</value>
-        INavigationService NavigationService { get; }
+        IBaseNavigationService NavigationService { get; }
         /// <summary>
         /// Gets the information service.
         /// </summary>

@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
@@ -15,10 +15,10 @@ namespace ISynergy.Framework.UI.Services
 {
     /// <summary>
     /// Class NavigationService.
-    /// Implements the <see cref="INavigationServiceExtended" />
+    /// Implements the <see cref="IBaseNavigationService" />
     /// </summary>
-    /// <seealso cref="INavigationServiceExtended" />
-    public class NavigationService : INavigationServiceExtended
+    /// <seealso cref="IBaseNavigationService" />
+    public class NavigationService : IBaseNavigationService
     {
         /// <summary>
         /// The frame
@@ -299,13 +299,13 @@ namespace ISynergy.Framework.UI.Services
             }
         }
 
-        Task INavigationService.NavigateAsync<TViewModel>()
+        Task IBaseNavigationService.NavigateAsync<TViewModel>()
         {
             this.Navigate<TViewModel>();
             return Task.CompletedTask;
         }
 
-        Task INavigationService.NavigateAsync<TViewModel>(object parameter)
+        Task IBaseNavigationService.NavigateAsync<TViewModel>(object parameter)
         {
             this.Navigate<TViewModel>(parameter);
             return Task.CompletedTask;
