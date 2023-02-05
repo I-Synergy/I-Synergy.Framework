@@ -34,7 +34,7 @@ namespace ISynergy.Framework.UI.Behaviors
                 Value = null
             };
 
-            var errorStyle = new Style
+            var errorStyle = new Microsoft.UI.Xaml.Style
             {
                 TargetType = typeof(Control)
             };

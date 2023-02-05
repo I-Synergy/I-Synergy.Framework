@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+﻿#if NET7_0_WINDOWS10_0_19041 && !HAS_UNO
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions;
 using Microsoft.Extensions.Configuration;
@@ -306,3 +307,4 @@ namespace ISynergy.Framework.UI.Hosting
             => services.AddSingleton<IHostLifetime, ConsoleLifetime>();
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿#if NET7_0_WINDOWS10_0_19041 && !HAS_UNO
+using Microsoft.UI.Xaml;
 
 namespace ISynergy.Framework.UI.Hosting
 {
@@ -31,3 +32,4 @@ namespace ISynergy.Framework.UI.Hosting
         public event Action Exiting;
     }
 }
+#endif

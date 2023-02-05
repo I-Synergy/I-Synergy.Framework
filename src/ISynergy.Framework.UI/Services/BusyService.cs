@@ -37,7 +37,7 @@ namespace ISynergy.Framework.UI.Services
             set
             {
                 SetValue(value);
-                OnPropertyChanged(nameof(IsEnabled));
+                IsEnabled = !value;
             }
         }
 
@@ -47,7 +47,8 @@ namespace ISynergy.Framework.UI.Services
         /// <value><c>true</c> if this instance is enabled; otherwise, <c>false</c>.</value>
         public bool IsEnabled
         {
-            get => !IsBusy;
+            get => GetValue<bool>();
+            private set => SetValue(value);
         }
 
         /// <summary>
@@ -68,13 +69,9 @@ namespace ISynergy.Framework.UI.Services
         public void StartBusy(string message = null)
         {
             if (message is not null)
-            {
                 BusyMessage = message;
-            }
             else
-            {
                 BusyMessage = _languageService.GetString("PleaseWait");
-            }
 
             IsBusy = true;
         }

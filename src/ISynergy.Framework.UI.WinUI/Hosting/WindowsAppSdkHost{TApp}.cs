@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Validation;
+﻿#if NET7_0_WINDOWS10_0_19041 && !HAS_UNO
+using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -263,3 +264,4 @@ namespace ISynergy.Framework.UI.Hosting
         }
     }
 }
+#endif
