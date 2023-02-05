@@ -1,11 +1,12 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+﻿using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
-namespace ISynergy.Framework.Mvvm.Abstractions.Services
+namespace ISynergy.Framework.UI.Abstractions.Services
 {
     /// <summary>
     /// Interface INavigationService
     /// </summary>
-    public interface INavigationServiceExtended : INavigationService
+    public interface INavigationService : IBaseNavigationService
     {
         object Frame { get; set; }
         bool CanGoBack { get; }

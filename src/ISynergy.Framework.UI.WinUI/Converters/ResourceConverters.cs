@@ -1,9 +1,6 @@
-﻿using System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Data;
+﻿using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-using Application = Microsoft.UI.Xaml.Application;
 
 namespace ISynergy.Framework.UI.Converters
 {

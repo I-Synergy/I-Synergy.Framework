@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ISynergy.Framework.UI.Models;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 
 namespace ISynergy.Framework.UI.Common
 {

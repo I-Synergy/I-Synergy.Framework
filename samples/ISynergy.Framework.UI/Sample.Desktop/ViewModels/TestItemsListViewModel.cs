@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+using ISynergy.Framework.UI.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 
 namespace Sample.ViewModels
 {
@@ -182,8 +184,7 @@ namespace Sample.ViewModels
         {
             var selectionVM = new SelectionViewModel(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
             selectionVM.Submitted += SelectionVM_Submitted;
-            (CommonServices.NavigationService as INavigationServiceExtended)?.OpenBladeAsync(this, selectionVM);
-            return Task.CompletedTask;
+            return (CommonServices.NavigationService as INavigationService)?.OpenBladeAsync(this, selectionVM);
         }
 
         /// <summary>

@@ -240,7 +240,7 @@ namespace ISynergy.Framework.UI.Converters
             }
             else
             {
-                return 0;
+                return 0m;
             }
         }
 
@@ -254,7 +254,52 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value.ToString();
+            if (decimal.TryParse(value.ToString(), out var result))
+                return result;
+            return 0m;
+        }
+    }
+
+    /// <summary>
+    /// Class StringToDecimalConverter.
+    /// Implements the <see cref="IValueConverter" />
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
+    public class StringToDoubleConverter : IValueConverter
+    {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.Object.</returns>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (double.TryParse(value.ToString(), out var result))
+            {
+                return result;
+            }
+            else
+            {
+                return 0d;
+            }
+        }
+
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.Object.</returns>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (double.TryParse(value.ToString(), out var result))
+                return result;
+            return 0d;
         }
     }
 

@@ -1,22 +1,18 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
-namespace ISynergy.Framework.Mvvm.ViewModels
+namespace ISynergy.Framework.UI.ViewModels
 {
-    /// <summary>
-    /// Class SelectionViewModel.
-    /// Implements the <see name="ViewModelBlade{IList{TEntity}}" />
-    /// </summary>
-    /// <seealso name="ViewModelBlade{IList{TEntity}}" />
-    public class SelectionViewModel : ViewModelDialog<List<object>>, ISelectionViewModel
+    public class SelectionViewModel : ViewModelBlade<List<object>>, IViewModelBlade, ISelectionViewModel
     {
         /// <summary>
         /// Gets the title.
@@ -96,14 +92,10 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             Validator = new Action<IObservableClass>(arg =>
             {
                 if (SelectionMode == SelectionModes.Single && SelectedItems.Count != 1)
-                {
                     Properties[nameof(SelectedItems)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
-                }
 
                 if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
-                {
                     Properties[nameof(SelectedItems)].Errors.Add(commonServices.LanguageService.GetString("WarningSelectItem"));
-                }
             });
 
             Search_Command = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));

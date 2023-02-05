@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Services;
 using Sample.Abstractions.Services;
 
@@ -39,7 +40,7 @@ namespace Sample.Services
             IBusyService busyService,
             ILanguageService languageService,
             IDialogService dialogService,
-            INavigationServiceExtended navigationService,
+            INavigationService navigationService,
             IInfoService infoService,
             IConverterService converterService,
             IDispatcherService dispatcherService,

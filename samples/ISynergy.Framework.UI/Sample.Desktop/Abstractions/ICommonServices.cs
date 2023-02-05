@@ -21,5 +21,6 @@ namespace Sample.Abstractions.Services
         /// </summary>
         /// <value>The file service.</value>
         IFileService<FileResult> FileService { get; }
+
     }
 }
