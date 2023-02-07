@@ -15,12 +15,12 @@
     
     <VerticalStackLayout Spacing="10">
         <Label Text="Decimal:"/>
-        <c:NumericEntry Type="Decimal" Text="{Binding DecimalValue, Converter={StaticResource StringToDecimalConverter}}" />
+        <c:DecimalEntry Value="{Binding DecimalValue}" />
 
         <Label Text="Double:"/>
-        <c:NumericEntry Type="Double" Text="{Binding DoubleValue, Converter={StaticResource StringToDoubleConverter}}" />
+        <c:DoubleEntry Value="{Binding DoubleValue}" />
 
         <Label Text="Integer:"/>
-        <c:NumericEntry Type="Integer" Text="{Binding IntegerValue, Converter={StaticResource StringToIntegerConverter}}" />
+        <c:IntegerEntry Value="{Binding IntegerValue}" />
     </VerticalStackLayout>
 </c:View>
