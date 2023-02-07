@@ -54,6 +54,8 @@ namespace Sample.ViewModels
             : base(context, commonServices, logger)
         {
             DecimalValue = 2910.1975m;
+            DoubleValue = 291019.75d;
+            IntegerValue = 29101975;
         }
     }
 }
