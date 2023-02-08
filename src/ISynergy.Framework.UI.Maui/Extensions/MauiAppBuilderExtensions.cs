@@ -88,7 +88,7 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
             appBuilder.Services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
             appBuilder.Services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
-            appBuilder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
+            appBuilder.Services.AddSingleton<INavigationService, NavigationService>((s) => navigationService);
             appBuilder.Services.AddSingleton<IMessageService, MessageService>();
             appBuilder.Services.AddSingleton<IContext, TContext>();
             appBuilder.Services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
@@ -99,7 +99,7 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<IDialogService, DialogService>();
             appBuilder.Services.AddSingleton<IDispatcherService, DispatcherService>();
             appBuilder.Services.AddSingleton<IClipboardService, ClipboardService>();
-            appBuilder.Services.AddSingleton<IPopupNavigation>((s) => MopupService.Instance);
+            appBuilder.Services.AddSingleton<IPopupNavigation, PopupNavigation>();
             appBuilder.Services.AddSingleton<IThemeService, ThemeService>();
             appBuilder.Services.AddSingleton<IFileService<FileResult>, FileService>();
 
