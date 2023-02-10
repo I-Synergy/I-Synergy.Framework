@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
@@ -82,12 +83,8 @@ namespace ISynergy.Framework.UI.Converters
             var list = new List<KeyValuePair<int, string>>();
 
             if (value is Enum)
-            {
                 foreach (Enum item in Enum.GetValues(value.GetType()))
-                {
-                    list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), GetDescription(item)));
-                }
-            }
+                    list.Add(new KeyValuePair<int, string>(System.Convert.ToInt32(item), item.GetLocalizedDescription()));
 
             return list;
         }
@@ -105,23 +102,9 @@ namespace ISynergy.Framework.UI.Converters
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Gets the description.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        /// <exception cref="ArgumentNullException">value</exception>
-        public static string GetDescription(Enum value)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(value.ToString());
-        }
     }
+
+
 
     /// <summary>
     /// Class EnumToStringConverter.
@@ -141,11 +124,9 @@ namespace ISynergy.Framework.UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()) is Type type && type.IsEnum)
-            {
-                return GetDescription(Enum.Parse(type, value.ToString()) as Enum);
-            }
+                return (Enum.Parse(type, value.ToString()) as Enum).GetLocalizedDescription();
 
-            return GetDescription(Enum.Parse(value.GetType(), value.ToString()) as Enum);
+            return (Enum.Parse(value.GetType(), value.ToString()) as Enum).GetLocalizedDescription();
         }
 
         /// <summary>
@@ -161,30 +142,43 @@ namespace ISynergy.Framework.UI.Converters
         {
             throw new NotImplementedException();
         }
+    }
 
+    /// <summary>
+    /// Class EnumToStringConverter.
+    /// Implements the <see cref="IValueConverter" />
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
+    public class EnumToDescriptionConverter : IValueConverter
+    {
         /// <summary>
-        /// Gets the description.
+        /// Converts the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns>System.String.</returns>
-        /// <exception cref="ArgumentNullException">value</exception>
-        public static string GetDescription(Enum value)
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.Object.</returns>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            if (value is Enum enumeration)
+                return enumeration.GetLocalizedDescription();
 
-            var description = value.ToString();
-            var fieldInfo = value.GetType().GetField(description);
-            var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return value;
+        }
 
-            if (attributes is not null && attributes.Length > 0)
-            {
-                description = ServiceLocator.Default.GetInstance<ILanguageService>().GetString(attributes[0].Description);
-            }
-
-            return description;
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }
