@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Attributes;
-using System;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Extensions
@@ -17,7 +16,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns>System.String.</returns>
         /// <exception cref="ArgumentException">EnumerationValue must be of Enum type - enumerationValue</exception>
         public static string GetDescription<T>(this T enumerationValue)
-            where T : struct
+            where T : Enum
         {
             Type type = enumerationValue.GetType();
             
@@ -47,7 +46,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns>System.String.</returns>
         /// <exception cref="ArgumentException">EnumerationValue must be of Enum type - enumerationValue</exception>
         public static string GetLocalizedDescription<T>(this T enumerationValue)
-            where T : struct
+            where T : Enum
         {
             Type type = enumerationValue.GetType();
             if (!type.IsEnum)
@@ -66,6 +65,22 @@ namespace ISynergy.Framework.Core.Extensions
 
             //If we have no description attribute, just return the ToString of the enum
             return enumerationValue.ToString();
+        }
+
+        /// <summary>
+        /// Converts enum to a list of enum values.
+        /// </summary>
+        /// <param name="enumeration"></param>
+        /// <returns></returns>
+        public static List<Enum> ToList(this Type enumeration)
+        {
+            var list = new List<Enum>();
+
+            if (enumeration.IsEnum)
+                foreach (Enum item in Enum.GetValues(enumeration))
+                    list.Add(item);
+
+            return list;
         }
     }
 }
