@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Models;
+﻿using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 

@@ -3,9 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels
 {

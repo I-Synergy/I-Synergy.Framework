@@ -54,6 +54,9 @@ namespace ISynergy.Framework.Logging.AppCenter.Services
 
             if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
             {
+                Microsoft.AppCenter.AppCenter.SetUserId(profile.Username);
+                Microsoft.AppCenter.AppCenter.SetCountryCode(profile.CountryCode);
+
                 metrics.Add(nameof(profile.Username), profile.Username);
                 metrics.Add(nameof(profile.UserId), profile.UserId.ToString());
                 metrics.Add(nameof(profile.AccountId), profile.AccountId.ToString());

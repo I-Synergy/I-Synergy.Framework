@@ -9,7 +9,7 @@
 
     <ContentView 
         ControlTemplate="{StaticResource DefaultDialogTemplate}"
-        MaximumWidthRequest="500">
+        MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
         
         <StackLayout Margin="10">
             <RadioButton x:Name="Button_Language_nl" Content="{m:GetString Key=Language_Dutch}" GroupName="Language" >

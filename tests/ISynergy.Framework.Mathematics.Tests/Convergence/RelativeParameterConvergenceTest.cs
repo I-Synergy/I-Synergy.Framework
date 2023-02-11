@@ -3,8 +3,7 @@
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Convergence;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;    
-    
+
     [TestClass]
     public class RelativeParameterConvergenceTest
     {

@@ -2,9 +2,7 @@
 {
     using ISynergy.Framework.Mathematics;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Collections.Generic;
     using System;
-    using System.IO;
     using ISynergy.Framework.Mathematics.Formats;
 
     [TestClass]

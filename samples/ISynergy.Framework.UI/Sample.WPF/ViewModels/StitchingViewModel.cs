@@ -4,13 +4,7 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions;
 using Sample.Abstractions.Services;
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Sample.ViewModels
 {
@@ -292,10 +286,10 @@ namespace Sample.ViewModels
             return Task.CompletedTask;
         }
 
-        private async Task BrowseFolderAsync()
+        private Task BrowseFolderAsync()
         {
             //var folder = await _commonServices.FileService.OpenFolderDialogAsync();
-            
+
             //if (!string.IsNullOrEmpty(folder))
             //{
             //    Folder = folder;
@@ -326,6 +320,8 @@ namespace Sample.ViewModels
             //    Files = files;
             //    Count = Files.Length;
             //}
+
+            return Task.CompletedTask;
         }
     }
 }

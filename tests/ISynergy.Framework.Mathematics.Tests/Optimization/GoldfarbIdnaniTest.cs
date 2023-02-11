@@ -9,7 +9,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
 
     [TestClass]
     public class GoldfarbIdnaniTest

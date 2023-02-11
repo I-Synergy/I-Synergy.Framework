@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Framework.UI.Controls
 {
-    public class DecimalEntry : NumericEntry<decimal>
+    public sealed class DecimalEntry : NumericEntry<decimal>
     {
         public DecimalEntry() : base()
         {

@@ -18,7 +18,6 @@ namespace Sample.Services
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="restService"></param>
         public SettingsService()
         {
         }

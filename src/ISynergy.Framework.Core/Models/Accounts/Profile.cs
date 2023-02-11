@@ -8,11 +8,25 @@ namespace ISynergy.Framework.Core.Models.Accounts
     /// </summary>
     public class Profile : IProfile
     {
-        public Profile(Token token, Guid accountId, string accountDescription, string timeZoneId, Guid userId, string username, string email, List<string> roles, List<string> modules, DateTimeOffset licenseExpration, int licenseUsers, DateTime expiration)
+        public Profile(
+            Token token, 
+            Guid accountId, 
+            string accountDescription, 
+            string timeZoneId, 
+            string countryCode,
+            Guid userId, 
+            string username, 
+            string email, 
+            List<string> roles, 
+            List<string> modules, 
+            DateTimeOffset licenseExpration, 
+            int licenseUsers, 
+            DateTime expiration)
         {
             AccountId = accountId;
             AccountDescription = accountDescription;
             TimeZoneId = timeZoneId;
+            CountryCode = countryCode;
             UserId = userId;
             Username = username;
             Email = email;
@@ -41,6 +55,11 @@ namespace ISynergy.Framework.Core.Models.Accounts
         /// </summary>
         /// <value>The time zone identifier.</value>
         public string TimeZoneId { get; }
+
+        /// <summary>
+        /// Gets the country code.
+        /// </summary>
+        public string CountryCode { get; }
 
         /// <summary>
         /// Gets or sets the UserId property value.
