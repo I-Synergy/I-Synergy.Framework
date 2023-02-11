@@ -9,7 +9,6 @@ using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
-using Sample.Views;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
 
 namespace Sample.ViewModels

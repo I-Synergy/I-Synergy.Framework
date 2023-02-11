@@ -27,7 +27,7 @@ namespace ISynergy.Framework.UI.Services
 
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // The user canceled or something went wrong
             }

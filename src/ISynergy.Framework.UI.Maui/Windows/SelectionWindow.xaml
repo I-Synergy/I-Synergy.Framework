@@ -8,7 +8,7 @@
 
     <ContentView 
         ControlTemplate="{StaticResource DefaultDialogTemplate}"
-        MaximumWidthRequest="600">
+        MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
         
         <Grid>
             <Grid.RowDefinitions>

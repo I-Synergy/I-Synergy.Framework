@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {

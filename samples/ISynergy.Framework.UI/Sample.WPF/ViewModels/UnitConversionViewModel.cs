@@ -4,10 +4,8 @@ using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Enumerations;
 using ISynergy.Framework.Physics.Extensions;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions;
 using Sample.Abstractions.Services;
 using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace Sample.ViewModels
 {
