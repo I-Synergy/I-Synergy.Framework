@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Points;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Points.Tests
 {

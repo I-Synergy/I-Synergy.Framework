@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -8,11 +7,7 @@ using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Enumerations;
 using Sample.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Services;
 

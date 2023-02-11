@@ -9,7 +9,6 @@
     using System.Linq;
     using ISynergy.Framework.Core.Ranges;
     using ISynergy.Framework.Mathematics.Exceptions;
-    using ISynergy.Framework.Mathematics.Comparers;
     using ISynergy.Framework.Mathematics.Formats;
     using ISynergy.Framework.Mathematics.Enumerations;
     using ISynergy.Framework.Mathematics.Common;

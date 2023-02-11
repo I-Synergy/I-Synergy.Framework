@@ -16,7 +16,6 @@ using Sample.Models;
 using Sample.Services;
 using Sample.ViewModels;
 using Sample.Views;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace Sample

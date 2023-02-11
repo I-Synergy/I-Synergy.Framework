@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Storage.Abstractions.Services;
-using Sample.Storage.Azure.Options;
 using System;
 using System.IO;
 using System.Threading.Tasks;

@@ -14,7 +14,6 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
-using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Mopups.Hosting;
@@ -91,7 +90,7 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<INavigationService, NavigationService>((s) => navigationService);
             appBuilder.Services.AddSingleton<IMessageService, MessageService>();
             appBuilder.Services.AddSingleton<IContext, TContext>();
-            appBuilder.Services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
+            appBuilder.Services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
             appBuilder.Services.AddSingleton<ILocalizationService, LocalizationService>();
             appBuilder.Services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             appBuilder.Services.AddSingleton<IConverterService, ConverterService>();

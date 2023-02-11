@@ -6,7 +6,6 @@ using ISynergy.Framework.IO.Models.Tests;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.IO.Watchers;
 using ISynergy.Framework.IO.Models;
-using WatcherEventHandler = ISynergy.Framework.IO.Watchers.Base.BaseWatcher<ISynergy.Framework.IO.Watchers.FileSystemWatcherEx, ISynergy.Framework.IO.Events.WatcherExEventArgs>;
 
 namespace ISynergy.Framework.IO.Tests.Fixtures
 {

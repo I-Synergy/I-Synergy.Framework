@@ -1,6 +1,6 @@
 ﻿namespace ISynergy.Framework.UI.Controls
 {
-    public class DoubleEntry : NumericEntry<double>
+    public sealed class DoubleEntry : NumericEntry<double>
     {
         public DoubleEntry() : base()
         {

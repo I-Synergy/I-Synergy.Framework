@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Sample.Abstractions.Services
+﻿namespace Sample.Abstractions.Services
 {
     /// <summary>
     /// Interface IClientMonitorService

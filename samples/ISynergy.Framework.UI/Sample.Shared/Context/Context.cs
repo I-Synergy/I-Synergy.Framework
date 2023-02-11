@@ -6,11 +6,8 @@ using ISynergy.Framework.Core.Enumerations;
 using Microsoft.Extensions.Options;
 using Sample.Options;
 using Sample.Shared.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 
 namespace Sample
 {
