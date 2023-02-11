@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.UI.Enumerations;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -19,6 +20,16 @@ namespace ISynergy.Framework.UI.Controls
             set => SetValue(ValueProperty, value);
         }
 
+        [Browsable(false)]
+        [Bindable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new string Text
+        {
+            get => (string)GetValue(TextProperty);
+            internal set => SetValue(TextProperty, value);
+        }
+
         protected NumericEntry()
             : base()
         {
@@ -26,7 +37,6 @@ namespace ISynergy.Framework.UI.Controls
             IsPassword = false;
             IsTextPredictionEnabled = false;
             IsSpellCheckEnabled = false;
-            Text = default(T).ToString();
             TextChanged += NumericEntry_TextChanged;
         }
 

@@ -1,13 +1,13 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
 
-namespace ISynergy.Framework.UI.Services.Base
+namespace ISynergy.Framework.UI.Services
 {
-    public class BaseExceptionHandlerService : IExceptionHandlerService
+    public class ExceptionHandlerService : IExceptionHandlerService
     {
         private readonly IBusyService _busyService;
         private readonly ILanguageService _languageService;
@@ -21,11 +21,11 @@ namespace ISynergy.Framework.UI.Services.Base
         /// <param name="dialogService"></param>
         /// <param name="languageService"></param>
         /// <param name="logger"></param>
-        public BaseExceptionHandlerService(
+        public ExceptionHandlerService(
             IBusyService busyService,
             IDialogService dialogService,
             ILanguageService languageService,
-            ILogger<BaseExceptionHandlerService> logger)
+            ILogger<ExceptionHandlerService> logger)
         {
             _busyService = busyService;
             _languageService = languageService;

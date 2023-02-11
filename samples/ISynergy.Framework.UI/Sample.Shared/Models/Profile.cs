@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Models;
 
 namespace Sample.Shared.Models
@@ -27,6 +25,11 @@ namespace Sample.Shared.Models
         /// </summary>
         /// <value>The time zone identifier.</value>
         public string TimeZoneId => "W. Europe Standard Time";
+        
+        /// <summary>
+        /// Gets the country code.
+        /// </summary>
+        public string CountryCode => "nl";
 
         /// <summary>
         /// Gets the user identifier.

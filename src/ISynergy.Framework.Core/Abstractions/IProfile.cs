@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Core.Abstractions
         /// <summary>
         /// Gets the country ISO2 code.
         /// </summary>
-        /// string CountryISO2 { get; set; }
+        string CountryCode { get; }
         /// <summary>
         /// Gets the user identifier.
         /// </summary>

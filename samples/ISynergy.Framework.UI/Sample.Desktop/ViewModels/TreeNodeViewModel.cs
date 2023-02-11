@@ -5,7 +5,6 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;
-using System;
 using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels

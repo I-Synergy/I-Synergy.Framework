@@ -243,8 +243,10 @@ namespace ISynergy.Framework.UI.ViewModels
 
                 Modules = modules.OrderBy(o => o.ModuleId).ToList();
 
-                SelectedModules = new List<Module>();
-                SelectedModules.Add(Modules.First());
+                SelectedModules = new List<Module>
+                {
+                    Modules.First()
+                };
 
                 Countries = countries.OrderBy(o => o.CountryISO).ToList();
             }
@@ -280,7 +282,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (Validate())
             {
-                string emailaddress = string.Empty;
+                string emailaddress;
 
                 // if email starts with "test:" or "local:"
                 // remove this prefix and set environment to test.
@@ -316,14 +318,14 @@ namespace ISynergy.Framework.UI.ViewModels
                         Password = Password,
                         Modules = Modules,
                         UsersAllowed = 1,
-                        CountryISO2Code = SelectedCountry.ISO2Code,
+                        CountryCode = SelectedCountry.ISO2Code,
                         TimeZoneId = SelectedTimeZone
                     };
 
                     if (await _authenticationService.RegisterNewAccountAsync(registrationData))
                     {
                         await BaseCommonServices.DialogService.ShowInformationAsync(BaseCommonServices.LanguageService.GetString("WarningRegistrationConfirmEmail"));
-                        SignInAsync();
+                        await SignInAsync();
                     }
                 }
             }

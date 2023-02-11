@@ -16,7 +16,7 @@
     
     <ContentView 
         ControlTemplate="{DynamicResource DefaultDialogTemplate}"
-        MaximumWidthRequest="600">
+        MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
         
         <VerticalStackLayout>
             <HorizontalStackLayout HorizontalOptions="Center">

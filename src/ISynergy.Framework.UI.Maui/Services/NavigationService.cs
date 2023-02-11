@@ -17,7 +17,9 @@ namespace ISynergy.Framework.UI.Services
         public Task ReplaceMainWindowAsync<T>() where T : IView
         {
             if (ServiceLocator.Default.GetInstance<T>() is Page page)
-                Application.Current.MainPage.Dispatcher.Dispatch(() => Application.Current.MainPage = new NavigationPage(page));
+                Application.Current.MainPage.Dispatcher.Dispatch(() => {
+                    Application.Current.MainPage = new NavigationPage(page);
+                    });
             else
                 throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
 

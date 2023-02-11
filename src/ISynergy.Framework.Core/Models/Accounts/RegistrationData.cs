@@ -75,8 +75,11 @@ namespace ISynergy.Framework.Core.Models.Accounts
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Country code (ISO2)
+        /// </summary>
         [Required]
-        public string CountryISO2Code
+        public string CountryCode
         {
             get { return GetValue<string>(); }
             set { SetValue(value); }

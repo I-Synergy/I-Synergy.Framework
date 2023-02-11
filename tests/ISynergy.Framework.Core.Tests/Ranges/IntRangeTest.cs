@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Ranges;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Ranges.Tests
 {
