@@ -44,8 +44,10 @@ namespace ISynergy.Framework.Automations.Tests
                 Active = false
             };
 
-            _defaultAutomation = new Automation();
-            _defaultAutomation.IsActive = true;
+            _defaultAutomation = new Automation
+            {
+                IsActive = true
+            };
             _defaultAutomation.Conditions.Add(new Condition<Customer>(_defaultAutomation.AutomationId, (e) => !string.IsNullOrEmpty(e.Name)));
             _defaultAutomation.Conditions.Add(new Condition<Customer>(_defaultAutomation.AutomationId, (e) => !string.IsNullOrEmpty(e.Email)));
             _defaultAutomation.Conditions.Add(new Condition<Customer>(_defaultAutomation.AutomationId, (e) => e.Age >= 18));
@@ -57,8 +59,8 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod()]
         public void AutomationDefaultInActiveTest()
         {
-            var _defaultAutomation = new Automation();
-            Assert.IsFalse(_defaultAutomation.IsActive);
+            var defaultAutomation = new Automation();
+            Assert.IsFalse(defaultAutomation.IsActive);
         }
 
         /// <summary>
@@ -67,9 +69,12 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod()]
         public void AutomationActiveTest()
         {
-            var _defaultAutomation = new Automation();
-            _defaultAutomation.IsActive = true;
-            Assert.IsTrue(_defaultAutomation.IsActive);
+            var defaultAutomation = new Automation
+            {
+                IsActive = true
+            };
+
+            Assert.IsTrue(defaultAutomation.IsActive);
         }
 
         /// <summary>
@@ -90,7 +95,7 @@ namespace ISynergy.Framework.Automations.Tests
             // Assert should succeed because condition is met.
             Assert.IsTrue(result1.Succeeded);
             // Assert should succeed because condition is met and delay is applied.
-            Assert.IsTrue(stopwatch.Elapsed > TimeSpan.FromSeconds(1));
+            Assert.IsTrue(stopwatch.Elapsed >= TimeSpan.FromSeconds(1));
 
             stopwatch.Reset();
 
@@ -111,7 +116,7 @@ namespace ISynergy.Framework.Automations.Tests
         }
 
         /// <summary>
-        /// Scenario where _defaultAutomation is run and executed before timing out.
+        /// Scenario where defaultAutomation is run and executed before timing out.
         /// </summary>
         /// <returns></returns>
         [TestMethod]
@@ -159,7 +164,7 @@ namespace ISynergy.Framework.Automations.Tests
         }
 
         /// <summary>
-        /// Scenario where _defaultAutomation is run and executed before timing out.
+        /// Scenario where defaultAutomation is run and executed before timing out.
         /// </summary>
         /// <returns></returns>
         [TestMethod]
@@ -182,7 +187,7 @@ namespace ISynergy.Framework.Automations.Tests
         }
 
         /// <summary>
-        /// Scenario where _defaultAutomation trigger is set and handled.
+        /// Scenario where defaultAutomation trigger is set and handled.
         /// </summary>
         /// <returns></returns>
         [TestMethod]
@@ -217,16 +222,20 @@ namespace ISynergy.Framework.Automations.Tests
         }
 
         /// <summary>
-        /// Scenario where _defaultAutomation is cancelled by timeout.
+        /// Scenario where defaultAutomation is cancelled by timeout.
         /// </summary>
         /// <returns></returns>
         [TestMethod]
         public async Task AutomationScenario5TestAsync()
         {
-            var automation = new Automation();
-            automation.IsActive = true;
-            automation.ExecutionTimeout = TimeSpan.FromSeconds(5);
+            var automation = new Automation
+            {
+                IsActive = true,
+                ExecutionTimeout = TimeSpan.FromSeconds(5)
+            };
+
             automation.Actions.Add(new DelayAction(automation.AutomationId, TimeSpan.FromSeconds(10)));
+            
             await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => _automationService.ExecuteAsync(automation, null));
         }
 
@@ -238,9 +247,12 @@ namespace ISynergy.Framework.Automations.Tests
         public async Task AutomationScenario6TestAsync()
         {
             var stopwatch = new Stopwatch();
-            var automation = new Automation();
-            automation.IsActive = true;
-            automation.ExecutionTimeout = TimeSpan.FromSeconds(10);
+            var automation = new Automation
+            {
+                IsActive = true,
+                ExecutionTimeout = TimeSpan.FromSeconds(10)
+            };
+
             automation.Actions.Add(new DelayAction(automation.AutomationId, TimeSpan.FromSeconds(2)));
             automation.Actions.Add(new DelayAction(automation.AutomationId, TimeSpan.FromSeconds(2)));
             automation.Actions.Add(new DelayAction(automation.AutomationId, TimeSpan.FromSeconds(2)));
@@ -261,9 +273,11 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public Task AutomationScenario7TestAsync()
         {
-            var automation = new Automation();
-            automation.IsActive = true;
-            automation.ExecutionTimeout = TimeSpan.FromSeconds(10);
+            var automation = new Automation
+            {
+                IsActive = true,
+                ExecutionTimeout = TimeSpan.FromSeconds(10)
+            };
 
             var stateTrigger = new BooleanStateTrigger(
                 automation.AutomationId,
@@ -292,9 +306,11 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public Task AutomationScenario8TestAsync()
         {
-            var automation = new Automation();
-            automation.IsActive = true;
-            automation.ExecutionTimeout = TimeSpan.FromSeconds(10);
+            var automation = new Automation
+            {
+                IsActive = true,
+                ExecutionTimeout = TimeSpan.FromSeconds(10)
+            };
 
             var name = "Test";
 
