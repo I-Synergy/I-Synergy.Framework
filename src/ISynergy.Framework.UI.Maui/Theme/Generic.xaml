@@ -172,7 +172,7 @@
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
-        <Setter Property="MinimumHeightRequest" Value="{StaticResource DefaultMinimumHeightRequest}"/>
+        <Setter Property="HeightRequest" Value="88"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
