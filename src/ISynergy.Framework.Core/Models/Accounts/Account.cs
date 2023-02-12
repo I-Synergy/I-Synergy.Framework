@@ -115,6 +115,16 @@ namespace ISynergy.Framework.Core.Models.Accounts
             get { return GetValue<string>(); }
             set { SetValue(value); }
         }
+
+        /// <summary>
+        /// Gets or sets the CountryCode property value.
+        /// </summary>
+        [Required]
+        public string CountryCode
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
     }
 
     /// <summary>
