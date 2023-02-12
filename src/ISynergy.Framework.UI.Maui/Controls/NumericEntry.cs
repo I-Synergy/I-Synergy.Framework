@@ -37,6 +37,7 @@ namespace ISynergy.Framework.UI.Controls
             IsPassword = false;
             IsTextPredictionEnabled = false;
             IsSpellCheckEnabled = false;
+            ClearButtonVisibility = ClearButtonVisibility.WhileEditing;
             TextChanged += NumericEntry_TextChanged;
         }
 

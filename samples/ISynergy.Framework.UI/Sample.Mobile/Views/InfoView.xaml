@@ -23,6 +23,9 @@
             <Label Text="Activation"/>
             <Entry Text="{Binding Startup}" IsReadOnly="True"/>
 
+            <Label Text="Memo"/>
+            <Editor />
+
             <Button Text="Set Busy On" Command="{Binding BusyOn_Command}"/>
             <Button Text="Set Busy Off" Command="{Binding BusyOff_Command}"/>
         </VerticalStackLayout>

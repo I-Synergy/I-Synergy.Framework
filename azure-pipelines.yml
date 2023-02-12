@@ -113,21 +113,6 @@ stages:
             projectName: 'I-Synergy.Framework'
             projectVersion: '$(GitVersion.FullSemVer)'
 
-        - task: UseDotNet@2
-          displayName: 'Install .Net 7.0 SDK'
-          inputs:
-            packageType: 'sdk'
-            version: '7.x'
-
-        - task: Bash@3
-          displayName: Install MAUI
-          inputs:
-            targetType: 'inline'
-            script: |
-              dotnet nuget locals all --clear 
-              dotnet workload install maui --source https://api.nuget.org/v3/index.json
-              dotnet workload install android ios maccatalyst tvos macos maui wasm-tools --source https://api.nuget.org/v3/index.json
-
         - task: DotNetCoreCLI@2
           displayName: 'Build Core Project'
           inputs:
@@ -459,12 +444,6 @@ stages:
       displayName: 'Test assemblies'
       timeoutInMinutes: 120
       steps:
-        - task: UseDotNet@2
-          displayName: 'Install .Net 7.0 SDK'
-          inputs:
-            packageType: 'sdk'
-            version: '7.x'
-
         - task: DotNetCoreCLI@2
           displayName: 'Run Core Tests'
           inputs:
@@ -536,12 +515,6 @@ stages:
     - job: DocJob
       displayName: 'Create API Documentation'
       steps:
-        - task: UseDotNet@2
-          displayName: 'Install .Net 7.0 SDK'
-          inputs:
-            packageType: 'sdk'
-            version: '7.x'
-
         - task: ChocolateyToolInstaller@0
           inputs:
             force: true
