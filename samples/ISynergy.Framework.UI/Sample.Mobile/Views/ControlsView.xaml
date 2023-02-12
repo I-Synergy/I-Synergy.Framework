@@ -22,5 +22,8 @@
 
         <Label Text="Integer:"/>
         <c:IntegerEntry Value="{Binding IntegerValue}" />
+
+        <Label Text="Entry:"/>
+        <Entry Text="Hello Entry..." />
     </VerticalStackLayout>
 </c:View>
