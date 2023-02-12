@@ -57,6 +57,10 @@ namespace ISynergy.Framework.Core.Constants
         /// </summary>
         public const string TimeZoneType = "timezone";
         /// <summary>
+        /// The country claim type.
+        /// </summary>
+        public const string CountryType = "country";
+        /// <summary>
         /// The expiration type
         /// </summary>
         public const string ExpirationType = "exp";
