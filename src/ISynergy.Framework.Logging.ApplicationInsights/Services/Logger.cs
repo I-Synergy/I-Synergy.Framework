@@ -1,10 +1,12 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Base;
 using ISynergy.Framework.Logging.Extensions;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -103,7 +105,12 @@ namespace ISynergy.Framework.Logging.Services
         public void Flush()
         {
             SetUserProfile();
-            _client?.Flush();
+            
+            _client.Flush();
+
+            // Explicitly call Flush() followed by Delay, as required in console apps.
+            // This ensures that even if the application terminates, telemetry is sent to the back end.
+            Task.Delay(5000).Wait();
         }
 
         public override void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
@@ -118,9 +125,14 @@ namespace ISynergy.Framework.Logging.Services
 
             if (!string.IsNullOrEmpty(message) || exception != null)
             {
-                if (logLevel == LogLevel.Error)
+                if (logLevel == LogLevel.Error || logLevel == LogLevel.Critical)
                 {
                     _client.TrackException(new ExceptionTelemetry { Exception = exception, Message = message });
+                }
+                else if (logLevel == LogLevel.Trace)
+                {
+                    metrics.Add("LogLevel", logLevel.ToLogLevelString());
+                    _client.TrackTrace(message, metrics);
                 }
                 else
                 {
