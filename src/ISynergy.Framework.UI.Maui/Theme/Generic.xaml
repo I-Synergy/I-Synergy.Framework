@@ -5,6 +5,7 @@
     x:Class="ISynergy.Framework.UI.Theme.Generic"
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
     xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors"
     xmlns:enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup">
 
@@ -209,6 +210,7 @@
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>
+        <Setter Property="behaviors:SelectAllOnFocusBehavior.AttachBehavior" Value="true" />
     </Style>
 
     <Style TargetType="controls:IntegerEntry">
@@ -231,6 +233,7 @@
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>
+        <Setter Property="behaviors:SelectAllOnFocusBehavior.AttachBehavior" Value="true" />
     </Style>
 
     <Style TargetType="controls:DoubleEntry">
@@ -253,6 +256,7 @@
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>
+        <Setter Property="behaviors:SelectAllOnFocusBehavior.AttachBehavior" Value="true" />
     </Style>
 
     <Style TargetType="controls:DecimalEntry">
@@ -275,6 +279,7 @@
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>
+        <Setter Property="behaviors:SelectAllOnFocusBehavior.AttachBehavior" Value="true" />
     </Style>
 
     <Style TargetType="Frame">
