@@ -11,10 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using ISynergy.Framework.Core.Abstractions.Base;
 
-#if NET472 || NET48 || NETSTANDARD2_0
-using Remotion.Linq.Parsing.ExpressionVisitors;
-#endif
-
 namespace ISynergy.Framework.EntityFramework.DataContext
 {
     /// <summary>
@@ -36,7 +32,7 @@ namespace ISynergy.Framework.EntityFramework.DataContext
         /// <summary>
         /// The tenant service
         /// </summary>
-        private readonly ITenantService _tenantService;
+        protected readonly ITenantService _tenantService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDataContext"/> class.

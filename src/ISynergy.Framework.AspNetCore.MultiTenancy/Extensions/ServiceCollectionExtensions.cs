@@ -19,7 +19,7 @@ namespace ISynergy.Framework.AspNetCore.MultiTenancy.Extensions
         public static IServiceCollection AddMultiTenancyIntegration(this IServiceCollection services)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.TryAddSingleton<ITenantService, TenantService>();
+            services.TryAddTransient<ITenantService, TenantService>();
             return services;
         }
     }

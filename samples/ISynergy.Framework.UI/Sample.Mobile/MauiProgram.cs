@@ -51,11 +51,10 @@ namespace Sample
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseCommonServices, CommonServices>());
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ICommonServices, CommonServices>());
 
-            builder.Services.AddSingleton<IAuthenticationView, AuthenticationView>();
-            builder.Services.AddSingleton<IRegistrationView, RegistrationView>();
-
-            builder.Services.AddSingleton<IShellViewModel, AppShellViewModel>();
-            builder.Services.AddSingleton<IShellView, AppShell>();
+            builder.Services.AddTransient<IAuthenticationView, AuthenticationView>();
+            builder.Services.AddTransient<IRegistrationView, RegistrationView>();
+            builder.Services.AddTransient<IShellViewModel, AppShellViewModel>();
+            builder.Services.AddTransient<IShellView, AppShell>();
 
             builder.Logging.AddAppCenterLogging(builder.Configuration);
 
