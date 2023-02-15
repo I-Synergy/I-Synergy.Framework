@@ -1,9 +1,11 @@
 ﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Views;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Abstractions.Views;
 
 namespace Sample.Services
 {
@@ -38,7 +40,8 @@ namespace Sample.Services
 
         public Task AuthenticateWithUsernamePasswordAsync(string username, string password, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            Application.Current.MainPage = ServiceLocator.Default.GetInstance<IShellView>() as Page;
+            return Task.CompletedTask;
         }
 
         public Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default)
@@ -76,9 +79,6 @@ namespace Sample.Services
             throw new NotImplementedException();
         }
 
-        public void SignOut()
-        {
-            _navigationService.ReplaceMainWindowAsync<IAuthenticationView>().Await();
-        }
+        public void SignOut() => _navigationService.ReplaceMainWindowAsync<IAuthenticationView>().Await();
     }
 }

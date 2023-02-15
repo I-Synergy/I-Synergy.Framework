@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Models.Accounts;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -67,11 +64,6 @@ namespace ISynergy.Framework.Core.Abstractions
         /// </summary>
         /// <value><c>true</c> if this instance is offline; otherwise, <c>false</c>.</value>
         bool IsOffline { get; set; }
-        /// <summary>
-        /// Gets or sets the view models.
-        /// </summary>
-        /// <value>The view models.</value>
-        List<Type> ViewModels { get; set; }
         /// <summary>
         /// Gets the title of the application.
         /// </summary>
