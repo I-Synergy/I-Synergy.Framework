@@ -26,6 +26,7 @@ namespace ISynergy.Framework.AspNetCore.MultiTenancy.Services
         public TenantService(IHttpContextAccessor httpContextAccessor)
         {
             Argument.IsNotNull(httpContextAccessor);
+
             _httpContextAccessor = httpContextAccessor;
         }
 

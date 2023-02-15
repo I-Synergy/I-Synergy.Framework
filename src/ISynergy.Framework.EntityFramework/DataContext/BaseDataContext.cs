@@ -32,7 +32,7 @@ namespace ISynergy.Framework.EntityFramework.DataContext
         /// <summary>
         /// The tenant service
         /// </summary>
-        private readonly ITenantService _tenantService;
+        protected readonly ITenantService _tenantService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDataContext"/> class.
