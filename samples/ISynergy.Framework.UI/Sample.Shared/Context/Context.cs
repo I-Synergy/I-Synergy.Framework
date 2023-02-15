@@ -39,8 +39,6 @@ namespace Sample
 
             Profiles = new ObservableCollection<IProfile>() {  new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();
-            ViewModels = new List<Type>();
-
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
 
@@ -51,16 +49,6 @@ namespace Sample
         {
             get { return GetValue<string>(); }
             private set { SetValue(value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the view models.
-        /// </summary>
-        /// <value>The view models.</value>
-        public List<Type> ViewModels
-        {
-            get { return GetValue<List<Type>>(); }
-            set { SetValue(value); }
         }
 
         /// <summary>

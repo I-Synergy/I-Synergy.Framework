@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace ISynergy.Framework.Core.Locators
 {
@@ -11,10 +10,6 @@ namespace ISynergy.Framework.Core.Locators
     public class ServiceLocator
     {
         /// <summary>
-        /// The current service provider
-        /// </summary>
-        private IServiceProvider _currentServiceProvider;
-        /// <summary>
         /// The service provider
         /// </summary>
         private static IServiceProvider _serviceProvider;
@@ -25,7 +20,7 @@ namespace ISynergy.Framework.Core.Locators
         /// <param name="currentServiceProvider">The current service provider.</param>
         public ServiceLocator(IServiceProvider currentServiceProvider)
         {
-            _currentServiceProvider = currentServiceProvider;
+            _serviceProvider = currentServiceProvider;
         }
 
         /// <summary>
@@ -55,7 +50,7 @@ namespace ISynergy.Framework.Core.Locators
         /// <param name="serviceType">Type of the service.</param>
         /// <returns>System.Object.</returns>
         public object GetInstance(Type serviceType) =>
-            _currentServiceProvider.GetService(serviceType);
+            _serviceProvider.GetService(serviceType);
 
         /// <summary>
         /// Gets the instance.
@@ -63,7 +58,7 @@ namespace ISynergy.Framework.Core.Locators
         /// <typeparam name="TService">The type of the t service.</typeparam>
         /// <returns>TService.</returns>
         public TService GetInstance<TService>() =>
-            _currentServiceProvider.GetService<TService>();
+            _serviceProvider.GetService<TService>();
 
         public IServiceProvider GetServiceProvider() => _serviceProvider;
     }

@@ -102,24 +102,15 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<IThemeService, ThemeService>();
             appBuilder.Services.AddSingleton<IFileService<FileResult>, FileService>();
 
-
             languageService.AddResourceManager(typeof(TResource));
 
-            appBuilder.RegisterAssemblies(mainAssembly, navigationService);
+            appBuilder.RegisterAssemblies(mainAssembly, navigationService, assemblyFilter);
 
             return appBuilder
                 .UseMauiCommunityToolkit()
                 .UseMauiCommunityToolkitMarkup()
                 .ConfigureMopups();
         }
-
-        /// <summary>
-        /// Registers the assemblies.
-        /// </summary>
-        /// <param name="appBuilder"></param>
-        /// <param name="mainAssembly">The main assembly.</param>
-        /// <param name="navigationService"></param>
-        private static void RegisterAssemblies(this MauiAppBuilder appBuilder, Assembly mainAssembly, INavigationService navigationService) => appBuilder.RegisterAssemblies(mainAssembly, navigationService, null);
 
         /// <summary>
         /// Registers the assemblies.
@@ -205,11 +196,11 @@ namespace ISynergy.Framework.UI.Extensions
 
                 if (abstraction is not null && !viewmodel.IsGenericType && abstraction != typeof(IQueryAttributable))
                 {
-                    appBuilder.Services.AddSingleton(abstraction, viewmodel);
+                    appBuilder.Services.AddScoped(abstraction, viewmodel);
                 }
                 else
                 {
-                    appBuilder.Services.AddSingleton(viewmodel);
+                    appBuilder.Services.AddScoped(viewmodel);
                 }
             }
 
@@ -223,11 +214,11 @@ namespace ISynergy.Framework.UI.Extensions
 
                 if (abstraction is not null)
                 {
-                    appBuilder.Services.AddSingleton(abstraction, view);
+                    appBuilder.Services.AddTransient(abstraction, view);
                 }
                 else
                 {
-                    appBuilder.Services.AddSingleton(view);
+                    appBuilder.Services.AddTransient(view);
                 }
             }
 
