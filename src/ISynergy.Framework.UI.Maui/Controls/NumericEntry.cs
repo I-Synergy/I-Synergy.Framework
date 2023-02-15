@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.UI.Enumerations;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls
 {
