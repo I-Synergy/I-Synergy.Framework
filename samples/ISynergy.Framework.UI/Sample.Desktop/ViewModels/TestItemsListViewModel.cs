@@ -10,6 +10,7 @@ using Sample.Models;
 using System.Collections.ObjectModel;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.Core.Collections;
 
 namespace Sample.ViewModels
 {
@@ -91,7 +92,7 @@ namespace Sample.ViewModels
             Clear_Command = new RelayCommand(ClearItems);
 
             Query = string.Empty;
-            Items = new ObservableCollection<TestItem>();
+            Items = new ObservableConcurrentCollection<TestItem>();
         }
 
         /// <summary>
@@ -149,7 +150,7 @@ namespace Sample.ViewModels
 
             try
             {
-                Items = new ObservableCollection<TestItem>(
+                Items = new ObservableConcurrentCollection<TestItem>(
                     await RetrieveItemsAsync(SearchCancellationtoken.Token));
             }
             catch (OperationCanceledException)

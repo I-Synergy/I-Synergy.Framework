@@ -7,9 +7,13 @@
   "ProjectKey": "I-Synergy.Framework",
   "ProjectName": "I-Synergy.Framework",
   "Profiles": {
+    "Secrets": {
+      "ProfileKey": "AYXoTKoJ9Ao2yLWbNM9x",
+      "ProfileTimestamp": "2023-01-25T09:40:14Z"
+    },
     "CSharp": {
       "ProfileKey": "AXMHF2O3i59i90gTYyEz",
-      "ProfileTimestamp": "2023-02-02T09:07:47Z"
+      "ProfileTimestamp": "2023-02-22T15:28:17Z"
     }
   }
 }

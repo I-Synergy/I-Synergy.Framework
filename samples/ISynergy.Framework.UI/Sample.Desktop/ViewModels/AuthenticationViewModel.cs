@@ -2,6 +2,7 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -37,9 +38,9 @@ namespace Sample.ViewModels
         /// Gets or sets the Usernames property value.
         /// </summary>
         /// <value>The usernames.</value>
-        public ObservableCollection<string> Usernames
+        public ObservableConcurrentCollection<string> Usernames
         {
-            get { return GetValue<ObservableCollection<string>>(); }
+            get { return GetValue<ObservableConcurrentCollection<string>>(); }
             set { SetValue(value); }
         }
 
@@ -257,7 +258,7 @@ namespace Sample.ViewModels
                 }
             });
 
-            Usernames = new ObservableCollection<string>();
+            Usernames = new ObservableConcurrentCollection<string>();
             Registration_TimeZone = null;
             Registration_Modules = new List<Module>();
             LoginVisible = true;
@@ -272,7 +273,7 @@ namespace Sample.ViewModels
             Registration_Modules.Add(Modules.First());
 
             if (_applicationSettingsService.Settings.Users is List<string> users)
-                Usernames = new ObservableCollection<string>(users);
+                Usernames = new ObservableConcurrentCollection<string>(users);
 
             Username = _applicationSettingsService.Settings.DefaultUser;
         }

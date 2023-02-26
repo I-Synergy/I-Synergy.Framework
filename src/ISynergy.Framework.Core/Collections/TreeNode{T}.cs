@@ -88,7 +88,7 @@ namespace ISynergy.Framework.Core.Collections
             IsSelected = false;
             DisposeTraversal = UpDownTraversalTypes.BottomUp;
             Parent = null;
-            Children = new ObservableCollection<TreeNode<TKey, TModel>>();
+            Children = new ObservableConcurrentCollection<TreeNode<TKey, TModel>>();
         }
 
         /// <summary>
@@ -172,9 +172,9 @@ namespace ISynergy.Framework.Core.Collections
         /// Gets or sets the Children property value.
         /// </summary>
         /// <value>The children.</value>
-        public ObservableCollection<TreeNode<TKey,TModel>> Children
+        public ObservableConcurrentCollection<TreeNode<TKey,TModel>> Children
         {
-            get => GetValue<ObservableCollection<TreeNode<TKey, TModel>>>();
+            get => GetValue<ObservableConcurrentCollection<TreeNode<TKey, TModel>>>();
             set => SetValue(value);
         }
         

@@ -9,6 +9,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using ISynergy.Framework.Core.Collections;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -36,9 +37,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Blades property value.
         /// </summary>
         /// <value>The blades.</value>
-        public ObservableCollection<IView> Blades
+        public ObservableConcurrentCollection<IView> Blades
         {
-            get => GetValue<ObservableCollection<IView>>();
+            get => GetValue<ObservableConcurrentCollection<IView>>();
             set => SetValue(value);
         }
 
@@ -46,9 +47,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Items property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableCollection<TEntity> Items
+        public ObservableConcurrentCollection<TEntity> Items
         {
-            get => GetValue<ObservableCollection<TEntity>>();
+            get => GetValue<ObservableConcurrentCollection<TEntity>>();
             set => SetValue(value);
         }
 
@@ -153,8 +154,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Items = new ObservableCollection<TEntity>();
-            Blades = new ObservableCollection<IView>();
+            Items = new ObservableConcurrentCollection<TEntity>();
+            Blades = new ObservableConcurrentCollection<IView>();
 
             Add_Command = new AsyncRelayCommand(async () => await AddAsync());
             Edit_Command = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));
