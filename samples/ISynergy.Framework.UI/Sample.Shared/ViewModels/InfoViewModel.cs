@@ -69,7 +69,6 @@ namespace Sample.ViewModels
         }
 
         public RelayCommand BusyOn_Command { get; set; }
-        public RelayCommand BusyOff_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -89,10 +88,24 @@ namespace Sample.ViewModels
             Copyrights = commonServices.InfoService.Copyrights;
             Startup = ((Context)context).Environment.ToString();
             
-            BusyOn_Command = new RelayCommand(commonServices.BusyService.StartBusy);
-            BusyOff_Command = new RelayCommand(commonServices.BusyService.EndBusy);
+            BusyOn_Command = new RelayCommand(StartTimer);
 
             //throw new Exception("Test exception for logging!");
+        }
+
+        private void StartTimer()
+        {
+            var timer = new System.Timers.Timer(5000);
+            timer.Elapsed += Timer_Elapsed;
+            BaseCommonServices.BusyService.StartBusy();
+            timer.Enabled = true;
+            timer.AutoReset = true;
+            timer.Start();
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            BaseCommonServices.BusyService.EndBusy();
         }
     }
 }
