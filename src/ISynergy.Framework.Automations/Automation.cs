@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Enumerations;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Collections;
 using System;
 using System.Collections.ObjectModel;
 
@@ -68,27 +69,27 @@ namespace ISynergy.Framework.Automations
         /// <summary>
         /// Gets or sets the Triggers property value.
         /// </summary>
-        public ObservableCollection<object> Triggers
+        public ObservableConcurrentCollection<object> Triggers
         {
-            get { return GetValue<ObservableCollection<object>>(); }
+            get { return GetValue<ObservableConcurrentCollection<object>>(); }
             set { SetValue(value); }
         }
 
         /// <summary>
         /// Gets or sets the Conditions property value.
         /// </summary>
-        public ObservableCollection<ICondition> Conditions
+        public ObservableConcurrentCollection<ICondition> Conditions
         {
-            get { return GetValue<ObservableCollection<ICondition>>(); }
+            get { return GetValue<ObservableConcurrentCollection<ICondition>>(); }
             set { SetValue(value); }
         }
 
         /// <summary>
         /// Gets or sets the Actions property value.
         /// </summary>
-        public ObservableCollection<IAction> Actions
+        public ObservableConcurrentCollection<IAction> Actions
         {
-            get { return GetValue<ObservableCollection<IAction>>(); }
+            get { return GetValue<ObservableConcurrentCollection<IAction>>(); }
             set { SetValue(value); }
         }
 
@@ -101,9 +102,9 @@ namespace ISynergy.Framework.Automations
             Mode = RunModes.Single;
             IsActive = false;
             ExecutionTimeout = TimeSpan.FromSeconds(30);
-            Triggers = new ObservableCollection<object>();
-            Conditions = new ObservableCollection<ICondition>();
-            Actions = new ObservableCollection<IAction>();
+            Triggers = new ObservableConcurrentCollection<object>();
+            Conditions = new ObservableConcurrentCollection<ICondition>();
+            Actions = new ObservableConcurrentCollection<IAction>();
         }
     }
 }

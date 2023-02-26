@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -45,9 +46,9 @@ namespace ISynergy.Framework.UI.ViewModels
         /// Gets or sets the Item property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableCollection<object> Items
+        public ObservableConcurrentCollection<object> Items
         {
-            get { return GetValue<ObservableCollection<object>>(); }
+            get { return GetValue<ObservableConcurrentCollection<object>>(); }
             set { SetValue(value); }
         }
 
@@ -109,7 +110,7 @@ namespace ISynergy.Framework.UI.ViewModels
 
             Refresh_Command = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
             RawItems = items;
-            Items = new ObservableCollection<object>(items);
+            Items = new ObservableConcurrentCollection<object>(items);
             SelectedItems = new List<object>(selectedItems);
             IsInitialized = true;
         }
@@ -122,7 +123,7 @@ namespace ISynergy.Framework.UI.ViewModels
         {
             if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
             {
-                Items = new ObservableCollection<object>(RawItems);
+                Items = new ObservableConcurrentCollection<object>(RawItems);
             }
             else
             {
@@ -140,7 +141,7 @@ namespace ISynergy.Framework.UI.ViewModels
                     }
                 }
 
-                Items = new ObservableCollection<object>(filteredList);
+                Items = new ObservableConcurrentCollection<object>(filteredList);
             }
 
             return Task.CompletedTask;

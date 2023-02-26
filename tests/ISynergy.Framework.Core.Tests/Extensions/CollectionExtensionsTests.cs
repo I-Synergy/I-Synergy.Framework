@@ -1,10 +1,10 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+﻿using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
@@ -20,7 +20,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void NullObservableCollectionNonFailableTest()
         {
-            ObservableCollection<object> list = null;
+            ObservableConcurrentCollection<object> list = null;
             var result = false;
 
             foreach (var item in list.EnsureNotNull()) { }
@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         {
             Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
             {
-                ObservableCollection<object> list = null;
+                ObservableConcurrentCollection<object> list = null;
 
                 foreach (var item in list) { }
 

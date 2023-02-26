@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using ISynergy.Framework.Core.Collections;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
@@ -9,6 +10,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
     /// <seealso cref="IViewModel" />
     public interface IViewModelSummary<TEntity> : IViewModelSelectedItem<TEntity>
     {
-        ObservableCollection<TEntity> Items { get; set; }
+        ObservableConcurrentCollection<TEntity> Items { get; set; }
     }
 }

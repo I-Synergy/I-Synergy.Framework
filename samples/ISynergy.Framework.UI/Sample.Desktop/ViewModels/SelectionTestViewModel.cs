@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
@@ -58,7 +59,7 @@ namespace Sample.ViewModels
         /// Gets or sets the selected test items.
         /// </summary>
         /// <value>The selected test items.</value>
-        public ObservableCollection<TestItem> SelectedTestItems { get; set; }
+        public ObservableConcurrentCollection<TestItem> SelectedTestItems { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
@@ -123,7 +124,7 @@ namespace Sample.ViewModels
             if (sender is SelectionViewModel vm)
                 vm.Submitted -= SelectionVm_MultipleSubmitted;
 
-            SelectedTestItems = new ObservableCollection<TestItem>(e.Result.Cast<TestItem>());
+            SelectedTestItems = new ObservableConcurrentCollection<TestItem>(e.Result.Cast<TestItem>());
 
             await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Cast<TestItem>().Select(s => s.Description))} selected.");
         }
