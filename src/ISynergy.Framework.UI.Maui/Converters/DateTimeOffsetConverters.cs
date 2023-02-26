@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using System.Collections.ObjectModel;
@@ -109,11 +110,11 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = new ObservableCollection<DateTime>();
+            var result = new ObservableConcurrentCollection<DateTime>();
 
-            if (value is not null && value.GetType() == typeof(ObservableCollection<DateTimeOffset>))
+            if (value is not null && value.GetType() == typeof(ObservableConcurrentCollection<DateTimeOffset>))
             {
-                var collection = value as ObservableCollection<DateTimeOffset>;
+                var collection = value as ObservableConcurrentCollection<DateTimeOffset>;
 
                 foreach (var item in collection)
                 {
@@ -134,13 +135,13 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = new ObservableCollection<DateTimeOffset>();
+            var result = new ObservableConcurrentCollection<DateTimeOffset>();
 
             if (value is not null)
             {
-                if (value.GetType() == typeof(ObservableCollection<DateTime>))
+                if (value.GetType() == typeof(ObservableConcurrentCollection<DateTime>))
                 {
-                    var collection = value as ObservableCollection<DateTime>;
+                    var collection = value as ObservableConcurrentCollection<DateTime>;
 
                     foreach (var item in collection)
                     {
@@ -148,9 +149,9 @@ namespace ISynergy.Framework.UI.Converters
                     }
                 }
 
-                if (value.GetType() == typeof(ObservableCollection<string>))
+                if (value.GetType() == typeof(ObservableConcurrentCollection<string>))
                 {
-                    var collection = value as ObservableCollection<string>;
+                    var collection = value as ObservableConcurrentCollection<string>;
 
                     foreach (var item in collection)
                     {

@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using Microsoft.Extensions.Options;
@@ -37,7 +38,7 @@ namespace Sample
             _configurationOptions = configurationOptions.Value;
             _infoService = infoService;
 
-            Profiles = new ObservableCollection<IProfile>() {  new Profile() };
+            Profiles = new ObservableConcurrentCollection<IProfile>() {  new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
@@ -55,9 +56,9 @@ namespace Sample
         /// Gets or sets the profiles.
         /// </summary>
         /// <value>The profiles.</value>
-        public ObservableCollection<IProfile> Profiles
+        public ObservableConcurrentCollection<IProfile> Profiles
         {
-            get { return GetValue<ObservableCollection<IProfile>>(); }
+            get { return GetValue<ObservableConcurrentCollection<IProfile>>(); }
             set { SetValue(value); }
         }
 

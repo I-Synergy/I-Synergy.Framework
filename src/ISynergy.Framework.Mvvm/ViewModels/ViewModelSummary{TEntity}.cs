@@ -10,6 +10,7 @@ using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Threading;
+using ISynergy.Framework.Core.Collections;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -29,9 +30,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Items property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableCollection<TEntity> Items
+        public ObservableConcurrentCollection<TEntity> Items
         {
-            get => GetValue<ObservableCollection<TEntity>>();
+            get => GetValue<ObservableConcurrentCollection<TEntity>>();
             set => SetValue(value);
         }
 
@@ -126,7 +127,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Items = new ObservableCollection<TEntity>();
+            Items = new ObservableConcurrentCollection<TEntity>();
 
             Add_Command = new AsyncRelayCommand(async () => await AddAsync());
             Edit_Command = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));

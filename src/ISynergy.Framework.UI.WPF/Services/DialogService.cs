@@ -96,14 +96,44 @@ namespace ISynergy.Framework.UI.Services
         /// <returns>MessageBoxResult.</returns>
         public override Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
         {
+            var button = System.Windows.MessageBoxButton.OK;
+
+            switch (buttons)
+            {
+                case MessageBoxButton.OKCancel:
+                    button = System.Windows.MessageBoxButton.OKCancel;
+                    break;
+                case MessageBoxButton.YesNoCancel:
+                    button = System.Windows.MessageBoxButton.YesNoCancel;
+                    break;
+                case MessageBoxButton.YesNo:
+                    button = System.Windows.MessageBoxButton.YesNo;
+                    break;
+                default:
+                    button = System.Windows.MessageBoxButton.OK;
+                    break;
+            }
+
             var result = System.Windows.MessageBox.Show( 
                 message,
                 title,
-                (System.Windows.MessageBoxButton)buttons,
+                button,
                 System.Windows.MessageBoxImage.Information,
-                (System.Windows.MessageBoxResult)MessageBoxResult.Cancel);
+                System.Windows.MessageBoxResult.Cancel);
 
-            return Task.FromResult((MessageBoxResult)result);
+            switch (result)
+            {
+                case System.Windows.MessageBoxResult.OK:
+                    return Task.FromResult(MessageBoxResult.OK);
+                case System.Windows.MessageBoxResult.Cancel:
+                    return Task.FromResult(MessageBoxResult.Cancel);
+                case System.Windows.MessageBoxResult.Yes:
+                    return Task.FromResult(MessageBoxResult.Yes);
+                case System.Windows.MessageBoxResult.No:
+                    return Task.FromResult(MessageBoxResult.No);
+                default:
+                    return Task.FromResult(MessageBoxResult.None);
+            }
         }
     }
 }

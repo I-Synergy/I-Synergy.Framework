@@ -20,9 +20,9 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the Publication property value.
         /// </summary>
-        public ObservableCollection<TreeNode<Guid, PublicationItem>> Publication
+        public ObservableConcurrentCollection<TreeNode<Guid, PublicationItem>> Publication
         {
-            get => GetValue<ObservableCollection<TreeNode<Guid, PublicationItem>>>();
+            get => GetValue<ObservableConcurrentCollection<TreeNode<Guid, PublicationItem>>>();
             set => SetValue(value);
         }
 
@@ -38,7 +38,7 @@ namespace Sample.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            Publication = new ObservableCollection<TreeNode<Guid, PublicationItem>>();
+            Publication = new ObservableConcurrentCollection<TreeNode<Guid, PublicationItem>>();
 
             var publication = new Publication("Test publication", "1.0.0", 0);
 

@@ -13,14 +13,14 @@ namespace ISynergy.Framework.Core.Collections
     public class ObservableRangeCollection<T> : ObservableCollection<T>
     {
         /// <summary>
-        /// Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class.
+        /// Initializes a new instance of the System.Collections.ObjectModel.ObservableConcurrentCollection(Of T) class.
         /// </summary>
         public ObservableRangeCollection()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class that contains elements copied from the specified collection.
+        /// Initializes a new instance of the System.Collections.ObjectModel.ObservableConcurrentCollection(Of T) class that contains elements copied from the specified collection.
         /// </summary>
         /// <param name="collection">collection: The collection from which the elements are copied.</param>
         /// <exception cref="ArgumentNullException">The collection parameter cannot be null.</exception>
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Core.Collections
         }
 
         /// <summary>
-        /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T).
+        /// Adds the elements of the specified collection to the end of the ObservableConcurrentCollection(Of T).
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <param name="notificationMode">The notification mode.</param>
@@ -68,7 +68,7 @@ namespace ISynergy.Framework.Core.Collections
         }
 
         /// <summary>
-        /// Removes the first occurence of each item in the specified collection from ObservableCollection(Of T). NOTE: with notificationMode = Remove, removed items starting index is not set because items are not guaranteed to be consecutive.
+        /// Removes the first occurence of each item in the specified collection from ObservableConcurrentCollection(Of T). NOTE: with notificationMode = Remove, removed items starting index is not set because items are not guaranteed to be consecutive.
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <param name="notificationMode">The notification mode.</param>
