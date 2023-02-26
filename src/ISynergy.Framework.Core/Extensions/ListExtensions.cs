@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Collections;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,10 +39,10 @@ namespace ISynergy.Framework.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list">The list.</param>
-        /// <returns>ObservableCollection&lt;T&gt;.</returns>
-        public static ObservableCollection<T> EnsureNotNull<T>(this ObservableCollection<T> list)
+        /// <returns>ObservableConcurrentCollection&lt;T&gt;.</returns>
+        public static ObservableConcurrentCollection<T> EnsureNotNull<T>(this ObservableConcurrentCollection<T> list)
         {
-            return list ?? new ObservableCollection<T>();
+            return list ?? new ObservableConcurrentCollection<T>();
         }
 
         /// <summary>

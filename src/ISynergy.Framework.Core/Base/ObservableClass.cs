@@ -54,8 +54,8 @@ namespace ISynergy.Framework.Core.Base
         [DataTableIgnore]
         [XmlIgnore]
         [Display(AutoGenerateField = false)]
-        public ObservableCollection<string> Errors { get; private set; }
-            = new ObservableCollection<string>();
+        public ObservableConcurrentCollection<string> Errors { get; private set; }
+            = new ObservableConcurrentCollection<string>();
 
         /// <summary>
         /// Gets or sets the validator.
@@ -259,7 +259,7 @@ namespace ISynergy.Framework.Core.Base
             foreach (var property in Properties)
                 errors.AddRange(property.Value.Errors);
 
-            Errors = new ObservableCollection<string>(errors.Distinct());
+            Errors = new ObservableConcurrentCollection<string>(errors.Distinct());
 
             OnPropertyChanged(nameof(IsValid));
             OnPropertyChanged(nameof(Errors));

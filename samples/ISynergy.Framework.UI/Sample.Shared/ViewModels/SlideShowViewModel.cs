@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -24,9 +25,9 @@ namespace Sample.ViewModels
         /// Gets or sets the Items property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableCollection<MediaItem> Items
+        public ObservableConcurrentCollection<MediaItem> Items
         {
-            get { return GetValue<ObservableCollection<MediaItem>>(); }
+            get { return GetValue<ObservableConcurrentCollection<MediaItem>>(); }
             set { SetValue(value); }
         }
 
@@ -68,7 +69,7 @@ namespace Sample.ViewModels
             UpdateSourceTimer.Start();
 
             // Get initial images from source.
-            Items = new ObservableCollection<MediaItem>()
+            Items = new ObservableConcurrentCollection<MediaItem>()
                 {
                     new MediaItem { Index = 0, ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
                     new MediaItem { Index = 1, ImageUri = "http://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
@@ -115,7 +116,7 @@ namespace Sample.ViewModels
         {
             UpdateSourceTimer.Enabled = false;
 
-            Items = new ObservableCollection<MediaItem>()
+            Items = new ObservableConcurrentCollection<MediaItem>()
             {
                 new MediaItem { Index = 0, ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
                 new MediaItem { Index = 1, ImageUri = "http://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },

@@ -1,0 +1,56 @@
+﻿<c:Window 
+    x:Class="ISynergy.Framework.UI.Windows.SelectionWindow"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
+    mc:Ignorable="d"
+    Title="{Binding Title}"
+    Height="600" 
+    Width="400" 
+    WindowStyle="None" 
+    WindowStartupLocation="CenterScreen" 
+    ResizeMode="NoResize">
+
+    <c:Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:SelectionModeConverters x:Key="SelectionModeConverters"/>
+        </ResourceDictionary>
+    </c:Window.Resources>
+    
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}"/>
+
+        <ListView
+            x:Name="DataSummary"
+            Grid.Row="1"
+            Margin="4"
+            SelectionChanged="DataSummary_SelectionChanged"
+            ItemsSource="{Binding Items}"
+            SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverters}}">
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="PreviewMouseDoubleClick">
+                    <behaviors:InvokeCommandAction Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}"/>
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
+        </ListView>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8">
+            <Button Content="Ok" Command="{Binding Submit_Command}" />
+            <Button Content="Annuleren" Command="{Binding Close_Command}"/>
+        </StackPanel>
+    </Grid>
+</c:Window>
