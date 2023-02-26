@@ -9,22 +9,18 @@
         d:DesignHeight="450" d:DesignWidth="800"
         Title="{Binding DisplayName}">
 
-    <syncfusion:SfNavigationDrawer x:Name="NavigationView" 
+    <Grid>
+        <syncfusion:SfNavigationDrawer x:Name="NavigationView" 
                                    ItemsSource="{Binding PrimaryItems}"
                                    DisplayMode="Compact"
                                    DisplayMemberPath="Name"
                                    IconMemberPath="Symbol"
                                    ItemClicked="NavigationView_ItemClicked">
-        <syncfusion:SfNavigationDrawer.ContentView>
-            <Grid>
+            <syncfusion:SfNavigationDrawer.ContentView>
                 <Frame x:Name="ContentRootFrame" Margin="10"/>
-                <Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
-                    <Grid Background="Gray" Opacity="0.75" />
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    </StackPanel>
-                </Grid>
-            </Grid>
-        </syncfusion:SfNavigationDrawer.ContentView>
-    </syncfusion:SfNavigationDrawer>
+            </syncfusion:SfNavigationDrawer.ContentView>
+        </syncfusion:SfNavigationDrawer>
+
+        <c:LoadingSpinner Visibility="{Binding BaseCommonServices.BusyService.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Message="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" />
+    </Grid>
 </c:View>
