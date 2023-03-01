@@ -178,7 +178,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         public override Task AddAsync()
         {
-            var selectionVM = new SelectionViewModel(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+            var selectionVM = new ViewModelSelectionBlade(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
             selectionVM.Submitted += SelectionVM_Submitted;
             return (CommonServices.NavigationService as INavigationService)?.OpenBladeAsync(this, selectionVM);
         }
