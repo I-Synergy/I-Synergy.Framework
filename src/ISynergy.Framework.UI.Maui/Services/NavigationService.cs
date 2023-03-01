@@ -14,6 +14,8 @@ namespace ISynergy.Framework.UI.Services
         public Task NavigateAsync<TViewModel>(object parameter) where TViewModel : class, IViewModel =>
             Shell.Current.GoToAsync(typeof(TViewModel).GetViewModelFullName(), true, new Dictionary<string, object> { { GenericConstants.Parameter, parameter } });
 
+        public Task ReplaceMainFrameAsync<T>() where T : IView => throw new NotImplementedException();
+
         public Task ReplaceMainWindowAsync<T>() where T : IView
         {
             if (ServiceLocator.Default.GetInstance<T>() is Page page)

@@ -206,7 +206,7 @@ namespace ISynergy.Framework.UI.ViewModels
 
         private Task SelectModulesAsync()
         {
-            var selectionVM = new SelectionViewModel(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
+            var selectionVM = new ViewModelSelectionDialog(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
             selectionVM.Submitted += SelectionVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(SelectionWindow), selectionVM);
         }
@@ -228,7 +228,7 @@ namespace ISynergy.Framework.UI.ViewModels
 
             SelectedModules = selectedItems;
 
-            if (sender is SelectionViewModel vm)
+            if (sender is ViewModelSelectionDialog vm)
                 vm.Submitted -= SelectionVM_Submitted;
         }
 

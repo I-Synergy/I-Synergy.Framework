@@ -16,5 +16,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services.Base
             where TViewModel : class, IViewModel;
 
         Task ReplaceMainWindowAsync<T>() where T : IView;
+        Task ReplaceMainFrameAsync<T>() where T : IView;
     }
 }
