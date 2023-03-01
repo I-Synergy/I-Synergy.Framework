@@ -98,6 +98,20 @@ stages:
           inputs:
             versionSpec: 6.4.0
 
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'sdk'
+            useGlobalJson: true
+
+        - task: Bash@3
+          displayName: Install MAUI
+          inputs:
+            targetType: 'inline'
+            script: |
+              dotnet nuget locals all --clear 
+              dotnet workload install maui --source https://api.nuget.org/v3/index.json
+              dotnet workload install android ios maccatalyst tvos macos maui wasm-tools --source https://api.nuget.org/v3/index.json
+
         - task: DownloadSecureFile@1
           displayName: 'Download secure file'
           inputs:
@@ -444,6 +458,11 @@ stages:
       displayName: 'Test assemblies'
       timeoutInMinutes: 120
       steps:
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'sdk'
+            useGlobalJson: true
+
         - task: DotNetCoreCLI@2
           displayName: 'Run Core Tests'
           inputs:
@@ -515,6 +534,11 @@ stages:
     - job: DocJob
       displayName: 'Create API Documentation'
       steps:
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'sdk'
+            useGlobalJson: true
+
         - task: ChocolateyToolInstaller@0
           inputs:
             force: true

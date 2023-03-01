@@ -7,18 +7,16 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
-using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using System.Collections.ObjectModel;
 
-namespace ISynergy.Framework.UI.ViewModels
+namespace ISynergy.Framework.Mvvm.ViewModels
 {
     /// <summary>
     /// Class ViewModelDialogSelection.
-    /// Implements the <see name="ViewModelBlade{IList{TEntity}}" />
+    /// Implements the <see name="ViewModelDialog{List{object}}" />
     /// </summary>
-    /// <seealso name="ViewModelBlade{IList{TEntity}}" />
-    public class SelectionViewModel : ViewModelDialog<List<object>>, ISelectionViewModel
+    /// <seealso name="ViewModelDialog{List{object}}" />
+    public class ViewModelSelectionDialog : ViewModelDialog<List<object>>, ISelectionViewModel
     {
         /// <summary>
         /// Gets the title.
@@ -68,7 +66,7 @@ namespace ISynergy.Framework.UI.ViewModels
         public AsyncRelayCommand<string> Refresh_Command { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
+        /// Initializes a new instance of the <see cref="ViewModelSelectionDialog"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="commonServices">The common services.</param>
@@ -77,7 +75,7 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="selectedItems">The selected items.</param>
         /// <param name="selectionMode">The selection mode.</param>
         /// <param name="automaticValidation"></param>
-        public SelectionViewModel(
+        public ViewModelSelectionDialog(
             IContext context,
             IBaseCommonServices commonServices,
             ILogger logger,

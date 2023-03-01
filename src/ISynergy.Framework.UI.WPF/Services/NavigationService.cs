@@ -337,5 +337,15 @@ namespace ISynergy.Framework.UI.Services
 
             return Task.CompletedTask;
         }
+
+        public Task ReplaceMainFrameAsync<T>() where T : IView
+        {
+            if (ServiceLocator.Default.GetInstance<T>() is Page page)
+                Application.Current.Dispatcher.Invoke(() => _frame.Content = page);
+            else
+                throw new InvalidCastException($"Implementation of '{nameof(T)}' is not of type of Page.");
+
+            return Task.CompletedTask;
+        }
     }
 }
