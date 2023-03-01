@@ -6,10 +6,8 @@ using ISynergy.Framework.Mail.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Graph.Models;
+using Microsoft.Graph.Users.Item.SendMail;
 
 namespace ISynergy.Framework.Mail.Services
 {
@@ -118,11 +116,15 @@ namespace ISynergy.Framework.Mail.Services
                     options);
 
                 var client = new GraphServiceClient(credentials, _mailOptions.Scopes);
+                var body = new SendMailPostRequestBody
+                {
+                    Message = message,
+                    SaveToSentItems = true
+                };
 
                 await client.Users[_mailOptions.EmailAddress]
-                    .SendMail(message, true)
-                    .Request()
-                    .PostAsync(cancellationToken);
+                    .SendMail
+                    .PostAsync(body, cancellationToken: cancellationToken);
 
                 return true;
             }
