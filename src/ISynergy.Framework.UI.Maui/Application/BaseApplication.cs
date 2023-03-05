@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Exceptions;
+using ISynergy.Framework.UI.Views;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Globalization;
@@ -79,8 +80,8 @@ namespace ISynergy.Framework.UI
             _themeService.SetStyle();
 
             _logger.LogInformation("Setting up main page.");
-            if (ServiceLocator.Default.GetInstance<IShellView>() is Shell shell)
-                MainPage = shell;
+
+            MainPage = new LoadingView();
 
             InitializeApplication();
 
@@ -113,6 +114,18 @@ namespace ISynergy.Framework.UI
 
         public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
+        /// <summary>
+        /// Initialize the application.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///     await base.InitializeApplicationAsync();
+        ///     // wait 5 seconds before showing the main window...
+        ///     await Task.Delay(5000);
+        ///     await ServiceLocator.Default.GetInstance{INavigationService}().ReplaceMainWindowAsync{IShellView}();
+        /// </code>
+        /// </example>
+        /// <returns></returns>
         public virtual Task InitializeApplicationAsync() 
         {
             var culture = CultureInfo.CurrentCulture;
