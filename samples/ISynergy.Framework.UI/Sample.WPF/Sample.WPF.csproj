@@ -15,6 +15,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Assets\Fonts\FontAwesome.otf" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
@@ -33,8 +37,12 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-		<PackageReference Include="Syncfusion.SfInput.WPF" Version="20.4.0.52" />
-		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="20.4.0.52" />
+		<PackageReference Include="Syncfusion.SfInput.WPF" Version="20.4.0.53" />
+		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="20.4.0.53" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Assets\Fonts\FontAwesome.otf" />
 	</ItemGroup>
 
 	<ItemGroup>
