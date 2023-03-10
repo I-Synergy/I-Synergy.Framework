@@ -4,7 +4,7 @@
                     xmlns:Controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Wpf"
                     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
                     xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Wpf"
-                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" Source="/Assets/Fonts/FontAwesome.otf">
 
     <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     <Converters:MaskToRegexConverter x:Key="MaskToRegexConverter"/>
@@ -12,6 +12,8 @@
     <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <Converters:StringToGeometryConverter x:Key="StringToGeometryConverter"/>
 
+    <FontFamily x:Key="FontAwesome">/assets/fonts/#Font Awesome 6 Pro Light</FontFamily>
+    
     <Style x:Key="FocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>
