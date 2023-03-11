@@ -23,7 +23,7 @@ namespace ISynergy.Framework.UI.Converters
             if (value is SelectionModes selectionMode && selectionMode == SelectionModes.Multiple)
                 return SelectionMode.Multiple;
 
-            return ListViewSelectionMode.Single;
+            return SelectionMode.Single;
         }
 
         /// <summary>
