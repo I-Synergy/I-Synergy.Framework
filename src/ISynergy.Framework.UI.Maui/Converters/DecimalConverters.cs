@@ -3,11 +3,11 @@
 namespace ISynergy.Framework.UI.Converters
 {
     /// <summary>
-    /// Class DecimalToIsVisibileConverter.
+    /// Class DecimalToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class DecimalToIsVisibileConverter : IValueConverter
+    public class DecimalToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -45,11 +45,11 @@ namespace ISynergy.Framework.UI.Converters
     }
 
     /// <summary>
-    /// Class ZeroDecimalToIsVisibileConverter.
+    /// Class ZeroDecimalToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class ZeroDecimalToIsVisibileConverter : IValueConverter
+    public class ZeroDecimalToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
