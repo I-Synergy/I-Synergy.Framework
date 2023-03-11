@@ -32,51 +32,35 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="title">The title.</param>
         /// <param name="buttons">The buttons.</param>
         /// <returns>MessageBoxResult.</returns>
-        public override Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
+        public override async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK)
         {
-            var result = false;
-
-            _dispatcherService.Invoke(async () =>
-            {
-                switch (buttons)
-                {
-                    case MessageBoxButton.OKCancel:
-                        result = await Application.Current.MainPage.DisplayAlert(
-                            title,
-                            message,
-                            _languageService.GetString("Ok"),
-                            _languageService.GetString("Cancel"));
-                        break;
-                    case MessageBoxButton.YesNo:
-                        result = await Application.Current.MainPage.DisplayAlert(
-                            title,
-                            message,
-                            _languageService.GetString("Yes"),
-                            _languageService.GetString("No"));
-                        break;
-                    default:
-                        await Application.Current.MainPage.DisplayAlert(
-                            title,
-                            message,
-                            _languageService.GetString("Ok"));
-                        break;
-                }
-            });
-
             switch (buttons)
             {
                 case MessageBoxButton.OKCancel:
-                    if (result)
-                        return Task.FromResult(MessageBoxResult.OK);
+                    if (await Application.Current.MainPage.DisplayAlert(
+                        title,
+                        message,
+                        _languageService.GetString("Ok"),
+                        _languageService.GetString("Cancel")))
+                        return MessageBoxResult.OK;
                     else
-                        return Task.FromResult(MessageBoxResult.Cancel);
+                        return MessageBoxResult.Cancel;
                 case MessageBoxButton.YesNo:
-                    if (result)
-                        return Task.FromResult(MessageBoxResult.Yes);
+                    if (await Application.Current.MainPage.DisplayAlert(
+                        title,
+                        message,
+                        _languageService.GetString("Yes"),
+                        _languageService.GetString("No")))
+                        return MessageBoxResult.Yes;
                     else
-                        return Task.FromResult(MessageBoxResult.No);
+                        return MessageBoxResult.No;
                 default:
-                    return Task.FromResult(MessageBoxResult.OK);
+                    await Application.Current.MainPage.DisplayAlert(
+                        title,
+                        message,
+                        _languageService.GetString("Ok"));
+
+                    return MessageBoxResult.OK;
             }
         }
 
