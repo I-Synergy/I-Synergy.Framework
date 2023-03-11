@@ -92,11 +92,11 @@ namespace ISynergy.Framework.UI.Converters
     }
 
     /// <summary>
-    /// Class StringToVisibilityConverter.
+    /// Class StringToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class StringToVisibilityConverter : IValueConverter
+    public class StringToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -110,11 +110,11 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is string stringValue && !string.IsNullOrEmpty(stringValue))
             {
-                return Visibility.Visible;
+                return true;
             }
             else
             {
-                return Visibility.Collapsed;
+                return false;
             }
         }
 

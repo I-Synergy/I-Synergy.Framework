@@ -20,15 +20,15 @@
     <converters:StringToIntegerConverter x:Key="StringToIntegerConverter"/>
     <converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
     <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
-    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+    <converters:StringToIsVisibleConverter x:Key="StringToIsVisibleConverter"/>
     <converters:StringToEnabledConverter x:Key="StringToEnabledConverter"/>
     <converters:DateTimeOffsetToLocalDateTimeConverter x:Key="DateTimeOffsetToLocalDateTimeConverter"/>
     <converters:DateTimeOffsetToLocalDateTimeOffsetConverter x:Key="DateTimeOffsetToLocalDateTimeOffsetConverter" />
     <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter" />
-    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
-    <converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
-    <converters:BooleanToVisibilityConverter x:Key="IsEditableToVisibilityConverter" True="Visible" False="Collapsed" />
-    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:BooleanToIsVisibleConverter x:Key="BooleanToIsVisibleConverter" True="True" False="False" />
+    <converters:BooleanToIsVisibleConverter x:Key="InverseBooleanToIsVisibleConverter" True="False" False="True"/>
+    <converters:BooleanToIsVisibleConverter x:Key="IsEditableToVisibleConverter" True="True" False="False" />
+    <converters:NullToIsVisibleConverter x:Key="NullToIsVisibleConverter"/>
     <converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters"/>
     <converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter"/>
     <converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter"/>
@@ -555,14 +555,15 @@
     </Style>
 
     <ControlTemplate x:Key="DefaultDialogTemplate">
-        <Frame BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
+        <Border BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
-               CornerRadius="8"
-               HasShadow="True"
                Padding="8"
                HorizontalOptions="Center"
                VerticalOptions="Center"
                Margin="10">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="8"/>
+            </Border.StrokeShape>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -572,9 +573,7 @@
 
                 <Label Text="{Binding Title}" FontSize="Title" HorizontalOptions="StartAndExpand" Margin="8,4" />
 
-                <ScrollView Grid.Row="1" Margin="{StaticResource DefaultMargin}">
-                    <ContentPresenter />
-                </ScrollView>
+                <ContentPresenter Grid.Row="1" Margin="{StaticResource DefaultMargin}"/>
 
                 <Grid Grid.Row="2">
                     <HorizontalStackLayout HorizontalOptions="EndAndExpand" Spacing="8">
@@ -583,6 +582,6 @@
                     </HorizontalStackLayout>
                 </Grid>
             </Grid>
-        </Frame>
+        </Border>
     </ControlTemplate>
 </ResourceDictionary>

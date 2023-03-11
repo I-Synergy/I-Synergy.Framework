@@ -11,33 +11,46 @@
         MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
         
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="44"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid Margin="25,4">
-                <HorizontalStackLayout VerticalOptions="Center" Spacing="4" HorizontalOptions="Start">
-                </HorizontalStackLayout>
+            <Entry
+                Text="{Binding Query,Mode=TwoWay}"
+                Placeholder="{m:GetString Search}"
+                Grid.Column="0"
+                ClearButtonVisibility="WhileEditing"
+                ReturnCommand="{Binding Refresh_Command}"
+                ReturnCommandParameter="{Binding Query}"
+                Margin="2"/>
 
-                <HorizontalStackLayout VerticalOptions="Center" Spacing="4" HorizontalOptions="End">
-                    <Button Command="{Binding Refresh_Command}" Style="{StaticResource RefreshButtonStyle}"/>
-                </HorizontalStackLayout>
-            </Grid>
+            <Button
+                Text="{m:GetString Search}"
+                Grid.Column="1"
+                Command="{Binding Refresh_Command}"
+                CommandParameter="{Binding Query}"
+                Style="{StaticResource RefreshButtonStyle}"
+                Margin="2"/>
 
             <CollectionView
                 x:Name="DataSummary"
                 ItemsSource="{Binding Items}"
                 SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}"
                 SelectionChanged="DataSummary_SelectionChanged"
-                Grid.Row="1">
+                Grid.Row="1"
+                Grid.ColumnSpan="2">
                 
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Description}" />
+                        <Label Text="{Binding Description}" Margin="4" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
