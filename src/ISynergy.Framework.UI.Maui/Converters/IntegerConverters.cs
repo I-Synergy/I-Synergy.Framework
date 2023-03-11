@@ -3,11 +3,11 @@
 namespace ISynergy.Framework.UI.Converters
 {
     /// <summary>
-    /// Class IntegerToVisibilityConverter.
+    /// Class IntegerToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class IntegerToVisibilityConverter : IValueConverter
+    public class IntegerToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -21,11 +21,11 @@ namespace ISynergy.Framework.UI.Converters
         {
             if ((int)value == 0 || value is null)
             {
-                return Visibility.Collapsed;
+                return false;
             }
             else
             {
-                return Visibility.Visible;
+                return true;
             }
         }
 
@@ -45,11 +45,11 @@ namespace ISynergy.Framework.UI.Converters
     }
 
     /// <summary>
-    /// Class ZeroIntegerToVisibilityConverter.
+    /// Class ZeroIntegerToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class ZeroIntegerToVisibilityConverter : IValueConverter
+    public class ZeroIntegerToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -63,11 +63,11 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is int intValue && intValue == 0)
             {
-                return Visibility.Visible;
+                return true;
             }
             else
             {
-                return Visibility.Collapsed;
+                return false;
             }
         }
 

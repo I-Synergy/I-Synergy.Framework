@@ -20,15 +20,15 @@
     <converters:StringToIntegerConverter x:Key="StringToIntegerConverter"/>
     <converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
     <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
-    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+    <converters:StringToIsVisibleConverter x:Key="StringToIsVisibleConverter"/>
     <converters:StringToEnabledConverter x:Key="StringToEnabledConverter"/>
     <converters:DateTimeOffsetToLocalDateTimeConverter x:Key="DateTimeOffsetToLocalDateTimeConverter"/>
     <converters:DateTimeOffsetToLocalDateTimeOffsetConverter x:Key="DateTimeOffsetToLocalDateTimeOffsetConverter" />
     <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter" />
-    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" True="Visible" False="Collapsed" />
-    <converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
-    <converters:BooleanToVisibilityConverter x:Key="IsEditableToVisibilityConverter" True="Visible" False="Collapsed" />
-    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:BooleanToIsVisibleConverter x:Key="BooleanToIsVisibleConverter" True="True" False="False" />
+    <converters:BooleanToIsVisibleConverter x:Key="InverseBooleanToIsVisibleConverter" True="False" False="True"/>
+    <converters:BooleanToIsVisibleConverter x:Key="IsEditableToVisibleConverter" True="True" False="False" />
+    <converters:NullToIsVisibleConverter x:Key="NullToIsVisibleConverter"/>
     <converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters"/>
     <converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter"/>
     <converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter"/>
