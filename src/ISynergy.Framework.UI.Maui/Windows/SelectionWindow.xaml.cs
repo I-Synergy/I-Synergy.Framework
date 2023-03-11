@@ -1,9 +1,10 @@
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Enumerations;
 
 namespace ISynergy.Framework.UI.Windows;
 
-public partial class SelectionWindow
+public partial class SelectionWindow : ISelectionWindow
 {
 	public SelectionWindow()
 	{

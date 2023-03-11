@@ -3,11 +3,11 @@
 namespace ISynergy.Framework.UI.Converters
 {
     /// <summary>
-    /// Class NullToVisibilityConverter.
+    /// Class NullToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class NullToVisibilityConverter : IValueConverter
+    public class NullToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -20,9 +20,9 @@ namespace ISynergy.Framework.UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null)
-                return Visibility.Collapsed;
+                return false;
             else
-                return Visibility.Visible;
+                return true;
         }
 
         /// <summary>
@@ -41,11 +41,11 @@ namespace ISynergy.Framework.UI.Converters
     }
 
     /// <summary>
-    /// Class NullToInversedVisibilityConverter.
+    /// Class NullToInversedIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class NullToInversedVisibilityConverter : IValueConverter
+    public class NullToInversedIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -59,11 +59,11 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is not null)
             {
-                return Visibility.Collapsed;
+                return false;
             }
             else
             {
-                return Visibility.Visible;
+                return true;
             }
         }
 

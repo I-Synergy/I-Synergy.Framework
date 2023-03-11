@@ -1,4 +1,6 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Mopups.Animations;
+using Mopups.Enums;
 using Mopups.Pages;
 
 namespace ISynergy.Framework.UI.Controls
@@ -20,7 +22,19 @@ namespace ISynergy.Framework.UI.Controls
         public Window()
         {
             CloseWhenBackgroundIsClicked = false;
+            
             BackgroundColor = Color.FromArgb("#80000000");
+            
+            Animation = new ScaleAnimation
+            {
+                DurationIn = 700,
+                EasingIn = Easing.BounceOut,
+                PositionIn = MoveAnimationOptions.Bottom,
+                PositionOut = MoveAnimationOptions.Center,
+                ScaleIn = 1,
+                ScaleOut = 0.7
+            };
+
             Loaded += Window_Loaded;
         }
 

@@ -3,11 +3,11 @@
 namespace ISynergy.Framework.UI.Converters
 {
     /// <summary>
-    /// Class GuidToInversedVisibilityConverter.
+    /// Class GuidToInversedIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class GuidToInversedVisibilityConverter : IValueConverter
+    public class GuidToInversedIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -21,11 +21,11 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is Guid guid && guid != Guid.Empty)
             {
-                return Visibility.Collapsed;
+                return false;
             }
             else
             {
-                return Visibility.Visible;
+                return true;
             }
         }
 
@@ -45,11 +45,11 @@ namespace ISynergy.Framework.UI.Converters
     }
 
     /// <summary>
-    /// Class GuidToVisibilityConverter.
+    /// Class GuidToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class GuidToVisibilityConverter : IValueConverter
+    public class GuidToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -63,11 +63,11 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is Guid guid && guid != Guid.Empty)
             {
-                return Visibility.Visible;
+                return true;
             }
             else
             {
-                return Visibility.Collapsed;
+                return false;
             }
         }
 

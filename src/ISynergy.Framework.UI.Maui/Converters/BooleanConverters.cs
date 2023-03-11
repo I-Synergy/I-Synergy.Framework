@@ -86,17 +86,17 @@ namespace ISynergy.Framework.UI.Converters
     }
 
     /// <summary>
-    /// Class BooleanToVisibilityConverter.
+    /// Class BooleanToIsVisibleConverter.
     /// Implements the <see cref="BooleanConverter{Visibility}" />
     /// </summary>
     /// <seealso cref="BooleanConverter{Visibility}" />
-    public sealed class BooleanToVisibilityConverter : BooleanConverter<Visibility>
+    public sealed class BooleanToIsVisibleConverter : BooleanConverter<bool>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BooleanToVisibilityConverter"/> class.
+        /// Initializes a new instance of the <see cref="BooleanToIsVisibleConverter"/> class.
         /// </summary>
-        public BooleanToVisibilityConverter()
-            : base(Visibility.Visible, Visibility.Collapsed)
+        public BooleanToIsVisibleConverter()
+            : base(true, false)
         {
         }
     }

@@ -3,11 +3,11 @@
 namespace ISynergy.Framework.UI.Converters
 {
     /// <summary>
-    /// Class ZeroDoubleToVisibilityConverter.
+    /// Class ZeroDoubleToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class ZeroDoubleToVisibilityConverter : IValueConverter
+    public class ZeroDoubleToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -21,11 +21,53 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is double doubleValue && doubleValue == 0d)
             {
-                return Visibility.Visible;
+                return true;
             }
             else
             {
-                return Visibility.Collapsed;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// Class DoubleToIsVisibileConverter.
+    /// Implements the <see cref="IValueConverter" />
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
+    public class DoubleToIsVisibileConverter : IValueConverter
+    {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.Object.</returns>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((double)value == 0 || value is null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
