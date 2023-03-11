@@ -59,6 +59,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             set => SetValue(value);
         }
 
+
+        /// <summary>
+        /// Gets or sets the Query property value.
+        /// </summary>
+        public string Query
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
+
         /// <summary>
         /// Gets or sets the refresh command.
         /// </summary>

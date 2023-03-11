@@ -17,7 +17,7 @@ using Sample.ViewModels;
 using Sample.Views;
 using System.Reflection;
 
-[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+//[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
 namespace Sample
 {

@@ -65,6 +65,9 @@
 	  <MauiXaml Update="Views\LoadingView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Windows\NoteWindow.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Windows\SelectionWindow.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -7,7 +7,7 @@
     Title="{Binding Title}">
 
     <VerticalStackLayout Spacing="10">
-        <!--<Button Command="{Binding SelectSingle_Command}" 
+        <Button Command="{Binding SelectSingle_Command}" 
             Text="Select single item..." 
             Width="200"
             Height="35"
@@ -17,7 +17,7 @@
             Text="Select multiple items..."
             Width="200"
             Height="35"
-            Margin="1"/>-->
+            Margin="1"/>
 
         <Button Command="{Binding ShowDialogYesNo}" 
             Text="Show Yes/No dialog..."
@@ -33,6 +33,12 @@
 
         <Button Command="{Binding ShowDialogOkCancel}" 
             Text="Show Ok/Cancel dialog..."
+            Width="200"
+            Height="35"
+            Margin="1"/>
+
+        <Button Command="{Binding ShowNoteDialog}" 
+            Text="Show Note dialog..."
             Width="200"
             Height="35"
             Margin="1"/>
