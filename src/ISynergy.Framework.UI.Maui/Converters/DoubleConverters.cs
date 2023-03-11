@@ -45,11 +45,11 @@ namespace ISynergy.Framework.UI.Converters
     }
 
     /// <summary>
-    /// Class DoubleToIsVisibileConverter.
+    /// Class DoubleToIsVisibleConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class DoubleToIsVisibileConverter : IValueConverter
+    public class DoubleToIsVisibleConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
