@@ -3,11 +3,11 @@
 namespace ISynergy.Framework.UI.Converters
 {
     /// <summary>
-    /// Class DecimalToVisibilityConverter.
+    /// Class DecimalToIsVisibileConverter.
     /// Implements the <see cref="IValueConverter" />
     /// </summary>
     /// <seealso cref="IValueConverter" />
-    public class DecimalToVisibilityConverter : IValueConverter
+    public class DecimalToIsVisibileConverter : IValueConverter
     {
         /// <summary>
         /// Converts the specified value.
@@ -21,11 +21,53 @@ namespace ISynergy.Framework.UI.Converters
         {
             if ((decimal)value == 0 || value is null)
             {
-                return Visibility.Collapsed;
+                return false;
             }
             else
             {
-                return Visibility.Visible;
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.Object.</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// Class ZeroDecimalToIsVisibileConverter.
+    /// Implements the <see cref="IValueConverter" />
+    /// </summary>
+    /// <seealso cref="IValueConverter" />
+    public class ZeroDecimalToIsVisibileConverter : IValueConverter
+    {
+        /// <summary>
+        /// Converts the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns>System.Object.</returns>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((decimal)value == 0 || value is null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
