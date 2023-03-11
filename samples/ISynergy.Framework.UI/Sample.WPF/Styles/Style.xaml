@@ -4,7 +4,7 @@
                     xmlns:Controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Wpf"
                     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
                     xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Wpf"
-                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" Source="/Assets/Fonts/FontAwesome.otf">
+                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     <Converters:MaskToRegexConverter x:Key="MaskToRegexConverter"/>

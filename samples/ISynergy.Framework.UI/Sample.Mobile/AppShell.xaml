@@ -24,6 +24,7 @@
             </ShellContent.Icon>
         </ShellContent>
         <ShellContent Title="Controls" ContentTemplate="{DataTemplate views:ControlsView}" Route="Controls"/>
+        <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate views:DialogsView}" Route="Dialogs"/>
     </FlyoutItem>
 
     <MenuFlyoutItem Text="{m:GetString Help}" Command="{Binding Help_Command}">
