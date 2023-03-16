@@ -47,6 +47,10 @@ namespace Sample.Services
                 var json = File.ReadAllText(file);
                 _settings = JsonSerializer.Deserialize<ApplicationSetting>(json);
             }
+            catch (JsonException)
+            {
+                SaveSettings();
+            }
             catch (FileNotFoundException)
             {
                 _settings = new ApplicationSetting();
