@@ -4,6 +4,7 @@ using ISynergy.Framework.UI.Extensions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.Controls.Validators
 {
@@ -253,7 +254,7 @@ namespace ISynergy.Framework.UI.Controls.Validators
                         return;
                     }
 
-                    regexMatch = System.Text.RegularExpressions.Regex.IsMatch(textBox.Text, regex);
+                    regexMatch = System.Text.RegularExpressions.Regex.IsMatch(textBox.Text, regex, RegexOptions.None, TimeSpan.FromMilliseconds(100));
                     break;
                 case ValidationType.Decimal:
                     regexMatch = textBox.Text.IsDecimal();

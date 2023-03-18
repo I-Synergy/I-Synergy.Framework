@@ -135,7 +135,7 @@
             str = str.Replace("\n", newline);
 
             if (string.IsNullOrEmpty(newline))
-                str = Regex.Replace(str, " +", " ");
+                str = Regex.Replace(str, " +", " ", RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
             return str;
         }
@@ -257,7 +257,7 @@
             // remove excess tabs
             str = str.Replace('\t', ' ');
             // remove excess spaces
-            str = Regex.Replace(str, @" +", " ");
+            str = Regex.Replace(str, @" +", " ", RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
             // First remove starting and trailing tokens
             str = str.Remove(0, provider.ParseMatrixStart.Length);
@@ -283,7 +283,7 @@
 
                 foreach (string strCol in strCols)
                 {
-                    string col = Regex.Replace(strCol, @"\s", string.Empty);
+                    string col = Regex.Replace(strCol, @"\s", string.Empty, RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
                     // Remove starting and trailing tokens
                     if (col.StartsWith(provider.ParseColStart, StringComparison.Ordinal))

@@ -20,7 +20,7 @@ namespace ISynergy.Framework.Core.Utilities
 
             var secretBytes = new byte[byteLength];
             rng.GetNonZeroBytes(secretBytes);
-            return Regex.Replace(Convert.ToBase64String(secretBytes), "[^A-Za-z0-9]", "X");
+            return Regex.Replace(Convert.ToBase64String(secretBytes), "[^A-Za-z0-9]", "X", RegexOptions.None, TimeSpan.FromMilliseconds(100));
         }
     }
 }

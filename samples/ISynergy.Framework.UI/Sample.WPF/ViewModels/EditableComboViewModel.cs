@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels
 {
@@ -71,7 +72,7 @@ namespace Sample.ViewModels
             {
                 var regex = RegexUtility.MaskToRegexConverter(RegexExpression);
 
-                if (string.IsNullOrEmpty(RegexSample) || !regex.IsMatch(RegexSample))
+                if (string.IsNullOrEmpty(RegexSample) || !regex.IsMatch(RegexSample, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
                     Properties[nameof(RegexSample)].Errors.Add("TextSample is fout.");
                 }

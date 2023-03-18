@@ -208,7 +208,7 @@ namespace Sample.ViewModels
                         Properties[nameof(Username)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
                     }
 
-                    if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx))
+                    if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
                         Properties[nameof(Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
@@ -235,7 +235,7 @@ namespace Sample.ViewModels
                         Properties[nameof(Registration_Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
 
-                    if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx))
+                    if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
                         Properties[nameof(Registration_Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
