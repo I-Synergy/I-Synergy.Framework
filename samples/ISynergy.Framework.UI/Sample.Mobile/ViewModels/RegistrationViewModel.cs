@@ -151,7 +151,7 @@ namespace ISynergy.Framework.UI.ViewModels
 
             this.Validator = new Action<IObservableClass>(_ =>
             {
-                if (string.IsNullOrEmpty(Name) || !(Name.Length > 3))
+                if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
                 {
                     Properties[nameof(Name)].Errors.Add(commonServices.LanguageService.GetString("WarningLicenseNameSize"));
                 }
@@ -166,7 +166,7 @@ namespace ISynergy.Framework.UI.ViewModels
                     Properties[nameof(SelectedTimeZone)].Errors.Add(commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
                 }
 
-                if (string.IsNullOrEmpty(Password) || !(Password.Length > 6))
+                if (string.IsNullOrEmpty(Password) || (Password.Length <= 6))
                 {
                     Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
@@ -176,7 +176,7 @@ namespace ISynergy.Framework.UI.ViewModels
                     Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
-                if (string.IsNullOrEmpty(PasswordCheck) || !(PasswordCheck.Length > 6))
+                if (string.IsNullOrEmpty(PasswordCheck) || (PasswordCheck.Length <= 6))
                 {
                     Properties[nameof(PasswordCheck)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
