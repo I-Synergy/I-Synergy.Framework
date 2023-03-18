@@ -32,7 +32,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// Gets the errors.
         /// </summary>
         /// <value>The errors.</value>
-        ObservableConcurrentCollection<string> Errors { get; }
+        ObservableCollection<string> Errors { get; }
 
         /// <summary>
         /// Returns true if ... is valid.

@@ -92,7 +92,7 @@ namespace Sample.ViewModels
             Clear_Command = new RelayCommand(ClearItems);
 
             Query = string.Empty;
-            Items = new ObservableConcurrentCollection<TestItem>();
+            Items = new ObservableCollection<TestItem>();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Sample.ViewModels
 
             try
             {
-                Items = new ObservableConcurrentCollection<TestItem>(
+                Items = new ObservableCollection<TestItem>(
                     await RetrieveItemsAsync(SearchCancellationtoken.Token));
             }
             catch (OperationCanceledException)

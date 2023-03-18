@@ -112,11 +112,11 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var result = new ObservableConcurrentCollection<DateTime>();
+            var result = new ObservableCollection<DateTime>();
 
-            if (value is not null && value.GetType() == typeof(ObservableConcurrentCollection<DateTimeOffset>))
+            if (value is not null && value.GetType() == typeof(ObservableCollection<DateTimeOffset>))
             {
-                var collection = value as ObservableConcurrentCollection<DateTimeOffset>;
+                var collection = value as ObservableCollection<DateTimeOffset>;
 
                 foreach (var item in collection)
                 {
@@ -137,13 +137,13 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            var result = new ObservableConcurrentCollection<DateTimeOffset>();
+            var result = new ObservableCollection<DateTimeOffset>();
 
             if (value is not null)
             {
-                if (value.GetType() == typeof(ObservableConcurrentCollection<DateTime>))
+                if (value.GetType() == typeof(ObservableCollection<DateTime>))
                 {
-                    var collection = value as ObservableConcurrentCollection<DateTime>;
+                    var collection = value as ObservableCollection<DateTime>;
 
                     foreach (var item in collection)
                     {
@@ -151,9 +151,9 @@ namespace ISynergy.Framework.UI.Converters
                     }
                 }
 
-                if (value.GetType() == typeof(ObservableConcurrentCollection<string>))
+                if (value.GetType() == typeof(ObservableCollection<string>))
                 {
-                    var collection = value as ObservableConcurrentCollection<string>;
+                    var collection = value as ObservableCollection<string>;
 
                     foreach (var item in collection)
                     {

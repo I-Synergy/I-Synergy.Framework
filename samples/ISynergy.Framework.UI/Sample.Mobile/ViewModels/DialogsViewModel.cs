@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
+using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels
 {
@@ -54,12 +55,12 @@ namespace Sample.ViewModels
         /// Gets or sets the selected test items.
         /// </summary>
         /// <value>The selected test items.</value>
-        public ObservableConcurrentCollection<TestItem> SelectedTestItems { get; set; }
+        public ObservableCollection<TestItem> SelectedTestItems { get; set; }
 
         /// <summary>
         /// Gets or sets the items.
         /// </summary>
-        public ObservableConcurrentCollection<TestItem> Items { get; set; }
+        public ObservableCollection<TestItem> Items { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -80,7 +81,7 @@ namespace Sample.ViewModels
             ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
             ShowNoteDialog = new AsyncRelayCommand(ShowNoteDialogAsync);
 
-            Items = new ObservableConcurrentCollection<TestItem>()
+            Items = new ObservableCollection<TestItem>()
             {
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},
@@ -158,7 +159,7 @@ namespace Sample.ViewModels
             if (sender is ViewModelSelectionBlade vm)
                 vm.Submitted -= SelectionVm_MultipleSubmitted;
 
-            SelectedTestItems = new ObservableConcurrentCollection<TestItem>(e.Result.Cast<TestItem>());
+            SelectedTestItems = new ObservableCollection<TestItem>(e.Result.Cast<TestItem>());
 
             await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Cast<TestItem>().Select(s => s.Description))} selected.");
         }
