@@ -166,7 +166,7 @@ namespace ISynergy.Framework.UI.Extensions
                     .Where(q =>
                         q.GetInterface(nameof(IViewModel), false) is not null
                         && !q.Name.Equals(GenericConstants.ShellViewModel)
-                        && (q.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(q.Name, GenericConstants.ViewModelTRegex))
+                        && (q.Name.EndsWith(GenericConstants.ViewModel) || Regex.IsMatch(q.Name, GenericConstants.ViewModelTRegex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                         && q.Name != GenericConstants.ViewModel
                         && !q.IsAbstract
                         && !q.IsInterface)

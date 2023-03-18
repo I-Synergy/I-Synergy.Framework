@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels
 {
@@ -102,7 +103,7 @@ namespace Sample.ViewModels
                         Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] should be a valid regex expression.");
                     }
 
-                    if(!System.Text.RegularExpressions.Regex.IsMatch(Test, Regex))
+                    if(!System.Text.RegularExpressions.Regex.IsMatch(Test, Regex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
                         Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] does not match the regular expression.");
                     }

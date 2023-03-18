@@ -171,7 +171,7 @@ namespace ISynergy.Framework.UI.ViewModels
                     Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
-                if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx))
+                if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
                     Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
@@ -308,7 +308,7 @@ namespace ISynergy.Framework.UI.ViewModels
                     await _authenticationService.CheckRegistrationEmailAsync(emailaddress) &&
                     PasswordCheck is not null && Password is not null &&
                     PasswordCheck.Equals(Password) &&
-                    Regex.IsMatch(Password, GenericConstants.PasswordRegEx))
+                    Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
                     var registrationData = new RegistrationData
                     {
