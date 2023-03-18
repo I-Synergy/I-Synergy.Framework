@@ -30,9 +30,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Items property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableConcurrentCollection<TEntity> Items
+        public ObservableCollection<TEntity> Items
         {
-            get => GetValue<ObservableConcurrentCollection<TEntity>>();
+            get => GetValue<ObservableCollection<TEntity>>();
             set => SetValue(value);
         }
 
@@ -127,7 +127,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Items = new ObservableConcurrentCollection<TEntity>();
+            Items = new ObservableCollection<TEntity>();
 
             Add_Command = new AsyncRelayCommand(async () => await AddAsync());
             Edit_Command = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));

@@ -72,7 +72,7 @@ namespace Sample.ViewModels
             {
                 var regex = RegexUtility.MaskToRegexConverter(RegexExpression);
 
-                if (string.IsNullOrEmpty(RegexSample) || !regex.IsMatch(RegexSample, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+                if (string.IsNullOrEmpty(RegexSample) || !regex.IsMatch(RegexSample))
                 {
                     Properties[nameof(RegexSample)].Errors.Add("TextSample is fout.");
                 }

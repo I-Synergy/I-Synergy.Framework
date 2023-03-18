@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Core.Abstractions
         /// Gets or sets the profiles.
         /// </summary>
         /// <value>The profiles.</value>
-        ObservableConcurrentCollection<IProfile> Profiles { get; set; }
+        ObservableCollection<IProfile> Profiles { get; set; }
         /// <summary>
         /// Gets or sets the current profile.
         /// </summary>

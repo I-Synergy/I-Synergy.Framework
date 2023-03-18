@@ -59,7 +59,7 @@ namespace Sample.ViewModels
         /// Gets or sets the selected test items.
         /// </summary>
         /// <value>The selected test items.</value>
-        public ObservableConcurrentCollection<TestItem> SelectedTestItems { get; set; }
+        public ObservableCollection<TestItem> SelectedTestItems { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
@@ -84,12 +84,12 @@ namespace Sample.ViewModels
         private async Task ShowDialogAsync(MessageBoxButton buttons)
         {
             if (await BaseCommonServices.DialogService.ShowMessageAsync(
-                                $"Testing {buttons.ToString()} Dialog",
+                                $"Testing {buttons} Dialog",
                                 "Test",
                                 buttons) is MessageBoxResult result)
             {
-                await BaseCommonServices.DialogService.ShowInformationAsync($"{result.ToString()} selected.", "Result...");
-            };
+                await BaseCommonServices.DialogService.ShowInformationAsync($"{result} selected.", "Result...");
+            }
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Sample.ViewModels
             if (sender is ViewModelSelectionBlade vm)
                 vm.Submitted -= SelectionVm_MultipleSubmitted;
 
-            SelectedTestItems = new ObservableConcurrentCollection<TestItem>(e.Result.Cast<TestItem>());
+            SelectedTestItems = new ObservableCollection<TestItem>(e.Result.Cast<TestItem>());
 
             await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Cast<TestItem>().Select(s => s.Description))} selected.");
         }

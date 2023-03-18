@@ -132,8 +132,8 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             _themeService = themeService;
             _localizationService = LocalizationService;
 
-            PrimaryItems = new ObservableConcurrentCollection<NavigationItem>();
-            SecondaryItems = new ObservableConcurrentCollection<NavigationItem>();
+            PrimaryItems = new ObservableCollection<NavigationItem>();
+            SecondaryItems = new ObservableCollection<NavigationItem>();
 
             RestartUpdate_Command = new AsyncRelayCommand(() => ShowDialogRestartAfterUpdateAsync());
 
@@ -196,9 +196,9 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// Gets or sets the PrimaryItems property value.
         /// </summary>
         /// <value>The primary items.</value>
-        public ObservableConcurrentCollection<NavigationItem> PrimaryItems
+        public ObservableCollection<NavigationItem> PrimaryItems
         {
-            get => GetValue<ObservableConcurrentCollection<NavigationItem>>();
+            get => GetValue<ObservableCollection<NavigationItem>>();
             set => SetValue(value);
         }
 
@@ -206,9 +206,9 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// Gets or sets the SecondaryItems property value.
         /// </summary>
         /// <value>The primary items.</value>
-        public ObservableConcurrentCollection<NavigationItem> SecondaryItems
+        public ObservableCollection<NavigationItem> SecondaryItems
         {
-            get => GetValue<ObservableConcurrentCollection<NavigationItem>>();
+            get => GetValue<ObservableCollection<NavigationItem>>();
             set => SetValue(value);
         }
 

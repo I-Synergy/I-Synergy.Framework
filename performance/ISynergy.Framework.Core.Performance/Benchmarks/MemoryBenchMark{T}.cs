@@ -60,15 +60,15 @@ namespace ISynergy.Framework.Core.Performance.Benchmarks
             return result;
         }
 
-        [Benchmark(Description = "ObservableConcurrentCollection")]
+        [Benchmark(Description = "ObservableCollection")]
         //[Arguments(1)]
         //[Arguments(10)]
         //[Arguments(100)]
         //[Arguments(1000)]
         [Arguments(10000)]
-        public ObservableConcurrentCollection<T> CreateObservableConcurrentCollection(int count)
+        public ObservableCollection<T> CreateObservableConcurrentCollection(int count)
         {
-            var result = new ObservableConcurrentCollection<T>();
+            var result = new ObservableCollection<T>();
             for (int i = 0; i < count; i++)
             {
                 result.Add(new T());

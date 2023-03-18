@@ -38,9 +38,9 @@ namespace Sample.ViewModels
         /// Gets or sets the Usernames property value.
         /// </summary>
         /// <value>The usernames.</value>
-        public ObservableConcurrentCollection<string> Usernames
+        public ObservableCollection<string> Usernames
         {
-            get { return GetValue<ObservableConcurrentCollection<string>>(); }
+            get { return GetValue<ObservableCollection<string>>(); }
             set { SetValue(value); }
         }
 
@@ -258,7 +258,7 @@ namespace Sample.ViewModels
                 }
             });
 
-            Usernames = new ObservableConcurrentCollection<string>();
+            Usernames = new ObservableCollection<string>();
             Registration_TimeZone = null;
             Registration_Modules = new List<Module>();
             LoginVisible = true;
@@ -273,7 +273,7 @@ namespace Sample.ViewModels
             Registration_Modules.Add(Modules.First());
 
             if (_applicationSettingsService.Settings.Users is List<string> users)
-                Usernames = new ObservableConcurrentCollection<string>(users);
+                Usernames = new ObservableCollection<string>(users);
 
             Username = _applicationSettingsService.Settings.DefaultUser;
         }

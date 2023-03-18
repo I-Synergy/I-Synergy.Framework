@@ -27,9 +27,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Locations property value.
         /// </summary>
         /// <value>The locations.</value>
-        public ObservableConcurrentCollection<object> Locations
+        public ObservableCollection<object> Locations
         {
-            get { return GetValue<ObservableConcurrentCollection<object>>(); }
+            get { return GetValue<ObservableCollection<object>>(); }
             set { SetValue(value); }
         }
 
@@ -99,7 +99,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             string address)
             : base(context, commonServices, logger)
         {
-            Locations = new ObservableConcurrentCollection<object>();
+            Locations = new ObservableCollection<object>();
             Title = address;
             Address = address;
             Name = name;

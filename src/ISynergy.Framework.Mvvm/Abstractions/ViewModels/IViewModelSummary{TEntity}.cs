@@ -10,6 +10,6 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
     /// <seealso cref="IViewModel" />
     public interface IViewModelSummary<TEntity> : IViewModelSelectedItem<TEntity>
     {
-        ObservableConcurrentCollection<TEntity> Items { get; set; }
+        ObservableCollection<TEntity> Items { get; set; }
     }
 }

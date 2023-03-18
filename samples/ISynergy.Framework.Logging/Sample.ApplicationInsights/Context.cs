@@ -38,7 +38,7 @@ namespace Sample
             _configurationOptions = configurationOptions.Value;
             _infoService = infoService;
 
-            Profiles = new ObservableConcurrentCollection<IProfile>() {  new Profile() };
+            Profiles = new ObservableCollection<IProfile>() {  new Profile() };
             CurrentProfile = Profiles.FirstOrDefault();
             ViewModels = new List<Type>();
 
@@ -68,9 +68,9 @@ namespace Sample
         /// Gets or sets the profiles.
         /// </summary>
         /// <value>The profiles.</value>
-        public ObservableConcurrentCollection<IProfile> Profiles
+        public ObservableCollection<IProfile> Profiles
         {
-            get { return GetValue<ObservableConcurrentCollection<IProfile>>(); }
+            get { return GetValue<ObservableCollection<IProfile>>(); }
             set { SetValue(value); }
         }
 
