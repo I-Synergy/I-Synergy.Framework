@@ -203,7 +203,7 @@ namespace Sample.ViewModels
             {
                 if (LoginVisible)
                 {
-                    if (string.IsNullOrEmpty(Username) || !(Username.Length > 3))
+                    if (string.IsNullOrEmpty(Username) || (Username.Length <= 3))
                     {
                         Properties[nameof(Username)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
                     }
@@ -215,7 +215,7 @@ namespace Sample.ViewModels
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(Registration_Name) || !(Registration_Name.Length > 3))
+                    if (string.IsNullOrEmpty(Registration_Name) || (Registration_Name.Length <= 3))
                     {
                         Properties[nameof(Registration_Name)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningLicenseNameSize"));
                     }
@@ -230,7 +230,7 @@ namespace Sample.ViewModels
                         Properties[nameof(Registration_TimeZone)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
                     }
 
-                    if (string.IsNullOrEmpty(Registration_Password) || !(Registration_Password.Length > 6))
+                    if (string.IsNullOrEmpty(Registration_Password) || (Registration_Password.Length <= 6))
                     {
                         Properties[nameof(Registration_Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
@@ -240,7 +240,7 @@ namespace Sample.ViewModels
                         Properties[nameof(Registration_Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
 
-                    if (string.IsNullOrEmpty(Registration_PasswordCheck) || !(Registration_PasswordCheck.Length > 6))
+                    if (string.IsNullOrEmpty(Registration_PasswordCheck) || (Registration_PasswordCheck.Length <= 6))
                     {
                         Properties[nameof(Registration_PasswordCheck)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
