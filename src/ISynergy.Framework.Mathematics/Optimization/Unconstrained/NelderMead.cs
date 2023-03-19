@@ -27,8 +27,6 @@
 using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {

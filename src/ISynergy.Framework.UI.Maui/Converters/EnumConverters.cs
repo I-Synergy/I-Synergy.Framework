@@ -1,7 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using System.Globalization;
 

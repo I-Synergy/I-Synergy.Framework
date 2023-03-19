@@ -19,20 +19,20 @@ namespace Sample.MessageBus.Publisher
         {
             try
             {
-                var config = new ConfigurationBuilder()
+                IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false)
                 .AddEnvironmentVariables()
                 .AddUserSecrets<Program>()
                 .Build();
 
-                var serviceProvider = new ServiceCollection()
+                ServiceProvider serviceProvider = new ServiceCollection()
                     .AddLogging()
                     .AddOptions()
                     .AddMessageBusAzurePublishIntegration<TestDataModel>(config)
                     .AddSingleton<ApplicationAzure>()
                     .BuildServiceProvider();
 
-                var application = serviceProvider.GetRequiredService<ApplicationAzure>();
+                ApplicationAzure application = serviceProvider.GetRequiredService<ApplicationAzure>();
                 application.RunAsync().GetAwaiter().GetResult();
             }
             catch (Exception e)

@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -38,9 +37,9 @@ namespace Sample.ViewModels
         /// Gets or sets the Usernames property value.
         /// </summary>
         /// <value>The usernames.</value>
-        public ObservableConcurrentCollection<string> Usernames
+        public ObservableCollection<string> Usernames
         {
-            get { return GetValue<ObservableConcurrentCollection<string>>(); }
+            get { return GetValue<ObservableCollection<string>>(); }
             set { SetValue(value); }
         }
 
@@ -203,19 +202,19 @@ namespace Sample.ViewModels
             {
                 if (LoginVisible)
                 {
-                    if (string.IsNullOrEmpty(Username) || !(Username.Length > 3))
+                    if (string.IsNullOrEmpty(Username) || (Username.Length <= 3))
                     {
                         Properties[nameof(Username)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
                     }
 
-                    if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx))
+                    if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
                         Properties[nameof(Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(Registration_Name) || !(Registration_Name.Length > 3))
+                    if (string.IsNullOrEmpty(Registration_Name) || (Registration_Name.Length <= 3))
                     {
                         Properties[nameof(Registration_Name)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningLicenseNameSize"));
                     }
@@ -230,17 +229,17 @@ namespace Sample.ViewModels
                         Properties[nameof(Registration_TimeZone)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
                     }
 
-                    if (string.IsNullOrEmpty(Registration_Password) || !(Registration_Password.Length > 6))
+                    if (string.IsNullOrEmpty(Registration_Password) || (Registration_Password.Length <= 6))
                     {
                         Properties[nameof(Registration_Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
 
-                    if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx))
+                    if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
                         Properties[nameof(Registration_Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
 
-                    if (string.IsNullOrEmpty(Registration_PasswordCheck) || !(Registration_PasswordCheck.Length > 6))
+                    if (string.IsNullOrEmpty(Registration_PasswordCheck) || (Registration_PasswordCheck.Length <= 6))
                     {
                         Properties[nameof(Registration_PasswordCheck)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
@@ -258,7 +257,7 @@ namespace Sample.ViewModels
                 }
             });
 
-            Usernames = new ObservableConcurrentCollection<string>();
+            Usernames = new ObservableCollection<string>();
             Registration_TimeZone = null;
             Registration_Modules = new List<Module>();
             LoginVisible = true;
@@ -273,7 +272,7 @@ namespace Sample.ViewModels
             Registration_Modules.Add(Modules.First());
 
             if (_applicationSettingsService.Settings.Users is List<string> users)
-                Usernames = new ObservableConcurrentCollection<string>(users);
+                Usernames = new ObservableCollection<string>(users);
 
             Username = _applicationSettingsService.Settings.DefaultUser;
         }
@@ -292,7 +291,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         public Task ForgotPasswordAsync()
         {
-            var forgotPasswordVM = new ForgotPasswordViewModel(Context, BaseCommonServices, _authenticationService, Logger);
+            ForgotPasswordViewModel forgotPasswordVM = new(Context, BaseCommonServices, _authenticationService, Logger);
             forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
         }
@@ -340,6 +339,7 @@ namespace Sample.ViewModels
         {
             if (Validate())
             {
+                return Task.CompletedTask;
             }
 
             return Task.CompletedTask;
@@ -347,7 +347,7 @@ namespace Sample.ViewModels
 
         private Task SignInAsync()
         {
-            if (Validate()) 
+            if (Validate())
             {
                 return BaseCommonServices.NavigationService.ReplaceMainWindowAsync<IShellView>();
             }

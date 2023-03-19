@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace ISynergy.Framework.EntityFramework.Extensions
+﻿namespace ISynergy.Framework.EntityFramework.Extensions
 {
     /// <summary>
     /// QueryableExtensions

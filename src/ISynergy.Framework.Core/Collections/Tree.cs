@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Collections
+﻿namespace ISynergy.Framework.Core.Collections
 {
     /// <summary>
     /// Base class for tree structures.
@@ -14,7 +12,7 @@ namespace ISynergy.Framework.Core.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="Tree{TKey, TModel}" /> class.
         /// </summary>
-        public Tree() 
+        public Tree()
             : base() { }
 
         /// <summary>

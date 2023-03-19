@@ -19,10 +19,10 @@ namespace ISynergy.Framework.Core.Extensions
             where T : Enum
         {
             Type type = enumerationValue.GetType();
-            
+
             if (!type.IsEnum)
                 throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
-            
+
             //Tries to find a DescriptionAttribute for a potential friendly name
             //for the enum
             MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());

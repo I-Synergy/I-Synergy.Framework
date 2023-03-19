@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.IO.Events;
 using ISynergy.Framework.IO.Models;
 using ISynergy.Framework.IO.Watchers.Base;
-using System;
-using System.IO;
 
 namespace ISynergy.Framework.IO.Watchers
 {

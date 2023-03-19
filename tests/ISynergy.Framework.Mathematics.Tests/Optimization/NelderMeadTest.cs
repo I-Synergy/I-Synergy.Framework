@@ -22,7 +22,7 @@
                 10.0 * Math.Pow(x[0] + 1.0, 2.0) + Math.Pow(x[1], 2.0);
 
             // We can do so using the NelderMead class:
-            var solver = new NelderMead(numberOfVariables: 2)
+            NelderMead solver = new(numberOfVariables: 2)
             {
                 Function = function // f(x) = 10 * (x+1)^2 + y^2
             };
@@ -52,10 +52,10 @@
         [TestMethod]
         public void ConstructorTest4()
         {
-            var function = new NonlinearObjectiveFunction(2, x =>
+            NonlinearObjectiveFunction function = new(2, x =>
                 Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
 
-            NelderMead solver = new NelderMead(function);
+            NelderMead solver = new(function);
 
             Assert.IsTrue(solver.Minimize());
             double minimum = solver.Value;
@@ -72,10 +72,10 @@
         [TestMethod]
         public void ConstructorTest5()
         {
-            var function = new NonlinearObjectiveFunction(2, x =>
+            NonlinearObjectiveFunction function = new(2, x =>
                 10.0 * Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
 
-            NelderMead solver = new NelderMead(function);
+            NelderMead solver = new(function);
 
             Assert.IsTrue(solver.Minimize());
             double minimum = solver.Value;
@@ -93,10 +93,10 @@
         [TestMethod]
         public void SubspaceTest1()
         {
-            var function = new NonlinearObjectiveFunction(5, x =>
+            NonlinearObjectiveFunction function = new(5, x =>
                 10.0 * Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
 
-            NelderMead solver = new NelderMead(function);
+            NelderMead solver = new(function);
 
             solver.NumberOfVariables = 2;
 
@@ -132,7 +132,7 @@
             // This values are relevant for my RealWorld(TM) scenario
             Double[] init = new double[] { 0.5, 0 };
 
-            NelderMead nm = new NelderMead(2, eval);
+            NelderMead nm = new(2, eval);
 
             nm.Minimize(init);
 

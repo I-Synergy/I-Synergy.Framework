@@ -4,7 +4,7 @@ namespace ISynergy.Framework.UI.Services
 {
     internal class DispatcherService : IDispatcherService
     {
-        public bool Invoke(Action action)  =>
+        public bool Invoke(Action action) =>
             Application.Current.MainPage.Dispatcher.Dispatch(action);
     }
 }

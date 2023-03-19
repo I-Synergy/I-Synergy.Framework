@@ -20,7 +20,7 @@
         {
             Array jagged = Jagged.Zeros(typeof(int), 2, 3, 1);
 
-            foreach (var idx in jagged.GetIndices(deep: true))
+            foreach (int[] idx in jagged.GetIndices(deep: true))
             {
                 Assert.AreEqual(0, jagged.GetValue(deep: true, indices: idx));
                 jagged.SetValue(idx.Sum(), deep: true, indices: idx);
@@ -40,7 +40,7 @@
         {
             Array matrix = Matrix.Zeros(typeof(int), 2, 3, 1);
 
-            foreach (var idx in matrix.GetIndices())
+            foreach (int[] idx in matrix.GetIndices())
             {
                 Assert.AreEqual(0, matrix.GetValue(deep: true, indices: idx));
                 matrix.SetValue(idx.Sum(), deep: true, indices: idx);
@@ -66,7 +66,7 @@
 
             int[] expected = { 0, 1, 2, 1, 2, 3 };
 
-            List<int> actual = new List<int>();
+            List<int> actual = new();
             foreach (object obj in Jagged.Enumerate(input, new int[] { 2, 3, 1 }))
                 actual.Add((int)obj);
 
@@ -90,7 +90,7 @@
 
             int[] expected = { 0, 1, 2, 1, 2, 3 };
 
-            List<int> actual = new List<int>();
+            List<int> actual = new();
             foreach (object obj in Jagged.Enumerate(input, new int[] { 2 }))
                 actual.AddRange((int[])obj);
 
@@ -114,7 +114,7 @@
 
             int[] expected = { 0, 1, 2, 1, 2, 3 };
 
-            List<int> actual = new List<int>();
+            List<int> actual = new();
             foreach (object obj in Jagged.Enumerate(input))
                 actual.Add((int)obj);
 
@@ -138,7 +138,7 @@
 
             int[] expected = { 0, 1, 0, 9, 0, 3 };
 
-            List<int> actual = new List<int>();
+            List<int> actual = new();
             foreach (object obj in Jagged.Enumerate(input, new int[] { 2, 3, 1 }))
                 actual.Add(obj is null ? 0 : (int)obj);
 
@@ -155,8 +155,8 @@
         [TestMethod]
         public void StackTest()
         {
-            var x1 = Vector.Ones(1000);
-            var y1 = Vector.Zeros(1000);
+            double[] x1 = Vector.Ones(1000);
+            double[] y1 = Vector.Zeros(1000);
 
             double[,] w1 = Matrix.Stack(x1, y1).Transpose();
 
@@ -176,8 +176,8 @@
                 Assert.AreEqual(0, w1[i, 1]);
             }
 
-            var x = w1.GetColumn(0);
-            var y = w1.GetColumn(1);
+            double[] x = w1.GetColumn(0);
+            double[] y = w1.GetColumn(1);
 
             Assert.IsTrue(x.IsEqual(x1));
             Assert.IsTrue(y.IsEqual(y1));

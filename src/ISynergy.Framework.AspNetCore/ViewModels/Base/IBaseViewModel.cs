@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.AspNetCore.ViewModels.Base
+﻿namespace ISynergy.Framework.AspNetCore.ViewModels.Base
 {
     /// <summary>
     /// Interface IBaseViewModel

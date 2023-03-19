@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Attributes
+﻿namespace ISynergy.Framework.Core.Attributes
 {
     /// <summary>
     /// Class DescriptionAttribute.
@@ -14,7 +12,7 @@ namespace ISynergy.Framework.Core.Attributes
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        public string Description { get;set;}
+        public string Description { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DescriptionAttribute"/> class.

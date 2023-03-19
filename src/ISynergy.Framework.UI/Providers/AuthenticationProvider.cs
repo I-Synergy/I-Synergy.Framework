@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Input;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.UI.Providers
 {

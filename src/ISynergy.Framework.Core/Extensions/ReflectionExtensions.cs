@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
-using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -54,7 +52,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <typeparam name="TResult">The type of the t result.</typeparam>
         /// <param name="_self">The self.</param>
         /// <returns>T.</returns>
-        public static TResult GetIdentityValue<T, TResult>(this T _self) 
+        public static TResult GetIdentityValue<T, TResult>(this T _self)
             where T : class
             where TResult : struct
         {
@@ -167,7 +165,7 @@ namespace ISynergy.Framework.Core.Extensions
             var propInfo = _self.GetType().GetProperty(propertyName);
             var prop = propInfo.GetValue(_self, null);
 
-            if(prop is TResult result)
+            if (prop is TResult result)
                 return result;
 
             return defaultValue;

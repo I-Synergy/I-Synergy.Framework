@@ -572,11 +572,11 @@
 
             for (var j = 1; j <= n; ++j)
             {
-                var wsig = 0.0; 
+                var wsig = 0.0;
                 for (var k = 1; k <= n; ++k)
                     wsig += simi[j, k] * simi[j, k];
 
-                var weta = 0.0; 
+                var weta = 0.0;
                 for (var k = 1; k <= n; ++k)
                     weta += sim[k, j] * sim[k, j];
 

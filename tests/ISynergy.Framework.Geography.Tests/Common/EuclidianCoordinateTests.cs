@@ -1,7 +1,7 @@
-﻿using System;
-using ISynergy.Framework.Geography.Global;
+﻿using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Projection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Geography.Common.Tests
 {
@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestConstructor1()
         {
-            var e = new EuclidianCoordinate(projection, -1, -2);
+            EuclidianCoordinate e = new(projection, -1, -2);
             Assert.AreEqual(e.X, -1);
             Assert.AreEqual(e.Y, -2);
         }
@@ -33,7 +33,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestConstructor2()
         {
-            var e = new EuclidianCoordinate(projection, new double[] { -3, -4 });
+            EuclidianCoordinate e = new(projection, new double[] { -3, -4 });
             Assert.AreEqual(e.X, -3);
             Assert.AreEqual(e.Y, -4);
         }
@@ -53,8 +53,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEquals1()
         {
-            var e1 = new EuclidianCoordinate(projection, -3, -4);
-            var e2 = new EuclidianCoordinate(projection, -3, -4);
+            EuclidianCoordinate e1 = new(projection, -3, -4);
+            EuclidianCoordinate e2 = new(projection, -3, -4);
             Assert.AreEqual(e1, e2);
         }
 
@@ -75,8 +75,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEquals3()
         {
-            var e1 = new EuclidianCoordinate(projection, -3, -4);
-            var e2 = new EuclidianCoordinate(new EllipticalMercatorProjection(), -3, -4);
+            EuclidianCoordinate e1 = new(projection, -3, -4);
+            EuclidianCoordinate e2 = new(new EllipticalMercatorProjection(), -3, -4);
             Assert.AreNotEqual(e1, e2);
         }
 
@@ -86,8 +86,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEquals4()
         {
-            var e1 = new EuclidianCoordinate(projection, -3, -4);
-            var e2 = new EuclidianCoordinate(projection, -3 + 1e-13, -4);
+            EuclidianCoordinate e1 = new(projection, -3, -4);
+            EuclidianCoordinate e2 = new(projection, -3 + 1e-13, -4);
             Assert.AreEqual(e1, e2);
         }
 
@@ -97,8 +97,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEquals5()
         {
-            var e1 = new EuclidianCoordinate(projection, -3, -4);
-            var e2 = new EuclidianCoordinate(projection, -3, -4 + 1e-13);
+            EuclidianCoordinate e1 = new(projection, -3, -4);
+            EuclidianCoordinate e2 = new(projection, -3, -4 + 1e-13);
             Assert.AreEqual(e1, e2);
         }
 
@@ -108,8 +108,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestHash()
         {
-            var e1 = new EuclidianCoordinate(projection, -3, -4);
-            var e2 = new EuclidianCoordinate(projection, -3, -4 + 1e-13);
+            EuclidianCoordinate e1 = new(projection, -3, -4);
+            EuclidianCoordinate e2 = new(projection, -3, -4 + 1e-13);
             Assert.AreNotEqual(e1.GetHashCode(), e2.GetHashCode());
         }
 
@@ -119,8 +119,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestNotSameProjection()
         {
-            var e1 = new EuclidianCoordinate(projection, -3, -4);
-            var e2 = new EuclidianCoordinate(new EllipticalMercatorProjection(), -3, -4);
+            EuclidianCoordinate e1 = new(projection, -3, -4);
+            EuclidianCoordinate e2 = new(new EllipticalMercatorProjection(), -3, -4);
             Assert.ThrowsException<ArgumentException>(() => e1.DistanceTo(e2));
         }
     }

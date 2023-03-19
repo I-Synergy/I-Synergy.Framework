@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -27,9 +26,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Locations property value.
         /// </summary>
         /// <value>The locations.</value>
-        public ObservableConcurrentCollection<object> Locations
+        public ObservableCollection<object> Locations
         {
-            get { return GetValue<ObservableConcurrentCollection<object>>(); }
+            get { return GetValue<ObservableCollection<object>>(); }
             set { SetValue(value); }
         }
 
@@ -95,11 +94,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             IContext context,
             IBaseCommonServices commonServices,
             ILogger logger,
-            string name, 
+            string name,
             string address)
             : base(context, commonServices, logger)
         {
-            Locations = new ObservableConcurrentCollection<object>();
+            Locations = new ObservableCollection<object>();
             Title = address;
             Address = address;
             Name = name;

@@ -1,7 +1,7 @@
-﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ISynergy.Framework.IO.Abtractions.Analyzers;
+﻿using ISynergy.Framework.IO.Abtractions.Analyzers;
 using ISynergy.Framework.IO.Analyzers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 
 namespace ISynergy.Framework.IO.Tests
 {
@@ -17,10 +17,10 @@ namespace ISynergy.Framework.IO.Tests
         [TestMethod]
         public void CanDetectAlias_Jpg()
         {
-            var filePath = GetFileByType("JPG");
-            var fileContents = File.ReadAllBytes(filePath);
+            string filePath = GetFileByType("JPG");
+            byte[] fileContents = File.ReadAllBytes(filePath);
 
-            var result = _fileTypeAnalyzer.IsType(fileContents, "jpg");
+            bool result = _fileTypeAnalyzer.IsType(fileContents, "jpg");
 
             Assert.IsTrue(result);
         }
@@ -28,10 +28,10 @@ namespace ISynergy.Framework.IO.Tests
         [TestMethod]
         public void CanDetectAlias_Jpeg()
         {
-            var filePath = GetFileByType("JPG");
-            var fileContents = File.ReadAllBytes(filePath);
+            string filePath = GetFileByType("JPG");
+            byte[] fileContents = File.ReadAllBytes(filePath);
 
-            var result = _fileTypeAnalyzer.IsType(fileContents, "jpeg");
+            bool result = _fileTypeAnalyzer.IsType(fileContents, "jpeg");
 
             Assert.IsTrue(result);
         }
@@ -39,10 +39,10 @@ namespace ISynergy.Framework.IO.Tests
         [TestMethod]
         public void CanDetectJpg_By_MimeType()
         {
-            var filePath = GetFileByType("JPG");
-            var fileContents = File.ReadAllBytes(filePath);
+            string filePath = GetFileByType("JPG");
+            byte[] fileContents = File.ReadAllBytes(filePath);
 
-            var result = _fileTypeAnalyzer.IsType(fileContents, "image/jpeg");
+            bool result = _fileTypeAnalyzer.IsType(fileContents, "image/jpeg");
 
             Assert.IsTrue(result);
         }

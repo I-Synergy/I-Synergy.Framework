@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor1()
         {
-            var g = new GlobalCoordinates(45, 9);
+            GlobalCoordinates g = new(45, 9);
             Assert.AreEqual(45, g.Latitude.Degrees);
             Assert.AreEqual(9, g.Longitude.Degrees);
         }
@@ -26,7 +26,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor2()
         {
-            var g = new GlobalCoordinates(-181, 9);
+            GlobalCoordinates g = new(-181, 9);
             Assert.AreEqual(1, g.Latitude.Degrees);
             Assert.AreEqual(g.Longitude.Degrees, -171);
         }
@@ -37,7 +37,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor3()
         {
-            var g = new GlobalCoordinates(-811, 0);
+            GlobalCoordinates g = new(-811, 0);
             Assert.AreEqual(g.Latitude.Degrees, -89);
             Assert.AreEqual(g.Longitude.Degrees, -180);
         }
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor4()
         {
-            var g = new GlobalCoordinates(-0, -811);
+            GlobalCoordinates g = new(-0, -811);
             Assert.AreEqual(0, g.Latitude.Degrees);
             Assert.AreEqual(g.Longitude.Degrees, -91);
         }
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestLatitudeSetter()
         {
-            var a = new GlobalCoordinates(0.0, 45.0)
+            GlobalCoordinates a = new(0.0, 45.0)
             {
                 Latitude = 45.0
             };
@@ -72,7 +72,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestLongitudeSetter()
         {
-            var a = new GlobalCoordinates(0.0, 45.0)
+            GlobalCoordinates a = new(0.0, 45.0)
             {
                 Longitude = -10.0
             };
@@ -85,8 +85,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestCompareTo1()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(45, 9);
             Assert.AreEqual(0, a.CompareTo(b));
         }
 
@@ -96,8 +96,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestCompareTo2()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(46, 9);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(46, 9);
             Assert.AreEqual(a.CompareTo(b), -1);
         }
 
@@ -107,8 +107,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestCompareTo3()
         {
-            var a = new GlobalCoordinates(45, 10);
-            var b = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(45, 10);
+            GlobalCoordinates b = new(45, 9);
             Assert.AreEqual(1, a.CompareTo(b));
         }
 
@@ -118,8 +118,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestCompareTo4()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(45, 10);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(45, 10);
             Assert.AreEqual(a.CompareTo(b), -1);
         }
 
@@ -129,8 +129,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestCompareTo5()
         {
-            var a = new GlobalCoordinates(44, 9);
-            var b = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(44, 9);
+            GlobalCoordinates b = new(45, 9);
             Assert.AreEqual(a.CompareTo(b), -1);
         }
 
@@ -140,8 +140,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestCompareTo6()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(44, 9);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(44, 9);
             Assert.AreEqual(1, a.CompareTo(b));
         }
 
@@ -151,11 +151,11 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestEquals()
         {
-            var a = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(45, 9);
             Assert.IsFalse(a.Equals(null));
             object s = "x";
             Assert.IsFalse(a.Equals(s));
-            var b = new GlobalCoordinates(45, 9);
+            GlobalCoordinates b = new(45, 9);
             Assert.IsTrue(a.Equals(b));
             b.Longitude += 1;
             Assert.IsFalse(a.Equals(b));
@@ -167,9 +167,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestToString()
         {
-            var a = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(45, 9);
             Assert.AreEqual("45N;9E;", a.ToString());
-            var b = new GlobalCoordinates(-45, -9);
+            GlobalCoordinates b = new(-45, -9);
             Assert.AreEqual("45S;9W;", b.ToString());
         }
 
@@ -179,8 +179,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestGetHash()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(45, 9.000000001);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(45, 9.000000001);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
@@ -190,8 +190,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestEquality()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(45, 9);
             Assert.IsTrue(a == b);
             b.Longitude += 1e-13;
             Assert.IsTrue(a == b);
@@ -205,8 +205,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestInEquality()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(45, 9);
             Assert.IsFalse(a != b);
             b.Longitude += 1e-13;
             Assert.IsFalse(a != b);
@@ -220,8 +220,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestGreater()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(45, 8);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(45, 8);
             Assert.IsTrue(a > b);
             b.Longitude = a.Longitude + 1e-13;
             Assert.IsFalse(a > b);
@@ -235,8 +235,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestGreaterEqual()
         {
-            var a = new GlobalCoordinates(45, 9);
-            var b = new GlobalCoordinates(45, 8);
+            GlobalCoordinates a = new(45, 9);
+            GlobalCoordinates b = new(45, 8);
             Assert.IsTrue(a >= b);
             b.Longitude = a.Longitude + 1e-13;
             Assert.IsTrue(a >= b);
@@ -250,8 +250,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestLess()
         {
-            var a = new GlobalCoordinates(45, 8);
-            var b = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(45, 8);
+            GlobalCoordinates b = new(45, 9);
             Assert.IsTrue(a < b);
             a.Longitude = b.Longitude + 1e-13;
             Assert.IsFalse(a < b);
@@ -265,8 +265,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestLessEqual()
         {
-            var a = new GlobalCoordinates(45, 8);
-            var b = new GlobalCoordinates(45, 9);
+            GlobalCoordinates a = new(45, 8);
+            GlobalCoordinates b = new(45, 9);
             Assert.IsTrue(a <= b);
             a.Longitude = b.Longitude + 1e-13;
             Assert.IsTrue(a <= b);
@@ -280,8 +280,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestAntipode()
         {
-            var loc = new GlobalCoordinates(27.97, -82.53);
-            var antiloc = new GlobalCoordinates(-27.97, 97.47);
+            GlobalCoordinates loc = new(27.97, -82.53);
+            GlobalCoordinates antiloc = new(-27.97, 97.47);
             Assert.AreEqual(loc.Antipode, antiloc);
         }
     }

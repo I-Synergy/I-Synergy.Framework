@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Automations.Abstractions
+﻿namespace ISynergy.Framework.Automations.Abstractions
 {
     public interface IAutomationManager
     {

@@ -31,15 +31,15 @@
             // Linear constraints are common in numerical optimization.
             // Constraints can be defined using strings, expressions or
             // vectors. Suppose we have a quadratic objective function:
-            var f = new QuadraticObjectiveFunction("2x² + 4y² - 2xy + 6");
+            QuadraticObjectiveFunction f = new("2x² + 4y² - 2xy + 6");
 
             // Then the following three are all equivalent:
-            var lc1 = new LinearConstraint(f, "3*x + 5*y <= 7");
+            LinearConstraint lc1 = new(f, "3*x + 5*y <= 7");
 
             double x = 0, y = 0; // Define some dummy variables
-            var lc2 = new LinearConstraint(f, () => 3*x + 5*y <= 7);
+            LinearConstraint lc2 = new(f, () => 3 * x + 5 * y <= 7);
 
-            var lc3 = new LinearConstraint(numberOfVariables: 2)
+            LinearConstraint lc3 = new(numberOfVariables: 2)
             {
                 CombinedAs = new double[] { 3, 5 },
                 ShouldBe = ConstraintType.LesserThanOrEqualTo,
@@ -72,9 +72,9 @@
         [TestMethod]
         public void ConstructorTest1()
         {
-            var f = new QuadraticObjectiveFunction("a + b = 0");
+            QuadraticObjectiveFunction f = new("a + b = 0");
 
-            var constraints1 = new[]
+            LinearConstraint[] constraints1 = new[]
             {
                 new LinearConstraint(f, "0.0732 * a + 0.0799 * b = 0.098"),
                 new LinearConstraint(f, "a + b = 1"),
@@ -83,7 +83,7 @@
                 new LinearConstraint(f, "a >= 0.5")
             };
 
-            var constraints2 = new[]
+            LinearConstraint[] constraints2 = new[]
             {
                 new LinearConstraint(f, "0.0732 * a + 0.0799 * b - 0.098 = 0"),
                 new LinearConstraint(f, "a + b -2 = -1"),
@@ -94,8 +94,8 @@
 
             for (int i = 0; i < constraints1.Length; i++)
             {
-                var c1 = constraints1[i];
-                var c2 = constraints2[i];
+                LinearConstraint c1 = constraints1[i];
+                LinearConstraint c2 = constraints2[i];
 
                 for (double a = -10; a < 10; a += 0.1)
                 {
@@ -115,7 +115,7 @@
         {
             double a = 0, b = 0;
 
-            var f = new QuadraticObjectiveFunction(() => a + b);
+            QuadraticObjectiveFunction f = new(() => a + b);
 
             Assert.AreEqual(2, f.NumberOfVariables);
             Assert.AreEqual(0, f.Variables["a"]);
@@ -123,7 +123,7 @@
             Assert.AreEqual(1, f.LinearTerms[0]);
             Assert.AreEqual(1, f.LinearTerms[1]);
 
-            var constraints1 = new[]
+            LinearConstraint[] constraints1 = new[]
             {
                 new LinearConstraint(f, () => 0.0732 * a + 0.0799 * b == 0.098),
                 new LinearConstraint(f, () => a + b == 1),
@@ -134,7 +134,7 @@
                 new LinearConstraint(f, () => -1 + a <= -5)
             };
 
-            var constraints2 = new[]
+            LinearConstraint[] constraints2 = new[]
             {
                 new LinearConstraint(f, () => 0.0732 * a + 0.0799 * b - 0.098 == 0),
                 new LinearConstraint(f, () => a + b -2 == -1),
@@ -156,8 +156,8 @@
 
             for (int i = 0; i < constraints1.Length; i++)
             {
-                var c1 = constraints1[i];
-                var c2 = constraints2[i];
+                LinearConstraint c1 = constraints1[i];
+                LinearConstraint c2 = constraints2[i];
 
                 for (a = -10; a < 10; a += 0.1)
                 {
@@ -185,7 +185,7 @@
             double[] expected2 = { 0, 0, 9, 0, 5, 0, 1, 0 };
             double[] expected3 = { 9, 0, 0, 0, 5, 0, 1, 0 };
 
-            var linearConstraint = new LinearConstraint(indices1.Length)
+            LinearConstraint linearConstraint = new(indices1.Length)
             {
                 CombinedAs = combinedAs1,
                 VariablesAtIndices = indices1,
@@ -226,7 +226,7 @@
             double[] combinedAs2 = { 9, 5, 1, 5, 8 };
             double[] x = Vector.Random(5);
 
-            var linearConstraint = new LinearConstraint(combinedAs1)
+            LinearConstraint linearConstraint = new(combinedAs1)
             {
                 ShouldBe = ConstraintType.EqualTo,
                 Value = 42

@@ -2,9 +2,6 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using Windows.Media.Capture;
 using Windows.Storage;
 

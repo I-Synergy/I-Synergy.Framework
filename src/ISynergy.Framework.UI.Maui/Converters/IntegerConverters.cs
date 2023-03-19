@@ -123,7 +123,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not null && int.TryParse(value.ToString(), out int result)) 
+            if (value is not null && int.TryParse(value.ToString(), out int result))
                 return result;
 
             return 0;

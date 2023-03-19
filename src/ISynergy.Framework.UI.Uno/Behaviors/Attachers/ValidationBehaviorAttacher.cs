@@ -1,9 +1,9 @@
-﻿using Microsoft.Xaml.Interactions.Core;
-using Microsoft.Xaml.Interactivity;
-using Microsoft.UI;
+﻿using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.Xaml.Interactions.Core;
+using Microsoft.Xaml.Interactivity;
 
 namespace ISynergy.Framework.UI.Behaviors
 {

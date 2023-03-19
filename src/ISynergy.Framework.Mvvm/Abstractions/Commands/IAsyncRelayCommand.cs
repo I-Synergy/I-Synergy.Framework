@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 
+#nullable enable
+
 namespace ISynergy.Framework.Mvvm.Abstractions.Commands
 {
     /// <summary>

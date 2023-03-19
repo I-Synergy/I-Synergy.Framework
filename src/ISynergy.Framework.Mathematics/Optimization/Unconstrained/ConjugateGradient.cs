@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Async;
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {

@@ -39,13 +39,17 @@ namespace Sample.Services
         {
             try
             {
-                var file = Path.Combine(_settingsFolder, _fileName);
+                string file = Path.Combine(_settingsFolder, _fileName);
 
                 if (!File.Exists(file))
                     SaveSettings();
 
-                var json = File.ReadAllText(file);
+                string json = File.ReadAllText(file);
                 _settings = JsonSerializer.Deserialize<ApplicationSetting>(json);
+            }
+            catch (JsonException)
+            {
+                SaveSettings();
             }
             catch (FileNotFoundException)
             {
@@ -61,8 +65,8 @@ namespace Sample.Services
             if (!Directory.Exists(_settingsFolder))
                 Directory.CreateDirectory(_settingsFolder);
 
-            var file = Path.Combine(_settingsFolder, _fileName);
-            var json = JsonSerializer.Serialize(_settings);
+            string file = Path.Combine(_settingsFolder, _fileName);
+            string json = JsonSerializer.Serialize(_settings);
             File.WriteAllText(file, json);
         }
 

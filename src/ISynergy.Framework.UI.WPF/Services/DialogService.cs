@@ -1,18 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
-using System.Windows.Media;
-using ISynergy.Framework.UI.Services.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Window = ISynergy.Framework.UI.Controls.Window;
-using Application = System.Windows.Application;
-using System.Windows;
-using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
+using ISynergy.Framework.UI.Services.Base;
 using MessageBoxButton = ISynergy.Framework.Mvvm.Enumerations.MessageBoxButton;
-using ISynergy.Framework.Core.Extensions;
+using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
+using Window = ISynergy.Framework.UI.Controls.Window;
 
 namespace ISynergy.Framework.UI.Services
 {
@@ -34,7 +27,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         /// <value>The registered windows.</value>
         public List<Window> RegisteredWindows { get; internal set; }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
@@ -114,7 +107,7 @@ namespace ISynergy.Framework.UI.Services
                     break;
             }
 
-            var result = System.Windows.MessageBox.Show( 
+            var result = System.Windows.MessageBox.Show(
                 message,
                 title,
                 button,

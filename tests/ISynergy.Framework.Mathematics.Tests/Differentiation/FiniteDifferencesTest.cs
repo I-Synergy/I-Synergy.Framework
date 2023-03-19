@@ -14,7 +14,7 @@
         public void ComputeTest()
         {
             int numberOfParameters = 2;
-            FiniteDifferences target = new FiniteDifferences(numberOfParameters);
+            FiniteDifferences target = new(numberOfParameters);
 
             double[] inputs = { -1, 0.4 };
 
@@ -32,7 +32,7 @@
             // https://www.wolframalpha.com/input/?i=third+derivative+of+(1+-+x)%5E2+%2B+100(y+-+x%5E2)%5E2+at+(-1,0.4)
 
             int numberOfParameters = 2;
-            FiniteDifferences target = new FiniteDifferences(numberOfParameters)
+            FiniteDifferences target = new(numberOfParameters)
             {
                 NumberOfPoints = 7,
                 Order = 3,
@@ -60,7 +60,7 @@
 
 
             // Create a new finite differences calculator
-            var calculator = new FiniteDifferences(2, function);
+            FiniteDifferences calculator = new(2, function);
 
             // Evaluate the gradient function at the point (2, -1)
             double[] result = calculator.Gradient(new double[] { 2, -1 }); // answer is (4, 1)
@@ -81,7 +81,7 @@
             // the gradient w.r.t to y should be  1
 
             // Create a new finite differences calculator
-            var calculator = new FiniteDifferences(2, function);
+            FiniteDifferences calculator = new(2, function);
 
             // Evaluate the gradient function at the point (2, -1)
             double[][] result = calculator.Hessian(new[] { 2.0, -1.0 }); // answer is [(2, 0), (0, 0)]
@@ -101,7 +101,7 @@
         {
             Func<double[], double> function = x => Math.Pow(x[0], 2) + x[1] + x[0] * x[1] + 47;
 
-            var calculator = new FiniteDifferences(2, function);
+            FiniteDifferences calculator = new(2, function);
 
             double[][] result = calculator.Hessian(new[] { 2.0, -1.0 });
             double[][] expected =
@@ -119,7 +119,7 @@
             // x² + log(y) + xy + exp(x+y) + 47
             Func<double[], double> function = x => Math.Pow(x[0], 2) + Math.Log(x[1]) + x[0] * x[1] + Math.Exp(x[0] + x[1]) + 47;
 
-            var calculator = new FiniteDifferences(variables: 2)
+            FiniteDifferences calculator = new(variables: 2)
             {
                 Function = function,
                 NumberOfPoints = 7
@@ -158,9 +158,9 @@
                 double[,] Q = mat.DotWithTransposed(mat);
                 double[] d = Vector.Random(Size);
 
-                var qof = new QuadraticObjectiveFunction(Q, d);
+                QuadraticObjectiveFunction qof = new(Q, d);
 
-                var calculator = new FiniteDifferences(Size, qof.Function);
+                FiniteDifferences calculator = new(Size, qof.Function);
 
                 double[][] result = calculator.Hessian(Vector.Random(Size));
 
@@ -219,7 +219,7 @@
 
             };
 
-            var calculator = new FiniteDifferences(variables: 4, function: funcionObjetivoLBFGS)
+            FiniteDifferences calculator = new(variables: 4, function: funcionObjetivoLBFGS)
             {
                 NumberOfPoints = 7,
             };

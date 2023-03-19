@@ -1,5 +1,7 @@
 ﻿using System.Windows.Input;
 
+#nullable enable
+
 namespace ISynergy.Framework.Mvvm.Abstractions.Commands
 {
     /// <summary>

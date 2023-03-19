@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mvvm.Enumerations
+﻿namespace ISynergy.Framework.Mvvm.Enumerations
 {
     /// <summary>
     /// Enum MessageBoxImage

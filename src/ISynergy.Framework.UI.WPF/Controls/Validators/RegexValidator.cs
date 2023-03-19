@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Controls;
 
 namespace ISynergy.Framework.UI.Controls.Validators
@@ -253,7 +253,7 @@ namespace ISynergy.Framework.UI.Controls.Validators
                         return;
                     }
 
-                    regexMatch = System.Text.RegularExpressions.Regex.IsMatch(textBox.Text, regex);
+                    regexMatch = System.Text.RegularExpressions.Regex.IsMatch(textBox.Text, regex, RegexOptions.None, TimeSpan.FromMilliseconds(100));
                     break;
                 case ValidationType.Decimal:
                     regexMatch = textBox.Text.IsDecimal();

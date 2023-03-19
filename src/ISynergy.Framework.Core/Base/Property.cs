@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Messaging;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
@@ -58,7 +57,7 @@ namespace ISynergy.Framework.Core.Base
             Argument.IsNotNullOrEmpty(name);
 
             Name = name;
-            Errors = new ObservableConcurrentCollection<string>();
+            Errors = new ObservableCollection<string>();
             Errors.CollectionChanged += (s, e) => OnPropertyChanged(nameof(IsValid));
         }
 
@@ -78,7 +77,7 @@ namespace ISynergy.Framework.Core.Base
         /// </summary>
         /// <value>The errors.</value>
         [JsonIgnore]
-        public ObservableConcurrentCollection<string> Errors { get; }
+        public ObservableCollection<string> Errors { get; }
 
         /// <summary>
         /// Returns true if ... is valid.

@@ -25,10 +25,10 @@ namespace Sample
     {
         public static MauiApp CreateMauiApp()
         {
-            var builder = MauiApp.CreateBuilder();
-            var mainAssembly = Assembly.GetAssembly(typeof(App));
+            MauiAppBuilder builder = MauiApp.CreateBuilder();
+            Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
 
-            var config = new ConfigurationBuilder()
+            IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"))
                 .Build();
 
@@ -44,7 +44,7 @@ namespace Sample
                     fonts.AddFont("FontAwesome.otf", "FontAwesome");
                 })
                 .ConfigureServices<App, Context, Properties.Resources>(x => x.Name.StartsWith(typeof(MauiProgram).Namespace));
-            
+
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
             builder.Services.AddSingleton<IBaseApplicationSettingsService, AppSettingsService>();

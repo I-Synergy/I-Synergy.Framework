@@ -27,14 +27,14 @@
         [TestMethod]
         public void EuclideanTest()
         {
-            double[,] a = 
+            double[,] a =
             {
                 { 15.4457, 0.4187, 15.6093 },
                 {  0.0000, 2.5708,  0.6534 }
             };
 
 
-            double[] expected = 
+            double[] expected =
             {
                 21.9634, 2.6525
             };
@@ -43,7 +43,7 @@
             Assert.IsTrue(expected.IsEqual(actual, 0.001));
 
 
-            double[] expected2 = 
+            double[] expected2 =
             {
                 15.4457, 2.6047, 15.6229
             };
@@ -58,7 +58,7 @@
         [TestMethod]
         public void Norm2Test()
         {
-            double[,] a = 
+            double[,] a =
             {
                 { 2,     1,     5 },
                 { 2,     2,     2 },
@@ -73,7 +73,7 @@
         [TestMethod]
         public void Norm1Test()
         {
-            double[,] a = 
+            double[,] a =
             {
                 { 2,     1,     5 },
                 { 2,     2,     2 },

@@ -21,8 +21,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestDeletingRecipient()
         {
-            var recipient1 = new TestRecipient1();
-            var recipient2 = new TestRecipient1();
+            TestRecipient1 recipient1 = new();
+            TestRecipient1 recipient2 = new();
 
             const string TestContent1 = "abcd";
             const string TestContent2 = "efgh";
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             const string TestContent = "abcd";
 
             Reset();
-            var messenger = new MessageService();
+            MessageService messenger = new();
 
             messenger.Register<TestMessage>(this, m => StringContent = m.Content);
 

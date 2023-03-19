@@ -151,7 +151,7 @@ namespace ISynergy.Framework.UI.ViewModels
 
             this.Validator = new Action<IObservableClass>(_ =>
             {
-                if (string.IsNullOrEmpty(Name) || !(Name.Length > 3))
+                if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
                 {
                     Properties[nameof(Name)].Errors.Add(commonServices.LanguageService.GetString("WarningLicenseNameSize"));
                 }
@@ -166,17 +166,17 @@ namespace ISynergy.Framework.UI.ViewModels
                     Properties[nameof(SelectedTimeZone)].Errors.Add(commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
                 }
 
-                if (string.IsNullOrEmpty(Password) || !(Password.Length > 6))
+                if (string.IsNullOrEmpty(Password) || (Password.Length <= 6))
                 {
                     Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
-                if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx))
+                if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
                     Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
-                if (string.IsNullOrEmpty(PasswordCheck) || !(PasswordCheck.Length > 6))
+                if (string.IsNullOrEmpty(PasswordCheck) || (PasswordCheck.Length <= 6))
                 {
                     Properties[nameof(PasswordCheck)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
@@ -206,7 +206,7 @@ namespace ISynergy.Framework.UI.ViewModels
 
         private Task SelectModulesAsync()
         {
-            var selectionVM = new ViewModelSelectionDialog(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
+            ViewModelSelectionDialog selectionVM = new(Context, BaseCommonServices, Logger, Modules, SelectedModules, SelectionModes.Multiple);
             selectionVM.Submitted += SelectionVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(SelectionWindow), selectionVM);
         }
@@ -218,13 +218,13 @@ namespace ISynergy.Framework.UI.ViewModels
         /// <param name="e">The e.</param>
         private void SelectionVM_Submitted(object sender, SubmitEventArgs<List<object>> e)
         {
-            var selectedItems = new List<Module>();
+            List<Module> selectedItems = new();
 
-            foreach (var item in e.Result)
+            foreach (object item in e.Result)
             {
                 if (item is Module module)
                     selectedItems.Add(module);
-            }            
+            }
 
             SelectedModules = selectedItems;
 
@@ -238,8 +238,8 @@ namespace ISynergy.Framework.UI.ViewModels
             {
                 ArePickersAvailable = true;
 
-                var modules = await _authenticationService.GetModulesAsync();
-                var countries = await _authenticationService.GetCountriesAsync();
+                List<Module> modules = await _authenticationService.GetModulesAsync();
+                List<Country> countries = await _authenticationService.GetCountriesAsync();
 
                 Modules = modules.OrderBy(o => o.ModuleId).ToList();
 
@@ -264,7 +264,7 @@ namespace ISynergy.Framework.UI.ViewModels
                 if (SelectedCountry is not null)
                 {
                     TimeZones = _localizationService.GetTimeZoneIds(SelectedCountry.ISO2Code);
-                    
+
                     if (TimeZones.Count == 1)
                     {
                         SelectedTimeZone = TimeZones[0];
@@ -308,9 +308,9 @@ namespace ISynergy.Framework.UI.ViewModels
                     await _authenticationService.CheckRegistrationEmailAsync(emailaddress) &&
                     PasswordCheck is not null && Password is not null &&
                     PasswordCheck.Equals(Password) &&
-                    Regex.IsMatch(Password, GenericConstants.PasswordRegEx))
+                    Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
-                    var registrationData = new RegistrationData
+                    RegistrationData registrationData = new()
                     {
                         ApplicationId = 1,
                         LicenseName = Name,

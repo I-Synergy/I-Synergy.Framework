@@ -27,7 +27,7 @@
             FourierTransform2.DFT(output, FourierTransform.Direction.Backward);
             #endregion
 
-            double[] re2 = output.Re(); 
+            double[] re2 = output.Re();
             double[] im2 = output.Im();
 
             Assert.IsTrue(re.IsEqual(new[] { 20, 0, 12, 0 }, 1e-8));
@@ -41,7 +41,7 @@
         {
             #region doc_dft2
             // Suppose we would like to transform the matrix
-            Complex[][] input = new Complex[][] 
+            Complex[][] input = new Complex[][]
             {
                 new Complex[] { 1, 4, 8, 0 },
                 new Complex[] { 0, 4, 5, 0 },
@@ -53,7 +53,7 @@
 
             // We can also get the real and imaginary parts of the matrix using
             double[][] re = input.Re(); // The real part of the output will be:
-            double[][] expectedRe = new double[][] 
+            double[][] expectedRe = new double[][]
             {
                 new double[] { 30.0, -20.0,    14.0,    -20.0    },
                 new double[] {  4.5,  -3.9641,  0.4999,   2.9641 },
@@ -61,7 +61,7 @@
             };
 
             double[][] im = input.Im(); // The imaginary part of the output will be:
-            double[][] expectedIm = new double[][] 
+            double[][] expectedIm = new double[][]
             {
                 new double[] {  0,      -8,        0,        7.9999 },
                 new double[] { -0.8660, -4.5980,   6.0621,  -0.5980 },
@@ -77,7 +77,7 @@
 
             Assert.IsTrue(re.IsEqual(expectedRe, 1e-3));
             Assert.IsTrue(im.IsEqual(expectedIm, 1e-3));
-            var expected = new Complex[][]
+            Complex[][] expected = new Complex[][]
             {
                 new Complex[] { 1, 4, 8, 0 },
                 new Complex[] { 0, 4, 5, 0 },
@@ -155,7 +155,7 @@
 
             Assert.IsTrue(re.IsEqual(expectedRe, 1e-3));
             Assert.IsTrue(im.IsEqual(expectedIm, 1e-3));
-            var expected = new Complex[][]
+            Complex[][] expected = new Complex[][]
             {
                 new Complex[] { 1, 4, 8, 0 },
                 new Complex[] { 0, 4, 5, 0 },
@@ -397,7 +397,7 @@
 
         private static double[] randomReals(int size)
         {
-            var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
+            Random random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
             double[] result = new double[size];
             for (int i = 0; i < result.Length; i++)

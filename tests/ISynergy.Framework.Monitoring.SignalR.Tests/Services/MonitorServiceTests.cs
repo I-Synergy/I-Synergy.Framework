@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Monitoring.Services.Tests
 
         public MonitorServiceTests()
         {
-            var contextMock = new Mock<IHubContext<MonitorHub>>();
+            Mock<IHubContext<MonitorHub>> contextMock = new();
             contextMock.Setup(x => x.Clients)
                 .Returns(() => new Mock<IHubClients>().Object);
             contextMock.Setup(x => x.Groups)
@@ -24,7 +24,7 @@ namespace ISynergy.Framework.Monitoring.Services.Tests
             contextMock.Setup(x => x.Clients.Group(_channel))
                 .Returns(() => new Mock<IClientProxy>().Object);
 
-            var context = contextMock.Object;
+            IHubContext<MonitorHub> context = contextMock.Object;
             context.Groups.AddToGroupAsync("0", _channel);
 
             _monitorService = new MonitorService<object>(context);

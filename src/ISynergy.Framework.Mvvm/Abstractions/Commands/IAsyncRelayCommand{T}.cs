@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.Commands
+﻿#nullable enable
+
+namespace ISynergy.Framework.Mvvm.Abstractions.Commands
 {
     /// <summary>
     /// A generic interface representing a more specific version of <see cref="IAsyncRelayCommand"/>.

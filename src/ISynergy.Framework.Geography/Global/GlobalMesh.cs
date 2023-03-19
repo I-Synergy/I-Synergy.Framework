@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Geodetic;
 using ISynergy.Framework.Geography.Utm;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Geography.Global
 {

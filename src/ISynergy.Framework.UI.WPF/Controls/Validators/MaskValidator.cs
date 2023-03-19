@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using ISynergy.Framework.Core.Validation;
-using System.Text;
-using System;
+﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.UI.Extensions;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.UI.Controls.Validators
 {
@@ -220,7 +219,7 @@ namespace ISynergy.Framework.UI.Controls.Validators
                     char key;
 
                     // an exception should be throw if the regex is not valid
-                    System.Text.RegularExpressions.Regex.Match(string.Empty, value);
+                    System.Text.RegularExpressions.Regex.Match(string.Empty, value, RegexOptions.None, TimeSpan.FromMilliseconds(100));
                     if (!char.TryParse(keyValue, out key))
                     {
                         throw new ArgumentException("Invalid CustomMask property, please validate the mask key");
@@ -359,7 +358,7 @@ namespace ISynergy.Framework.UI.Controls.Validators
                 if (representationDictionary.ContainsKey(maskChar) && !escapedChars.Contains(i))
                 {
                     var pattern = representationDictionary[maskChar];
-                    if (System.Text.RegularExpressions.Regex.IsMatch(selectedChar.ToString(), pattern))
+                    if (System.Text.RegularExpressions.Regex.IsMatch(selectedChar.ToString(), pattern, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
                         textArray[i] = selectedChar;
                     }
@@ -508,7 +507,7 @@ namespace ISynergy.Framework.UI.Controls.Validators
                 if (representationDictionary.ContainsKey(maskChar) && !escapedChars.Contains(newSelectionIndex))
                 {
                     var pattern = representationDictionary[maskChar];
-                    if (System.Text.RegularExpressions.Regex.IsMatch(selectedChar.ToString(), pattern))
+                    if (System.Text.RegularExpressions.Regex.IsMatch(selectedChar.ToString(), pattern, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
                         textArray[newSelectionIndex - 1] = selectedChar;
 

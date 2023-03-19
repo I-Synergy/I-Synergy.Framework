@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Collections;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -14,7 +13,7 @@ namespace ISynergy.Framework.Core.Abstractions
         /// Gets or sets the profiles.
         /// </summary>
         /// <value>The profiles.</value>
-        ObservableConcurrentCollection<IProfile> Profiles { get; set; }
+        ObservableCollection<IProfile> Profiles { get; set; }
         /// <summary>
         /// Gets or sets the current profile.
         /// </summary>

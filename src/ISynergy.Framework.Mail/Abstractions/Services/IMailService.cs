@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Mail.Models;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mail.Abstractions.Services
 {

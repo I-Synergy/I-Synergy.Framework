@@ -1,8 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
-using System;
-using System.Collections.ObjectModel;
-using ISynergy.Framework.Core.Collections;
 
 namespace ISynergy.Framework.Core.Abstractions.Base
 {
@@ -32,7 +29,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// Gets the errors.
         /// </summary>
         /// <value>The errors.</value>
-        ObservableConcurrentCollection<string> Errors { get; }
+        ObservableCollection<string> Errors { get; }
 
         /// <summary>
         /// Returns true if ... is valid.

@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
 
 namespace ISynergy.Framework.AspNetCore.Providers
 {

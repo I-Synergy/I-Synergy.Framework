@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using ISynergy.Framework.Mathematics.Random;
-    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
     [TestClass]
     public class BroydenFletcherGoldfarbShannoTest
@@ -22,7 +22,7 @@
             int n = 2; // number of variables
             double[] initial = { -1.2, 1 };
 
-            var lbfgs = new BroydenFletcherGoldfarbShanno(n, f, g);
+            BroydenFletcherGoldfarbShanno lbfgs = new(n, f, g);
 
             double expected = 0;
             Assert.IsTrue(lbfgs.Minimize(initial));
@@ -80,9 +80,9 @@
             };
 
             // Finally, we create a L-BFGS solver for the two variable problem:
-            var lbfgs = new BroydenFletcherGoldfarbShanno(numberOfVariables: 2)
+            BroydenFletcherGoldfarbShanno lbfgs = new(numberOfVariables: 2)
             {
-                Function = f, 
+                Function = f,
                 Gradient = g
             };
 
@@ -142,7 +142,7 @@
         [TestMethod]
         public void NoFunctionTest()
         {
-            BroydenFletcherGoldfarbShanno target = new BroydenFletcherGoldfarbShanno(2);
+            BroydenFletcherGoldfarbShanno target = new(2);
 
             Assert.ThrowsException<InvalidOperationException>(() => target.Minimize(), "");
         }
@@ -150,7 +150,7 @@
         [TestMethod]
         public void NoGradientTest()
         {
-            BroydenFletcherGoldfarbShanno target = new BroydenFletcherGoldfarbShanno(2)
+            BroydenFletcherGoldfarbShanno target = new(2)
             {
                 Function = (x) => 0.0
             };
@@ -163,7 +163,7 @@
         [TestMethod]
         public void WrongGradientSizeTest()
         {
-            BroydenFletcherGoldfarbShanno target = new BroydenFletcherGoldfarbShanno(2)
+            BroydenFletcherGoldfarbShanno target = new(2)
             {
                 Function = (x) => 0.0,
                 Gradient = (x) => new double[1]
@@ -175,7 +175,7 @@
         [TestMethod]
         public void MutableGradientSizeTest()
         {
-            BroydenFletcherGoldfarbShanno target = new BroydenFletcherGoldfarbShanno(2)
+            BroydenFletcherGoldfarbShanno target = new(2)
             {
                 Function = (x) => 0.0,
                 Gradient = (x) => x
@@ -192,7 +192,7 @@
 
             Func<double[], double[]> gradient = x => new[] { 20 * (x[0] + 1), 2 * x[1] };
 
-            BroydenFletcherGoldfarbShanno target = new BroydenFletcherGoldfarbShanno(2)
+            BroydenFletcherGoldfarbShanno target = new(2)
             {
                 Function = function,
                 Gradient = gradient
@@ -226,7 +226,7 @@
             {
                 double[] start = Vector.Random(2, -1.0, 1.0);
 
-                var lbfgs = new BroydenFletcherGoldfarbShanno(numberOfVariables: 2, function: f, gradient: g);
+                BroydenFletcherGoldfarbShanno lbfgs = new(numberOfVariables: 2, function: f, gradient: g);
 
                 lbfgs.Minimize(start);
                 double minValue = lbfgs.Value;

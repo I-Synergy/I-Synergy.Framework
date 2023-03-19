@@ -4,9 +4,7 @@ using ISynergy.Framework.AspNetCore.Proxy.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Proxy.Middleware
 {

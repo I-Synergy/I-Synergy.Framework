@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Data;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 
 namespace ISynergy.Framework.Mathematics.IO.NumPy
 {

@@ -20,7 +20,7 @@ namespace ISynergy.Framework.Physics.Services.Tests
         [TestInitialize]
         public void InitializeTest()
         {
-            var languageServiceMock = Mock.Of<ILanguageService>();
+            ILanguageService languageServiceMock = Mock.Of<ILanguageService>();
             _unitConversionService = new UnitConversionService(languageServiceMock);
         }
 
@@ -80,8 +80,8 @@ namespace ISynergy.Framework.Physics.Services.Tests
         [DataRow("L", 1000, "m3", 1)]
         public void UnitConvertTest(string sourceSymbol, double value, string targetSymbol, double result)
         {
-            var source = _unitConversionService.Units.Where(q => q.Symbol.Equals(sourceSymbol)).Single();
-            var target = _unitConversionService.Units.Where(q => q.Symbol.Equals(targetSymbol)).Single();
+            IUnit source = _unitConversionService.Units.Where(q => q.Symbol.Equals(sourceSymbol)).Single();
+            IUnit target = _unitConversionService.Units.Where(q => q.Symbol.Equals(targetSymbol)).Single();
 
             Assert.AreEqual(result, _unitConversionService.Convert(source, value, target));
         }

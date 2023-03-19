@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics;
 using ISynergy.Framework.Mathematics.Exceptions;
-using System;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 

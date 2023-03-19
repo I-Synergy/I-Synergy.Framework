@@ -25,10 +25,10 @@ namespace Sample
         [STAThread]
         public static void Main()
         {
-            var host = new HostBuilder()
+            IHost host = new HostBuilder()
                 .ConfigureHostConfiguration(builder =>
                 {
-                    var mainAssembly = Assembly.GetAssembly(typeof(App));
+                    Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
                     builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
                 })
                 .ConfigureServices((context, services) =>
@@ -56,11 +56,11 @@ namespace Sample
                 })
                 .Build();
 
-            using (var scope = host.Services.CreateScope())
+            using (IServiceScope scope = host.Services.CreateScope())
             {
                 ServiceLocator.SetLocatorProvider(scope.ServiceProvider);
 
-                var application = new App();
+                App application = new();
                 application.InitializeComponent();
                 application.InitializeApplication();
                 application.Run();

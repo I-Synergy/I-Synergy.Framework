@@ -73,7 +73,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// <param name="e">The e.</param>
         protected override void OnSubmitted(SubmitEventArgs<string> e)
         {
-            if(!string.IsNullOrEmpty(_targetProperty))
+            if (!string.IsNullOrEmpty(_targetProperty))
             {
                 base.OnSubmitted(new SubmitEventArgs<string>(e.Owner, e.Result, _targetProperty));
             }

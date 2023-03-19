@@ -1,6 +1,6 @@
-﻿using System;
-using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Running;
 using ISynergy.Framework.MessageBus.Performance.Benchmarks;
+using System;
 
 namespace ISynergy.Framework.MessageBus.Performance
 {

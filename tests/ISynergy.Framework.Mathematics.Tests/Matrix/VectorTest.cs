@@ -31,8 +31,8 @@
         [TestMethod]
         public void sample_test()
         {
-            var r = Vector.Range(10000);
-            var s = Vector.Sample(r, 10);
+            int[] r = Vector.Range(10000);
+            int[] s = Vector.Sample(r, 10);
             Assert.IsTrue(s.Any(x => x > 10));
         }
 

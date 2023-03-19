@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Models;
-using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace ISynergy.Framework.AspNetCore.Abstractions.Services

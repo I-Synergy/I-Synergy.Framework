@@ -1,6 +1,6 @@
-﻿using System;
-using ISynergy.Framework.Core.Data.Tests.TestClasses;
+﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void CheckIfObjectAfterInitializationIsClean_1()
         {
-            var product = new Product
+            Product product = new()
             {
                 Name = "Test1"
             };
@@ -32,7 +32,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void CheckIfObjectAfterInitializationIsClean_2()
         {
-            var product = new Product
+            Product product = new()
             {
                 Name = "Test2"
             };
@@ -47,7 +47,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void CheckIfObjectAfterInitializationIsClean_3()
         {
-            var product = new Product(
+            Product product = new(
                 Guid.NewGuid(),
                 "Test3",
                 1,
@@ -63,7 +63,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void CheckIfObjectAfterInitializationIsDirty_1()
         {
-            var product = new Product
+            Product product = new()
             {
                 Name = "Test1"
             };
@@ -77,7 +77,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void CheckIfObjectAfterInitializationIsDirty_2()
         {
-            var product = new Product { Name = "Test2" };
+            Product product = new() { Name = "Test2" };
             product.Date = DateTimeOffset.Now;
 
             Assert.IsTrue(product.IsDirty);
@@ -89,7 +89,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void CheckIfObjectAfterInitializationIsDirty_3()
         {
-            var product = new Product(
+            Product product = new(
                 Guid.NewGuid(),
                 "Test3",
                 1,
@@ -107,7 +107,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void TestIfNullValueGeneratesValidationError()
         {
-            var product = new Product();
+            Product product = new();
             product.Validate();
             Assert.IsTrue(product.Errors.Count > 0);
         }
@@ -118,7 +118,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void TestIfNonNullValueGeneratesNoValidationError()
         {
-            var product = new Product();
+            Product product = new();
             product.Name = "Test";
             product.Validate();
             Assert.IsTrue(product.Errors.Count == 0);

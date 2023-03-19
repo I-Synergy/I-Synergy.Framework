@@ -1,7 +1,7 @@
-﻿using System;
-using System.Globalization;
-using ISynergy.Framework.Core.Constants;
+﻿using ISynergy.Framework.Core.Constants;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Globalization;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
@@ -17,8 +17,8 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IsInRangeOfDateSameOffsetTest()
         {
-            var self = new DateTimeOffset(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
-            var comparer = new DateTimeOffset(2017, 10, 11, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset);
+            DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
+            DateTimeOffset comparer = new(2017, 10, 11, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset);
 
             Assert.IsTrue(self.IsInRangeOfDate(comparer));
         }
@@ -29,8 +29,8 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IsInRangeOfDateDifferentOffsetTest()
         {
-            var self = new DateTimeOffset(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
-            var comparer = new DateTimeOffset(2017, 10, 10, 22, 0, 0, new TimeSpan(0, 0, 0));
+            DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
+            DateTimeOffset comparer = new(2017, 10, 10, 22, 0, 0, new TimeSpan(0, 0, 0));
 
             Assert.IsTrue(self.IsInRangeOfDate(comparer));
         }
@@ -41,9 +41,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IsInRangeOfDatesSameOffsetTest()
         {
-            var self = new DateTimeOffset(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
-            var start = new DateTimeOffset(2017, 10, 11, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset);
-            var end = new DateTimeOffset(2017, 10, 11, 23, 59, 59, TimeZoneInfo.Local.BaseUtcOffset);
+            DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
+            DateTimeOffset start = new(2017, 10, 11, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset);
+            DateTimeOffset end = new(2017, 10, 11, 23, 59, 59, TimeZoneInfo.Local.BaseUtcOffset);
 
             Assert.IsTrue(self.IsInRangeOfDate(start, end));
         }
@@ -54,9 +54,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IsInRangeOfDatesDifferentOffsetTest()
         {
-            var self = new DateTimeOffset(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
-            var start = new DateTimeOffset(2017, 10, 10, 22, 0, 0, new TimeSpan(0, 0, 0));
-            var end = new DateTimeOffset(2017, 10, 11, 21, 59, 59, new TimeSpan(0, 0, 0));
+            DateTimeOffset self = new(2017, 10, 11, 14, 30, 0, TimeZoneInfo.Local.BaseUtcOffset);
+            DateTimeOffset start = new(2017, 10, 10, 22, 0, 0, new TimeSpan(0, 0, 0));
+            DateTimeOffset end = new(2017, 10, 11, 21, 59, 59, new TimeSpan(0, 0, 0));
 
             Assert.IsTrue(self.IsInRangeOfDate(start, end));
         }
@@ -67,8 +67,8 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToStartOfDayLocalTest()
         {
-            var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay();
-            var test = new DateTimeOffset(1975, 10, 29, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime();
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay();
+            DateTimeOffset test = new DateTimeOffset(1975, 10, 29, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime();
             Assert.AreEqual(test, result);
         }
 
@@ -78,7 +78,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToEndOfDayLocalTest()
         {
-            var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay();
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay();
             Assert.AreEqual(new DateTimeOffset(1975, 10, 29, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddDays(1).AddTicks(-1).ToUniversalTime(), result);
         }
 
@@ -88,7 +88,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToStartOfMonthLocalTest()
         {
-            var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfMonth();
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfMonth();
             Assert.AreEqual(new DateTimeOffset(1975, 10, 1, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime(), result);
         }
 
@@ -98,7 +98,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToEndOfMonthLocalTest()
         {
-            var result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfMonth();
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 29, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfMonth();
             Assert.AreEqual(new DateTimeOffset(1975, 10, 31, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddDays(1).AddTicks(-1).ToUniversalTime(), result);
         }
 
@@ -108,7 +108,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToStartOfYearLocalTest()
         {
-            var result = new DateTime(1975, 10, 29).Year.ToStartOfYear();
+            DateTime result = new DateTime(1975, 10, 29).Year.ToStartOfYear();
             Assert.AreEqual(new DateTimeOffset(1975, 1, 1, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToUniversalTime(), result);
         }
 
@@ -118,7 +118,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToEndOfYearLocalTest()
         {
-            var result = new DateTime(1975, 10, 29).Year.ToEndOfYear();
+            DateTime result = new DateTime(1975, 10, 29).Year.ToEndOfYear();
             Assert.AreEqual(new DateTimeOffset(1975, 1, 1, 0, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).AddYears(1).AddTicks(-1).ToUniversalTime(), result);
         }
 
@@ -128,7 +128,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToStartOfWeekOnMondayTest()
         {
-            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfWeek(DayOfWeek.Monday);
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfWeek(DayOfWeek.Monday);
             Assert.AreEqual(new DateTimeOffset(1975, 9, 29, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay(), result);
         }
 
@@ -138,7 +138,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToEndOfWeekOnMondayTest()
         {
-            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfWeek(DayOfWeek.Monday);
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfWeek(DayOfWeek.Monday);
             Assert.AreEqual(new DateTimeOffset(1975, 10, 5, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay(), result);
         }
 
@@ -148,7 +148,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToStartOfWeekOnSundayTest()
         {
-            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfWeek(DayOfWeek.Sunday);
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfWeek(DayOfWeek.Sunday);
             Assert.AreEqual(new DateTimeOffset(1975, 9, 28, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay(), result);
         }
 
@@ -158,7 +158,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToEndOfWeekOnSundayTest()
         {
-            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfWeek(DayOfWeek.Sunday);
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfWeek(DayOfWeek.Sunday);
             Assert.AreEqual(new DateTimeOffset(1975, 10, 4, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay(), result);
         }
 
@@ -168,7 +168,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToStartOfWorkWeekTest()
         {
-            var result = new DateTimeOffset(1975, 10, 4, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfWorkWeek();
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 4, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfWorkWeek();
             Assert.AreEqual(new DateTimeOffset(1975, 9, 29, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToStartOfDay(), result);
         }
 
@@ -178,7 +178,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToEndOfWorkWeekTest()
         {
-            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfWorkWeek();
+            DateTimeOffset result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfWorkWeek();
             Assert.AreEqual(new DateTimeOffset(1975, 10, 3, 0, 0, 0, TimeZoneInfo.Local.BaseUtcOffset).ToEndOfDay(), result);
         }
 
@@ -188,9 +188,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ToUniversalTimeStringTest()
         {
-            var timezoneWesternEurope = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-            var result = new DateTimeOffset(1975, 10, 1, 14, 43, 35,  timezoneWesternEurope.BaseUtcOffset).ToUniversalTimeString();
-            var expected = new DateTimeOffset(1975, 10, 1, 13, 43, 35, TimeSpan.FromHours(0)).ToString(GenericConstants.DateTimeOffsetFormat); ; 
+            TimeZoneInfo timezoneWesternEurope = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+            string result = new DateTimeOffset(1975, 10, 1, 14, 43, 35, timezoneWesternEurope.BaseUtcOffset).ToUniversalTimeString();
+            string expected = new DateTimeOffset(1975, 10, 1, 13, 43, 35, TimeSpan.FromHours(0)).ToString(GenericConstants.DateTimeOffsetFormat); ;
             Assert.AreEqual(expected, result);
         }
 
@@ -211,9 +211,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [DataRow("T", "1:45:30 PM", "en-US")]
         public void ToLocalDateStringTest(string format, string expected, string culture)
         {
-            var sourceDate =  new DateTime(2009, 6, 15, 13, 45, 30, DateTimeKind.Utc);
-            var date = new DateTimeOffset(sourceDate);
-            var result = date.ToLocalDateString(format, TimeSpan.FromHours(0), new CultureInfo(culture));
+            DateTime sourceDate = new(2009, 6, 15, 13, 45, 30, DateTimeKind.Utc);
+            DateTimeOffset date = new(sourceDate);
+            string result = date.ToLocalDateString(format, TimeSpan.FromHours(0), new CultureInfo(culture));
             Assert.AreEqual(expected, result);
         }
 
@@ -230,9 +230,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [DataRow("2021-01-29 20:55:47.8056804 +01:00", 1, 20)]
         public void ToLocalDateTimeOffsetTest(string datetime, int offset, int hour)
         {
-            if(DateTimeOffset.TryParse(datetime, out var actualDateTime))
+            if (DateTimeOffset.TryParse(datetime, out DateTimeOffset actualDateTime))
             {
-                var localDateTime = actualDateTime.ToOffset(TimeSpan.FromHours(offset));
+                DateTimeOffset localDateTime = actualDateTime.ToOffset(TimeSpan.FromHours(offset));
                 Assert.AreEqual(hour, localDateTime.Hour);
             }
         }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.IO.Events;
 using ISynergy.Framework.IO.Events.Base;
 using ISynergy.Framework.IO.Models;
 

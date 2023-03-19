@@ -55,7 +55,7 @@ namespace ISynergy.Framework.Core.Extensions
         private static T AwaitTask<T>(this Task<T> task, Action completedAction = null, Action<Exception> errorAction = null)
         {
             var result = default(T);
-            
+
             try
             {
                 result = task.GetAwaiter().GetResult();

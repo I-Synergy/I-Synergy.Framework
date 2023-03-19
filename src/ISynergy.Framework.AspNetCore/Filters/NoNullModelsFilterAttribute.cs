@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
 
 namespace ISynergy.Framework.AspNetCore.Filters
 {

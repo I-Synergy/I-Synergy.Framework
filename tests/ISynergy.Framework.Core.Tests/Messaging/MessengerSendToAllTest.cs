@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             MessageService.Default.Register<TestMessage>(this, m => StringContent2 = m.Content);
 
-            var externalRecipient = new TestRecipient();
+            TestRecipient externalRecipient = new();
             externalRecipient.RegisterWith(MessageService.Default);
 
             Assert.AreEqual(null, StringContent1);

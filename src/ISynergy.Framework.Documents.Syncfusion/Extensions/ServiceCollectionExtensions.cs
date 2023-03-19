@@ -4,7 +4,6 @@ using ISynergy.Framework.Documents.Models;
 using ISynergy.Framework.Documents.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Documents.Extensions
 {

@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
-using ISynergy.Framework.Core.Fixtures;
+﻿using ISynergy.Framework.Core.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
@@ -16,13 +16,13 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ViewModelFieldNotifyPropertyChangedNotifiesOnNewValueTest()
         {
-            var originalValue = "original value";
+            string originalValue = "original value";
 
-            var instance = new ModelFixture<string>(originalValue);
+            ModelFixture<string> instance = new(originalValue);
 
             Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
 
-            var gotEvent = false;
+            bool gotEvent = false;
 
             ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
             {
@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Core.Data.Tests
                 Assert.IsTrue(e.PropertyName.Equals("Value") | e.PropertyName.Equals("IsValid"), "PropertyName was wrong.");
             };
 
-            var newValue = "new value";
+            string newValue = "new value";
             instance.Value = newValue;
 
             Assert.IsTrue(newValue.Equals(instance.Value), "Value didn't change.");
@@ -43,13 +43,13 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ViewModelFieldNotifyPropertyChangedDoesNotNotifyOnSameValueTest()
         {
-            var originalValue = "original value";
+            string originalValue = "original value";
 
-            var instance = new ModelFixture<string>(originalValue);
+            ModelFixture<string> instance = new(originalValue);
 
             Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
 
-            var gotEvent = false;
+            bool gotEvent = false;
 
             ((INotifyPropertyChanged)instance).PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
             {
@@ -68,7 +68,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ViewModelFieldConstructorEmptyTest()
         {
-            var instance = new ModelFixture<string>();
+            ModelFixture<string> instance = new();
 
             Assert.IsTrue(instance.Value is null, "Value should be null.");
         }
@@ -79,9 +79,9 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ViewModelFieldConstructorWithValueTest()
         {
-            var expectedValue = "expected value";
+            string expectedValue = "expected value";
 
-            var instance = new ModelFixture<string>(expectedValue);
+            ModelFixture<string> instance = new(expectedValue);
 
             Assert.IsTrue(expectedValue.Equals(instance.Value), "Value was wrong.");
         }
@@ -92,7 +92,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ViewModelFieldToStringReturnsEmptyStringWhenValueIsNullTest()
         {
-            var instance = new ModelFixture<string>();
+            ModelFixture<string> instance = new();
 
             Assert.IsTrue(instance.Value is null, "Value should be null.");
             Assert.IsTrue(instance.ToString().Equals(string.Empty), "ToString() should return empty.");
@@ -104,9 +104,9 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ViewModelFieldToStringTest()
         {
-            var expectedValue = "expected value";
+            string expectedValue = "expected value";
 
-            var instance = new ModelFixture<string>(expectedValue);
+            ModelFixture<string> instance = new(expectedValue);
 
             Assert.IsTrue(expectedValue.Equals(instance.Value), "Value was wrong.");
             Assert.IsTrue(expectedValue.Equals(instance.ToString()), "ToString() was wrong.");

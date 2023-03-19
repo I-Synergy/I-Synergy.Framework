@@ -24,12 +24,12 @@
 
             double[] linearTerms = { 1, 2, 3 };
 
-            var target = new QuadraticObjectiveFunction(quadraticTerms, linearTerms);
+            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
 
-            var function = target.Function;
-            var gradient = target.Gradient;
+            Func<double[], double> function = target.Function;
+            Func<double[], double[]> gradient = target.Gradient;
 
-            FiniteDifferences fd = new FiniteDifferences(3, function);
+            FiniteDifferences fd = new(3, function);
 
             double[][] x =
             {
@@ -78,12 +78,12 @@
 
             double[] linearTerms = { 1, 2, 3 };
 
-            var target = new QuadraticObjectiveFunction(quadraticTerms, linearTerms);
+            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
 
-            var function = target.Function;
-            var gradient = target.Gradient;
+            Func<double[], double> function = target.Function;
+            Func<double[], double[]> gradient = target.Gradient;
 
-            FiniteDifferences fd = new FiniteDifferences(3, function);
+            FiniteDifferences fd = new(3, function);
 
             double[][] x =
             {
@@ -134,12 +134,12 @@
 
             double[] linearTerms = { 0, 0, 0 };
 
-            var target = new QuadraticObjectiveFunction(quadraticTerms, linearTerms);
+            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
 
-            var function = target.Function;
-            var gradient = target.Gradient;
+            Func<double[], double> function = target.Function;
+            Func<double[], double[]> gradient = target.Gradient;
 
-            FiniteDifferences fd = new FiniteDifferences(3, function);
+            FiniteDifferences fd = new(3, function);
 
             double[][] x =
             {
@@ -174,12 +174,12 @@
 
             double[] linearTerms = { 0, 0, 0 };
 
-            var target = new QuadraticObjectiveFunction(quadraticTerms, linearTerms);
+            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
 
-            var function = target.Function;
-            var gradient = target.Gradient;
+            Func<double[], double> function = target.Function;
+            Func<double[], double[]> gradient = target.Gradient;
 
-            FiniteDifferences fd = new FiniteDifferences(3, function);
+            FiniteDifferences fd = new(3, function);
 
             double[][] x =
             {
@@ -209,7 +209,7 @@
             double y = 0;
 
             Func<double> expected = () => -2 * x * x + x * y - y * y + 5 * y;
-            var actual = new QuadraticObjectiveFunction("-2x² + xy - y² + 5y");
+            QuadraticObjectiveFunction actual = new("-2x² + xy - y² + 5y");
 
             for (int i = 0; i < 10; i++)
             {
@@ -236,7 +236,7 @@
             double z = 0;
 
             Func<double> expected = () => -2 * x * x + x * y - y * y - 10 * x * z + z * z;
-            var actual = new QuadraticObjectiveFunction("-2x² + xy - y² - 10xz + z²");
+            QuadraticObjectiveFunction actual = new("-2x² + xy - y² - 10xz + z²");
 
             for (int i = 0; i < 10; i++)
             {
@@ -265,7 +265,7 @@
             double x = 0;
 
             Func<double> expected = () => x * x + 1;
-            var actual = new QuadraticObjectiveFunction("x² + 1");
+            QuadraticObjectiveFunction actual = new("x² + 1");
 
             for (int i = 0; i < 10; i++)
             {
@@ -288,7 +288,7 @@
             double z = 0;
 
             Func<double> expected = () => -x * y + y * z;
-            var actual = new QuadraticObjectiveFunction("-x*y + y*z");
+            QuadraticObjectiveFunction actual = new("-x*y + y*z");
 
             for (int i = 0; i < 10; i++)
             {
@@ -314,18 +314,18 @@
         [TestMethod]
         public void FunctionTest5()
         {
-            var f1 = new QuadraticObjectiveFunction("x² + 1");
-            var f2 = new QuadraticObjectiveFunction("-x*y + y*z");
-            var f3 = new QuadraticObjectiveFunction("-2x² + xy - y² - 10xz + z²");
-            var f4 = new QuadraticObjectiveFunction("-2x² + xy - y² + 5y");
-            var f5 = new QuadraticObjectiveFunction("2x² -5");
+            QuadraticObjectiveFunction f1 = new("x² + 1");
+            QuadraticObjectiveFunction f2 = new("-x*y + y*z");
+            QuadraticObjectiveFunction f3 = new("-2x² + xy - y² - 10xz + z²");
+            QuadraticObjectiveFunction f4 = new("-2x² + xy - y² + 5y");
+            QuadraticObjectiveFunction f5 = new("2x² -5");
 
             double x = 0, y = 0, z = 0;
-            var g1 = new QuadraticObjectiveFunction(() => x * x + 1);
-            var g2 = new QuadraticObjectiveFunction(() => -x * y + y * z);
-            var g3 = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
-            var g4 = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y + 5 * y);
-            var g5 = new QuadraticObjectiveFunction(() => 2 * x * x - 5);
+            QuadraticObjectiveFunction g1 = new(() => x * x + 1);
+            QuadraticObjectiveFunction g2 = new(() => -x * y + y * z);
+            QuadraticObjectiveFunction g3 = new(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
+            QuadraticObjectiveFunction g4 = new(() => -2 * x * x + x * y - y * y + 5 * y);
+            QuadraticObjectiveFunction g5 = new(() => 2 * x * x - 5);
 
 
             QuadraticObjectiveFunction[] f = { f1, f2, f3, f4, f5 };
@@ -333,8 +333,8 @@
 
             for (int l = 0; l < f.Length; l++)
             {
-                var fl = f[l];
-                var gl = g[l];
+                QuadraticObjectiveFunction fl = f[l];
+                QuadraticObjectiveFunction gl = g[l];
 
                 Assert.AreEqual(fl.NumberOfVariables, gl.NumberOfVariables);
 
@@ -363,7 +363,7 @@
             double y = 0;
 
             Func<double> expected = () => -2 * x * x + x * y - y * y + 5 * y;
-            var actual = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y + 5 * y);
+            QuadraticObjectiveFunction actual = new(() => -2 * x * x + x * y - y * y + 5 * y);
 
             for (int i = 0; i < 10; i++)
             {
@@ -390,7 +390,7 @@
             double z = 0;
 
             Func<double> expected = () => -2 * x * x + x * y - y * y - 10 * x * z + z * z;
-            var actual = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
+            QuadraticObjectiveFunction actual = new(() => -2 * x * x + x * y - y * y - 10 * x * z + z * z);
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -415,7 +415,7 @@
             double x = 0;
 
             Func<double> expected = () => x * x + 1;
-            var actual = new QuadraticObjectiveFunction(() => x * x + 1);
+            QuadraticObjectiveFunction actual = new(() => x * x + 1);
 
             for (int i = 0; i < 10; i++)
             {
@@ -438,7 +438,7 @@
             double z = 0;
 
             Func<double> expected = () => -x * y + y * z;
-            var actual = new QuadraticObjectiveFunction(() => -x * y + y * z);
+            QuadraticObjectiveFunction actual = new(() => -x * y + y * z);
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -465,7 +465,7 @@
             double z = 0;
 
             Func<double> expected = () => 2 * y * x - x * y + y * z;
-            var actual = new QuadraticObjectiveFunction(() => 2 * y * x - x * y + y * z);
+            QuadraticObjectiveFunction actual = new(() => 2 * y * x - x * y + y * z);
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -493,9 +493,9 @@
 
             Func<double> expected1 = () => 2 * y * x - x * y + y * z;
             Func<double> expected2 = () => z * x - x * y + y * z + 4 * z + 2;
-            var actual1 = new QuadraticObjectiveFunction(() => 2 * y * x - x * y + y * z);
-            var actual2 = new QuadraticObjectiveFunction(() => z * x - x * y + y * z + 4 * z + 2);
-            var actual = actual1 + actual2;
+            QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
+            QuadraticObjectiveFunction actual2 = new(() => z * x - x * y + y * z + 4 * z + 2);
+            QuadraticObjectiveFunction actual = actual1 + actual2;
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -531,9 +531,9 @@
             double y = 0;
             double z = 0;
 
-            var actual1 = new QuadraticObjectiveFunction(string1);
-            var actual2 = new QuadraticObjectiveFunction(string2);
-            var actual = actual1 + actual2;
+            QuadraticObjectiveFunction actual1 = new(string1);
+            QuadraticObjectiveFunction actual2 = new(string2);
+            QuadraticObjectiveFunction actual = actual1 + actual2;
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -543,7 +543,7 @@
                         y = (j - 5) / 10.0;
                         z = (k - 5) / 10.0;
 
-                        var arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+                        double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
 
                         double a = actual.Function(arg);
                         double e = actual1.Function(arg) + actual2.Function(arg);
@@ -563,8 +563,8 @@
             // QP programs can be linearly combined to create new QP
             // problems. This idea can be useful when composing
             // objective functions.
-            var f1 = new QuadraticObjectiveFunction("2x² + 4y² - 2xy + 6");
-            var f2 = new QuadraticObjectiveFunction("3x² - 4y² + 6xy + 3x + 2y");
+            QuadraticObjectiveFunction f1 = new("2x² + 4y² - 2xy + 6");
+            QuadraticObjectiveFunction f2 = new("3x² - 4y² + 6xy + 3x + 2y");
 
             // Suppose we have the functions:
             //      f₁(x,y) = 2x² - 2xy + 4y² + 6
@@ -607,9 +607,9 @@
             double y = 0;
             double z = 0;
 
-            var actual1 = new QuadraticObjectiveFunction(string1);
-            var actual2 = new QuadraticObjectiveFunction(string2);
-            var actual = (weight1 * actual1) + (weight2 * actual2);
+            QuadraticObjectiveFunction actual1 = new(string1);
+            QuadraticObjectiveFunction actual2 = new(string2);
+            QuadraticObjectiveFunction actual = (weight1 * actual1) + (weight2 * actual2);
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -619,7 +619,7 @@
                         y = (j - 5) / 10.0;
                         z = (k - 5) / 10.0;
 
-                        var arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+                        double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
 
                         double a = actual.Function(arg);
                         double e = (weight1 * actual1.Function(arg)) + (weight2 * actual2.Function(arg));
@@ -647,9 +647,9 @@
             double y = 0;
             double z = 0;
 
-            var actual1 = new QuadraticObjectiveFunction(string1);
-            var actual2 = new QuadraticObjectiveFunction(string2);
-            var actual = actual1 - actual2;
+            QuadraticObjectiveFunction actual1 = new(string1);
+            QuadraticObjectiveFunction actual2 = new(string2);
+            QuadraticObjectiveFunction actual = actual1 - actual2;
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -659,7 +659,7 @@
                         y = (j - 5) / 10.0;
                         z = (k - 5) / 10.0;
 
-                        var arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+                        double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
 
                         double a = actual.Function(arg);
                         double e = actual1.Function(arg) - actual2.Function(arg);
@@ -679,8 +679,8 @@
             double scalar = 5;
 
             Func<double> expected1 = () => 2 * y * x - x * y + y * z;
-            var actual1 = new QuadraticObjectiveFunction(() => 2 * y * x - x * y + y * z);
-            var actual = actual1 * scalar;
+            QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
+            QuadraticObjectiveFunction actual = actual1 * scalar;
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -711,8 +711,8 @@
             double y = 0;
             double z = 0;
 
-            var actual1 = new QuadraticObjectiveFunction(string1);
-            var actual = actual1 * scalar;
+            QuadraticObjectiveFunction actual1 = new(string1);
+            QuadraticObjectiveFunction actual = actual1 * scalar;
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -722,7 +722,7 @@
                         y = (j - 5) / 10.0;
                         z = (k - 5) / 10.0;
 
-                        var arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
+                        double[] arg = new[] { x, y, z }.First(actual1.NumberOfVariables);
 
                         double a = actual.Function(arg);
                         double e = actual1.Function(arg) * scalar;
@@ -741,8 +741,8 @@
             double z = 0;
 
             Func<double> expected1 = () => 2 * y * x - x * y + y * z;
-            var actual1 = new QuadraticObjectiveFunction(() => 2 * y * x - x * y + y * z);
-            var actual = -actual1;
+            QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
+            QuadraticObjectiveFunction actual = -actual1;
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -769,8 +769,8 @@
             double z = 0;
 
             Func<double> expected1 = () => 2 * y * x - x * y + y * z;
-            var actual1 = new QuadraticObjectiveFunction(() => 2 * y * x - x * y + y * z);
-            var actual = actual1 / 5;
+            QuadraticObjectiveFunction actual1 = new(() => 2 * y * x - x * y + y * z);
+            QuadraticObjectiveFunction actual = actual1 / 5;
 
             for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
@@ -790,7 +790,7 @@
 
             Assert.ThrowsException<DivideByZeroException>(() =>
             {
-                var resultant = actual / 0;
+                QuadraticObjectiveFunction resultant = actual / 0;
                 Assert.IsNull(resultant);
             });
         }
@@ -809,7 +809,7 @@
 
             Assert.ThrowsException<NonSymmetricMatrixException>(() =>
             {
-                var target = new QuadraticObjectiveFunction(quadraticTerms, linearTerms);
+                QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
                 Assert.IsNotNull(target);
             });
         }
@@ -818,10 +818,10 @@
         public void NonSymmetricSelfCorrectsTest()
         {
             double x = 0, y = 0;
-            var f1 = new QuadraticObjectiveFunction(() => -2 * x * x + x * y - y * y - 3 * y * x);
-            var f2 = new QuadraticObjectiveFunction("-2x² + xy - y² - 3yx");
+            QuadraticObjectiveFunction f1 = new(() => -2 * x * x + x * y - y * y - 3 * y * x);
+            QuadraticObjectiveFunction f2 = new("-2x² + xy - y² - 3yx");
 
-            var correct = new QuadraticObjectiveFunction("-2x² + xy - y² - 3yx");
+            QuadraticObjectiveFunction correct = new("-2x² + xy - y² - 3yx");
 
             double[] arg = { 3, 7 };
 

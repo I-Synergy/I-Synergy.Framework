@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.UI.Extensions;
-using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;

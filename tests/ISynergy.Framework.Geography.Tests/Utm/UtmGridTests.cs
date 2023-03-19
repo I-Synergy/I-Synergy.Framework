@@ -1,7 +1,7 @@
-﻿using System;
-using ISynergy.Framework.Geography.Global;
+﻿using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Geography.Utm.Tests
 {
@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// The utm
         /// </summary>
-        readonly UtmProjection utm = new UtmProjection();
+        readonly UtmProjection utm = new();
 
         /// <summary>
         /// Validates the corners.
@@ -33,7 +33,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor1()
         {
-            var g = new UtmGrid(utm, 1, 'C');
+            UtmGrid g = new(utm, 1, 'C');
             Assert.AreEqual(g.LowerLeftCorner.Longitude, -180);
             Assert.AreEqual(g.LowerLeftCorner.Latitude, utm.MinLatitude);
             Assert.AreEqual(6.0, g.Width);
@@ -46,7 +46,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor2()
         {
-            var g = new UtmGrid(utm, 1, 'X');
+            UtmGrid g = new(utm, 1, 'X');
             Assert.AreEqual(g.LowerLeftCorner.Longitude, -180);
             Assert.AreEqual(g.LowerLeftCorner.Latitude, utm.MaxLatitude - g.Height);
             Assert.AreEqual(12.0, g.Height);
@@ -60,7 +60,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor3()
         {
-            var loc = new GlobalCoordinates(utm.MaxLatitude + 1.0, 0);
+            GlobalCoordinates loc = new(utm.MaxLatitude + 1.0, 0);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, loc));
         }
 
@@ -70,8 +70,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor4()
         {
-            var loc = new GlobalCoordinates(utm.MaxLatitude, 0);
-            var g = new UtmGrid(utm, loc);
+            GlobalCoordinates loc = new(utm.MaxLatitude, 0);
+            UtmGrid g = new(utm, loc);
             Assert.IsTrue(true);
             ValidateCorners(g);
         }
@@ -136,7 +136,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor_32V()
         {
-            var g = new UtmGrid(utm, 32, 'V');
+            UtmGrid g = new(utm, 32, 'V');
             Assert.AreEqual(9.0, g.Width);
             ValidateCorners(g);
         }
@@ -147,13 +147,13 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor_31V()
         {
-            var g = new UtmGrid(utm, 31, 'V');
+            UtmGrid g = new(utm, 31, 'V');
             Assert.AreEqual(3.0, g.Width);
-            var l = g.LowerLeftCorner;
+            GlobalCoordinates l = g.LowerLeftCorner;
             // 4 degrees east of lower left is normally in the same grid
             // but not so in 31V
             l.Longitude += 4.0;
-            var g2 = new UtmGrid(utm, l);
+            UtmGrid g2 = new(utm, l);
             Assert.AreEqual("32V", g2.ToString());
             ValidateCorners(g);
             ValidateCorners(g2);
@@ -165,13 +165,13 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor_31X()
         {
-            var g = new UtmGrid(utm, 31, 'X');
+            UtmGrid g = new(utm, 31, 'X');
             Assert.AreEqual(9.0, g.Width);
-            var l = g.LowerLeftCorner;
+            GlobalCoordinates l = g.LowerLeftCorner;
             // Going a little more than width should bring us 
             // into the next zone 32, but not in this band
             l.Longitude += g.Width + 1.0;
-            var g2 = new UtmGrid(utm, l);
+            UtmGrid g2 = new(utm, l);
             Assert.AreEqual("33X", g2.ToString());
             ValidateCorners(g);
             ValidateCorners(g2);
@@ -183,7 +183,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor_37X()
         {
-            var g = new UtmGrid(utm, 37, 'X');
+            UtmGrid g = new(utm, 37, 'X');
             Assert.AreEqual(9.0, g.Width);
             ValidateCorners(g);
         }
@@ -194,11 +194,11 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor_33X()
         {
-            var g = new UtmGrid(utm, 33, 'X');
+            UtmGrid g = new(utm, 33, 'X');
             Assert.AreEqual(12.0, g.Width);
-            var l = g.LowerRightCorner;
+            GlobalCoordinates l = g.LowerRightCorner;
             l.Longitude += 1.0;
-            var g2 = new UtmGrid(utm, l);
+            UtmGrid g2 = new(utm, l);
             Assert.AreEqual("35X", g2.ToString());
             ValidateCorners(g);
             ValidateCorners(g2);
@@ -210,11 +210,11 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestConstructor_35X()
         {
-            var g = new UtmGrid(utm, 35, 'X');
+            UtmGrid g = new(utm, 35, 'X');
             Assert.AreEqual(12.0, g.Width);
-            var l = g.LowerRightCorner;
+            GlobalCoordinates l = g.LowerRightCorner;
             l.Longitude += 1.0;
-            var g2 = new UtmGrid(utm, l);
+            UtmGrid g2 = new(utm, l);
             Assert.AreEqual("37X", g2.ToString());
             ValidateCorners(g);
             ValidateCorners(g2);
@@ -226,12 +226,12 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestCorners()
         {
-            var g = new UtmGrid(utm, 32, 'U');
-            var glrc = new UtmGrid(utm, g.LowerRightCorner);
+            UtmGrid g = new(utm, 32, 'U');
+            UtmGrid glrc = new(utm, g.LowerRightCorner);
             Assert.AreEqual("32U", glrc.ToString());
-            var gulc = new UtmGrid(utm, g.UpperLeftCorner);
+            UtmGrid gulc = new(utm, g.UpperLeftCorner);
             Assert.AreEqual("32U", gulc.ToString());
-            var gurc = new UtmGrid(utm, g.UpperRightCorner);
+            UtmGrid gurc = new(utm, g.UpperRightCorner);
             Assert.AreEqual("32U", gurc.ToString());
             ValidateCorners(g);
         }
@@ -242,9 +242,9 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestOrdinal()
         {
-            var g = new UtmGrid(utm, 32, 'U');
-            var ord = g.Ordinal;
-            var g2 = new UtmGrid(utm, ord);
+            UtmGrid g = new(utm, 32, 'U');
+            int ord = g.Ordinal;
+            UtmGrid g2 = new(utm, ord);
             Assert.AreEqual(g, g2);
             ValidateCorners(g);
             ValidateCorners(g2);
@@ -256,11 +256,11 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestOrdinal2()
         {
-            for (var ord = 0; ord < 1200; ord++)
+            for (int ord = 0; ord < 1200; ord++)
             {
                 if (UtmGrid.IsValidOrdinal(ord))
                 {
-                    var g = new UtmGrid(utm, ord);
+                    UtmGrid g = new(utm, ord);
                     Assert.AreEqual(g.Ordinal, ord);
                 }
             }
@@ -272,8 +272,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestBandSetter()
         {
-            var g0 = new UtmGrid(utm, 32, 'U');
-            var g = new UtmGrid(utm, 32, 'U')
+            UtmGrid g0 = new(utm, 32, 'U');
+            UtmGrid g = new(utm, 32, 'U')
             {
                 Band = 'V'
             };
@@ -288,8 +288,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestZoneSetter()
         {
-            var g0 = new UtmGrid(utm, 32, 'U');
-            var g = new UtmGrid(utm, 32, 'U')
+            UtmGrid g0 = new(utm, 32, 'U');
+            UtmGrid g = new(utm, 32, 'U')
             {
                 Zone = 33
             };
@@ -304,15 +304,15 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestOriginCompute()
         {
-            var g = new UtmGrid(utm, 32, 'U');
+            UtmGrid g = new(utm, 32, 'U');
 
-            if(g.Origin is UtmCoordinate o)
+            if (g.Origin is UtmCoordinate o)
             {
                 Assert.AreEqual(o.Projection, utm);
                 Assert.AreEqual("32U", o.Grid.ToString());
                 Assert.IsTrue(Math.Abs(o.ScaleFactor - 1.0) < 0.001);
             }
-            
+
             ValidateCorners(g);
         }
 
@@ -322,17 +322,17 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void ValidateAllGridsCorners()
         {
-            var maxHeight = double.MinValue;
-            var maxWidth = double.MinValue;
-            var minWidth = double.MaxValue;
-            var minHeight = double.MaxValue;
+            double maxHeight = double.MinValue;
+            double maxWidth = double.MinValue;
+            double minWidth = double.MaxValue;
+            double minHeight = double.MaxValue;
 
-            var G = new UtmGrid(utm, 1, 'C');
-            for (var zone = 1; zone <= UtmGrid.NumberOfZones; zone++)
+            UtmGrid G = new(utm, 1, 'C');
+            for (int zone = 1; zone <= UtmGrid.NumberOfZones; zone++)
             {
-                for (var band = 0; band < UtmGrid.NumberOfBands; band++)
+                for (int band = 0; band < UtmGrid.NumberOfBands; band++)
                 {
-                    var valid = true;
+                    bool valid = true;
                     try
                     {
                         G = new UtmGrid(utm, zone, band);
@@ -359,8 +359,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestEquals1()
         {
-            var s = "123";
-            var g = new UtmGrid(utm, 1, 'C');
+            string s = "123";
+            UtmGrid g = new(utm, 1, 'C');
             Assert.IsFalse(g.Equals(s));
         }
 
@@ -370,8 +370,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestEquals2()
         {
-            var g1 = new UtmGrid(utm, 1, 'C');
-            var g2 = new UtmGrid(utm, 1, 'D')
+            UtmGrid g1 = new(utm, 1, 'C');
+            UtmGrid g2 = new(utm, 1, 'D')
             {
                 Band = 'C'
             };
@@ -384,8 +384,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestEquality()
         {
-            var g1 = new UtmGrid(utm, 1, 'C');
-            var g2 = new UtmGrid(utm, 1, 'D')
+            UtmGrid g1 = new(utm, 1, 'C');
+            UtmGrid g2 = new(utm, 1, 'D')
             {
                 Band = 'C'
             };
@@ -398,8 +398,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestInEquality()
         {
-            var g1 = new UtmGrid(utm, 1, 'C');
-            var g2 = new UtmGrid(utm, 1, 'D');
+            UtmGrid g1 = new(utm, 1, 'C');
+            UtmGrid g2 = new(utm, 1, 'D');
             Assert.IsTrue(g1 != g2);
         }
 
@@ -409,15 +409,15 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestNeighbors()
         {
-            var g = new UtmGrid(utm, Constants.MyHome);
+            UtmGrid g = new(utm, Constants.MyHome);
             Assert.IsTrue(g.Band == 'U' && g.Zone == 32);
-            var n = g.North;
+            UtmGrid n = g.North;
             Assert.IsTrue(n.Band == 'V' && n.Zone == 32);
-            var s = g.South;
+            UtmGrid s = g.South;
             Assert.IsTrue(s.Band == 'T' && s.Zone == 32);
-            var w = g.West;
+            UtmGrid w = g.West;
             Assert.IsTrue(w.Band == 'U' && w.Zone == 31);
-            var e = g.East;
+            UtmGrid e = g.East;
             Assert.IsTrue(e.Band == 'U' && e.Zone == 33);
         }
 
@@ -427,7 +427,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestNorth1()
         {
-            var g = new UtmGrid(utm, 31, 'U');
+            UtmGrid g = new(utm, 31, 'U');
             Assert.ThrowsException<Exception>(() => g.North);
         }
 
@@ -437,7 +437,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestNorth2()
         {
-            var g = new UtmGrid(utm, 32, 'W');
+            UtmGrid g = new(utm, 32, 'W');
             Assert.ThrowsException<Exception>(() => g.North);
         }
 
@@ -447,7 +447,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestNorth3()
         {
-            var g = new UtmGrid(utm, 34, 'W');
+            UtmGrid g = new(utm, 34, 'W');
             Assert.ThrowsException<Exception>(() => g.North);
         }
 
@@ -457,7 +457,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestNorth4()
         {
-            var g = new UtmGrid(utm, 36, 'W');
+            UtmGrid g = new(utm, 36, 'W');
             Assert.ThrowsException<Exception>(() => g.North);
         }
 
@@ -467,7 +467,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestNorth5()
         {
-            var g = new UtmGrid(utm, 1, 'X');
+            UtmGrid g = new(utm, 1, 'X');
             Assert.ThrowsException<Exception>(() => g.North);
         }
 
@@ -477,7 +477,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestSouth1()
         {
-            var g = new UtmGrid(utm, 31, 'W');
+            UtmGrid g = new(utm, 31, 'W');
             Assert.ThrowsException<Exception>(() => g.South);
         }
 
@@ -487,7 +487,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestSouth2()
         {
-            var g = new UtmGrid(utm, 31, 'X');
+            UtmGrid g = new(utm, 31, 'X');
             Assert.ThrowsException<Exception>(() => g.South);
         }
 
@@ -497,7 +497,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestSouth3()
         {
-            var g = new UtmGrid(utm, 33, 'X');
+            UtmGrid g = new(utm, 33, 'X');
             Assert.ThrowsException<Exception>(() => g.South);
         }
 
@@ -507,7 +507,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestSouth4()
         {
-            var g = new UtmGrid(utm, 35, 'X');
+            UtmGrid g = new(utm, 35, 'X');
             Assert.ThrowsException<Exception>(() => g.South);
         }
 
@@ -517,7 +517,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestSouth5()
         {
-            var g = new UtmGrid(utm, 37, 'X');
+            UtmGrid g = new(utm, 37, 'X');
             Assert.ThrowsException<Exception>(() => g.South);
         }
 
@@ -527,7 +527,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestSouth6()
         {
-            var g = new UtmGrid(utm, 37, 'C');
+            UtmGrid g = new(utm, 37, 'C');
             Assert.ThrowsException<Exception>(() => g.South);
         }
     }

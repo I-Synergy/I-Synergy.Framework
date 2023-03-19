@@ -9,13 +9,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestMultipleMessengerInstances()
         {
-            var messenger1 = new MessageService();
-            var messenger2 = new MessageService();
+            MessageService messenger1 = new();
+            MessageService messenger2 = new();
 
-            var recipient11 = new TestRecipient1();
-            var recipient12 = new TestRecipient1();
-            var recipient21 = new TestRecipient2();
-            var recipient22 = new TestRecipient2();
+            TestRecipient1 recipient11 = new();
+            TestRecipient1 recipient12 = new();
+            TestRecipient2 recipient21 = new();
+            TestRecipient2 recipient22 = new();
 
             messenger1.Register<string>(recipient11, recipient11.ReceiveMessage);
             messenger2.Register<string>(recipient12, recipient12.ReceiveMessage);

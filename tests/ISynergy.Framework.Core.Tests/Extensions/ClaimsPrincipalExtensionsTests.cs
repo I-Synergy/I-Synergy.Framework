@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
 
         public ClaimsPrincipalExtensionsTests()
         {
-            var identity = new ClaimsIdentity(
+            ClaimsIdentity identity = new(
                         "OAuth",
                         ClaimTypes.UserNameType,
                         ClaimTypes.RoleType);

@@ -1,5 +1,3 @@
-using System;
-
 namespace ISynergy.Framework.Mathematics.Formats.Base
 {
     /// <summary>

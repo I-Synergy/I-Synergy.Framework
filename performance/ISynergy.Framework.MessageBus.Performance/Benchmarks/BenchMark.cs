@@ -57,7 +57,7 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
         /// <returns>TestModel.</returns>
         public TestModel GetTestObject(byte[] file)
         {
-            var result = new TestModel
+            TestModel result = new()
             {
                 Id = Guid.NewGuid(),
                 Description = "Description",
@@ -91,7 +91,7 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
         [GlobalSetup]
         public async Task GlobalSetup()
         {
-            var file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", fileName));
+            byte[] file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", fileName));
             Model = GetTestObject(file);
         }
 
@@ -132,7 +132,7 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
         [Benchmark(Baseline = true)]
         public void Json()
         {
-            var result = JsonSerializer.Serialize(Model);
+            string result = JsonSerializer.Serialize(Model);
             JsonSerializer.Deserialize<TestModel>(result, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -196,7 +196,7 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks
         [Benchmark]
         public void MessagePack()
         {
-            var result = MessagePackSerializer.Serialize(Model, _options);
+            byte[] result = MessagePackSerializer.Serialize(Model, _options);
             MessagePackSerializer.Deserialize<TestModel>(result, _options);
         }
     }

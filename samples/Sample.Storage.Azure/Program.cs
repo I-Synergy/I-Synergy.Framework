@@ -16,26 +16,26 @@ namespace Sample.Storage.Azure
         {
             try
             {
-                var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-                var config = new ConfigurationBuilder()
+                IConfigurationRoot config = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", false)
                     .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true)
                     .Build();
 
-                var options = new AzureBlobOptions()
+                AzureBlobOptions options = new()
                 {
                     ConnectionString = config["AzureBlobOptions:ConnectionString"]
                 };
 
-                var services = new ServiceCollection()
+                ServiceProvider services = new ServiceCollection()
                     .AddLogging()
                     .AddOptions()
                     .AddStorageAzureIntegration<AzureBlobOptions>(config, Guid.Parse("ECEB4346-97AD-4919-9248-3EA1012FCA47").ToString())
                     .AddSingleton<Startup>()
                     .BuildServiceProvider();
 
-                var application = services.GetRequiredService<Startup>();
+                Startup application = services.GetRequiredService<Startup>();
                 application.RunAsync().GetAwaiter().GetResult();
             }
             catch (Exception e)

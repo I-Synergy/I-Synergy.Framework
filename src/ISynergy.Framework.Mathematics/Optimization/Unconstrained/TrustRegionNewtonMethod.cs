@@ -35,7 +35,6 @@
 //
 
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using System;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained

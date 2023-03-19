@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISynergy.Framework.Core.Constants
+﻿namespace ISynergy.Framework.Core.Constants
 {
     public class StringFormats
     {

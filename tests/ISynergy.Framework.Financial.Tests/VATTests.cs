@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcPriceExclVATTest()
         {
-            var result = VAT.CalculateAmountFromAmountExcludingVAT(21, 121);
+            decimal result = VAT.CalculateAmountFromAmountExcludingVAT(21, 121);
             Assert.AreEqual(100, result);
         }
 
@@ -24,7 +24,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcPriceInclVATTest()
         {
-            var result = VAT.CalculateAmountFromAmountIncludingVAT(21, 100);
+            decimal result = VAT.CalculateAmountFromAmountIncludingVAT(21, 100);
             Assert.AreEqual(121, result);
         }
 
@@ -34,7 +34,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcVATExclVATTest()
         {
-            var result = VAT.CalculateVATFromAmountExcludingVAT(21, 100);
+            decimal result = VAT.CalculateVATFromAmountExcludingVAT(21, 100);
             Assert.AreEqual(21, result);
         }
 
@@ -44,7 +44,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcVATInclVATTest()
         {
-            var result = VAT.CalculateVATFromAmountIncludingVAT(21, 121);
+            decimal result = VAT.CalculateVATFromAmountIncludingVAT(21, 121);
             Assert.AreEqual(21, result);
         }
     }

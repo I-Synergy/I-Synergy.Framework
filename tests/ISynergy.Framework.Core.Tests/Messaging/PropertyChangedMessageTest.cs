@@ -18,22 +18,22 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestPropertyChangedMessageBaseFromViewModelBase()
         {
-            var previousDateTime = DateTime.Now - TimeSpan.FromDays(1);
-            var currentDateTime = DateTime.Now + TimeSpan.FromDays(1);
+            DateTime previousDateTime = DateTime.Now - TimeSpan.FromDays(1);
+            DateTime currentDateTime = DateTime.Now + TimeSpan.FromDays(1);
             const Exception PreviousException = null;
-            var currentException = new InvalidOperationException();
+            InvalidOperationException currentException = new();
 
-            var receivedPreviousDateTime = DateTime.MinValue;
-            var receivedCurrentDateTime = DateTime.MinValue;
+            DateTime receivedPreviousDateTime = DateTime.MinValue;
+            DateTime receivedCurrentDateTime = DateTime.MinValue;
             Exception receivedPreviousException = null;
             Exception receivedCurrentException = null;
 
             object receivedSender = null;
             object receivedTarget = null;
 
-            var messageWasReceived = false;
+            bool messageWasReceived = false;
 
-            var testViewModel = new TestViewModel(previousDateTime, (InvalidOperationException)PreviousException);
+            TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException);
 
             MessageService.Reset();
 
@@ -46,7 +46,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                     receivedTarget = m.Target;
                     messageWasReceived = true;
 
-                    var exceptionMessage =
+                    PropertyChangedMessage<InvalidOperationException> exceptionMessage =
                         m as PropertyChangedMessage<InvalidOperationException>;
 
                     if (exceptionMessage is not null && exceptionMessage.PropertyName == nameof(TestViewModel.MyException))
@@ -58,7 +58,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                         return;
                     }
 
-                    var dateMessage = m as PropertyChangedMessage<DateTime>;
+                    PropertyChangedMessage<DateTime> dateMessage = m as PropertyChangedMessage<DateTime>;
 
                     if (dateMessage is not null && dateMessage.PropertyName == nameof(TestViewModel.MyDate))
                     {
@@ -117,22 +117,22 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestPropertyChangedMessageFomViewModelBase()
         {
-            var previousDateTime = DateTime.Now - TimeSpan.FromDays(1);
-            var currentDateTime = DateTime.Now + TimeSpan.FromDays(1);
+            DateTime previousDateTime = DateTime.Now - TimeSpan.FromDays(1);
+            DateTime currentDateTime = DateTime.Now + TimeSpan.FromDays(1);
             const Exception PreviousException = null;
-            var currentException = new InvalidOperationException();
+            InvalidOperationException currentException = new();
 
-            var receivedPreviousDateTime = DateTime.MinValue;
-            var receivedCurrentDateTime = DateTime.MinValue;
+            DateTime receivedPreviousDateTime = DateTime.MinValue;
+            DateTime receivedCurrentDateTime = DateTime.MinValue;
             Exception receivedPreviousException = null;
             Exception receivedCurrentException = null;
 
             object receivedSender = null;
             object receivedTarget = null;
 
-            var messageWasReceived = false;
+            bool messageWasReceived = false;
 
-            var testViewModel = new TestViewModel(previousDateTime, (InvalidOperationException)PreviousException);
+            TestViewModel testViewModel = new(previousDateTime, (InvalidOperationException)PreviousException);
 
             MessageService.Reset();
 

@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Triggers.Base;
 using ISynergy.Framework.Core.Abstractions.Base;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Triggers
 {
@@ -19,9 +17,9 @@ namespace ISynergy.Framework.Automations.Triggers
         /// <param name="above"></param>
         /// <param name="callbackAsync"></param>
         public IntegerTrigger(
-            Guid automationId, 
-            Func<(IObservableClass Entity, IProperty<int> Property)> function, 
-            int below, 
+            Guid automationId,
+            Func<(IObservableClass Entity, IProperty<int> Property)> function,
+            int below,
             int above,
             Func<int, Task> callbackAsync)
             : base(automationId, function, below, above, callbackAsync)

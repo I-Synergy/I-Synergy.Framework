@@ -30,7 +30,7 @@
 
             double[] b = { -8, 2, 0 };
 
-            GoldfarbIdnani target = new GoldfarbIdnani(D, d.Multiply(-1), A.Transpose(), b);
+            GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
 
             double[] expectedSolution = { 0.4761905, 1.0476190, 2.0952381 };
             double expected = -2.380952;
@@ -72,7 +72,7 @@
 
             double[] b = { -8, 2, 0 };
 
-            GoldfarbIdnani target = new GoldfarbIdnani(D, d.Multiply(-1), A.Transpose(), b);
+            GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
 
             Assert.IsTrue(target.Minimize());
             double actual = target.Value;
@@ -124,7 +124,7 @@
             double[] b = { 5, 3 };
 
 
-            GoldfarbIdnani target = new GoldfarbIdnani(D, d.Multiply(-1), A.Transpose(), b);
+            GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
 
             Assert.IsTrue(target.Minimize());
             double actual = target.Value;
@@ -172,7 +172,7 @@
 
             double[] b = { -8, 4, -1 };
 
-            GoldfarbIdnani target = new GoldfarbIdnani(D, d.Multiply(-1), A.Transpose(), b);
+            GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
 
             Assert.IsTrue(target.Minimize());
             double actual = target.Value;
@@ -226,7 +226,7 @@
             double[] b = { 0, 0, 0 };
 
 
-            GoldfarbIdnani target = new GoldfarbIdnani(D, d.Multiply(-1), A.Transpose(), b);
+            GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
 
             Assert.IsTrue(target.Minimize());
             double actual = target.Value;
@@ -256,9 +256,9 @@
         {
             // example from http://www.mail-archive.com/r-help@r-project.org/msg00831.html
 
-            var cma = Matrix.Identity(10);
+            double[,] cma = Matrix.Identity(10);
 
-            var dva = new double[10];
+            double[] dva = new double[10];
 
             double[,] Ama =
             {
@@ -278,7 +278,7 @@
 
             int meq = 2;
 
-            GoldfarbIdnani target = new GoldfarbIdnani(cma, dva.Multiply(-1), Ama.Transpose(), bva, meq);
+            GoldfarbIdnani target = new(cma, dva.Multiply(-1), Ama.Transpose(), bva, meq);
 
             Assert.IsTrue(target.Minimize());
             double value = target.Value;
@@ -313,14 +313,14 @@
 
             double[] b = { -8, 2, 0 };
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(-4, -3, +0) { Value = -8 });
             constraints.Add(new LinearConstraint(+2, +1, +0) { Value = +2 });
             constraints.Add(new LinearConstraint(+0, -2, +1) { Value = +0 });
 
-            QuadraticObjectiveFunction f = new QuadraticObjectiveFunction("2x² + y - z + 2");
+            QuadraticObjectiveFunction f = new("2x² + y - z + 2");
 
-            GoldfarbIdnani target = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani target = new(f, constraints);
 
             Assert.IsTrue(A.IsEqual(target.ConstraintMatrix));
             Assert.IsTrue(b.IsEqual(target.ConstraintValues));
@@ -380,7 +380,7 @@
 
 
             // Alternatively, we may use an explicit form:
-            var constraints = new List<LinearConstraint>()
+            List<LinearConstraint> constraints = new()
             {
                 // Define the first constraint, which involves only x
                 new LinearConstraint(numberOfVariables: 1)
@@ -411,7 +411,7 @@
 
 
             // Now we can finally create our optimization problem
-            var solver = new GoldfarbIdnani(
+            GoldfarbIdnani solver = new(
                 function: new QuadraticObjectiveFunction(Q, d),
                 constraints: constraints);
 
@@ -460,17 +460,17 @@
             double x = 0, y = 0;
 
             // Create our objective function using a lambda expression
-            var f = new QuadraticObjectiveFunction(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y);
+            QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y);
 
             // Now, create the constraints
-            List<LinearConstraint> constraints = new List<LinearConstraint>()
+            List<LinearConstraint> constraints = new()
             {
                 new LinearConstraint(f, () => x - y == 5),
                 new LinearConstraint(f, () => x >= 10)
             };
 
             // Now we create the quadratic programming solver 
-            var solver = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani solver = new(f, constraints);
 
             // And attempt solve for the min:
             bool success = solver.Minimize();
@@ -510,8 +510,8 @@
             double[] d = { -5, -6 };
 
 
-            var actualQ = f.QuadraticTerms;
-            var actuald = f.LinearTerms;
+            double[,] actualQ = f.QuadraticTerms;
+            double[] actuald = f.LinearTerms;
 
             Assert.IsTrue(Q.IsEqual(actualQ));
             Assert.IsTrue(d.IsEqual(actuald));
@@ -524,13 +524,13 @@
 
             double x = 0, y = 0;
 
-            var f = new QuadraticObjectiveFunction(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y - 100);
+            QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y - 100);
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(f, () => x - y == 5));
             constraints.Add(new LinearConstraint(f, () => x >= 10));
 
-            GoldfarbIdnani solver = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani solver = new(f, constraints);
 
             double[,] Q =
             {
@@ -540,8 +540,8 @@
 
             double[] d = { -5, -6 };
 
-            var actualQ = f.QuadraticTerms;
-            var actuald = f.LinearTerms;
+            double[,] actualQ = f.QuadraticTerms;
+            double[] actuald = f.LinearTerms;
 
             Assert.IsTrue(Q.IsEqual(actualQ));
             Assert.IsTrue(d.IsEqual(actuald));
@@ -559,13 +559,13 @@
 
             double x = 0, y = 0;
 
-            var f = new QuadraticObjectiveFunction(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y + 100);
+            QuadraticObjectiveFunction f = new(() => 2 * (x * x) - (x * y) + 4 * (y * y) - 5 * x - 6 * y + 100);
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(f, () => x - y == 5));
             constraints.Add(new LinearConstraint(f, () => x >= 10));
 
-            GoldfarbIdnani solver = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani solver = new(f, constraints);
 
             double[,] Q =
             {
@@ -575,8 +575,8 @@
 
             double[] d = { -5, -6 };
 
-            var actualQ = f.QuadraticTerms;
-            var actuald = f.LinearTerms;
+            double[,] actualQ = f.QuadraticTerms;
+            double[] actuald = f.LinearTerms;
 
             Assert.IsTrue(Q.IsEqual(actualQ));
             Assert.IsTrue(d.IsEqual(actuald));
@@ -598,14 +598,14 @@
             //             x  >=  10  (x should be greater than or equal to 10)
             //
 
-            var f = new QuadraticObjectiveFunction("2x² - xy + 4y² - 5x - 6y");
+            QuadraticObjectiveFunction f = new("2x² - xy + 4y² - 5x - 6y");
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(f, "x-y = 5"));
             constraints.Add(new LinearConstraint(f, "x >= 10"));
 
 
-            GoldfarbIdnani target = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani target = new(f, constraints);
 
             double[,] A =
             {
@@ -631,8 +631,8 @@
             double[] d = { -5, -6 };
 
 
-            var actualQ = f.QuadraticTerms;
-            var actuald = f.LinearTerms;
+            double[,] actualQ = f.QuadraticTerms;
+            double[] actuald = f.LinearTerms;
 
             Assert.IsTrue(Q.IsEqual(actualQ));
             Assert.IsTrue(d.IsEqual(actuald));
@@ -646,16 +646,16 @@
 
             double x = 0, y = 0, z = 0;
 
-            var f = new QuadraticObjectiveFunction(() => x * x - 2 * x * y + 3 * y * y + z * z - 4 * x - 5 * y - z);
+            QuadraticObjectiveFunction f = new(() => x * x - 2 * x * y + 3 * y * y + z * z - 4 * x - 5 * y - z);
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(f, () => 6 * x - 7 * y <= 8));
             constraints.Add(new LinearConstraint(f, () => 9 * x + 1 * y <= 11));
             constraints.Add(new LinearConstraint(f, () => 9 * x - y <= 11));
             constraints.Add(new LinearConstraint(f, () => -z - y == 12));
 
 
-            GoldfarbIdnani target = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani target = new(f, constraints);
 
             bool success = target.Minimize();
             double value = target.Value;
@@ -679,16 +679,16 @@
             // min 1x² - 2xy + 3y² +z² - 4x - 5y -z, 6x-7y <= 8, 9x + 1y <= 11, 9x-y <= 11, -z-y = 12
             // http://www.wolframalpha.com/input/?i=min+1x%C2%B2+-+2xy+%2B+3y%C2%B2+%2Bz%C2%B2+-+4x+-+5y+-z%2C+6x-7y+%3C%3D+8%2C+9x+%2B+1y+%3C%3D+11%2C+9x-y+%3C%3D+11%2C+-z-y+%3D+12
 
-            var f = new QuadraticObjectiveFunction("1x² - 2xy + 3y² + z² - 4x - 5y -z");
+            QuadraticObjectiveFunction f = new("1x² - 2xy + 3y² + z² - 4x - 5y -z");
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(f, "6x-7y <= 8"));
             constraints.Add(new LinearConstraint(f, "9x + 1y <= 11"));
             constraints.Add(new LinearConstraint(f, "9x-y <= 11"));
             constraints.Add(new LinearConstraint(f, "-z-y = 12"));
 
 
-            GoldfarbIdnani target = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani target = new(f, constraints);
 
             bool success = target.Minimize();
             double value = target.Value;
@@ -718,14 +718,14 @@
             double x = 0, y = 0;
 
             // http://www.wolframalpha.com/input/?i=min+x%C2%B2+%2B+2xy+%2B+y%C2%B2+-+y%2C+x+%3E%3D+1%2C+y+%3E%3D+1
-            var f = new QuadraticObjectiveFunction(() => 3 * (x * x) + 2 * (x * y) + 3 * (y * y) - y);
+            QuadraticObjectiveFunction f = new(() => 3 * (x * x) + 2 * (x * y) + 3 * (y * y) - y);
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(f, () => x >= 1));
             constraints.Add(new LinearConstraint(f, () => y >= 1));
 
 
-            GoldfarbIdnani target = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani target = new(f, constraints);
 
             double[,] A =
             {
@@ -751,8 +751,8 @@
             double[] d = { 0, -1 };
 
 
-            var actualQ = f.QuadraticTerms;
-            var actuald = f.LinearTerms;
+            double[,] actualQ = f.QuadraticTerms;
+            double[] actuald = f.LinearTerms;
 
             Assert.IsTrue(Q.IsEqual(actualQ));
             Assert.IsTrue(d.IsEqual(actuald));
@@ -792,14 +792,14 @@
             double x = 0, y = 0;
 
             // http://www.wolframalpha.com/input/?i=min+x%C2%B2+%2B+2xy+%2B+y%C2%B2+-+y%2C+x+%3E%3D+1%2C+y+%3E%3D+1
-            var f = new QuadraticObjectiveFunction(() => (x * x) + 2 * (x * y) + (y * y) - y);
+            QuadraticObjectiveFunction f = new(() => (x * x) + 2 * (x * y) + (y * y) - y);
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(f, () => x >= 1));
             constraints.Add(new LinearConstraint(f, () => y >= 1));
 
 
-            GoldfarbIdnani target = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani target = new(f, constraints);
 
             double[,] A =
             {
@@ -825,8 +825,8 @@
             double[] d = { 0, -1 };
 
 
-            var actualQ = f.QuadraticTerms;
-            var actuald = f.LinearTerms;
+            double[,] actualQ = f.QuadraticTerms;
+            double[] actuald = f.LinearTerms;
 
             Assert.IsTrue(Q.IsEqual(actualQ));
             Assert.IsTrue(d.IsEqual(actuald));
@@ -853,16 +853,16 @@
 
             double x = 0, y = 0;
 
-            var f = new QuadraticObjectiveFunction(() => 2 * (x * x) + (x * y) + (y * y) - 5 * y);
+            QuadraticObjectiveFunction f = new(() => 2 * (x * x) + (x * y) + (y * y) - 5 * y);
 
-            List<LinearConstraint> constraints = new List<LinearConstraint>();
+            List<LinearConstraint> constraints = new();
             constraints.Add(new LinearConstraint(f, () => -x - 3 * y >= -2));
             constraints.Add(new LinearConstraint(f, () => -x - y >= 0));
             constraints.Add(new LinearConstraint(f, () => x >= 0));
             constraints.Add(new LinearConstraint(f, () => y >= 0));
 
 
-            GoldfarbIdnani target = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani target = new(f, constraints);
 
             double[,] expectedA =
             {
@@ -898,10 +898,10 @@
                solve.QP(Qmat, dvec, Amat, bvec)
             */
 
-            var actualA = target.ConstraintMatrix;
-            var actualb = target.ConstraintValues;
-            var actualQ = f.QuadraticTerms;
-            var actuald = f.LinearTerms;
+            double[,] actualA = target.ConstraintMatrix;
+            double[] actualb = target.ConstraintValues;
+            double[,] actualQ = f.QuadraticTerms;
+            double[] actuald = f.LinearTerms;
 
             Assert.IsTrue(expectedA.IsEqual(actualA));
             Assert.IsTrue(expectedb.IsEqual(actualb));
@@ -946,17 +946,17 @@
             //
 
             // Create our objective function using a text string
-            var f = new QuadraticObjectiveFunction("-2x² + xy - y² + 5y");
+            QuadraticObjectiveFunction f = new("-2x² + xy - y² + 5y");
 
             // Now, create the constraints
-            List<LinearConstraint> constraints = new List<LinearConstraint>()
+            List<LinearConstraint> constraints = new()
             {
                 new LinearConstraint(f, "x + y <= 0"),
                 new LinearConstraint(f, "    y >= 0")
             };
 
             // Now we create the quadratic programming solver 
-            var solver = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani solver = new(f, constraints);
 
             // And attempt solve for the max:
             bool success = solver.Maximize();
@@ -989,12 +989,12 @@
                 "x + y = 100"
             };
 
-            QuadraticObjectiveFunction function = new QuadraticObjectiveFunction(strObjective);
-            LinearConstraintCollection cst = new LinearConstraintCollection();
-            foreach (var tmpCst in strConstraints)
+            QuadraticObjectiveFunction function = new(strObjective);
+            LinearConstraintCollection cst = new();
+            foreach (string tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst));
 
-            var classSolver = new GoldfarbIdnani(function, cst);
+            GoldfarbIdnani classSolver = new(function, cst);
             bool status = classSolver.Minimize();
             double result = classSolver.Value;
 
@@ -1005,7 +1005,7 @@
         [TestMethod]
         public void GoldfarbIdnaniParseGlobalizationTest()
         {
-            var fr = CultureInfo.GetCultureInfo("fr-FR");
+            CultureInfo fr = CultureInfo.GetCultureInfo("fr-FR");
 
             Assert.AreEqual(",", fr.NumberFormat.NumberDecimalSeparator);
 
@@ -1021,12 +1021,12 @@
                 "x + y = 100"
             };
 
-            QuadraticObjectiveFunction function = new QuadraticObjectiveFunction(strObjective, fr);
-            LinearConstraintCollection cst = new LinearConstraintCollection();
-            foreach (var tmpCst in strConstraints)
+            QuadraticObjectiveFunction function = new(strObjective, fr);
+            LinearConstraintCollection cst = new();
+            foreach (string tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst, fr));
 
-            var classSolver = new GoldfarbIdnani(function, cst);
+            GoldfarbIdnani classSolver = new(function, cst);
             bool status = classSolver.Minimize();
             double result = classSolver.Value;
 
@@ -1049,12 +1049,12 @@
                 "x + y = 100"
             };
 
-            QuadraticObjectiveFunction function = new QuadraticObjectiveFunction(strObjective);
-            LinearConstraintCollection cst = new LinearConstraintCollection();
-            foreach (var tmpCst in strConstraints)
+            QuadraticObjectiveFunction function = new(strObjective);
+            LinearConstraintCollection cst = new();
+            foreach (string tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst));
 
-            var classSolver = new GoldfarbIdnani(function, cst);
+            GoldfarbIdnani classSolver = new(function, cst);
             bool status = classSolver.Minimize();
             double result = classSolver.Value;
 
@@ -1065,7 +1065,7 @@
         [TestMethod]
         public void GoldfarbIdnaniParseTest()
         {
-            var s = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            string s = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
             String strObjective = "0" + s + "5x² + 0" + s + "2y² + 0" + s + "3xy";
 
@@ -1076,12 +1076,12 @@
             };
 
             // Now we can start creating our function:
-            QuadraticObjectiveFunction function = new QuadraticObjectiveFunction(strObjective, CultureInfo.CurrentCulture);
-            LinearConstraintCollection cst = new LinearConstraintCollection();
-            foreach (var tmpCst in strConstraints)
+            QuadraticObjectiveFunction function = new(strObjective, CultureInfo.CurrentCulture);
+            LinearConstraintCollection cst = new();
+            foreach (string tmpCst in strConstraints)
                 cst.Add(new LinearConstraint(function, tmpCst, CultureInfo.CurrentCulture));
 
-            var classSolver = new GoldfarbIdnani(function, cst);
+            GoldfarbIdnani classSolver = new(function, cst);
             bool status = classSolver.Minimize();
             double result = classSolver.Value;
 
@@ -1110,10 +1110,10 @@
 
             double[] d = { 0, 0, 0, 0 };
 
-            var f = new QuadraticObjectiveFunction(Q, d, "a", "b", "c", "d");
+            QuadraticObjectiveFunction f = new(Q, d, "a", "b", "c", "d");
 
             // Now, create the constraints
-            var constraints = new LinearConstraintCollection();
+            LinearConstraintCollection constraints = new();
 
             constraints.Add(new LinearConstraint(f, "0.0732 * a + 0.0799 * b + 0.1926 * c + 0.0047 * d = 0.098"));
             constraints.Add(new LinearConstraint(f, "a + b + c + d = 1"));
@@ -1139,7 +1139,7 @@
 
 
             // Now we create the quadratic programming solver for 2 variables, using the constraints.
-            GoldfarbIdnani solver = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani solver = new(f, constraints);
 
             // And attempt to solve it.
             Assert.IsTrue(solver.Minimize());
@@ -1183,10 +1183,10 @@
 
             double[] d = { 0, 0, 0, 0 };
 
-            var f = new QuadraticObjectiveFunction(Q, d, "a", "b", "c", "d");
+            QuadraticObjectiveFunction f = new(Q, d, "a", "b", "c", "d");
 
             // Now, create the constraints
-            var constraints = new LinearConstraintCollection();
+            LinearConstraintCollection constraints = new();
 
             constraints.Add(new LinearConstraint(f, "0.0732 * a + 0.0799 * b + 0.1926 * c + 0.0047 * d = 0.098"));
             constraints.Add(new LinearConstraint(f, "a + b + c + d = 1"));
@@ -1208,7 +1208,7 @@
             double[,] A = constraints.CreateMatrix(4, out b, out eq);
 
             // Now we create the quadratic programming solver for 2 variables, using the constraints.
-            GoldfarbIdnani solver = new GoldfarbIdnani(f, constraints);
+            GoldfarbIdnani solver = new(f, constraints);
 
             // And attempt to solve it.
             Assert.IsTrue(solver.Minimize());
@@ -1235,18 +1235,18 @@
         [TestMethod]
         public void GoldfarbIdnaniLargeSampleTest1()
         {
-            var Q = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "dmatFull.csv"));
-            var AMat = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraintMatrix11_15.csv"));
-            var bvec = readVectorFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraints11_14.csv"));
+            double[,] Q = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "dmatFull.csv"));
+            double[,] AMat = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraintMatrix11_15.csv"));
+            double[] bvec = readVectorFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraints11_14.csv"));
 
-            var dvec = new double[Q.GetLength(0)];
+            double[] dvec = new double[Q.GetLength(0)];
             double[] b = new double[bvec.Length];
             bvec.CopyTo(b, 0);
 
             bool psd = Q.IsPositiveDefinite();
             Assert.IsTrue(psd);
 
-            GoldfarbIdnani gfI = new GoldfarbIdnani(Q, dvec, AMat, b, 2);
+            GoldfarbIdnani gfI = new(Q, dvec, AMat, b, 2);
 
             bool success = gfI.Minimize();
 
@@ -1278,18 +1278,18 @@
         [TestMethod]
         public void GoldfarbIdnaniLargeSampleTest2()
         {
-            var Q = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "dmatFull.csv"));
-            var AMat = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraintMatrix11_15_2.csv"));
-            var bvec = readVectorFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraints11_14_2.csv"));
+            double[,] Q = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "dmatFull.csv"));
+            double[,] AMat = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraintMatrix11_15_2.csv"));
+            double[] bvec = readVectorFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraints11_14_2.csv"));
 
-            var dvec = new double[Q.GetLength(0)];
+            double[] dvec = new double[Q.GetLength(0)];
             double[] b = new double[bvec.Length];
             bvec.CopyTo(b, 0);
 
             bool psd = Q.IsPositiveDefinite();
             Assert.IsTrue(psd);
 
-            GoldfarbIdnani gfI = new GoldfarbIdnani(Q, dvec, AMat, b, 2);
+            GoldfarbIdnani gfI = new(Q, dvec, AMat, b, 2);
 
             for (int i = 0; i < gfI.ConstraintTolerances.Length; i++)
                 Assert.AreEqual(LinearConstraint.DefaultTolerance, gfI.ConstraintTolerances[i]);
@@ -1325,18 +1325,18 @@
         [TestMethod]
         public void GoldfarbIdnaniLargeSampleTest3_InfiniteLoop()
         {
-            var Q = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "dmatFull.csv"));
-            var AMat = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraintMatrix11_15_3.csv"));
-            var bvec = readVectorFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraints11_14_3.csv"));
+            double[,] Q = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "dmatFull.csv"));
+            double[,] AMat = readMatrixFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraintMatrix11_15_3.csv"));
+            double[] bvec = readVectorFile(Path.Combine(System.Environment.CurrentDirectory, "Assets", "constraints11_14_3.csv"));
 
-            var dvec = new double[Q.GetLength(0)];
+            double[] dvec = new double[Q.GetLength(0)];
             double[] b = new double[bvec.Length];
             bvec.CopyTo(b, 0);
 
             bool psd = Q.IsPositiveDefinite();
             Assert.IsTrue(psd);
 
-            GoldfarbIdnani gfI = new GoldfarbIdnani(Q, dvec, AMat, b, 2);
+            GoldfarbIdnani gfI = new(Q, dvec, AMat, b, 2);
 
             for (int i = 0; i < gfI.ConstraintTolerances.Length; i++)
                 gfI.ConstraintTolerances[i] = 1e-10;
@@ -1407,12 +1407,12 @@
             AMat[0, 2] = 1; AMat[1, 2] = 0; AMat[2, 2] = 0; AMat[3, 2] = 0; AMat[4, 2] = 0; AMat[5, 2] = 1; AMat[6, 2] = -1; AMat[7, 2] = 0; AMat[8, 2] = 0;
             AMat[0, 3] = 1; AMat[1, 3] = 0; AMat[2, 3] = 0; AMat[3, 3] = 0; AMat[4, 3] = 0; AMat[5, 3] = 0; AMat[6, 3] = 0; AMat[7, 3] = 1; AMat[8, 3] = -1;
 
-            var oldA = (double[,])AMat.Clone();
-            var oldD = (double[,])DMat.Clone();
-            var oldb = (double[])bvec.Clone();
-            var oldd = (double[])dvec.Clone();
+            double[,] oldA = (double[,])AMat.Clone();
+            double[,] oldD = (double[,])DMat.Clone();
+            double[] oldb = (double[])bvec.Clone();
+            double[] oldd = (double[])dvec.Clone();
 
-            GoldfarbIdnani gfI = new GoldfarbIdnani(DMat, dvec, AMat, bvec, 1);
+            GoldfarbIdnani gfI = new(DMat, dvec, AMat, bvec, 1);
 
             Assert.AreEqual(4, gfI.NumberOfVariables);
             Assert.AreEqual(9, gfI.NumberOfConstraints);
@@ -1441,16 +1441,16 @@
 
         private double[,] readMatrixFile(string path)
         {
-            var str = File.ReadAllLines(path);
+            string[] str = File.ReadAllLines(path);
 
             char[] sep = new char[] { ',' };
             string[] parts = str[0].Split(sep, StringSplitOptions.RemoveEmptyEntries);
             double[,] v = new double[str.Length, parts.Length];
-            
+
             for (int i = 0; i < str.Length; i++)
             {
                 parts = str[i].Split(sep, StringSplitOptions.RemoveEmptyEntries);
-                
+
                 for (int j = 0; j < parts.Length; j++)
                 {
                     string prt = parts[j];
@@ -1458,13 +1458,13 @@
                     v[i, j] = prtdbl;
                 }
             }
-            
+
             return v;
         }
 
         private double[] readVectorFile(string path)
         {
-            var str = File.ReadAllLines(path);
+            string[] str = File.ReadAllLines(path);
             char[] sep = new char[] { ',' };
             double[] v = new double[str.Length];
             string[] parts = str[0].Split(sep);
@@ -1484,8 +1484,8 @@
             // https://github.com/accord-net/framework/issues/171
 
             int n = 21;
-            var Q = Matrix.Diagonal(n, 2.0);
-            var d = Vector.Create(3132.0, 6264, 15660, 18792, 21924, 6264, 18792, 21924, 9396, 3132, 12528, 6264, 9396, 18792, 21924, 9396, 3132, 3132, 6264, 15660, 18792);
+            double[,] Q = Matrix.Diagonal(n, 2.0);
+            double[] d = Vector.Create(3132.0, 6264, 15660, 18792, 21924, 6264, 18792, 21924, 9396, 3132, 12528, 6264, 9396, 18792, 21924, 9396, 3132, 3132, 6264, 15660, 18792);
 
             int m = 44;
 
@@ -1519,7 +1519,7 @@
                 -0.001, -0.001, -0.001, -0.001
             };
 
-            var A = Matrix.Create(m, n,
+            double[,] A = Matrix.Create(m, n,
                  1.0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                  0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1539,44 +1539,44 @@
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0,
                 -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0,
                  0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0,
-                 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 
+                 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0,
                  0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0,
-                 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 
-                 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 
-                 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
+                 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0,
+                 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1,
+                 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
 
 
-            var solver = new GoldfarbIdnani(Q, d, A, b, 0);
+            GoldfarbIdnani solver = new(Q, d, A, b, 0);
 
             //for (int i = 0; i < solver.ConstraintTolerances.Length; i++)
             //    solver.ConstraintTolerances[i] = 1e-1;
 
             Assert.IsTrue(solver.Minimize());
 
-            QuadraticObjectiveFunction f = new QuadraticObjectiveFunction(Q, d);
+            QuadraticObjectiveFunction f = new(Q, d);
             f.Function(solver.Solution);
 
-            var constraints = LinearConstraintCollection.Create(A, b, 0);
+            LinearConstraintCollection constraints = LinearConstraintCollection.Create(A, b, 0);
 
             double[] violation = constraints.Apply(x => x.GetViolation(solver.Solution));
         }
@@ -1638,8 +1638,8 @@
                 10,10,30,20,30,20
             };
 
-            GoldfarbIdnani target = new GoldfarbIdnani(Q, d, A, b, 3);
-            var tolerance = 0.001;
+            GoldfarbIdnani target = new(Q, d, A, b, 3);
+            double tolerance = 0.001;
             target.ConstraintTolerances.Apply(a => tolerance);
 
             Assert.IsTrue(target.Minimize());

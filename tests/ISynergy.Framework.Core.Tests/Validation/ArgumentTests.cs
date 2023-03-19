@@ -77,7 +77,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         [TestMethod]
         public void IsNotNullOrEmptyListTTest()
         {
-            var test = new List<object>();
+            List<object> test = new();
             Assert.ThrowsException<ArgumentNullException>(() => Argument.IsNotNullOrEmptyList(test));
         }
 
@@ -87,7 +87,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         [TestMethod]
         public void IsNotEnumTTest()
         {
-            var test = new object();
+            object test = new();
             Assert.ThrowsException<ArgumentException>(() => Argument.IsNotEnum(test));
         }
 
@@ -97,10 +97,10 @@ namespace ISynergy.Framework.Core.Validation.Tests
         [TestMethod]
         public void HasNoNullsTTest()
         {
-            var test = new List<Product>();
+            List<Product> test = new();
             test.Add(new Product());
             test.Add(null);
-            
+
             Assert.ThrowsException<ArgumentNullException>(() => Argument.HasNoNulls(test));
         }
 
@@ -110,7 +110,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         [TestMethod]
         public void IsNotOutOfRangeTTest()
         {
-            var test = 1975;
+            int test = 1975;
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsNotOutOfRange(test, 2000, 2021));
         }
 
@@ -120,7 +120,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         [TestMethod]
         public void IsMinimalTTest()
         {
-            var test = 1975;
+            int test = 1975;
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMinimal(test, 2000));
         }
 
@@ -130,7 +130,7 @@ namespace ISynergy.Framework.Core.Validation.Tests
         [TestMethod]
         public void IsMaximumTTest()
         {
-            var test = 1975;
+            int test = 1975;
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => Argument.IsMaximum(test, 1970));
         }
     }

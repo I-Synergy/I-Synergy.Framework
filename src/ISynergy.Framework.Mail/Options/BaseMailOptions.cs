@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace ISynergy.Framework.Mail.Options
+﻿namespace ISynergy.Framework.Mail.Options
 {
     /// <summary>
     /// Mail service options.

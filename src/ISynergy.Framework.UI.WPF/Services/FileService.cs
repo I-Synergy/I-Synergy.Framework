@@ -1,6 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
 using Microsoft.Win32;
@@ -42,7 +42,7 @@ namespace ISynergy.Framework.UI.Services
         {
             _dialogService = dialogService;
             _languageService = languageService;
-            
+
             AddExtension = true;
             CheckFileExists = false;
             CheckPathExists = true;

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using ISynergy.Framework.Core.Collections;
-using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Mvvm.Abstractions;
 using Microsoft.UI.Xaml.Data;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.UI.Converters
 {
@@ -23,9 +21,9 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is ObservableConcurrentCollection<IView>)
+            if (value is ObservableCollection<IView>)
             {
-                if (value is ObservableConcurrentCollection<IView> blades && blades.Count > 0)
+                if (value is ObservableCollection<IView> blades && blades.Count > 0)
                 {
                     return true;
                 }

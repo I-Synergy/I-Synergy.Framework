@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using ClaimTypes = ISynergy.Framework.Core.Constants.ClaimTypes;
 
@@ -30,13 +29,13 @@ namespace ISynergy.Framework.Monitoring.Hubs.Tests
             _mockClientProxy = new Mock<IClientProxy>();
             _mockClients = new Mock<IHubCallerClients>();
             _mockGroupManager = new Mock<IGroupManager>();
-            
+
             _mockHubCallerContext = new Mock<HubCallerContext>();
             _mockHubCallerContext.Setup(x => x.ConnectionId).Returns(connectionId);
             _mockHubCallerContext.Setup(x => x.User)
                 .Returns(() =>
                 {
-                    var identity = new ClaimsIdentity(
+                    ClaimsIdentity identity = new(
                         "OAuth",
                         ClaimTypes.UserNameType,
                         ClaimTypes.RoleType);
@@ -74,7 +73,7 @@ namespace ISynergy.Framework.Monitoring.Hubs.Tests
             _mockClientProxy.Verify(x => x.SendCoreAsync(
                     "Connected",
                     It.Is<object[]>(o => o != null),
-                    default(CancellationToken)), Times.Once);
+                    default), Times.Once);
         }
 
         [TestMethod()]
@@ -87,7 +86,7 @@ namespace ISynergy.Framework.Monitoring.Hubs.Tests
             _mockClientProxy.Verify(x => x.SendCoreAsync(
                     "Disconnected",
                     It.Is<object[]>(o => o != null),
-                    default(CancellationToken)), Times.Once);
+                    default), Times.Once);
         }
     }
 }

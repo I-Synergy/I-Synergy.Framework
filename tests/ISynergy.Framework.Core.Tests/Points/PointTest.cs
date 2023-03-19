@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Core.Points.Tests
         [DataRow(0.3f, 0.4f, 0.5f)]
         public void EuclideanNormTest(float x, float y, float expectedNorm)
         {
-            Point point = new Point(x, y);
+            Point point = new(x, y);
             Assert.AreEqual(expectedNorm, point.EuclideanNorm(true, 1));
         }
 
@@ -32,8 +32,8 @@ namespace ISynergy.Framework.Core.Points.Tests
         [DataRow(-2.5f, 2.5f, -2, 2)]
         public void RoundTest(float x, float y, int expectedX, int expectedY)
         {
-            Point point1 = new Point(x, y, true);
-            Point point2 = new Point(expectedX, expectedY);
+            Point point1 = new(x, y, true);
+            Point point2 = new(expectedX, expectedY);
 
             Assert.AreEqual(point2, point1);
         }
@@ -44,8 +44,8 @@ namespace ISynergy.Framework.Core.Points.Tests
         [DataRow(1.1f, 2.2f, 3.3f, 4.4f, false)]
         public void EqualityOperatorTest(float x1, float y1, float x2, float y2, bool areEqual)
         {
-            Point point1 = new Point(x1, y1);
-            Point point2 = new Point(x2, y2);
+            Point point1 = new(x1, y1);
+            Point point2 = new(x2, y2);
 
             Assert.AreEqual(point1 == point2, areEqual);
         }
@@ -57,8 +57,8 @@ namespace ISynergy.Framework.Core.Points.Tests
         [DataRow(1.1f, 2.2f, 3.3f, 4.4f, true)]
         public void InequalityOperatorTest(float x1, float y1, float x2, float y2, bool areNotEqual)
         {
-            Point point1 = new Point(x1, y1);
-            Point point2 = new Point(x2, y2);
+            Point point1 = new(x1, y1);
+            Point point2 = new(x2, y2);
 
             Assert.AreEqual(point1 != point2, areNotEqual);
         }

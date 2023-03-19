@@ -1,8 +1,5 @@
 ﻿using ISynergy.Framework.Core.Base;
-using System;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.EntityFramework.Abstractions.Repositories
 {

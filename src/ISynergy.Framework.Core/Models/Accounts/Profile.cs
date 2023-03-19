@@ -9,18 +9,18 @@ namespace ISynergy.Framework.Core.Models.Accounts
     public class Profile : IProfile
     {
         public Profile(
-            Token token, 
-            Guid accountId, 
-            string accountDescription, 
-            string timeZoneId, 
+            Token token,
+            Guid accountId,
+            string accountDescription,
+            string timeZoneId,
             string countryCode,
-            Guid userId, 
-            string username, 
-            string email, 
-            List<string> roles, 
-            List<string> modules, 
-            DateTimeOffset licenseExpration, 
-            int licenseUsers, 
+            Guid userId,
+            string username,
+            string email,
+            List<string> roles,
+            List<string> modules,
+            DateTimeOffset licenseExpration,
+            int licenseUsers,
             DateTime expiration)
         {
             AccountId = accountId;

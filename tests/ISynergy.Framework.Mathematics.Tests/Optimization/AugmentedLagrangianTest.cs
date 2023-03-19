@@ -2,14 +2,14 @@
 {
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Optimization.Base;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained;
+    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
+    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
-    using ISynergy.Framework.Mathematics.Random;
-    using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
-    using ISynergy.Framework.Mathematics.Optimization.Constrained;
-    using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
-    using ISynergy.Framework.Mathematics.Optimization.Base;
 
     [TestClass]
     public class AugmentedLagrangianTest
@@ -26,7 +26,7 @@
             //       y <= 0
             //
 
-            var f = new NonlinearObjectiveFunction(2,
+            NonlinearObjectiveFunction f = new(2,
 
                 function: (x) => 100 * Math.Pow(x[1] - x[0] * x[0], 2) + Math.Pow(1 - x[0], 2),
 
@@ -39,7 +39,7 @@
             );
 
 
-            var constraints = new List<NonlinearConstraint>();
+            List<NonlinearConstraint> constraints = new();
 
             constraints.Add(new NonlinearConstraint(f,
 
@@ -57,7 +57,7 @@
                 shouldBe: ConstraintType.LesserThanOrEqualTo, value: 0
             ));
 
-            var solver = new AugmentedLagrangian(f, constraints);
+            AugmentedLagrangian solver = new(f, constraints);
 
             Assert.IsTrue(solver.Minimize());
             double minValue = solver.Value;
@@ -78,7 +78,7 @@
             //       y >= 0
             //
 
-            var f = new NonlinearObjectiveFunction(2,
+            NonlinearObjectiveFunction f = new(2,
 
                 function: (x) => 100 * Math.Pow(x[1] - x[0] * x[0], 2) + Math.Pow(1 - x[0], 2),
 
@@ -91,7 +91,7 @@
             );
 
 
-            var constraints = new List<NonlinearConstraint>();
+            List<NonlinearConstraint> constraints = new();
 
             constraints.Add(new NonlinearConstraint(f,
 
@@ -109,7 +109,7 @@
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0
             ));
 
-            var solver = new AugmentedLagrangian(f, constraints);
+            AugmentedLagrangian solver = new(f, constraints);
 
             Assert.IsTrue(solver.Minimize());
             double minValue = solver.Value;
@@ -135,7 +135,7 @@
 
             double x = 0, y = 0, z = 0;
 
-            var f = new NonlinearObjectiveFunction(
+            NonlinearObjectiveFunction f = new(
 
                 function: () => x * y + y * z,
 
@@ -149,7 +149,7 @@
             );
 
 
-            var constraints = new List<NonlinearConstraint>();
+            List<NonlinearConstraint> constraints = new();
 
             constraints.Add(new NonlinearConstraint(f,
 
@@ -167,7 +167,7 @@
                 shouldBe: ConstraintType.LesserThanOrEqualTo, value: 10
             ));
 
-            var solver = new AugmentedLagrangian(f, constraints);
+            AugmentedLagrangian solver = new(f, constraints);
 
             solver.Solution[0] = 1;
             solver.Solution[1] = 1;
@@ -201,7 +201,7 @@
 
             double x = 0, y = 0, z = 0;
 
-            var f = new NonlinearObjectiveFunction(
+            NonlinearObjectiveFunction f = new(
 
                 function: () => x * y + y * z,
 
@@ -215,7 +215,7 @@
             );
 
 
-            var constraints = new List<NonlinearConstraint>();
+            List<NonlinearConstraint> constraints = new();
 
             constraints.Add(new NonlinearConstraint(f,
 
@@ -241,10 +241,10 @@
                 shouldBe: ConstraintType.EqualTo, value: 1
             ));
 
-            foreach (var c in constraints)
+            foreach (NonlinearConstraint c in constraints)
                 c.Tolerance = 1e-5;
 
-            var solver = new AugmentedLagrangian(f, constraints);
+            AugmentedLagrangian solver = new(f, constraints);
 
             solver.Solution[0] = 1;
             solver.Solution[1] = 1;
@@ -279,7 +279,7 @@
             double x = 0, y = 0; // (values do not matter)
 
             // Now, we create an objective function
-            var f = new NonlinearObjectiveFunction(
+            NonlinearObjectiveFunction f = new(
 
                 // This is the objective function:  f(x,y) = min 100(y-x²)²+(1-x)²
                 function: () => 100 * Math.Pow(y - x * x, 2) + Math.Pow(1 - x, 2),
@@ -293,7 +293,7 @@
             );
 
             // Now we can start stating the constraints
-            var constraints = new List<NonlinearConstraint>()
+            List<NonlinearConstraint> constraints = new()
             {
                 // Add the non-negativity constraint for x
                 new NonlinearConstraint(f,
@@ -315,7 +315,7 @@
             };
 
             // Finally, we create the non-linear programming solver
-            var solver = new AugmentedLagrangian(f, constraints);
+            AugmentedLagrangian solver = new(f, constraints);
 
             // And attempt to find a minimum
             bool success = solver.Minimize();
@@ -352,7 +352,7 @@
             //
 
             // Now, we can create an objective function using vectors
-            var f = new NonlinearObjectiveFunction(numberOfVariables: 2,
+            NonlinearObjectiveFunction f = new(numberOfVariables: 2,
 
                 // This is the objective function:  f(x,y) = min 100(y-x²)²+(1-x)²
                 function: (x) => 100 * Math.Pow(x[1] - x[0] * x[0], 2) + Math.Pow(1 - x[0], 2),
@@ -370,10 +370,10 @@
             double[,] a = Matrix.Identity(2); // Set up the constraint matrix...
             double[] b = Vector.Zeros(2);     // ...and the values they must be greater than
             int numberOfEqualities = 0;
-            var linearConstraints = LinearConstraintCollection.Create(a, b, numberOfEqualities);
+            LinearConstraintCollection linearConstraints = LinearConstraintCollection.Create(a, b, numberOfEqualities);
 
             // Finally, we create the non-linear programming solver
-            var solver = new AugmentedLagrangian(f, linearConstraints);
+            AugmentedLagrangian solver = new(f, linearConstraints);
 
             // And attempt to find a minimum
             bool success = solver.Minimize();
@@ -427,7 +427,7 @@
             double k = 50;
 
             // Create the objective function
-            var objective = new NonlinearObjectiveFunction(2,
+            NonlinearObjectiveFunction objective = new(2,
                 function: (x) => x.Dot(c),
                 gradient: (x) => c
             );
@@ -445,7 +445,7 @@
 
 
             // Create the optimization constraints
-            var constraints = new List<NonlinearConstraint>();
+            List<NonlinearConstraint> constraints = new();
 
             constraints.Add(new QuadraticConstraint(objective,
                 quadraticTerms: A,
@@ -482,12 +482,12 @@
                 }
             }
 
-            foreach (var constraint in constraints)
+            foreach (NonlinearConstraint constraint in constraints)
                 constraint.Tolerance = 1e-7;
 
 
             AugmentedLagrangian solver =
-                new AugmentedLagrangian(inner, objective, constraints);
+                new(inner, objective, constraints);
 
             Assert.AreEqual(inner, solver.Optimizer);
 
@@ -519,7 +519,7 @@
             double k = 50;
 
             // Create the objective function
-            var objective = new NonlinearObjectiveFunction(2,
+            NonlinearObjectiveFunction objective = new(2,
                 function: (x) => x.Dot(c),
                 gradient: (x) => c
             );
@@ -537,7 +537,7 @@
 
 
             // Create the optimization constraints
-            var constraints = new List<NonlinearConstraint>();
+            List<NonlinearConstraint> constraints = new();
 
             constraints.Add(new QuadraticConstraint(objective,
                 quadraticTerms: A,
@@ -550,7 +550,7 @@
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    var input = new double[] { i, j };
+                    double[] input = new double[] { i, j };
 
                     double expected = i * (2 * i + 0 * j) + j * (0 * i + 2 * j);
                     double actual = constraints[0].Function(input);
@@ -561,7 +561,7 @@
 
             // Create the solver algorithm
             AugmentedLagrangian solver =
-                new AugmentedLagrangian(inner, objective, constraints);
+                new(inner, objective, constraints);
 
             Assert.AreEqual(inner, solver.Optimizer);
 
@@ -581,7 +581,7 @@
         {
             Generator.Seed = 0;
 
-            var function = new NonlinearObjectiveFunction(2,
+            NonlinearObjectiveFunction function = new(2,
                 function: x => x[0] * x[1],
                 gradient: x => new[] { x[1], x[0] });
 
@@ -595,9 +595,9 @@
                     gradient: x => new [] { 1.0, 0.0}),
             };
 
-            var target = new ConjugateGradient(2);
+            ConjugateGradient target = new(2);
             target.Tolerance = 0;
-            AugmentedLagrangian solver = new AugmentedLagrangian(target, function, constraints);
+            AugmentedLagrangian solver = new(target, function, constraints);
 
             Assert.IsTrue(solver.Minimize());
             double minimum = solver.Value;
@@ -626,7 +626,7 @@
             //
 
             // Easy three dimensional minimization in ellipsoid.
-            var function = new NonlinearObjectiveFunction(3,
+            NonlinearObjectiveFunction function = new(3,
                 function: x => x[0] * x[1] * x[2],
                 gradient: x => new[] { x[1] * x[2], x[0] * x[2], x[0] * x[1] });
 
@@ -652,11 +652,11 @@
                 Assert.AreEqual(0, constraints[i].Value);
             }
 
-            var inner = new BroydenFletcherGoldfarbShanno(3);
+            BroydenFletcherGoldfarbShanno inner = new(3);
             inner.LineSearch = LineSearch.BacktrackingArmijo;
             inner.Corrections = 10;
 
-            var solver = new AugmentedLagrangian(inner, function, constraints);
+            AugmentedLagrangian solver = new(inner, function, constraints);
 
             Assert.AreEqual(inner, solver.Optimizer);
 
@@ -693,24 +693,24 @@
             double[,] XSolve = ATest.Solve(bTest);  // uses the pseudoinverse to minimise norm(X) subject to A*X =  b
 
             // recreate Solve function using AugmentedLagrangian
-            var fTest = new NonlinearObjectiveFunction(nVariablesTest, ds => ds.Dot(ds), ds => ds.Multiply(2.0)); // minimise norm(ds)
+            NonlinearObjectiveFunction fTest = new(nVariablesTest, ds => ds.Dot(ds), ds => ds.Multiply(2.0)); // minimise norm(ds)
 
-            var nonlinearConstraintsTest = new List<NonlinearConstraint>(nConstraintsTest);  // linear constraints A*X = b
+            List<NonlinearConstraint> nonlinearConstraintsTest = new(nConstraintsTest);  // linear constraints A*X = b
             for (int i = 0; i < nConstraintsTest; i++)
             {
                 int j = i; // http://blogs.msdn.com/b/ericlippert/archive/2009/11/12/closing-over-the-loop-variable-considered-harmful.aspx
                 nonlinearConstraintsTest.Add(new NonlinearConstraint(fTest, ds => ATest.GetRow(j).Dot(ds) - (double)bTest.GetValue(j, 0), ConstraintType.EqualTo, 0.0, ds => ATest.GetRow(j), constraintsTolerance));
             }
 
-            var innerSolverTest = new ResilientBackpropagation(nVariablesTest);
+            ResilientBackpropagation innerSolverTest = new(nVariablesTest);
             innerSolverTest.Tolerance = constraintsTolerance;
             innerSolverTest.Iterations = 1000;
-            var solverTest = new AugmentedLagrangian(innerSolverTest, fTest, nonlinearConstraintsTest);
+            AugmentedLagrangian solverTest = new(innerSolverTest, fTest, nonlinearConstraintsTest);
             solverTest.MaxEvaluations = 0;
             bool didMinimise = solverTest.Minimize();
 
-            var errorConstraintRelative = XSolve.Subtract(solverTest.Solution, 1).ElementwiseDivide(XSolve); // relative error between .Solve and .Minimize
-            var errorConstraintAbsolute = XSolve.Subtract(solverTest.Solution, 1); // absolute error between .Solve and .Minimize
+            double[,] errorConstraintRelative = XSolve.Subtract(solverTest.Solution, 1).ElementwiseDivide(XSolve); // relative error between .Solve and .Minimize
+            double[,] errorConstraintAbsolute = XSolve.Subtract(solverTest.Solution, 1); // absolute error between .Solve and .Minimize
 
             double[] errorConstraintsTest = new double[nConstraintsTest];
             for (int i = 0; i < nConstraintsTest; i++)
@@ -727,7 +727,7 @@
             // https://github.com/accord-net/framework/issues/177
 
             // Easy three dimensional minimization in ellipsoid.
-            var function = new NonlinearObjectiveFunction(3,
+            NonlinearObjectiveFunction function = new(3,
                 function: x => x[0] * x[1] * x[2],
                 gradient: x => new[] { x[1] * x[2], x[0] * x[2], x[0] * x[1] });
 
@@ -753,11 +753,11 @@
                 Assert.AreEqual(0, constraints[i].Value);
             }
 
-            var inner = new BroydenFletcherGoldfarbShanno(3);
+            BroydenFletcherGoldfarbShanno inner = new(3);
             inner.LineSearch = LineSearch.BacktrackingArmijo;
             inner.Corrections = 10;
 
-            var solver = new AugmentedLagrangian(inner, function, constraints);
+            AugmentedLagrangian solver = new(inner, function, constraints);
 
             Assert.AreEqual(inner, solver.Optimizer);
 
@@ -789,11 +789,11 @@
             // to the five constraints $x_0 - 2x_1 +2 \ge 0$, $-x_0 - 2x_1 + 6 \ge0$, $-x_0 + 2x_1 + 2\ge0$,
             // $x_0\ge0$ and $x_1\ge0$.
 
-            var f = new NonlinearObjectiveFunction(2,
+            NonlinearObjectiveFunction f = new(2,
                 function: (x) => (x[0] - 1.0) * (x[0] - 1.0) + (x[1] - 2.5) * (x[1] - 2.5),
                 gradient: (x) => new[] { 2.0 * (x[0] - 1.0), 2.0 * (x[1] - 2.5) });
 
-            var constraints = new List<NonlinearConstraint>();
+            List<NonlinearConstraint> constraints = new();
 
             // Add the constraint $x_1 - 2x_2 + 2 \ge0$.
             constraints.Add(new NonlinearConstraint(f,
@@ -825,7 +825,7 @@
                 gradient: (x) => new[] { 0.0, 1.0 },
                 shouldBe: ConstraintType.GreaterThanOrEqualTo, value: 0));
 
-            var solver = new AugmentedLagrangian(f, constraints);
+            AugmentedLagrangian solver = new(f, constraints);
 
             Assert.IsTrue(solver.Minimize());
             double minValue = solver.Value;
@@ -847,11 +847,11 @@
 
             // This problem is about minimizing $3x_0 - 4x_1$ over the elements of $[0, 1] \times[0, 1]$ summing to one.
 
-            var f = new NonlinearObjectiveFunction(2,
+            NonlinearObjectiveFunction f = new(2,
                 function: (x) => 3.0 * x[0] - 4.0 * x[1],
                 gradient: (x) => new[] { 3.0, -4.0 });
 
-            var constraints = new List<NonlinearConstraint>();
+            List<NonlinearConstraint> constraints = new();
 
             // Add the constraint $x_0 \ge 0$.
             constraints.Add(new NonlinearConstraint(f,
@@ -883,7 +883,7 @@
                 gradient: (x) => new[] { 1.0, 1.0 },
                 shouldBe: ConstraintType.EqualTo, value: 1));
 
-            var solver = new AugmentedLagrangian(f, constraints);
+            AugmentedLagrangian solver = new(f, constraints);
 
             Assert.IsTrue(solver.Minimize());
             double minValue = solver.Value;

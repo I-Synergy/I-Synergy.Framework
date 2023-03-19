@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     public static partial class Elementwise
     {
@@ -361,24 +359,24 @@ namespace ISynergy.Framework.Mathematics
                         var B = b[i][j];
 
                         if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else
-                        { 
-                            r[i][j] = (A == B); 
+                        {
+                            r[i][j] = (A == B);
                         }
                     }
             }
@@ -403,24 +401,24 @@ namespace ISynergy.Framework.Mathematics
                         var B = b[i, j];
 
                         if (A == B)
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else
                         {
@@ -429,12 +427,12 @@ namespace ISynergy.Framework.Mathematics
                             var delta = Math.Abs(C - D);
 
                             if (C == 0 && delta <= rtol)
-                            { 
-                                r[i][j] = true; 
+                            {
+                                r[i][j] = true;
                             }
                             else if (D == 0 && delta <= rtol)
-                            { 
-                                r[i][j] = true; 
+                            {
+                                r[i][j] = true;
                             }
                             else
                             {
@@ -452,23 +450,23 @@ namespace ISynergy.Framework.Mathematics
                         var B = b[i, j];
 
                         if (A == B)
-                        { 
-                            r[i][j] = true; 
+                        {
+                            r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
-                            r[i][j] = true; 
+                        {
+                            r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
+                        {
                             r[i][j] = false;
                         }
                         else
@@ -489,24 +487,24 @@ namespace ISynergy.Framework.Mathematics
                         var B = b[i, j];
 
                         if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else
-                        { 
-                            r[i][j] = (A == B); 
+                        {
+                            r[i][j] = (A == B);
                         }
                     }
             }
@@ -531,24 +529,24 @@ namespace ISynergy.Framework.Mathematics
                         var B = b[i][j];
 
                         if (A == B)
-                        { 
-                            r[i][j] = true; 
+                        {
+                            r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
-                            r[i][j] = true; 
+                        {
+                            r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else
                         {
@@ -557,16 +555,16 @@ namespace ISynergy.Framework.Mathematics
                             var delta = Math.Abs(C - D);
 
                             if (C == 0 && delta <= rtol)
-                            { 
+                            {
                                 r[i][j] = true;
                             }
                             else if (D == 0 && delta <= rtol)
-                            { 
-                                r[i][j] = true; 
+                            {
+                                r[i][j] = true;
                             }
                             else
-                            { 
-                                r[i][j] = (delta <= Math.Abs(C) * rtol); 
+                            {
+                                r[i][j] = (delta <= Math.Abs(C) * rtol);
                             }
                         }
                     }
@@ -580,24 +578,24 @@ namespace ISynergy.Framework.Mathematics
                         var B = b[i][j];
 
                         if (A == B)
-                        { 
-                            r[i][j] = true; 
+                        {
+                            r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
+                        {
                             r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else
                         {
@@ -617,24 +615,24 @@ namespace ISynergy.Framework.Mathematics
                         var B = b[i][j];
 
                         if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
-                            r[i][j] = true; 
+                        {
+                            r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else
-                        { 
-                            r[i][j] = (A == B); 
+                        {
+                            r[i][j] = (A == B);
                         }
                     }
             }
@@ -658,23 +656,23 @@ namespace ISynergy.Framework.Mathematics
                     var B = b;
 
                     if (A == B)
-                    { 
-                        r[i] = true; 
+                    {
+                        r[i] = true;
                     }
                     else if (Double.IsNaN(A) && Double.IsNaN(B))
-                    { 
+                    {
                         r[i] = true;
                     }
                     else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                    { 
+                    {
                         r[i] = false;
                     }
                     else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                    { 
-                        r[i] = false; 
+                    {
+                        r[i] = false;
                     }
                     else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                    { 
+                    {
                         r[i] = false;
                     }
                     else
@@ -682,18 +680,18 @@ namespace ISynergy.Framework.Mathematics
                         var C = A;
                         var D = B;
                         var delta = Math.Abs(C - D);
-                        
+
                         if (C == 0 && delta <= rtol)
-                        { 
-                            r[i] = true; 
+                        {
+                            r[i] = true;
                         }
                         else if (D == 0 && delta <= rtol)
-                        { 
+                        {
                             r[i] = true;
                         }
                         else
-                        { 
-                            r[i] = (delta <= Math.Abs(C) * rtol); 
+                        {
+                            r[i] = (delta <= Math.Abs(C) * rtol);
                         }
                     }
                 }
@@ -742,24 +740,24 @@ namespace ISynergy.Framework.Mathematics
                     var B = b;
 
                     if (Double.IsNaN(A) && Double.IsNaN(B))
-                    { 
-                        r[i] = true; 
+                    {
+                        r[i] = true;
                     }
                     else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                    { 
+                    {
                         r[i] = false;
                     }
                     else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                    { 
+                    {
                         r[i] = false;
                     }
                     else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                    { 
+                    {
                         r[i] = false;
                     }
                     else
-                    { 
-                        r[i] = (A == B); 
+                    {
+                        r[i] = (A == B);
                     }
                 }
             }
@@ -788,24 +786,24 @@ namespace ISynergy.Framework.Mathematics
                             var B = b;
 
                             if (A == B)
-                            { 
+                            {
                                 ptrR[i] = true;
                             }
                             else if (Double.IsNaN(A) && Double.IsNaN(B))
-                            { 
-                                ptrR[i] = true; 
+                            {
+                                ptrR[i] = true;
                             }
                             else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            { 
+                            {
                                 ptrR[i] = false;
                             }
                             else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            { 
+                            {
                                 ptrR[i] = false;
                             }
                             else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            { 
-                                ptrR[i] = false; 
+                            {
+                                ptrR[i] = false;
                             }
                             else
                             {
@@ -814,15 +812,15 @@ namespace ISynergy.Framework.Mathematics
                                 var delta = Math.Abs(C - D);
 
                                 if (C == 0 && delta <= rtol)
-                                { 
+                                {
                                     ptrR[i] = true;
                                 }
                                 else if (D == 0 && delta <= rtol)
-                                { 
-                                    ptrR[i] = true; 
+                                {
+                                    ptrR[i] = true;
                                 }
                                 else
-                                { 
+                                {
                                     ptrR[i] = (delta <= Math.Abs(C) * rtol);
                                 }
                             }
@@ -836,31 +834,31 @@ namespace ISynergy.Framework.Mathematics
                             var B = b;
 
                             if (A == B)
-                            { 
-                                ptrR[i] = true; 
+                            {
+                                ptrR[i] = true;
                             }
                             else if (Double.IsNaN(A) && Double.IsNaN(B))
-                            { 
-                                ptrR[i] = true; 
+                            {
+                                ptrR[i] = true;
                             }
                             else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            { 
+                            {
                                 ptrR[i] = false;
                             }
                             else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            { 
+                            {
                                 ptrR[i] = false;
                             }
                             else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            { 
-                                ptrR[i] = false; 
+                            {
+                                ptrR[i] = false;
                             }
                             else
-                            { 
+                            {
                                 var C = A;
                                 var D = B;
-                            
-                                ptrR[i] = (Math.Abs(C - D) <= atol); 
+
+                                ptrR[i] = (Math.Abs(C - D) <= atol);
                             }
                         }
 
@@ -873,24 +871,24 @@ namespace ISynergy.Framework.Mathematics
                             var B = b;
 
                             if (Double.IsNaN(A) && Double.IsNaN(B))
-                            { 
-                                ptrR[i] = true; 
+                            {
+                                ptrR[i] = true;
                             }
                             else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            { 
-                                ptrR[i] = false; 
+                            {
+                                ptrR[i] = false;
                             }
                             else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            { 
-                                ptrR[i] = false; 
+                            {
+                                ptrR[i] = false;
                             }
                             else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            { 
-                                ptrR[i] = false; 
+                            {
+                                ptrR[i] = false;
                             }
                             else
-                            { 
-                                ptrR[i] = (A == B); 
+                            {
+                                ptrR[i] = (A == B);
                             }
                         }
                     }
@@ -917,24 +915,24 @@ namespace ISynergy.Framework.Mathematics
                         var B = b;
 
                         if (A == B)
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else
                         {
@@ -943,19 +941,19 @@ namespace ISynergy.Framework.Mathematics
                             var delta = Math.Abs(C - D);
 
                             if (C == 0 && delta <= rtol)
-                            { 
-                                r[i][j] = true; 
+                            {
+                                r[i][j] = true;
                             }
                             else if (D == 0 && delta <= rtol)
-                            { 
-                                r[i][j] = true; 
+                            {
+                                r[i][j] = true;
                             }
                             else
-                            { 
-                                r[i][j] = (delta <= Math.Abs(C) * rtol); 
+                            {
+                                r[i][j] = (delta <= Math.Abs(C) * rtol);
                             }
                         }
-                        
+
                     }
             }
             else if (atol > 0)
@@ -967,23 +965,23 @@ namespace ISynergy.Framework.Mathematics
                         var B = b;
 
                         if (A == B)
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
+                        {
                             r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
+                        {
                             r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
+                        {
                             r[i][j] = false;
                         }
                         else
@@ -1004,24 +1002,24 @@ namespace ISynergy.Framework.Mathematics
                         var B = b;
 
                         if (Double.IsNaN(A) && Double.IsNaN(B))
-                        { 
-                            r[i][j] = true; 
+                        {
+                            r[i][j] = true;
                         }
                         else if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                        { 
-                            r[i][j] = false; 
+                        {
+                            r[i][j] = false;
                         }
                         else
-                        { 
-                            r[i][j] = (A == B); 
+                        {
+                            r[i][j] = (A == B);
                         }
                     }
             }

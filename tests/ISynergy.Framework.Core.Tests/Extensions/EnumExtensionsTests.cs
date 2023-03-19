@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod()]
         public void ToListTest()
         {
-            var list = typeof(TestEnum).ToList();
+            System.Collections.Generic.List<System.Enum> list = typeof(TestEnum).ToList();
             Assert.AreEqual(4, list.Count);
         }
     }

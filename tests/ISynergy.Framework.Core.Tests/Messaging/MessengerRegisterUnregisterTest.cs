@@ -53,8 +53,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestRegisterForGenericMessageBase()
         {
-            var testContentException = new InvalidOperationException();
-            var testContentDateTime = DateTime.Now;
+            InvalidOperationException testContentException = new();
+            DateTime testContentDateTime = DateTime.Now;
             const string testContentString = "abcd";
 
             MessageService.Reset();
@@ -65,7 +65,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 true,
                 m =>
                 {
-                    var exceptionMessage =
+                    TestMessageGeneric<Exception> exceptionMessage =
                         m as TestMessageGeneric<Exception>;
                     if (exceptionMessage is not null)
                     {
@@ -74,7 +74,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                         return;
                     }
 
-                    var dateTimeMessage =
+                    TestMessageGeneric<DateTime> dateTimeMessage =
                         m as TestMessageGeneric<DateTime>;
                     if (dateTimeMessage is not null)
                     {
@@ -83,7 +83,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                         return;
                     }
 
-                    var stringMessage = m as TestMessageGeneric<string>;
+                    TestMessageGeneric<string> stringMessage = m as TestMessageGeneric<string>;
                     if (stringMessage is not null)
                     {
                         ReceivedContentStringA1 = stringMessage.Content;
@@ -126,8 +126,8 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestRegisterForGenericMessageSpecific()
         {
-            var testContentException = new InvalidOperationException();
-            var testContentDateTime = DateTime.Now;
+            InvalidOperationException testContentException = new();
+            DateTime testContentDateTime = DateTime.Now;
             const string testContentString = "abcd";
 
             MessageService.Reset();
@@ -172,13 +172,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         [TestMethod]
         public void TestRegisterStrictAndNonStrictRecipients()
         {
-            var testContentDateTime = DateTime.Now;
+            DateTime testContentDateTime = DateTime.Now;
             const string testContentString = "abcd";
 
             MessageService.Reset();
             Reset();
 
-            var receivedMessages = 0;
+            int receivedMessages = 0;
 
             MessageService.Default.Register<TestMessageGenericBase>(
                 this,
@@ -187,7 +187,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 {
                     receivedMessages++;
 
-                    var dateTimeMessage =
+                    TestMessageGeneric<DateTime> dateTimeMessage =
                         m as TestMessageGeneric<DateTime>;
                     if (dateTimeMessage is not null)
                     {
@@ -196,7 +196,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                         return;
                     }
 
-                    var stringMessage = m as TestMessageGeneric<string>;
+                    TestMessageGeneric<string> stringMessage = m as TestMessageGeneric<string>;
                     if (stringMessage is not null)
                     {
                         ReceivedContentStringA1 = stringMessage.Content;
@@ -259,14 +259,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 true,
                 m =>
                 {
-                    var messageA = m as TestMessageA;
+                    TestMessageA messageA = m as TestMessageA;
                     if (messageA is not null)
                     {
                         ReceivedContentStringA1 = messageA.Content;
                         return;
                     }
 
-                    var messageB = m as TestMessageB;
+                    TestMessageB messageB = m as TestMessageB;
                     if (messageB is not null)
                     {
                         ReceivedContentStringB = messageB.Content;
@@ -309,13 +309,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests
                 true,
                 m =>
                 {
-                    var messageA = m;
+                    TestMessageA messageA = m;
                     if (messageA is not null)
                     {
                         ReceivedContentStringA1 = messageA.Content;
                     }
 
-                    var messageAa = m as TestMessageAa;
+                    TestMessageAa messageAa = m as TestMessageAa;
                     if (messageAa is not null)
                     {
                         ReceivedContentStringA2 = messageAa.Content;
@@ -358,7 +358,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         public void TestRegisterSimpleTypes()
         {
             const string testContentString = "abcd";
-            var testContentDateTime = DateTime.Now;
+            DateTime testContentDateTime = DateTime.Now;
             const int testContentInt = 42;
 
             MessageService.Reset();
@@ -370,19 +370,19 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             Assert.AreEqual(null, ReceivedContentStringA1);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
-            Assert.AreEqual(default(int), ReceivedContentInt);
+            Assert.AreEqual(default, ReceivedContentInt);
 
             MessageService.Default.Send(testContentString);
 
             Assert.AreEqual(testContentString, ReceivedContentStringA1);
             Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
-            Assert.AreEqual(default(int), ReceivedContentInt);
+            Assert.AreEqual(default, ReceivedContentInt);
 
             MessageService.Default.Send(testContentDateTime);
 
             Assert.AreEqual(testContentString, ReceivedContentStringA1);
             Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
-            Assert.AreEqual(default(int), ReceivedContentInt);
+            Assert.AreEqual(default, ReceivedContentInt);
 
             MessageService.Default.Send(testContentInt);
 
@@ -408,7 +408,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
             MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
-            var externalRecipient = new TestRecipient();
+            TestRecipient externalRecipient = new();
             externalRecipient.RegisterWith(MessageService.Default);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
@@ -467,7 +467,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
             MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
-            var externalRecipient = new TestRecipient();
+            TestRecipient externalRecipient = new();
             externalRecipient.RegisterWith(MessageService.Default);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
@@ -526,7 +526,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Default.Register<TestMessageA>(this, m => ReceivedContentStringA2 = m.Content);
             MessageService.Default.Register<TestMessageB>(this, m => ReceivedContentStringB = m.Content);
 
-            var externalRecipient = new TestRecipient();
+            TestRecipient externalRecipient = new();
             externalRecipient.RegisterWith(MessageService.Default);
 
             Assert.AreEqual(null, ReceivedContentStringA1);
@@ -708,7 +708,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             ReceivedContentStringA1 = null;
             ReceivedContentStringA2 = null;
             ReceivedContentStringB = null;
-            ReceivedContentInt = default(int);
+            ReceivedContentInt = default;
 
             ReceivedContentDateTime1 = DateTime.MinValue;
             ReceivedContentDateTime2 = DateTime.MinValue;

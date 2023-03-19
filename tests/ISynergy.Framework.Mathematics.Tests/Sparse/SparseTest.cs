@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void SetTest()
         {
-            var s = new Sparse<double>();
+            Sparse<double> s = new();
             s[0] = 1;
             s[99] = 99;
             s[10] = 42;

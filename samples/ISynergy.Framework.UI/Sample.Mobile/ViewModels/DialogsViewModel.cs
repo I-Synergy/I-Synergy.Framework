@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -8,6 +7,7 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
+using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels
 {
@@ -54,12 +54,12 @@ namespace Sample.ViewModels
         /// Gets or sets the selected test items.
         /// </summary>
         /// <value>The selected test items.</value>
-        public ObservableConcurrentCollection<TestItem> SelectedTestItems { get; set; }
+        public ObservableCollection<TestItem> SelectedTestItems { get; set; }
 
         /// <summary>
         /// Gets or sets the items.
         /// </summary>
-        public ObservableConcurrentCollection<TestItem> Items { get; set; }
+        public ObservableCollection<TestItem> Items { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoViewModel"/> class.
@@ -80,7 +80,7 @@ namespace Sample.ViewModels
             ShowDialogOkCancel = new AsyncRelayCommand(async () => await ShowDialogAsync(MessageBoxButton.OKCancel));
             ShowNoteDialog = new AsyncRelayCommand(ShowNoteDialogAsync);
 
-            Items = new ObservableConcurrentCollection<TestItem>()
+            Items = new ObservableCollection<TestItem>()
             {
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},
@@ -102,7 +102,7 @@ namespace Sample.ViewModels
 
         private async Task ShowNoteDialogAsync()
         {
-            var vm = new NoteViewModel(Context, BaseCommonServices, Logger, "Lorem ipsum dolor sit amet");
+            NoteViewModel vm = new(Context, BaseCommonServices, Logger, "Lorem ipsum dolor sit amet");
             vm.Submitted += Vm_Submitted;
             await BaseCommonServices.DialogService.ShowDialogAsync(typeof(INoteWindow), vm);
         }
@@ -132,7 +132,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         private Task SelectMultipleAsync()
         {
-            var selectionVm = new ViewModelSelectionDialog(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
+            ViewModelSelectionDialog selectionVm = new(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
         }
@@ -143,7 +143,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         private Task SelectSingleAsync()
         {
-            var selectionVm = new ViewModelSelectionDialog(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
+            ViewModelSelectionDialog selectionVm = new(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
         }
@@ -158,7 +158,7 @@ namespace Sample.ViewModels
             if (sender is ViewModelSelectionBlade vm)
                 vm.Submitted -= SelectionVm_MultipleSubmitted;
 
-            SelectedTestItems = new ObservableConcurrentCollection<TestItem>(e.Result.Cast<TestItem>());
+            SelectedTestItems = new ObservableCollection<TestItem>(e.Result.Cast<TestItem>());
 
             await BaseCommonServices.DialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Cast<TestItem>().Select(s => s.Description))} selected.");
         }

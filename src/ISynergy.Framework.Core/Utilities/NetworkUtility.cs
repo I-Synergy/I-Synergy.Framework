@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Core.Utilities
         /// <returns><c>true</c> if [is valid ip] [the specified test address]; otherwise, <c>false</c>.</returns>
         public static bool IsValidIP(string TestAddress)
         {
-            return Regex.Match(TestAddress, "^(0[0-7]{10,11}|0(x|X)[0-9a-fA-F]{8}|(\\b4\\d{8}[0-5]\\b|\\b[1-3]?\\d{8}\\d?\\b)|((2[0-5][0-5]|1\\d{2}|[1-9]\\d?)|(0(x|X)[0-9a-fA-F]{2})|(0[0-7]{3}))(\\.((2[0-5][0-5]|1\\d{2}|\\d\\d?)|(0(x|X)[0-9a-fA-F]{2})|(0[0-7]{3}))){3})$").Success;
+            return Regex.Match(TestAddress, "^(0[0-7]{10,11}|0(x|X)[0-9a-fA-F]{8}|(\\b4\\d{8}[0-5]\\b|\\b[1-3]?\\d{8}\\d?\\b)|((2[0-5][0-5]|1\\d{2}|[1-9]\\d?)|(0(x|X)[0-9a-fA-F]{2})|(0[0-7]{3}))(\\.((2[0-5][0-5]|1\\d{2}|\\d\\d?)|(0(x|X)[0-9a-fA-F]{2})|(0[0-7]{3}))){3})$", RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace ISynergy.Framework.Core.Utilities
         /// <returns><c>true</c> if [is valid domain] [the specified string domain]; otherwise, <c>false</c>.</returns>
         public static bool IsValidDomain(string strDomain)
         {
-            return Regex.Match(strDomain, DomainRegEx).Success;
+            return Regex.Match(strDomain, DomainRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace ISynergy.Framework.Core.Utilities
         /// <returns><c>true</c> if [is valid URL] [the specified string URL]; otherwise, <c>false</c>.</returns>
         public static bool IsValidURL(string strURL)
         {
-            return Regex.Match(strURL, URLRegEx).Success;
+            return Regex.Match(strURL, URLRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Core.Utilities
         /// <returns><c>true</c> if [is valid e mail] [the specified string mail address]; otherwise, <c>false</c>.</returns>
         public static bool IsValidEMail(string strMailAddress)
         {
-            return Regex.Match(strMailAddress, MailRegEx).Success;
+            return Regex.Match(strMailAddress, MailRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
         }
 
         /// <summary>

@@ -16,16 +16,16 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             MessageService.Reset();
 
-            var token1 = new object();
-            var token2 = new object();
+            object token1 = new();
+            object token2 = new();
 
             MessageService.Default.Register<string>(this, m => receivedContent1 = m);
             MessageService.Default.Register<string>(this, token1, m => receivedContent2 = m);
             MessageService.Default.Register<string>(this, token2, m => receivedContent3 = m);
 
-            var message1 = "Hello world";
-            var message2 = "And again";
-            var message3 = "Third one";
+            string message1 = "Hello world";
+            string message2 = "And again";
+            string message3 = "Third one";
 
             MessageService.Default.Send(message1, token1);
 
@@ -55,14 +55,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             MessageService.Reset();
 
-            var token1 = new object();
-            var token2 = new object();
+            object token1 = new();
+            object token2 = new();
 
             MessageService.Default.Register<Exception>(this, true, m => receivedContent1 = m);
             MessageService.Default.Register<Exception>(this, token1, true, m => receivedContent2 = m);
             MessageService.Default.Register<Exception>(this, token2, true, m => receivedContent3 = m);
 
-            var message = new InvalidOperationException();
+            InvalidOperationException message = new();
 
             MessageService.Default.Send(message, token1);
 
@@ -80,14 +80,14 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             MessageService.Reset();
 
-            var token1 = 123;
-            var token2 = 456;
+            int token1 = 123;
+            int token2 = 456;
 
             MessageService.Default.Register<InvalidOperationException>(this, m => receivedContent1 = m);
             MessageService.Default.Register<InvalidOperationException>(this, token1, m => receivedContent2 = m);
             MessageService.Default.Register<InvalidOperationException>(this, token2, m => receivedContent3 = m);
 
-            var message = new InvalidOperationException();
+            InvalidOperationException message = new();
 
             MessageService.Default.Send(message, token1);
 
@@ -104,7 +104,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             MessageService.Reset();
 
-            var token1 = new object();
+            object token1 = new();
 
             MessageService.Default.Register<string>(
                 this,

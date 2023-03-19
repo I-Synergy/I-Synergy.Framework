@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Attributes;
-using System;
 using System.Reflection;
 
 namespace ISynergy.Framework.Physics.Extensions

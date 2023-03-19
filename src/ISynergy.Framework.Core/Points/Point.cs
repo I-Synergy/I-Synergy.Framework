@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace ISynergy.Framework.Core.Points
 {
@@ -45,7 +44,7 @@ namespace ISynergy.Framework.Core.Points
         /// 
         public Point(double x, double y, bool round = false, int decimals = 0)
         {
-            if(round)
+            if (round)
             {
                 X = Math.Round(x, decimals);
                 Y = Math.Round(y, decimals);

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Automations.Actions;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Abstractions
 {

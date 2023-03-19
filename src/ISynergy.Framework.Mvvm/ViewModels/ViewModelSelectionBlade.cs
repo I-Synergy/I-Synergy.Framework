@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -8,6 +7,7 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -44,9 +44,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Item property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableConcurrentCollection<object> Items
+        public ObservableCollection<object> Items
         {
-            get { return GetValue<ObservableConcurrentCollection<object>>(); }
+            get { return GetValue<ObservableCollection<object>>(); }
             set { SetValue(value); }
         }
 
@@ -108,7 +108,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
 
             Refresh_Command = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
             RawItems = items;
-            Items = new ObservableConcurrentCollection<object>(items);
+            Items = new ObservableCollection<object>(items);
             SelectedItems = new List<object>(selectedItems);
             IsInitialized = true;
         }
@@ -121,7 +121,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         {
             if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
             {
-                Items = new ObservableConcurrentCollection<object>(RawItems);
+                Items = new ObservableCollection<object>(RawItems);
             }
             else
             {
@@ -139,7 +139,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                     }
                 }
 
-                Items = new ObservableConcurrentCollection<object>(filteredList);
+                Items = new ObservableCollection<object>(filteredList);
             }
 
             return Task.CompletedTask;

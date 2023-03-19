@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using System;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained

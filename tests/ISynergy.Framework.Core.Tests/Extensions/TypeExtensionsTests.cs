@@ -1,6 +1,6 @@
-﻿using System;
-using ISynergy.Framework.Core.Data.Tests.TestClasses;
+﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Core.Utilities.Tests
 {
@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Core.Utilities.Tests
         [DataRow(typeof(Product))]
         public void BasicTypeActivatorTest(Type type)
         {
-            var result = TypeActivator.CreateInstance(type);
+            object result = TypeActivator.CreateInstance(type);
             Assert.IsNotNull(result);
         }
 

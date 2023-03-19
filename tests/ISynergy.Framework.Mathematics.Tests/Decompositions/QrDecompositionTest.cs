@@ -13,7 +13,7 @@
         {
             int n = 5;
 
-            var I = Matrix.Identity(n);
+            double[,] I = Matrix.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -21,10 +21,10 @@
                 {
                     double[,] value = Matrix.Magic(n);
 
-                    var target = new QrDecomposition(value);
-                    var solution = target.Solve(I);
-                    var inverse = target.Inverse();
-                    var reverse = target.Reverse();
+                    QrDecomposition target = new(value);
+                    double[,] solution = target.Solve(I);
+                    double[,] inverse = target.Inverse();
+                    double[,] reverse = target.Reverse();
 
                     Assert.IsTrue(Matrix.IsEqual(solution, inverse, 1e-4));
                     Assert.IsTrue(Matrix.IsEqual(value, reverse, 1e-4));
@@ -37,7 +37,7 @@
         {
             int n = 5;
 
-            var I = Matrix.Identity(n);
+            double[,] I = Matrix.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -47,9 +47,9 @@
 
                     value[i, j] = double.NaN;
 
-                    var target = new QrDecomposition(value);
-                    var solution = target.Solve(I);
-                    var inverse = target.Inverse();
+                    QrDecomposition target = new(value);
+                    double[,] solution = target.Solve(I);
+                    double[,] inverse = target.Inverse();
 
                     Assert.IsTrue(Matrix.IsEqual(solution, inverse));
                 }
@@ -67,11 +67,11 @@
             };
 
 
-            var target = new QrDecomposition(value);
+            QrDecomposition target = new(value);
 
             // Decomposition Identity
-            var Q = target.OrthogonalFactor;
-            var QQt = Q.DotWithTransposed(Q);
+            double[,] Q = target.OrthogonalFactor;
+            double[,] QQt = Q.DotWithTransposed(Q);
             Assert.IsTrue(Matrix.IsEqual(QQt, Matrix.Identity(3), 1e-6));
             Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-6));
 
@@ -94,14 +94,14 @@
                {  0, -1,  2 }
             };
 
-            var target = new QrDecomposition(value);
+            QrDecomposition target = new(value);
 
             // Decomposition Identity
-            var Q1 = target.OrthogonalFactor;
-            var Q2 = target.OrthogonalFactor;
+            double[,] Q1 = target.OrthogonalFactor;
+            double[,] Q2 = target.OrthogonalFactor;
 
-            var utf1 = target.UpperTriangularFactor;
-            var utf2 = target.UpperTriangularFactor;
+            double[,] utf1 = target.UpperTriangularFactor;
+            double[,] utf2 = target.UpperTriangularFactor;
 
             Assert.AreSame(Q1, Q2);
             Assert.AreSame(utf1, utf2);
@@ -126,7 +126,7 @@
             };
 
 
-            var target = new QrDecomposition(value);
+            QrDecomposition target = new(value);
 
             double[,] actual = target.Inverse();
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
@@ -150,7 +150,7 @@
 
             double[] expected = { 2.5000, 4.0000, 3.5000 };
 
-            QrDecomposition target = new QrDecomposition(value);
+            QrDecomposition target = new(value);
             double[] actual = target.Solve(b);
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
@@ -174,12 +174,12 @@
 
             // Matrices
             {
-                double[,] b = 
+                double[,] b =
                 {
                     { 4 },
                     { 1 },
                     { 0 },
-                    { 0 }, 
+                    { 0 },
                     { 2 },
                     { 5 },
                 };
@@ -191,14 +191,14 @@
                     { 0.0153  },
                 };
 
-                var target = new QrDecomposition(value);
+                QrDecomposition target = new(value);
                 double[,] actual = target.Solve(b);
 
                 Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
                 Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-6));
 
 
-                var target2 = new JaggedQrDecomposition(value.ToJagged());
+                JaggedQrDecomposition target2 = new(value.ToJagged());
                 double[][] actual2 = target2.Solve(b.ToJagged());
 
                 Assert.IsTrue(Matrix.IsEqual(expected, actual2, atol: 1e-4));
@@ -210,7 +210,7 @@
                 double[] b = { 4, 1, 0, 0, 2, 5 };
                 double[] expected = { 3.9286, -0.5031, 0.0153 };
 
-                var target = new QrDecomposition(value);
+                QrDecomposition target = new(value);
                 double[] actual = target.Solve(b);
 
                 Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
@@ -221,7 +221,7 @@
         [TestMethod]
         public void SolveTransposeTest()
         {
-            double[,] a = 
+            double[,] a =
             {
                 { 2, 1, 4 },
                 { 6, 2, 2 },
@@ -242,7 +242,7 @@
                  { 0.8063,   -0.2188,    0.2875 },
             };
 
-            var target = new QrDecomposition(b, true);
+            QrDecomposition target = new(b, true);
             double[,] actual = target.SolveTranspose(a);
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
             Assert.IsTrue(Matrix.IsEqual(b.Transpose(), target.Reverse(), 1e-6));

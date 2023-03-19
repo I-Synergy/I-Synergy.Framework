@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using ISynergy.Framework.Mathematics.Random;
 
     [TestClass]
     public class BoundedBroydenFletcherGoldfarbShannoTest
@@ -21,7 +21,7 @@
             int n = 2; // number of variables
             double[] initial = { -1.2, 1 };
 
-            var lbfgs = new BoundedBroydenFletcherGoldfarbShanno(n, f, g);
+            BoundedBroydenFletcherGoldfarbShanno lbfgs = new(n, f, g);
             lbfgs.GradientTolerance = 1e-10;
             lbfgs.FunctionTolerance = 1e-10;
 
@@ -69,7 +69,7 @@
             //   g(x,y)  =  { del f / del x, del f / del y }
             // 
 
-            Func<double[], double[]> g = (x) => new double[] 
+            Func<double[], double[]> g = (x) => new double[]
             {
                 // df/dx = {-2 e^(-    (x-1)^2) (x-1)}
                 2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
@@ -79,7 +79,7 @@
             };
 
             // Finally, we can create the L-BFGS solver, passing the functions as arguments
-            var lbfgs = new BoundedBroydenFletcherGoldfarbShanno(numberOfVariables: 2, function: f, gradient: g);
+            BoundedBroydenFletcherGoldfarbShanno lbfgs = new(numberOfVariables: 2, function: f, gradient: g);
 
             // And then minimize the function:
             Assert.IsTrue(lbfgs.Minimize());
@@ -125,7 +125,7 @@
             // min f(x, y) = -exp(-(x-1)^2) - exp(-0.5*(y-2)^2)
             f = (x) => -Math.Exp(-Math.Pow(x[0] - 1, 2)) - Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2));
 
-            g = (x) => new[] 
+            g = (x) => new[]
             {
                 2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
                 Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2)) * (x[1] - 2)
@@ -135,7 +135,7 @@
         [TestMethod]
         public void NoFunctionTest()
         {
-            var target = new BoundedBroydenFletcherGoldfarbShanno(2);
+            BoundedBroydenFletcherGoldfarbShanno target = new(2);
 
             Assert.ThrowsException<InvalidOperationException>(() => target.Minimize(), "");
         }
@@ -143,7 +143,7 @@
         [TestMethod]
         public void NoGradientTest()
         {
-            var target = new BoundedBroydenFletcherGoldfarbShanno(2)
+            BoundedBroydenFletcherGoldfarbShanno target = new(2)
             {
                 Function = (x) => 0.0
             };
@@ -156,7 +156,7 @@
         [TestMethod]
         public void WrongGradientSizeTest()
         {
-            var target = new BoundedBroydenFletcherGoldfarbShanno(2)
+            BoundedBroydenFletcherGoldfarbShanno target = new(2)
             {
                 Function = (x) => 0.0,
                 Gradient = (x) => new double[1]
@@ -168,7 +168,7 @@
         [TestMethod]
         public void MutableGradientSizeTest()
         {
-            var target = new BoundedBroydenFletcherGoldfarbShanno(2)
+            BoundedBroydenFletcherGoldfarbShanno target = new(2)
             {
                 Function = (x) => 0.0,
                 Gradient = (x) => x
@@ -185,7 +185,7 @@
 
             Func<double[], double[]> gradient = x => new[] { 20 * (x[0] + 1), 2 * x[1] };
 
-            var target = new BoundedBroydenFletcherGoldfarbShanno(2)
+            BoundedBroydenFletcherGoldfarbShanno target = new(2)
             {
                 Function = function,
                 Gradient = gradient
@@ -205,7 +205,7 @@
             Assert.AreEqual(expectedMinimum, minimum);
         }
 
-     
+
 
 
         [TestMethod]
@@ -223,7 +223,7 @@
             {
                 double[] start = Vector.Random(2, -1.0, 1.0);
 
-                var lbfgs = new BoundedBroydenFletcherGoldfarbShanno(numberOfVariables: 2,
+                BoundedBroydenFletcherGoldfarbShanno lbfgs = new(numberOfVariables: 2,
                     function: f, gradient: g);
 
                 lbfgs.FunctionTolerance = 1e3;
@@ -246,7 +246,7 @@
             f = (x) =>
                            -Math.Exp(-Math.Pow(x[0] - 1, 2)) - Math.Exp(-0.5 * Math.Pow(x[1] - 2, 2));
 
-            g = (x) => new double[] 
+            g = (x) => new double[]
             {
                 // df/dx = {-2 e^(-    (x-1)^2) (x-1)}
                 2 * Math.Exp(-Math.Pow(x[0] - 1, 2)) * (x[0] - 1),
@@ -256,7 +256,7 @@
             };
         }
 
-        
+
 
     }
 }
