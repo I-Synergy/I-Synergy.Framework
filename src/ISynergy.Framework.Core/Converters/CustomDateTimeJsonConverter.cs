@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Converters
@@ -7,7 +6,7 @@ namespace ISynergy.Framework.Core.Converters
     public class CustomDateTimeJsonConverter : JsonConverter<DateTime>
     {
         private readonly string Format;
-        
+
         public CustomDateTimeJsonConverter(string format)
         {
             Format = format;

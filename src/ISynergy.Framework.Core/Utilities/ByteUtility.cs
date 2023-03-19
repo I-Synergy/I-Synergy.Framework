@@ -19,7 +19,7 @@ namespace ISynergy.Framework.Core.Utilities
             var result = new StringBuilder(input);
             var byteNum = 0;
             var charPos = start;
-            
+
             for (var i = 0; i < bytes.LongLength; i++)
             {
                 var temp = string.Format("{0:x2}", bytes[byteNum++]);

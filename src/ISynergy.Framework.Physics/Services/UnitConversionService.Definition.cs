@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Enumerations;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Physics.Services
 {

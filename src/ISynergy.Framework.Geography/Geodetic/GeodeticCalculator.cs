@@ -1,5 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Global;
 

@@ -27,7 +27,6 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using System;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained

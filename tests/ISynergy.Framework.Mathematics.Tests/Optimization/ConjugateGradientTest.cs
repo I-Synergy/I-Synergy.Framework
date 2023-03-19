@@ -20,7 +20,7 @@
             int n = 2; // number of variables
             double[] initial = { -1.2, 1 };
 
-            ConjugateGradient cg = new ConjugateGradient(n, f, g);
+            ConjugateGradient cg = new(n, f, g);
             cg.Method = ConjugateGradientMethod.FletcherReeves;
 
             Assert.IsTrue(cg.Minimize(initial));
@@ -61,7 +61,7 @@
             int n = 2; // number of variables
             double[] initial = { -1.2, 1 };
 
-            ConjugateGradient cg = new ConjugateGradient(n, f, g);
+            ConjugateGradient cg = new(n, f, g);
             cg.Method = ConjugateGradientMethod.PolakRibiere;
 
             Assert.IsTrue(cg.Minimize(initial));
@@ -102,7 +102,7 @@
             int n = 2; // number of variables
             double[] initial = { -1.2, 1 };
 
-            ConjugateGradient cg = new ConjugateGradient(n, f, g);
+            ConjugateGradient cg = new(n, f, g);
             cg.Method = ConjugateGradientMethod.PositivePolakRibiere;
 
             Assert.IsTrue(cg.Minimize(initial));

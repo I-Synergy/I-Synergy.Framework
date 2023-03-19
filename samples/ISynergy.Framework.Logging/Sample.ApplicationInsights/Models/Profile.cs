@@ -53,13 +53,13 @@ namespace Sample.ApplicationInsights.Models
         /// Gets the roles.
         /// </summary>
         /// <value>The roles.</value>
-        public List<string> Roles => new List<string>();
+        public List<string> Roles => new();
 
         /// <summary>
         /// Gets the modules.
         /// </summary>
         /// <value>The modules.</value>
-        public List<string> Modules => new List<string>();
+        public List<string> Modules => new();
 
         /// <summary>
         /// Gets the license expration.

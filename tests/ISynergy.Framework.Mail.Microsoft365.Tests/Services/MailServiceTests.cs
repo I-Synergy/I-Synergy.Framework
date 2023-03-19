@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Mail.Services.Tests
 
         public MailServiceTests()
         {
-            var configMock = new Mock<MailOptions>();
+            Mock<MailOptions> configMock = new();
             _mailOptions = configMock.Object;
             _mailOptions.ClientId = "";
             _mailOptions.ClientSecret = "";
@@ -28,8 +28,8 @@ namespace ISynergy.Framework.Mail.Services.Tests
         [TestMethod()]
         public async Task SendEmailAsyncTest()
         {
-            var service = new MailService(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
-            var message = new MailMessage(
+            MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
+            MailMessage message = new(
                 new List<string> { "ismail.hassani@i-synergy.nl" },
                 "Test subject",
                 "Test body",
@@ -42,8 +42,8 @@ namespace ISynergy.Framework.Mail.Services.Tests
         [TestMethod()]
         public async Task SendEmailWithCopyAsyncTest()
         {
-            var service = new MailService(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
-            var message = new MailMessage(
+            MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
+            MailMessage message = new(
                 new List<string> { "ismail.hassani@i-synergy.nl" },
                 "Test subject",
                 "Test body",
@@ -56,8 +56,8 @@ namespace ISynergy.Framework.Mail.Services.Tests
         [TestMethod()]
         public async Task SendEmailWithFromAsyncTest()
         {
-            var service = new MailService(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
-            var message = new MailMessage(
+            MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
+            MailMessage message = new(
                 "info@i-synergy.nl",
                 new List<string> { "support@i-synergy.nl" },
                 "Test subject",
@@ -71,8 +71,8 @@ namespace ISynergy.Framework.Mail.Services.Tests
         [TestMethod()]
         public async Task SendEmailWithFromAndCopyAsyncTest()
         {
-            var service = new MailService(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
-            var message = new MailMessage(
+            MailService service = new(OptionsX.Create(_mailOptions), new LoggerFactory().CreateLogger<MailServiceTests>());
+            MailMessage message = new(
                 "info@i-synergy.nl",
                 new List<string> { "support@i-synergy.nl" },
                 "Test subject",

@@ -25,14 +25,14 @@ namespace Sample.Storage.Azure
         {
             Console.WriteLine("Azure implementation started...");
 
-            var fileName = Randomize();
+            string fileName = Randomize();
 
             Console.WriteLine("Upload started...");
-            var url = await UploadAsync(fileName).ConfigureAwait(false);
+            Uri url = await UploadAsync(fileName).ConfigureAwait(false);
             Console.WriteLine($"Upload completed to {url}.");
 
             Console.WriteLine("Download started...");
-            var fileBytes = await DownloadAsync(fileName).ConfigureAwait(false);
+            byte[] fileBytes = await DownloadAsync(fileName).ConfigureAwait(false);
 
             if (fileBytes is not null)
             {
@@ -60,10 +60,10 @@ namespace Sample.Storage.Azure
 
         public async Task<Uri> UploadAsync(string fileName)
         {
-            var path = CreateTempFile();
+            string path = CreateTempFile();
 
             // Open the file and upload its data
-            var file = await File.ReadAllBytesAsync(path);
+            byte[] file = await File.ReadAllBytesAsync(path);
 
             return await _storageService.UploadFileAsync(file, "text/plain", fileName, "");
         }

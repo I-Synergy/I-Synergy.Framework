@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.UI.Xaml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -170,7 +169,7 @@ namespace ISynergy.Framework.UI.Hosting
             CreateServiceProvider();
 
             var host = _appServices.GetRequiredService<IHost>();
-            
+
             if (diagnosticListener.IsEnabled() && diagnosticListener.IsEnabled(HOST_BUILT_EVENT_NAME))
                 Write(diagnosticListener, HOST_BUILT_EVENT_NAME, host);
 

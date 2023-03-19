@@ -1,12 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Logging.ApplicationInsights.Options;
 using ISynergy.Framework.Logging.Base;
 using ISynergy.Framework.Logging.Extensions;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -105,7 +103,7 @@ namespace ISynergy.Framework.Logging.Services
         public void Flush()
         {
             SetUserProfile();
-            
+
             _client.Flush();
 
             // Explicitly call Flush() followed by Delay, as required in console apps.
@@ -118,7 +116,7 @@ namespace ISynergy.Framework.Logging.Services
             base.Log(logLevel, eventId, state, exception, formatter);
 
             var message = formatter(state, exception);
-            
+
             SetUserProfile();
 
             var metrics = GetMetrics();

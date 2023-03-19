@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Projection;
-using System;
 using System.Globalization;
 
 namespace ISynergy.Framework.Geography.Utm

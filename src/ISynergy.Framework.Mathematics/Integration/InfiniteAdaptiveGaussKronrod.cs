@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Integration.Base;
-using System;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Integration

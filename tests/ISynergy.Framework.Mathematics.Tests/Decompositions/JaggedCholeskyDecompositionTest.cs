@@ -14,7 +14,7 @@
         {
             int n = 5;
 
-            var I = Jagged.Identity(n);
+            double[][] I = Jagged.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -32,7 +32,7 @@
 
                     bool thrown = false;
 
-                    var target = new JaggedCholeskyDecomposition(value);
+                    JaggedCholeskyDecomposition target = new(value);
 
                     try
                     {
@@ -68,7 +68,7 @@
             };
 
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged());
+            JaggedCholeskyDecomposition chol = new(value.ToJagged());
             double[][] L = chol.LeftTriangularFactor;
 
             Assert.IsTrue(Matrix.IsEqual(L, expected, 0.0001));
@@ -92,7 +92,7 @@
                {  0, -1,  2 }
             };
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged());
+            JaggedCholeskyDecomposition chol = new(value.ToJagged());
             double[][] L = chol.LeftTriangularFactor;
 
             double[][] B = Jagged.ColumnVector(new double[] { 1, 2, 3 });
@@ -120,7 +120,7 @@
                {  0, -1,  2 }
             };
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged());
+            JaggedCholeskyDecomposition chol = new(value.ToJagged());
             double[][] L = chol.LeftTriangularFactor;
 
             double[] B = new double[] { 1, 2, 3 };
@@ -148,17 +148,17 @@
                {  6, -2,  0,  0 },
             };
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged(), true);
+            JaggedCholeskyDecomposition chol = new(value.ToJagged(), true);
             double[][] L = chol.LeftTriangularFactor;
 
             double[][] B = Jagged.Identity(4);
 
-            double[,] expected = 
+            double[,] expected =
             {
                 { 0.4000,    1.2000,    1.4000,   -0.5000 },
                 { 1.2000,    3.6000,    4.2000,   -2.0000 },
                 { 1.4000,    4.2000,    5.4000,   -2.5000 },
-                { -0.5000,  -2.0000,   -2.5000,    1.0000 }, 
+                { -0.5000,  -2.0000,   -2.5000,    1.0000 },
             };
             double[][] actual = chol.Solve(B);
 
@@ -178,7 +178,7 @@
                {  6, -2,  0,  0 },
             };
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged(), true);
+            JaggedCholeskyDecomposition chol = new(value.ToJagged(), true);
             double[][] L = chol.LeftTriangularFactor;
 
             double[] B = new double[] { 1, 2, 3, 4 };
@@ -200,7 +200,7 @@
                {  6, -2,  0,  0 },
             };
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged(), true);
+            JaggedCholeskyDecomposition chol = new(value.ToJagged(), true);
             double[][] L = chol.LeftTriangularFactor;
 
             double[][] expected = Matrix.Inverse(value.ToJagged());
@@ -237,7 +237,7 @@
 
 
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged(), true);
+            JaggedCholeskyDecomposition chol = new(value.ToJagged(), true);
             double[][] L = chol.LeftTriangularFactor;
             double[][] D = chol.DiagonalMatrix;
             Assert.IsTrue(Matrix.IsEqual(L, expected, 0.001));
@@ -278,7 +278,7 @@
                 {      0,         0,         0,    1.0000 },
             };
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged(), true);
+            JaggedCholeskyDecomposition chol = new(value.ToJagged(), true);
             double[][] L = chol.LeftTriangularFactor;
             double[][] D = chol.DiagonalMatrix;
             Assert.IsTrue(Matrix.IsEqual(L, expected, 0.001));
@@ -313,7 +313,7 @@
             };
 
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged(), robust: false, valueType: MatrixType.LowerTriangular);
+            JaggedCholeskyDecomposition chol = new(value.ToJagged(), robust: false, valueType: MatrixType.LowerTriangular);
             double[][] L = chol.LeftTriangularFactor;
 
             Assert.IsTrue(Matrix.IsEqual(L, expected, 1e-4));
@@ -346,7 +346,7 @@
         [TestMethod]
         public void LogDeterminantTest()
         {
-            var chol = new JaggedCholeskyDecomposition(bigmatrix.ToJagged());
+            JaggedCholeskyDecomposition chol = new(bigmatrix.ToJagged());
             Assert.AreEqual(0.0, chol.Determinant);
             Assert.AreEqual(-2224.8931093738875, chol.LogDeterminant, 1e-10);
             Assert.IsTrue(chol.IsPositiveDefinite);
@@ -366,7 +366,7 @@
                {  1, -2,  1,  7 },
             };
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged());
+            JaggedCholeskyDecomposition chol = new(value.ToJagged());
             Assert.AreEqual(2232, chol.Determinant, 1e-12);
             Assert.IsTrue(chol.Nonsingular);
             //Assert.IsTrue(chol.Symmetric);
@@ -383,7 +383,7 @@
                {  1, -2,  1,  7 },
             };
 
-            var chol = new JaggedCholeskyDecomposition(value.ToJagged());
+            JaggedCholeskyDecomposition chol = new(value.ToJagged());
             Assert.AreEqual(2232, chol.Determinant, 1e-12);
 
             double expected = System.Math.Log(2232);

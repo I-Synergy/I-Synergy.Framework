@@ -15,7 +15,7 @@
             return new FileStream(fileName, FileMode.Open, FileAccess.Read);
         }
 
-      
+
         [TestMethod]
         public void matrix_test_int32()
         {
@@ -30,7 +30,7 @@
             string pathInt32 = Path.Combine(localPath, "int32.mat");
 
             // Create a .MAT reader for the file:
-            var reader = new MatReader(pathInt32);
+            MatReader reader = new(pathInt32);
 
             // Let's check what is the name of the variable we need to load:
             string[] names = reader.FieldNames; // should be { "a" }
@@ -73,7 +73,7 @@
             string pathInt8 = Path.Combine(localPath, "int8.mat");
 
             // Create a .MAT reader for the file:
-            var reader = new MatReader(pathInt8);
+            MatReader reader = new(pathInt8);
 
             // The variable in the file is called "arr"
             sbyte[,] matrix = reader.Read<sbyte[,]>("arr");
@@ -107,7 +107,7 @@
             string fileName = Path.Combine(localPath, "simplestruct.mat");
 
             // Create a .MAT reader for the file:
-            var reader = new MatReader(fileName);
+            MatReader reader = new(fileName);
 
             // We can extract some basic information about the file:
             string description = reader.Description; // "MATLAB 5.0 MAT-file, Platform: PCWIN"
@@ -115,24 +115,24 @@
             bool bigEndian = reader.BigEndian;   // false
 
             // Enumerate the fields in the file
-            foreach (var field in reader.Fields)
+            foreach (System.Collections.Generic.KeyValuePair<string, MatNode> field in reader.Fields)
                 Console.WriteLine(field.Key); // "structure"
 
             // We have the single following field
-            var structure = reader["structure"];
+            MatNode structure = reader["structure"];
 
             // Enumerate the fields in the structure
-            foreach (var field in structure.Fields)
+            foreach (System.Collections.Generic.KeyValuePair<string, MatNode> field in structure.Fields)
                 Console.WriteLine(field.Key); // "a", "string"
 
             // Check the type for the field "a"
-            var aType = structure["a"].ValueType; // byte[,]
+            Type aType = structure["a"].ValueType; // byte[,]
 
             // Retrieve the field "a" from the file
-            var a = structure["a"].GetValue<byte[,]>();
+            byte[,] a = structure["a"].GetValue<byte[,]>();
 
             // We can also do directly if we know the type in advance
-            var s = reader["structure"]["string"].GetValue<string>();
+            string s = reader["structure"]["string"].GetValue<string>();
             #endregion
 
             Assert.AreEqual(typeof(byte[,]), aType);
@@ -162,8 +162,8 @@
         [TestMethod]
         public void readInt8()
         {
-            var file = GetMat("int8.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("int8.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Wed Jun 27 17:40:39 2007",
@@ -172,10 +172,10 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["arr"];
-            var value = node.Value as sbyte[,];
+            MatNode node = reader["arr"];
+            sbyte[,] value = node.Value as sbyte[,];
 
-            sbyte[,] expected = 
+            sbyte[,] expected =
             {
                 { -128, 127 },
             };
@@ -186,8 +186,8 @@
         [TestMethod]
         public void readInt32()
         {
-            var file = GetMat("int32.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("int32.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Tue Dec 04 11:46:17 2012",
@@ -196,10 +196,10 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["a"];
-            var value = node.Value as int[,];
+            MatNode node = reader["a"];
+            int[,] value = node.Value as int[,];
 
-            int[,] expected = 
+            int[,] expected =
             {
                 { 1, 2, 3, 4 },
             };
@@ -210,8 +210,8 @@
         [TestMethod]
         public void readInt64()
         {
-            var file = GetMat("int64.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("int64.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Wed Jun 27 17:41:23 2007",
@@ -220,10 +220,10 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["arr"];
-            var value = node.Value as long[,];
+            MatNode node = reader["arr"];
+            long[,] value = node.Value as long[,];
 
-            System.Int64[,] expected = 
+            System.Int64[,] expected =
             {
                 { 0, -1 },
             };
@@ -234,8 +234,8 @@
         [TestMethod]
         public void readInt64_2()
         {
-            var file = GetMat("a64.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("a64.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, written by Octave 3.8.1, 2014-07-14 10:52:44 UTC",
@@ -244,10 +244,10 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["A64"];
-            var value = node.Value as long[,];
+            MatNode node = reader["A64"];
+            long[,] value = node.Value as long[,];
 
-            long[,] expected = 
+            long[,] expected =
             {
                {  -83,  -91,  -92,  -93,   -1,   92,  -78,   42,  -92,    25 },
                {  -79,  -60,   96,  -23,  -85,  -44,   85,   48,   71,   -17 },
@@ -262,8 +262,8 @@
         [TestMethod]
         public void readUInt64()
         {
-            var file = GetMat("uint64.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("uint64.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Wed Jun 27 17:43:04 2007",
@@ -272,10 +272,10 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["arr"];
-            var value = node.Value as ulong[,];
+            MatNode node = reader["arr"];
+            ulong[,] value = node.Value as ulong[,];
 
-            System.UInt64[,] expected = 
+            System.UInt64[,] expected =
             {
                 { 0, unchecked ((System.UInt64)(-1)) },
             };
@@ -286,8 +286,8 @@
         [TestMethod]
         public void readSingle()
         {
-            var file = GetMat("single.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("single.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Wed Jun 04 13:29:10 2008",
@@ -296,12 +296,12 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["arr"];
-            var value = node.Value as float[,];
+            MatNode node = reader["arr"];
+            float[,] value = node.Value as float[,];
 
-            float[,] expected = 
+            float[,] expected =
             {
-                { 1.1f, 2.2f, 3.3f } 
+                { 1.1f, 2.2f, 3.3f }
             };
 
             Assert.IsTrue(expected.IsEqual(value));
@@ -310,8 +310,8 @@
         [TestMethod]
         public void readDouble()
         {
-            var file = GetMat("matnativedouble.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("matnativedouble.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Wed Feb 21 18:57:45 2007",
@@ -320,14 +320,14 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["arr"];
-            var value = node.Value as byte[,];
+            MatNode node = reader["arr"];
+            byte[,] value = node.Value as byte[,];
 
-            byte[,] expected = 
+            byte[,] expected =
             {
                 { 1, 4 },
                 { 2, 5 },
-                { 3, 6 } 
+                { 3, 6 }
             };
 
             Assert.IsTrue(expected.IsEqual(value));
@@ -336,8 +336,8 @@
         [TestMethod]
         public void readDouble2()
         {
-            var file = GetMat("matnativedouble2.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("matnativedouble2.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Fri Mar 02 12:35:43 2007",
@@ -346,14 +346,14 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["arr"];
-            var value = node.Value as double[,];
+            MatNode node = reader["arr"];
+            double[,] value = node.Value as double[,];
 
-            double[,] expected = 
+            double[,] expected =
             {
                 { 1.1, 4.4 },
                 { 2.2, 5.5 },
-                { 3.3, 6.6 } 
+                { 3.3, 6.6 }
             };
 
             Assert.IsTrue(expected.IsEqual(value));
@@ -362,8 +362,8 @@
         [TestMethod]
         public void readLogical()
         {
-            var file = GetMat("logical.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("logical.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Mon Feb 25 20:07:08 2013",
@@ -372,10 +372,10 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["bool"];
-            var value = node.Value as byte[,];
+            MatNode node = reader["bool"];
+            byte[,] value = node.Value as byte[,];
 
-            byte[,] expected = 
+            byte[,] expected =
             {
                 { 1, 0 },
             };
@@ -386,8 +386,8 @@
         [TestMethod]
         public void readStruct()
         {
-            var file = GetMat("simplestruct.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("simplestruct.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Thu Feb 22 01:39:50 2007",
@@ -396,15 +396,15 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var node = reader["structure"];
+            MatNode node = reader["structure"];
 
-            var value1 = node["a"];
-            var value2 = node["string"];
+            MatNode value1 = node["a"];
+            MatNode value2 = node["string"];
 
             Assert.AreEqual("a", value1.Name);
-            var a = value1.Value as byte[,];
+            byte[,] a = value1.Value as byte[,];
 
-            byte[,] expected = 
+            byte[,] expected =
             {
                 { 1, 2, 3 },
                 { 4, 5, 6 },
@@ -413,15 +413,15 @@
             Assert.IsTrue(expected.IsEqual(a));
 
             Assert.AreEqual("string", value2.Name);
-            var s = value2.Value as string;
+            string s = value2.Value as string;
             Assert.AreEqual("ala ma kota", s);
         }
 
         [TestMethod]
         public void readCell()
         {
-            var file = GetMat("cell.mat");
-            MatReader reader = new MatReader(file);
+            FileStream file = GetMat("cell.mat");
+            MatReader reader = new(file);
 
             Assert.AreEqual(
                 "MATLAB 5.0 MAT-file, Platform: PCWIN, Created on: Thu Feb 22 03:12:25 2007",
@@ -430,25 +430,25 @@
             Assert.AreEqual(256, reader.Version);
             Assert.IsFalse(reader.BigEndian);
 
-            var cel = reader["cel"];
+            MatNode cel = reader["cel"];
             Assert.IsNotNull(cel["xBF"]);
             Assert.IsNotNull(cel["xY"]);
             Assert.IsNotNull(cel["nscan"]);
             Assert.IsNotNull(cel["Sess"]);
             Assert.IsNotNull(cel["xX"]);
 
-            var xBF = cel["xBF"];
+            MatNode xBF = cel["xBF"];
 
             Assert.AreEqual("xBF", xBF.Name);
             Assert.AreEqual(9, xBF.Count);
 
-            var T = xBF["T"];
-            var T0 = xBF["T0"];
-            var dt = xBF["dt"];
-            var UNITS = xBF["UNITS"];
-            var name = xBF["name"];
-            var order = xBF["order"];
-            var bf = xBF["bf"];
+            MatNode T = xBF["T"];
+            MatNode T0 = xBF["T0"];
+            MatNode dt = xBF["dt"];
+            MatNode UNITS = xBF["UNITS"];
+            MatNode name = xBF["name"];
+            MatNode order = xBF["order"];
+            MatNode bf = xBF["bf"];
 
             Assert.AreEqual(16, (T.Value as byte[,])[0, 0]);
             Assert.AreEqual(1, (T0.Value as byte[,])[0, 0]);
@@ -458,29 +458,29 @@
             Assert.AreEqual(2, (order.Value as byte[,])[0, 0]);
             Assert.IsTrue(expectedBfValues.IsEqual(bf.Value as double[,], 1e-15));
 
-            var nscan = cel["nscan"];
+            MatNode nscan = cel["nscan"];
             Assert.AreEqual(0, nscan.Count);
             Assert.AreEqual(96, (nscan.Value as byte[,])[0, 0]);
 
-            var xY = cel["xY"];
+            MatNode xY = cel["xY"];
 
             Assert.AreEqual("xY", xY.Name);
             Assert.AreEqual(1, xY.Count);
 
-            var RT = xY["RT"];
+            MatNode RT = xY["RT"];
             Assert.AreEqual(3, (RT.Value as byte[,])[0, 0]);
 
-            var xX = cel["xX"];
+            MatNode xX = cel["xX"];
 
             Assert.AreEqual("xX", xX.Name);
             Assert.AreEqual(6, xX.Count);
 
-            var X = xX["X"];
-            var iH = xX["iH"];
-            var iC = xX["iC"];
-            var iB = xX["iB"];
-            var iG = xX["iG"];
-            var xname = xX["name"];
+            MatNode X = xX["X"];
+            MatNode iH = xX["iH"];
+            MatNode iC = xX["iC"];
+            MatNode iB = xX["iB"];
+            MatNode iG = xX["iG"];
+            MatNode xname = xX["name"];
 
             Assert.IsTrue(expectedxXValues.IsEqual(X.Value as double[,], 1e-15));
 
@@ -490,23 +490,23 @@
 
 
 
-            var Sess = cel["Sess"];
+            MatNode Sess = cel["Sess"];
 
             Assert.AreEqual(5, Sess.Count);
 
-            var U = Sess["U"];
+            MatNode U = Sess["U"];
 
             Assert.AreEqual(7, U.Count);
 
-            var Uname = U["name"];
-            var Uons = U["ons"];
-            var Udur = U["dur"];
-            var Udt = U["dt"];
-            var Uu = U["u"];
-            var Upst = U["pst"];
-            var P = U["P"];
+            MatNode Uname = U["name"];
+            MatNode Uons = U["ons"];
+            MatNode Udur = U["dur"];
+            MatNode Udt = U["dt"];
+            MatNode Uu = U["u"];
+            MatNode Upst = U["pst"];
+            MatNode P = U["P"];
 
-            Assert.AreEqual("test", (Uname["0"] as MatNode).Value as string);
+            Assert.AreEqual("test", Uname["0"].Value as string);
             Assert.AreEqual(8.00000000000000e+00, (Uons.Value as byte[,])[0, 0]);
             Assert.AreEqual(2.40000000000000e+01, (Uons.Value as byte[,])[1, 0]);
             Assert.AreEqual(4.00000000000000e+01, (Uons.Value as byte[,])[2, 0]);
@@ -519,7 +519,7 @@
 
             Assert.AreEqual(1.87500000000000e-01, (Udt.Value as double[,])[0, 0]);
 
-            var sparse = Uu.Value as MatSparse;
+            MatSparse sparse = Uu.Value as MatSparse;
             Assert.AreEqual(774, sparse.Rows.Length);
             Assert.AreEqual(2, sparse.Columns.Length);
             Assert.AreEqual(774, sparse.Values.Length);
@@ -555,13 +555,13 @@
             Assert.AreEqual(24, (Upst.Value as short[,])[0, 95]);
 
 
-            var Pname = P["name"];
-            var PP = P["P"];
-            var Ph = P["h"];
-            var Pi = P["i"];
+            MatNode Pname = P["name"];
+            MatNode PP = P["P"];
+            MatNode Ph = P["h"];
+            MatNode Pi = P["i"];
 
             Assert.AreEqual("none", Pname.Value);
-            var ppv = PP.Value as ushort[,];
+            ushort[,] ppv = PP.Value as ushort[,];
             Assert.AreEqual(6, ppv.Length);
             Assert.AreEqual(2.40000000000000e+01, ppv[0, 0]);
             Assert.AreEqual(7.20000000000000e+01, ppv[1, 0]);
@@ -573,24 +573,24 @@
             Assert.AreEqual(0, (Ph.Value as byte[,])[0, 0]);
             Assert.AreEqual(1, (Pi.Value as byte[,])[0, 0]);
 
-            var C = Sess["C"];
+            MatNode C = Sess["C"];
             Assert.AreEqual(2, C.Count);
 
             Assert.AreEqual(0, (C["C"].Value as byte[,]).Length);
             Assert.IsNull(C["name"].Value);
 
-            var row = Sess["row"];
+            MatNode row = Sess["row"];
             for (int i = 0; i < 96; i++)
                 Assert.AreEqual(i + 1, (row.Value as byte[,])[0, i]);
 
-            var col = Sess["col"];
+            MatNode col = Sess["col"];
             Assert.AreEqual(1, (col.Value as byte[,])[0, 0]);
             Assert.AreEqual(2, (col.Value as byte[,])[0, 1]);
 
-            var Fc = Sess["Fc"];
+            MatNode Fc = Sess["Fc"];
 
-            var Fci = Fc["i"];
-            var Fname = Fc["name"];
+            MatNode Fci = Fc["i"];
+            MatNode Fname = Fc["name"];
 
             Assert.AreEqual(1, (Fci.Value as byte[,])[0, 0]);
             Assert.AreEqual(2, (Fci.Value as byte[,])[0, 1]);

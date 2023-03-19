@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
-using System.Globalization;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Abstractions;
 using Microsoft.UI.Xaml.Data;
-using ISynergy.Framework.Core.Collections;
+using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters
 {
@@ -65,7 +63,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is DateTimeOffset dt)
+            if (value is DateTimeOffset dt)
             {
                 original = dt;
                 var ts = DateTimeOffsetConverter.DateTimeOffsetToTimeSpan(dt);
@@ -85,7 +83,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if(original is DateTimeOffset odt && value is TimeSpan ts)
+            if (original is DateTimeOffset odt && value is TimeSpan ts)
             {
                 var dt = DateTimeOffsetConverter.TimeSpanToDateTimeOffset(odt, ts);
                 return dt.GetValueOrDefault(DateTimeOffset.MinValue);
@@ -245,7 +243,7 @@ namespace ISynergy.Framework.UI.Converters
 
                 var offset = TimeZoneInfo.Local.BaseUtcOffset;
 
-                if(ServiceLocator.Default.GetInstance<IContext>() is IContext context)
+                if (ServiceLocator.Default.GetInstance<IContext>() is IContext context)
                 {
                     offset = context.CurrentTimeZone.BaseUtcOffset;
                 }

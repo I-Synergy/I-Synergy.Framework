@@ -36,10 +36,8 @@
 
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained
 {

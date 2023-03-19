@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -292,7 +291,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         public Task ForgotPasswordAsync()
         {
-            var forgotPasswordVM = new ForgotPasswordViewModel(Context, BaseCommonServices, _authenticationService, Logger);
+            ForgotPasswordViewModel forgotPasswordVM = new(Context, BaseCommonServices, _authenticationService, Logger);
             forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
         }
@@ -340,6 +339,7 @@ namespace Sample.ViewModels
         {
             if (Validate())
             {
+                return Task.CompletedTask;
             }
 
             return Task.CompletedTask;
@@ -347,7 +347,7 @@ namespace Sample.ViewModels
 
         private Task SignInAsync()
         {
-            if (Validate()) 
+            if (Validate())
             {
                 return BaseCommonServices.NavigationService.ReplaceMainWindowAsync<IShellView>();
             }

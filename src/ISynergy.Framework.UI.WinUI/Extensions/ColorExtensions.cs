@@ -1,5 +1,4 @@
-﻿using System;
-using Windows.UI;
+﻿using Windows.UI;
 
 namespace ISynergy.Framework.UI.Extensions
 {

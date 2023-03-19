@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace ISynergy.Framework.IO.Models
+﻿namespace ISynergy.Framework.IO.Models
 {
     /// <summary>
     /// Class WatcherInfo.

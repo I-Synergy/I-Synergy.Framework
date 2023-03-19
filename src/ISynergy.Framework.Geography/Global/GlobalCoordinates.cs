@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Geography.Common;
+using System.Text;
 
 namespace ISynergy.Framework.Geography.Global
 {

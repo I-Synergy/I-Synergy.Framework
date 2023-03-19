@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using ISynergy.Framework.Core.Collections;
-using ISynergy.Framework.Mvvm.Abstractions;
+﻿using ISynergy.Framework.Mvvm.Abstractions;
 using Microsoft.UI.Xaml.Data;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.UI.Converters
 {

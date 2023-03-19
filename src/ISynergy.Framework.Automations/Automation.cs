@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Enumerations;
 using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Core.Collections;
-using System;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Automations

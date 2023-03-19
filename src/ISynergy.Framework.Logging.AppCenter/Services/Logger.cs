@@ -74,7 +74,7 @@ namespace ISynergy.Framework.Logging.AppCenter.Services
             base.Log(logLevel, eventId, state, exception, formatter);
 
             var message = formatter(state, exception);
-            
+
             var metrics = GetMetrics();
             metrics.Add("Message", message);
 

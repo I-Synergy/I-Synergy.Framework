@@ -1,7 +1,7 @@
-﻿using Sample.ViewModels;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Accounts;
 using Microsoft.UI.Xaml.Controls;
+using Sample.ViewModels;
 using Syncfusion.UI.Xaml.Editors;
 
 namespace Sample.Views.Identity.Controls
@@ -41,7 +41,7 @@ namespace Sample.Views.Identity.Controls
             {
                 ComboBox_Modules.SelectedItems.Add(viewModel.Modules?.First());
             }
-                
+
         }
     }
 }

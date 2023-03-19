@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Financial.Tests
 {
@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Financial.Tests
         [DataRow(12510.41, 14696.23, 0.1747)]
         public void CalcPercAmountOfAmountTest(object amount, object mainamount, object result)
         {
-            var assert = Math.Round(
+            decimal assert = Math.Round(
                 Percentage.CalculatePercentageAmountOfAmount(
                     Convert.ToDecimal(amount),
                     Convert.ToDecimal(mainamount)), 4);
@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcPercAmountOfAmountDevideByZeroTest()
         {
-            var result = Percentage.CalculatePercentageAmountOfAmount(0m, 0m);
+            decimal result = Percentage.CalculatePercentageAmountOfAmount(0m, 0m);
             Assert.AreEqual(0m, result);
         }
 
@@ -48,7 +48,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcAmountOfPercentageTest()
         {
-            var result = Percentage.CalculateAmountOfPercentage(121m, 21m);
+            decimal result = Percentage.CalculateAmountOfPercentage(121m, 21m);
             Assert.AreEqual(25.41m, result);
         }
 
@@ -67,7 +67,7 @@ namespace ISynergy.Framework.Financial.Tests
         [DataRow(4.95, 2.5, -0.4949)]
         public void CalcMarginPercentageTest(object purchasePrice, object salesPrice, object result)
         {
-            var assert = Math.Round(
+            decimal assert = Math.Round(
                 Percentage.CalculateMarginPercentage(
                     Convert.ToDecimal(salesPrice),
                     Convert.ToDecimal(purchasePrice)), 4);
@@ -81,7 +81,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CalcMarginPercentageDevideByZeroTest()
         {
-            var result = Percentage.CalculateMarginPercentage(100, 0);
+            decimal result = Percentage.CalculateMarginPercentage(100, 0);
             Assert.AreEqual(1, result);
         }
     }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Automations.Abstractions
+﻿namespace ISynergy.Framework.Automations.Abstractions
 {
     /// <summary>
     /// Base state interface

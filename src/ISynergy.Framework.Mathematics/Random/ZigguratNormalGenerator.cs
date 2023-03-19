@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics.Random
+﻿namespace ISynergy.Framework.Mathematics.Random
 {
     /// <summary>
     ///     Normal random number generator using the Ziggurat method.

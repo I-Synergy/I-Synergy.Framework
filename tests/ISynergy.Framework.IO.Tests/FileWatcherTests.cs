@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ISynergy.Framework.IO.Tests.Fixtures;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 using System.Linq;
-using ISynergy.Framework.IO.Tests.Fixtures;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.IO.Tests
 {
@@ -29,10 +29,10 @@ namespace ISynergy.Framework.IO.Tests
         /// </summary>
         public void FileWatcherAddedTest()
         {
-            var count = 1000;
+            int count = 1000;
 
-            var location = AppDomain.CurrentDomain.BaseDirectory;
-            var folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherAddedTest))).FullName;
+            string location = AppDomain.CurrentDomain.BaseDirectory;
+            string folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherAddedTest))).FullName;
 
             if (_fixture.InitializeWatcher(folder, false))
             {
@@ -58,10 +58,10 @@ namespace ISynergy.Framework.IO.Tests
         /// </summary>
         public void FileWatcherDeletedTest()
         {
-            var count = 1000;
+            int count = 1000;
 
-            var location = AppDomain.CurrentDomain.BaseDirectory;
-            var folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherDeletedTest))).FullName;
+            string location = AppDomain.CurrentDomain.BaseDirectory;
+            string folder = Directory.CreateDirectory(Path.Combine(location, nameof(FileWatcherDeletedTest))).FullName;
 
             if (_fixture.InitializeWatcher(folder, false))
             {

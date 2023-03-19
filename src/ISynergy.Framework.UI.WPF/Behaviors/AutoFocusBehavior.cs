@@ -1,7 +1,7 @@
-﻿using System.Windows.Input;
-using ISynergy.Framework.UI.Extensions;
+﻿using ISynergy.Framework.UI.Extensions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.UI.Behaviors
 {

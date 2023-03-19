@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ISynergy.Framework.AspNetCore.Enumerations;
+﻿using ISynergy.Framework.AspNetCore.Enumerations;
 using ISynergy.Framework.AspNetCore.Options;
 using ISynergy.Framework.AspNetCore.Tests.Fixture;
 using ISynergy.Framework.AspNetCore.Tests.Internals;
@@ -13,6 +7,12 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 {
@@ -83,7 +83,7 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
 
             if (configuration is not null)
             {
-                ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+                ConfigurationBuilder configurationBuilder = new();
                 configurationBuilder.AddInMemoryCollection(configuration);
                 IConfiguration buildedConfiguration = configurationBuilder.Build();
 
@@ -103,9 +103,9 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         [TestMethod]
         public async Task SingleRequest_ReturnsSuccessfulResponse()
         {
-            using var server = PrepareTestServer();
-            using var client = server.CreateClient();
-            var response = await client.GetAsync("/");
+            using TestServer server = PrepareTestServer();
+            using HttpClient client = server.CreateClient();
+            HttpResponseMessage response = await client.GetAsync("/");
 
             Assert.IsTrue(response.IsSuccessStatusCode);
         }
@@ -116,10 +116,10 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         [TestMethod]
         public async Task SingleRequest_ReturnsDefaultResponse()
         {
-            using var server = PrepareTestServer();
-            using var client = server.CreateClient();
-            var response = await client.GetAsync("/");
-            var responseText = await response.Content.ReadAsStringAsync();
+            using TestServer server = PrepareTestServer();
+            using HttpClient client = server.CreateClient();
+            HttpResponseMessage response = await client.GetAsync("/");
+            string responseText = await response.Content.ReadAsStringAsync();
 
             Assert.AreEqual(DEFAULT_RESPONSE, responseText);
         }
@@ -130,13 +130,13 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         [TestMethod]
         public void SomeMaxConcurrentRequestsLimit_Drop_SomeConcurrentRequestsCount_CountMinusLimitRequestsReturnServiceUnavailable()
         {
-            var configuration = new Dictionary<string, string>
+            Dictionary<string, string> configuration = new()
             {
                 {"MaxConcurrentRequestsOptions:Limit", SOME_MAX_CONCURRENT_REQUESTS_LIMIT.ToString() },
                 {"MaxConcurrentRequestsOptions:LimitExceededPolicy", MaxConcurrentRequestsLimitExceededPolicy.Drop.ToString() }
             };
 
-            var responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
+            HttpResponseInformation[] responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
             Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
         }
@@ -147,14 +147,14 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         [TestMethod]
         public void SomeMaxConcurrentRequestsLimit_FifoQueueDropTail_SomeMaxQueueLength_SomeConcurrentRequestsCount_CountMinusLimitRequestsAndMaxQueueLengthReturnServiceUnavailable()
         {
-            var configuration = new Dictionary<string, string>
+            Dictionary<string, string> configuration = new()
             {
                 {"MaxConcurrentRequestsOptions:Limit", SOME_MAX_CONCURRENT_REQUESTS_LIMIT.ToString() },
                 {"MaxConcurrentRequestsOptions:LimitExceededPolicy", MaxConcurrentRequestsLimitExceededPolicy.FifoQueueDropTail.ToString() },
                 {"MaxConcurrentRequestsOptions:MaxQueueLength", SOME_MAX_QUEUE_LENGTH.ToString() }
             };
 
-            var responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
+            HttpResponseInformation[] responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
             Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
         }
@@ -165,14 +165,14 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         [TestMethod]
         public void SomeMaxConcurrentRequestsLimit_FifoQueueDropHead_SomeMaxQueueLength_SomeConcurrentRequestsCount_CountMinusLimitRequestsAndMaxQueueLengthReturnServiceUnavailable()
         {
-            var configuration = new Dictionary<string, string>
+            Dictionary<string, string> configuration = new()
             {
                 {"MaxConcurrentRequestsOptions:Limit", SOME_MAX_CONCURRENT_REQUESTS_LIMIT.ToString() },
                 {"MaxConcurrentRequestsOptions:LimitExceededPolicy", MaxConcurrentRequestsLimitExceededPolicy.FifoQueueDropHead.ToString() },
                 {"MaxConcurrentRequestsOptions:MaxQueueLength", SOME_MAX_QUEUE_LENGTH.ToString() }
             };
 
-            var responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
+            HttpResponseInformation[] responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
             Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT - SOME_MAX_QUEUE_LENGTH, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
         }
@@ -183,7 +183,7 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         [TestMethod]
         public void SomeMaxConcurrentRequestsLimit_Queue_SomeMaxQueueLength_MaxTimeInQueueShorterThanProcessing_SomeConcurrentRequestsCount_CountMinusLimitRequestsReturnServiceUnavailable()
         {
-            var configuration = new Dictionary<string, string>
+            Dictionary<string, string> configuration = new()
             {
                 {"MaxConcurrentRequestsOptions:Limit", SOME_MAX_CONCURRENT_REQUESTS_LIMIT.ToString() },
                 {"MaxConcurrentRequestsOptions:LimitExceededPolicy", MaxConcurrentRequestsLimitExceededPolicy.FifoQueueDropTail.ToString() },
@@ -191,7 +191,7 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
                 {"MaxConcurrentRequestsOptions:MaxTimeInQueue", TIME_SHORTER_THAN_PROCESSING.ToString() }
             };
 
-            var responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
+            HttpResponseInformation[] responseInformation = GetResponseInformation(configuration, SOME_CONCURRENT_REQUESTS_COUNT);
 
             Assert.AreEqual(SOME_CONCURRENT_REQUESTS_COUNT - SOME_MAX_CONCURRENT_REQUESTS_LIMIT, responseInformation.Count(i => i.StatusCode == HttpStatusCode.ServiceUnavailable));
         }
@@ -206,17 +206,17 @@ namespace ISynergy.Framework.AspNetCore.Middleware.Tests
         {
             HttpResponseInformation[] responseInformation;
 
-            using (var server = PrepareTestServer(configuration))
+            using (TestServer server = PrepareTestServer(configuration))
             {
-                var clients = new List<HttpClient>();
-                for (var i = 0; i < concurrentRequestsCount; i++)
+                List<HttpClient> clients = new();
+                for (int i = 0; i < concurrentRequestsCount; i++)
                 {
                     clients.Add(server.CreateClient());
                 }
 
-                var responsesWithTimingsTasks = new List<Task<HttpResponseMessageWithTiming>>();
+                List<Task<HttpResponseMessageWithTiming>> responsesWithTimingsTasks = new();
 
-                foreach (var client in clients)
+                foreach (HttpClient client in clients)
                 {
                     responsesWithTimingsTasks.Add(Task.Run(async () => { return await client.GetWithTimingAsync("/"); }));
                 }

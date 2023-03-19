@@ -16,15 +16,15 @@ namespace ISynergy.Framework.UI.Controls
             {
                 SetValue(ViewModelProperty, value);
                 BindingContext = value;
-            } 
+            }
         }
 
         public Window()
         {
             CloseWhenBackgroundIsClicked = false;
-            
+
             BackgroundColor = Color.FromArgb("#80000000");
-            
+
             Animation = new ScaleAnimation
             {
                 DurationIn = 700,

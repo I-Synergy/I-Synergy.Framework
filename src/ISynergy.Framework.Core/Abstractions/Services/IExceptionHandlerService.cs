@@ -1,6 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
-
-namespace ISynergy.Framework.Core.Abstractions.Services
+﻿namespace ISynergy.Framework.Core.Abstractions.Services
 {
     public interface IExceptionHandlerService
     {

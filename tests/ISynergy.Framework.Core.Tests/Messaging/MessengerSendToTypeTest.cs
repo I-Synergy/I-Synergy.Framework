@@ -11,10 +11,10 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         {
             MessageService.Reset();
 
-            var recipient11 = new TestRecipient1();
-            var recipient12 = new TestRecipient1();
-            var recipient21 = new TestRecipient2();
-            var recipient22 = new TestRecipient2();
+            TestRecipient1 recipient11 = new();
+            TestRecipient1 recipient12 = new();
+            TestRecipient2 recipient21 = new();
+            TestRecipient2 recipient22 = new();
 
             MessageService.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
             MessageService.Default.Register<string>(recipient12, recipient12.ReceiveMessage);
@@ -49,12 +49,12 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         {
             MessageService.Reset();
 
-            var recipient11 = new TestRecipient1();
-            var recipient12 = new TestRecipient1();
-            var recipient21 = new TestRecipient2();
-            var recipient22 = new TestRecipient2();
-            var recipient31 = new TestRecipient3();
-            var recipient32 = new TestRecipient3();
+            TestRecipient1 recipient11 = new();
+            TestRecipient1 recipient12 = new();
+            TestRecipient2 recipient21 = new();
+            TestRecipient2 recipient22 = new();
+            TestRecipient3 recipient31 = new();
+            TestRecipient3 recipient32 = new();
 
             MessageService.Default.Register<string>(recipient11, recipient11.ReceiveMessage);
             MessageService.Default.Register<string>(recipient12, recipient12.ReceiveMessage);

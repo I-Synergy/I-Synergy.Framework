@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.IO.Events;
+using ISynergy.Framework.IO.Models;
+using ISynergy.Framework.IO.Models.Tests;
+using ISynergy.Framework.IO.Watchers;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using ISynergy.Framework.IO.Events;
-using ISynergy.Framework.IO.Models.Tests;
-using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.IO.Watchers;
-using ISynergy.Framework.IO.Models;
 
 namespace ISynergy.Framework.IO.Tests.Fixtures
 {
@@ -96,7 +96,7 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         /// </summary>
         public void RemoveEventHandlers()
         {
-            if(FileWatcher is not null)
+            if (FileWatcher is not null)
             {
                 FileWatcher.EventChangedAttribute -= fileWatcher_EventChanged;
                 FileWatcher.EventChangedCreationTime -= fileWatcher_EventChanged;
@@ -200,8 +200,8 @@ namespace ISynergy.Framework.IO.Tests.Fixtures
         /// <param name="e">The <see cref="WatcherExEventArgs"/> instance containing the event data.</param>
         private void fileWatcher_EventPathAvailability(object sender, WatcherExEventArgs e)
         {
-            var eventName = "Availability";
-            var filterName = "N/A";
+            string eventName = "Availability";
+            string filterName = "N/A";
             string status;
 
             if (e.Arguments is null)

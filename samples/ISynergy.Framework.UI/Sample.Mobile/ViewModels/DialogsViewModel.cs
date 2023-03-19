@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -103,7 +102,7 @@ namespace Sample.ViewModels
 
         private async Task ShowNoteDialogAsync()
         {
-            var vm = new NoteViewModel(Context, BaseCommonServices, Logger, "Lorem ipsum dolor sit amet");
+            NoteViewModel vm = new(Context, BaseCommonServices, Logger, "Lorem ipsum dolor sit amet");
             vm.Submitted += Vm_Submitted;
             await BaseCommonServices.DialogService.ShowDialogAsync(typeof(INoteWindow), vm);
         }
@@ -133,7 +132,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         private Task SelectMultipleAsync()
         {
-            var selectionVm = new ViewModelSelectionDialog(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
+            ViewModelSelectionDialog selectionVm = new(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Multiple);
             selectionVm.Submitted += SelectionVm_MultipleSubmitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
         }
@@ -144,7 +143,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         private Task SelectSingleAsync()
         {
-            var selectionVm = new ViewModelSelectionDialog(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
+            ViewModelSelectionDialog selectionVm = new(Context, BaseCommonServices, Logger, Items, SelectedTestItems, SelectionModes.Single);
             selectionVm.Submitted += SelectionVm_SingleSubmitted;
             return BaseCommonServices.DialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
         }

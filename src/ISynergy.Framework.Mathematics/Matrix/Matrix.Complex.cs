@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Exceptions;
-using System;
 using System.Numerics;
 
 namespace ISynergy.Framework.Mathematics

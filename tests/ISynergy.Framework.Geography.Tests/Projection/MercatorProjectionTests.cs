@@ -1,6 +1,6 @@
-﻿using System;
-using ISynergy.Framework.Geography.Tests;
+﻿using ISynergy.Framework.Geography.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Geography.Projection.Tests
 {
@@ -16,12 +16,12 @@ namespace ISynergy.Framework.Geography.Projection.Tests
         [TestMethod]
         public void TestLoxodromeToOffice()
         {
-            var proj = new EllipticalMercatorProjection();
+            EllipticalMercatorProjection proj = new();
             _ = proj.CalculatePath(
                 Constants.MyHome,
                 Constants.MyOffice,
-                out var mercatorRhumDistance,
-                out var bearing, 3);
+                out double mercatorRhumDistance,
+                out Common.Angle bearing, 3);
 
             // The reference values are computed with 
             // http://onboardintelligence.com/RL_Lat1Long1Lat2Long2.aspx

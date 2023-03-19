@@ -1,8 +1,7 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Geography.Common;
 using System.Globalization;
 using System.Text;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Geography.Common;
 
 namespace ISynergy.Framework.Geography.Geodetic
 {

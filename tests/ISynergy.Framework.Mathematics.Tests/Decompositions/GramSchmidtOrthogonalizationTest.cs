@@ -28,20 +28,20 @@
         [TestMethod]
         public void ConstructorTest1()
         {
-            double[,] value = 
+            double[,] value =
             {
                {  4, -2 },
                {  3,  1 },
             };
 
-            var svd = new SingularValueDecomposition(value);
+            SingularValueDecomposition svd = new(value);
             Assert.AreEqual(2, svd.Rank);
 
 
-            var target = new GramSchmidtOrthogonalization(value);
+            GramSchmidtOrthogonalization target = new(value);
 
-            var Q = target.OrthogonalFactor;
-            var R = target.UpperTriangularFactor;
+            double[,] Q = target.OrthogonalFactor;
+            double[,] R = target.UpperTriangularFactor;
 
             double[,] inv = Q.Inverse();
             double[,] transpose = Q.Transpose();

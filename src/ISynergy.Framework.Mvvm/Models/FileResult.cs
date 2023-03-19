@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace ISynergy.Framework.Mvvm.Models
+﻿namespace ISynergy.Framework.Mvvm.Models
 {
     /// <summary>
     /// Class FileResult.

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.IO.Models
+﻿namespace ISynergy.Framework.IO.Models
 {
     /// <summary>
     /// Information regarding the file type, including name, extension, mime type and signature.

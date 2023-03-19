@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Monitoring.Client.Abstractions.Services
 {

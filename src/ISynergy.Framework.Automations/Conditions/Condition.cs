@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Base;
 using ISynergy.Framework.Automations.Enumerations;
-using System;
 
 namespace ISynergy.Framework.Automations.Conditions
 {
@@ -44,7 +43,7 @@ namespace ISynergy.Framework.Automations.Conditions
         /// <param name="automationId"></param>
         /// <param name="validator"></param>
         public Condition(Guid automationId, Func<TEntity, bool> validator)
-            : base (automationId)
+            : base(automationId)
         {
             ConditionId = Guid.NewGuid();
             Validator = validator;

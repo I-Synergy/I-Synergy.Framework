@@ -17,7 +17,7 @@
             {
                 return ((actualAmount - previousAmount) / (previousAmount / 100)) / 100;
             }
-            else if(actualAmount == previousAmount)
+            else if (actualAmount == previousAmount)
             {
                 return 0;
             }
@@ -48,7 +48,7 @@
         {
             if (purchasePrice > 0 || purchasePrice < 0)
             {
-                return ((salesPrice - purchasePrice) / (purchasePrice / 100)) /100;
+                return ((salesPrice - purchasePrice) / (purchasePrice / 100)) / 100;
             }
             else if (salesPrice == purchasePrice)
             {

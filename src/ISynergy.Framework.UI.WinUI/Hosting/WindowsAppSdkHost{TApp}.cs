@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
 using WinRT;
 
 namespace ISynergy.Framework.UI.Hosting

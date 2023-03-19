@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {
@@ -8,8 +8,8 @@ namespace ISynergy.Framework.Mathematics.Tests
     {
         private const float Epsilon = 0.000001f;
 
-        private Matrix3x3 a1 = new Matrix3x3();
-        private Matrix3x3 a2 = new Matrix3x3();
+        private Matrix3x3 a1 = new();
+        private Matrix3x3 a2 = new();
 
         public Matrix3x3Test()
         {
@@ -43,7 +43,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void ToArrayTest()
         {
-            Matrix3x3 matrix = new Matrix3x3();
+            Matrix3x3 matrix = new();
 
             matrix.V00 = 1;
             matrix.V01 = 2;
@@ -61,23 +61,23 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             for (int i = 0; i < 9; i++)
             {
-                Assert.AreEqual(array[i], (float)(i + 1));
+                Assert.AreEqual(array[i], i + 1);
             }
         }
 
         [TestMethod]
         public void CreateFromRowsTest()
         {
-            Vector3 row0 = new Vector3(1, 2, 3);
-            Vector3 row1 = new Vector3(4, 5, 6);
-            Vector3 row2 = new Vector3(7, 8, 9);
+            Vector3 row0 = new(1, 2, 3);
+            Vector3 row1 = new(4, 5, 6);
+            Vector3 row2 = new(7, 8, 9);
             Matrix3x3 matrix = Matrix3x3.CreateFromRows(row0, row1, row2);
 
             float[] array = matrix.ToArray();
 
             for (int i = 0; i < 9; i++)
             {
-                Assert.AreEqual(array[i], (float)(i + 1));
+                Assert.AreEqual(array[i], i + 1);
             }
 
             Assert.AreEqual(row0, matrix.GetRow(0));
@@ -100,16 +100,16 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void CreateFromColumnsTest()
         {
-            Vector3 column0 = new Vector3(1, 4, 7);
-            Vector3 column1 = new Vector3(2, 5, 8);
-            Vector3 column2 = new Vector3(3, 6, 9);
+            Vector3 column0 = new(1, 4, 7);
+            Vector3 column1 = new(2, 5, 8);
+            Vector3 column2 = new(3, 6, 9);
             Matrix3x3 matrix = Matrix3x3.CreateFromColumns(column0, column1, column2);
 
             float[] array = matrix.ToArray();
 
             for (int i = 0; i < 9; i++)
             {
-                Assert.AreEqual(array[i], (float)(i + 1));
+                Assert.AreEqual(array[i], i + 1);
             }
 
             Assert.AreEqual(column0, matrix.GetColumn(0));
@@ -260,7 +260,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(-1, -2, -3)]
         public void CreateDiagonalTest(float v00, float v11, float v22)
         {
-            Vector3 diagonal = new Vector3(v00, v11, v22);
+            Vector3 diagonal = new(v00, v11, v22);
             Matrix3x3 matrix = Matrix3x3.CreateDiagonal(diagonal);
 
             float[] expectedArray = new float[9] { v00, 0, 0, 0, v11, 0, 0, 0, v22 };
@@ -278,7 +278,7 @@ namespace ISynergy.Framework.Mathematics.Tests
             float v10, float v11, float v12,
             float v20, float v21, float v22)
         {
-            Matrix3x3 matrix = new Matrix3x3();
+            Matrix3x3 matrix = new();
 
             matrix.V00 = v00;
             matrix.V01 = v01;
@@ -301,7 +301,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(1, 4, 2, 2, 2, 1, 2, 1, 1)]
         public void InverseTest(float v00, float v01, float v02, float v10, float v11, float v12, float v20, float v21, float v22)
         {
-            Matrix3x3 matrix = new Matrix3x3();
+            Matrix3x3 matrix = new();
 
             matrix.V00 = v00;
             matrix.V01 = v01;
@@ -325,7 +325,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(1, 0, 0, 0, 1, 0, 1, 0, 0)]
         public void InverseTestInvalid(float v00, float v01, float v02, float v10, float v11, float v12, float v20, float v21, float v22)
         {
-            Matrix3x3 matrix = new Matrix3x3();
+            Matrix3x3 matrix = new();
 
             matrix.V00 = v00;
             matrix.V01 = v01;
@@ -345,7 +345,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void AddMatricesTest()
         {
-            Matrix3x3 expectedResult = new Matrix3x3();
+            Matrix3x3 expectedResult = new();
 
             expectedResult.V00 = 3;
             expectedResult.V01 = 3;
@@ -367,7 +367,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void SubtractMatricesTest()
         {
-            Matrix3x3 expectedResult = new Matrix3x3();
+            Matrix3x3 expectedResult = new();
 
             expectedResult.V00 = -1;
             expectedResult.V01 = 1;
@@ -389,7 +389,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void MultiplyMatricesTest()
         {
-            Matrix3x3 expectedResult = new Matrix3x3();
+            Matrix3x3 expectedResult = new();
 
             expectedResult.V00 = 13;
             expectedResult.V01 = 13;

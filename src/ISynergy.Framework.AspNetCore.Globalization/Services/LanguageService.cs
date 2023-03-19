@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Localization;
-
-namespace ISynergy.Framework.AspNetCore.Globalization.Services
+﻿namespace ISynergy.Framework.AspNetCore.Globalization.Services
 {
     /// <summary>
     /// Class LanguageService.

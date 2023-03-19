@@ -3,9 +3,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.UI.Controls
 {

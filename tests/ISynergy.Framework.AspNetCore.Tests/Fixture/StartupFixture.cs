@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using ISynergy.Framework.AspNetCore.Extensions;
+﻿using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.AspNetCore.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Tests.Fixture
 {

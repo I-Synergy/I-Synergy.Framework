@@ -5,10 +5,8 @@ using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
-using System;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace ISynergy.Framework.MessageBus.Azure.Services.Queue
 {

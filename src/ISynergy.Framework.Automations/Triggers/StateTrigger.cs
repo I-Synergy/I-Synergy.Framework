@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Triggers.Base;
 using ISynergy.Framework.Core.Abstractions.Base;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Triggers
 {
@@ -21,7 +19,7 @@ namespace ISynergy.Framework.Automations.Triggers
         public BooleanStateTrigger(
             Guid automationId,
             Func<(IObservableClass Entity, IProperty<bool> Property)> function,
-            bool from, 
+            bool from,
             bool to,
             Func<bool, Task> callbackAsync)
             : base(automationId, function, from, to, callbackAsync, TimeSpan.Zero)

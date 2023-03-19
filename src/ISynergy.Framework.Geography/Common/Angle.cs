@@ -1,6 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Extensions;
 using System.Globalization;
-using ISynergy.Framework.Core.Extensions;
 
 namespace ISynergy.Framework.Geography.Common
 {

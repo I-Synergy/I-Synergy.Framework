@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Automations.Abstractions;
+﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions;
 using ISynergy.Framework.Automations.Conditions;
 using ISynergy.Framework.Automations.Enumerations;
@@ -9,6 +8,7 @@ using ISynergy.Framework.Automations.Tests.Data;
 using ISynergy.Framework.Automations.Triggers;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod()]
         public void AutomationDefaultInActiveTest()
         {
-            var defaultAutomation = new Automation();
+            Automation defaultAutomation = new();
             Assert.IsFalse(defaultAutomation.IsActive);
         }
 
@@ -69,7 +69,7 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod()]
         public void AutomationActiveTest()
         {
-            var defaultAutomation = new Automation
+            Automation defaultAutomation = new()
             {
                 IsActive = true
             };
@@ -86,10 +86,10 @@ namespace ISynergy.Framework.Automations.Tests
         {
             _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, TimeSpan.FromSeconds(1)));
 
-            var stopwatch = new Stopwatch();
-            
+            Stopwatch stopwatch = new();
+
             stopwatch.Start();
-            var result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
+            ActionResult result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
             stopwatch.Stop();
 
             // Assert should succeed because condition is met.
@@ -99,14 +99,14 @@ namespace ISynergy.Framework.Automations.Tests
 
             stopwatch.Reset();
 
-            var customer2 = new Customer()
+            Customer customer2 = new()
             {
                 Name = "Test2",
                 Age = 16
             };
 
             stopwatch.Start();
-            var result2 = await _automationService.ExecuteAsync(_defaultAutomation, customer2);
+            ActionResult result2 = await _automationService.ExecuteAsync(_defaultAutomation, customer2);
             stopwatch.Stop();
 
             // Assert should fail because condition is not met. Age is below 18.
@@ -122,13 +122,13 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public async Task AutomationScenario2TestAsync()
         {
-            var command = new RelayCommand<Customer>((e) =>
+            RelayCommand<Customer> command = new((e) =>
             {
                 e.Age = 16;
                 _defaultAutomation.IsActive = false;
             });
 
-            var command2 = new RelayCommand<Customer>((e) =>
+            RelayCommand<Customer> command2 = new((e) =>
             {
                 e.Age += 1;
             });
@@ -139,10 +139,10 @@ namespace ISynergy.Framework.Automations.Tests
             _defaultAutomation.Actions.Add(new CommandAction(_defaultAutomation.AutomationId, command2, _defaultCustomer));
             _defaultAutomation.Actions.Add(new RepeatPreviousAction<Customer>(_defaultAutomation.AutomationId, RepeatTypes.Until, (e) => e.Age >= 35, 10));
 
-            var stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
 
             stopwatch.Start();
-            var result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
+            ActionResult result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
             stopwatch.Stop();
 
             // Assert should succeed because condition is met.
@@ -154,7 +154,7 @@ namespace ISynergy.Framework.Automations.Tests
             stopwatch.Reset();
 
             stopwatch.Start();
-            var result2 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
+            ActionResult result2 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
             stopwatch.Stop();
 
             // Assert should fail because condition is not met. Age is below 18.
@@ -170,7 +170,7 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public async Task AutomationScenario3TestAsync()
         {
-            var command = new RelayCommand<Customer>((e) =>
+            RelayCommand<Customer> command = new((e) =>
             {
                 e.Age = 16;
             });
@@ -178,11 +178,11 @@ namespace ISynergy.Framework.Automations.Tests
             _defaultAutomation.Actions.Add(new CommandAction(_defaultAutomation.AutomationId, command, _defaultCustomer));
             _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, TimeSpan.FromSeconds(3)));
 
-            var result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
+            ActionResult result1 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
             Assert.IsTrue(result1.Succeeded);
             Assert.AreEqual(16, ((Customer)result1.Result).Age);
 
-            var result2 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
+            ActionResult result2 = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
             Assert.IsFalse(result2.Succeeded);
         }
 
@@ -193,7 +193,7 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public Task AutomationScenario4TestAsync()
         {
-            var command = new RelayCommand<Customer>((e) =>
+            RelayCommand<Customer> command = new((e) =>
             {
                 e.Age = 16;
             });
@@ -202,14 +202,14 @@ namespace ISynergy.Framework.Automations.Tests
             _defaultAutomation.Actions.Add(new CommandAction(_defaultAutomation.AutomationId, command, _defaultCustomer));
             _defaultAutomation.Actions.Add(new DelayAction(_defaultAutomation.AutomationId, TimeSpan.FromSeconds(4)));
 
-            var trigger = new IntegerTrigger(
-                _defaultAutomation.AutomationId, 
-                () => new (_defaultCustomer, (IProperty<int>)_defaultCustomer.Properties[nameof(Customer.Age)]), 
-                65, 
+            IntegerTrigger trigger = new(
+                _defaultAutomation.AutomationId,
+                () => new(_defaultCustomer, (IProperty<int>)_defaultCustomer.Properties[nameof(Customer.Age)]),
+                65,
                 18,
-                async (age) => 
+                async (age) =>
                 {
-                    var result = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
+                    ActionResult result = await _automationService.ExecuteAsync(_defaultAutomation, _defaultCustomer);
                     Assert.IsTrue(result.Succeeded);
                     Assert.AreEqual(21, age);
                 });
@@ -228,14 +228,14 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public async Task AutomationScenario5TestAsync()
         {
-            var automation = new Automation
+            Automation automation = new()
             {
                 IsActive = true,
                 ExecutionTimeout = TimeSpan.FromSeconds(5)
             };
 
             automation.Actions.Add(new DelayAction(automation.AutomationId, TimeSpan.FromSeconds(10)));
-            
+
             await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => _automationService.ExecuteAsync(automation, null));
         }
 
@@ -246,8 +246,8 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public async Task AutomationScenario6TestAsync()
         {
-            var stopwatch = new Stopwatch();
-            var automation = new Automation
+            Stopwatch stopwatch = new();
+            Automation automation = new()
             {
                 IsActive = true,
                 ExecutionTimeout = TimeSpan.FromSeconds(10)
@@ -258,9 +258,9 @@ namespace ISynergy.Framework.Automations.Tests
             automation.Actions.Add(new DelayAction(automation.AutomationId, TimeSpan.FromSeconds(2)));
 
             stopwatch.Start();
-            var result = await _automationService.ExecuteAsync(automation, null);
+            ActionResult result = await _automationService.ExecuteAsync(automation, null);
             stopwatch.Stop();
-            
+
             Assert.IsTrue(result.Succeeded);
             // Assert should succeed because condition is met and delay is applied.
             Assert.IsTrue(stopwatch.Elapsed >= TimeSpan.FromSeconds(3 * 2));
@@ -273,20 +273,20 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public Task AutomationScenario7TestAsync()
         {
-            var automation = new Automation
+            Automation automation = new()
             {
                 IsActive = true,
                 ExecutionTimeout = TimeSpan.FromSeconds(10)
             };
 
-            var stateTrigger = new BooleanStateTrigger(
+            BooleanStateTrigger stateTrigger = new(
                 automation.AutomationId,
                 () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)),
                 false,
                 true,
                 async (active) =>
                 {
-                    var result = await _automationService.ExecuteAsync(automation, _defaultCustomer);
+                    ActionResult result = await _automationService.ExecuteAsync(automation, _defaultCustomer);
                     Assert.IsTrue(result.Succeeded);
                     Assert.AreEqual(true, active);
                 });
@@ -306,22 +306,22 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public Task AutomationScenario8TestAsync()
         {
-            var automation = new Automation
+            Automation automation = new()
             {
                 IsActive = true,
                 ExecutionTimeout = TimeSpan.FromSeconds(10)
             };
 
-            var name = "Test";
+            string name = "Test";
 
-            var stateTrigger = new StringStateTrigger(
+            StringStateTrigger stateTrigger = new(
                 automation.AutomationId,
                 () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Name)),
                 _defaultCustomer.Name,
                 name,
                 async (newName) =>
                 {
-                    var result = await _automationService.ExecuteAsync(automation, _defaultCustomer);
+                    ActionResult result = await _automationService.ExecuteAsync(automation, _defaultCustomer);
                     Assert.IsTrue(result.Succeeded);
                     Assert.AreEqual(name, newName);
                 });
@@ -343,7 +343,7 @@ namespace ISynergy.Framework.Automations.Tests
         {
             Assert.ThrowsException<ArgumentException>(() =>
             {
-                var stateTrigger = new BooleanStateTrigger(
+                BooleanStateTrigger stateTrigger = new(
                 new Automation().AutomationId,
                 () => new(_defaultCustomer, _defaultCustomer.GetProperty(x => x.Active)),
                 false,
@@ -359,17 +359,17 @@ namespace ISynergy.Framework.Automations.Tests
         [TestMethod]
         public Task AutomationScenario10TestAsync()
         {
-            var automation = new Automation();
+            Automation automation = new();
             automation.IsActive = true;
             automation.ExecutionTimeout = TimeSpan.FromSeconds(15);
 
-            var stateTrigger = new EventTrigger<Customer>(
+            EventTrigger<Customer> stateTrigger = new(
                 automation.AutomationId,
                 _defaultCustomer,
                 (s) => _defaultCustomer.Registered += s,
                 async (e) =>
                 {
-                    var result = await _automationService.ExecuteAsync(automation, e);
+                    ActionResult result = await _automationService.ExecuteAsync(automation, e);
                     Assert.IsTrue(result.Succeeded);
                 });
 

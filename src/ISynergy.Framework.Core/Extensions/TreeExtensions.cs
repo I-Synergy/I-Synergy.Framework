@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Validation;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ISynergy.Framework.Core.Extensions
 {
@@ -123,7 +121,7 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var array = nodes.ToArray();
 
-            if(array.Length > 0)
+            if (array.Length > 0)
             {
                 var tree = array[0] as Tree<TKey, TModel>;
                 var parents = new Stack<TreeNode<TKey, TModel>>();

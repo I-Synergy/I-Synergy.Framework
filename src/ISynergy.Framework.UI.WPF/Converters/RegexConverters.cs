@@ -1,6 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Utilities;
 using System.Globalization;
-using ISynergy.Framework.Core.Utilities;
 using System.Windows.Data;
 
 namespace ISynergy.Framework.UI.Converters

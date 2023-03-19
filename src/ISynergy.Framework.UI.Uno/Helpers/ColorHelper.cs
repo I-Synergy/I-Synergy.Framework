@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
-using System;
 using System.Globalization;
 using Windows.UI;
 

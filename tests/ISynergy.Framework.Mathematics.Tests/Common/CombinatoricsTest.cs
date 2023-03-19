@@ -1,10 +1,10 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Collections.Generic;
     using System.Linq;
-    using ISynergy.Framework.Mathematics;
-    using ISynergy.Framework.Mathematics.Common;
 
     [TestClass]
     public class CombinatoricsTest
@@ -118,8 +118,8 @@
                 //
             }
 
-            List<int[]> permutations = new List<int[]>();
-            foreach (var p in Combinatorics.Permutations(values))
+            List<int[]> permutations = new();
+            foreach (int[] p in Combinatorics.Permutations(values))
                 permutations.Add(p);
 
             Assert.AreEqual(6, permutations.Count);

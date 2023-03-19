@@ -8,8 +8,8 @@ namespace ISynergy.Framework.Core.Performance
     {
         static void Main(string[] args)
         {
-            //BenchmarkRunner.Run<MemoryBenchMark<BasicModel>>();
-            //BenchmarkRunner.Run<MemoryBenchMark<EntityModel>>();
+            BenchmarkRunner.Run<MemoryBenchMark<BasicModel>>();
+            BenchmarkRunner.Run<MemoryBenchMark<EntityModel>>();
             BenchmarkRunner.Run<MemoryBenchMark<ObservableModel>>();
             Console.ReadLine();
         }

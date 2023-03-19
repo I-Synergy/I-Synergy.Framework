@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Models;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Models;
@@ -135,7 +135,7 @@ namespace Sample.ViewModels
         /// <returns>A Task representing the asynchronous operation.</returns>
         private async Task BrowseFileAsync()
         {
-            var imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
+            string imageFilter = "Images (Jpeg, Gif, Png)|*.jpg; *.jpeg; *.gif; *.png";
 
             if (await CommonServices.FileService.BrowseFileAsync(imageFilter) is List<FileResult> files && files.Count > 0)
                 await CommonServices.DialogService.ShowInformationAsync($"File '{files.First().FileName}' is selected.");

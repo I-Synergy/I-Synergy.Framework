@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -95,7 +94,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             IContext context,
             IBaseCommonServices commonServices,
             ILogger logger,
-            string name, 
+            string name,
             string address)
             : base(context, commonServices, logger)
         {

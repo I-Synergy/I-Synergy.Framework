@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Core.Helpers
+﻿#nullable enable
+
+namespace ISynergy.Framework.Core.Helpers
 {
     public class ReadWriteLock
     {

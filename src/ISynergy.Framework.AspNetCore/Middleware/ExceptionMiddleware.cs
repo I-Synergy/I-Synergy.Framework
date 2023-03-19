@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Models;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Middleware
 {
@@ -54,8 +52,8 @@ namespace ISynergy.Framework.AspNetCore.Middleware
 
             return context.Response
                 .WriteAsync(new ErrorDetail(
-                    context.Response.StatusCode, 
-                    exception.Message, 
+                    context.Response.StatusCode,
+                    exception.Message,
                     exception.GetType().FullName)
                 .ToString());
         }

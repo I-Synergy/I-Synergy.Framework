@@ -2,9 +2,9 @@
 {
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Optimization;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using ISynergy.Framework.Mathematics.Random;
 
     [TestClass]
     public class MunkresTest
@@ -26,7 +26,7 @@
             };
 
             // Create a new Hungarian algorithm
-            Munkres m = new Munkres(costMatrix);
+            Munkres m = new(costMatrix);
 
             bool success = m.Minimize();    // solve it (should return true)
             double[] solution = m.Solution; // Solution will be 0, 1, 2
@@ -48,7 +48,7 @@
         {
             double[][] costMatrix = Jagged.Magic(5);
 
-            var m = new Munkres(costMatrix);
+            Munkres m = new(costMatrix);
 
             Assert.AreEqual(5, m.NumberOfTasks);
             Assert.AreEqual(5, m.NumberOfWorkers);
@@ -75,7 +75,7 @@
                 new double[] { 3, 6, 9 },
             };
 
-            var m = new Munkres(costMatrix);
+            Munkres m = new(costMatrix);
 
             Assert.AreEqual(3, m.NumberOfTasks);
             Assert.AreEqual(3, m.NumberOfWorkers);
@@ -98,7 +98,7 @@
                 new double[] { 3, 6, 9, 12 },
             };
 
-            var m = new Munkres(costMatrix);
+            Munkres m = new(costMatrix);
 
             Assert.AreEqual(4, m.NumberOfTasks);
             Assert.AreEqual(3, m.NumberOfWorkers);
@@ -123,7 +123,7 @@
                 new double[] { 4, 8, 12 },
             };
 
-            var m = new Munkres(costMatrix.Transpose());
+            Munkres m = new(costMatrix.Transpose());
 
             Assert.AreEqual(4, m.NumberOfTasks);
             Assert.AreEqual(3, m.NumberOfWorkers);
@@ -147,7 +147,7 @@
                 new double[] { 4, 8, 12 },
             };
 
-            var m = new Munkres(costMatrix);
+            Munkres m = new(costMatrix);
 
             Assert.AreEqual(3, m.NumberOfTasks);
             Assert.AreEqual(4, m.NumberOfWorkers);
@@ -232,7 +232,7 @@
                 new double[] { 1.0, 5.0, 0.5 },
             };
 
-            var m = new Munkres(costMatrix);
+            Munkres m = new(costMatrix);
 
             Assert.AreEqual(3, m.NumberOfTasks);
             Assert.AreEqual(3, m.NumberOfWorkers);
@@ -255,7 +255,7 @@
                 new double[] { 1.0, inf, 5.0, 0.5 },
             };
 
-            var m = new Munkres(costMatrix);
+            Munkres m = new(costMatrix);
 
             Assert.AreEqual(3, m.NumberOfTasks);
             Assert.AreEqual(3, m.NumberOfWorkers);
@@ -292,7 +292,7 @@
                 new[] {  466.560000000000 ,   1399.68000000000 ,   3265.92000000000 ,   4199.04000000000 ,   3265.92000000000 ,   1399.68000000000 ,   466.560000000000 ,   0.00000000000000 ,  466.560000000000  ,  1866.24000000000 ,   3265.92000000000 ,   5598.72000000000 ,   6065.28000000000 ,   7464.96000000000 ,   6065.28000000000  ,  5598.72000000000 ,   3265.92000000000 ,   1866.24000000000 },
             };
 
-            Munkres m = new Munkres(costMatrix);
+            Munkres m = new(costMatrix);
 
             Assert.AreEqual(18, m.NumberOfTasks);
             Assert.AreEqual(18, m.NumberOfWorkers);
@@ -333,7 +333,7 @@
                 { 4.6656e+002, 4.6656e+002, 1.8662e+003, 3.2659e+003, 3.2659e+003, 1.8662e+003, 1.3997e+003, 4.6656e+002, 6.5358e-012, 4.6656e+002, 1.3997e+003, 3.2659e+003, 4.1990e+003, 6.0653e+003, 5.5987e+003, 6.0653e+003, 4.1990e+003, 3.2659e+003 }
             };
 
-            Munkres m = new Munkres(costMatrix.ToJagged());
+            Munkres m = new(costMatrix.ToJagged());
 
             Assert.AreEqual(18, m.NumberOfTasks);
             Assert.AreEqual(18, m.NumberOfWorkers);
@@ -374,8 +374,8 @@
                 new[] {  466.560000000000 ,   1399.68000000000 ,   3265.92000000000 ,   4199.04000000000 ,   3265.92000000000 ,   1399.68000000000 ,   466.560000000000 ,   0.00000000000000 ,  466.560000000000  ,  1866.24000000000 ,   3265.92000000000 ,   5598.72000000000 ,   6065.28000000000 ,   7464.96000000000 ,   6065.28000000000  ,  5598.72000000000 ,   3265.92000000000 ,   1866.24000000000 },
             };
 
-            var minRow = Matrix.Min(costMatrix, dimension: 1);
-            var minCol = Matrix.Min(costMatrix.Subtract(minRow, dimension: 0), dimension: 0);
+            double[] minRow = Matrix.Min(costMatrix, dimension: 1);
+            double[] minCol = Matrix.Min(costMatrix.Subtract(minRow, dimension: 0), dimension: 0);
             double[][] min;
             bool[][] M = Munkres.findZeros(costMatrix, minRow, minCol, out min);
 
@@ -475,7 +475,7 @@
                 new double[] { 0, 698914969, 689797696, 642369025, 689587600, 691532209, 694217104, 702674064, 651729841, 680479396, 702038016, 653671489, 698703489, 668636164, 643484689, 653109136, 701720100, 631969321, 680896836, 638926729, 624400144, 647702500, 635443264, 692058249, 678550401, 649638144, 685444761, 652138369, 693532225, 695218689, 656435641, 702621049, 635090401, 668532736 }
             };
 
-            var munkres = new Munkres(costMatrix);
+            Munkres munkres = new(costMatrix);
             munkres.Tolerance = 1e-5;
 
             bool success = munkres.Minimize();

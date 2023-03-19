@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.ComponentModel;
@@ -21,12 +20,14 @@ namespace ISynergy.Framework.UI.Controls
         /// Gets or sets the viewmodel and data context for a view.
         /// </summary>
         /// <value>The data context.</value>
-        public IViewModel ViewModel { 
-            get => _viewModel; 
-            set {
+        public IViewModel ViewModel
+        {
+            get => _viewModel;
+            set
+            {
                 _viewModel = value;
                 DataContext = _viewModel;
-            } 
+            }
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace ISynergy.Framework.UI.Controls
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter is IViewModel viewModel)
+            if (e.Parameter is IViewModel viewModel)
             {
                 ViewModel = viewModel;
 

@@ -2,10 +2,7 @@
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
 using System.Net.WebSockets;
-using System.Threading.Tasks;
 using Windows.Networking.Connectivity;
 
 namespace ISynergy.Framework.UI.Services

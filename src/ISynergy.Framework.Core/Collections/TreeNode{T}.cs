@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
-using System;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Core.Collections
@@ -63,9 +62,9 @@ namespace ISynergy.Framework.Core.Collections
         /// Gets or sets the Parent property value.
         /// </summary>
         /// <value>The parent.</value>
-        public TreeNode<TKey,TModel> Parent
+        public TreeNode<TKey, TModel> Parent
         {
-            get => GetValue<TreeNode<TKey,TModel>>();
+            get => GetValue<TreeNode<TKey, TModel>>();
             set => SetValue(value);
         }
 
@@ -172,12 +171,12 @@ namespace ISynergy.Framework.Core.Collections
         /// Gets or sets the Children property value.
         /// </summary>
         /// <value>The children.</value>
-        public ObservableCollection<TreeNode<TKey,TModel>> Children
+        public ObservableCollection<TreeNode<TKey, TModel>> Children
         {
             get => GetValue<ObservableCollection<TreeNode<TKey, TModel>>>();
             set => SetValue(value);
         }
-        
+
         private void TreeNode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(Parent)))
@@ -211,7 +210,7 @@ namespace ISynergy.Framework.Core.Collections
                 node.Parent = null;
                 return Children.Remove(node);
             }
-                
+
             return false;
         }
 

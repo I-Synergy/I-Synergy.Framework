@@ -82,7 +82,7 @@
         [TestMethod]
         public void Multinomial()
         {
-            double actual = Beta.Multinomial(0.42, 0.5, 5.2 );
+            double actual = Beta.Multinomial(0.42, 0.5, 5.2);
             Assert.AreEqual(0.82641912952987062, actual);
         }
 

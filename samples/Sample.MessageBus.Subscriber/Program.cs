@@ -19,20 +19,20 @@ namespace Sample.MessageBus.Subscriber
         {
             try
             {
-                var config = new ConfigurationBuilder()
+                IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false)
                 .AddEnvironmentVariables()
                 .AddUserSecrets<Program>()
                 .Build();
 
-                var serviceProvider = new ServiceCollection()
+                ServiceProvider serviceProvider = new ServiceCollection()
                     .AddLogging()
                     .AddOptions()
                     .AddMessageBusAzureSubscribeIntegration<TestDataModel>(config)
                     .AddScoped<Startup>()
                     .BuildServiceProvider();
 
-                var application = serviceProvider.GetRequiredService<Startup>();
+                Startup application = serviceProvider.GetRequiredService<Startup>();
                 application.RunAsync().GetAwaiter().GetResult();
             }
             catch (Exception e)

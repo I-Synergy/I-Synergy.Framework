@@ -4,7 +4,8 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
+
+#nullable enable
 
 namespace ISynergy.Framework.Mvvm.Commands
 {

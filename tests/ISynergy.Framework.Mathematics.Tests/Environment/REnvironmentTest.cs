@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ISynergy.Framework.Mathematics.Environments;
+﻿using ISynergy.Framework.Mathematics.Environments;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {
@@ -9,9 +9,9 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void eyeTest()
         {
-            var x = c(1, 2, 3, 4);
+            vec x = c(1, 2, 3, 4);
 
-            var m = matrix(x, 2, 2);
+            mat m = matrix(x, 2, 2);
 
             double[,] actual = m;
             Assert.AreEqual(1, actual[0, 0]);

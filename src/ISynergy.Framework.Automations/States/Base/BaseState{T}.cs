@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Core.Validation;
-using System;
 
 namespace ISynergy.Framework.Automations.States.Base
 {

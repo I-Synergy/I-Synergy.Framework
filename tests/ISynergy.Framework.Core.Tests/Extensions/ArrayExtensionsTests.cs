@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
@@ -17,9 +17,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         public void NullArrayNonFailableTest()
         {
             object[] list = null;
-            var result = false;
+            bool result = false;
 
-            foreach (var item in list.EnsureNotNull())
+            foreach (object item in list.EnsureNotNull())
             {
             }
 
@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             {
                 object[] list = null;
 
-                foreach (var item in list)
+                foreach (object item in list)
                 {
                 }
 

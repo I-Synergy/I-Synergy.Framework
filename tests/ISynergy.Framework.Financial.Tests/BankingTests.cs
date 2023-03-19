@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CheckAccountBankTest()
         {
-            var result = Banking.ElevenTest("150483341");
+            bool result = Banking.ElevenTest("150483341");
             Assert.IsTrue(result);
         }
 
@@ -24,7 +24,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CheckAccountGiroTest()
         {
-            var result = Banking.ElevenTest("8318140");
+            bool result = Banking.ElevenTest("8318140");
             Assert.IsFalse(result);
         }
 
@@ -34,7 +34,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CheckSofinummerTest()
         {
-            var result = Banking.ElevenTest("169649167");
+            bool result = Banking.ElevenTest("169649167");
             Assert.IsFalse(result);
         }
 
@@ -44,7 +44,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CheckAccountStringTest()
         {
-            var result = Banking.ElevenTest("abcdefghijklmnopqrstuvwxyz");
+            bool result = Banking.ElevenTest("abcdefghijklmnopqrstuvwxyz");
             Assert.IsFalse(result);
         }
 
@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Financial.Tests
         [TestMethod]
         public void CheckAccountNumbersTest()
         {
-            var result = Banking.ElevenTest("123456789");
+            bool result = Banking.ElevenTest("123456789");
             Assert.IsTrue(result);
         }
     }

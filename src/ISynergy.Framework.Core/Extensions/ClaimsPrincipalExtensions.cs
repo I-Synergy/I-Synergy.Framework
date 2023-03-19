@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.Core.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using ClaimTypes = ISynergy.Framework.Core.Constants.ClaimTypes;
 
@@ -36,7 +33,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="principal"></param>
         /// <param name="claimType">Type of the claim.</param>
         /// <returns><c>true</c> if the specified claim type has claim; otherwise, <c>false</c>.</returns>
-        public static bool HasClaim(this ClaimsPrincipal principal, string claimType) => 
+        public static bool HasClaim(this ClaimsPrincipal principal, string claimType) =>
             principal.Claims.FindSingleValue(claimType) is not null;
 
         /// <summary>
@@ -96,7 +93,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="principal"></param>
         /// <param name="claimType">Type of the claim.</param>
         /// <returns>List&lt;System.Int32&gt;.</returns>
-        private static List<int> GetClaimsAsInt(this ClaimsPrincipal principal, string claimType) => 
+        private static List<int> GetClaimsAsInt(this ClaimsPrincipal principal, string claimType) =>
             principal.GetClaimsAs<int>(claimType, int.TryParse);
 
         /// <summary>
@@ -124,7 +121,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="principal"></param>
         /// <param name="claimType">Type of the claim.</param>
         /// <returns>Guid.</returns>
-        private static Guid GetSingleClaimAsGuid(this ClaimsPrincipal principal, string claimType) => 
+        private static Guid GetSingleClaimAsGuid(this ClaimsPrincipal principal, string claimType) =>
             principal.GetSingleClaimAs<Guid>(claimType, Guid.TryParse);
 
         /// <summary>

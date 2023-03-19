@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Abstractions.Base
+﻿namespace ISynergy.Framework.Core.Abstractions.Base
 {
     /// <summary>
     /// Interface IEntityBase

@@ -1,9 +1,9 @@
 ﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
@@ -20,9 +20,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         public void NullEnumerableNonFailableTest()
         {
             IEnumerable<object> list = null;
-            var result = false;
+            bool result = false;
 
-            foreach (var item in list.EnsureNotNull())
+            foreach (object item in list.EnsureNotNull())
             {
             }
 
@@ -41,7 +41,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
             {
                 IEnumerable<object> list = null;
 
-                foreach (var item in list)
+                foreach (object item in list)
                 {
                 }
 
@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IEnumerableTToDataTableTest()
         {
-            var collection = new List<Product>()
+            List<Product> collection = new()
             {
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
@@ -63,7 +63,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
 
             if (collection is IEnumerable<Product> data)
             {
-                var dataTable = data.ToDataTable<Product>("Test");
+                System.Data.DataTable dataTable = data.ToDataTable<Product>("Test");
 
                 Assert.IsNotNull(dataTable);
                 Assert.AreEqual(5, dataTable.Rows.Count);
@@ -83,7 +83,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void IEnumerableToDataTableTest()
         {
-            var collection = new List<Product>()
+            List<Product> collection = new()
             {
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
@@ -94,7 +94,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
 
             if (collection is IEnumerable data)
             {
-                var dataTable = data.ToDataTable(typeof(Product), "Test");
+                System.Data.DataTable dataTable = data.ToDataTable(typeof(Product), "Test");
 
                 Assert.IsNotNull(dataTable);
                 Assert.AreEqual(5, dataTable.Rows.Count);

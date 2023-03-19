@@ -8,9 +8,9 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void ConstructorTest()
         {
-            Vector3 v1 = new Vector3(1, 2, 3);
-            Vector3 v2 = new Vector3(-1, -2, -3);
-            Vector3 v3 = new Vector3(7);
+            Vector3 v1 = new(1, 2, 3);
+            Vector3 v2 = new(-1, -2, -3);
+            Vector3 v3 = new(7);
 
             Assert.AreEqual(v1.X, 1);
             Assert.AreEqual(v1.Y, 2);
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void MinMaxTest(float x, float y, float z, float expectedMin, float expectedMax,
             int expectedMinIndex, int expectedMaxIndex)
         {
-            Vector3 vector = new Vector3(x, y, z);
+            Vector3 vector = new(x, y, z);
 
             Assert.AreEqual(vector.Min, expectedMin);
             Assert.AreEqual(vector.Max, expectedMax);
@@ -58,7 +58,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(-3, -4, 0, 5)]
         public void NormTest(float x, float y, float z, float expectedNorm)
         {
-            Vector3 vector = new Vector3(x, y, z);
+            Vector3 vector = new(x, y, z);
 
             float norm = vector.Norm;
 
@@ -72,8 +72,8 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(-1, -2, -3, -1, -2, 3, false)]
         public void EqualityTest(float x1, float y1, float z1, float x2, float y2, float z2, bool expected)
         {
-            Vector3 vector1 = new Vector3(x1, y1, z1);
-            Vector3 vector2 = new Vector3(x2, y2, z2);
+            Vector3 vector1 = new(x1, y1, z1);
+            Vector3 vector2 = new(x2, y2, z2);
 
             Assert.AreEqual(vector1 == vector2, expected);
             Assert.AreEqual(vector1 != vector2, !expected);
@@ -88,9 +88,9 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void AdditionTest(float x1, float y1, float z1, float x2, float y2, float z2,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector1 = new Vector3(x1, y1, z1);
-            Vector3 vector2 = new Vector3(x2, y2, z2);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector1 = new(x1, y1, z1);
+            Vector3 vector2 = new(x2, y2, z2);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result1 = vector1 + vector2;
             Vector3 result2 = Vector3.Add(vector1, vector2);
@@ -105,8 +105,8 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void AdditionWithConstTest(float x, float y, float z, float value,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector = new Vector3(x, y, z);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector = new(x, y, z);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result1 = vector + value;
             Vector3 result2 = Vector3.Add(vector, value);
@@ -121,9 +121,9 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void SubtractionTest(float x1, float y1, float z1, float x2, float y2, float z2,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector1 = new Vector3(x1, y1, z1);
-            Vector3 vector2 = new Vector3(x2, y2, z2);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector1 = new(x1, y1, z1);
+            Vector3 vector2 = new(x2, y2, z2);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result1 = vector1 - vector2;
             Vector3 result2 = Vector3.Subtract(vector1, vector2);
@@ -138,8 +138,8 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void SubtractionWithConstTest(float x, float y, float z, float value,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector = new Vector3(x, y, z);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector = new(x, y, z);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result1 = vector - value;
             Vector3 result2 = Vector3.Subtract(vector, value);
@@ -154,9 +154,9 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void MultiplicationTest(float x1, float y1, float z1, float x2, float y2, float z2,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector1 = new Vector3(x1, y1, z1);
-            Vector3 vector2 = new Vector3(x2, y2, z2);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector1 = new(x1, y1, z1);
+            Vector3 vector2 = new(x2, y2, z2);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result1 = vector1 * vector2;
             Vector3 result2 = Vector3.Multiply(vector1, vector2);
@@ -171,8 +171,8 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void MultiplicationWithConstTest(float x, float y, float z, float value,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector = new Vector3(x, y, z);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector = new(x, y, z);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result1 = vector * value;
             Vector3 result2 = Vector3.Multiply(vector, value);
@@ -187,9 +187,9 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void DivisionTest(float x1, float y1, float z1, float x2, float y2, float z2,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector1 = new Vector3(x1, y1, z1);
-            Vector3 vector2 = new Vector3(x2, y2, z2);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector1 = new(x1, y1, z1);
+            Vector3 vector2 = new(x2, y2, z2);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result1 = vector1 / vector2;
             Vector3 result2 = Vector3.Divide(vector1, vector2);
@@ -204,8 +204,8 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void DivisionWithConstTest(float x, float y, float z, float value,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector = new Vector3(x, y, z);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector = new(x, y, z);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result1 = vector / value;
             Vector3 result2 = Vector3.Divide(vector, value);
@@ -222,8 +222,8 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(3f, 0f, 4f, 0.6f, 0f, 0.8f)]
         public void NormalizeTest(float x, float y, float z, float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector = new Vector3(x, y, z);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector = new(x, y, z);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             float norm1 = vector.Norm;
             float norm2 = vector.Normalize();
@@ -240,8 +240,8 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(0.5f, 0.25f, 0.125f, 2f, 4f, 8f)]
         public void InverseTest(float x, float y, float z, float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector = new Vector3(x, y, z);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector = new(x, y, z);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Vector3 result = vector.Inverse();
 
@@ -255,8 +255,8 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(1, 2, 3, -3, -2, -1, -10)]
         public void DotTest(float x1, float y1, float z1, float x2, float y2, float z2, float expectedResult)
         {
-            Vector3 vector1 = new Vector3(x1, y1, z1);
-            Vector3 vector2 = new Vector3(x2, y2, z2);
+            Vector3 vector1 = new(x1, y1, z1);
+            Vector3 vector2 = new(x2, y2, z2);
 
             Assert.AreEqual(Vector3.Dot(vector1, vector2), expectedResult);
         }
@@ -268,9 +268,9 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void CrossTest(float x1, float y1, float z1, float x2, float y2, float z2,
             float expectedX, float expectedY, float expectedZ)
         {
-            Vector3 vector1 = new Vector3(x1, y1, z1);
-            Vector3 vector2 = new Vector3(x2, y2, z2);
-            Vector3 expectedResult = new Vector3(expectedX, expectedY, expectedZ);
+            Vector3 vector1 = new(x1, y1, z1);
+            Vector3 vector2 = new(x2, y2, z2);
+            Vector3 expectedResult = new(expectedX, expectedY, expectedZ);
 
             Assert.AreEqual(Vector3.Cross(vector1, vector2) == expectedResult, true);
         }

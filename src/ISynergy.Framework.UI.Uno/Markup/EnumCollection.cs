@@ -4,8 +4,6 @@ using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.UI.Markup
 {

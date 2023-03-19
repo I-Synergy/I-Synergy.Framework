@@ -3,7 +3,6 @@ using ISynergy.Framework.Logging.AppCenter.Options;
 using ISynergy.Framework.Logging.AppCenter.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace ISynergy.Framework.Logging.Extensions

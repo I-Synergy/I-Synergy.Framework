@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions.Base;
 using ISynergy.Framework.Automations.Enumerations;
-using System;
 
 namespace ISynergy.Framework.Automations.Actions
 {

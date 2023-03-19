@@ -2,7 +2,6 @@
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
-using System;
 using System.Reflection;
 
 namespace ISynergy.Framework.Mathematics

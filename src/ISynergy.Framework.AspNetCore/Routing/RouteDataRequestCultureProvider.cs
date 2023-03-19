@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Routing
 {
@@ -36,7 +34,7 @@ namespace ISynergy.Framework.AspNetCore.Routing
             {
                 return ZeroResultTask;
             }
-            
+
             string culture;
             var uiCulture = culture = pathTest;
 

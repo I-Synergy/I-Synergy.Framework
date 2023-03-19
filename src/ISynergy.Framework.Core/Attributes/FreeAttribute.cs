@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Attributes
+﻿namespace ISynergy.Framework.Core.Attributes
 {
     /// <summary>
     /// Class FreeAttribute. This class cannot be inherited.

@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Geography.Common.Tests
 {
@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestConstructor1()
         {
-            var a = new Angle(90);
+            Angle a = new(90);
             Assert.AreEqual(90, a.Degrees);
         }
 
@@ -25,7 +25,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestConstructor2()
         {
-            var a = new Angle(45, 30);
+            Angle a = new(45, 30);
             Assert.AreEqual(45.5, a.Degrees);
         }
 
@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestConstructor3()
         {
-            var a = new Angle(-45, 30);
+            Angle a = new(-45, 30);
             Assert.AreEqual(-45.5, a.Degrees);
         }
 
@@ -54,7 +54,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestConstructor5()
         {
-            var a = new Angle(45, 30, 30);
+            Angle a = new(45, 30, 30);
             Assert.AreEqual(a.Degrees, 45.5 + (1.0 / 120.0));
         }
 
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestConstructor8()
         {
-            var a = new Angle(-45, 30, 30);
+            Angle a = new(-45, 30, 30);
             Assert.AreEqual(a.Degrees, -45.5 - (1.0 / 120.0));
         }
 
@@ -101,7 +101,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestDegreeSetter()
         {
-            var a = new Angle(0);
+            Angle a = new(0);
             Assert.AreEqual(0, a.Degrees);
             a.Degrees = 90.0;
             Assert.AreEqual(90, a.Degrees);
@@ -113,7 +113,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestRadiansGetter()
         {
-            var a = new Angle(180);
+            Angle a = new(180);
             Assert.AreEqual(a.Radians, Math.PI);
         }
 
@@ -123,7 +123,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestRadiansSetter()
         {
-            var a = new Angle(0);
+            Angle a = new(0);
             Assert.AreEqual(0, a.Degrees);
             a.Radians = Math.PI;
             Assert.AreEqual(180, a.Degrees);
@@ -135,9 +135,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestAbs()
         {
-            var a = new Angle(-180);
+            Angle a = new(-180);
             Assert.AreEqual(a.Degrees, -180);
-            var b = a.Abs();
+            Angle b = a.Abs();
             Assert.AreEqual(180, b.Degrees);
         }
 
@@ -147,10 +147,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestCompareTo1()
         {
-            var x = 180.0;
-            var y = 180.00000001;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0;
+            double y = 180.00000001;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.AreEqual(0, a.CompareTo(a));
             Assert.AreEqual(a.CompareTo(b), -1);
             Assert.AreEqual(1, b.CompareTo(a));
@@ -162,10 +162,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestCompareTo2()
         {
-            var x = 180.0;
-            var y = x + 1e-13;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0;
+            double y = x + 1e-13;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.AreEqual(0, a.CompareTo(a));
             Assert.AreEqual(0, a.CompareTo(b));
             Assert.AreEqual(0, b.CompareTo(a));
@@ -177,10 +177,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEquals1()
         {
-            var x = 180.0;
-            var y = 180.00000001;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0;
+            double y = 180.00000001;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsFalse(a.Equals(b));
             b = new Angle(x);
             Assert.IsTrue(a.Equals(b));
@@ -192,7 +192,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEquals2()
         {
-            var a = new Angle(180);
+            Angle a = new(180);
             object s = "180";
             Assert.IsFalse(a.Equals(null));
             Assert.IsFalse(a.Equals(s));
@@ -204,8 +204,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestToString()
         {
-            var a = new Angle(45);
-            var s = a.ToString();
+            Angle a = new(45);
+            string s = a.ToString();
             Assert.AreEqual("45", s);
         }
 
@@ -215,10 +215,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestLessEqual1()
         {
-            var x = 180.0;
-            var y = 180.00000001;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0;
+            double y = 180.00000001;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsTrue(a <= b);
         }
 
@@ -228,10 +228,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestLessEqual2()
         {
-            var x = 180.0;
-            var y = 180.0 + 1e-13;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0;
+            double y = 180.0 + 1e-13;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsTrue(a <= b);
         }
 
@@ -241,10 +241,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestGreaterEqual1()
         {
-            var x = 180.0;
-            var y = 180.00000001;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0;
+            double y = 180.00000001;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsTrue(b >= a);
         }
 
@@ -254,10 +254,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestGreaterEqual2()
         {
-            var x = 180.0;
-            var y = 180.0 + 1e-13;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0;
+            double y = 180.0 + 1e-13;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsTrue(b >= a);
         }
 
@@ -267,9 +267,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestOperatorAdd()
         {
-            var a = new Angle(45);
-            var b = new Angle(60);
-            var c = a + b;
+            Angle a = new(45);
+            Angle b = new(60);
+            Angle c = a + b;
             Assert.AreEqual(105, c.Degrees);
         }
 
@@ -279,9 +279,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestOperatorSub()
         {
-            var a = new Angle(45);
-            var b = new Angle(60);
-            var c = a - b;
+            Angle a = new(45);
+            Angle b = new(60);
+            Angle c = a - b;
             Assert.AreEqual(c.Degrees, -15);
         }
 
@@ -291,9 +291,9 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestOperatorMul()
         {
-            var a = new Angle(45);
-            var b = 2 * a;
-            var c = a * 3;
+            Angle a = new(45);
+            Angle b = 2 * a;
+            Angle c = a * 3;
             Assert.AreEqual(90, b.Degrees);
             Assert.AreEqual(135, c.Degrees);
         }
@@ -304,10 +304,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestGreaterThan1()
         {
-            var x = 180.00000001;
-            var y = 180.0;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.00000001;
+            double y = 180.0;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsTrue(a > b);
         }
 
@@ -317,10 +317,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestGreaterThan2()
         {
-            var x = 180.0 + 1e-12;
-            var y = 180.0;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0 + 1e-12;
+            double y = 180.0;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsFalse(a > b);
         }
 
@@ -330,10 +330,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestNotEqual1()
         {
-            var x = 180.00000001;
-            var y = 180.0;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.00000001;
+            double y = 180.0;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsTrue(a != b);
         }
 
@@ -343,10 +343,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestNotEqual2()
         {
-            var x = 180.0 + 1e-12;
-            var y = 180.0;
-            var a = new Angle(x);
-            var b = new Angle(y);
+            double x = 180.0 + 1e-12;
+            double y = 180.0;
+            Angle a = new(x);
+            Angle b = new(y);
             Assert.IsFalse(a != b);
         }
 
@@ -356,8 +356,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestNegate()
         {
-            var a = new Angle(180);
-            var b = -a;
+            Angle a = new(180);
+            Angle b = -a;
             Assert.AreEqual(b.Degrees, -180);
         }
 
@@ -377,7 +377,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestDeg2Rad()
         {
-            var a = Angle.DegToRad(90);
+            double a = Angle.DegToRad(90);
             Assert.AreEqual(a, Math.PI / 2.0);
         }
 
@@ -387,7 +387,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestRadToDeg()
         {
-            var a = Angle.RadToDeg(Math.PI);
+            double a = Angle.RadToDeg(Math.PI);
             Assert.AreEqual(180, a);
         }
 
@@ -397,8 +397,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestHashCode()
         {
-            var a = new Angle(0);
-            var b = new Angle(0.000000001);
+            Angle a = new(0);
+            Angle b = new(0.000000001);
             Assert.IsTrue(a.GetHashCode() != b.GetHashCode());
         }
     }

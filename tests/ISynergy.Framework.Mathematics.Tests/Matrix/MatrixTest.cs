@@ -1,17 +1,17 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Core.Ranges;
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
     using ISynergy.Framework.Mathematics.Decompositions;
+    using ISynergy.Framework.Mathematics.Enumerations;
+    using ISynergy.Framework.Mathematics.Exceptions;
+    using ISynergy.Framework.Mathematics.Formats;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using ISynergy.Framework.Core.Ranges;
-    using ISynergy.Framework.Mathematics.Exceptions;
-    using ISynergy.Framework.Mathematics.Formats;
-    using ISynergy.Framework.Mathematics.Enumerations;
-    using ISynergy.Framework.Mathematics.Common;
 
     public partial class MatrixTest
     {
@@ -259,7 +259,7 @@
             double stepSize = 0.2;
             double[] expected = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
             double[] actual = Vector.Interval(from, to, stepSize);
-            var round = Matrix.Round(actual, 15);
+            double[] round = Matrix.Round(actual, 15);
             Assert.IsTrue(Matrix.IsEqual(expected, round));
         }
 
@@ -291,7 +291,7 @@
             int to = -1;
             double[] expected = { 5, 4, 3, 2, 1, 0, -1 };
             double[] actual = Vector.Indices(from, to);
-            var result = Matrix.IsEqual(expected, actual);
+            bool result = Matrix.IsEqual(expected, actual);
             Assert.IsTrue(result);
         }
         #endregion
@@ -555,7 +555,7 @@
                 new double[] {  5, 1,  2 },
             };
 
-            var actual = Elementwise.AddToDiagonal(a, 1.0);
+            double[][] actual = Elementwise.AddToDiagonal(a, 1.0);
 
             for (int i = 0; i < actual.GetLength()[0]; i++)
                 for (int j = 0; j < actual.GetLength()[1]; j++)
@@ -654,7 +654,7 @@
                 { 1, 2, 3, 4, 5 },
             };
 
-            actual = Elementwise.Add(a, v, (VectorType)0); // Add to rows
+            actual = Elementwise.Add(a, v, 0); // Add to rows
             Assert.IsTrue(Matrix.IsEqual(expected, actual));
 
 
@@ -798,7 +798,7 @@
         [TestMethod]
         public void ToArrayTest()
         {
-            DataTable table = new DataTable("myData");
+            DataTable table = new("myData");
             table.Columns.Add("Double", typeof(double));
             table.Columns.Add("Integer", typeof(int));
             table.Columns.Add("Boolean", typeof(bool));
@@ -826,7 +826,7 @@
         [TestMethod]
         public void ToArrayTest1()
         {
-            DataTable table = new DataTable("myData");
+            DataTable table = new("myData");
             table.Columns.Add("Double", typeof(double));
             table.Columns.Add("Integer", typeof(int));
             table.Columns.Add("Boolean", typeof(bool));
@@ -860,7 +860,7 @@
         [TestMethod]
         public void ToMatrixTest2()
         {
-            DataTable table = new DataTable("myData");
+            DataTable table = new("myData");
             table.Columns.Add("Double", typeof(double));
             table.Columns.Add("Integer", typeof(int));
             table.Columns.Add("Boolean", typeof(bool));
@@ -1164,7 +1164,7 @@
 
             double[] expected = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-            var actual = Matrix.Concatenate(vectors);
+            double[] actual = Matrix.Concatenate(vectors);
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual));
 
@@ -1301,13 +1301,13 @@
                 new int[] { 4, 5, 6},
             };
 
-            var actual = Matrix.Cartesian(sequences);
+            int[][] actual = Matrix.Cartesian(sequences);
 
-            var list = new List<int[]>();
+            List<int[]> list = new();
             foreach (IEnumerable<int> point in actual)
                 list.Add(new List<int>(point).ToArray());
 
-            var points = list.ToArray();
+            int[][] points = list.ToArray();
 
             Assert.IsTrue(points[0].IsEqual(new int[] { 1, 4 }));
             Assert.IsTrue(points[1].IsEqual(new int[] { 1, 5 }));
@@ -1684,8 +1684,8 @@
 
             double[][] actual = Matrix.Null(value);
 
-            var a = Jagged.RowVector(value).Dot(expected.GetColumn(0));
-            var b = Jagged.RowVector(value).Dot(expected.GetColumn(1));
+            double[] a = Jagged.RowVector(value).Dot(expected.GetColumn(0));
+            double[] b = Jagged.RowVector(value).Dot(expected.GetColumn(1));
             Assert.IsTrue(Matrix.IsEqual(a, new[] { 0 }, 1e-6));
             Assert.IsTrue(Matrix.IsEqual(b, new[] { 0 }, 1e-6));
 
@@ -1747,7 +1747,7 @@
                 { 0, 1, 6, 1 },
             };
 
-            var stra = a.ToString(OctaveMatrixFormatProvider.InvariantCulture);
+            string stra = a.ToString(OctaveMatrixFormatProvider.InvariantCulture);
 
             double[,] b =
             {
@@ -1756,7 +1756,7 @@
                 { 1, 5, 2, 1 },
             };
 
-            var strb = b.ToString(OctaveMatrixFormatProvider.InvariantCulture);
+            string strb = b.ToString(OctaveMatrixFormatProvider.InvariantCulture);
 
             double[,] expected =
             {
@@ -1785,7 +1785,7 @@
                 { 5,     1,     1 }
             };
 
-            var stra = a.ToString(OctaveMatrixFormatProvider.InvariantCulture);
+            string stra = a.ToString(OctaveMatrixFormatProvider.InvariantCulture);
 
             double[,] b =
             {
@@ -1794,7 +1794,7 @@
                 { 0, 0, 1 },
             };
 
-            var strb = b.ToString(OctaveMatrixFormatProvider.InvariantCulture);
+            string strb = b.ToString(OctaveMatrixFormatProvider.InvariantCulture);
 
             double[,] actual = Matrix.Divide(a, b);
             Assert.IsTrue(Matrix.IsEqual(a, actual, 1e-3));
@@ -2219,15 +2219,15 @@
             Assert.IsTrue(L.ToUpperTriangular(from: MatrixType.LowerTriangular).GetUpperTriangle(true).IsEqual(L.Transpose()));
             Assert.IsTrue(L.ToLowerTriangular(from: MatrixType.LowerTriangular).GetLowerTriangle(true).IsEqual(L));
 
-            var LowerToUpper = X.ToUpperTriangular(from: MatrixType.LowerTriangular);
-            var UpperToUpper = X.ToUpperTriangular(from: MatrixType.UpperTriangular);
-            var LowerToLower = X.ToLowerTriangular(from: MatrixType.LowerTriangular);
-            var UpperToLower = X.ToLowerTriangular(from: MatrixType.UpperTriangular);
+            double[,] LowerToUpper = X.ToUpperTriangular(from: MatrixType.LowerTriangular);
+            double[,] UpperToUpper = X.ToUpperTriangular(from: MatrixType.UpperTriangular);
+            double[,] LowerToLower = X.ToLowerTriangular(from: MatrixType.LowerTriangular);
+            double[,] UpperToLower = X.ToLowerTriangular(from: MatrixType.UpperTriangular);
 
-            var a = LowerToUpper.ToCSharp();
-            var b = UpperToUpper.ToCSharp();
-            var c = LowerToLower.ToCSharp();
-            var d = UpperToLower.ToCSharp();
+            string a = LowerToUpper.ToCSharp();
+            string b = UpperToUpper.ToCSharp();
+            string c = LowerToLower.ToCSharp();
+            string d = UpperToLower.ToCSharp();
 
             Assert.IsTrue(LowerToUpper.IsEqual(new double[,] {
                 { 1, 0, 6 },
@@ -2384,7 +2384,7 @@
 
             for (int i = 0; i < actual.GetLength(0); i++)
                 for (int j = 0; j < actual.GetLength(1); j++)
-                    Assert.AreEqual(expected[i,j], actual[i,j]);
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
         }
 
         [TestMethod]
@@ -2620,7 +2620,7 @@
         [TestMethod]
         public void MagicTest()
         {
-            var actual = Matrix.Magic(3);
+            double[,] actual = Matrix.Magic(3);
 
             double[,] expected =
             {
@@ -3033,8 +3033,8 @@
         [TestMethod]
         public void MeshTest()
         {
-            NumericRange rowRange = new NumericRange(-1, 1);
-            NumericRange colRange = new NumericRange(-1, 1);
+            NumericRange rowRange = new(-1, 1);
+            NumericRange colRange = new(-1, 1);
             double rowSteps = 0.5f;
             double colSteps = 0.5f;
             double[][] expected =
@@ -3153,7 +3153,7 @@
             double[] b = { 4, 5, 6 };
 
             // We can create a grid
-            var grid = a.MeshGrid(b);
+            Tuple<double[,], double[,]> grid = a.MeshGrid(b);
 
             // get the x-axis values
             double[,] x = grid.Item1;
@@ -3573,10 +3573,10 @@
                     Assert.AreEqual(expectedTop.Length, actualTop.Length);
                     Assert.AreEqual(expectedBottom.Length, actualBottom.Length);
 
-                    foreach (var v in actualTop)
+                    foreach (double v in actualTop)
                         Assert.IsTrue(expectedTop.Contains(v));
 
-                    foreach (var v in actualBottom)
+                    foreach (double v in actualBottom)
                         Assert.IsTrue(expectedBottom.Contains(v));
                 }
             }

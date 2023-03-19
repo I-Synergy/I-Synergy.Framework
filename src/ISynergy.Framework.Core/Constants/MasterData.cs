@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Models;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Core.Constants

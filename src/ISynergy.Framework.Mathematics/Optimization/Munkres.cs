@@ -58,9 +58,6 @@
 
 using ISynergy.Framework.Mathematics.Enumerations;
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ISynergy.Framework.Mathematics.Optimization
 {

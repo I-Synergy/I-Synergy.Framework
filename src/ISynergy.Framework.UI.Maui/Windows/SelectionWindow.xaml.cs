@@ -6,10 +6,10 @@ namespace ISynergy.Framework.UI.Windows;
 
 public partial class SelectionWindow : ISelectionWindow
 {
-	public SelectionWindow()
-	{
-		InitializeComponent();
-	}
+    public SelectionWindow()
+    {
+        InitializeComponent();
+    }
 
     private void DataSummary_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {

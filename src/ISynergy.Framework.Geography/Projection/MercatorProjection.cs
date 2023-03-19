@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Geodetic;
 using ISynergy.Framework.Geography.Global;
-using System;
 
 namespace ISynergy.Framework.Geography.Projection
 {

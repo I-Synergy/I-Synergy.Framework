@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Extensions;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Utilities
 {

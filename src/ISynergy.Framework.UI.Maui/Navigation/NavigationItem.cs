@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui;
-using Microsoft.Maui.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace ISynergy.Framework.UI.Navigation
 {

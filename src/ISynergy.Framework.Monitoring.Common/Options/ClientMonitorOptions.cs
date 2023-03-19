@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace ISynergy.Framework.Monitoring.Common.Options
+﻿namespace ISynergy.Framework.Monitoring.Common.Options
 {
     /// <summary>
     /// Client monitor options.

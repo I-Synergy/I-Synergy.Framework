@@ -30,8 +30,8 @@
         [TestMethod]
         public void ScaleTest()
         {
-            NumericRange from = new NumericRange(0, 100);
-            NumericRange to = new NumericRange(0, 50);
+            NumericRange from = new(0, 100);
+            NumericRange to = new(0, 50);
             int x = 50;
             int expected = 25;
             double actual = Vector.Scale(x, from, to);
@@ -42,8 +42,8 @@
         [TestMethod]
         public void ScaleTest2()
         {
-            NumericRange from = new NumericRange(-100, 100);
-            NumericRange to = new NumericRange(0, 50);
+            NumericRange from = new(-100, 100);
+            NumericRange to = new(0, 50);
             double x = 0;
             double expected = 25;
             double actual = Vector.Scale(x, from, to);
@@ -57,26 +57,26 @@
             double toMin = 0;
             double toMax = 100;
 
-            double[][] x = 
-            { 
+            double[][] x =
+            {
                 new double[] { -1.0,  1.0 },
                 new double[] { -0.2,  0.0 },
                 new double[] { -0.6,  0.0 },
                 new double[] {  0.0, -1.0 },
             };
 
-            double[][] expected = 
-            { 
+            double[][] expected =
+            {
                 new double[] {    0, 100 },
                 new double[] {   80,  50 },
                 new double[] {   40,  50 },
                 new double[] {  100,   0 },
             };
 
-            var min = Matrix.Min(x, 0);
-            var max = Matrix.Max(x, 0);
+            double[] min = Matrix.Min(x, 0);
+            double[] max = Matrix.Max(x, 0);
 
-            var actual = Vector.Scale(min, max, toMin, toMax, x);
+            double[][] actual = Vector.Scale(min, max, toMin, toMax, x);
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual));
 
@@ -126,16 +126,16 @@
         [TestMethod]
         public void DirectionTest()
         {
-            Point center = new Point(0, 0);
+            Point center = new(0, 0);
 
-            Point w = new Point(1, 0);
-            Point nw = new Point(1, 1);
-            Point n = new Point(0, 1);
-            Point ne = new Point(-1, 1);
-            Point e = new Point(-1, 0);
-            Point se = new Point(-1, -1);
-            Point s = new Point(0, -1);
-            Point sw = new Point(1, -1);
+            Point w = new(1, 0);
+            Point nw = new(1, 1);
+            Point n = new(0, 1);
+            Point ne = new(-1, 1);
+            Point e = new(-1, 0);
+            Point se = new(-1, -1);
+            Point s = new(0, -1);
+            Point sw = new(1, -1);
 
 
             int actual;

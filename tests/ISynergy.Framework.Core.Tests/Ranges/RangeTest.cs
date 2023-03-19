@@ -16,8 +16,8 @@ namespace ISynergy.Framework.Core.Ranges.Tests
         [DataRow(-5, 5, 0, 10, true)]
         public void IsOverlappingTest(float min1, float max1, float min2, float max2, bool expectedResult)
         {
-            NumericRange range1 = new NumericRange(min1, max1);
-            NumericRange range2 = new NumericRange(min2, max2);
+            NumericRange range1 = new(min1, max1);
+            NumericRange range2 = new(min2, max2);
 
             Assert.AreEqual(expectedResult, range1.IsOverlapping(range2));
         }
@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Core.Ranges.Tests
         [DataRow(-6.6f, -0.1f, -7, 0, false)]
         public void ToRangeTest(float fMin, float fMax, int iMin, int iMax, bool innerRange)
         {
-            NumericRange range = new NumericRange(fMin, fMax);
+            NumericRange range = new(fMin, fMax);
             NumericRange iRange = range.ToRange(innerRange);
 
             Assert.AreEqual(iMin, iRange.Min);
@@ -44,8 +44,8 @@ namespace ISynergy.Framework.Core.Ranges.Tests
         [DataRow(1.1f, 2.2f, 3.3f, 4.4f, false)]
         public void EqualityOperatorTest(float min1, float max1, float min2, float max2, bool areEqual)
         {
-            NumericRange range1 = new NumericRange(min1, max1);
-            NumericRange range2 = new NumericRange(min2, max2);
+            NumericRange range1 = new(min1, max1);
+            NumericRange range2 = new(min2, max2);
 
             Assert.AreEqual(range1.Equals(range2), areEqual);
             Assert.AreEqual(range1 == range2, areEqual);

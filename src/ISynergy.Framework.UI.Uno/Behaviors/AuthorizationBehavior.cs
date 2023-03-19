@@ -3,7 +3,6 @@ using ISynergy.Framework.UI.Abstractions.Providers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
-using System;
 using Windows.ApplicationModel;
 
 namespace ISynergy.Framework.UI.Behaviors

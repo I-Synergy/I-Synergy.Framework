@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.AspNetCore.Proxy.Models;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.AspNetCore.Proxy.Options
 {

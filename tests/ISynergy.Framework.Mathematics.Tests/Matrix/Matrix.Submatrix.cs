@@ -5,19 +5,19 @@ namespace ISynergy.Framework.Mathematics.Tests
     public partial class MatrixTest
     {
 
-        
+
         [TestMethod]
         public void MatrixSubmatrix()
         {
             double[,] value = new double[,]
-            { 
+            {
               { 1.000, 1.000, 1.000 },
               { 2.000, 2.000, 2.000 },
               { 3.000, 3.000, 3.000 }
             };
 
             double[,] expected = new double[,]
-            { 
+            {
               { 1.000, 1.000, 1.000 },
               { 3.000, 3.000, 3.000 }
             };
@@ -31,14 +31,14 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void MatrixSubmatrix2()
         {
             double[,] value = new double[,]
-            { 
+            {
               { 1.000, 1.000, 1.000 },
               { 2.000, 2.000, 2.000 },
               { 3.000, 3.000, 3.000 }
             };
 
             double[,] expected = new double[,]
-            { 
+            {
               { 1.000, 1.000, 1.000 },
               { 3.000, 3.000, 3.000 }
             };
@@ -58,7 +58,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void SubmatrixTest()
         {
-            double[][] data = 
+            double[][] data =
             {
                 new double[] { 1, 2, 3 },
                 new double[] { 4, 5, 6 },
@@ -69,7 +69,7 @@ namespace ISynergy.Framework.Mathematics.Tests
             int j0 = 0;
             int j1 = 1;
 
-            double[][] expected = 
+            double[][] expected =
             {
                 //new double[] { 1, 2, 3 },
                 new double[] { 4, 5/*, 6*/ },
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.Mathematics.Tests
                 for (int j = 0; j < actual.GetLength()[1]; j++)
                     Assert.AreEqual(expected[i][j], actual[i][j]);
 
-            double[][] expected2 = 
+            double[][] expected2 =
             {
                 new double[] { 1, 2/*, 3*/ },
                 new double[] { 4, 5/*, 6*/ },
@@ -100,14 +100,14 @@ namespace ISynergy.Framework.Mathematics.Tests
         public void SubmatrixTest1()
         {
             double[,] value = new double[,]
-            { 
+            {
                 { 1.000, 1.000, 1.000 },
                 { 2.000, 2.000, 2.000 },
                 { 3.000, 3.000, 3.000 }
             };
 
             double[,] expected = new double[,]
-            { 
+            {
                 {        1.000, 1.000 },
                 {        3.000, 3.000 }
             };
@@ -123,7 +123,7 @@ namespace ISynergy.Framework.Mathematics.Tests
 
 
             double[,] expected2 = new double[,]
-            { 
+            {
                 {        1.000, 1.000 },
                 {        2.000, 2.000 },
                 {        3.000, 3.000 }

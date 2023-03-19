@@ -6,10 +6,7 @@ using ISynergy.Framework.EntityFramework.Abstractions.Repositories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.EntityFramework.Repositories
 {

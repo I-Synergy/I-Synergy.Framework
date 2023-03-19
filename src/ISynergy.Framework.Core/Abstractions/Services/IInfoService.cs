@@ -24,6 +24,6 @@
         /// Gets the copy rights.
         /// </summary>
         /// <value>The copy rights detail.</value>
-        string Copyrights { get;}
+        string Copyrights { get; }
     }
 }
