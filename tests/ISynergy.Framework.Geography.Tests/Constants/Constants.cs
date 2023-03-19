@@ -11,12 +11,12 @@ namespace ISynergy.Framework.Geography.Tests
         /// That's where my home is.
         /// </summary>
         public static readonly GlobalCoordinates MyHome =
-            new GlobalCoordinates(49.8459444, 8.7993944);
+            new(49.8459444, 8.7993944);
 
         /// <summary>
         /// My office
         /// </summary>
         public static readonly GlobalCoordinates MyOffice =
-            new GlobalCoordinates(50.2160806, 8.6152611);
+            new(50.2160806, 8.6152611);
     }
 }

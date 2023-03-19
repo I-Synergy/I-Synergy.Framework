@@ -21,7 +21,7 @@
             Func<double, double> function = x => x * x * x + 2 * x * x - 10 * x + 1;
 
             // And now we can create the search algorithm:
-            BrentSearch search = new BrentSearch(function, -4, 2);
+            BrentSearch search = new(function, -4, 2);
 
             // Finally, we can query the information we need
             bool success1 = search.Maximize();  // should be true
@@ -55,7 +55,7 @@
             double tolerance = 1e-9;
             int maxIterations = 20;
 
-            BrentSearch sut = new BrentSearch(f, lowerBound, upperBound, tolerance, maxIterations);
+            BrentSearch sut = new(f, lowerBound, upperBound, tolerance, maxIterations);
 
             Assert.AreSame(f, sut.Function);
             Assert.AreEqual(lowerBound, sut.LowerBound);
@@ -80,7 +80,7 @@
             Assert.AreEqual(expected, actual, 1e-6);
             Assert.IsFalse(Double.IsNaN(actual));
 
-            var search = new BrentSearch(f, a, b);
+            BrentSearch search = new(f, a, b);
             bool isSuccess = search.FindRoot();
 
             Assert.IsTrue(isSuccess);
@@ -106,7 +106,7 @@
             Assert.AreEqual(expected, actual, 1e-6);
             Assert.AreEqual(value, f(actual), 1e-5);
 
-            var search = new BrentSearch(f, a, b);
+            BrentSearch search = new(f, a, b);
             bool isSuccess = search.Find(value);
 
             Assert.IsTrue(isSuccess);
@@ -127,7 +127,7 @@
             Assert.AreEqual(expected, actual, 1e-10);
 
 
-            var search = new BrentSearch(f, -200, 200);
+            BrentSearch search = new(f, -200, 200);
             bool isSuccess = search.Maximize();
 
             Assert.IsTrue(isSuccess);
@@ -148,7 +148,7 @@
             Assert.AreEqual(expected, actual, 1e-10);
 
 
-            var search = new BrentSearch(f, -200, 200);
+            BrentSearch search = new(f, -200, 200);
             bool isSuccess = search.Minimize();
 
             Assert.IsTrue(isSuccess);
@@ -179,8 +179,8 @@
             double a = -1;
             double b = +1;
 
-            var search = new BrentSearch(f, a, b);
-            var isSuccess = search.FindRoot();
+            BrentSearch search = new(f, a, b);
+            bool isSuccess = search.FindRoot();
 
             Assert.AreEqual(false, isSuccess);
             Assert.AreEqual(BrentSearchStatus.RootNotBracketed, search.Status);
@@ -208,8 +208,8 @@
             double a = -3;
             double b = +3;
 
-            var search = new BrentSearch(f, a, b);
-            var isSuccess = search.FindRoot();
+            BrentSearch search = new(f, a, b);
+            bool isSuccess = search.FindRoot();
 
             Assert.AreEqual(false, isSuccess);
             Assert.AreEqual(BrentSearchStatus.RootNotBracketed, search.Status);
@@ -237,8 +237,8 @@
             double a = -1;
             double b = +3000;
 
-            var search = new BrentSearch(f, a, b, maxIterations: 5);
-            var isSuccess = search.FindRoot();
+            BrentSearch search = new(f, a, b, maxIterations: 5);
+            bool isSuccess = search.FindRoot();
 
             Assert.AreEqual(false, isSuccess);
             Assert.AreEqual(BrentSearchStatus.MaxIterationsReached, search.Status);
@@ -268,8 +268,8 @@
             double a = -200;
             double b = +200;
 
-            var search = new BrentSearch(f, a, b, maxIterations: 10);
-            var isSuccess = search.Maximize();
+            BrentSearch search = new(f, a, b, maxIterations: 10);
+            bool isSuccess = search.Maximize();
 
             Assert.AreEqual(false, isSuccess);
             Assert.AreEqual(BrentSearchStatus.MaxIterationsReached, search.Status);

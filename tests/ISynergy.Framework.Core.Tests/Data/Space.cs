@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Core.Tests.Data
         public string Name { get; set; }
         public double SquareFeet { get; set; }
         public SpaceTypes Type { get; set; }
-        
+
         public Space()
         {
             Id = Guid.NewGuid();

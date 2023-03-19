@@ -1,10 +1,9 @@
-﻿using System.Diagnostics;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Controls;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ISynergy.Framework.UI.Controls.Validators
 {

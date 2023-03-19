@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Core.Collections.Tests
         {
             #region doc_ctor_2
             // Let's start by creating an empty tree 
-            var tree = new BinaryTree<MyTreeNode>();
+            BinaryTree<MyTreeNode> tree = new();
 
             // Now, we can proceed by placing elements on different positions of the tree. Note that this class 
             // does not  implement a search  tree, so it is not possible to place elements automatically using 

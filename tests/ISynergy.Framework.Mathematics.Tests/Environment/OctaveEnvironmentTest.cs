@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ISynergy.Framework.Mathematics.Environments;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using ISynergy.Framework.Mathematics.Environments;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {
@@ -10,9 +10,9 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void eyeTest()
         {
-            var I = eye(3);
+            mat I = eye(3);
 
-            var A = I * 2;
+            mat A = I * 2;
 
             Console.WriteLine(A);
             //
@@ -20,7 +20,7 @@ namespace ISynergy.Framework.Mathematics.Tests
             //    A = 0 2 0
             //        0 0 2
 
-            var B = ones(3, 6);
+            mat B = ones(3, 6);
 
             Console.WriteLine(B);
             //
@@ -28,14 +28,14 @@ namespace ISynergy.Framework.Mathematics.Tests
             //    B = 1 1 1 1 1 1
             //        1 1 1 1 1 1
 
-            var C = new double[,]
+            double[,] C = new double[,]
             {
                 { 2, 2, 2, 2, 2, 2 },
                 { 2, 0, 0, 0, 0, 2 },
                 { 2, 2, 2, 2, 2, 2 },
             };
 
-            var D = A * B - C;
+            mat D = A * B - C;
 
             Console.WriteLine(D);
             //
@@ -101,7 +101,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void initTest()
         {
-            MyAlgorithm al = new MyAlgorithm();
+            MyAlgorithm al = new();
         }
 
         public class MyAlgorithm : OctaveEnvironment

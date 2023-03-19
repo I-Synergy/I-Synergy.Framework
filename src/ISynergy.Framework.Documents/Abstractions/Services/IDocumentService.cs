@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.Documents.Models;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Documents.Abstractions.Services
 {

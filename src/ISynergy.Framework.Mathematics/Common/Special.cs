@@ -20,7 +20,6 @@
 //
 
 using ISynergy.Framework.Mathematics.Functions;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Common
 {

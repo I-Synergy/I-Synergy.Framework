@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions;
-using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Exceptions;
 using ISynergy.Framework.UI.Views;
 using Microsoft.Extensions.Logging;
@@ -42,7 +41,7 @@ namespace ISynergy.Framework.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        protected BaseApplication() 
+        protected BaseApplication()
             : base()
         {
             _logger = ServiceLocator.Default.GetInstance<ILogger>() ?? LoggerFactory.Create(builder =>
@@ -65,7 +64,6 @@ namespace ISynergy.Framework.UI
             _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
             _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
             _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
-            
             _applicationSettingsService = ServiceLocator.Default.GetInstance<IBaseApplicationSettingsService>();
             _applicationSettingsService.LoadSettings();
 
@@ -126,7 +124,7 @@ namespace ISynergy.Framework.UI
         /// </code>
         /// </example>
         /// <returns></returns>
-        public virtual Task InitializeApplicationAsync() 
+        public virtual Task InitializeApplicationAsync()
         {
             var culture = CultureInfo.CurrentCulture;
             var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();

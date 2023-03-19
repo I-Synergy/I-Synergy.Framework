@@ -40,41 +40,41 @@ namespace Sample.ViewModels
         {
             Publication = new ObservableCollection<TreeNode<Guid, PublicationItem>>();
 
-            var publication = new Publication("Test publication", "1.0.0", 0);
+            Publication publication = new("Test publication", "1.0.0", 0);
 
-            var chapter1Model = new PublicationItem(publication.PublicationId, "Chapter 1", PublicationItemTypes.Chapter);
-            var topicAModel = new PublicationItem(publication.PublicationId, "Topic A", PublicationItemTypes.Topic);
-            var documentA1Model = new PublicationItem(publication.PublicationId, "Document A1", PublicationItemTypes.Document);
-            var documentA2Model = new PublicationItem(publication.PublicationId, "Document A2", PublicationItemTypes.Document);
-            var documentA3Model = new PublicationItem(publication.PublicationId, "Document A3", PublicationItemTypes.Document);
-            var topicBModel = new PublicationItem(publication.PublicationId, "Topic B", PublicationItemTypes.Topic);
-            var documentB1Model = new PublicationItem(publication.PublicationId, "Document B1", PublicationItemTypes.Document);
-            var documentB2Model = new PublicationItem(publication.PublicationId, "Document B2", PublicationItemTypes.Document);
-            var documentB3Model = new PublicationItem(publication.PublicationId, "Document B3", PublicationItemTypes.Document);
-            var documentB4Model = new PublicationItem(publication.PublicationId, "Document B4", PublicationItemTypes.Document);
-            var chapter2Model = new PublicationItem(publication.PublicationId, "Chapter 2", PublicationItemTypes.Chapter);
-            var topicCModel = new PublicationItem(publication.PublicationId, "Topic C", PublicationItemTypes.Topic);
-            var documentC1Model = new PublicationItem(publication.PublicationId, "Document C1", PublicationItemTypes.Document);
-            var documentC2Model = new PublicationItem(publication.PublicationId, "Document C2", PublicationItemTypes.Document);
-            var documentC3Model = new PublicationItem(publication.PublicationId, "Document C3", PublicationItemTypes.Document);
-            var documentC4Model = new PublicationItem(publication.PublicationId, "Document C4", PublicationItemTypes.Document);
-            var documentC5Model = new PublicationItem(publication.PublicationId, "Document C5", PublicationItemTypes.Document);
+            PublicationItem chapter1Model = new(publication.PublicationId, "Chapter 1", PublicationItemTypes.Chapter);
+            PublicationItem topicAModel = new(publication.PublicationId, "Topic A", PublicationItemTypes.Topic);
+            PublicationItem documentA1Model = new(publication.PublicationId, "Document A1", PublicationItemTypes.Document);
+            PublicationItem documentA2Model = new(publication.PublicationId, "Document A2", PublicationItemTypes.Document);
+            PublicationItem documentA3Model = new(publication.PublicationId, "Document A3", PublicationItemTypes.Document);
+            PublicationItem topicBModel = new(publication.PublicationId, "Topic B", PublicationItemTypes.Topic);
+            PublicationItem documentB1Model = new(publication.PublicationId, "Document B1", PublicationItemTypes.Document);
+            PublicationItem documentB2Model = new(publication.PublicationId, "Document B2", PublicationItemTypes.Document);
+            PublicationItem documentB3Model = new(publication.PublicationId, "Document B3", PublicationItemTypes.Document);
+            PublicationItem documentB4Model = new(publication.PublicationId, "Document B4", PublicationItemTypes.Document);
+            PublicationItem chapter2Model = new(publication.PublicationId, "Chapter 2", PublicationItemTypes.Chapter);
+            PublicationItem topicCModel = new(publication.PublicationId, "Topic C", PublicationItemTypes.Topic);
+            PublicationItem documentC1Model = new(publication.PublicationId, "Document C1", PublicationItemTypes.Document);
+            PublicationItem documentC2Model = new(publication.PublicationId, "Document C2", PublicationItemTypes.Document);
+            PublicationItem documentC3Model = new(publication.PublicationId, "Document C3", PublicationItemTypes.Document);
+            PublicationItem documentC4Model = new(publication.PublicationId, "Document C4", PublicationItemTypes.Document);
+            PublicationItem documentC5Model = new(publication.PublicationId, "Document C5", PublicationItemTypes.Document);
 
-            var chapter1 = publication.AddChild(chapter1Model);
-            var topicA = chapter1.AddChild(topicAModel);
+            TreeNode<Guid, PublicationItem> chapter1 = publication.AddChild(chapter1Model);
+            TreeNode<Guid, PublicationItem> topicA = chapter1.AddChild(topicAModel);
             topicA.AddChild(documentA1Model);
             topicA.AddChild(documentA2Model);
             topicA.AddChild(documentA3Model);
 
-            var topicB = chapter1.AddChild(topicBModel);
+            TreeNode<Guid, PublicationItem> topicB = chapter1.AddChild(topicBModel);
             topicB.AddChild(documentB1Model);
             topicB.AddChild(documentB2Model);
             topicB.AddChild(documentB3Model);
             topicB.AddChild(documentB4Model);
 
-            var chapter2 = publication.AddChild(chapter2Model);
+            TreeNode<Guid, PublicationItem> chapter2 = publication.AddChild(chapter2Model);
 
-            var topicC = chapter2.AddChild(topicCModel);
+            TreeNode<Guid, PublicationItem> topicC = chapter2.AddChild(topicCModel);
             topicC.AddChild(documentC1Model);
             topicC.AddChild(documentC2Model);
             topicC.AddChild(documentC3Model);

@@ -21,13 +21,13 @@ namespace Sample.ApplicationInsights
         {
             try
             {
-                var config = new ConfigurationBuilder()
+                IConfigurationRoot config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false)
                 .Build();
 
                 var assembly = Assembly.GetAssembly(typeof(Program));
 
-                var serviceProvider = new ServiceCollection()
+                ServiceProvider serviceProvider = new ServiceCollection()
                     .AddLogging(builder => builder.AddApplicationInsightsLogging(config))
                     .AddOptions()
                     .AddSingleton<IContext, Context>()
@@ -35,7 +35,7 @@ namespace Sample.ApplicationInsights
                     .AddScoped<Startup>()
                     .BuildServiceProvider();
 
-                var application = serviceProvider.GetRequiredService<Startup>();
+                Startup application = serviceProvider.GetRequiredService<Startup>();
                 application.Run();
             }
             catch (Exception e)

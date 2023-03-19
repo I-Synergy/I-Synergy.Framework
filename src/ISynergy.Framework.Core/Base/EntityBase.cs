@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using System;
 using System.Reflection;
 
 namespace ISynergy.Framework.Core.Base

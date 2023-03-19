@@ -24,7 +24,7 @@ namespace ISynergy.Framework.MessageBus.Extensions
             _self.TryAddSingleton<TImplementation>();
             _self.TryAddSingleton<IPublisherServiceBus<TQueueMessage>, TImplementation>();
 
-            return _self; 
+            return _self;
         }
 
 
@@ -40,7 +40,7 @@ namespace ISynergy.Framework.MessageBus.Extensions
             where TQueueMessage : class, IBaseMessage
             where TImplementation : class, ISubscriberServiceBus<TQueueMessage>
         {
-            if(isScoped)
+            if (isScoped)
             {
                 _self.TryAddScoped<TImplementation>();
                 _self.TryAddScoped<ISubscriberServiceBus<TQueueMessage>, TImplementation>();

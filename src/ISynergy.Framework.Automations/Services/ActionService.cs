@@ -5,10 +5,6 @@ using ISynergy.Framework.Automations.Options;
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Services
 {

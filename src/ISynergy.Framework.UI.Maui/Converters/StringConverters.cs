@@ -380,12 +380,12 @@ namespace ISynergy.Framework.UI.Converters
         }
     }
 
-    
+
     public class StringToUriConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(Uri.TryCreate(value.ToString(), UriKind.RelativeOrAbsolute, out Uri uri))
+            if (Uri.TryCreate(value.ToString(), UriKind.RelativeOrAbsolute, out Uri uri))
                 return uri;
 
             return null;

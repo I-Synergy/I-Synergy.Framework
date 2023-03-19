@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using ISynergy.Framework.Core.Validation;
-using System.Text;
-using System;
+﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.UI.Extensions;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Controls;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.UI.Controls.Validators
 {

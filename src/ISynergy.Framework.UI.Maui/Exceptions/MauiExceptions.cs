@@ -26,7 +26,7 @@
             // but we need to set UnwindNativeCode to get it to work correctly. 
             // 
             // See: https://github.com/xamarin/xamarin-macios/issues/15252
-        
+
             ObjCRuntime.Runtime.MarshalManagedException += (_, args) =>
             {
                 args.ExceptionMode = ObjCRuntime.MarshalManagedExceptionMode.UnwindNativeCode;

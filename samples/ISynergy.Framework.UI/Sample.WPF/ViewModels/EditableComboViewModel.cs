@@ -70,7 +70,7 @@ namespace Sample.ViewModels
 
             this.Validator = new Action<IObservableClass>(_ =>
             {
-                var regex = RegexUtility.MaskToRegexConverter(RegexExpression);
+                Regex regex = RegexUtility.MaskToRegexConverter(RegexExpression);
 
                 if (string.IsNullOrEmpty(RegexSample) || !regex.IsMatch(RegexSample))
                 {
@@ -81,7 +81,7 @@ namespace Sample.ViewModels
 
         public override Task SubmitAsync(object e)
         {
-            if(Validate())
+            if (Validate())
                 return base.SubmitAsync(e);
 
             return Task.CompletedTask;

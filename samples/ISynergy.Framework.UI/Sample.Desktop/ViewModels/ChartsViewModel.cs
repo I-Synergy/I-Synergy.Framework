@@ -58,9 +58,9 @@ namespace Sample.ViewModels
 
         private List<Measurement> BuildOperationBudget(DateTimeOffset startDate, int totalMonths, double earnings, double expenses)
         {
-            var result = new List<Measurement>();
+            List<Measurement> result = new();
 
-            var buffer = 0d;
+            double buffer = 0d;
 
             for (int i = 0; i < totalMonths; i++)
             {

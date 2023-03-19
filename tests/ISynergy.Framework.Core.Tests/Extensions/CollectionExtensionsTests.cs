@@ -1,11 +1,9 @@
-﻿using ISynergy.Framework.Core.Collections;
-using ISynergy.Framework.Core.Data.Tests.TestClasses;
+﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Extensions.Tests
 {
@@ -22,13 +20,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         public void NullObservableCollectionNonFailableTest()
         {
             ObservableCollection<object> list = null;
-            var result = false;
-
-            foreach (var item in list.EnsureNotNull()) { }
-
-            result = true;
-
-            Assert.IsTrue(result);
+            Assert.IsNotNull(list.EnsureNotNull());
         }
 
         /// <summary>
@@ -37,13 +29,13 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void NullObservableCollectionFailableTest()
         {
-            Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
+            Assert.ThrowsException<NullReferenceException>(() =>
             {
                 ObservableCollection<object> list = null;
-
-                foreach (var item in list) { }
-
-                return Task.CompletedTask;
+                foreach (object item in list) 
+                {
+                    Assert.IsNotNull(item);
+                }
             });
         }
 
@@ -53,7 +45,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ICollectionTToDataTableTest()
         {
-            var collection = new List<Product>()
+            List<Product> collection = new()
             {
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
@@ -62,9 +54,9 @@ namespace ISynergy.Framework.Core.Extensions.Tests
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test5" }
             };
 
-            if(collection is ICollection<Product> data)
+            if (collection is ICollection<Product> data)
             {
-                var dataTable = data.ToDataTable<Product>("Test");
+                System.Data.DataTable dataTable = data.ToDataTable<Product>("Test");
 
                 Assert.IsNotNull(dataTable);
                 Assert.AreEqual(5, dataTable.Rows.Count);
@@ -87,7 +79,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void ICollectionToDataTableTest()
         {
-            var collection = new List<Product>()
+            List<Product> collection = new()
             {
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test1" },
                 new Product{ ProductId = Guid.NewGuid(), Name ="Test2" },
@@ -98,7 +90,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
 
             if (collection is ICollection data)
             {
-                var dataTable = data.ToDataTable(typeof(Product), "Test");
+                System.Data.DataTable dataTable = data.ToDataTable(typeof(Product), "Test");
 
                 Assert.IsNotNull(dataTable);
                 Assert.AreEqual(5, dataTable.Rows.Count);

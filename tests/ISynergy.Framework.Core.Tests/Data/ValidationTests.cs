@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using ISynergy.Framework.Core.Abstractions.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
@@ -18,14 +18,14 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ValidateIsNullTest()
         {
-            var model = new ModelFixture<string>
+            ModelFixture<string> model = new()
             {
                 Value = null
             };
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<string>;
+                ModelFixture<string> i = arg as ModelFixture<string>;
 
                 if (string.IsNullOrEmpty(i.Value))
                 {
@@ -42,14 +42,14 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ValidateIsNotNullTest()
         {
-            var model = new ModelFixture<string>
+            ModelFixture<string> model = new()
             {
                 Value = "192.168.1.0"
             };
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<string>;
+                ModelFixture<string> i = arg as ModelFixture<string>;
 
                 if (string.IsNullOrEmpty(i.Value))
                 {
@@ -66,14 +66,14 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ValidateIsNotInRangeTest()
         {
-            var model = new ModelFixture<int>
+            ModelFixture<int> model = new()
             {
                 Value = 9999
             };
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<int>;
+                ModelFixture<int> i = arg as ModelFixture<int>;
 
                 if (!Enumerable.Range(1, 100).Contains(i.Value))
                 {
@@ -90,14 +90,14 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ValidateIsInRangeTest()
         {
-            var model = new ModelFixture<int>
+            ModelFixture<int> model = new()
             {
                 Value = 80
             };
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<int>;
+                ModelFixture<int> i = arg as ModelFixture<int>;
 
                 if (!Enumerable.Range(1, 500).Contains(i.Value))
                 {
@@ -114,14 +114,14 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ValidateStringLengthIsNotInRangeTest()
         {
-            var model = new ModelFixture<string>
+            ModelFixture<string> model = new()
             {
                 Value = ""
             };
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<string>;
+                ModelFixture<string> i = arg as ModelFixture<string>;
 
                 if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                 {
@@ -138,14 +138,14 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void ValidateStringLengthIsInRangeTest()
         {
-            var model = new ModelFixture<string>
+            ModelFixture<string> model = new()
             {
                 Value = "192.168.1.0"
             };
 
             model.Validator = new Action<IObservableClass>(arg =>
             {
-                var i = arg as ModelFixture<string>;
+                ModelFixture<string> i = arg as ModelFixture<string>;
 
                 if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                 {

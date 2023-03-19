@@ -1,8 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Mathematics.Transforms;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Numerics;
-    using ISynergy.Framework.Mathematics.Transforms;
 
     [TestClass]
     public class HilbertTransformTest
@@ -37,7 +37,7 @@
         [TestMethod]
         public void FHTTest2()
         {
-            double[] original = { -1.0, -0.8, -0.2, -0.1, 0.1, 0.2, 0.8, 1.0  };
+            double[] original = { -1.0, -0.8, -0.2, -0.1, 0.1, 0.2, 0.8, 1.0 };
 
             double[] actual = (double[])original.Clone();
 

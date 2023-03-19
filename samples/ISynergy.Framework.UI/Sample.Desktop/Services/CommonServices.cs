@@ -46,11 +46,11 @@ namespace Sample.Services
             IDispatcherService dispatcherService,
             IAuthenticationService authenticationService,
             IFileService<FileResult> fileService)
-            :base(busyService,
-                 languageService, 
-                 dialogService, 
-                 navigationService, 
-                 infoService, 
+            : base(busyService,
+                 languageService,
+                 dialogService,
+                 navigationService,
+                 infoService,
                  converterService,
                  dispatcherService)
         {

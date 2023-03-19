@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using ISynergy.Framework.IO.Events;
+﻿using ISynergy.Framework.IO.Events;
 
 namespace ISynergy.Framework.IO.Watchers
 {

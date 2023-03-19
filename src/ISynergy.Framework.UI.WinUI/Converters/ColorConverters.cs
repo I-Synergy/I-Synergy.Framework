@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.UI.Extensions;
-using System;
-using Microsoft.UI;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Media;
 using Windows.UI;
 
 namespace ISynergy.Framework.UI.Converters
@@ -61,7 +59,7 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is int color && color != 0)
+            if (value is int color && color != 0)
             {
                 return new SolidColorBrush(color.ConvertInteger2Color());
             }
@@ -123,7 +121,7 @@ namespace ISynergy.Framework.UI.Converters
         {
             Argument.IsNotNull(value);
 
-            if(value is Color color)
+            if (value is Color color)
             {
                 return color.ConvertColor2Integer();
             }

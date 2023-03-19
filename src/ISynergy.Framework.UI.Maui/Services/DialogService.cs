@@ -90,13 +90,13 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="dialog"></param>
         public override Task CloseDialogAsync(IWindow dialog)
         {
-            if (dialog is PopupPage page && 
-                _popupNavigation.PopupStack is not null && 
-                _popupNavigation.PopupStack.Count > 0 && 
+            if (dialog is PopupPage page &&
+                _popupNavigation.PopupStack is not null &&
+                _popupNavigation.PopupStack.Count > 0 &&
                 _popupNavigation.PopupStack.Contains(page))
                 return _popupNavigation.RemovePageAsync(page);
 
             return Task.CompletedTask;
-        } 
+        }
     }
 }

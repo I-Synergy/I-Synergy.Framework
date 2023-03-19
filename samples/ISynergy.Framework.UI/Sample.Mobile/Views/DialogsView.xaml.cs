@@ -4,9 +4,9 @@ namespace Sample.Views;
 
 public partial class DialogsView
 {
-	public DialogsView(DialogsViewModel viewModel)
+    public DialogsView(DialogsViewModel viewModel)
         : base(viewModel)
-	{
-		InitializeComponent();
-	}
+    {
+        InitializeComponent();
+    }
 }

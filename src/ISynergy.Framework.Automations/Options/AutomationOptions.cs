@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Automations.Options
+﻿namespace ISynergy.Framework.Automations.Options
 {
     /// <summary>
     /// Automation options.

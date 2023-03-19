@@ -92,9 +92,9 @@ namespace ISynergy.Framework.Logging.Services
         /// Gets the metrics.
         /// </summary>
         /// <returns>Dictionary&lt;System.String, System.String&gt;.</returns>
-        private Dictionary<string, object?> GetMetrics()
+        private Dictionary<string, object> GetMetrics()
         {
-            var metrics = new Dictionary<string, object?>();
+            var metrics = new Dictionary<string, object>();
 
             if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
             {

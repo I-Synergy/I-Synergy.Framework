@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Linq;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {
@@ -54,7 +52,7 @@ namespace ISynergy.Framework.AspNetCore.Extensions
             {
                 var contentType = GetFileContentType(path);
 
-                if(html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
+                if (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)) is IWebHostEnvironment env)
                 {
                     using var stream = env.WebRootFileProvider.GetFileInfo(path).CreateReadStream();
                     var array = new byte[stream.Length];

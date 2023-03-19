@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mathematics.Exceptions;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints
 {

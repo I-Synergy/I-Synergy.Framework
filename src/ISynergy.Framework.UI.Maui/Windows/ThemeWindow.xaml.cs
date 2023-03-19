@@ -4,8 +4,8 @@ namespace ISynergy.Framework.UI.Windows;
 
 public partial class ThemeWindow : IThemeWindow
 {
-	public ThemeWindow()
-	{
-		InitializeComponent();
-	}
+    public ThemeWindow()
+    {
+        InitializeComponent();
+    }
 }

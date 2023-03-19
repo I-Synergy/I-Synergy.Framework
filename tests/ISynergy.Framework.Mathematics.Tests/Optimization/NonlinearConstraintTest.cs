@@ -27,7 +27,7 @@
         [TestMethod]
         public void ConstructorTest6()
         {
-            var constraints = new[]
+            NonlinearConstraint[] constraints = new[]
             {
                 new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1]),
                 new NonlinearConstraint(2, x =>  1.0 - x[0] * x[0] - x[1] * x[1] >= 0),
@@ -45,11 +45,11 @@
             Assert.AreEqual(-1.0, constraints[2].Value);
             Assert.AreEqual(1.0, constraints[3].Value);
 
-            foreach (var c1 in constraints)
+            foreach (NonlinearConstraint c1 in constraints)
             {
                 double v1 = c1.GetViolation(new double[] { 4, 2 });
 
-                foreach (var c2 in constraints)
+                foreach (NonlinearConstraint c2 in constraints)
                 {
                     double v2 = c2.GetViolation(new double[] { 4, 2 });
 
@@ -68,7 +68,7 @@
             };
 
             double[] expected;
-            
+
             expected = new double[] { -0.5, 0.5 };
             for (int i = 0; i < targets.Length; i++)
             {

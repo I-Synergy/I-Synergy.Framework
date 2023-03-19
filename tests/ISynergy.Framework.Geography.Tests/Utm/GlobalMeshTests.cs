@@ -1,7 +1,7 @@
-﻿using System;
-using ISynergy.Framework.Geography.Global;
+﻿using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Geography.Utm.Tests
 {
@@ -17,11 +17,11 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestAllCenters()
         {
-            var theMesh = new GlobalMesh(25000);
+            GlobalMesh theMesh = new(25000);
             for (long mesh = 0; mesh < theMesh.Count; mesh++)
             {
-                var center = theMesh.CenterOf(mesh);
-                var verify = theMesh.MeshNumber(center);
+                UtmCoordinate center = theMesh.CenterOf(mesh);
+                long verify = theMesh.MeshNumber(center);
                 Assert.AreEqual(mesh, verify);
             }
         }
@@ -32,12 +32,12 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestBoundingBox()
         {
-            var theMesh = new GlobalMesh(1000);
-            var nr = theMesh.MeshNumber(Constants.MyHome);
-            var ll = theMesh.LowerLeft(nr);
-            var lr = theMesh.LowerRight(nr);
-            var ul = theMesh.UpperLeft(nr);
-            var ur = theMesh.UpperRight(nr);
+            GlobalMesh theMesh = new(1000);
+            long nr = theMesh.MeshNumber(Constants.MyHome);
+            UtmCoordinate ll = theMesh.LowerLeft(nr);
+            UtmCoordinate lr = theMesh.LowerRight(nr);
+            UtmCoordinate ul = theMesh.UpperLeft(nr);
+            UtmCoordinate ur = theMesh.UpperRight(nr);
             Assert.AreEqual(ll.X, ul.X);
             Assert.AreEqual(lr.X, ur.X);
             Assert.AreEqual(ll.Y, lr.Y);
@@ -50,16 +50,16 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestNeighborHood()
         {
-            var theMesh = new GlobalMesh(1000);
-            var nr = theMesh.MeshNumber(Constants.MyHome);
-            var n0 = theMesh.Neighborhood(nr, 0);
+            GlobalMesh theMesh = new(1000);
+            long nr = theMesh.MeshNumber(Constants.MyHome);
+            System.Collections.Generic.List<long> n0 = theMesh.Neighborhood(nr, 0);
             Assert.IsTrue(n0.Count == 1);
             Assert.AreEqual(nr, n0[0]);
-            var n1 = theMesh.Neighborhood(nr, 1);
+            System.Collections.Generic.List<long> n1 = theMesh.Neighborhood(nr, 1);
             Assert.AreEqual(8, n1.Count);
-            var n2 = theMesh.Neighborhood(nr, 2);
+            System.Collections.Generic.List<long> n2 = theMesh.Neighborhood(nr, 2);
             Assert.AreEqual(16, n2.Count);
-            var n3 = theMesh.Neighborhood(nr, 3);
+            System.Collections.Generic.List<long> n3 = theMesh.Neighborhood(nr, 3);
             Assert.AreEqual(24, n3.Count);
         }
 

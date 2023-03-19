@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Helpers
+﻿namespace ISynergy.Framework.Core.Helpers
 {
     /// <summary>
     /// Helper class for platform detection.

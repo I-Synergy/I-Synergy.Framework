@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Collections;
-using ISynergy.Framework.Core.Enumerations;
+﻿using ISynergy.Framework.Core.Enumerations;
 using System.Collections.ObjectModel;
 using System.Globalization;
 

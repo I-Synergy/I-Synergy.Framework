@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Geography.Projection;
 
 namespace ISynergy.Framework.Geography.Common

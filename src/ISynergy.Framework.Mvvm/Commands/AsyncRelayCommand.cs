@@ -7,6 +7,8 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace ISynergy.Framework.Mvvm.Commands
 {
     /// <summary>
@@ -157,7 +159,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <param name="canExecute">The execution status logic.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="cancelableExecute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
         public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Func<bool> canExecute)
-            : this (cancelableExecute)
+            : this(cancelableExecute)
         {
             Argument.IsNotNull(canExecute);
 
@@ -172,7 +174,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         /// <param name="options">The _options to use to configure the async _command.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="cancelableExecute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
         public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Func<bool> canExecute, AsyncRelayCommandOptions options)
-            : this (cancelableExecute, canExecute)
+            : this(cancelableExecute, canExecute)
         {
             _options = options;
         }

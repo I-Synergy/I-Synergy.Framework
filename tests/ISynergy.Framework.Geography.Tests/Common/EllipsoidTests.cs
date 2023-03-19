@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestFactory1()
         {
-            var e = Ellipsoid.FromAAndF(100000, 0.01);
+            Ellipsoid e = Ellipsoid.FromAAndF(100000, 0.01);
             Assert.AreEqual(e.SemiMinorAxis, (1 - 0.01) * 100000);
             Assert.AreEqual(100, e.InverseFlattening);
             Assert.AreEqual(100000, e.SemiMajorAxis);
@@ -28,7 +28,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestFactory2()
         {
-            var e = Ellipsoid.FromAAndInverseF(100000, 100);
+            Ellipsoid e = Ellipsoid.FromAAndInverseF(100000, 100);
             Assert.AreEqual(e.SemiMinorAxis, (1 - 0.01) * 100000);
             Assert.AreEqual(0.01, e.Flattening);
             Assert.AreEqual(100000, e.SemiMajorAxis);
@@ -41,11 +41,11 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEquality()
         {
-            var e1 = Ellipsoid.FromAAndInverseF(100000, 100);
-            var e2 = Ellipsoid.FromAAndInverseF(100000, 100);
-            var e3 = Ellipsoid.FromAAndInverseF(100000, 101);
-            var e4 = Ellipsoid.FromAAndInverseF(100000, 100 + 1e-13);
-            var e5 = Ellipsoid.FromAAndInverseF(99000, 100);
+            Ellipsoid e1 = Ellipsoid.FromAAndInverseF(100000, 100);
+            Ellipsoid e2 = Ellipsoid.FromAAndInverseF(100000, 100);
+            Ellipsoid e3 = Ellipsoid.FromAAndInverseF(100000, 101);
+            Ellipsoid e4 = Ellipsoid.FromAAndInverseF(100000, 100 + 1e-13);
+            Ellipsoid e5 = Ellipsoid.FromAAndInverseF(99000, 100);
             Assert.IsTrue(e1 == e2);
             Assert.IsFalse(e1 == e3);
             Assert.IsTrue(e1 == e4);
@@ -58,10 +58,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestInEquality()
         {
-            var e1 = Ellipsoid.FromAAndInverseF(100000, 100);
-            var e2 = Ellipsoid.FromAAndInverseF(100000, 100);
-            var e3 = Ellipsoid.FromAAndInverseF(100000, 101);
-            var e4 = Ellipsoid.FromAAndInverseF(100000, 100 + 1e-13);
+            Ellipsoid e1 = Ellipsoid.FromAAndInverseF(100000, 100);
+            Ellipsoid e2 = Ellipsoid.FromAAndInverseF(100000, 100);
+            Ellipsoid e3 = Ellipsoid.FromAAndInverseF(100000, 101);
+            Ellipsoid e4 = Ellipsoid.FromAAndInverseF(100000, 100 + 1e-13);
             Assert.IsFalse(e1 != e2);
             Assert.IsTrue(e1 != e3);
             Assert.IsFalse(e1 != e4);
@@ -73,10 +73,10 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEquals()
         {
-            var e1 = Ellipsoid.FromAAndInverseF(100000, 100);
-            var e2 = Ellipsoid.FromAAndInverseF(100000, 100);
-            var e3 = Ellipsoid.FromAAndInverseF(100000, 101);
-            var e4 = Ellipsoid.FromAAndInverseF(100000, 100 + 1e-13);
+            Ellipsoid e1 = Ellipsoid.FromAAndInverseF(100000, 100);
+            Ellipsoid e2 = Ellipsoid.FromAAndInverseF(100000, 100);
+            Ellipsoid e3 = Ellipsoid.FromAAndInverseF(100000, 101);
+            Ellipsoid e4 = Ellipsoid.FromAAndInverseF(100000, 100 + 1e-13);
             object s = "123";
             Assert.IsTrue(e1.Equals(e2));
             Assert.IsFalse(e1.Equals(e3));
@@ -91,8 +91,8 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestHashCode()
         {
-            var e1 = Ellipsoid.FromAAndInverseF(100000, 100);
-            var e2 = Ellipsoid.FromAAndInverseF(100000, 101);
+            Ellipsoid e1 = Ellipsoid.FromAAndInverseF(100000, 100);
+            Ellipsoid e2 = Ellipsoid.FromAAndInverseF(100000, 101);
             Assert.AreNotEqual(e1.GetHashCode(), e2.GetHashCode());
         }
 
@@ -102,7 +102,7 @@ namespace ISynergy.Framework.Geography.Common.Tests
         [TestMethod]
         public void TestEccentricity()
         {
-            var e = Ellipsoid.WGS84;
+            Ellipsoid e = Ellipsoid.WGS84;
             Assert.IsTrue(e.Eccentricity.IsApproximatelyEqual(0.081819190842621));
         }
     }

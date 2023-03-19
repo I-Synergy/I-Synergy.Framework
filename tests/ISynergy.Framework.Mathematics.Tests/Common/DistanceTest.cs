@@ -62,20 +62,20 @@
             double[] x, y;
             double actual, expected;
 
-            var svd = new SingularValueDecomposition(cov, true, true, true);
+            SingularValueDecomposition svd = new(cov, true, true, true);
 
-            var inv = cov.Inverse();
-            var pinv = svd.Inverse();
+            double[,] inv = cov.Inverse();
+            double[,] pinv = svd.Inverse();
             Assert.IsTrue(inv.IsEqual(pinv, 1e-6));
 
             x = new double[] { 2, 4, 1 };
             y = new double[] { 0, 0, 0 };
 
             {
-                var bla = cov.Solve(x);
-                var blo = svd.Solve(x);
-                var ble = inv.Dot(x);
-                var bli = pinv.Dot(x);
+                double[] bla = cov.Solve(x);
+                double[] blo = svd.Solve(x);
+                double[] ble = inv.Dot(x);
+                double[] bli = pinv.Dot(x);
 
                 Assert.IsTrue(bla.IsEqual(blo, 1e-6));
                 Assert.IsTrue(bla.IsEqual(ble, 1e-6));
@@ -187,7 +187,7 @@
                 { 0, 0, 0 }
             };
 
-            var pinv = covX.PseudoInverse();
+            double[,] pinv = covX.PseudoInverse();
 
             // Run actual Test
             double expected = 0.14285714285714282;
@@ -216,7 +216,7 @@
 
             // There are multiple ways to create a Mahalanobis 
             // distance. The easiest method by far is by using:
-            var mahalanobis = Mahalanobis.FromCovarianceMatrix(covariance);
+            Mahalanobis mahalanobis = Mahalanobis.FromCovarianceMatrix(covariance);
 
             // Then, you can compute the distance using:
             double distance = mahalanobis.Distance(x, y);
@@ -225,10 +225,10 @@
             // should be inverted, or if you have the precision matrix instead of
             // the covariance, you can use any of the alternative methods:
 
-            var fromCholesky = new Mahalanobis(new CholeskyDecomposition(covariance));
-            var fromSVD = new Mahalanobis(new SingularValueDecomposition(covariance));
-            var fromPrecision1 = new Mahalanobis(covariance.Inverse());
-            var fromPrecision2 = Mahalanobis.FromPrecisionMatrix(covariance.Inverse());
+            Mahalanobis fromCholesky = new(new CholeskyDecomposition(covariance));
+            Mahalanobis fromSVD = new(new SingularValueDecomposition(covariance));
+            Mahalanobis fromPrecision1 = new(covariance.Inverse());
+            Mahalanobis fromPrecision2 = Mahalanobis.FromPrecisionMatrix(covariance.Inverse());
 
             // They all should produce equivalent results:
             double a = fromCholesky.Distance(x, y);
@@ -265,7 +265,7 @@
 
             // There are multiple ways to create a Mahalanobis 
             // distance. The easiest method by far is by using:
-            var mahalanobis = SquareMahalanobis.FromCovarianceMatrix(covariance);
+            SquareMahalanobis mahalanobis = SquareMahalanobis.FromCovarianceMatrix(covariance);
 
             // Then, you can compute the distance using:
             double distance = mahalanobis.Distance(x, y);
@@ -274,10 +274,10 @@
             // should be inverted, or if you have the precision matrix instead of
             // the covariance, you can use any of the alternative methods:
 
-            var fromCholesky = new SquareMahalanobis(new CholeskyDecomposition(covariance));
-            var fromSVD = new SquareMahalanobis(new SingularValueDecomposition(covariance));
-            var fromPrecision1 = new SquareMahalanobis(covariance.Inverse());
-            var fromPrecision2 = SquareMahalanobis.FromPrecisionMatrix(covariance.Inverse());
+            SquareMahalanobis fromCholesky = new(new CholeskyDecomposition(covariance));
+            SquareMahalanobis fromSVD = new(new SingularValueDecomposition(covariance));
+            SquareMahalanobis fromPrecision1 = new(covariance.Inverse());
+            SquareMahalanobis fromPrecision2 = SquareMahalanobis.FromPrecisionMatrix(covariance.Inverse());
 
             // They all should produce equivalent results:
             double a = fromCholesky.Distance(x, y);
@@ -370,7 +370,7 @@
             double a = Distance.Cosine(new[] { 0.0, 2.0, 4.0 }, new[] { 2.0, 5.0, 1.0 }); // ~0.42845239335059182d
 
             // Or could also be computed by instantiating the Cosine class beforehand as:
-            Cosine cos = new Cosine();
+            Cosine cos = new();
             double b = cos.Distance(new[] { 0.0, 2.0, 4.0 }, new[] { 2.0, 5.0, 1.0 }); // ~0.42845239335059182d
             #endregion
 

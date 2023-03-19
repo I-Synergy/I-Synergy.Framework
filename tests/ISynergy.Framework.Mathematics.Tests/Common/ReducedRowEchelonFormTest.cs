@@ -27,17 +27,17 @@
         [TestMethod]
         public void ReducedRowEchelonFormConstructorTest()
         {
-            double[,] matrix = 
+            double[,] matrix =
             {
                 { 1, 2, -3 },
                 { 3, 5,  9 },
                 { 5, 9,  3 },
             };
 
-            ReducedRowEchelonForm target = new ReducedRowEchelonForm(matrix);
+            ReducedRowEchelonForm target = new(matrix);
 
-            var actual = target.Result;
-            double[,] expected = 
+            double[,] actual = target.Result;
+            double[,] expected =
             {
                 { 1, 0,  33 },
                 { 0, 1, -18 },
@@ -51,18 +51,18 @@
         [TestMethod]
         public void ReducedRowEchelonFormConstructorTest2()
         {
-            double[,] matrix = 
+            double[,] matrix =
             {
                 {3,2,2,3,1},
                 {6,4,4,6,2},
                 {9,6,6,9,1},
             };
 
-            ReducedRowEchelonForm target = new ReducedRowEchelonForm(matrix);
+            ReducedRowEchelonForm target = new(matrix);
 
-            var actual = target.Result;
+            double[,] actual = target.Result;
 
-            double[,] expected = 
+            double[,] expected =
             {
                 { 1, 2/3.0,  2/3.0,   1,   0   },
                 { 0,     0,      0,   0,   1   },
@@ -72,6 +72,6 @@
 
             Assert.IsTrue(expected.IsEqual(actual));
         }
-   
+
     }
 }

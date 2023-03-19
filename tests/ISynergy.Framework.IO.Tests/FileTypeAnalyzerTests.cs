@@ -1,9 +1,9 @@
 ﻿using ISynergy.Framework.IO.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.IO.Tests
 {
@@ -228,15 +228,15 @@ namespace ISynergy.Framework.IO.Tests
         /// <exception cref="FileNotFoundException">Testfile with {extension} extension is not found.</exception>
         private void DetectType(string extension, Action<FileTypeInfo> assertionValidator)
         {
-            var files = GetFilesByExtension(extension);
+            IEnumerable<string> files = GetFilesByExtension(extension);
 
             if (files is null || files.Count() == 0)
                 throw new FileNotFoundException($"Testfile with {extension} extension is not found.");
 
-            foreach (var file in files)
+            foreach (string file in files)
             {
-                var fileContents = File.ReadAllBytes(file);
-                var result = _fileTypeAnalyzer.DetectType(fileContents, extension);
+                byte[] fileContents = File.ReadAllBytes(file);
+                FileTypeInfo result = _fileTypeAnalyzer.DetectType(fileContents, extension);
                 assertionValidator(result);
             }
         }

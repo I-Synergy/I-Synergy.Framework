@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.MessageBus.Abstractions
+﻿namespace ISynergy.Framework.MessageBus.Abstractions
 {
     /// <summary>
     /// Interface ISubscriberServiceBus

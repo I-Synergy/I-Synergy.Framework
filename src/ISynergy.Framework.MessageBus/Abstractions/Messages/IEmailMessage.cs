@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.MessageBus.Abstractions.Messages
 {

@@ -11,7 +11,7 @@
         [TestMethod]
         public void TestZigguratNormalGenerator_Unseeded_InitializesCorrectly()
         {
-            var rng = new ZigguratNormalGenerator();
+            ZigguratNormalGenerator rng = new();
             double num = rng.Generate();
 
             Assert.IsNotNull(rng);
@@ -20,8 +20,8 @@
         [TestMethod]
         public void TestZigguratNormalGenerator_WithSeed_InitializesCorrectly()
         {
-            var rng1 = new ZigguratNormalGenerator(seed: 457860009);
-            var rng2 = new ZigguratNormalGenerator(seed: 457860009);
+            ZigguratNormalGenerator rng1 = new(seed: 457860009);
+            ZigguratNormalGenerator rng2 = new(seed: 457860009);
 
             double num1 = rng1.Generate();
             double num2 = rng2.Generate();
@@ -33,7 +33,7 @@
         [TestMethod]
         public void TestZigguratExponentialGenerator_Unseeded_InitializesCorrectly()
         {
-            var rng = new ZigguratExponentialGenerator();
+            ZigguratExponentialGenerator rng = new();
             double num = rng.Generate();
 
             Assert.IsNotNull(rng);
@@ -42,7 +42,7 @@
         [TestMethod]
         public void TestZigguratExponentialGenerator_Unseeded_NeverOverflows()
         {
-            var rng = new ZigguratExponentialGenerator();
+            ZigguratExponentialGenerator rng = new();
 
             for (int i = 0; i < 100; i++)
             {
@@ -55,7 +55,7 @@
         [TestMethod]
         public void TestZigguratGenerator_Unseeded_NeverOverflows()
         {
-            var rng = new ZigguratNormalGenerator();
+            ZigguratNormalGenerator rng = new();
 
             for (int i = 0; i < 100; i++)
             {
@@ -68,8 +68,8 @@
         [TestMethod]
         public void TestZigguratExponentialGenerator_WithSeed_InitializesCorrectly()
         {
-            var rng1 = new ZigguratExponentialGenerator(seed: 457860009);
-            var rng2 = new ZigguratExponentialGenerator(seed: 457860009);
+            ZigguratExponentialGenerator rng1 = new(seed: 457860009);
+            ZigguratExponentialGenerator rng2 = new(seed: 457860009);
 
             double num1 = rng1.Generate();
             double num2 = rng2.Generate();

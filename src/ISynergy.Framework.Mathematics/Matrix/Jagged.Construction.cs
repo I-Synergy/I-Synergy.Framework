@@ -1,9 +1,7 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Random;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Mathematics
 {

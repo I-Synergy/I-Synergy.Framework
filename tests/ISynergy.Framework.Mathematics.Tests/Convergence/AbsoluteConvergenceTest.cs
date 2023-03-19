@@ -11,7 +11,7 @@
         [TestMethod]
         public void AbsoluteConvergenceConstructorTest()
         {
-            var criteria = new AbsoluteConvergence(iterations: 10, tolerance: 0.1);
+            AbsoluteConvergence criteria = new(iterations: 10, tolerance: 0.1);
 
             int progress = 1;
 
@@ -41,7 +41,7 @@
         [TestMethod]
         public void AbsoluteConvergenceConstructorTest2()
         {
-            var criteria = new AbsoluteConvergence(iterations: 10, tolerance: 1e-5, startValue: 1);
+            AbsoluteConvergence criteria = new(iterations: 10, tolerance: 1e-5, startValue: 1);
             criteria.CurrentIteration = -2;
             do
             {
@@ -56,7 +56,7 @@
         [TestMethod]
         public void AbsoluteConvergenceConstructorTest3()
         {
-            var criteria = new AbsoluteConvergence(iterations: 1, tolerance: 1e-5, startValue: 1);
+            AbsoluteConvergence criteria = new(iterations: 1, tolerance: 1e-5, startValue: 1);
             criteria.CurrentIteration = -2;
             do
             {
@@ -71,7 +71,7 @@
         [TestMethod]
         public void AbsoluteConvergenceConstructorTest4()
         {
-            var criteria = new AbsoluteConvergence(iterations: 0, tolerance: 1e-5, startValue: 1);
+            AbsoluteConvergence criteria = new(iterations: 0, tolerance: 1e-5, startValue: 1);
             criteria.CurrentIteration = -2;
             do
             {

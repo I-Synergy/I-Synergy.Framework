@@ -16,9 +16,9 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Reset();
             TestRecipient.Reset();
 
-            var list = new List<TestRecipient1>();
+            List<TestRecipient1> list = new();
 
-            for (var index = 0; index < 10; index++)
+            for (int index = 0; index < 10; index++)
             {
                 list.Add(new TestRecipient1(true));
             }
@@ -40,9 +40,9 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Reset();
             TestRecipient.Reset();
 
-            var list = new List<TestRecipient2>();
+            List<TestRecipient2> list = new();
 
-            for (var index = 0; index < 10; index++)
+            for (int index = 0; index < 10; index++)
             {
                 list.Add(new TestRecipient2(true));
             }
@@ -188,7 +188,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             public virtual void ReceiveString(Message m)
             {
-                var message = m as Message<string>;
+                Message<string> message = m as Message<string>;
                 if (message is not null)
                 {
                     MessageService.Default.Register<Message>(this, true, ReceiveStringNested);
@@ -197,7 +197,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
 
             public void ReceiveStringNested(Message m)
             {
-                var message = m as Message<string>;
+                Message<string> message = m as Message<string>;
                 if (message is not null)
                 {
                     ReceivedStringMessages++;

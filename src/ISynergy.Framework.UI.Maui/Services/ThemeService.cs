@@ -22,8 +22,10 @@ namespace ISynergy.Framework.UI.Services
         /// Gets or sets the theme.
         /// </summary>
         /// <value>The theme.</value>
-        public Style Style { get => new()
+        public Style Style
         {
+            get => new()
+            {
                 Theme = _applicationSettingsService.Settings.Theme,
                 Color = _applicationSettingsService.Settings.Color
             };
@@ -83,7 +85,7 @@ namespace ISynergy.Framework.UI.Services
                     {
                         item.Remove(AccentColorLight);
 
-                        if(!application.Resources.ContainsKey(nameof(AccentColorLight)))
+                        if (!application.Resources.ContainsKey(nameof(AccentColorLight)))
                             application.Resources.Add(nameof(AccentColorLight), accentColorLight);
                     }
 

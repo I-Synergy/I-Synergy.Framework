@@ -48,7 +48,7 @@ namespace Sample.ViewModels
         /// <summary>
         /// Gets or sets the IsLengthCheck property value.
         /// </summary>
-        public bool IsLengthCheck   
+        public bool IsLengthCheck
         {
             get { return GetValue<bool>(); }
             set { SetValue(value); }
@@ -86,7 +86,7 @@ namespace Sample.ViewModels
 
             Validator = new Action<IObservableClass>(_ =>
             {
-                if(string.IsNullOrEmpty(Test))
+                if (string.IsNullOrEmpty(Test))
                 {
                     Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] cannot be null or empty.");
                 }
@@ -103,7 +103,7 @@ namespace Sample.ViewModels
                         Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] should be a valid regex expression.");
                     }
 
-                    if(!System.Text.RegularExpressions.Regex.IsMatch(Test, Regex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(Test, Regex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
                         Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] does not match the regular expression.");
                     }

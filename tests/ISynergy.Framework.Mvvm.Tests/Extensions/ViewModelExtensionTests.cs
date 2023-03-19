@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests
         [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "NoteViewModel")]
         public void GetNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
         {
-            var result = viewModelType.GetViewModelName();
+            string result = viewModelType.GetViewModelName();
             Assert.AreEqual(expectedName, result);
         }
 
@@ -21,7 +21,7 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests
         [DataRow(typeof(ISynergy.Framework.Mvvm.ViewModels.NoteViewModel), "ISynergy.Framework.Mvvm.ViewModels.NoteViewModel")]
         public void GetFullNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
         {
-            var result = viewModelType.GetViewModelFullName();
+            string result = viewModelType.GetViewModelFullName();
             Assert.AreEqual(expectedName, result);
         }
     }

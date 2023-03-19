@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Mathematics.Comparers;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Mathematics
 {

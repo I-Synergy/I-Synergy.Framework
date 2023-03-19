@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Extensions
 {
@@ -20,7 +18,7 @@ namespace ISynergy.Framework.Automations.Extensions
             if (action is DelayAction delayAction)
                 return new Func<Task>(() => Task.Delay(delayAction.Delay));
 
-            if(action is ScheduledAction scheduledAction)
+            if (action is ScheduledAction scheduledAction)
                 return new Func<Task>(() => Task.Delay(DateTimeOffset.Now - scheduledAction.ExecutionTime));
 
             throw new ArgumentException("Parameter 'action' can only be type of 'DelayAction' or 'ScheduledAction'");

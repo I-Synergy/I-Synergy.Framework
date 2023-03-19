@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.AspNetCore.Senders;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {

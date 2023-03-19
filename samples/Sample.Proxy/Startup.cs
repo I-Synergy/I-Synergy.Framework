@@ -90,7 +90,7 @@ namespace Sample.Proxy
                 Console.WriteLine($"Request Path: {context.Request.Path}");
 
                 // Headers
-                foreach (var header in context.Request.Headers)
+                foreach (System.Collections.Generic.KeyValuePair<string, Microsoft.Extensions.Primitives.StringValues> header in context.Request.Headers)
                 {
                     Console.WriteLine($"Header: {header.Key}: {header.Value}");
                 }

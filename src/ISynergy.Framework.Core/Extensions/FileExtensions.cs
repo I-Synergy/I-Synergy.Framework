@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.Core.Constants;
-using System;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Extensions
@@ -46,7 +43,7 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = MasterData
                 .FileTypes
-                .Where(q => 
+                .Where(q =>
                     q.Extension.Equals(Path.GetExtension(self)))
                 .SingleOrDefault();
 

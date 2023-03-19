@@ -4,9 +4,9 @@ namespace Sample.Views;
 
 public partial class InfoView
 {
-	public InfoView(InfoViewModel viewModel)
-        :base(viewModel)
-	{
-		InitializeComponent();
-	}
+    public InfoView(InfoViewModel viewModel)
+        : base(viewModel)
+    {
+        InitializeComponent();
+    }
 }

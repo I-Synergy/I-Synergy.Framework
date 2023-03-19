@@ -15,7 +15,7 @@ namespace Sample.Views
         /// Default constructor to initialize the view
         /// </summary>
         public ShellView(IShellViewModel viewModel, INavigationService navigationService)
-            :base(viewModel)
+            : base(viewModel)
         {
             InitializeComponent();
             navigationService.Frame = ContentRootFrame;
@@ -23,9 +23,9 @@ namespace Sample.Views
 
         private void NavigationView_ItemClicked(object sender, NavigationItemClickedEventArgs e)
         {
-            if(e.Item.DataContext is ISynergy.Framework.UI.Models.NavigationItem navigationItem)
+            if (e.Item.DataContext is ISynergy.Framework.UI.Models.NavigationItem navigationItem)
             {
-                if(navigationItem.Command.CanExecute(navigationItem.CommandParameter))
+                if (navigationItem.Command.CanExecute(navigationItem.CommandParameter))
                     navigationItem.Command.Execute(navigationItem.CommandParameter);
             }
         }

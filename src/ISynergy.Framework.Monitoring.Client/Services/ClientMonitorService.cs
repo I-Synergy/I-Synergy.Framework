@@ -7,8 +7,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Monitoring.Client.Services
 {

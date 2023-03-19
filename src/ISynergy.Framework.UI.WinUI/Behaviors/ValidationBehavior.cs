@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
 using Microsoft.UI.Xaml;
 using Microsoft.Xaml.Interactivity;
-using System;
-using System.Collections.Generic;
 using Windows.ApplicationModel;
 
 namespace ISynergy.Framework.UI.Behaviors
@@ -45,12 +43,12 @@ namespace ISynergy.Framework.UI.Behaviors
         /// </summary>
         private void TearDown()
         {
-            if(GetProperty(false) is not null)
+            if (GetProperty(false) is not null)
             {
                 GetProperty(false).PropertyChanged -= Property_PropertyChanged;
             }
 
-            if(Control is not null)
+            if (Control is not null)
             {
                 Control.DataContextChanged -= Control_DataContextChanged;
             }

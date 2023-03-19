@@ -5,11 +5,11 @@ namespace ISynergy.Framework.UI.Windows;
 
 public partial class LanguageWindow : ILanguageWindow
 {
-	public LanguageWindow()
-	{
-		InitializeComponent();
+    public LanguageWindow()
+    {
+        InitializeComponent();
         BindingContextChanged += LanguageWindow_BindingContextChanged;
-	}
+    }
 
     private void LanguageWindow_BindingContextChanged(object sender, EventArgs e)
     {

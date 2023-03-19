@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Collections;
-using System;
 using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Core.Abstractions.Base

@@ -2,7 +2,6 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Models;
-using Microsoft.UI.Xaml;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;

@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using NodaTime;
 
 namespace ISynergy.Framework.UI.Controls
 {
@@ -32,7 +31,7 @@ namespace ISynergy.Framework.UI.Controls
         }
 
         // Using a DependencyProperty as the backing store for Value.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ValueProperty = 
+        public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(nameof(Value), typeof(TimeSpan), typeof(DurationSpinner), new PropertyMetadata(TimeSpan.FromMinutes(5)));
 
         /// <summary>

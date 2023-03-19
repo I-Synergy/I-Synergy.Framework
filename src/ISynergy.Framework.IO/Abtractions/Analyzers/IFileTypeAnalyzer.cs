@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.IO.Models;
-using System.Collections.Generic;
-using System.IO;
 
 namespace ISynergy.Framework.IO.Abtractions.Analyzers
 {

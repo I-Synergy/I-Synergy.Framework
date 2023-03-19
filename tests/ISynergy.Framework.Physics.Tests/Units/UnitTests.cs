@@ -34,7 +34,7 @@ namespace ISynergy.Framework.Physics.Tests
         [TestMethod()]
         public void UnitValidConstructorTest()
         {
-            var unit = new Unit(Enumerations.Units.minute, new UnitTypes[] { UnitTypes.Time }, e => e * 100, e => e / 100);
+            Unit unit = new(Enumerations.Units.minute, new UnitTypes[] { UnitTypes.Time }, e => e * 100, e => e / 100);
             Assert.IsNotNull(unit);
         }
     }

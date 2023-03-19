@@ -10,7 +10,7 @@
         [TestMethod]
         public void RelativeConvergenceConstructorTest()
         {
-            var criteria = new RelativeConvergence(iterations: 0, tolerance: 0.1);
+            RelativeConvergence criteria = new(iterations: 0, tolerance: 0.1);
 
             int progress = 1;
 
@@ -40,7 +40,7 @@
         [TestMethod]
         public void RelativeConvergenceConstructorTest2()
         {
-            var criteria = new RelativeConvergence(iterations: 10, tolerance: 1e-5, startValue: 1);
+            RelativeConvergence criteria = new(iterations: 10, tolerance: 1e-5, startValue: 1);
             criteria.CurrentIteration = -2;
             do
             {
@@ -55,7 +55,7 @@
         [TestMethod]
         public void RelativeConvergenceConstructorTest3()
         {
-            var criteria = new RelativeConvergence(iterations: 1, tolerance: 1e-5, startValue: 1);
+            RelativeConvergence criteria = new(iterations: 1, tolerance: 1e-5, startValue: 1);
             criteria.CurrentIteration = -2;
             do
             {
@@ -70,7 +70,7 @@
         [TestMethod]
         public void RelativeConvergenceConstructorTest4()
         {
-            var criteria = new RelativeConvergence(iterations: 0, tolerance: 1e-5, startValue: 1);
+            RelativeConvergence criteria = new(iterations: 0, tolerance: 1e-5, startValue: 1);
             criteria.CurrentIteration = -2;
 
             criteria.NewValue /= 10.0;

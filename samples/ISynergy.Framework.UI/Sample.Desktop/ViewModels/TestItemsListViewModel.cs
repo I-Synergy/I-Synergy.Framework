@@ -1,16 +1,14 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Enumerations;
 using Sample.Models;
 using System.Collections.ObjectModel;
-using ISynergy.Framework.UI.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Services;
-using ISynergy.Framework.Core.Collections;
 
 namespace Sample.ViewModels
 {
@@ -119,7 +117,7 @@ namespace Sample.ViewModels
         /// </summary>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
-        public override Task<List<TestItem>> RetrieveItemsAsync(CancellationToken cancellationToken) => 
+        public override Task<List<TestItem>> RetrieveItemsAsync(CancellationToken cancellationToken) =>
             Task.FromResult(new List<TestItem>()
                 {
                     new TestItem { Id = 1, Description = "Test 1"},
@@ -178,7 +176,7 @@ namespace Sample.ViewModels
         /// <returns>Task.</returns>
         public override Task AddAsync()
         {
-            var selectionVM = new ViewModelSelectionBlade(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
+            ViewModelSelectionBlade selectionVM = new(Context, CommonServices, Logger, Items, SelectedItems, ISynergy.Framework.Mvvm.Enumerations.SelectionModes.Single);
             selectionVM.Submitted += SelectionVM_Submitted;
             return (CommonServices.NavigationService as INavigationService)?.OpenBladeAsync(this, selectionVM);
         }

@@ -1,9 +1,5 @@
-﻿using ISynergy.Framework.Core.Collections;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace ISynergy.Framework.Core.Extensions
 {

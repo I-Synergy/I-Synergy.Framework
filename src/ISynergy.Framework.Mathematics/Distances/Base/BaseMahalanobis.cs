@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mathematics.Decompositions;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Distances.Base
 {

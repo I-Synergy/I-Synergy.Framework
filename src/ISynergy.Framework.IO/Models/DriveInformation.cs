@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.Core.Validation;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace ISynergy.Framework.IO.Models
 {

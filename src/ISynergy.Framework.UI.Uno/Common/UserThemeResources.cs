@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.UI.Xaml.Resources;
+﻿using Microsoft.UI.Xaml.Resources;
 
 namespace ISynergy.Framework.UI.Common
 {

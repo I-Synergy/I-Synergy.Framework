@@ -1,6 +1,5 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Abstractions;
 using Microsoft.UI.Xaml.Data;
-using ISynergy.Framework.Core.Abstractions;
 using Windows.Globalization.NumberFormatting;
 
 namespace ISynergy.Framework.UI.Converters

@@ -15,7 +15,7 @@
             Func<double[], double> function = // min f(x) = 10 * (x+1)^2 + y^2
               x => 10.0 * Math.Pow(x[0] + 1.0, 2.0) + Math.Pow(x[1], 2.0);
 
-            Subplex solver = new Subplex(2, function);
+            Subplex solver = new(2, function);
 
             Assert.IsTrue(solver.Minimize());
             double minimum = solver.Value;
@@ -34,10 +34,10 @@
         public void ConstructorTest4()
         {
             // Weak version of Rosenbrock's problem.
-            var function = new NonlinearObjectiveFunction(2, x =>
+            NonlinearObjectiveFunction function = new(2, x =>
                 Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
 
-            Subplex solver = new Subplex(function);
+            Subplex solver = new(function);
 
             Assert.IsTrue(solver.Minimize());
             double minimum = solver.Value;
@@ -55,10 +55,10 @@
         [TestMethod]
         public void ConstructorTest5()
         {
-            var function = new NonlinearObjectiveFunction(2, x =>
+            NonlinearObjectiveFunction function = new(2, x =>
                 10.0 * Math.Pow(x[0] * x[0] - x[1], 2.0) + Math.Pow(1.0 + x[0], 2.0));
 
-            Subplex solver = new Subplex(function);
+            Subplex solver = new(function);
 
             Assert.IsTrue(solver.Minimize());
             double minimum = solver.Value;

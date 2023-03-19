@@ -1,8 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
-using System;
-using System.Collections.ObjectModel;
-using ISynergy.Framework.Core.Collections;
 
 namespace ISynergy.Framework.Core.Abstractions.Base
 {

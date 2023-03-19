@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics.Integration;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using ISynergy.Framework.Mathematics.Random;
 
     [TestClass]
     public class MonteCarloIntegralTest
@@ -19,7 +19,7 @@
             // Wikipedia's page for Monte-Carlo Integration at
             // https://en.wikipedia.org/wiki/Monte_Carlo_integration#Example
 
-            Func<double, double, double> H = 
+            Func<double, double, double> H =
                 (x, y) => (x * x + y * y <= 1) ? 1 : 0;
 
             double[] from = { -1, -1 };

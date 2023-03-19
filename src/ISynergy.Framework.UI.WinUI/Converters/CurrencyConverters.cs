@@ -1,9 +1,8 @@
-﻿using System;
-using System.Globalization;
-using ISynergy.Framework.Core.Locators;
+﻿using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using Windows.ApplicationModel;
 using Microsoft.UI.Xaml.Data;
+using System.Globalization;
+using Windows.ApplicationModel;
 
 namespace ISynergy.Framework.UI.Converters
 {

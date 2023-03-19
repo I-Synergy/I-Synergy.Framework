@@ -26,10 +26,10 @@ namespace Sample
         [STAThread]
         public static async Task Main(string[] args)
         {
-            var host = new WindowsAppSdkHostBuilder<App>()
+            IHost host = new WindowsAppSdkHostBuilder<App>()
                 .ConfigureHostConfiguration(builder =>
                 {
-                    var mainAssembly = Assembly.GetAssembly(typeof(App));
+                    Assembly mainAssembly = Assembly.GetAssembly(typeof(App));
                     builder.AddJsonStream(mainAssembly.GetManifestResourceStream($"{mainAssembly.GetName().Name}.appsettings.json"));
                 })
                 .ConfigureServices((context, services) =>

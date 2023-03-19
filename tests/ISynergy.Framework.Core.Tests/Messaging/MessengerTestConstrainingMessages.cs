@@ -29,7 +29,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Reset();
             MessageService.Default.Register<ITestMessage>(this, ReceiveITestMessage);
 
-            var testMessage = new TestMessageImpl(this)
+            TestMessageImpl testMessage = new(this)
             {
                 Content = TestContent
             };
@@ -61,7 +61,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Reset();
             MessageService.Default.Register<TestMessageBase>(this, ReceiveTestMessageBase);
 
-            var testMessage = new TestMessageImpl(this)
+            TestMessageImpl testMessage = new(this)
             {
                 Content = TestContent
             };
@@ -93,7 +93,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Reset();
             MessageService.Default.Register<TestMessageBase>(this, ReceiveITestMessage);
 
-            var testMessage = new TestMessageImpl(this)
+            TestMessageImpl testMessage = new(this)
             {
                 Content = TestContent
             };
@@ -125,7 +125,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             MessageService.Reset();
             MessageService.Default.Register<Message>(this, ReceiveMessageBase);
 
-            var testMessage = new TestMessageImpl(this)
+            TestMessageImpl testMessage = new(this)
             {
                 Content = TestContent
             };
@@ -170,7 +170,7 @@ namespace ISynergy.Framework.Core.Messaging.Tests
         {
             Assert.IsNotNull(testMessage);
 
-            var castedMessage = testMessage as ITestMessage;
+            ITestMessage castedMessage = testMessage as ITestMessage;
 
             if (castedMessage is not null)
             {

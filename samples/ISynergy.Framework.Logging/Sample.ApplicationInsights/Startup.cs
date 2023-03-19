@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Locators;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Sample.ApplicationInsights
 {

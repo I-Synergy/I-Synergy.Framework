@@ -14,7 +14,7 @@
         {
             int n = 5;
 
-            var I = Matrix.Identity(n);
+            double[,] I = Matrix.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -24,10 +24,10 @@
 
                     value[i, j] = double.NaN;
 
-                    var target = new LuDecomposition(value);
+                    LuDecomposition target = new(value);
                     Assert.IsTrue(Matrix.IsEqual(target.Solve(I), target.Inverse()));
 
-                    var target2 = new JaggedLuDecomposition(value.ToJagged());
+                    JaggedLuDecomposition target2 = new(value.ToJagged());
                     Assert.IsTrue(Matrix.IsEqual(target2.Solve(I.ToJagged()), target2.Inverse()));
                 }
             }
@@ -53,12 +53,12 @@
                 0.5217,
             };
 
-            var target = new LuDecomposition(value);
+            LuDecomposition target = new(value);
             double[] actual = target.Solve(rhs);
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
             Assert.IsTrue(Matrix.IsEqual(value, target.Reverse()));
 
-            var target2 = new JaggedLuDecomposition(value.ToJagged());
+            JaggedLuDecomposition target2 = new(value.ToJagged());
             actual = target2.Solve(rhs);
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
             Assert.IsTrue(Matrix.IsEqual(value, target2.Reverse()));
@@ -81,12 +81,12 @@
                 { 0.0435,    0.0870,    0.3043 },
             };
 
-            var target = new LuDecomposition(value);
+            LuDecomposition target = new(value);
             double[,] actualInverse = target.Inverse();
             Assert.IsTrue(Matrix.IsEqual(expectedInverse, actualInverse, 0.001));
             Assert.IsTrue(Matrix.IsEqual(value, target.Reverse()));
 
-            var target2 = new JaggedLuDecomposition(value.ToJagged());
+            JaggedLuDecomposition target2 = new(value.ToJagged());
             actualInverse = target2.Inverse().ToMatrix();
             Assert.IsTrue(Matrix.IsEqual(expectedInverse, actualInverse, 0.001));
             Assert.IsTrue(Matrix.IsEqual(value, target2.Reverse()));
@@ -129,18 +129,18 @@
                { -1.000,  2.000,  1.000 },
             };
 
-            LuDecomposition target = new LuDecomposition(value);
+            LuDecomposition target = new(value);
 
             double[,] L = target.LowerTriangularFactor;
             double[,] U = target.UpperTriangularFactor;
 
-            double[,] expectedL = 
+            double[,] expectedL =
             {
                {  1.000, 0.000 },
                { -0.500, 1.000 },
             };
 
-            double[,] expectedU = 
+            double[,] expectedU =
             {
                 { 2.000, 3.000, 0.000 },
                 { 0.000, 3.500, 1.000  },
@@ -159,12 +159,12 @@
                 { 1.6, 4.2 },
             };
 
-            double[] rhs = {  6.1, 4.3 };
+            double[] rhs = { 6.1, 4.3 };
 
-            double[] expected = {  3.1839, -0.1891 };
+            double[] expected = { 3.1839, -0.1891 };
 
-            var target1 = new LuDecomposition(value);
-            var target2 = new JaggedLuDecomposition(value.ToJagged());
+            LuDecomposition target1 = new(value);
+            JaggedLuDecomposition target2 = new(value.ToJagged());
 
             Assert.IsTrue(Matrix.IsEqual(expected, target1.Solve(rhs), 1e-3));
             Assert.IsTrue(Matrix.IsEqual(expected, target2.Solve(rhs), 1e-3));
@@ -184,7 +184,7 @@
 
             double[] expected = { 3.1839, -0.1891 };
 
-            LuDecomposition target = new LuDecomposition(value);
+            LuDecomposition target = new(value);
 
             bool thrown = false;
             try
@@ -202,7 +202,7 @@
         [TestMethod]
         public void SolveTransposeTest()
         {
-            double[,] a = 
+            double[,] a =
             {
                 { 2, 1, 4 },
                 { 6, 2, 2 },
@@ -226,12 +226,12 @@
             Assert.IsTrue(Matrix.IsEqual(expected, new LuDecomposition(b, true).SolveTranspose(a), 1e-3));
             Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(b.ToJagged(), true).SolveTranspose(a.ToJagged()), 1e-3));
 
-            var target = new LuDecomposition(b, true);
-            var p = target.PivotPermutationVector;
+            LuDecomposition target = new(b, true);
+            int[] p = target.PivotPermutationVector;
             int[] idx = p.ArgSort();
 
-            var r = target.LowerTriangularFactor.Dot(target.UpperTriangularFactor).Submatrix(idx, null).Transpose();
-            
+            double[,] r = target.LowerTriangularFactor.Dot(target.UpperTriangularFactor).Submatrix(idx, null).Transpose();
+
             Assert.IsTrue(Matrix.IsEqual(b, r, 1e-3));
             Assert.IsTrue(Matrix.IsEqual(b.Transpose(), target.Reverse(), 1e-3));
             Assert.IsTrue(Matrix.IsEqual(b.Transpose(), new JaggedLuDecomposition(b.ToJagged(), true).Reverse(), 1e-3));
@@ -251,7 +251,7 @@
             };
 
             // Compute the LU decomposition with:
-            var lu = new LuDecomposition(matrix);
+            LuDecomposition lu = new(matrix);
 
 
             // Retrieve the lower triangular factor L:
@@ -308,7 +308,7 @@
         [TestMethod]
         public void LogDeterminantTest()
         {
-            LuDecomposition lu = new LuDecomposition(CholeskyDecompositionTest.bigmatrix);
+            LuDecomposition lu = new(CholeskyDecompositionTest.bigmatrix);
             Assert.AreEqual(0, lu.Determinant);
             Assert.AreEqual(-2224.8931093738875, lu.LogDeterminant, 1e-12);
             Assert.IsTrue(lu.Nonsingular);
@@ -324,7 +324,7 @@
                {  0, -1,  3 }
             };
 
-            var lu = new LuDecomposition(value);
+            LuDecomposition lu = new(value);
             Assert.AreEqual(23, lu.Determinant);
             Assert.IsTrue(lu.Nonsingular);
         }
@@ -339,7 +339,7 @@
                {  0, -1,  3 }
             };
 
-            var lu = new JaggedLuDecomposition(value.ToJagged());
+            JaggedLuDecomposition lu = new(value.ToJagged());
             Assert.AreEqual(23, lu.Determinant);
             Assert.IsTrue(lu.Nonsingular);
         }
@@ -354,7 +354,7 @@
                {  0, -1,  3 }
             };
 
-            var lu = new LuDecomposition(value);
+            LuDecomposition lu = new(value);
             Assert.AreEqual(23, lu.Determinant);
 
             double expected = System.Math.Log(23);

@@ -19,8 +19,6 @@
 //   moshier@na-net.ornl.gov
 //
 
-using System;
-
 namespace ISynergy.Framework.Mathematics.Functions
 {
     /// <summary>

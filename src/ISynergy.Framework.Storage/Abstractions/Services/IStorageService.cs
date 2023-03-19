@@ -1,9 +1,4 @@
-﻿using ISynergy.Framework.Storage.Abstractions.Options;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Storage.Abstractions.Services
+﻿namespace ISynergy.Framework.Storage.Abstractions.Services
 {
     /// <summary>
     /// Interface IStorageService

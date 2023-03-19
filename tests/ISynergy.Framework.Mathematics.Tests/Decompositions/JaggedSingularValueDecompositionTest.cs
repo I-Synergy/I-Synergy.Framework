@@ -13,7 +13,7 @@
         {
             int n = 5;
 
-            var I = Matrix.Identity(n).ToJagged();
+            double[][] I = Matrix.Identity(n).ToJagged();
 
             for (int i = 0; i < n; i++)
             {
@@ -23,7 +23,7 @@
 
                     value[i][j] = double.NaN;
 
-                    var target = new JaggedSingularValueDecomposition(value);
+                    JaggedSingularValueDecomposition target = new(value);
 
                     double[][] solution = target.Solve(I);
                     double[][] inverse = target.Inverse();
@@ -36,21 +36,21 @@
         [TestMethod]
         public void InverseTest()
         {
-            var value = new double[][]
-            { 
+            double[][] value = new double[][]
+            {
                   new double[] { 1.0, 1.0 },
                   new double[] { 2.0, 2.0 }
             };
 
-            var target = new JaggedSingularValueDecomposition(value);
+            JaggedSingularValueDecomposition target = new(value);
 
-            var expected = new double[][]
+            double[][] expected = new double[][]
             {
                new double[] { 0.1, 0.2 },
                new double[] { 0.1, 0.2 }
             };
 
-            var actual = target.Solve(Jagged.Identity(2));
+            double[][] actual = target.Solve(Jagged.Identity(2));
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
             Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-5));
             actual = target.Inverse();
@@ -62,7 +62,7 @@
         {
             int n = 5;
 
-            var I = Jagged.Identity(n);
+            double[][] I = Jagged.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -70,7 +70,7 @@
                 {
                     double[][] value = Jagged.Magic(n);
 
-                    var target = new JaggedSingularValueDecomposition(value);
+                    JaggedSingularValueDecomposition target = new(value);
 
                     double[][] solution = target.Solve(I);
                     double[][] inverse = target.Inverse();
@@ -94,15 +94,15 @@
             // Test for m-x-n matrices where m < n. The available SVD
             // routine was not meant to be used in this case.
 
-            var value = new double[][]
-            { 
+            double[][] value = new double[][]
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
                  new double[] { 7, 8 }
             }.Transpose(); // value is 2x4, having less rows than columns.
 
-            var target = new JaggedSingularValueDecomposition(value, true, true, false);
+            JaggedSingularValueDecomposition target = new(value, true, true, false);
 
             double[][] actual = Matrix.Dot(Matrix.Dot(
                 target.LeftSingularVectors, target.DiagonalMatrix),
@@ -113,7 +113,7 @@
             Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-2));
 
             // Checking values
-            var U = new double[][]
+            double[][] U = new double[][]
             {
                 new double[] { -0.641423027995072, -0.767187395072177 },
                 new double[] { -0.767187395072177,  0.641423027995072 },
@@ -135,10 +135,10 @@
             Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors.Submatrix(0, 3, 0, 1), V, 0.0001));
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -155,17 +155,17 @@
             // routine was not meant to be used in this case.
 
             double[][] value = new double[][]
-            { 
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
                  new double[] { 7, 8 }
             }.Transpose(); // value is 2x4, having less rows than columns.
 
-            var target = new JaggedSingularValueDecomposition(value, true, true, true);
+            JaggedSingularValueDecomposition target = new(value, true, true, true);
 
             double[][] actual = Matrix.Dot(
-                Matrix.Dot(target.LeftSingularVectors, target.DiagonalMatrix), 
+                Matrix.Dot(target.LeftSingularVectors, target.DiagonalMatrix),
                 target.RightSingularVectors.Transpose());
 
             // Checking the decomposition
@@ -195,10 +195,10 @@
             Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors, V, 0.0001));
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -212,7 +212,7 @@
             // Test for m-x-n matrices where m > n (4 > 2)
 
             double[][] value = new double[][]
-            { 
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
@@ -220,7 +220,7 @@
              }; // value is 4x2, thus having more rows than columns
 
 
-            var target = new JaggedSingularValueDecomposition(value, true, true, false);
+            JaggedSingularValueDecomposition target = new(value, true, true, false);
 
             double[][] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
                                 target.DiagonalMatrix),
@@ -254,10 +254,10 @@
             Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors, V, 0.0001));
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -272,14 +272,14 @@
             // without computing the right singular vectors.
 
             double[][] value = new double[][]
-            { 
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
                  new double[] { 7, 8 }
             }.Transpose(); // value is 2x4, having less rows than columns.
 
-            var target = new JaggedSingularValueDecomposition(value, true, false, true);
+            JaggedSingularValueDecomposition target = new(value, true, false, true);
 
 
             // Checking values
@@ -306,10 +306,10 @@
             Assert.IsTrue(Matrix.IsEqual(target.RightSingularVectors, V));
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -322,15 +322,15 @@
             // Test using SVD assumption auto-correction feature
             // without computing the left singular vectors.
 
-            var value = new double[][]
-            { 
+            double[][] value = new double[][]
+            {
                  new double[] { 1, 2 },
                  new double[] { 3, 4 },
                  new double[] { 5, 6 },
                  new double[] { 7, 8 }
             }.Transpose(); // value is 2x4, having less rows than columns.
 
-            var target = new JaggedSingularValueDecomposition(value, false, true, true);
+            JaggedSingularValueDecomposition target = new(value, false, true, true);
 
 
             // Checking values
@@ -357,10 +357,10 @@
 
 
 
-            double[][] S = 
+            double[][] S =
             {
                 new double[] { 14.2690954992615, 0.000000000000000 },
-                new double[] {  0.0000000000000,	0.626828232417543 },
+                new double[] {  0.0000000000000,    0.626828232417543 },
             };
 
             // The diagonal values should be equal
@@ -387,13 +387,13 @@
                 new double[] { 1.1,  0.9 }
             };
 
-            var value2 = value1.Transpose();
+            double[][] value2 = value1.Transpose();
 
-            var cvalue1 = value1.Copy();
-            var cvalue2 = value2.Copy();
+            double[][] cvalue1 = value1.Copy();
+            double[][] cvalue2 = value2.Copy();
 
-            var target1 = new JaggedSingularValueDecomposition(cvalue1, true, true, true, true);
-            var target2 = new JaggedSingularValueDecomposition(cvalue2, true, true, true, true);
+            JaggedSingularValueDecomposition target1 = new(cvalue1, true, true, true, true);
+            JaggedSingularValueDecomposition target2 = new(cvalue2, true, true, true, true);
 
             Assert.IsFalse(value1.IsEqual(cvalue1, 1e-3));
             Assert.IsTrue(value2.IsEqual(cvalue2, 1e-3)); // due to auto-transpose
@@ -428,7 +428,7 @@
 
 
 
-            var target = new JaggedSingularValueDecomposition(value,
+            JaggedSingularValueDecomposition target = new(value,
                 computeLeftSingularVectors: true,
                 computeRightSingularVectors: true);
 
@@ -474,7 +474,7 @@
 
 
 
-            var target = new JaggedSingularValueDecomposition(value,
+            JaggedSingularValueDecomposition target = new(value,
                 computeLeftSingularVectors: true,
                 computeRightSingularVectors: true);
 

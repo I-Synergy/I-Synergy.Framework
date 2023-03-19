@@ -24,8 +24,8 @@ namespace ISynergy.Framework.UI.Converters
 
             if (value != null)
             {
-                var  collection = value as ICollection;
-                
+                var collection = value as ICollection;
+
                 if (collection != null)
                 {
                     var values = collection.OfType<object>().Select(s => s.ToString());

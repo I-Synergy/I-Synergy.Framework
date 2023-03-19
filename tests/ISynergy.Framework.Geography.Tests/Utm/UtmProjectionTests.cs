@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         /// <summary>
         /// The utm
         /// </summary>
-        private readonly UtmProjection utm = new UtmProjection();
+        private readonly UtmProjection utm = new();
 
         /// <summary>
         /// Defines the test method TestMyHome.
@@ -20,7 +20,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestMyHome()
         {
-            var e = (UtmCoordinate)utm.ToEuclidian(Constants.MyHome);
+            UtmCoordinate e = (UtmCoordinate)utm.ToEuclidian(Constants.MyHome);
             // Reference Computation from http://www.earthpoint.us/Convert.aspx
             Assert.AreEqual("32U 485577 5521521", e.ToString());
         }
@@ -31,8 +31,8 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestInversion()
         {
-            var e = (UtmCoordinate)utm.ToEuclidian(Constants.MyHome);
-            var c = utm.FromEuclidian(e);
+            UtmCoordinate e = (UtmCoordinate)utm.ToEuclidian(Constants.MyHome);
+            Global.GlobalCoordinates c = utm.FromEuclidian(e);
             Assert.IsTrue(c.IsApproximatelyEqual(Constants.MyHome, 0.000000001));
         }
 
@@ -42,7 +42,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestEquals1()
         {
-            var s = "123";
+            string s = "123";
             Assert.IsFalse(utm.Equals(s));
         }
 
@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Geography.Utm.Tests
         [TestMethod]
         public void TestEquals2()
         {
-            var utm2 = new UtmProjection();
+            UtmProjection utm2 = new();
         }
     }
 }

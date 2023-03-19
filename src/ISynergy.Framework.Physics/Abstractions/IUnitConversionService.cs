@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Physics.Enumerations;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Physics.Abstractions
 {

@@ -2,8 +2,6 @@
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained

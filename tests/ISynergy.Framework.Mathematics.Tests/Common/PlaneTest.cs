@@ -1,8 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Mathematics.Geometry;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Globalization;
-    using ISynergy.Framework.Mathematics.Geometry;
 
     [TestClass]
     public class PlaneTest
@@ -11,12 +11,12 @@
         [TestMethod]
         public void FromPointsTest()
         {
-            Point3 point1 = new Point3(0, 1, -7);
-            Point3 point2 = new Point3(3, 1, -9);
-            Point3 point3 = new Point3(0, -5, -8);
+            Point3 point1 = new(0, 1, -7);
+            Point3 point2 = new(3, 1, -9);
+            Point3 point3 = new(0, -5, -8);
 
             Plane actual = Plane.FromPoints(point1, point2, point3);
-            Vector3 expected = new Vector3(-12, 3, -18);
+            Vector3 expected = new(-12, 3, -18);
 
             Assert.AreEqual(expected, actual.Normal);
         }
@@ -24,11 +24,11 @@
         [TestMethod]
         public void FromPointsTest2()
         {
-            Point3 point1 = new Point3(1, 2, -2);
-            Point3 point2 = new Point3(3, -2, 1);
-            Point3 point3 = new Point3(5, 1, -4);
+            Point3 point1 = new(1, 2, -2);
+            Point3 point2 = new(3, -2, 1);
+            Point3 point3 = new(5, 1, -4);
 
-            Plane expected = new Plane(11, 16, 14, -15);
+            Plane expected = new(11, 16, 14, -15);
             Plane actual = Plane.FromPoints(point1, point2, point3);
 
             Assert.AreEqual(expected, actual);
@@ -37,7 +37,7 @@
         [TestMethod]
         public void ToStringTest()
         {
-            Plane target = new Plane(-12, 3, -18, 1);
+            Plane target = new(-12, 3, -18, 1);
 
             {
                 string expected = "-12x +3y -18z +1 = 0";

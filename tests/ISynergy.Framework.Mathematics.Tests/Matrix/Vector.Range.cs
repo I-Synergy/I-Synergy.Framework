@@ -132,7 +132,7 @@
                 {
                     for (double start = 0; start < 5; start++)
                     {
-                        Test(start, end, step, (Func<IEnumerable<double>>)(() => Vector.Range(start, end, step)));
+                        Test(start, end, step, () => Vector.Range(start, end, step));
                     }
                 }
             }

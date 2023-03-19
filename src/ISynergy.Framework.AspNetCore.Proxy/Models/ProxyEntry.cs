@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.AspNetCore.Proxy.Models
 {

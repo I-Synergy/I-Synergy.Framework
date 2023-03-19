@@ -221,7 +221,7 @@ namespace ISynergy.Framework.Core.Extensions
             var result = new StringBuilder();
 
             foreach (var character in self.EnsureNotNull())
-                if (isHexDigit.IsMatch(character.ToString())) 
+                if (isHexDigit.IsMatch(character.ToString()))
                     result.Append(character.ToString());
 
             return result.ToString();
@@ -669,21 +669,21 @@ namespace ISynergy.Framework.Core.Extensions
         public static IList<string> SplitAndKeep(this string _self, params char[] delimiters)
         {
             var parts = new List<string>();
-            
+
             if (!string.IsNullOrEmpty(_self))
             {
                 var firstChar = 0;
                 do
                 {
                     var lastChar = _self.IndexOfAny(delimiters, firstChar);
-                    
+
                     if (lastChar >= 0)
                     {
                         if (lastChar > firstChar)
                             parts.Add(_self.Substring(firstChar, lastChar - firstChar)); //part before the delimiter
-                        
+
                         parts.Add(new string(_self[lastChar], 1));//the delimiter
-                        
+
                         firstChar = lastChar + 1;
                         continue;
                     }

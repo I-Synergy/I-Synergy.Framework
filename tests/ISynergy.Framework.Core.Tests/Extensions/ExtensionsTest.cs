@@ -18,8 +18,8 @@ namespace ISynergy.Framework.Core.Extensions.Tests
         [TestMethod]
         public void MakeArrayType_test()
         {
-            var t = typeof(double);
-            var r = t.MakeArrayType(rank: 3, jagged: true);
+            System.Type t = typeof(double);
+            System.Type r = t.MakeArrayType(rank: 3, jagged: true);
             Assert.AreEqual(typeof(double[][][]), r);
 
             r = t.MakeArrayType(rank: 1, jagged: true);

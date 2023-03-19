@@ -17,7 +17,7 @@
                   { 2.0, 2.0 }
             };
 
-            var target = new SingularValueDecomposition(value);
+            SingularValueDecomposition target = new(value);
 
             double[,] expected = new double[,]
             {
@@ -38,7 +38,7 @@
         {
             int n = 5;
 
-            var I = Matrix.Identity(n);
+            double[,] I = Matrix.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -46,7 +46,7 @@
                 {
                     double[,] value = Matrix.Magic(n);
 
-                    var target = new SingularValueDecomposition(value);
+                    SingularValueDecomposition target = new(value);
 
                     double[,] solution = target.Solve(I);
                     double[,] inverse = target.Inverse();
@@ -63,7 +63,7 @@
         {
             int n = 5;
 
-            var I = Matrix.Identity(n);
+            double[,] I = Matrix.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -73,7 +73,7 @@
 
                     value[i, j] = double.NaN;
 
-                    var target = new SingularValueDecomposition(value);
+                    SingularValueDecomposition target = new(value);
 
                     double[,] solution = target.Solve(I);
                     double[,] inverse = target.Inverse();
@@ -104,7 +104,7 @@
                  { 7, 8 }
              }.Transpose(); // value is 2x4, having less rows than columns.
 
-            var target = new SingularValueDecomposition(value, true, true, false);
+            SingularValueDecomposition target = new(value, true, true, false);
 
             double[,] actual = target.LeftSingularVectors.Dot(
                 target.DiagonalMatrix).Dot(target.RightSingularVectors.Transpose());
@@ -132,7 +132,7 @@
                 { -0.744788648803490, -0.381169081397574,  },
             };
 
-            var matrix = target.RightSingularVectors.Submatrix(0, 3, 0, 1);
+            double[,] matrix = target.RightSingularVectors.Submatrix(0, 3, 0, 1);
 
             // V can be different, but for the economy SVD it is often equal
             Assert.IsTrue(
@@ -166,7 +166,7 @@
                  { 7, 8 }
              }.Transpose(); // value is 2x4, having less rows than columns.
 
-            var target = new SingularValueDecomposition(value, true, true, true);
+            SingularValueDecomposition target = new(value, true, true, true);
 
             double[,] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
                 Matrix.Diagonal(target.Diagonal)), target.RightSingularVectors.Transpose());
@@ -223,7 +223,7 @@
              }; // value is 4x2, thus having more rows than columns
 
 
-            SingularValueDecomposition target = new SingularValueDecomposition(value, true, true, false);
+            SingularValueDecomposition target = new(value, true, true, false);
 
             double[,] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
                 Matrix.Diagonal(target.Diagonal)), target.RightSingularVectors.Transpose());
@@ -281,7 +281,7 @@
                  { 7, 8 }
              }.Transpose(); // value is 2x4, having less rows than columns.
 
-            var target = new SingularValueDecomposition(value, true, false, true);
+            SingularValueDecomposition target = new(value, true, false, true);
 
 
             // Checking values
@@ -332,7 +332,7 @@
                  { 7, 8 }
              }.Transpose(); // value is 2x4, having less rows than columns.
 
-            var target = new SingularValueDecomposition(value, false, true, true);
+            SingularValueDecomposition target = new(value, false, true, true);
 
 
             // Checking values
@@ -391,11 +391,11 @@
 
             double[,] value2 = value1.Transpose();
 
-            var cvalue1 = value1.Copy();
-            var cvalue2 = value2.Copy();
+            double[,] cvalue1 = value1.Copy();
+            double[,] cvalue2 = value2.Copy();
 
-            var target1 = new SingularValueDecomposition(cvalue1, true, true, true, true);
-            var target2 = new SingularValueDecomposition(cvalue2, true, true, true, true);
+            SingularValueDecomposition target1 = new(cvalue1, true, true, true, true);
+            SingularValueDecomposition target2 = new(cvalue2, true, true, true, true);
 
             Assert.IsFalse(cvalue1.IsEqual(value1, 1e-5));
             // Assert.IsFalse(cvalue2.IsEqual(value2, 1e-5));
@@ -429,7 +429,7 @@
 
 
 
-            SingularValueDecomposition target = new SingularValueDecomposition(value,
+            SingularValueDecomposition target = new(value,
                 computeLeftSingularVectors: true,
                 computeRightSingularVectors: true);
 
