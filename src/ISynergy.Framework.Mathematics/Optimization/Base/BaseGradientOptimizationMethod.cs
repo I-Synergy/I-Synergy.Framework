@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mathematics.Differentiation;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Base
 {

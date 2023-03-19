@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace ISynergy.Framework.EntityFramework.Extensions.Tests
 {
@@ -21,7 +21,7 @@ namespace ISynergy.Framework.EntityFramework.Extensions.Tests
         [DataRow(8, 10, 1)]
         public void GetPageCountTest(int size, int pageSize, int pages)
         {
-            var list = Enumerable.Repeat(new object(), size).AsQueryable();
+            IQueryable<object> list = Enumerable.Repeat(new object(), size).AsQueryable();
             Assert.AreEqual(pages, list.CountPages(pageSize));
         }
 
@@ -41,7 +41,7 @@ namespace ISynergy.Framework.EntityFramework.Extensions.Tests
         [DataRow(8, 10, 1, 8)]
         public void GetPageTest(int size, int pageSize, int page, int count)
         {
-            var list = Enumerable.Repeat(new object(), size).AsQueryable();
+            IQueryable<object> list = Enumerable.Repeat(new object(), size).AsQueryable();
             Assert.AreEqual(count, list.ToPage(page, pageSize).Count());
         }
     }

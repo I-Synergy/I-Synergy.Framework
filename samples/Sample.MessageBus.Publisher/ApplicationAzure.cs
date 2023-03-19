@@ -31,20 +31,20 @@ namespace Sample.MessageBus.Publisher
         {
             Console.WriteLine("Azure implementation started...");
 
-            var sessionId = Guid.NewGuid();
-            var cancellationTokenSource = new CancellationTokenSource();
-            var publishTasks = new List<Task>();
+            Guid sessionId = Guid.NewGuid();
+            CancellationTokenSource cancellationTokenSource = new();
+            List<Task> publishTasks = new();
 
             for (int i = 0; i < 10; i++)
             {
-                var id = Guid.NewGuid();
+                Guid id = Guid.NewGuid();
 
                 Console.WriteLine($"Sending message with id: {id}");
 
                 publishTasks.Add(_messageBus.SendMessageAsync(new TestDataModel(QueueMessageActions.Add, $"Message {i} with id: {i}"), sessionId));
             }
 
-            var allPublishes = Task.WhenAll(publishTasks);
+            Task allPublishes = Task.WhenAll(publishTasks);
 
             Console.WriteLine("Publishing messages...");
             Console.WriteLine("Press any key to exit application.");

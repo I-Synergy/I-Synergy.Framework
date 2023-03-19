@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Collections;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
 {
@@ -14,7 +13,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels
         /// Gets or sets the blades.
         /// </summary>
         /// <value>The blades.</value>
-        ObservableConcurrentCollection<IView> Blades { get; set; }
+        ObservableCollection<IView> Blades { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance is pane enabled.
         /// </summary>

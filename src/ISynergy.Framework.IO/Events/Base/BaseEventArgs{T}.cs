@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
-using System.IO;
 
 namespace ISynergy.Framework.IO.Events.Base
 {

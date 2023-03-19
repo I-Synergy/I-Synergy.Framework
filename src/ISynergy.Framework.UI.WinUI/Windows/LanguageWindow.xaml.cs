@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.UI.ViewModels;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace ISynergy.Framework.UI
 {

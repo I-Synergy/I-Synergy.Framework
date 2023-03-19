@@ -100,7 +100,7 @@ namespace ISynergy.Framework.AspNetCore.Startup
             }
 
             app.ConfigureExceptionHandlerMiddleware();
-            
+
             app.UseStaticFiles();
 
             app.UseRequestLocalization(

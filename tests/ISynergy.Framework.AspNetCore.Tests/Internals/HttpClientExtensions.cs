@@ -17,9 +17,9 @@ namespace ISynergy.Framework.AspNetCore.Tests.Internals
         /// <returns>A Task&lt;HttpResponseMessageWithTiming&gt; representing the asynchronous operation.</returns>
         internal static async Task<HttpResponseMessageWithTiming> GetWithTimingAsync(this HttpClient client, string requestUri)
         {
-            var stopwatch = Stopwatch.StartNew();
-            var response = await client.GetAsync(requestUri);
-            var timing = stopwatch.Elapsed;
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            HttpResponseMessage response = await client.GetAsync(requestUri);
+            System.TimeSpan timing = stopwatch.Elapsed;
 
             stopwatch.Stop();
 

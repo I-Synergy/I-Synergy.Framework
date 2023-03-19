@@ -38,11 +38,11 @@ namespace ISynergy.Framework.UI.ViewModels
         public AsyncRelayCommand Register_Command { get; set; }
 
         public AuthenticationViewModel(
-            IContext context, 
+            IContext context,
             IBaseCommonServices commonServices,
             IAuthenticationService authenticationService,
-            ILogger logger, 
-            bool automaticValidation = false) 
+            ILogger logger,
+            bool automaticValidation = false)
             : base(context, commonServices, logger, automaticValidation)
         {
             _authenticationService = authenticationService;
@@ -55,7 +55,7 @@ namespace ISynergy.Framework.UI.ViewModels
                 if (string.IsNullOrEmpty(Username) || (!string.IsNullOrEmpty(Username) && Username.Length <= 3))
                     Properties[nameof(Username)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
 
-                if (string.IsNullOrEmpty(Password) || (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, GenericConstants.PasswordRegEx)))
+                if (string.IsNullOrEmpty(Password) || (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100))))
                     Properties[nameof(Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
             });
         }

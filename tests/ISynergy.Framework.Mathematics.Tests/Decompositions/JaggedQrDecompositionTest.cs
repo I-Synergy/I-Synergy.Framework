@@ -1,9 +1,9 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
-    using ISynergy.Framework.Mathematics.Decompositions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Common;
+    using ISynergy.Framework.Mathematics.Decompositions;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class JaggedQrDecompositionTest
@@ -14,7 +14,7 @@
         {
             int n = 5;
 
-            var I = Jagged.Identity(n);
+            double[][] I = Jagged.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -24,10 +24,10 @@
 
                     value[i][j] = double.NaN;
 
-                    var target = new JaggedQrDecomposition(value);
+                    JaggedQrDecomposition target = new(value);
 
-                    var solution = target.Solve(I);
-                    var inverse = target.Inverse();
+                    double[][] solution = target.Solve(I);
+                    double[][] inverse = target.Inverse();
 
                     Assert.IsTrue(Matrix.IsEqual(solution, inverse));
                 }
@@ -45,11 +45,11 @@
             };
 
 
-            var target = new JaggedQrDecomposition(value);
+            JaggedQrDecomposition target = new(value);
 
             // Decomposition Identity
-            var Q = target.OrthogonalFactor;
-            var QQt = Matrix.Dot(Q, Q.Transpose());
+            double[][] Q = target.OrthogonalFactor;
+            double[][] QQt = Matrix.Dot(Q, Q.Transpose());
             Assert.IsTrue(Matrix.IsEqual(QQt, Jagged.Identity(3), 1e-6));
             Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-6));
 
@@ -72,11 +72,11 @@
             };
 
 
-            var target = new JaggedQrDecomposition(value);
+            JaggedQrDecomposition target = new(value);
 
             // Decomposition Identity
-            var Q = target.OrthogonalFactor;
-            var QQt = Matrix.Dot(Q.Transpose(), Q);
+            double[][] Q = target.OrthogonalFactor;
+            double[][] QQt = Matrix.Dot(Q.Transpose(), Q);
             Assert.IsTrue(Matrix.IsEqual(QQt, Jagged.Identity(1), 1e-6));
             double[][] reverse = target.Reverse();
             Assert.IsTrue(Matrix.IsEqual(value, reverse, 1e-6));
@@ -103,7 +103,7 @@
                {  0, -1,  2 }
             };
 
-            var target = new JaggedQrDecomposition(value.ToJagged());
+            JaggedQrDecomposition target = new(value.ToJagged());
 
             // Decomposition Identity
             double[][] Q1 = target.OrthogonalFactor;
@@ -127,11 +127,11 @@
             };
 
 
-            var target = new JaggedQrDecomposition(value, economy: false);
+            JaggedQrDecomposition target = new(value, economy: false);
 
             // Decomposition Identity
-            var Q = target.OrthogonalFactor;
-            var QtQ = Matrix.Dot(Q.Transpose(), Q);
+            double[][] Q = target.OrthogonalFactor;
+            double[][] QtQ = Matrix.Dot(Q.Transpose(), Q);
             Assert.IsTrue(Matrix.IsEqual(QtQ, Jagged.Identity(3), 1e-6));
             double[][] reverse = target.Reverse();
             Assert.IsTrue(Matrix.IsEqual(value, reverse, 1e-6));
@@ -142,7 +142,7 @@
             double[][] actual = target.Solve(B);
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
 
-            var QQt = Matrix.Dot(Q, Q.Transpose());
+            double[][] QQt = Matrix.Dot(Q, Q.Transpose());
             Assert.IsTrue(Matrix.IsEqual(QQt, Jagged.Identity(3), 1e-6));
         }
 
@@ -164,7 +164,7 @@
             };
 
 
-            var target = new JaggedQrDecomposition(value);
+            JaggedQrDecomposition target = new(value);
 
             double[][] actual = target.Inverse();
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
@@ -190,7 +190,7 @@
 
             double[] expected = { 2.5000, 4.0000, 3.5000 };
 
-            var target = new JaggedQrDecomposition(value);
+            JaggedQrDecomposition target = new(value);
             double[] actual = target.Solve(b);
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
@@ -232,7 +232,7 @@
                     new double[] { 0.0153  },
                 };
 
-                var target = new JaggedQrDecomposition(value);
+                JaggedQrDecomposition target = new(value);
                 double[][] actual = target.Solve(b);
 
                 Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
@@ -244,7 +244,7 @@
                 double[] b = { 4, 1, 0, 0, 2, 5 };
                 double[] expected = { 3.9286, -0.5031, 0.0153 };
 
-                var target = new JaggedQrDecomposition(value);
+                JaggedQrDecomposition target = new(value);
                 double[] actual = target.Solve(b);
 
                 Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
@@ -286,7 +286,7 @@
                     new double[] { 0.0153  },
                 };
 
-                var target = new JaggedQrDecomposition(value, economy: false);
+                JaggedQrDecomposition target = new(value, economy: false);
                 double[][] actual = target.Solve(b);
 
                 Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
@@ -298,7 +298,7 @@
                 double[] b = { 4, 1, 0, 0, 2, 5 };
                 double[] expected = { 3.9286, -0.5031, 0.0153 };
 
-                var target = new JaggedQrDecomposition(value, economy: false);
+                JaggedQrDecomposition target = new(value, economy: false);
                 double[] actual = target.Solve(b);
 
                 Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
@@ -358,27 +358,27 @@
                 new double[] { -5.0909763966987178  },
             };
 
-            var target = new JaggedQrDecomposition(value);
+            JaggedQrDecomposition target = new(value);
             double[][] actual = target.Solve(b);
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
-            var reconstruct = value.Dot(expected);
+            double[][] reconstruct = value.Dot(expected);
             Assert.IsTrue(Matrix.IsEqual(reconstruct, b, rtol: 1e-1));
             double[] b2 = b.GetColumn(0);
             double[] expected2 = expected.GetColumn(0);
 
-            var target2 = new JaggedQrDecomposition(value);
+            JaggedQrDecomposition target2 = new(value);
             double[] actual2 = target2.Solve(b2);
             Assert.IsTrue(Matrix.IsEqual(expected2, actual2, atol: 1e-4));
 
-            var targetMat = new QrDecomposition(value.ToMatrix());
+            QrDecomposition targetMat = new(value.ToMatrix());
             double[,] actualMat = targetMat.Solve(b.ToMatrix());
 
             Assert.IsTrue(Matrix.IsEqual(expected, actualMat, atol: 1e-4));
-            var reconstructMat = value.ToMatrix().Dot(expected);
+            double[][] reconstructMat = value.ToMatrix().Dot(expected);
             Assert.IsTrue(Matrix.IsEqual(reconstruct, b, rtol: 1e-1));
 
-            var targetMat2 = new QrDecomposition(value.ToMatrix());
+            QrDecomposition targetMat2 = new(value.ToMatrix());
             Assert.IsTrue(Matrix.IsEqual(target2.Diagonal, targetMat2.Diagonal, atol: 1e-4));
             Assert.IsTrue(Matrix.IsEqual(target2.OrthogonalFactor, targetMat2.OrthogonalFactor, atol: 1e-4));
             Assert.IsTrue(Matrix.IsEqual(target2.UpperTriangularFactor, targetMat2.UpperTriangularFactor, atol: 1e-4));
@@ -416,11 +416,11 @@
                 computeRightSingularVectors: true,
                 autoTranspose: true).Inverse();
 
-            var target = new JaggedQrDecomposition(value);
+            JaggedQrDecomposition target = new(value);
             double[][] actual = target.Inverse();
             Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
 
-            var targetMat = new QrDecomposition(value.ToMatrix());
+            QrDecomposition targetMat = new(value.ToMatrix());
             double[][] actualMat = target.Inverse();
             Assert.IsTrue(Matrix.IsEqual(expected, actualMat, atol: 1e-4));
         }
@@ -453,8 +453,8 @@
             double[][] actual = new JaggedQrDecomposition(b, true).SolveTranspose(a);
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.001));
 
-            var bX = b.Dot(expected);
-            var Xb = expected.Dot(b);
+            double[][] bX = b.Dot(expected);
+            double[][] Xb = expected.Dot(b);
             Assert.IsTrue(Matrix.IsEqual(Xb, a, atol: 1e-3));
             Assert.IsFalse(Matrix.IsEqual(bX, a, atol: 1e-3));
 
@@ -470,7 +470,7 @@
             q = Jagged.Identity(m);
             for (int i = 0; i < n; i++)
             {
-                var h = Jagged.Identity(m);
+                double[][] h = Jagged.Identity(m);
                 h.Set(i, 0, i, 0, householder(a.GetColumn(i).Get(i, 0)));
                 q = q.Dot(h);
                 a = h.Dot(a);
@@ -481,10 +481,10 @@
         {
             double[] v = a.Divide((a[0] + Special.Sign(Norm.Euclidean(a), a[0])));
             v[0] = 1;
-            var H = Jagged.Identity(a.Length);
-            var vr = Jagged.RowVector(v);
-            var vc = Jagged.ColumnVector(v);
-            var t = vc.Dot(vr);
+            double[][] H = Jagged.Identity(a.Length);
+            double[][] vr = Jagged.RowVector(v);
+            double[][] vc = Jagged.ColumnVector(v);
+            double[][] t = vc.Dot(vr);
             H.Subtract((2 / v.Dot(v)).Multiply(t), result: H);
             return H;
         }
@@ -511,7 +511,7 @@
             };
 
             Assert.IsTrue(expectedM.IsEqual(m, 1e-6));
-            Assert.IsTrue(expectedQ.IsEqual(q, 1e-6)); 
+            Assert.IsTrue(expectedQ.IsEqual(q, 1e-6));
         }
 
         [TestMethod]
@@ -526,14 +526,14 @@
 
             double[] b = { 1, 2, 3 };
 
-            double[][] expected = 
+            double[][] expected =
             {
                 new double[] { 0.75, 1, 0.75 },
                 new double[] { 0.50, 2, 1.50 },
                 new double[] { 0.25, 1, 2.25 }
             };
 
-            var target = new JaggedQrDecomposition(value);
+            JaggedQrDecomposition target = new(value);
             double[][] actual = target.SolveForDiagonal(b);
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));

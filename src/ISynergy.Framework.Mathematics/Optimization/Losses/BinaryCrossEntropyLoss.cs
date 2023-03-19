@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Statistics;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses
 {

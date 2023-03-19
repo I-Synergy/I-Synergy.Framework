@@ -1,18 +1,13 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.UI.Services.Base
 {
-    public abstract class BaseDialogService: IDialogService
+    public abstract class BaseDialogService : IDialogService
     {/// <summary>
      /// Gets the language service.
      /// </summary>

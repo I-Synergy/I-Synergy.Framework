@@ -41,7 +41,7 @@
 
             double[,] expected = Matrix.Magic(3);
 
-            var actual = a.To<double[,]>();
+            double[,] actual = a.To<double[,]>();
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -52,7 +52,7 @@
 
             double[,] expected = Matrix.Magic(3);
 
-            var actual = a.To<double[,]>();
+            double[,] actual = a.To<double[,]>();
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -62,7 +62,7 @@
             string[][] a = Jagged.Magic(3).Apply((x, i, j) => x.ToString());
             double[][] expected = Jagged.Magic(3);
 
-            var actual = a.To<double[][]>();
+            double[][] actual = a.To<double[][]>();
 
             for (int i = 0; i < actual.GetLength()[0]; i++)
                 for (int j = 0; j < actual.GetLength()[1]; j++)
@@ -126,13 +126,13 @@
             actual = (double[])((Array)a).Flatten(MatrixOrder.CRowMajor);
             CollectionAssert.AreEqual(expected, actual);
             CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
-            CollectionAssert.AreEqual(a, ((Array)actual).Reshape(a.GetLength(), MatrixOrder.CRowMajor));
+            CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
 
             expected = a.Flatten(MatrixOrder.FortranColumnMajor);
             actual = (double[])((Array)a).Flatten(MatrixOrder.FortranColumnMajor);
             CollectionAssert.AreEqual(expected, actual);
             CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
-            CollectionAssert.AreEqual(a, ((Array)actual).Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
+            CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
 
 
             double[,,,] b =
@@ -142,16 +142,16 @@
             };
 
             expected = a.Flatten(MatrixOrder.CRowMajor);
-            actual = (double[])((Array)b).Flatten(MatrixOrder.CRowMajor);
+            actual = (double[])b.Flatten(MatrixOrder.CRowMajor);
             CollectionAssert.AreEqual(expected, actual);
             CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
-            CollectionAssert.AreEqual(a, ((Array)actual).Reshape(a.GetLength(), MatrixOrder.CRowMajor));
+            CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
 
             expected = a.Flatten(MatrixOrder.FortranColumnMajor);
-            actual = (double[])((Array)b).Flatten(MatrixOrder.FortranColumnMajor);
+            actual = (double[])b.Flatten(MatrixOrder.FortranColumnMajor);
             CollectionAssert.AreEqual(expected, actual);
             CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
-            CollectionAssert.AreEqual(a, ((Array)actual).Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
+            CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
         }
 
         [TestMethod]

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
-using System;
 
 namespace ISynergy.Framework.Mathematics
 {
@@ -600,7 +599,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator ==(Matrix3x3 matrix1, Matrix3x3 matrix2)
         {
-            return 
+            return
                 matrix1.V00 == matrix2.V00 &&
                 matrix1.V01 == matrix2.V01 &&
                 matrix1.V02 == matrix2.V02 &&
@@ -626,7 +625,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator !=(Matrix3x3 matrix1, Matrix3x3 matrix2)
         {
-            return 
+            return
                 matrix1.V00 != matrix2.V00 ||
                 matrix1.V01 != matrix2.V01 ||
                 matrix1.V02 != matrix2.V02 ||

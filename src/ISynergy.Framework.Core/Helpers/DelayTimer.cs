@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Timers;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Core.Helpers
 {

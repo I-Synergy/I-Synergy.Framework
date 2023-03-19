@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.Core.Constants;
-using System;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.Core.Extensions
@@ -26,7 +23,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="_self">Name of the file.</param>
         /// <returns><c>true</c> if [is valid file name] [the specified file name]; otherwise, <c>false</c>.</returns>
         public static bool IsValidFileName(this string _self) =>
-            !Regex.IsMatch(_self, invalidRegStr);
+            !Regex.IsMatch(_self, invalidRegStr, RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
         /// <summary>
         /// Makes the name of the valid file.
@@ -34,7 +31,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <param name="_self">Name of the file.</param>
         /// <returns>System.String.</returns>
         public static string MakeValidFileName(this string _self) =>
-            Regex.Replace(_self, invalidRegStr, "_");
+            Regex.Replace(_self, invalidRegStr, "_", RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
         /// <summary>
         /// Converts filename to contenttype.
@@ -46,7 +43,7 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = MasterData
                 .FileTypes
-                .Where(q => 
+                .Where(q =>
                     q.Extension.Equals(Path.GetExtension(self)))
                 .SingleOrDefault();
 

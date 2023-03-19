@@ -1,5 +1,4 @@
-﻿using System;
-using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.EntityFramework.Attributes;
 
 namespace ISynergy.Framework.EntityFramework.Entities

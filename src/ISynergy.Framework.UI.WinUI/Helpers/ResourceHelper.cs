@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Markup;
+using System.Reflection;
 
 namespace ISynergy.Framework.UI.Helpers
 {

@@ -5,10 +5,10 @@ namespace Sample.Views;
 
 public partial class AuthenticationView : IAuthenticationView
 {
-	public AuthenticationView(AuthenticationViewModel viewModel)
-		: base(viewModel)
-	{
-		InitializeComponent();
-		BindingContext = viewModel;
-	}
+    public AuthenticationView(AuthenticationViewModel viewModel)
+        : base(viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+    }
 }

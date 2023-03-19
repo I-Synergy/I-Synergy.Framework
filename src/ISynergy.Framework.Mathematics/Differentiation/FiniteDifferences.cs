@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Exceptions;
-using System;
-using System.Threading;
 
 namespace ISynergy.Framework.Mathematics.Differentiation
 {

@@ -1,7 +1,6 @@
 ﻿using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.MachineLearning;
 using ISynergy.Framework.Mathematics.Statistics;
-using System;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Base
 {

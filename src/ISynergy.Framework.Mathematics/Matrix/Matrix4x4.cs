@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics
+﻿namespace ISynergy.Framework.Mathematics
 {
     /// <summary>
     /// A structure representing 4x4 matrix.
@@ -729,7 +727,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator ==(Matrix4x4 matrix1, Matrix4x4 matrix2)
         {
-            return 
+            return
                 matrix1.V00 == matrix2.V00 &&
                 matrix1.V01 == matrix2.V01 &&
                 matrix1.V02 == matrix2.V02 &&
@@ -763,7 +761,7 @@ namespace ISynergy.Framework.Mathematics
         /// 
         public static bool operator !=(Matrix4x4 matrix1, Matrix4x4 matrix2)
         {
-            return 
+            return
                 matrix1.V00 != matrix2.V00 ||
                 matrix1.V01 != matrix2.V01 ||
                 matrix1.V02 != matrix2.V02 ||

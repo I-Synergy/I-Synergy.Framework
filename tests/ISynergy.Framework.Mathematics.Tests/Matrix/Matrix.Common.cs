@@ -11,7 +11,7 @@
         [TestMethod]
         public void ReshapeTest()
         {
-            int[,] start = 
+            int[,] start =
             {
                 { 1, 3, 5},
                 { 2, 4, 6},
@@ -25,7 +25,7 @@
             int rows = 3;
             int cols = 2;
 
-            int[,] expected = 
+            int[,] expected =
             {
                 { 1, 3 },
                 { 5, 2 },
@@ -45,7 +45,7 @@
         [TestMethod]
         public void ReshapeTest1()
         {
-            double[,] array = 
+            double[,] array =
             {
                 { 1, 2, 3},
                 { 4, 5, 6},
@@ -65,7 +65,7 @@
         [TestMethod]
         public void ReshapeTest2()
         {
-            double[][] array = 
+            double[][] array =
             {
                 new double[] { 1, 2, 3 },
                 new double[] { 4, 5, 6 }
@@ -79,7 +79,7 @@
 
             {
                 double[] expected = { 1, 4, 2, 5, 3, 6 };
-                double[] actual = Matrix.Reshape(array, (MatrixOrder)0);
+                double[] actual = Matrix.Reshape(array, 0);
                 Assert.IsTrue(expected.IsEqual(actual));
             }
         }
@@ -87,7 +87,7 @@
         [TestMethod]
         public void ReshapeTest3()
         {
-            double[][] array = 
+            double[][] array =
             {
                 new double[] { 1, 2 },
                 new double[] { 3, 4, 5, 6 }
@@ -107,7 +107,7 @@
 
             {
                 double[] expected = { 1, 3, 2, 4, 5, 6 };
-                double[] actual = Matrix.Reshape(array, (MatrixOrder)0);
+                double[] actual = Matrix.Reshape(array, 0);
                 Assert.IsTrue(expected.IsEqual(actual));
             }
         }
@@ -117,8 +117,8 @@
         [TestMethod]
         public void GetLengthTest()
         {
-            var a = Jagged.Zeros(1, 1);
-            var b = Matrix.Zeros(1, 1);
+            double[][] a = Jagged.Zeros(1, 1);
+            double[,] b = Matrix.Zeros(1, 1);
             int[] actual = a.GetLength();
             int[] expected = b.GetLength();
             Assert.AreEqual(actual.Length, 2);
@@ -133,8 +133,8 @@
         [TestMethod]
         public void GetLengthTest2()
         {
-            var a = new int[0];
-            var b = new double[0];
+            int[] a = new int[0];
+            double[] b = new double[0];
             int[] actual = a.GetLength();
             int[] expected = b.GetLength();
             Assert.AreEqual(actual.Length, 0);
@@ -173,28 +173,28 @@
         {
             int[,] m = Vector.Range(0, 15).Reshape(3, 5);
 
-            var actual = m.Add(5);
+            int[,] actual = m.Add(5);
             Assert.IsTrue(actual.IsEqual(new int[,]
             {
-                { 5,    6,   7,  8,  9 }, 
-                { 10,  11,  12, 13, 14 }, 
-                { 15,  16,  17, 18, 19 }, 
+                { 5,    6,   7,  8,  9 },
+                { 10,  11,  12, 13, 14 },
+                { 15,  16,  17, 18, 19 },
             }));
 
             actual = m.Add(new[] { 10, 20, 30 }, dimension: VectorType.ColumnVector);
             Assert.IsTrue(actual.IsEqual(new int[,]
             {
-                { 10,   11,  12,  13,  14 }, 
-                { 25,   26,  27,  28,  29 }, 
-                { 40,   41,  42,  43,  44 }, 
+                { 10,   11,  12,  13,  14 },
+                { 25,   26,  27,  28,  29 },
+                { 40,   41,  42,  43,  44 },
             }));
 
             actual = m.Add(new[] { 10, 20, 30, 40, 50 }, dimension: 0);
             Assert.IsTrue(actual.IsEqual(new int[,]
             {
-                { 10,   21,  32,  43,  54 }, 
-                { 15,   26,  37,  48,  59 }, 
-                { 20,   31,  42,  53,  64 }, 
+                { 10,   21,  32,  43,  54 },
+                { 15,   26,  37,  48,  59 },
+                { 20,   31,  42,  53,  64 },
             }));
         }
 

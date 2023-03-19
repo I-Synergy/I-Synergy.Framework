@@ -28,7 +28,7 @@
         [TestMethod]
         public void RelativeParameterConstructorTest()
         {
-            var criteria = new RelativeParameterConvergence(iterations: 0, tolerance: 0.1);
+            RelativeParameterConvergence criteria = new(iterations: 0, tolerance: 0.1);
 
             int progress = 1;
             double[] parameters = { 12345.6, 952.12, 1925.1 };
@@ -49,7 +49,7 @@
             // of { 1234.56, 95.212, 192.51 }:
 
             int iterations = criteria.CurrentIteration; // 11
-            var v = criteria.OldValues; // { 1234.56, 95.212, 192.51 }
+            double[] v = criteria.OldValues; // { 1234.56, 95.212, 192.51 }
 
 
             Assert.AreEqual(11, criteria.CurrentIteration);

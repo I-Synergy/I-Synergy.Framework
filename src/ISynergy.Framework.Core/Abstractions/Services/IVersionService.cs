@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Abstractions.Services
+﻿namespace ISynergy.Framework.Core.Abstractions.Services
 {
     /// <summary>
     /// Interface IVersionService

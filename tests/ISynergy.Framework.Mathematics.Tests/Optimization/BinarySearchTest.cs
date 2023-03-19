@@ -18,8 +18,8 @@
         [DataRow(new int[] { 5, 4, 3, 2, 1, 0, -1, -2, -3 })]
         public void AccordBinarySearchShouldWorkWithArray(int[] data)
         {
-            var zeroIndex = data.ToList().FindIndex(v => v == 0);
-            var index = new BinarySearch(i => data[i], 0, data.Length - 1).FindRoot();
+            int zeroIndex = data.ToList().FindIndex(v => v == 0);
+            int index = new BinarySearch(i => data[i], 0, data.Length - 1).FindRoot();
             Assert.AreEqual(zeroIndex, index, String.Format("For {0}", String.Join(",", data)));
         }
     }
@@ -83,7 +83,7 @@
                 return y * y * y + 2 * y * y - 10 * y;
             };
 
-            BinarySearch search = new BinarySearch(function, -6, -4);
+            BinarySearch search = new(function, -6, -4);
             double root = search.FindRoot();
             Assert.AreEqual(-5, root);
         }
@@ -92,7 +92,7 @@
         public void ConstructorTest1()
         {
             Func<int, double> function = x => elements[x];
-            BinarySearch search = new BinarySearch(function, 0, elements.Length);
+            BinarySearch search = new(function, 0, elements.Length);
 
             int a1 = search.FindRoot();
             Assert.AreEqual(1, a1);
@@ -108,7 +108,7 @@
         public void ConstructorTest2()
         {
             Func<int, double> function = x => elements[x];
-            BinarySearch search = new BinarySearch(function, 0, elements.Length - 1);
+            BinarySearch search = new(function, 0, elements.Length - 1);
 
             int a1 = search.Find(5);
             int a2 = search.Find(6);

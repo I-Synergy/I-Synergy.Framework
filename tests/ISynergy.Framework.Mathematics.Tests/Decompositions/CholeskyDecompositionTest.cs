@@ -1,8 +1,8 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
+    using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Decompositions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ISynergy.Framework.Mathematics;
     using System;
 
     [TestClass]
@@ -14,7 +14,7 @@
         {
             int n = 5;
 
-            var I = Matrix.Identity(n);
+            double[,] I = Matrix.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -32,7 +32,7 @@
 
                     bool thrown = false;
 
-                    var target = new CholeskyDecomposition(value);
+                    CholeskyDecomposition target = new(value);
 
                     try
                     {
@@ -68,7 +68,7 @@
             };
 
 
-            var chol = new CholeskyDecomposition(value);
+            CholeskyDecomposition chol = new(value);
             double[,] L = chol.LeftTriangularFactor;
 
             Assert.IsTrue(Matrix.IsEqual(L, expected, 0.0001));
@@ -92,7 +92,7 @@
                {  0, -1,  2 }
             };
 
-            CholeskyDecomposition chol = new CholeskyDecomposition(value);
+            CholeskyDecomposition chol = new(value);
             double[,] L = chol.LeftTriangularFactor;
 
             double[,] B = Matrix.ColumnVector(new double[] { 1, 2, 3 });
@@ -120,7 +120,7 @@
                {  0, -1,  2 }
             };
 
-            var chol = new CholeskyDecomposition(value);
+            CholeskyDecomposition chol = new(value);
             Assert.IsTrue(chol.IsPositiveDefinite);
             double[,] L = chol.LeftTriangularFactor;
 
@@ -149,17 +149,17 @@
                {  6, -2,  0,  0 },
             };
 
-            var chol = new CholeskyDecomposition(value, true);
+            CholeskyDecomposition chol = new(value, true);
             double[,] L = chol.LeftTriangularFactor;
 
             double[,] B = Matrix.Identity(4);
 
-            double[,] expected = 
+            double[,] expected =
             {
                 { 0.4000,    1.2000,    1.4000,   -0.5000 },
                 { 1.2000,    3.6000,    4.2000,   -2.0000 },
                 { 1.4000,    4.2000,    5.4000,   -2.5000 },
-                { -0.5000,  -2.0000,   -2.5000,    1.0000 }, 
+                { -0.5000,  -2.0000,   -2.5000,    1.0000 },
             };
             double[,] actual = chol.Solve(B);
 
@@ -179,7 +179,7 @@
                {  6, -2,  0,  0 },
             };
 
-            var chol = new CholeskyDecomposition(value, true);
+            CholeskyDecomposition chol = new(value, true);
             double[,] L = chol.LeftTriangularFactor;
 
             double[] B = new double[] { 1, 2, 3, 4 };
@@ -209,7 +209,7 @@
                   { -0.50000, -2.00000, -2.50000,  1.00000 },
             };
 
-            var chol = new CholeskyDecomposition(value, robust: true);
+            CholeskyDecomposition chol = new(value, robust: true);
             double[,] L = chol.LeftTriangularFactor;
             Assert.IsFalse(chol.IsPositiveDefinite);
 
@@ -232,9 +232,9 @@
                 {  0, -1,  2 }
             };
 
-            var chol = new CholeskyDecomposition(value, robust: false);
+            CholeskyDecomposition chol = new(value, robust: false);
             Assert.IsTrue(chol.IsPositiveDefinite);
-            var L = chol.LeftTriangularFactor;
+            double[,] L = chol.LeftTriangularFactor;
 
             float[][] expected =
             {
@@ -276,7 +276,7 @@
             };
 
 
-            var chol = new CholeskyDecomposition(value, true);
+            CholeskyDecomposition chol = new(value, true);
             double[,] L = chol.LeftTriangularFactor;
             double[,] D = chol.DiagonalMatrix;
             Assert.IsTrue(Matrix.IsEqual(L, expected, 0.001));
@@ -317,7 +317,7 @@
                 {      0,         0,         0,    1.0000 },
             };
 
-            var chol = new CholeskyDecomposition(value, true);
+            CholeskyDecomposition chol = new(value, true);
             double[,] L = chol.LeftTriangularFactor;
             double[,] D = chol.DiagonalMatrix;
             Assert.IsTrue(Matrix.IsEqual(L, expected, 0.001));
@@ -352,7 +352,7 @@
             };
 
 
-            var chol = new CholeskyDecomposition(value, false, valueType: MatrixType.LowerTriangular);
+            CholeskyDecomposition chol = new(value, false, valueType: MatrixType.LowerTriangular);
             double[,] L = chol.LeftTriangularFactor;
 
             Assert.IsTrue(Matrix.IsEqual(L, expected, 1e-4));
@@ -382,7 +382,7 @@
         [TestMethod]
         public void LogDeterminantTest()
         {
-            var chol = new CholeskyDecomposition(bigmatrix);
+            CholeskyDecomposition chol = new(bigmatrix);
             Assert.AreEqual(0.0, chol.Determinant);
             Assert.AreEqual(-2224.8931093738875, chol.LogDeterminant, 1e-10);
             Assert.IsTrue(chol.IsPositiveDefinite);
@@ -402,7 +402,7 @@
                {  1, -2,  1,  7 },
             };
 
-            var chol = new CholeskyDecomposition(value);
+            CholeskyDecomposition chol = new(value);
             //var L = chol.LeftTriangularFactor;
             //var det = L.Determinant();
             Assert.IsTrue(chol.IsPositiveDefinite);
@@ -421,7 +421,7 @@
                {  0,  0,  0,  7 },
             };
 
-            var chol = new CholeskyDecomposition(value);
+            CholeskyDecomposition chol = new(value);
             //var L = chol.LeftTriangularFactor;
             //var det = L.Determinant();
             Assert.IsTrue(chol.IsPositiveDefinite);
@@ -441,7 +441,7 @@
                {  1, -2,  1,  7 },
             };
 
-            var chol = new CholeskyDecomposition(value);
+            CholeskyDecomposition chol = new(value);
             Assert.AreEqual(2232, chol.Determinant, 1e-12);
             Assert.IsTrue(chol.IsPositiveDefinite);
 

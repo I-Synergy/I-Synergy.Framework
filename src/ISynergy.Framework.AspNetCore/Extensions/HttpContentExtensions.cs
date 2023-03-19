@@ -1,6 +1,4 @@
 ﻿using System.Text.Json;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Extensions
 {

@@ -4,6 +4,7 @@ using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels
 {
@@ -69,7 +70,7 @@ namespace Sample.ViewModels
 
             this.Validator = new Action<IObservableClass>(_ =>
             {
-                var regex = RegexUtility.MaskToRegexConverter(RegexExpression);
+                Regex regex = RegexUtility.MaskToRegexConverter(RegexExpression);
 
                 if (string.IsNullOrEmpty(RegexSample) || !regex.IsMatch(RegexSample))
                 {
@@ -80,7 +81,7 @@ namespace Sample.ViewModels
 
         public override Task SubmitAsync(object e)
         {
-            if(Validate())
+            if (Validate())
                 return base.SubmitAsync(e);
 
             return Task.CompletedTask;

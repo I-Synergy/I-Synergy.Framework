@@ -1,5 +1,5 @@
-﻿using System;
-using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.Core.Base;
+using System;
 
 namespace ISynergy.Framework.Core.Fixtures
 {

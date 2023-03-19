@@ -1,5 +1,5 @@
-﻿using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Validation;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Markup

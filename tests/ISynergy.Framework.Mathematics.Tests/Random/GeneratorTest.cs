@@ -1,13 +1,13 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Random;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using ISynergy.Framework.Mathematics.Random;
 
     [TestClass]
     public class GeneratorTest
@@ -17,7 +17,7 @@
         public void ParallelTest_zero()
         {
             Generator.Seed = 0;
-            var l = create(100, 10, reset: false);
+            double[][] l = create(100, 10, reset: false);
             int sameCount = count(l);
             Assert.IsTrue(sameCount > 50);
         }
@@ -29,8 +29,8 @@
             // https://github.com/accord-net/framework/issues/870
             Generator.Seed = 0;
             int n = 100000;
-            var seeds = new int?[n];
-            var values = new int[n];
+            int?[] seeds = new int?[n];
+            int[] values = new int[n];
             Parallel.For(0, seeds.Length, i =>
             {
                 seeds[i] = Generator.ThreadSeed;
@@ -45,7 +45,7 @@
         public void ParallelTest_less_than_zero()
         {
             Generator.Seed = -1;
-            var l = create(1000, 10, reset: false);
+            double[][] l = create(1000, 10, reset: false);
             int sameCount = count(l);
             Assert.IsTrue(sameCount > 30);
         }
@@ -54,7 +54,7 @@
         public void ParallelTest_higher_than_zero()
         {
             Generator.Seed = 1;
-            var l = create(100, 10, reset: false);
+            double[][] l = create(100, 10, reset: false);
             int sameCount = count(l);
             Assert.IsTrue(sameCount == 0);
         }
@@ -78,7 +78,7 @@
         {
             Generator.Seed = null;
 
-            var l = create(100, 10, reset: false);
+            double[][] l = create(100, 10, reset: false);
             int sameCount = count(l);
             Assert.IsTrue(sameCount == 0);
         }
@@ -89,7 +89,7 @@
             Generator.Seed = 0;
             int[] actual = random(3);
             int[] expected = new int[] { 1559595546, 1755192844, 1649316166 };
-            var str = actual.ToCSharp();
+            string str = actual.ToCSharp();
             Assert.IsTrue(expected.IsEqual(actual));
 
             Generator.Seed = -1;
@@ -110,8 +110,8 @@
         {
             Generator.Seed = 0;
 
-            var values = new ConcurrentDictionary<int, List<int>>();
-            var seeds = new ConcurrentDictionary<int, List<int?>>();
+            ConcurrentDictionary<int, List<int>> values = new();
+            ConcurrentDictionary<int, List<int?>> seeds = new();
 
             Thread[] t = new Thread[100];
 
@@ -120,11 +120,11 @@
                 t[i] = new Thread(() =>
                 {
                     int threadId = Thread.CurrentThread.ManagedThreadId;
-                    var vd = values.GetOrAdd(threadId, new List<int>());
-                    var sd = seeds.GetOrAdd(threadId, new List<int?>());
+                    List<int> vd = values.GetOrAdd(threadId, new List<int>());
+                    List<int?> sd = seeds.GetOrAdd(threadId, new List<int?>());
 
                     int? before = Generator.ThreadSeed;
-                    var r = Generator.Random;
+                    System.Random r = Generator.Random;
                     int? after = Generator.ThreadSeed;
 
                     int v = r.Next();
@@ -144,13 +144,13 @@
             int? ex = null;
             for (int i = 0; i < keys.Length; i++)
             {
-                var l = values[keys[i]];
+                List<int> l = values[keys[i]];
                 if (ex is null)
                     ex = l[0];
                 else
                     Assert.AreEqual(ex.Value, l[0]);
 
-                var s = seeds[keys[i]];
+                List<int?> s = seeds[keys[i]];
                 // Assert.AreEqual(2, s.Count);
                 Assert.IsNull(s[0]);
                 Assert.AreEqual(0, s[1]);
@@ -166,7 +166,7 @@
 
         private static int[] random(int n)
         {
-            var r = Generator.Random;
+            System.Random r = Generator.Random;
             int[] v = new int[n];
             for (int i = 0; i < v.Length; i++)
                 v[i] = r.Next();
@@ -180,8 +180,8 @@
             {
                 for (int j = 0; j < l.Count; j++)
                 {
-                    var li = l[i];
-                    var lj = l[j];
+                    double[] li = l[i];
+                    double[] lj = l[j];
 
                     if (i != j)
                         if (li.IsEqual(lj, atol: 1e-8))
@@ -194,7 +194,7 @@
 
         private static double[][] create(int rows, int cols, bool reset)
         {
-            var l = new double[rows][];
+            double[][] l = new double[rows][];
             Thread[] t = new Thread[rows];
             for (int i = 0; i < rows; i++)
             {

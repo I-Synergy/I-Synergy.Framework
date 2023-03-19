@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
-using Style = ISynergy.Framework.Core.Models.Style;
+﻿using Style = ISynergy.Framework.Core.Models.Style;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services
 {

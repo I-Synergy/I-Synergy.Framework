@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Storage.Abstractions.Services;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ISynergy.Framework.Core.Abstractions.Services;
-using Moq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ISynergy.Framework.Storage.Abstractions.Services;
 
 namespace ISynergy.Framework.Storage.Azure.Tests
 {
@@ -32,15 +32,15 @@ namespace ISynergy.Framework.Storage.Azure.Tests
         /// </summary>
         public StorageServiceTests()
         {
-            var tenantMock = new Mock<ITenantService>();
+            Mock<ITenantService> tenantMock = new();
             _tenantService = tenantMock.Object;
             _tenantService.SetTenant(Guid.Parse("52F702C1-7304-466C-9DE6-B02FC14B4C3E"), "TestUser");
 
-            var configMock = new Mock<AzureBlobOptions>();
+            Mock<AzureBlobOptions> configMock = new();
             _storageBlobOptions = configMock.Object;
             _storageBlobOptions.ConnectionString = "https://aka.ms/bloburl";
 
-            var storageMock = new Mock<IStorageService>();
+            Mock<IStorageService> storageMock = new();
             storageMock.Setup(x => x.UploadFileAsync(
                     It.IsAny<byte[]>(),
                     It.IsAny<string>(),
@@ -79,7 +79,7 @@ namespace ISynergy.Framework.Storage.Azure.Tests
         [TestMethod]
         public async Task UploadBlobAsyncTest()
         {
-            var uri = await _storageService.UploadFileAsync(Array.Empty<byte>(), "contentType", "filename", "folder");
+            Uri uri = await _storageService.UploadFileAsync(Array.Empty<byte>(), "contentType", "filename", "folder");
             Assert.IsNotNull(uri);
         }
 
@@ -89,7 +89,7 @@ namespace ISynergy.Framework.Storage.Azure.Tests
         [TestMethod]
         public async Task DownloadFileAsyncTest()
         {
-            var bytes = await _storageService.DownloadFileAsync("filename", "folder");
+            byte[] bytes = await _storageService.DownloadFileAsync("filename", "folder");
             Assert.IsNotNull(bytes);
         }
 
@@ -99,7 +99,7 @@ namespace ISynergy.Framework.Storage.Azure.Tests
         [TestMethod]
         public async Task UpdateBlobAsyncTest()
         {
-            var uri = await _storageService.UpdateFileAsync(Array.Empty<byte>(), "contentType", "filename", "folder");
+            Uri uri = await _storageService.UpdateFileAsync(Array.Empty<byte>(), "contentType", "filename", "folder");
             Assert.IsNotNull(uri);
         }
 
@@ -109,7 +109,7 @@ namespace ISynergy.Framework.Storage.Azure.Tests
         [TestMethod]
         public async Task RemoveFileAsyncTest()
         {
-            var result = await _storageService.RemoveFileAsync("filename", "folder");
+            bool result = await _storageService.RemoveFileAsync("filename", "folder");
             Assert.IsTrue(result);
         }
     }

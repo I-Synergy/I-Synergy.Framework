@@ -1,7 +1,5 @@
 ﻿using ISynergy.Framework.Automations.Triggers.Base;
 using ISynergy.Framework.Core.Validation;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Automations.Triggers
 {
@@ -18,7 +16,7 @@ namespace ISynergy.Framework.Automations.Triggers
         /// <param name="subscription"></param>
         /// <param name="callbackAsync"></param>
         public EventTrigger(
-            Guid automationId, 
+            Guid automationId,
             T entity,
             Action<EventHandler> subscription,
             Func<T, Task> callbackAsync)

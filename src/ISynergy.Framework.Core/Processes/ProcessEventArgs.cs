@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Processes
+﻿namespace ISynergy.Framework.Core.Processes
 {
     /// <summary>
     /// The ProcessEventArgs are arguments for a console event.

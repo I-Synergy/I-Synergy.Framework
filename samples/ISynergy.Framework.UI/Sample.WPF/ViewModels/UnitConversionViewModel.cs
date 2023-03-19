@@ -98,7 +98,7 @@ namespace Sample.ViewModels
 
         public override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName.Equals(nameof(SelectedInputUnit)))
+            if (e.PropertyName.Equals(nameof(SelectedInputUnit)))
             {
                 InputUnit = ((ISynergy.Framework.Physics.Enumerations.Units)SelectedInputUnit).GetSymbol();
             }

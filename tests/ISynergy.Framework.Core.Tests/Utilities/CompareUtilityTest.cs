@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Core.Utilities.Tests
 {
@@ -33,24 +33,24 @@ namespace ISynergy.Framework.Core.Utilities.Tests
         [TestMethod]
         public void CompareObject()
         {
-            var oOldRecord = new EmployeeRecord
+            EmployeeRecord oOldRecord = new()
             {
                 EmployeeNumber = 1
             };
 
-            var oNewRecord = new EmployeeRecord
+            EmployeeRecord oNewRecord = new()
             {
                 EmployeeNumber = 2,
                 CompanyNumber = 3
             };
 
-            var result = CompareUtility.CompareObject(oOldRecord, oNewRecord);
-            var assert = new List<string>
+            List<string> result = CompareUtility.CompareObject(oOldRecord, oNewRecord);
+            List<string> assert = new()
             {
                 "Property EmployeeNumber was: 1; is: 2",
                 "Property CompanyNumber was: 0; is: 3"
             };
-            
+
             Assert.IsTrue(assert.All(result.Contains) && assert.Count == result.Count);
         }
 
@@ -70,7 +70,7 @@ namespace ISynergy.Framework.Core.Utilities.Tests
         [DataRow(true, "<=", 49, 49.99)]
         public void CompareDecimalValues(bool result, string operation, double value1, double value2)
         {
-            var assert = CompareUtility.Compare(operation, value1, value2);
+            bool assert = CompareUtility.Compare(operation, value1, value2);
             Assert.AreEqual(result, assert);
         }
     }

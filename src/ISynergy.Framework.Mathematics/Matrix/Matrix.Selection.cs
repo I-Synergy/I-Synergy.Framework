@@ -1,8 +1,5 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Comparers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ISynergy.Framework.Mathematics
 {

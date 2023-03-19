@@ -1,6 +1,5 @@
 ﻿using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Validation;
-using System;
 
 namespace ISynergy.Framework.Automations.Base
 {

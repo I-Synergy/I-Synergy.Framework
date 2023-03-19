@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Enumerations;
-using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Abstractions.Base
 {

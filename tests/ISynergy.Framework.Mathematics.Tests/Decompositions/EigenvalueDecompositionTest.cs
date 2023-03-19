@@ -13,7 +13,7 @@
         {
             int n = 5;
 
-            var I = Matrix.Identity(n);
+            double[,] I = Matrix.Identity(n);
 
             for (int i = 0; i < n; i++)
             {
@@ -23,7 +23,7 @@
 
                     value[i, j] = double.NaN;
 
-                    var target = new EigenvalueDecomposition(value);
+                    EigenvalueDecomposition target = new(value);
                 }
             }
         }
@@ -38,10 +38,10 @@
                 { 2, 4 }
             };
 
-            var target = new EigenvalueDecomposition(A);
+            EigenvalueDecomposition target = new(A);
 
-            var D = target.DiagonalMatrix;
-            var Q = target.Eigenvectors;
+            double[,] D = target.DiagonalMatrix;
+            double[,] Q = target.Eigenvectors;
 
             double[,] expectedD =
             {
@@ -61,8 +61,8 @@
 
 
             // Decomposition identity
-            var inv = Q.Inverse();
-            var actualA = Matrix.Dot(Matrix.Dot(Q, D), inv);
+            double[,] inv = Q.Inverse();
+            double[,] actualA = Matrix.Dot(Matrix.Dot(Q, D), inv);
 
 
             Assert.IsTrue(Matrix.IsEqual(expectedD, D, 0.00001));
@@ -84,9 +84,9 @@
                 { -1, 2, 3 }
             };
 
-            var target = new EigenvalueDecomposition(A);
-            var D = target.DiagonalMatrix;
-            var Q = target.Eigenvectors;
+            EigenvalueDecomposition target = new(A);
+            double[,] D = target.DiagonalMatrix;
+            double[,] Q = target.Eigenvectors;
 
             double[,] expectedD =
             {
@@ -96,7 +96,7 @@
             };
 
             // Decomposition identity
-            var actualA = Matrix.Dot(Matrix.Dot(Q, D), Q.Inverse());
+            double[,] actualA = Matrix.Dot(Matrix.Dot(Q, D), Q.Inverse());
 
             Assert.IsTrue(Matrix.IsEqual(expectedD, D, 1e-5));
             Assert.IsTrue(Matrix.IsEqual(A, actualA, 1e-5));

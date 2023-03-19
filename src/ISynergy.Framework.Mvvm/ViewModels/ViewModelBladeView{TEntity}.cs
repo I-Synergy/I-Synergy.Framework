@@ -1,15 +1,13 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using ISynergy.Framework.Core.Collections;
 
 namespace ISynergy.Framework.Mvvm.ViewModels
 {
@@ -37,9 +35,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Blades property value.
         /// </summary>
         /// <value>The blades.</value>
-        public ObservableConcurrentCollection<IView> Blades
+        public ObservableCollection<IView> Blades
         {
-            get => GetValue<ObservableConcurrentCollection<IView>>();
+            get => GetValue<ObservableCollection<IView>>();
             set => SetValue(value);
         }
 
@@ -47,9 +45,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels
         /// Gets or sets the Items property value.
         /// </summary>
         /// <value>The items.</value>
-        public ObservableConcurrentCollection<TEntity> Items
+        public ObservableCollection<TEntity> Items
         {
-            get => GetValue<ObservableConcurrentCollection<TEntity>>();
+            get => GetValue<ObservableCollection<TEntity>>();
             set => SetValue(value);
         }
 
@@ -154,8 +152,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Items = new ObservableConcurrentCollection<TEntity>();
-            Blades = new ObservableConcurrentCollection<IView>();
+            Items = new ObservableCollection<TEntity>();
+            Blades = new ObservableCollection<IView>();
 
             Add_Command = new AsyncRelayCommand(async () => await AddAsync());
             Edit_Command = new AsyncRelayCommand<TEntity>(async (e) => await EditAsync(e.Clone()));

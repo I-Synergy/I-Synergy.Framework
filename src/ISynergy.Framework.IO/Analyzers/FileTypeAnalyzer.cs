@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.IO.Analyzers.Base;
-using System.IO;
 using System.Reflection;
 
 namespace ISynergy.Framework.IO.Analyzers

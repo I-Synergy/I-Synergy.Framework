@@ -1,10 +1,9 @@
 ﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Monitoring.Client.Abstractions.Services;
-using ISynergy.Framework.Monitoring.Common.Options;
 using ISynergy.Framework.Monitoring.Client.Services;
+using ISynergy.Framework.Monitoring.Common.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ISynergy.Framework.Monitoring.Client.Extensions
 {

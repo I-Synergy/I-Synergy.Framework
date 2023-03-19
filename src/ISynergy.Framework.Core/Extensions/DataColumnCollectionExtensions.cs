@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Collections;
-using System;
 using System.Data;
 
 namespace ISynergy.Framework.Core.Extensions

@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Collections;
-using System;
 
 namespace ISynergy.Framework.Core.Collections
 {

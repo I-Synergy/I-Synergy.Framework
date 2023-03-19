@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.Monitoring.Abstractions.Services
+﻿namespace ISynergy.Framework.Monitoring.Abstractions.Services
 {
     /// <summary>
     /// Monitor hub service.

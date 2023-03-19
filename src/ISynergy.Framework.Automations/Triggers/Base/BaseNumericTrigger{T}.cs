@@ -57,10 +57,10 @@ namespace ISynergy.Framework.Automations.Triggers.Base
         /// <param name="above"></param>
         /// <param name="callbackAsync"></param>
         protected BaseNumericTrigger(
-            Guid automationId, 
-            Func<(IObservableClass Entity, IProperty<T> Property)> function, 
-            T below, 
-            T above, 
+            Guid automationId,
+            Func<(IObservableClass Entity, IProperty<T> Property)> function,
+            T below,
+            T above,
             Func<T, Task> callbackAsync)
             : this(automationId, below, above, TimeSpan.Zero)
         {

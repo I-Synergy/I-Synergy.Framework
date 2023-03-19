@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Extensions;
-using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.Mathematics

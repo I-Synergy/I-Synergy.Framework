@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
-using Microsoft.UI.Xaml.Media;
 
 namespace ISynergy.Framework.UI.Extensions
 {

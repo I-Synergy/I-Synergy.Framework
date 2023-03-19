@@ -1,12 +1,12 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
     using ISynergy.Framework.Mathematics;
+    using ISynergy.Framework.Mathematics.Common;
     using ISynergy.Framework.Mathematics.Comparers;
+    using ISynergy.Framework.Mathematics.Statistics;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
-    using ISynergy.Framework.Mathematics.Statistics;
-    using ISynergy.Framework.Mathematics.Common;
 
     public partial class MatrixTest
     {
@@ -200,7 +200,7 @@
                 new double[] { 18,14,1,15,4,32,10,26,38,9,24,16,31,20,25,30,22,6,28,21,33,17,5,35,2,13,36,8,29,7 }
             };
 
-            foreach (var v in data)
+            foreach (double[] v in data)
             {
                 double[] sorted;
 
@@ -329,12 +329,12 @@
                 new double[] { 7, 2 },
             };
 
-            var comparisons = new List<Tuple<double, double>>();
+            List<Tuple<double, double>> comparisons = new();
             double[] e = points[idx[0]];
             Func<double[], double[], int> comparer = (double[] x, double[] y) =>
             {
-                var d1 = Distance.Euclidean(e, x);
-                var d2 = Distance.Euclidean(e, y);
+                double d1 = Distance.Euclidean(e, x);
+                double d2 = Distance.Euclidean(e, y);
                 comparisons.Add(Tuple.Create(d1, d2));
                 return d1.CompareTo(d2);
             };
@@ -563,7 +563,7 @@
             // Now, let's say we would like to sort the columns of the matrix 
             // according to the absolute value of the elements in the row vector:
 
-            double[,] sortedMatrix2 = Matrix.Sort(keys: v, values: matrix, 
+            double[,] sortedMatrix2 = Matrix.Sort(keys: v, values: matrix,
                 comparer: new GeneralComparer(ComparerDirection.Ascending, useAbsoluteValues: true));
 
             // The resulting matrix will be:

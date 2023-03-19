@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.Mathematics.Tests
 {
@@ -8,8 +8,8 @@ namespace ISynergy.Framework.Mathematics.Tests
     {
         private const float Epsilon = 0.000001f;
 
-        private Matrix4x4 a1 = new Matrix4x4();
-        private Matrix4x4 a2 = new Matrix4x4();
+        private Matrix4x4 a1 = new();
+        private Matrix4x4 a2 = new();
 
         public Matrix4x4Test()
         {
@@ -59,7 +59,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void ToArrayTest()
         {
-            Matrix4x4 matrix = new Matrix4x4();
+            Matrix4x4 matrix = new();
 
             matrix.V00 = 1;
             matrix.V01 = 2;
@@ -85,24 +85,24 @@ namespace ISynergy.Framework.Mathematics.Tests
 
             for (int i = 0; i < 16; i++)
             {
-                Assert.AreEqual(array[i], (float)(i + 1));
+                Assert.AreEqual(array[i], i + 1);
             }
         }
 
         [TestMethod]
         public void CreateFromRowsTest()
         {
-            Vector4 row0 = new Vector4(1, 2, 3, 4);
-            Vector4 row1 = new Vector4(5, 6, 7, 8);
-            Vector4 row2 = new Vector4(9, 10, 11, 12);
-            Vector4 row3 = new Vector4(13, 14, 15, 16);
+            Vector4 row0 = new(1, 2, 3, 4);
+            Vector4 row1 = new(5, 6, 7, 8);
+            Vector4 row2 = new(9, 10, 11, 12);
+            Vector4 row3 = new(13, 14, 15, 16);
             Matrix4x4 matrix = Matrix4x4.CreateFromRows(row0, row1, row2, row3);
 
             float[] array = matrix.ToArray();
 
             for (int i = 0; i < 16; i++)
             {
-                Assert.AreEqual(array[i], (float)(i + 1));
+                Assert.AreEqual(array[i], i + 1);
             }
 
             Assert.AreEqual(row0, matrix.GetRow(0));
@@ -127,17 +127,17 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void CreateFromColumnsTest()
         {
-            Vector4 column0 = new Vector4(1, 5, 9, 13);
-            Vector4 column1 = new Vector4(2, 6, 10, 14);
-            Vector4 column2 = new Vector4(3, 7, 11, 15);
-            Vector4 column3 = new Vector4(4, 8, 12, 16);
+            Vector4 column0 = new(1, 5, 9, 13);
+            Vector4 column1 = new(2, 6, 10, 14);
+            Vector4 column2 = new(3, 7, 11, 15);
+            Vector4 column3 = new(4, 8, 12, 16);
             Matrix4x4 matrix = Matrix4x4.CreateFromColumns(column0, column1, column2, column3);
 
             float[] array = matrix.ToArray();
 
             for (int i = 0; i < 16; i++)
             {
-                Assert.AreEqual(array[i], (float)(i + 1));
+                Assert.AreEqual(array[i], i + 1);
             }
 
             Assert.AreEqual(column0, matrix.GetColumn(0));
@@ -298,7 +298,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [DataRow(-1, -2, -3, -4)]
         public void CreateDiagonalTest(float v00, float v11, float v22, float v33)
         {
-            Vector4 diagonal = new Vector4(v00, v11, v22, v33);
+            Vector4 diagonal = new(v00, v11, v22, v33);
             Matrix4x4 matrix = Matrix4x4.CreateDiagonal(diagonal);
 
             float[] expectedArray = new float[16] { v00, 0, 0, 0, 0, v11, 0, 0, 0, 0, v22, 0, 0, 0, 0, v33 };
@@ -309,7 +309,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void AddMatricesTest()
         {
-            Matrix4x4 expectedResult = new Matrix4x4();
+            Matrix4x4 expectedResult = new();
 
             expectedResult.V00 = 3;
             expectedResult.V01 = 3;
@@ -339,7 +339,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void SubtractMatricesTest()
         {
-            Matrix4x4 expectedResult = new Matrix4x4();
+            Matrix4x4 expectedResult = new();
 
             expectedResult.V00 = -1;
             expectedResult.V01 = 1;
@@ -369,7 +369,7 @@ namespace ISynergy.Framework.Mathematics.Tests
         [TestMethod]
         public void MultiplyMatricesTest()
         {
-            Matrix4x4 expectedResult = new Matrix4x4();
+            Matrix4x4 expectedResult = new();
 
             expectedResult.V00 = 23;
             expectedResult.V01 = 29;

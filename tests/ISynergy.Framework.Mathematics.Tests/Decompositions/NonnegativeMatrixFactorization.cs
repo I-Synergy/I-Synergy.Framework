@@ -2,8 +2,8 @@
 {
     using ISynergy.Framework.Mathematics;
     using ISynergy.Framework.Mathematics.Decompositions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ISynergy.Framework.Mathematics.Random;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class NonnegativeMatrixFactorizationTest
@@ -25,29 +25,29 @@
             };
 
 
-            var nmf = new NonnegativeMatrixFactorization(expected, 3);
+            NonnegativeMatrixFactorization nmf = new(expected, 3);
 
-            var H = nmf.RightNonnegativeFactors;
-            var W = nmf.LeftNonnegativeFactors;
+            double[,] H = nmf.RightNonnegativeFactors;
+            double[,] W = nmf.LeftNonnegativeFactors;
 
-            var actual = Matrix.Dot(W, H).Transpose();
+            double[,] actual = Matrix.Dot(W, H).Transpose();
 
             for (int i = 0; i < actual.GetLength(0); i++)
             {
                 for (int j = 0; j < actual.GetLength(1); j++)
                 {
-                    var x = actual[i, j];
-                    var y = expected[i, j];
+                    double x = actual[i, j];
+                    double y = expected[i, j];
                     Assert.IsTrue(Matrix.IsEqual(actual[i, j], expected[i, j], 0.05));
                 }
             }
-                
+
         }
 
         [TestMethod]
         public void NonNegativeMatrixFactorizationConstructorTest2()
         {
-            double[] data = 
+            double[] data =
             {
                 0.814723686, 0.157613082, 0.655740699, 0.706046088, 0.43874436, 0.276025077, 0.751267059, 0.840717256, 0.351659507, 0.07585429,
                 0.905791937, 0.970592782, 0.035711679, 0.031832846, 0.381558457, 0.679702677, 0.255095115, 0.254282179, 0.830828628, 0.053950119,
@@ -63,10 +63,10 @@
 
             double[,] input = data.Reshape(10, 10);
 
-            var nmf = new NonnegativeMatrixFactorization(input, 2);
+            NonnegativeMatrixFactorization nmf = new(input, 2);
 
-            var H = nmf.RightNonnegativeFactors;
-            var W = nmf.LeftNonnegativeFactors;
+            double[,] H = nmf.RightNonnegativeFactors;
+            double[,] W = nmf.LeftNonnegativeFactors;
 
             Assert.IsFalse(H.Has(0));
             Assert.IsFalse(W.Has(0));

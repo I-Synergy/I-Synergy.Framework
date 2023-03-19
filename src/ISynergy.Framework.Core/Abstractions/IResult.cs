@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ISynergy.Framework.Core.Abstractions
+﻿namespace ISynergy.Framework.Core.Abstractions
 {
     public interface IResult
     {

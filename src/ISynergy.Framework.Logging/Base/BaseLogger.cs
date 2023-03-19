@@ -22,7 +22,7 @@ namespace ISynergy.Framework.Logging.Base
         /// </summary>
         /// <param name="logLevel"></param>
         /// <returns></returns>
-        public virtual bool IsEnabled(LogLevel logLevel) => 
+        public virtual bool IsEnabled(LogLevel logLevel) =>
             logLevel != LogLevel.None;
 
 

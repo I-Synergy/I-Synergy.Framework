@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ISynergy.Framework.Mathematics.Comparers
+﻿namespace ISynergy.Framework.Mathematics.Comparers
 {
     /// <summary>
     ///     Stable comparer for stable sorting algorithm.

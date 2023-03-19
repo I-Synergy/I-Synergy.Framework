@@ -79,7 +79,7 @@ namespace Sample.ViewModels
         /// <returns>A Task representing the asynchronous operation.</returns>
         public override async Task SubmitAsync(bool e)
         {
-            var result = false;
+            bool result = false;
 
             if (Validate())
             {

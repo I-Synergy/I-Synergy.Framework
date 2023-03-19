@@ -2,9 +2,6 @@
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Random;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ISynergy.Framework.Mathematics
 {

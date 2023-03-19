@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ISynergy.Framework.UI.Models
+﻿namespace ISynergy.Framework.UI.Models
 {
     /// <summary>
     /// Class Result.

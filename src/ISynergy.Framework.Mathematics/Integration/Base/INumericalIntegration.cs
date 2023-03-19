@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Mathematics.Integration.Base
+﻿namespace ISynergy.Framework.Mathematics.Integration.Base
 {
     /// <summary>
     ///     Common interface for numeric integration methods.

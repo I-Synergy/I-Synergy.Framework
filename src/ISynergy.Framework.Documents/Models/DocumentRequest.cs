@@ -1,7 +1,4 @@
 ﻿using ISynergy.Framework.Documents.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ISynergy.Framework.Documents.Models
 {

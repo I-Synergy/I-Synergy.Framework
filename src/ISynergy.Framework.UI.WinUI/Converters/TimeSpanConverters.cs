@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Abstractions.Services;
-using System;
-using System.Text;
+﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using Microsoft.UI.Xaml.Data;
+using System.Text;
 
 namespace ISynergy.Framework.UI.Converters
 {
@@ -23,11 +22,11 @@ namespace ISynergy.Framework.UI.Converters
         /// <returns>System.Object.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is TimeSpan timeSpan)
+            if (value is TimeSpan timeSpan)
             {
                 var result = new StringBuilder();
 
-                if(timeSpan.Days > 0)
+                if (timeSpan.Days > 0)
                 {
                     result.Append($"{timeSpan.Days} {ServiceLocator.Default.GetInstance<ILanguageService>().GetString("Day_s")}, ");
                 }

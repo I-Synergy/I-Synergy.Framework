@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using ISynergy.Framework.Core.Models.Accounts;
+﻿using ISynergy.Framework.Core.Models.Accounts;
 using Microsoft.UI.Xaml.Data;
+using System.Collections;
 
 namespace ISynergy.Framework.UI.Converters
 {

@@ -1,9 +1,6 @@
 ﻿using ISynergy.Framework.Core.Extensions;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -173,8 +170,8 @@ namespace ISynergy.Framework.Core.Utilities
             for (var i = 0; i < str1.Count && i < str2.Count; i++)
             {
                 bool is1Integer = false;
-                
-                if(int.TryParse(str1[i].ToString(), out int res1))
+
+                if (int.TryParse(str1[i].ToString(), out int res1))
                 {
                     intX = res1;
                     is1Integer = true;

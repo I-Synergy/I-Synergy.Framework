@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Automations.Actions.Base;
-using System;
 
 namespace ISynergy.Framework.Automations.Actions
 {

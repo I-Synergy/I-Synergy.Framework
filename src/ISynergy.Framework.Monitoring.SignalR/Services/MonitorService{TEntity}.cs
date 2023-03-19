@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Monitoring.Abstractions.Services;
 using ISynergy.Framework.Monitoring.Hubs;
 using Microsoft.AspNetCore.SignalR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Monitoring.Services
 {
@@ -38,7 +36,7 @@ namespace ISynergy.Framework.Monitoring.Services
         {
             var group = _hubContext.Clients.Group(channel);
 
-            if(group is not null)
+            if (group is not null)
             {
                 return group.SendAsync(eventname, data, cancellationToken);
             }

@@ -87,7 +87,7 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             Copyrights = commonServices.InfoService.Copyrights;
             Startup = ((Context)context).Environment.ToString();
-            
+
             BusyOn_Command = new RelayCommand(StartTimer);
 
             //throw new Exception("Test exception for logging!");
@@ -95,7 +95,7 @@ namespace Sample.ViewModels
 
         private void StartTimer()
         {
-            var timer = new System.Timers.Timer(5000);
+            System.Timers.Timer timer = new(5000);
             timer.Elapsed += Timer_Elapsed;
             BaseCommonServices.BusyService.StartBusy();
             timer.Enabled = true;

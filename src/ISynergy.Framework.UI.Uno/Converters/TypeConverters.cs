@@ -1,7 +1,6 @@
-﻿using System;
-using System.Globalization;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters
 {

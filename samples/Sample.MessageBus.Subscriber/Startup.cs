@@ -29,10 +29,10 @@ namespace Sample.MessageBus.Subscriber
         {
             Console.WriteLine("Azure implementation started...");
 
-            var sessionId = Guid.NewGuid();
-            var cancellationTokenSource = new CancellationTokenSource();
+            Guid sessionId = Guid.NewGuid();
+            CancellationTokenSource cancellationTokenSource = new();
 
-            var allReceives = Task.WhenAll(
+            Task allReceives = Task.WhenAll(
                 _messageBus.SubscribeToMessageBusAsync(cancellationTokenSource.Token));
 
             Console.WriteLine("Receiving messages...");

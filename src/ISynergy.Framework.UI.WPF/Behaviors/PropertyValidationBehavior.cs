@@ -26,7 +26,7 @@ namespace ISynergy.Framework.UI.Behaviors
             var control = (Control)dependencyObject;
             _validationBehavior = new ValidationBehavior() { PropertyName = arg.NewValue.ToString() };
             control.Loaded += Control_Loaded;
-            
+
         }
 
         private static void Control_Loaded(object sender, RoutedEventArgs e)

@@ -1,6 +1,4 @@
 ﻿using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions.Views;
-using System;
 
 namespace ISynergy.Framework.UI.Extensions
 {

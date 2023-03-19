@@ -25,7 +25,7 @@ namespace Sample.Shared.Models
         /// </summary>
         /// <value>The time zone identifier.</value>
         public string TimeZoneId => "W. Europe Standard Time";
-        
+
         /// <summary>
         /// Gets the country code.
         /// </summary>
@@ -53,13 +53,13 @@ namespace Sample.Shared.Models
         /// Gets the roles.
         /// </summary>
         /// <value>The roles.</value>
-        public List<string> Roles => new List<string>();
+        public List<string> Roles => new();
 
         /// <summary>
         /// Gets the modules.
         /// </summary>
         /// <value>The modules.</value>
-        public List<string> Modules => new List<string>();
+        public List<string> Modules => new();
 
         /// <summary>
         /// Gets the license expration.

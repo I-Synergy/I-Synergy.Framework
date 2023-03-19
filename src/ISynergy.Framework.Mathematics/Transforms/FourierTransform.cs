@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Mathematics.Common;
-using System;
 using System.Numerics;
 
 namespace ISynergy.Framework.Mathematics.Transforms

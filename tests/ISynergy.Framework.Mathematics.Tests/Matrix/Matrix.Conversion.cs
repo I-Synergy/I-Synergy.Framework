@@ -36,7 +36,7 @@
         {
             #region doc_table_tojagged
             // Create a sample data table with two columns
-            DataTable table = new DataTable("My DataTable");
+            DataTable table = new("My DataTable");
             table.Columns.Add("x");
             table.Columns.Add("y");
 
@@ -150,7 +150,7 @@
         [TestMethod]
         public void FromTableToArrayTest()
         {
-            DataTable table = new DataTable();
+            DataTable table = new();
             table.Columns.Add("A", typeof(bool));
             table.Columns.Add("B", typeof(string));
             table.Rows.Add(true, "1.0");

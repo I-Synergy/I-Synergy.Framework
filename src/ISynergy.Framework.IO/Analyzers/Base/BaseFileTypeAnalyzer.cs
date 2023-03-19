@@ -1,11 +1,7 @@
 ﻿using ISynergy.Framework.IO.Abtractions.Analyzers;
 using ISynergy.Framework.IO.Models;
-using System.Text.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
+using System.Text.Json;
 
 namespace ISynergy.Framework.IO.Analyzers.Base
 {

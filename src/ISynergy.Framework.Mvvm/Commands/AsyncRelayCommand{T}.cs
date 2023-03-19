@@ -7,6 +7,8 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace ISynergy.Framework.Mvvm.Commands
 {
     /// <summary>

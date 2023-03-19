@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Async;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.Mathematics.MachineLearning
 {

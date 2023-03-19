@@ -1,6 +1,6 @@
-﻿using System;
-using ISynergy.Framework.IO.Models;
+﻿using ISynergy.Framework.IO.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace ISynergy.Framework.IO.Tests
 {
@@ -28,7 +28,7 @@ namespace ISynergy.Framework.IO.Tests
         {
             // If result = -1, the expected outcome is an exception.
             // otherwise its a boolean value.
-            if(result == -1)
+            if (result == -1)
             {
                 Assert.ThrowsException<ArgumentException>(() => DriveInformation.IsNetworkDrive(path));
             }
@@ -142,7 +142,7 @@ namespace ISynergy.Framework.IO.Tests
         [DataRow(@"..\Temp", null)]
         public void IsFreeSpaceAvailableTest(string path, object result)
         {
-            var fileSize = 1L;
+            long fileSize = 1L;
 
             // If result is null, the expected outcome is an exception.
             // otherwise its a string value with the drive name.

@@ -1,8 +1,6 @@
 ﻿using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Threading.Tasks;
 
 namespace ISynergy.Framework.AspNetCore.Binders
 {

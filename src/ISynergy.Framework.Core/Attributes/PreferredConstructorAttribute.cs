@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ISynergy.Framework.Core.Attributes
+﻿namespace ISynergy.Framework.Core.Attributes
 {
     /// <summary>
     /// When used with the SimpleIoc container, specifies which constructor

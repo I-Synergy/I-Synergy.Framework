@@ -1,5 +1,4 @@
 ﻿using ISynergy.Framework.Core.Extensions;
-using System.IO;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 
@@ -18,7 +17,7 @@ namespace ISynergy.Framework.UI.Extensions
 
         public static ImageSource ToImageSource(this byte[] _self)
         {
-            if(_self.ToMemoryStream() is not null)
+            if (_self.ToMemoryStream() is not null)
             {
                 var bitmap = new BitmapImage();
                 bitmap.SetSource(_self.ToMemoryStream().AsRandomAccessStream());

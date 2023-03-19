@@ -1,7 +1,7 @@
 ﻿using ISynergy.Framework.Core.Collections;
-using Sample.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Sample.Models;
 
 namespace Sample.Converters
 {
@@ -14,13 +14,11 @@ namespace Sample.Converters
         {
             if (item is TreeNode<Guid, PublicationItem> node)
             {
-                switch (node.Data.Type)
+                return node.Data.Type switch
                 {
-                    case Enumerations.PublicationItemTypes.Document:
-                        return DocumentTemplate;
-                    default:
-                        return FolderTemplate;  
-                }
+                    Enumerations.PublicationItemTypes.Document => DocumentTemplate,
+                    _ => FolderTemplate,
+                };
             }
 
             return DocumentTemplate;

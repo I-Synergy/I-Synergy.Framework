@@ -1,12 +1,12 @@
 ﻿namespace ISynergy.Framework.Mathematics.Tests
 {
-    using System;
     using ISynergy.Framework.Core.Collections;
     using ISynergy.Framework.Mathematics;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Linq;
-    using System.Collections.Generic;
     using ISynergy.Framework.Mathematics.Random;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     [TestClass]
     public class RedBlackTreeTest
@@ -34,10 +34,10 @@
         [TestMethod]
         public void DuplicateTest()
         {
-            var t = new RedBlackTree<int, string>();
-            var collection = t as ICollection<KeyValuePair<int, string>>;
+            RedBlackTree<int, string> t = new();
+            ICollection<KeyValuePair<int, string>> collection = t;
 
-            var values = collection.ToArray();
+            KeyValuePair<int, string>[] values = collection.ToArray();
             Assert.AreEqual(0, values.Length);
 
             t.Add(new KeyValuePair<int, string>(1, "1"));
@@ -57,19 +57,19 @@
             Assert.AreEqual("bla", values[0].Value);
             Assert.AreEqual("2", values[1].Value);
 
-            var node1 = t.Remove(new KeyValuePair<int, string>(1, "-"));
+            RedBlackTreeNode<KeyValuePair<int, string>> node1 = t.Remove(new KeyValuePair<int, string>(1, "-"));
             Assert.IsNotNull(node1);
             values = collection.ToArray();
             Assert.AreEqual(1, values.Length);
             Assert.AreEqual("2", values[0].Value);
 
-            var node2 = t.Remove(new KeyValuePair<int, string>(1, "-"));
+            RedBlackTreeNode<KeyValuePair<int, string>> node2 = t.Remove(new KeyValuePair<int, string>(1, "-"));
             Assert.IsNull(node2);
             values = collection.ToArray();
             Assert.AreEqual(1, values.Length);
             Assert.AreEqual("2", values[0].Value);
 
-            var node3 = t.Remove(new KeyValuePair<int, string>(2, "-"));
+            RedBlackTreeNode<KeyValuePair<int, string>> node3 = t.Remove(new KeyValuePair<int, string>(2, "-"));
             values = collection.ToArray();
             Assert.AreEqual(0, values.Length);
         }
@@ -87,9 +87,9 @@
 
         private static void run(int n)
         {
-            var rand = Generator.Random;
+            Random rand = Generator.Random;
 
-            RedBlackTree<int> t = new RedBlackTree<int>(allowDuplicates: true);
+            RedBlackTree<int> t = new(allowDuplicates: true);
 
             // Create a vector of random numbers
             int[] k = new int[n];
@@ -102,7 +102,7 @@
             // Populate the tree with numbers
             for (int i = 0; i < k.Length; i++)
             {
-                var node = t.Add(k[i]);
+                RedBlackTreeNode<int> node = t.Add(k[i]);
 
                 Assert.IsNotNull(node);
                 Assert.AreEqual(k[i], node.Value);
@@ -116,7 +116,7 @@
             // Check that all elements are in the tree
             for (int i = 0; i < k.Length; ++i)
             {
-                var node = t.Find(k[i]);
+                RedBlackTreeNode<int> node = t.Find(k[i]);
 
                 Assert.IsNotNull(node);
                 Assert.AreEqual(k[i], node.Value);
@@ -127,11 +127,11 @@
 
             // Enumerate the values (must be in order)
             int arrayIndex = 0;
-            foreach (var node in t)
+            foreach (RedBlackTreeNode<int> node in t)
                 Assert.AreEqual(sorted[arrayIndex++], node.Value);
 
             // Start from min and go navigating up to max
-            var min = t.Min();
+            RedBlackTreeNode<int> min = t.Min();
             Assert.IsNotNull(min);
             Assert.AreEqual(k.Min(), min.Value);
 
@@ -143,7 +143,7 @@
             Assert.IsNull(min); // the last should be null.
 
             // Start from max and go navigating down to min
-            var max = t.Max();
+            RedBlackTreeNode<int> max = t.Max();
             Assert.AreEqual(k.Max(), max.Value);
             for (int i = 0; i < k.Length; i++)
             {
@@ -171,7 +171,7 @@
 
                 int kd = k[i];
 
-                var node = t.Find(kd);
+                RedBlackTreeNode<int> node = t.Find(kd);
                 Assert.IsNotNull(node);
 
                 node.Value = knew;
@@ -195,10 +195,10 @@
             {
                 int kd = (int)(0.01 * (rand.Next() % (k.Length * 150) - k.Length * 25));
 
-                var le = t.FindLessThanOrEqualTo(kd);
-                var gt = t.FindGreaterThan(kd);
+                RedBlackTreeNode<int> le = t.FindLessThanOrEqualTo(kd);
+                RedBlackTreeNode<int> gt = t.FindGreaterThan(kd);
 
-                var node = t.Min();
+                RedBlackTreeNode<int> node = t.Min();
 
                 double lek = le is not null ? le.Value : int.MinValue;
                 double gtk = gt is not null ? gt.Value : int.MaxValue;
@@ -212,7 +212,7 @@
                 }
                 else
                 {
-                    var succ = node;
+                    RedBlackTreeNode<int> succ = node;
                     do
                     {
                         node = succ;
@@ -239,7 +239,7 @@
 
                 int kd = k[i];
 
-                var node = t.Find(kd);
+                RedBlackTreeNode<int> node = t.Find(kd);
                 Assert.IsNotNull(node);
 
                 node = t.Remove(node);
@@ -254,13 +254,13 @@
 
         private static void duplicates(int n)
         {
-            var rand = Generator.Random;
+            Random rand = Generator.Random;
 
-            RedBlackTree<int> t = new RedBlackTree<int>();
+            RedBlackTree<int> t = new();
 
             // Create a vector of random numbers with duplicates
             int[] k = new int[n];
-            for (int i = 0; i < k.Length; i++) 
+            for (int i = 0; i < k.Length; i++)
                 k[i] = i;
 
             Vector.Shuffle(k);
@@ -271,7 +271,7 @@
             // Populate the tree with numbers
             for (int i = 0; i < k.Length; i++)
             {
-                var node = t.Add(k[i]);
+                RedBlackTreeNode<int> node = t.Add(k[i]);
 
                 Assert.IsNotNull(node);
                 Assert.AreEqual(k[i], node.Value);
@@ -285,7 +285,7 @@
             // Check that all elements are in the tree
             for (int i = 0; i < k.Length; i++)
             {
-                var node = t.Find(k[i]);
+                RedBlackTreeNode<int> node = t.Find(k[i]);
 
                 Assert.IsNotNull(node);
                 Assert.AreEqual(k[i], node.Value);
@@ -296,7 +296,7 @@
 
             // Enumerate the values (must be in order)
             int arrayIndex = 0;
-            foreach (var node in t)
+            foreach (RedBlackTreeNode<int> node in t)
                 Assert.AreEqual(sorted[arrayIndex++], node.Value);
 
 
@@ -304,7 +304,7 @@
             // Populate the tree with the same numbers
             for (int i = 0; i < k.Length; i++)
             {
-                var node = t.Add(k[i]);
+                RedBlackTreeNode<int> node = t.Add(k[i]);
 
                 Assert.IsNotNull(node);
                 Assert.AreEqual(k[i], node.Value);
@@ -316,7 +316,7 @@
 
             // Enumerate the values (must be in order)
             arrayIndex = 0;
-            foreach (var node in t)
+            foreach (RedBlackTreeNode<int> node in t)
                 Assert.AreEqual(sorted[arrayIndex++], node.Value);
         }
 

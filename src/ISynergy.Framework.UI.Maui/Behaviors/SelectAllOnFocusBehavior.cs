@@ -5,7 +5,7 @@
         public static readonly BindableProperty AttachBehaviorProperty =
             BindableProperty.CreateAttached("AttachBehavior", typeof(bool), typeof(SelectAllOnFocusBehavior), false, propertyChanged: OnAttachBehaviorChanged);
 
-        public static bool GetAttachBehavior(BindableObject view) => 
+        public static bool GetAttachBehavior(BindableObject view) =>
             (bool)view.GetValue(AttachBehaviorProperty);
 
         public static void SetAttachBehavior(BindableObject view, bool value) =>
@@ -25,7 +25,7 @@
             else
             {
                 Behavior toRemove = entry.Behaviors.FirstOrDefault(b => b is SelectAllOnFocusBehavior);
-                
+
                 if (toRemove != null)
                     entry.Behaviors.Remove(toRemove);
             }

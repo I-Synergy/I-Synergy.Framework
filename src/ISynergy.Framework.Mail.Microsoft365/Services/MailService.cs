@@ -58,7 +58,7 @@ namespace ISynergy.Framework.Mail.Services
             {
                 var message = new Message();
 
-                if(emailMessage.EmailAddressFrom is not null)
+                if (emailMessage.EmailAddressFrom is not null)
                     message.From = new Recipient { EmailAddress = new EmailAddress { Address = emailMessage.EmailAddressFrom } };
                 else
                     message.From = new Recipient { EmailAddress = new EmailAddress { Address = _mailOptions.EmailAddress, Name = _mailOptions.Sender } };
@@ -82,7 +82,7 @@ namespace ISynergy.Framework.Mail.Services
 
                     message.CcRecipients = recipients;
                 }
-                        
+
                 if (emailMessage.EmailAddressesBcc.Count > 0 || emailMessage.SendCopy)
                 {
                     var recipients = new List<Recipient>();
@@ -110,9 +110,9 @@ namespace ISynergy.Framework.Mail.Services
                 };
 
                 var credentials = new ClientSecretCredential(
-                    _mailOptions.TenantId, 
-                    _mailOptions.ClientId, 
-                    _mailOptions.ClientSecret, 
+                    _mailOptions.TenantId,
+                    _mailOptions.ClientId,
+                    _mailOptions.ClientSecret,
                     options);
 
                 var client = new GraphServiceClient(credentials, _mailOptions.Scopes);
