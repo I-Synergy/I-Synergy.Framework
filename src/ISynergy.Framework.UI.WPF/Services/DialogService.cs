@@ -102,9 +102,6 @@ namespace ISynergy.Framework.UI.Services
                 case MessageBoxButton.YesNo:
                     button = System.Windows.MessageBoxButton.YesNo;
                     break;
-                default:
-                    button = System.Windows.MessageBoxButton.OK;
-                    break;
             }
 
             var result = System.Windows.MessageBox.Show(

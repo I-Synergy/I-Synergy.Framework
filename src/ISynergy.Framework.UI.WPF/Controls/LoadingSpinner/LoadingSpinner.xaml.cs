@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 namespace ISynergy.Framework.UI.Controls
@@ -7,7 +6,7 @@ namespace ISynergy.Framework.UI.Controls
     /// <summary>
     /// Interaction logic for LoadingSpinner.xaml
     /// </summary>
-    public partial class LoadingSpinner : UserControl
+    public sealed partial class LoadingSpinner
     {
         private Storyboard _storyboard;
 
@@ -21,9 +20,10 @@ namespace ISynergy.Framework.UI.Controls
 
         public LoadingSpinner()
         {
-            InitializeComponent();
-            StartStoryBoard();
-            IsVisibleChanged += LoadingSpinner_IsVisibleChanged;
+            this.InitializeComponent();
+
+            _storyboard = (Storyboard)TryFindResource("spinner");
+            _storyboard?.Begin();
         }
 
         private void LoadingSpinner_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -40,17 +40,6 @@ namespace ISynergy.Framework.UI.Controls
             {
                 _storyboard.Stop();
             }
-        }
-
-        private void StartStoryBoard()
-        {
-            try
-            {
-                _storyboard = (Storyboard)TryFindResource("spinner");
-                _storyboard?.Begin();
-            }
-            catch
-            { }
         }
     }
 }
