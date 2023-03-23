@@ -10,6 +10,11 @@ namespace ISynergy.Framework.Core.Services
     public class MessageService : IMessageService
     {
         private readonly object _registerLock = new object();
+        private readonly object _recipientsOfSubclassesActionLock = new object();
+        private readonly object _recipientsStrictActionLock = new object();
+        private readonly object _recipientsLock = new object();
+        private readonly object _listLock = new object();
+
         private Dictionary<Type, List<WeakActionAndToken>> _recipientsOfSubclassesAction;
         private Dictionary<Type, List<WeakActionAndToken>> _recipientsStrictAction;
 
@@ -167,7 +172,7 @@ namespace ISynergy.Framework.Core.Services
                     recipients = _recipientsStrictAction;
                 }
 
-                lock (recipients)
+                lock (_recipientsLock)
                 {
                     List<WeakActionAndToken> list;
 
@@ -387,14 +392,14 @@ namespace ISynergy.Framework.Core.Services
             Reset();
         }
 
-        private static void CleanupList(IDictionary<Type, List<WeakActionAndToken>> lists)
+        private void CleanupList(IDictionary<Type, List<WeakActionAndToken>> lists)
         {
             if (lists is null)
             {
                 return;
             }
 
-            lock (lists)
+            lock (_listLock)
             {
                 var listsToRemove = new List<Type>();
                 foreach (var list in lists)
@@ -453,7 +458,7 @@ namespace ISynergy.Framework.Core.Services
             }
         }
 
-        private static void UnregisterFromLists(object recipient, Dictionary<Type, List<WeakActionAndToken>> lists)
+        private void UnregisterFromLists(object recipient, Dictionary<Type, List<WeakActionAndToken>> lists)
         {
             if (recipient is null
                 || lists is null
@@ -462,7 +467,7 @@ namespace ISynergy.Framework.Core.Services
                 return;
             }
 
-            lock (lists)
+            lock (_listLock)
             {
                 foreach (var messageType in lists.Keys)
                 {
@@ -480,7 +485,7 @@ namespace ISynergy.Framework.Core.Services
             }
         }
 
-        private static void UnregisterFromLists<TMessage>(
+        private void UnregisterFromLists<TMessage>(
             object recipient,
             object token,
             Action<TMessage> action,
@@ -496,7 +501,7 @@ namespace ISynergy.Framework.Core.Services
                 return;
             }
 
-            lock (lists)
+            lock (_listLock)
             {
                 foreach (var item in lists[messageType])
                 {
@@ -574,7 +579,7 @@ namespace ISynergy.Framework.Core.Services
                         || messageType.IsSubclassOf(type)
                         || type.IsAssignableFrom(messageType))
                     {
-                        lock (_recipientsOfSubclassesAction)
+                        lock (_recipientsOfSubclassesActionLock)
                         {
                             list = _recipientsOfSubclassesAction[type].Take(_recipientsOfSubclassesAction[type].Count()).ToList();
                         }
@@ -588,7 +593,7 @@ namespace ISynergy.Framework.Core.Services
             {
                 List<WeakActionAndToken> list = null;
 
-                lock (_recipientsStrictAction)
+                lock (_recipientsStrictActionLock)
                 {
                     if (_recipientsStrictAction.ContainsKey(messageType))
                     {
