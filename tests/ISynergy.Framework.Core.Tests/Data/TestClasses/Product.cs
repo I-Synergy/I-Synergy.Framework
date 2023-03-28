@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Attributes;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,25 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
         /// </summary>
         public Product()
         {
+            Validator = new Action<IObservableClass>(_ =>
+            {
+                if (ProductGroups is null)
+                {
+                    Errors.Add(nameof(ProductGroups), "ProductGroups cannot be null.");
+                }
+                else
+                {
+                    if (ProductGroups.Count == 0)
+                    {
+                        Errors.Add(nameof(ProductGroups), "ProductGroups should contain at least one item.");
+                    }
+                }
+
+                if (Quantity == 0)
+                {
+                    Errors.Add(nameof(Quantity), "Quantity should not be zero.");
+                }
+            });
         }
 
         /// <summary>

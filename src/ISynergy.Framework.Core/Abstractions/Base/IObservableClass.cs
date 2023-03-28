@@ -1,5 +1,5 @@
 ﻿using ISynergy.Framework.Core.Collections;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Abstractions.Base
 {
@@ -10,13 +10,13 @@ namespace ISynergy.Framework.Core.Abstractions.Base
     /// </summary>
     /// <seealso cref="IBindable" />
     /// <seealso cref="IDisposable" />
-    public interface IObservableClass : IBindable, IDisposable
+    public interface IObservableClass : IBindable, IDisposable, IDataErrorInfo
     {
         /// <summary>
         /// Validates this instance.
         /// </summary>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        bool Validate();
+        bool Validate(bool validateUnderlayingProperties = true);
         /// <summary>
         /// Reverts this instance.
         /// </summary>
@@ -34,12 +34,12 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// Gets the errors.
         /// </summary>
         /// <value>The errors.</value>
-        ObservableCollection<string> Errors { get; }
+        Dictionary<string, string> Errors { get; }
         /// <summary>
         /// Gets or sets the validator.
         /// </summary>
         /// <value>The validator.</value>
-        Action<IObservableClass> Validator { set; get; }
+        Action<IObservableClass> Validator { get; set; }
         /// <summary>
         /// Returns true if ... is valid.
         /// </summary>

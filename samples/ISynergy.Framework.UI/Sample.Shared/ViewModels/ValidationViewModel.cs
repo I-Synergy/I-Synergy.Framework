@@ -88,24 +88,24 @@ namespace Sample.ViewModels
             {
                 if (string.IsNullOrEmpty(Test))
                 {
-                    Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] cannot be null or empty.");
+                    Errors.Add(nameof(Test), $"Value of [{nameof(Test)}] cannot be null or empty.");
                 }
 
                 if (IsLengthCheck && !string.IsNullOrEmpty(Test) && Test.Length < 4)
                 {
-                    Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] should be equal or larger then 4 characters.");
+                    Errors.Add(nameof(Test), $"Value of [{nameof(Test)}] should be equal or larger then 4 characters.");
                 }
 
                 if (IsRegexCheck && !string.IsNullOrEmpty(Test))
                 {
                     if (string.IsNullOrEmpty(Regex))
                     {
-                        Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] should be a valid regex expression.");
+                        Errors.Add(nameof(Test), $"Value of [{nameof(Test)}] should be a valid regex expression.");
                     }
 
                     if (!System.Text.RegularExpressions.Regex.IsMatch(Test, Regex, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
-                        Properties[nameof(Test)].Errors.Add($"Value of [{nameof(Test)}] does not match the regular expression.");
+                        Errors.Add(nameof(Test), $"Value of [{nameof(Test)}] does not match the regular expression.");
                     }
                 }
             });

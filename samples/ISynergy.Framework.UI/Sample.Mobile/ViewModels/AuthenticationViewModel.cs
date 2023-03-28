@@ -53,10 +53,10 @@ namespace ISynergy.Framework.UI.ViewModels
             Validator = new Action<IObservableClass>(_ =>
             {
                 if (string.IsNullOrEmpty(Username) || (!string.IsNullOrEmpty(Username) && Username.Length <= 3))
-                    Properties[nameof(Username)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
+                    Errors.Add(nameof(Username), BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
 
                 if (string.IsNullOrEmpty(Password) || (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100))))
-                    Properties[nameof(Password)].Errors.Add(BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                    Errors.Add(nameof(Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
             });
         }
 
