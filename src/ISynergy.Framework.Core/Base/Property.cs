@@ -1,10 +1,5 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Base
@@ -23,12 +18,6 @@ namespace ISynergy.Framework.Core.Base
         /// </summary>
         public event EventHandler ValueChanged;
         /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        /// <returns></returns>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
         /// The is original set
         /// </summary>
         private bool _IsOriginalSet = false;
@@ -36,10 +25,6 @@ namespace ISynergy.Framework.Core.Base
         /// The is dirty
         /// </summary>
         private bool _IsDirty = true;
-        /// <summary>
-        /// If set to true, changes will be broadcasted to the MessageService.
-        /// </summary>
-        private bool _broadCastChanges = false;
         /// <summary>
         /// The value
         /// </summary>
@@ -57,8 +42,6 @@ namespace ISynergy.Framework.Core.Base
             Argument.IsNotNullOrEmpty(name);
 
             Name = name;
-            Errors = new ObservableCollection<string>();
-            Errors.CollectionChanged += (s, e) => OnPropertyChanged(nameof(IsValid));
         }
 
         /// <summary>
@@ -73,20 +56,6 @@ namespace ISynergy.Framework.Core.Base
         }
 
         /// <summary>
-        /// Gets the errors.
-        /// </summary>
-        /// <value>The errors.</value>
-        [JsonIgnore]
-        public ObservableCollection<string> Errors { get; }
-
-        /// <summary>
-        /// Returns true if ... is valid.
-        /// </summary>
-        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
-        [JsonIgnore]
-        public bool IsValid => !Errors.Any();
-
-        /// <summary>
         /// Gets a value indicating whether this instance is dirty.
         /// </summary>
         /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
@@ -98,18 +67,9 @@ namespace ISynergy.Framework.Core.Base
         }
 
         /// <summary>
-        /// If set to true, changes will be broadcasted to the MessageService.
-        /// </summary>
-        [JsonIgnore]
-        public bool BroadCastChanges
-        {
-            get { return _broadCastChanges; }
-            set { _broadCastChanges = value; }
-        }
-
-        /// <summary>
         /// Name of the property.
         /// </summary>
+        [JsonIgnore]
         public string Name { get; private set; }
 
         /// <summary>
@@ -129,9 +89,6 @@ namespace ISynergy.Framework.Core.Base
                 Set(ref _Value, value);
                 IsDirty = true;
                 ValueChanged?.Invoke(this, EventArgs.Empty);
-
-                if (_broadCastChanges)
-                    Broadcast(OriginalValue, value);
             }
         }
 
@@ -139,6 +96,7 @@ namespace ISynergy.Framework.Core.Base
         /// Gets a value indicating whether this instance is original set.
         /// </summary>
         /// <value><c>true</c> if this instance is original set; otherwise, <c>false</c>.</value>
+        [JsonIgnore]
         public bool IsOriginalSet
         {
             get { return _IsOriginalSet; }
@@ -149,6 +107,7 @@ namespace ISynergy.Framework.Core.Base
         /// Gets or sets the original value.
         /// </summary>
         /// <value>The original value.</value>
+        [JsonIgnore]
         public T OriginalValue
         {
             get { return _OriginalValue; }
@@ -165,13 +124,11 @@ namespace ISynergy.Framework.Core.Base
         /// <typeparam name="V"></typeparam>
         /// <param name="storage">The storage.</param>
         /// <param name="value">The value.</param>
-        /// <param name="callerMemberName">Name of the caller member.</param>
-        private void Set<V>(ref V storage, V value, [CallerMemberName] string callerMemberName = null)
+        private void Set<V>(ref V storage, V value)
         {
             if (!Equals(storage, value))
             {
                 storage = value;
-                OnPropertyChanged(callerMemberName);
             }
         }
 
@@ -198,29 +155,5 @@ namespace ISynergy.Framework.Core.Base
         /// </summary>
         /// <returns>A <see cref="string" /> that represents this instance.</returns>
         public override string ToString() => Value.ToString();
-
-        /// <summary>
-        /// Called when [property changed].
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
-        /// Broadcasts a PropertyChangedMessage using either the instance of
-        /// the Messenger that was passed to this class (if available) 
-        /// or the Messenger's default instance.
-        /// </summary>
-        /// <param name="oldValue">The value of the property before it
-        /// changed.</param>
-        /// <param name="newValue">The value of the property after it
-        /// changed.</param>
-        protected virtual void Broadcast(T oldValue, T newValue)
-        {
-            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, Name);
-            MessageService.Default.Send(message);
-        }
     }
 }

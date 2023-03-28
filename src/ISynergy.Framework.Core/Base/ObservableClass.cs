@@ -2,10 +2,7 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Messaging;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
@@ -21,19 +18,7 @@ namespace ISynergy.Framework.Core.Base
     /// <seealso cref="IObservableClass" />
     public abstract class ObservableClass : IObservableClass
     {
-        /// <summary>
-        /// Gets the validation trigger.
-        /// </summary>
-        /// <value>The validation trigger.</value>
-        [JsonIgnore]
-        [DataTableIgnore]
-        [XmlIgnore]
-        [Display(AutoGenerateField = false)]
-        public bool AutomaticValidationTrigger
-        {
-            get { return GetValue<bool>(); }
-            set { SetValue(value); }
-        }
+        private readonly bool _automaticValidationTrigger;
 
         /// <summary>
         /// Gets the properties.
@@ -45,17 +30,6 @@ namespace ISynergy.Framework.Core.Base
         [Display(AutoGenerateField = false)]
         public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
             = new ObservableConcurrentDictionary<string, IProperty>();
-
-        /// <summary>
-        /// Gets the errors.
-        /// </summary>
-        /// <value>The errors.</value>
-        [JsonIgnore]
-        [DataTableIgnore]
-        [XmlIgnore]
-        [Display(AutoGenerateField = false)]
-        public ObservableCollection<string> Errors { get; private set; }
-            = new ObservableCollection<string>();
 
         /// <summary>
         /// Gets or sets the validator.
@@ -122,10 +96,10 @@ namespace ISynergy.Framework.Core.Base
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableClass" /> class.
         /// </summary>
-        /// <param name="automaticValidation">The validation.</param>
-        protected ObservableClass(bool automaticValidation = false)
+        /// <param name="automaticValidationTrigger">The validation.</param>
+        protected ObservableClass(bool automaticValidationTrigger = false)
         {
-            AutomaticValidationTrigger = automaticValidation;
+            _automaticValidationTrigger = automaticValidationTrigger;
 
             Validator = new Action<IObservableClass>(_ =>
             {
@@ -138,7 +112,7 @@ namespace ISynergy.Framework.Core.Base
                         if (!Properties.ContainsKey(item.Name))
                             Properties.Add(item.Name, new Property<object>(item.Name, value));
 
-                        Properties[item.Name].Errors.Add(string.Format(Core.Properties.Resources.WarningMandatoryProperty, $"[{item.Name}]"));
+                        Errors.Add(item.Name, string.Format(Core.Properties.Resources.WarningMandatoryProperty, $"[{item.Name}]"));
                     }
                 }
             });
@@ -169,8 +143,7 @@ namespace ISynergy.Framework.Core.Base
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
         /// <param name="propertyName">Name of the property.</param>
-        /// <param name="broadcast"></param>
-        protected void SetValue<T>(T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
+        protected void SetValue<T>(T value, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName);
 
@@ -187,10 +160,7 @@ namespace ISynergy.Framework.Core.Base
 
                     OnPropertyChanged(propertyName);
 
-                    if (broadcast)
-                        Broadcast(previous, value, propertyName);
-
-                    if (AutomaticValidationTrigger)
+                    if (_automaticValidationTrigger)
                         Validate();
                 }
             }
@@ -203,8 +173,7 @@ namespace ISynergy.Framework.Core.Base
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <param name="propertyName">Name of the property.</param>
-        /// <param name="broadcast"></param>
-        protected void SetValue<T>(ref T field, T value, bool broadcast = false, [CallerMemberName] string propertyName = null)
+        protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             Argument.IsNotNull(propertyName, propertyName);
 
@@ -221,10 +190,7 @@ namespace ISynergy.Framework.Core.Base
 
                     OnPropertyChanged(propertyName);
 
-                    if (broadcast)
-                        Broadcast(previous, value, propertyName);
-
-                    if (AutomaticValidationTrigger)
+                    if (_automaticValidationTrigger)
                         Validate();
                 }
             }
@@ -247,19 +213,29 @@ namespace ISynergy.Framework.Core.Base
         /// Validates this instance.
         /// </summary>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Validate()
+        public bool Validate(bool validateUnderlayingProperties = true)
         {
-            foreach (var property in Properties)
-                property.Value.Errors.Clear();
+            ClearErrors();
 
-            var errors = new List<string>();
-
+            if (validateUnderlayingProperties)
+            {
+                foreach (var property in this.GetType().GetProperties())
+                {
+                    if (property.PropertyType.BaseType == typeof(ObservableClass))
+                    {
+                        var method = property.PropertyType.GetMethod(nameof(Validate));
+                        var instance = property.GetValue(this, null);
+                        
+                        if (instance is not null && (bool)method.Invoke(instance, new object[] { false }) is false && instance is ObservableClass observable)
+                        {
+                            Errors.AddRange(observable.Errors);
+                            observable.Errors.Clear();
+                        }
+                    }
+                }
+            }
+            
             Validator?.Invoke(this);
-
-            foreach (var property in Properties)
-                errors.AddRange(property.Value.Errors);
-
-            Errors = new ObservableCollection<string>(errors.Distinct());
 
             OnPropertyChanged(nameof(IsValid));
             OnPropertyChanged(nameof(Errors));
@@ -275,7 +251,7 @@ namespace ISynergy.Framework.Core.Base
             foreach (var property in Properties)
                 property.Value.ResetChanges();
 
-            if (AutomaticValidationTrigger)
+            if (_automaticValidationTrigger)
                 Validate();
         }
 
@@ -287,30 +263,43 @@ namespace ISynergy.Framework.Core.Base
             foreach (var property in Properties)
                 property.Value.MarkAsClean();
 
-            MessageService.Default.Unregister(this);
-
-            if (AutomaticValidationTrigger)
+            if (_automaticValidationTrigger)
                 Validate();
         }
 
-        /// <summary>
-        /// Broadcasts a PropertyChangedMessage using either the instance of
-        /// the Messenger that was passed to this class (if available) 
-        /// or the Messenger's default instance.
-        /// </summary>
-        /// <typeparam name="T">The type of the property that
-        /// changed.</typeparam>
-        /// <param name="oldValue">The value of the property before it
-        /// changed.</param>
-        /// <param name="newValue">The value of the property after it
-        /// changed.</param>
-        /// <param name="propertyName">The name of the property that
-        /// changed.</param>
-        protected virtual void Broadcast<T>(T oldValue, T newValue, string propertyName)
+        #region IDataErrorInfo
+        [JsonIgnore]
+        [DataTableIgnore]
+        [XmlIgnore]
+        [Display(AutoGenerateField = false)]
+        public Dictionary<string, string> Errors { get; } = new Dictionary<string, string>();
+
+        [JsonIgnore]
+        [DataTableIgnore]
+        [XmlIgnore]
+        [Display(AutoGenerateField = false)]
+        public string Error
         {
-            var message = new PropertyChangedMessage<T>(this, oldValue, newValue, propertyName);
-            MessageService.Default.Send(message);
+            get
+            {
+                return string.Empty;
+            }
         }
+
+        [JsonIgnore]
+        [DataTableIgnore]
+        [XmlIgnore]
+        [Display(AutoGenerateField = false)]
+        public string this[string columnName]
+        {
+            get
+            {
+                if (Errors.ContainsKey(columnName))
+                    return Errors[columnName];
+                return string.Empty;
+            }
+        }
+        #endregion
 
         #region INotifyPropertyChanged
         /// <summary>

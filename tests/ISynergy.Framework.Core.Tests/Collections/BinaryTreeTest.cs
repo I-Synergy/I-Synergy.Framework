@@ -29,46 +29,47 @@ namespace ISynergy.Framework.Core.Collections.Tests
         {
             #region doc_ctor_2
             // Let's start by creating an empty tree 
-            BinaryTree<MyTreeNode> tree = new();
-
-            // Now, we can proceed by placing elements on different positions of the tree. Note that this class 
-            // does not  implement a search  tree, so it is not possible to place elements automatically using 
-            // an ".Add()" method. Instead, this class offers functionality that is common to all Binary Trees,
-            // such as traversing the tree breadth-first, depth-first, in order, in pre-order, and in post-order.
-
-            // Let's start populating the tree:
-            tree.Root = new MyTreeNode()
+            BinaryTree<MyTreeNode> tree = new()
             {
-                Left = new MyTreeNode()
+                // Now, we can proceed by placing elements on different positions of the tree. Note that this class 
+                // does not  implement a search  tree, so it is not possible to place elements automatically using 
+                // an ".Add()" method. Instead, this class offers functionality that is common to all Binary Trees,
+                // such as traversing the tree breadth-first, depth-first, in order, in pre-order, and in post-order.
+
+                // Let's start populating the tree:
+                Root = new MyTreeNode()
                 {
                     Left = new MyTreeNode()
                     {
-                        Value = "a"
+                        Left = new MyTreeNode()
+                        {
+                            Value = "a"
+                        },
+
+                        Value = "b",
+
+                        Right = new MyTreeNode()
+                        {
+                            Value = "c"
+                        },
                     },
 
-                    Value = "b",
+                    Value = "d",
 
                     Right = new MyTreeNode()
                     {
-                        Value = "c"
-                    },
-                },
+                        Left = new MyTreeNode()
+                        {
+                            Value = "e"
+                        },
 
-                Value = "d",
+                        Value = "f",
 
-                Right = new MyTreeNode()
-                {
-                    Left = new MyTreeNode()
-                    {
-                        Value = "e"
-                    },
-
-                    Value = "f",
-
-                    Right = new MyTreeNode()
-                    {
-                        Value = "g"
-                    },
+                        Right = new MyTreeNode()
+                        {
+                            Value = "g"
+                        },
+                    }
                 }
             };
 

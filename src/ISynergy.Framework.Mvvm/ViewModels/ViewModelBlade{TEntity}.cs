@@ -94,13 +94,6 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 if (arg is ViewModelBlade<TEntity> vm &&
                     vm.SelectedItem is IObservableClass selectedItem)
                 {
-                    if (!selectedItem.Validate())
-                    {
-                        foreach (var error in selectedItem.Errors)
-                        {
-                            vm.Properties[nameof(vm.SelectedItem)].Errors.Add(error);
-                        }
-                    }
                 }
             });
 

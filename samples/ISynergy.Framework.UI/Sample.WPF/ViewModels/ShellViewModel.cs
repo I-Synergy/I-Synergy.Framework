@@ -59,7 +59,6 @@ namespace Sample.ViewModels
         /// </summary>
         public RelayCommand ValidationTest_Command { get; set; }
 
-        public RelayCommand StitchImage_Command { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -92,13 +91,9 @@ namespace Sample.ViewModels
             EditableCombo_Command = new RelayCommand(async () => await OpenEditableComboAsync());
             ValidationTest_Command = new RelayCommand(async () => await OpenValidationTestAsync());
             UnitConversion_Command = new RelayCommand(async () => await OpenUnitConversionAsync());
-            StitchImage_Command = new RelayCommand(async () => await OpenImageStitchingAsync());
 
             PopulateNavItems();
         }
-
-        private Task OpenImageStitchingAsync() =>
-            CommonServices.NavigationService.NavigateAsync<StitchingViewModel>();
 
         /// <summary>
         /// Opens the Unit conversion view asynchronous.
@@ -152,7 +147,6 @@ namespace Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _themeService.Style.Color, EditableCombo_Command));
             PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _themeService.Style.Color, ValidationTest_Command));
             PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _themeService.Style.Color, UnitConversion_Command));
-            PrimaryItems.Add(new NavigationItem("Image Stitching", (Application.Current.Resources["camera"] as string).ToPath(), _themeService.Style.Color, StitchImage_Command));
 
             SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", (Application.Current.Resources["help"] as string).ToPath(), _themeService.Style.Color, Help_Command));

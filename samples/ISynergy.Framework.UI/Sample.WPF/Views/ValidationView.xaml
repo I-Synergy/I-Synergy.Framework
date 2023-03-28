@@ -30,13 +30,11 @@
                 <Separator Height="10" Visibility="{Binding IsRegexCheck, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="Regular expression:" Visibility="{Binding IsRegexCheck, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox Text="{Binding Regex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         behaviors:AutoSelectBehavior.AutoSelectable="True"
                          Visibility="{Binding IsRegexCheck, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 
                 <Separator Height="10"/>
                 <TextBlock Text="Test:"/>
                 <TextBox Text="{Binding Test, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                         behaviors:PropertyValidationBehavior.PropertyName="Test" 
                          behaviors:AutoFocusBehavior.AutoFocusable="True"/>
 
                 <Button Content="Test" Command="{Binding Submit_Command}" Margin="0,10" Width="150"/>

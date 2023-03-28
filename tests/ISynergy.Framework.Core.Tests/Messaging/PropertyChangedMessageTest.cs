@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Messaging.Base;
 using ISynergy.Framework.Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Core.Messaging.Tests
 {
@@ -343,7 +344,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             public DateTime AnotherDate
             {
                 get { return GetValue<DateTime>(); }
-                set { SetValue(value, true); }
+                set 
+                {
+                    var oldValue = GetValue<DateTime>();
+                    SetValue(value);
+                    var message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(AnotherDate));
+                    MessageService.Default.Send(message);
+                }
             }
 
             /// <summary>
@@ -354,7 +361,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             public DateTime MyDate
             {
                 get { return GetValue<DateTime>(); }
-                set { SetValue(value, true); }
+                set 
+                {
+                    var oldValue = GetValue<DateTime>();
+                    SetValue(value);
+                    var message = new PropertyChangedMessage<DateTime>(this, oldValue, value, nameof(MyDate));
+                    MessageService.Default.Send(message);
+                }
             }
 
             /// <summary>
@@ -363,7 +376,13 @@ namespace ISynergy.Framework.Core.Messaging.Tests
             public InvalidOperationException MyException
             {
                 get { return GetValue<InvalidOperationException>(); }
-                set { SetValue(value, true); }
+                set 
+                {
+                    var oldValue = GetValue<InvalidOperationException>();
+                    SetValue(value);
+                    var message = new PropertyChangedMessage<InvalidOperationException>(this, oldValue, value, nameof(MyException));
+                    MessageService.Default.Send(message);
+                }
             }
         }
     }
