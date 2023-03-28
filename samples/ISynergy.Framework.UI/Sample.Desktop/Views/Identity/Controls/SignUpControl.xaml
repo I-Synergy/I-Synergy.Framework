@@ -4,7 +4,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Behaviors="using:ISynergy.Framework.UI.Behaviors"
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:editors="using:Syncfusion.UI.Xaml.Editors"
@@ -18,11 +17,10 @@
         <StackPanel Margin="2,10" VerticalAlignment="Center">
             <TextBlock Text="{m:LanguageResource Key=Register}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
 
-            <TextBox x:Name="Text_CompanyName" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_Name" Header="{m:LanguageResource Key=CompanyName}" Text="{Binding Registration_Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBox x:Name="Text_Email" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_Mail" Header="{m:LanguageResource Key=Email}" CharacterCasing="Lower" Text="{Binding Registration_Mail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{m:LanguageResource Key=Email}" InputScope="EmailSmtpAddress" />
+            <TextBox x:Name="Text_CompanyName" Header="{m:LanguageResource Key=CompanyName}" Text="{Binding Registration_Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox x:Name="Text_Email" Header="{m:LanguageResource Key=Email}" CharacterCasing="Lower" Text="{Binding Registration_Mail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{m:LanguageResource Key=Email}" InputScope="EmailSmtpAddress" />
 
             <editors:SfComboBox x:Name="ComboBox_Modules" 
-                                Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_Modules" 
                                 Header="{m:LanguageResource Key=Modules}"
                                 PlaceholderText="Select modules..."
                                 ItemsSource="{Binding Modules}" 
@@ -33,9 +31,9 @@
                                 SelectionChanged="ComboBox_Modules_SelectionChanged"
                                 Loaded="ComboBox_Modules_Loaded"/>
             
-            <ComboBox x:Name="ComboBox_TimeZone" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_TimeZone" Header="{m:LanguageResource Key=TimeZone}" ItemsSource="{Binding TimeZones}" SelectedValuePath="Id" DisplayMemberPath="DisplayName" SelectedValue="{Binding Registration_TimeZone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <PasswordBox x:Name="Text_Password" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_Password" Header="{m:LanguageResource Key=Password}" ToolTipService.ToolTip="{m:LanguageResource Key=Password}" Password="{Binding Registration_Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <PasswordBox x:Name="Text_Password_Retype" Behaviors:ValidationBehaviorAttacher.PropertyName="Registration_PasswordCheck" Header="{m:LanguageResource Key=Password_Retype}" ToolTipService.ToolTip="{m:LanguageResource Key=Password_Retype}" Password="{Binding Registration_PasswordCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <ComboBox x:Name="ComboBox_TimeZone" Header="{m:LanguageResource Key=TimeZone}" ItemsSource="{Binding TimeZones}" SelectedValuePath="Id" DisplayMemberPath="DisplayName" SelectedValue="{Binding Registration_TimeZone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <PasswordBox x:Name="Text_Password" Header="{m:LanguageResource Key=Password}" ToolTipService.ToolTip="{m:LanguageResource Key=Password}" Password="{Binding Registration_Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <PasswordBox x:Name="Text_Password_Retype" Header="{m:LanguageResource Key=Password_Retype}" ToolTipService.ToolTip="{m:LanguageResource Key=Password_Retype}" Password="{Binding Registration_PasswordCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <Button x:Name="Button_Register" 
                     Content="{m:LanguageResource Key=Register}" 

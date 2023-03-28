@@ -1,14 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Abstractions.Base
 {
     /// <summary>
     /// Interface IProperty
-    /// Implements the <see cref="IBindable" />
     /// </summary>
-    /// <seealso cref="IBindable" />
-    public interface IProperty : IBindable
+    public interface IProperty
     {
         /// <summary>
         /// Occurs when [value changed].
@@ -26,19 +23,6 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         void MarkAsClean();
 
         /// <summary>
-        /// Gets the errors.
-        /// </summary>
-        /// <value>The errors.</value>
-        ObservableCollection<string> Errors { get; }
-
-        /// <summary>
-        /// Returns true if ... is valid.
-        /// </summary>
-        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
-        [JsonIgnore]
-        bool IsValid { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this instance is dirty.
         /// </summary>
         /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
@@ -46,20 +30,16 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         bool IsDirty { get; }
 
         /// <summary>
-        /// Gets or sets the Broadcast on changes.
-        /// </summary>
-        [JsonIgnore]
-        bool BroadCastChanges { get; set; }
-
-        /// <summary>
         /// Gets a value indicating whether this instance is original set.
         /// </summary>
         /// <value><c>true</c> if this instance is original set; otherwise, <c>false</c>.</value>
+        [JsonIgnore]
         bool IsOriginalSet { get; }
 
         /// <summary>
         /// Gets the name of the property.
         /// </summary>
+        [JsonIgnore]
         string Name { get; }
     }
 }

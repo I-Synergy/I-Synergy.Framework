@@ -153,47 +153,47 @@ namespace ISynergy.Framework.UI.ViewModels
             {
                 if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
                 {
-                    Properties[nameof(Name)].Errors.Add(commonServices.LanguageService.GetString("WarningLicenseNameSize"));
+                    Errors.Add(nameof(Name), commonServices.LanguageService.GetString("WarningLicenseNameSize"));
                 }
 
                 if (string.IsNullOrEmpty(Mail) || !NetworkUtility.IsValidEMail(Mail))
                 {
-                    Properties[nameof(Mail)].Errors.Add(commonServices.LanguageService.GetString("WarningInvalidEmail"));
+                    Errors.Add(nameof(Mail), commonServices.LanguageService.GetString("WarningInvalidEmail"));
                 }
 
                 if (string.IsNullOrEmpty(SelectedTimeZone))
                 {
-                    Properties[nameof(SelectedTimeZone)].Errors.Add(commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
+                    Errors.Add(nameof(SelectedTimeZone), commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
                 }
 
                 if (string.IsNullOrEmpty(Password) || (Password.Length <= 6))
                 {
-                    Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    Errors.Add(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
-                    Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    Errors.Add(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (string.IsNullOrEmpty(PasswordCheck) || (PasswordCheck.Length <= 6))
                 {
-                    Properties[nameof(PasswordCheck)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    Errors.Add(nameof(PasswordCheck), commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (!string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(PasswordCheck) && !Password.Equals(PasswordCheck))
                 {
-                    Properties[nameof(Password)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordMatch"));
-                    Properties[nameof(PasswordCheck)].Errors.Add(commonServices.LanguageService.GetString("WarningPasswordMatch"));
+                    Errors.Add(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordMatch"));
+                    Errors.Add(nameof(PasswordCheck), commonServices.LanguageService.GetString("WarningPasswordMatch"));
                 }
 
                 if (SelectedModules.Count < 1)
                 {
-                    Properties[nameof(SelectedModules)].Errors.Add(commonServices.LanguageService.GetString("WarningNoModulesSelected"));
+                    Errors.Add(nameof(SelectedModules), commonServices.LanguageService.GetString("WarningNoModulesSelected"));
                 }
 
                 if (SelectedCountry is null)
-                    Properties[nameof(SelectedCountry)].Errors.Add(commonServices.LanguageService.GetString("WarningNoCountrySelected"));
+                    Errors.Add(nameof(SelectedCountry), commonServices.LanguageService.GetString("WarningNoCountrySelected"));
             });
 
             Register_Command = new AsyncRelayCommand(RegisterAsync);
