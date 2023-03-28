@@ -18,8 +18,6 @@ namespace Sample.ViewModels
     /// <seealso cref="IForgotPasswordViewModel" />
     public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordViewModel
     {
-        private readonly IAuthenticationService _authenticationService;
-
         /// <summary>
         /// Gets the title.
         /// </summary>
@@ -40,13 +38,11 @@ namespace Sample.ViewModels
             ILogger logger)
             : base(context, commonServices, logger)
         {
-            _authenticationService = authenticationService;
-
             Validator = new Action<IObservableClass>(arg =>
             {
                 if (string.IsNullOrEmpty(EmailAddress) || !NetworkUtility.IsValidEMail(EmailAddress))
                 {
-                    Errors.Add("E-mail address is invalid.");
+                    Errors.Add(nameof(EmailAddress),"E-mail address is invalid.");
                 }
             });
 

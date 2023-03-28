@@ -1,6 +1,7 @@
 ﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 
 namespace ISynergy.Framework.Core.Data.Tests
 {
@@ -77,8 +78,11 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void CheckIfObjectAfterInitializationIsDirty_2()
         {
-            Product product = new() { Name = "Test2" };
-            product.Date = DateTimeOffset.Now;
+            Product product = new()
+            {
+                Name = "Test2",
+                Date = DateTimeOffset.Now
+            };
 
             Assert.IsTrue(product.IsDirty);
         }
@@ -108,7 +112,7 @@ namespace ISynergy.Framework.Core.Data.Tests
         public void TestIfNullValueGeneratesValidationError()
         {
             Product product = new();
-            product.Validate();
+            Assert.IsFalse(product.Validate());
             Assert.IsTrue(product.Errors.Count > 0);
         }
 
@@ -118,9 +122,17 @@ namespace ISynergy.Framework.Core.Data.Tests
         [TestMethod]
         public void TestIfNonNullValueGeneratesNoValidationError()
         {
-            Product product = new();
-            product.Name = "Test";
-            product.Validate();
+            Product product = new()
+            {
+                Name = "Test",
+                ProductGroups = new List<ProductGroup>()
+                {
+                    new ProductGroup { Description = "Test"}
+                },
+                Quantity = 1
+            };
+
+            Assert.IsTrue(product.Validate());
             Assert.IsTrue(product.Errors.Count == 0);
         }
     }
