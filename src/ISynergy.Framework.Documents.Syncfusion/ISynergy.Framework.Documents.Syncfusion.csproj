@@ -19,10 +19,10 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
-        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="21.1.35" />
-        <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="21.1.35" />
+        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="21.1.37" />
+        <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="21.1.37" />
         <PackageReference Include="Syncfusion.Licensing" Version="21.1.37" />
-        <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="21.1.35" />
-        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="21.1.35" />
+        <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="21.1.37" />
+        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="21.1.37" />
     </ItemGroup>
 </Project>
