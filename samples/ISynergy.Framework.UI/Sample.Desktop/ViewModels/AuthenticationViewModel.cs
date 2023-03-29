@@ -204,55 +204,55 @@ namespace Sample.ViewModels
                 {
                     if (string.IsNullOrEmpty(Username) || (Username.Length <= 3))
                     {
-                        Errors.Add(nameof(Username), BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
+                        AddValidationError(nameof(Username), BaseCommonServices.LanguageService.GetString("WarningUsernameSize"));
                     }
 
                     if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
-                        Errors.Add(nameof(Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                        AddValidationError(nameof(Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
                 }
                 else
                 {
                     if (string.IsNullOrEmpty(Registration_Name) || (Registration_Name.Length <= 3))
                     {
-                        Errors.Add(nameof(Registration_Name), BaseCommonServices.LanguageService.GetString("WarningLicenseNameSize"));
+                        AddValidationError(nameof(Registration_Name), BaseCommonServices.LanguageService.GetString("WarningLicenseNameSize"));
                     }
 
                     if (string.IsNullOrEmpty(Registration_Mail) || !NetworkUtility.IsValidEMail(Registration_Mail))
                     {
-                        Errors.Add(nameof(Registration_Mail), BaseCommonServices.LanguageService.GetString("WarningInvalidEmail"));
+                        AddValidationError(nameof(Registration_Mail), BaseCommonServices.LanguageService.GetString("WarningInvalidEmail"));
                     }
 
                     if (string.IsNullOrEmpty(Registration_TimeZone))
                     {
-                        Errors.Add(nameof(Registration_TimeZone), BaseCommonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
+                        AddValidationError(nameof(Registration_TimeZone), BaseCommonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
                     }
 
                     if (string.IsNullOrEmpty(Registration_Password) || (Registration_Password.Length <= 6))
                     {
-                        Errors.Add(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                        AddValidationError(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
 
                     if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                     {
-                        Errors.Add(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                        AddValidationError(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
 
                     if (string.IsNullOrEmpty(Registration_PasswordCheck) || (Registration_PasswordCheck.Length <= 6))
                     {
-                        Errors.Add(nameof(Registration_PasswordCheck), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
+                        AddValidationError(nameof(Registration_PasswordCheck), BaseCommonServices.LanguageService.GetString("WarningPasswordSize"));
                     }
 
                     if (!string.IsNullOrEmpty(Registration_Password) && !string.IsNullOrEmpty(Registration_PasswordCheck) && !Registration_Password.Equals(Registration_PasswordCheck))
                     {
-                        Errors.Add(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordMatch"));
-                        Errors.Add(nameof(Registration_PasswordCheck), BaseCommonServices.LanguageService.GetString("WarningPasswordMatch"));
+                        AddValidationError(nameof(Registration_Password), BaseCommonServices.LanguageService.GetString("WarningPasswordMatch"));
+                        AddValidationError(nameof(Registration_PasswordCheck), BaseCommonServices.LanguageService.GetString("WarningPasswordMatch"));
                     }
 
                     if (Registration_Modules.Count < 1)
                     {
-                        Errors.Add(nameof(Registration_Modules), BaseCommonServices.LanguageService.GetString("WarningNoModulesSelected"));
+                        AddValidationError(nameof(Registration_Modules), BaseCommonServices.LanguageService.GetString("WarningNoModulesSelected"));
                     }
                 }
             });

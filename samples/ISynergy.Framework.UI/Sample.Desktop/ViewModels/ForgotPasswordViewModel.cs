@@ -42,7 +42,7 @@ namespace Sample.ViewModels
             {
                 if (string.IsNullOrEmpty(EmailAddress) || !NetworkUtility.IsValidEMail(EmailAddress))
                 {
-                    Errors.Add(nameof(EmailAddress),"E-mail address is invalid.");
+                    AddValidationError(nameof(EmailAddress),"E-mail address is invalid.");
                 }
             });
 

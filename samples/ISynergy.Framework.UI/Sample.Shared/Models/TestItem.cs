@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Base;
+﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Base;
 
 namespace Sample.Models
 {
@@ -25,6 +26,18 @@ namespace Sample.Models
         {
             get { return GetValue<string>(); }
             set { SetValue(value); }
+        }
+
+        public TestItem()
+        {
+            Validator = new Action<IObservableClass>(_ =>
+            {
+                if (Id < 1)
+                    AddValidationError(nameof(Id), "Id cannot be zero!");
+
+                if (string.IsNullOrEmpty(Description) || Description.Length < 3)
+                    AddValidationError(nameof(Description), "Description should be a string with a minimum length of 3 characters!");
+            });
         }
     }
 }

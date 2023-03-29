@@ -124,7 +124,7 @@ namespace ISynergy.Framework.Core.Base
         /// <typeparam name="V"></typeparam>
         /// <param name="storage">The storage.</param>
         /// <param name="value">The value.</param>
-        private void Set<V>(ref V storage, V value)
+        private static void Set<V>(ref V storage, V value)
         {
             if (!Equals(storage, value))
             {

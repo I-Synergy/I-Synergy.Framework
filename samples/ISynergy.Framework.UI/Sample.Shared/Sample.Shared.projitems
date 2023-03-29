@@ -38,7 +38,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConvertersViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InfoViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SlideShowViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ValidationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\icon.png" />

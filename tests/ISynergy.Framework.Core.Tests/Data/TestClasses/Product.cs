@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
     /// Implements the <see cref="Base.ObservableClass" />
     /// </summary>
     /// <seealso cref="Base.ObservableClass" />
-    public class Product : ObservableClass
+    public class Product : ModelBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Product"/> class.
@@ -23,19 +23,19 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
             {
                 if (ProductGroups is null)
                 {
-                    Errors.Add(nameof(ProductGroups), "ProductGroups cannot be null.");
+                    AddValidationError(nameof(ProductGroups), "ProductGroups cannot be null.");
                 }
                 else
                 {
                     if (ProductGroups.Count == 0)
                     {
-                        Errors.Add(nameof(ProductGroups), "ProductGroups should contain at least one item.");
+                        AddValidationError(nameof(ProductGroups), "ProductGroups should contain at least one item.");
                     }
                 }
 
                 if (Quantity == 0)
                 {
-                    Errors.Add(nameof(Quantity), "Quantity should not be zero.");
+                    AddValidationError(nameof(Quantity), "Quantity should not be zero.");
                 }
             });
         }

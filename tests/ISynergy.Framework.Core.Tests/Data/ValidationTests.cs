@@ -30,7 +30,7 @@ namespace ISynergy.Framework.Core.Data.Tests
 
                     if (string.IsNullOrEmpty(i.Value))
                     {
-                        i.Errors.Add(nameof(i.Value), _valueIsNull);
+                        i.AddValidationError(nameof(i.Value), _valueIsNull);
                     }
                 })
             };
@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Core.Data.Tests
 
                     if (string.IsNullOrEmpty(i.Value))
                     {
-                        i.Errors.Add(nameof(i.Value), _valueIsNull);
+                        i.AddValidationError(nameof(i.Value), _valueIsNull);
                     }
                 })
             };
@@ -77,7 +77,7 @@ namespace ISynergy.Framework.Core.Data.Tests
 
                     if (!Enumerable.Range(1, 100).Contains(i.Value))
                     {
-                        i.Errors.Add(nameof(i.Value), _portNumberNotInRange);
+                        i.AddValidationError(nameof(i.Value), _portNumberNotInRange);
                     }
                 })
             };
@@ -99,7 +99,7 @@ namespace ISynergy.Framework.Core.Data.Tests
 
                     if (!Enumerable.Range(1, 500).Contains(i.Value))
                     {
-                        i.Errors.Add(nameof(i.Value), _portNumberNotInRange);
+                        i.AddValidationError(nameof(i.Value), _portNumberNotInRange);
                     }
                 })
             };
@@ -123,7 +123,7 @@ namespace ISynergy.Framework.Core.Data.Tests
 
                     if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                     {
-                        i.Errors.Add(nameof(i.Value), _stringLengthNotInRange);
+                        i.AddValidationError(nameof(i.Value), _stringLengthNotInRange);
                     }
                 })
             };
@@ -145,7 +145,7 @@ namespace ISynergy.Framework.Core.Data.Tests
 
                     if (!Enumerable.Range(1, 35).Contains(i.Value.Length))
                     {
-                        i.Errors.Add(nameof(i.Value), _stringLengthNotInRange);
+                        i.AddValidationError(nameof(i.Value), _stringLengthNotInRange);
                     }
                 })
             };
