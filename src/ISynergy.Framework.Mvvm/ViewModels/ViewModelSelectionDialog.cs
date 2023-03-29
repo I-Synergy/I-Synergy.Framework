@@ -106,10 +106,10 @@ namespace ISynergy.Framework.Mvvm.ViewModels
             Validator = new Action<IObservableClass>(arg =>
             {
                 if (SelectionMode == SelectionModes.Single && SelectedItems.Count != 1)
-                    Errors.Add(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
+                    AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
 
                 if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
-                    Errors.Add(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
+                    AddValidationError(nameof(SelectedItems), commonServices.LanguageService.GetString("WarningSelectItem"));
             });
 
             Refresh_Command = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
