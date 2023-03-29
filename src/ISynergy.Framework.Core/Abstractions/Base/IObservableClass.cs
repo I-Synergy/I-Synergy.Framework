@@ -1,4 +1,5 @@
 ﻿using ISynergy.Framework.Core.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Abstractions.Base
@@ -10,7 +11,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base
     /// </summary>
     /// <seealso cref="IBindable" />
     /// <seealso cref="IDisposable" />
-    public interface IObservableClass : IBindable, IDisposable, IDataErrorInfo
+    public interface IObservableClass : IBindable, IDisposable, IDataErrorInfo, INotifyDataErrorInfo
     {
         /// <summary>
         /// Validates this instance.
@@ -34,21 +35,22 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// Gets the errors.
         /// </summary>
         /// <value>The errors.</value>
-        Dictionary<string, string> Errors { get; }
+        ObservableCollection<KeyValuePair<string, string>> Errors { get; }
         /// <summary>
         /// Gets or sets the validator.
         /// </summary>
         /// <value>The validator.</value>
         Action<IObservableClass> Validator { get; set; }
         /// <summary>
-        /// Returns true if ... is valid.
-        /// </summary>
-        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
-        bool IsValid { get; }
-        /// <summary>
         /// Gets a value indicating whether this instance is dirty.
         /// </summary>
         /// <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
         bool IsDirty { get; }
+        /// <summary>
+        /// Adds an error message to the validation errors.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="errorMessage"></param>
+        void AddValidationError(string propertyName, string errorMessage);
     }
 }

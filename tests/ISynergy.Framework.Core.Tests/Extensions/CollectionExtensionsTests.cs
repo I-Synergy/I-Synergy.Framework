@@ -64,7 +64,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
                 Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
                 Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
                 Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsValid)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.HasErrors)));
                 Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
             }
             else
@@ -98,7 +98,7 @@ namespace ISynergy.Framework.Core.Extensions.Tests
                 Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
                 Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
                 Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
-                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsValid)));
+                Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.HasErrors)));
                 Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
             }
             else

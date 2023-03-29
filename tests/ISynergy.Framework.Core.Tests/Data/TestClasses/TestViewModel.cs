@@ -34,7 +34,7 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
                 {
                     if (viewModel.SelectedItem is null)
                     {
-                        Errors.Add(nameof(SelectedItem), "SelectedItem cannot be null.");
+                        AddValidationError(nameof(SelectedItem), "SelectedItem cannot be null.");
                     }
                 }
             });
