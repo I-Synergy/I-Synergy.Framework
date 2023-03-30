@@ -93,9 +93,16 @@ namespace ISynergy.Framework.Core.Base
         {
             _automaticValidationTrigger = automaticValidationTrigger;
 
+            ErrorsChanged += ObservableClass_ErrorsChanged;
+
             Validator = new Action<IObservableClass>(_ =>
             {
-                foreach (var item in GetType().GetProperties())
+                foreach (var item in GetType().GetProperties()
+                    .Where(q => 
+                        q.CanWrite &&
+                        !Attribute.IsDefined(q, typeof(JsonIgnoreAttribute)) &&
+                        !Attribute.IsDefined(q, typeof(DataTableIgnoreAttribute)) &&
+                        !Attribute.IsDefined(q, typeof(XmlIgnoreAttribute))))
                 {
                     var value = item.GetValue(this);
 
@@ -108,6 +115,12 @@ namespace ISynergy.Framework.Core.Base
                     }
                 }
             });
+        }
+
+        private void ObservableClass_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(HasErrors));
+            OnPropertyChanged(nameof(Errors));
         }
 
         /// <summary>
@@ -196,7 +209,7 @@ namespace ISynergy.Framework.Core.Base
         {
             Errors.Clear();
 
-            OnPropertyChanged(nameof(HasErrors));
+            OnErrorsChanged(nameof(Errors));
 
             return !HasErrors;
         }
@@ -213,10 +226,8 @@ namespace ISynergy.Framework.Core.Base
             {
                 foreach (var property in this.GetType().GetProperties().Where(q => q.PropertyType.GetInterfaces().Contains(typeof(IObservableClass))))
                 {
-                    var method = property.PropertyType.GetMethod(nameof(Validate));
-                    var instance = property.GetValue(this, null);
-
-                    if (instance is not null && (bool)method.Invoke(instance, new object[] { false }) is false && instance is ObservableClass observable)
+                    if (property.GetValue(this, null) is ObservableClass observable &&
+                        !observable.Validate(validateUnderlayingProperties))
                     {
                         Errors.AddRange(observable.Errors);
                         observable.Errors.Clear();
@@ -226,8 +237,7 @@ namespace ISynergy.Framework.Core.Base
             
             Validator?.Invoke(this);
 
-            OnPropertyChanged(nameof(HasErrors));
-            OnPropertyChanged(nameof(Errors));
+            OnErrorsChanged(nameof(Errors));
 
             return !HasErrors;
         }
@@ -299,6 +309,11 @@ namespace ISynergy.Framework.Core.Base
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
+        public virtual void OnErrorsChanged([CallerMemberName] string propertyName = null)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
         public IEnumerable GetErrors(string propertyName)
         {
             if (!string.IsNullOrEmpty(propertyName))
@@ -312,7 +327,7 @@ namespace ISynergy.Framework.Core.Base
                 }
                 else
                 {
-                    return default;
+                    return Enumerable.Empty<string>();
                 }
             }
             else
@@ -378,6 +393,7 @@ namespace ISynergy.Framework.Core.Base
             if (disposing)
             {
                 // free managed resources
+                ErrorsChanged -= ObservableClass_ErrorsChanged;
             }
 
             // free native resources if there are any.
