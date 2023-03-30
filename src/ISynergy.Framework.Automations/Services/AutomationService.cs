@@ -56,9 +56,9 @@ namespace ISynergy.Framework.Automations.Services
             foreach (var condition in automation.Conditions)
             {
                 if (condition.Operator == OperatorTypes.And)
-                    areAllConditionsValid = areAllConditionsValid && condition.Validate(value);
+                    areAllConditionsValid = areAllConditionsValid && condition.ValidateCondition(value);
                 else
-                    areAllConditionsValid = areAllConditionsValid || condition.Validate(value);
+                    areAllConditionsValid = areAllConditionsValid || condition.ValidateCondition(value);
             }
 
             return Task.FromResult(areAllConditionsValid);
@@ -141,7 +141,7 @@ namespace ISynergy.Framework.Automations.Services
                 }
                 else if (automation.Actions[i] is IRepeatAction untilRepeatAction && untilRepeatAction.RepeatType == RepeatTypes.Until)
                 {
-                    if (repeatCount.Equals(untilRepeatAction.CountCircuitBreaker) || untilRepeatAction.Validate(value))
+                    if (repeatCount.Equals(untilRepeatAction.CountCircuitBreaker) || untilRepeatAction.ValidateAction(value))
                     {
                         repeatCount = 0;
                     }
@@ -153,7 +153,7 @@ namespace ISynergy.Framework.Automations.Services
                 }
                 else if (automation.Actions[i] is IRepeatAction whileRepeatAction && whileRepeatAction.RepeatType == RepeatTypes.While)
                 {
-                    if (repeatCount.Equals(whileRepeatAction.CountCircuitBreaker) || !whileRepeatAction.Validate(value))
+                    if (repeatCount.Equals(whileRepeatAction.CountCircuitBreaker) || !whileRepeatAction.ValidateAction(value))
                     {
                         repeatCount = 0;
                     }
