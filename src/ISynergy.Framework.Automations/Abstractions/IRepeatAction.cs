@@ -6,6 +6,6 @@ namespace ISynergy.Framework.Automations.Abstractions
     {
         RepeatTypes RepeatType { get; }
         int CountCircuitBreaker { get; }
-        bool Validate(object entity);
+        bool ValidateAction(object entity);
     }
 }

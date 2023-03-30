@@ -53,10 +53,10 @@ namespace ISynergy.Framework.Automations.Actions
         }
 
         /// <summary>
-        /// Validate object with given conditions.
+        /// ValidateAction object with given conditions.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public bool Validate(object entity) => RepeatValidator?.Invoke(entity as TEntity) ?? false;
+        public bool ValidateAction(object entity) => RepeatValidator?.Invoke(entity as TEntity) ?? false;
     }
 }

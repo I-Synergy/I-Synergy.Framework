@@ -23,10 +23,10 @@ namespace ISynergy.Framework.Automations.Abstractions
         OperatorTypes Operator { get; set; }
 
         /// <summary>
-        /// Validate with object.
+        /// ValidateAction with object.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        bool Validate(object entity);
+        bool ValidateCondition(object entity);
     }
 }
