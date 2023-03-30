@@ -4,6 +4,7 @@
     {
         public DecimalEntry() : base()
         {
+            Text = $"{0m}";
         }
 
         public override void NumericEntry_TextChanged(object sender, TextChangedEventArgs e)
@@ -21,13 +22,13 @@
                 Value = 0m;
             }
 
-            else if (decimal.TryParse(e.NewTextValue.Trim(), out decimal newResult))
+            else if (!string.IsNullOrEmpty(e.NewTextValue) && decimal.TryParse(e.NewTextValue.Trim(), out decimal newResult))
             {
                 Text = newResult.ToString();
                 Value = newResult;
             }
 
-            else if (decimal.TryParse(e.OldTextValue.Trim(), out decimal oldResult))
+            else if (!string.IsNullOrEmpty(e.OldTextValue) && decimal.TryParse(e.OldTextValue.Trim(), out decimal oldResult))
             {
                 Text = oldResult.ToString();
                 Value = oldResult;

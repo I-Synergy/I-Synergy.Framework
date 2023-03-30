@@ -74,7 +74,7 @@ namespace Sample.ViewModels
 
                 if (string.IsNullOrEmpty(RegexSample) || !regex.IsMatch(RegexSample))
                 {
-                    Errors.Add(nameof(RegexSample), "TextSample is fout.");
+                    AddValidationError(nameof(RegexSample), "TextSample is fout.");
                 }
             });
         }
