@@ -211,18 +211,15 @@ namespace ISynergy.Framework.Core.Base
 
             if (validateUnderlayingProperties)
             {
-                foreach (var property in this.GetType().GetProperties())
+                foreach (var property in this.GetType().GetProperties().Where(q => q.PropertyType.GetInterfaces().Contains(typeof(IObservableClass))))
                 {
-                    if (property.PropertyType.GetInterfaces().Contains(typeof(IObservableClass)))
+                    var method = property.PropertyType.GetMethod(nameof(Validate));
+                    var instance = property.GetValue(this, null);
+
+                    if (instance is not null && (bool)method.Invoke(instance, new object[] { false }) is false && instance is ObservableClass observable)
                     {
-                        var method = property.PropertyType.GetMethod(nameof(Validate));
-                        var instance = property.GetValue(this, null);
-                        
-                        if (instance is not null && (bool)method.Invoke(instance, new object[] { false }) is false && instance is ObservableClass observable)
-                        {
-                            Errors.AddRange(observable.Errors);
-                            observable.Errors.Clear();
-                        }
+                        Errors.AddRange(observable.Errors);
+                        observable.Errors.Clear();
                     }
                 }
             }
@@ -289,7 +286,7 @@ namespace ISynergy.Framework.Core.Base
         {
             get
             {
-                if (Errors.Where(q => q.Key.Equals(propertyName)).Any())
+                if (Errors.Any(a => a.Key.Equals(propertyName)))
                     return Errors
                         .FirstOrDefault(q => q.Key.Equals(propertyName))
                         .Value ?? propertyName;
@@ -306,7 +303,7 @@ namespace ISynergy.Framework.Core.Base
         {
             if (!string.IsNullOrEmpty(propertyName))
             {
-                if (Errors.Where(q => q.Key.Equals(propertyName)).Any())
+                if (Errors.Any(a => a.Key.Equals(propertyName)))
                 {
                     return Errors
                         .Where(q => q.Key.Equals(propertyName))
@@ -315,7 +312,7 @@ namespace ISynergy.Framework.Core.Base
                 }
                 else
                 {
-                    return null;
+                    return default;
                 }
             }
             else
