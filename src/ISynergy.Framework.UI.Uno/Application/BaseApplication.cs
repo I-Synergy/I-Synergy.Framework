@@ -87,12 +87,12 @@ namespace ISynergy.Framework.UI
             _logger.LogInformation("Finishing initialization of application");
         }
 
-        private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
             Debug.WriteLine(e.Exception.Message);
         }
 
-        private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             if (_exceptionHandlerService is not null)
                 await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
@@ -102,7 +102,7 @@ namespace ISynergy.Framework.UI
             e.SetObserved();
         }
 
-        private async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        protected virtual async void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
                 if (_exceptionHandlerService is not null)
