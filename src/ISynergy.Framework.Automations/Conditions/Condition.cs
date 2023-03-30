@@ -51,10 +51,10 @@ namespace ISynergy.Framework.Automations.Conditions
         }
 
         /// <summary>
-        /// Validate object with given conditions.
+        /// ValidateAction object with given conditions.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public bool Validate(object entity) => Validator?.Invoke(entity as TEntity) ?? false;
+        public bool ValidateCondition(object entity) => Validator?.Invoke(entity as TEntity) ?? false;
     }
 }
