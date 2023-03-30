@@ -16,6 +16,14 @@ namespace ISynergy.Framework.Core.Data.Tests.TestClasses
             set => SetValue(value);
         }
 
+        /// <summary>
+        /// Gets or sets the ExtraItem property value.
+        /// </summary>
+        public Product ExtraItem
+        {
+            get => GetValue<Product>();
+            set => SetValue(value);
+        }
 
         /// <summary>
         /// Gets or sets the IsTest property value.
