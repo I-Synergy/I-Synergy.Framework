@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Controls
 
         private static void ValueChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (oldValue.Equals(default(T)) && !oldValue.Equals(newValue))
+            if (oldValue.Equals(default(T)) || !oldValue.Equals(newValue))
                 bindable.SetValue(TextProperty, newValue.ToString());
         }
 

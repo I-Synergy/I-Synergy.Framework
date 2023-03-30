@@ -4,6 +4,7 @@
     {
         public DoubleEntry() : base()
         {
+            Text = $"{0d}";
         }
 
         public override void NumericEntry_TextChanged(object sender, TextChangedEventArgs e)
@@ -21,13 +22,13 @@
                 Value = 0d;
             }
 
-            else if (double.TryParse(e.NewTextValue.Trim(), out double newResult))
+            else if (!string.IsNullOrEmpty(e.NewTextValue) && double.TryParse(e.NewTextValue.Trim(), out double newResult))
             {
                 Text = newResult.ToString();
                 Value = newResult;
             }
 
-            else if (double.TryParse(e.OldTextValue.Trim(), out double oldResult))
+            else if (!string.IsNullOrEmpty(e.OldTextValue) && double.TryParse(e.OldTextValue.Trim(), out double oldResult))
             {
                 Text = oldResult.ToString();
                 Value = oldResult;

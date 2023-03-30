@@ -10,10 +10,10 @@
     VerticalAlignment="Top">
 
     <UserControl.Resources>
-        <Converters:BooleanToVisibilityConverter x:Key="ErrorPresenterConverter" True="Collapsed" False="Visible"/>
+        <Converters:BooleanToVisibilityConverter x:Key="ErrorPresenterConverter" True="Visible" False="Collapsed"/>
     </UserControl.Resources>
     <UserControl.Visibility>
-        <Binding Converter="{StaticResource ErrorPresenterConverter}" Path="IsValid"/>
+        <Binding Converter="{StaticResource ErrorPresenterConverter}" Path="HasErrors"/>
     </UserControl.Visibility>
 
     <Border x:Name="RootBorder" CornerRadius="4" Background="Red">
@@ -21,7 +21,7 @@
             <ItemsControl ItemsSource="{Binding Errors}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" Foreground="White" FontSize="12" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Value}" Foreground="White" FontSize="12" FontWeight="Bold" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

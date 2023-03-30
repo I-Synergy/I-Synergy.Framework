@@ -3,21 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters"
              x:Class="ISynergy.Framework.UI.Controls.ErrorPresenter"
-             IsVisible="{Binding IsValid, Converter={StaticResource InverseBooleanConverter}}"
+             IsVisible="{Binding HasErrors}"
              Margin="0,5"
              Opacity="0.85">
-
-    <ContentView.Resources>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-    </ContentView.Resources>
     
-    <Frame CornerRadius="8" BackgroundColor="{DynamicResource RedAccent}">
-        <CollectionView ItemsSource="{Binding Errors}" SelectionMode="None">
+    <Border
+        StrokeThickness="0"
+        BackgroundColor="{DynamicResource RedAccent}">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="{StaticResource DefaultCornerRadius}"/>
+        </Border.StrokeShape>
+        <CollectionView ItemsSource="{Binding Errors}" SelectionMode="None" Margin="10,0">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Label Text="{Binding}" TextColor="White" FontSize="12" FontAttributes="Bold"/>
+                    <Label Text="{Binding Value}" TextColor="White" FontSize="12" FontAttributes="Bold"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </Frame>
+    </Border>
 </ContentView>

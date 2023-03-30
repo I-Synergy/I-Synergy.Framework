@@ -6,13 +6,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converters="using:ISynergy.Framework.UI.Converters"
     mc:Ignorable="d"
-    Visibility="{Binding IsValid, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+    Visibility="{Binding HasErrors}"
     Margin="0,5"
     Opacity="0.85">
 
     <UserControl.Resources>
         <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{StaticResource SystemAccentColorRed}" />
-        <Converters:BooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" True="Collapsed" False="Visible"/>
     </UserControl.Resources>
     
     <Border x:Name="RootBorder" CornerRadius="4" Background="{ThemeResource SystemAccentBrushRed}" BorderBrush="{x:Null}">
@@ -20,7 +19,7 @@
             <ListView x:Name="ErrorList" ItemsSource="{Binding Errors}" SelectionMode="None">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" Foreground="White" FontSize="12" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Value}" Foreground="White" FontSize="12" FontWeight="Bold" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

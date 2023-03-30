@@ -3,6 +3,8 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
+using System.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
@@ -40,16 +42,6 @@ namespace ISynergy.Framework.Core.Base
         [XmlIgnore]
         [Display(AutoGenerateField = false)]
         public Action<IObservableClass> Validator { set; get; }
-
-        /// <summary>
-        /// Returns true if ... is valid.
-        /// </summary>
-        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
-        [JsonIgnore]
-        [DataTableIgnore]
-        [XmlIgnore]
-        [Display(AutoGenerateField = false)]
-        public bool IsValid => !Errors.Any();
 
         /// <summary>
         /// Gets a value indicating whether this instance is dirty.
@@ -112,7 +104,7 @@ namespace ISynergy.Framework.Core.Base
                         if (!Properties.ContainsKey(item.Name))
                             Properties.Add(item.Name, new Property<object>(item.Name, value));
 
-                        Errors.Add(item.Name, string.Format(Core.Properties.Resources.WarningMandatoryProperty, $"[{item.Name}]"));
+                        AddValidationError(item.Name, string.Format(Core.Properties.Resources.WarningMandatoryProperty, $"[{item.Name}]"));
                     }
                 }
             });
@@ -204,9 +196,9 @@ namespace ISynergy.Framework.Core.Base
         {
             Errors.Clear();
 
-            OnPropertyChanged(nameof(IsValid));
+            OnPropertyChanged(nameof(HasErrors));
 
-            return IsValid;
+            return !HasErrors;
         }
 
         /// <summary>
@@ -221,7 +213,7 @@ namespace ISynergy.Framework.Core.Base
             {
                 foreach (var property in this.GetType().GetProperties())
                 {
-                    if (property.PropertyType.BaseType == typeof(ObservableClass))
+                    if (property.PropertyType.GetInterfaces().Contains(typeof(IObservableClass)))
                     {
                         var method = property.PropertyType.GetMethod(nameof(Validate));
                         var instance = property.GetValue(this, null);
@@ -237,10 +229,10 @@ namespace ISynergy.Framework.Core.Base
             
             Validator?.Invoke(this);
 
-            OnPropertyChanged(nameof(IsValid));
+            OnPropertyChanged(nameof(HasErrors));
             OnPropertyChanged(nameof(Errors));
 
-            return IsValid;
+            return !HasErrors;
         }
 
         /// <summary>
@@ -268,11 +260,14 @@ namespace ISynergy.Framework.Core.Base
         }
 
         #region IDataErrorInfo
+        public void AddValidationError(string propertyName, string errorMessage) =>
+            Errors.Add(new KeyValuePair<string, string>(propertyName, errorMessage));
+
         [JsonIgnore]
         [DataTableIgnore]
         [XmlIgnore]
         [Display(AutoGenerateField = false)]
-        public Dictionary<string, string> Errors { get; } = new Dictionary<string, string>();
+        public ObservableCollection<KeyValuePair<string, string>> Errors { get; } = new ObservableCollection<KeyValuePair<string, string>>();
 
         [JsonIgnore]
         [DataTableIgnore]
@@ -290,14 +285,52 @@ namespace ISynergy.Framework.Core.Base
         [DataTableIgnore]
         [XmlIgnore]
         [Display(AutoGenerateField = false)]
-        public string this[string columnName]
+        public string this[string propertyName]
         {
             get
             {
-                if (Errors.ContainsKey(columnName))
-                    return Errors[columnName];
+                if (Errors.Where(q => q.Key.Equals(propertyName)).Any())
+                    return Errors
+                        .FirstOrDefault(q => q.Key.Equals(propertyName))
+                        .Value ?? propertyName;
                 return string.Empty;
             }
+        }
+        #endregion
+
+        #region INotifyDataErrorInfo Members
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            if (!string.IsNullOrEmpty(propertyName))
+            {
+                if (Errors.Where(q => q.Key.Equals(propertyName)).Any())
+                {
+                    return Errors
+                        .Where(q => q.Key.Equals(propertyName))
+                        .Select(s => s.Value)
+                        .ToList();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return Errors.SelectMany(m => m.Value.ToList()).ToList();
+            }
+        }
+
+        [JsonIgnore]
+        [DataTableIgnore]
+        [XmlIgnore]
+        [Display(AutoGenerateField = false)]
+        public bool HasErrors
+        {
+            get => Errors.Any(a => a.Value.Any());
         }
         #endregion
 

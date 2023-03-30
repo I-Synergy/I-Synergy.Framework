@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
@@ -153,47 +154,47 @@ namespace ISynergy.Framework.UI.ViewModels
             {
                 if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
                 {
-                    Errors.Add(nameof(Name), commonServices.LanguageService.GetString("WarningLicenseNameSize"));
+                    AddValidationError(nameof(Name), commonServices.LanguageService.GetString("WarningLicenseNameSize"));
                 }
 
                 if (string.IsNullOrEmpty(Mail) || !NetworkUtility.IsValidEMail(Mail))
                 {
-                    Errors.Add(nameof(Mail), commonServices.LanguageService.GetString("WarningInvalidEmail"));
+                    AddValidationError(nameof(Mail), commonServices.LanguageService.GetString("WarningInvalidEmail"));
                 }
 
                 if (string.IsNullOrEmpty(SelectedTimeZone))
                 {
-                    Errors.Add(nameof(SelectedTimeZone), commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
+                    AddValidationError(nameof(SelectedTimeZone), commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
                 }
 
                 if (string.IsNullOrEmpty(Password) || (Password.Length <= 6))
                 {
-                    Errors.Add(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
-                    Errors.Add(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (string.IsNullOrEmpty(PasswordCheck) || (PasswordCheck.Length <= 6))
                 {
-                    Errors.Add(nameof(PasswordCheck), commonServices.LanguageService.GetString("WarningPasswordSize"));
+                    AddValidationError(nameof(PasswordCheck), commonServices.LanguageService.GetString("WarningPasswordSize"));
                 }
 
                 if (!string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(PasswordCheck) && !Password.Equals(PasswordCheck))
                 {
-                    Errors.Add(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordMatch"));
-                    Errors.Add(nameof(PasswordCheck), commonServices.LanguageService.GetString("WarningPasswordMatch"));
+                    AddValidationError(nameof(Password), commonServices.LanguageService.GetString("WarningPasswordMatch"));
+                    AddValidationError(nameof(PasswordCheck), commonServices.LanguageService.GetString("WarningPasswordMatch"));
                 }
 
                 if (SelectedModules.Count < 1)
                 {
-                    Errors.Add(nameof(SelectedModules), commonServices.LanguageService.GetString("WarningNoModulesSelected"));
+                    AddValidationError(nameof(SelectedModules), commonServices.LanguageService.GetString("WarningNoModulesSelected"));
                 }
 
                 if (SelectedCountry is null)
-                    Errors.Add(nameof(SelectedCountry), commonServices.LanguageService.GetString("WarningNoCountrySelected"));
+                    AddValidationError(nameof(SelectedCountry), commonServices.LanguageService.GetString("WarningNoCountrySelected"));
             });
 
             Register_Command = new AsyncRelayCommand(RegisterAsync);
@@ -303,7 +304,7 @@ namespace ISynergy.Framework.UI.ViewModels
                     Context.Environment = SoftwareEnvironments.Production;
                 }
 
-                if (IsValid &&
+                if (!HasErrors &&
                     await _authenticationService.CheckRegistrationNameAsync(Name) &&
                     await _authenticationService.CheckRegistrationEmailAsync(emailaddress) &&
                     PasswordCheck is not null && Password is not null &&
