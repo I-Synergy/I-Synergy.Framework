@@ -17,6 +17,6 @@
         <Entry Text="{Binding SelectedItem.Description, Mode=TwoWay}"/>
 
         <Button Text="Create new instance" Command="{Binding CreateInstance_Command}"/>
-        <Button Text="Validate" Command="{Binding Submit_Command}"/>
+        <Button Text="Validate" Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}"/>
     </VerticalStackLayout>
 </c:View>

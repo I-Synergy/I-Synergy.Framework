@@ -37,7 +37,7 @@
                 <TextBox Text="{Binding Test, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          behaviors:AutoFocusBehavior.AutoFocusable="True"/>
 
-                <Button Content="Test" Command="{Binding Submit_Command}" Margin="0,10" Width="150"/>
+                <Button Content="Test" Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}" Margin="0,10" Width="150"/>
             </StackPanel>
         </Grid>
     </DockPanel>

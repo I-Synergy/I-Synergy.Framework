@@ -34,7 +34,7 @@ namespace Sample
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services.ConfigureServices<App, Context, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
+                    services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
 
                     services.AddSingleton<IAuthenticationService, AuthenticationService>();
 

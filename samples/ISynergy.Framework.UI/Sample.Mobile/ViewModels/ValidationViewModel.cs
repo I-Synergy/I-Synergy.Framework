@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -29,6 +30,9 @@ namespace Sample.ViewModels
 
         public override async Task SubmitAsync(TestItem e)
         {
+            Argument.IsNotNull(SelectedItem);
+            Argument.IsNotNull(SelectedItem.Description);
+
             if (Validate())
             {
                 await BaseCommonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
