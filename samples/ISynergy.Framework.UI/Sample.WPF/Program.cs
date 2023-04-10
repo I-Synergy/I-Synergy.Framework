@@ -56,15 +56,13 @@ namespace Sample
                 })
                 .Build();
 
-            using (IServiceScope scope = host.Services.CreateScope())
-            {
-                ServiceLocator.SetLocatorProvider(scope.ServiceProvider);
+            using IServiceScope scope = host.Services.CreateScope();
+            ServiceLocator.SetLocatorProvider(scope.ServiceProvider);
 
-                App application = new();
-                application.InitializeComponent();
-                application.InitializeApplication();
-                application.Run();
-            }
+            App application = new();
+            application.InitializeComponent();
+            application.InitializeApplication();
+            application.Run();
         }
     }
 }

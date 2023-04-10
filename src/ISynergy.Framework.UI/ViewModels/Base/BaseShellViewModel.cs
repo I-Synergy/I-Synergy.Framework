@@ -134,14 +134,14 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
-            RestartUpdate_Command = new AsyncRelayCommand(() => ShowDialogRestartAfterUpdateAsync());
+            RestartUpdate_Command = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
 
-            Login_Command = new AsyncRelayCommand(() => Task.Run(() => _authenticationService.SignOut()));
-            Language_Command = new AsyncRelayCommand(() => OpenLanguageAsync());
-            Color_Command = new AsyncRelayCommand(() => OpenColorsAsync());
-            Help_Command = new AsyncRelayCommand(() => OpenHelpAsync());
-            Feedback_Command = new AsyncRelayCommand(() => OpenFeedbackAsync());
-            Settings_Command = new AsyncRelayCommand(() => OpenSettingsAsync());
+            Login_Command = new AsyncRelayCommand(SignOutAsync);
+            Language_Command = new AsyncRelayCommand(OpenLanguageAsync);
+            Color_Command = new AsyncRelayCommand(OpenColorsAsync);
+            Help_Command = new AsyncRelayCommand(OpenHelpAsync);
+            Feedback_Command = new AsyncRelayCommand(OpenFeedbackAsync);
+            Settings_Command = new AsyncRelayCommand(OpenSettingsAsync);
         }
 
         /// <summary>
@@ -151,10 +151,16 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         protected abstract Task OpenSettingsAsync();
 
         /// <summary>
+        /// Sign out.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task SignOutAsync() => _authenticationService.SignOutAsync();
+
+        /// <summary>
         /// Processes the authentication changed asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        public Task ProcessAuthenticationChangedAsync()
+        protected virtual Task ProcessAuthenticationChangedAsync()
         {
             PopulateNavItems();
 
@@ -275,7 +281,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// Opens the language asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected Task OpenLanguageAsync()
+        protected virtual Task OpenLanguageAsync()
         {
             var languageVM = new LanguageViewModel(Context, BaseCommonServices, Logger, _applicationSettingsService.Settings.Culture);
             languageVM.Submitted += LanguageVM_Submitted;
@@ -314,7 +320,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// Opens the colors asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        protected Task OpenColorsAsync()
+        protected virtual Task OpenColorsAsync()
         {
             var themeVM = new ThemeViewModel(Context, BaseCommonServices, _applicationSettingsService, Logger);
             themeVM.Submitted += ThemeVM_Submitted;
@@ -354,7 +360,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         /// <summary>
         /// restart application as an asynchronous operation.
         /// </summary>
-        public Task RestartApplicationAsync() =>
+        protected virtual Task RestartApplicationAsync() =>
             BaseCommonServices.DialogService.ShowInformationAsync("Please restart the application.");
     }
 }

@@ -59,10 +59,7 @@ namespace ISynergy.Framework.UI
             // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
             AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-            DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
+            SetGlobalExceptionHandler();
 
             _context = ServiceLocator.Default.GetInstance<IContext>();
             _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
@@ -82,6 +79,14 @@ namespace ISynergy.Framework.UI
             InitializeApplication();
 
             _logger.LogInformation("Finishing initialization of application");
+        }
+
+        protected virtual void SetGlobalExceptionHandler()
+        {
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
         }
 
         protected virtual async void BaseApplication_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

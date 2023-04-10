@@ -26,12 +26,12 @@
   &lt;property name="#LayoutVersion" /&gt;
   &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="3753566409" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="3335276851" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="autoTranslateForm.prefixTextBox.Text">####</globalSetting>
     <globalSetting name="autoTranslateForm.prefixCheckBox.Checked">True</globalSetting>
     <globalSetting name="autoTranslateForm.useExistingTranslationsCheckBox.Checked">False</globalSetting>
     <globalSetting name="autoTranslateForm.useOnlyExistingTranslationsCheckEdit.Checked">False</globalSetting>
-    <globalSetting name="autoTranslateForm.referenceLanguageComboBoxEdit.SelectedIndex">0</globalSetting>
+    <globalSetting name="autoTranslateForm.referenceLanguageComboBoxEdit.SelectedIndex">1</globalSetting>
     <globalSetting name="autoTranslateForm.languagesToTranslateCheckListBox">0;1;2</globalSetting>
     <userSetting name="ismai@ISYNERGY-ISMAIL.filesInitialDir">C:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.UI\Properties</userSetting>
     <userSetting name="ismai@ISYNERGY-ISMAIL.FindText">
