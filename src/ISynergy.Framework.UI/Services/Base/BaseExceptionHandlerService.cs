@@ -3,11 +3,10 @@ using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
-using Windows.Networking.Connectivity;
 
-namespace ISynergy.Framework.UI.Services
+namespace ISynergy.Framework.UI.Services.Base
 {
-    public class BaseExceptionHandlerService : IExceptionHandlerService
+    public abstract class BaseExceptionHandlerService : IExceptionHandlerService
     {
         private readonly IBusyService _busyService;
         private readonly ILanguageService _languageService;
@@ -21,7 +20,7 @@ namespace ISynergy.Framework.UI.Services
         /// <param name="dialogService"></param>
         /// <param name="languageService"></param>
         /// <param name="logger"></param>
-        public BaseExceptionHandlerService(
+        protected BaseExceptionHandlerService(
             IBusyService busyService,
             IDialogService dialogService,
             ILanguageService languageService,
@@ -53,46 +52,40 @@ namespace ISynergy.Framework.UI.Services
                 // Set busyIndicator to false if it's true.
                 _busyService.EndBusy();
 
-                var connections = NetworkInformation.GetInternetConnectionProfile();
-
-                if (connections?.GetNetworkConnectivityLevel() != NetworkConnectivityLevel.InternetAccess)
+                if (exception is ApiException apiException)
                 {
-                    await _dialogService.ShowInformationAsync(
-                        _languageService.GetString("ExceptionInternetConnection"));
+                    await _dialogService.ShowErrorAsync(apiException.Message);
                 }
-                else
+                else if (exception is NotImplementedException)
                 {
-                    if (exception is ApiException apiException)
+                    await _dialogService.ShowInformationAsync(_languageService.GetString("WarningFutureModule"), "Features");
+                }
+                else if (exception is UnauthorizedAccessException accessException)
+                {
+                    await _dialogService.ShowErrorAsync(accessException.Message);
+                }
+                else if (exception is IOException iOException)
+                {
+                    if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
                     {
-                        await _dialogService.ShowErrorAsync(apiException.Message);
-                    }
-                    else if (exception is NotImplementedException)
-                    {
-                        await _dialogService.ShowInformationAsync(_languageService.GetString("ExceptionFutureModule"));
-                    }
-                    else if (exception is UnauthorizedAccessException accessException)
-                    {
-                        await _dialogService.ShowErrorAsync(accessException.Message);
-                    }
-                    else if (exception is IOException iOException)
-                    {
-                        if (iOException.Message.Contains("The process cannot access the file") && iOException.Message.Contains("because it is being used by another process"))
-                        {
-                            await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionFileInUse"));
-                        }
-                        else
-                        {
-                            await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionDefault"));
-                        }
-                    }
-                    else if (exception is ArgumentException argumentException)
-                    {
-                        await _dialogService.ShowWarningAsync(string.Format(_languageService.GetString("ExceptionArgumentIsNull"), argumentException.ParamName));
+                        await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionFileInUse"));
                     }
                     else
                     {
                         await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionDefault"));
                     }
+                }
+                else if (exception is ArgumentException argumentException)
+                {
+                    await _dialogService.ShowWarningAsync(argumentException.Message);
+                }
+                else if (exception is ArgumentNullException argumentNullException)
+                {
+                    await _dialogService.ShowWarningAsync(argumentNullException.Message);
+                }
+                else
+                {
+                    await _dialogService.ShowErrorAsync(_languageService.GetString("ExceptionDefault"));
                 }
             }
             catch (Exception ex)

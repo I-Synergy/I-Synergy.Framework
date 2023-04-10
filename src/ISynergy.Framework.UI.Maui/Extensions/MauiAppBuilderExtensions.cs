@@ -55,13 +55,15 @@ namespace ISynergy.Framework.UI.Extensions
         /// </summary>
         /// <typeparam name="TApplication"></typeparam>
         /// <typeparam name="TContext"></typeparam>
+        /// <typeparam name="TExceptionHandler"></typeparam>
         /// <typeparam name="TResource"></typeparam>
         /// <param name="appBuilder"></param>
         /// <param name="assemblyFilter"></param>
         /// <returns></returns>
-        public static MauiAppBuilder ConfigureServices<TApplication, TContext, TResource>(this MauiAppBuilder appBuilder, Func<AssemblyName, bool> assemblyFilter)
+        public static MauiAppBuilder ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this MauiAppBuilder appBuilder, Func<AssemblyName, bool> assemblyFilter)
             where TApplication : class, Microsoft.Maui.IApplication
             where TContext : class, IContext
+            where TExceptionHandler : class, IExceptionHandlerService
             where TResource : class
         {
             appBuilder.Services.AddLogging();
@@ -90,7 +92,7 @@ namespace ISynergy.Framework.UI.Extensions
             appBuilder.Services.AddSingleton<INavigationService, NavigationService>((s) => navigationService);
             appBuilder.Services.AddSingleton<IMessageService, MessageService>();
             appBuilder.Services.AddSingleton<IContext, TContext>();
-            appBuilder.Services.AddSingleton<IExceptionHandlerService, ExceptionHandlerService>();
+            appBuilder.Services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
             appBuilder.Services.AddSingleton<ILocalizationService, LocalizationService>();
             appBuilder.Services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             appBuilder.Services.AddSingleton<IConverterService, ConverterService>();
