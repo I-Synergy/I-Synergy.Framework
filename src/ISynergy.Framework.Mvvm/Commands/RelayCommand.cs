@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using System.Runtime.CompilerServices;
 
 #nullable enable
@@ -73,11 +74,18 @@ namespace ISynergy.Framework.Mvvm.Commands
             catch (Exception ex)
             {
                 var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
-
-                if (ex.InnerException != null)
-                    exceptionHandlerService.HandleExceptionAsync(ex.InnerException).Await();
-                else
-                    exceptionHandlerService.HandleExceptionAsync(ex).Await();
+                var task = new Task(async () =>
+                {
+                    if (ex.InnerException != null)
+                    {
+                        await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                    }
+                    else
+                    {
+                        await exceptionHandlerService.HandleExceptionAsync(ex);
+                    }
+                });
+                task.RunSynchronously();
             }
         }
     }

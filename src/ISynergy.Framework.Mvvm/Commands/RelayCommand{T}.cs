@@ -95,11 +95,18 @@ namespace ISynergy.Framework.Mvvm.Commands
             catch (Exception ex)
             {
                 var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
-
-                if (ex.InnerException != null)
-                    exceptionHandlerService.HandleExceptionAsync(ex.InnerException).Await();
-                else
-                    exceptionHandlerService.HandleExceptionAsync(ex).Await();
+                var task = new Task(async () =>
+                {
+                    if (ex.InnerException != null)
+                    {
+                        await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                    }
+                    else
+                    {
+                        await exceptionHandlerService.HandleExceptionAsync(ex);
+                    }
+                });
+                task.RunSynchronously();
             }
         }
 

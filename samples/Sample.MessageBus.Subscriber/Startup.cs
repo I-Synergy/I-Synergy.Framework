@@ -29,7 +29,6 @@ namespace Sample.MessageBus.Subscriber
         {
             Console.WriteLine("Azure implementation started...");
 
-            Guid sessionId = Guid.NewGuid();
             CancellationTokenSource cancellationTokenSource = new();
 
             Task allReceives = Task.WhenAll(

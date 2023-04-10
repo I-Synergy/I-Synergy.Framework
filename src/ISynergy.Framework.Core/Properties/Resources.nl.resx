@@ -120,32 +120,29 @@
 	<data name="WarningMandatoryProperty" xml:space="preserve">
 		<value>{0} is verplicht.</value>
 	</data>
-	<data name="WarningNull" xml:space="preserve">
-		<value>kan niet null zijn.</value>
-	</data>
 	<data name="WarningNullOrEmpty" xml:space="preserve">
-		<value>mag niet null of leeg zijn.</value>
+		<value>Waarde mag niet null of leeg zijn.</value>
 	</data>
 	<data name="WarningGuidEmpty" xml:space="preserve">
-		<value>kan geen emty Guid zijn.</value>
+		<value>Waarde kan geen emty Guid zijn.</value>
 	</data>
 	<data name="WarningNullGuidEmpty" xml:space="preserve">
-		<value>mag geen null of een lege Guid zijn.</value>
+		<value>Waarde mag geen null of een lege Guid zijn.</value>
 	</data>
 	<data name="WarningNullWhitespace" xml:space="preserve">
-		<value>mag niet null zijn of alleen witruimtes bevatten.</value>
+		<value>Waarde mag niet null zijn of alleen witruimtes bevatten.</value>
 	</data>
 	<data name="WarningNullEmptyArray" xml:space="preserve">
-		<value>mag geen null of een lege array zijn.</value>
+		<value>Waarde mag geen null of een lege array zijn.</value>
 	</data>
 	<data name="WarningNullEmptyList" xml:space="preserve">
-		<value>mag geen null of een amptylijst zijn.</value>
+		<value>Waarde mag geen null of een lege lijst zijn.</value>
 	</data>
 	<data name="WarningEnum" xml:space="preserve">
-		<value>kan alleen opsommingen bevatten.</value>
+		<value>Waarde kan alleen opsommingen bevatten.</value>
 	</data>
 	<data name="WarningBetween" xml:space="preserve">
-		<value>moet een waarde hebben tussen {0} en {1}.</value>
+		<value>Waarde moet een waarde hebben tussen {0} en {1}.</value>
 	</data>
 	<data name="Between" xml:space="preserve">
 		<value>tussen</value>
@@ -154,9 +151,12 @@
 		<value>en</value>
 	</data>
 	<data name="WarningMinumum" xml:space="preserve">
-		<value>mag minimaal {0} zijn.</value>
+		<value>Waarde mag minimaal {0} zijn.</value>
 	</data>
 	<data name="WarningMaximum" xml:space="preserve">
-		<value>mag maximaal {0} zijn.</value>
+		<value>Waarde mag maximaal {0} zijn.</value>
+	</data>
+	<data name="WarningNull" xml:space="preserve">
+		<value>Waarde kan niet null zijn.</value>
 	</data>
 </root>
