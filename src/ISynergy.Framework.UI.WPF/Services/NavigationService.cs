@@ -88,13 +88,7 @@ namespace ISynergy.Framework.UI.Services
 
             try
             {
-                IViewModel viewmodel = default;
-
-                if (parameter is IViewModel instance)
-                    viewmodel = instance;
-                else
-                    viewmodel = ServiceLocator.Default.GetInstance<TViewModel>();
-
+                var viewmodel = parameter is IViewModel instance ? instance : ServiceLocator.Default.GetInstance<TViewModel>();
                 var viewModelKey = viewmodel.GetViewModelFullName();
 
                 if (!_pages.ContainsKey(viewModelKey))
@@ -119,6 +113,7 @@ namespace ISynergy.Framework.UI.Services
                         // Has class GenericTypeArguments?
                         if (viewmodel.GetType().GenericTypeArguments.Any())
                             genericPropertyType = viewmodel.GetType().GetGenericArguments().First();
+
                         // Has BaseType GenericTypeArguments?
                         else if (viewmodel.GetType().BaseType is Type baseType && baseType.GenericTypeArguments.Any())
                             genericPropertyType = baseType.GetGenericArguments().First();
@@ -159,9 +154,6 @@ namespace ISynergy.Framework.UI.Services
 
                 if (!_pages.ContainsKey(viewModelKey))
                     throw new Exception($"Page not found: {viewModelKey}. Did you forget to call NavigationService.Configure?");
-
-                //if (!viewModel.IsInitialized)
-                //    await viewModel.InitializeAsync();
 
                 if (TypeActivator.CreateInstance(_pages[viewModelKey]) is ISynergy.Framework.UI.Controls.View view)
                 {
@@ -312,10 +304,8 @@ namespace ISynergy.Framework.UI.Services
             return Task.CompletedTask;
         }
 
-        public Task NavigateAsync(Type viewModel)
-        {
+        public Task NavigateAsync(Type viewModel) =>
             throw new NotImplementedException();
-        }
 
         public Task CleanBackStackAsync()
         {

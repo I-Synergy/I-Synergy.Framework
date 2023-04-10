@@ -76,7 +76,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels
                 }
             });
 
-            Submit_Command = new AsyncRelayCommand<TEntity>((e) => SubmitAsync(e));
+            Submit_Command = new AsyncRelayCommand<TEntity>(SubmitAsync);
         }
 
         /// <summary>
