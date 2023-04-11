@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -109,6 +110,16 @@ namespace Sample.ViewModels
                     }
                 }
             });
+        }
+
+        public override async Task SubmitAsync(object e)
+        {
+            Argument.IsNotNullOrEmpty(Test);
+
+            if (Validate())
+            {
+                await BaseCommonServices.DialogService.ShowInformationAsync($"Validation succeeded.");
+            }
         }
     }
 }

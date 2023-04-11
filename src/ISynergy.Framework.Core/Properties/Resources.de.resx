@@ -100,29 +100,26 @@
 	<data name="WarningMandatoryProperty" xml:space="preserve">
 		<value>{0} ist obligatorisch.</value>
 	</data>
-	<data name="WarningNull" xml:space="preserve">
-		<value>darf nicht null sein.</value>
-	</data>
 	<data name="WarningNullOrEmpty" xml:space="preserve">
-		<value>darf nicht null oder leer sein.</value>
+		<value>Der Wert darf nicht null oder leer sein.</value>
 	</data>
 	<data name="WarningGuidEmpty" xml:space="preserve">
-		<value>kann kein emty Guid sein.</value>
+		<value>Der Wert kann kein emty Guid sein.</value>
 	</data>
 	<data name="WarningNullGuidEmpty" xml:space="preserve">
-		<value>darf nicht null oder eine leere GUID sein.</value>
+		<value>Der Wert darf nicht null oder eine leere GUID sein.</value>
 	</data>
 	<data name="WarningNullWhitespace" xml:space="preserve">
-		<value>darf nicht null sein oder nur Leerzeichen enthalten.</value>
+		<value>Der Wert darf nicht null sein oder nur Leerzeichen enthalten.</value>
 	</data>
 	<data name="WarningNullEmptyArray" xml:space="preserve">
-		<value>darf nicht null oder ein leeres Array sein.</value>
+		<value>Der Wert darf nicht null oder ein leeres Array sein.</value>
 	</data>
 	<data name="WarningNullEmptyList" xml:space="preserve">
-		<value>darf nicht null oder eine umfangreiche Liste sein.</value>
+		<value>Der Wert darf nicht null oder eine leeres Liste sein.</value>
 	</data>
 	<data name="WarningEnum" xml:space="preserve">
-		<value>Kann nur Enumerationen enthalten.</value>
+		<value>Der Wert kann nur Enumerationen enthalten.</value>
 	</data>
 	<data name="Between" xml:space="preserve">
 		<value>zwischen</value>
@@ -131,12 +128,15 @@
 		<value>und</value>
 	</data>
 	<data name="WarningBetween" xml:space="preserve">
-		<value>muss einen Wert zwischen {0} und {1} haben.</value>
+		<value>Der Wert muss zwischen {0} und {1} sein</value>
 	</data>
 	<data name="WarningMinumum" xml:space="preserve">
-		<value>kann mindestens {0} sein.</value>
+		<value>Der Wert kann mindestens {0} sein.</value>
 	</data>
 	<data name="WarningMaximum" xml:space="preserve">
-		<value>darf {0} nicht überschreiten.</value>
+		<value>Der Wert darf {0} nicht überschreiten.</value>
+	</data>
+	<data name="WarningNull" xml:space="preserve">
+		<value>Der Wert darf nicht null sein.</value>
 	</data>
 </root>

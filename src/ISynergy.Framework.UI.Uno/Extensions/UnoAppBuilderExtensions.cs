@@ -54,14 +54,16 @@ namespace ISynergy.Framework.UI.Extensions
         /// </summary>
         /// <typeparam name="TApplication"></typeparam>
         /// <typeparam name="TContext"></typeparam>
+        /// <typeparam name="TExceptionHandler"></typeparam>
         /// <typeparam name="TResource"></typeparam>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <param name="assemblyFilter"></param>
         /// <returns></returns>
-        public static IServiceCollection ConfigureServices<TApplication, TContext, TResource>(this IServiceCollection services, IConfiguration configuration, Func<AssemblyName, bool> assemblyFilter)
+        public static IServiceCollection ConfigureServices<TApplication, TContext, TExceptionHandler, TResource>(this IServiceCollection services, IConfiguration configuration, Func<AssemblyName, bool> assemblyFilter)
             where TApplication : Microsoft.UI.Xaml.Application
             where TContext : class, IContext
+            where TExceptionHandler : class, IExceptionHandlerService
             where TResource : class
         {
             services.AddLogging();
@@ -92,7 +94,7 @@ namespace ISynergy.Framework.UI.Extensions
             services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
 
             services.AddSingleton<IContext, TContext>();
-            services.AddSingleton<IExceptionHandlerService, BaseExceptionHandlerService>();
+            services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             services.AddSingleton<IConverterService, ConverterService>();

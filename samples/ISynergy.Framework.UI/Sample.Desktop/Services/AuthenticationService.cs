@@ -66,7 +66,7 @@ namespace Sample.Services
             throw new NotImplementedException();
         }
 
-        public void SignOut()
+        public Task SignOutAsync()
         {
             throw new NotImplementedException();
         }

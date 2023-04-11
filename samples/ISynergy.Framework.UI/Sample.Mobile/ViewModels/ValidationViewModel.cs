@@ -1,5 +1,6 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -11,6 +12,7 @@ namespace Sample.ViewModels
     public class ValidationViewModel : ViewModelNavigation<TestItem>
     {
         public RelayCommand CreateInstance_Command { get; set; }
+        public RelayCommand<TestItem> Validate_Command { get; set; }
 
         public ValidationViewModel(
             IContext context,
@@ -25,10 +27,26 @@ namespace Sample.ViewModels
             });
 
             CreateInstance_Command = new RelayCommand(() => SelectedItem = new TestItem { Id = -1, Description = "Hi" });
+            Validate_Command = new RelayCommand<TestItem>(ValidateTest);
+        }
+
+        private void ValidateTest(TestItem e)
+        {
+            Argument.IsNotNull(SelectedItem);
+            Argument.IsNotNull(SelectedItem.Description);
+
+            if (Validate())
+            {
+                var task = new Task(() => BaseCommonServices.DialogService.ShowInformationAsync($"Validation succeeded."));
+                task.RunSynchronously();
+            }
         }
 
         public override async Task SubmitAsync(TestItem e)
         {
+            Argument.IsNotNull(SelectedItem);
+            Argument.IsNotNull(SelectedItem.Description);
+
             if (Validate())
             {
                 await BaseCommonServices.DialogService.ShowInformationAsync($"Validation succeeded.");

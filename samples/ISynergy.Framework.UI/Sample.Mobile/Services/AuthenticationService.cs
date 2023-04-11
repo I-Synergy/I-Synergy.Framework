@@ -79,6 +79,6 @@ namespace Sample.Services
             throw new NotImplementedException();
         }
 
-        public void SignOut() => _navigationService.ReplaceMainWindowAsync<IAuthenticationView>().Await();
+        public Task SignOutAsync() => _navigationService.ReplaceMainWindowAsync<IAuthenticationView>();
     }
 }

@@ -46,7 +46,7 @@ namespace ISynergy.Framework.Mvvm.Abstractions.Services
         /// <param name="cancellationToken"></param>
         /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
         Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default);
-        void SignOut();
+        Task SignOutAsync();
         string GetEnvironmentalAuthToken(string token);
 
         /// <summary>

@@ -11,7 +11,7 @@
     Title="{Binding Title}"
     Height="600" 
     Width="400" 
-    WindowStyle="None" 
+    WindowStyle="SingleBorderWindow" 
     WindowStartupLocation="CenterScreen" 
     ResizeMode="NoResize">
 

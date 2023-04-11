@@ -59,9 +59,9 @@ namespace ISynergy.Framework.Core.Utilities
         /// </summary>
         /// <param name="strURL">The string URL.</param>
         /// <returns><c>true</c> if [is valid URL] [the specified string URL]; otherwise, <c>false</c>.</returns>
-        public static bool IsValidURL(string strURL)
+        public static bool IsValidURL(Uri strURL)
         {
-            return Regex.Match(strURL, URLRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
+            return Regex.Match(strURL.AbsoluteUri, URLRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
         }
 
         /// <summary>
@@ -80,24 +80,12 @@ namespace ISynergy.Framework.Core.Utilities
         }
 
         /// <summary>
-        /// Validates the URL.
-        /// </summary>
-        /// <param name="strUri">The string URI.</param>
-        /// <returns>System.String.</returns>
-        public static string ValidateUrl(string strUri)
-        {
-            if (!strUri.ToLower().StartsWith("http://"))
-                strUri = "http://" + strUri;
-            return strUri;
-        }
-
-        /// <summary>
         /// Determines whether [is URL reachable] [the specified URL].
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="method">The method.</param>
         /// <returns><c>true</c> if [is URL reachable] [the specified URL]; otherwise, <c>false</c>.</returns>
-        public static bool IsUrlReachable(string url, string method = "GET")
+        public static bool IsUrlReachable(Uri url, string method = "GET")
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Timeout = 1000;
