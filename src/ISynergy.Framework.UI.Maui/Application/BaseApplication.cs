@@ -56,10 +56,8 @@ namespace ISynergy.Framework.UI
             // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
             AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-            MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
+            SetGlobalExceptionHandler();
+            
             _context = ServiceLocator.Default.GetInstance<IContext>();
             _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
             _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
@@ -86,26 +84,33 @@ namespace ISynergy.Framework.UI
             _logger.LogInformation("Finishing initialization of application");
         }
 
+        protected virtual void SetGlobalExceptionHandler()
+        {
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+            MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+        }
+
         protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
             Debug.WriteLine(e.Exception.Message);
         }
 
-        protected virtual async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        protected virtual void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             if (_exceptionHandlerService is not null)
-                await _exceptionHandlerService.HandleExceptionAsync(e.Exception);
+                _exceptionHandlerService.HandleExceptionAsync(e.Exception);
             else
                 _logger.LogCritical(e.Exception, e.Exception.Message);
 
             e.SetObserved();
         }
 
-        protected virtual async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        protected virtual void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception exception)
                 if (_exceptionHandlerService is not null)
-                    await _exceptionHandlerService.HandleExceptionAsync(exception);
+                    _exceptionHandlerService.HandleExceptionAsync(exception);
                 else
                     _logger.LogCritical(exception, exception.Message);
         }

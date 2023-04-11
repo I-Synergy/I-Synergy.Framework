@@ -708,18 +708,5 @@ namespace ISynergy.Framework.Core.Extensions
 
             return path;
         }
-
-        public static string ToFixedArgumentMessage(this string message)
-        {
-            var parameter = "Parameter";
-
-            if (message.Contains($"({parameter} '"))
-                message = message.Replace($"({parameter} '", "");
-
-            if (message.EndsWith("')"))
-                message = message.Replace("')", "");
-
-            return message;
-        }
     }
 }

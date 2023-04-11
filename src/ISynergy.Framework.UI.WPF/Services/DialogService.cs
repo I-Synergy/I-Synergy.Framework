@@ -3,6 +3,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Services.Base;
+using System.Windows;
 using MessageBoxButton = ISynergy.Framework.Mvvm.Enumerations.MessageBoxButton;
 using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
 using Window = ISynergy.Framework.UI.Controls.Window;
@@ -55,6 +56,8 @@ namespace ISynergy.Framework.UI.Services
             if (dialog is Window window)
             {
                 window.ViewModel = viewmodel;
+                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                window.WindowStyle = WindowStyle.None;
 
                 viewmodel.Closed += async (sender, e) => await CloseDialogAsync(window);
                 viewmodel.Submitted += async (sender, e) => await CloseDialogAsync(window);
@@ -105,6 +108,7 @@ namespace ISynergy.Framework.UI.Services
             }
 
             var result = System.Windows.MessageBox.Show(
+                Application.Current.MainWindow,
                 message,
                 title,
                 button,

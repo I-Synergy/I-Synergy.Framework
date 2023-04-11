@@ -43,7 +43,7 @@ namespace Sample
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("FontAwesome.otf", "FontAwesome");
                 })
-                .ConfigureServices<App, Context, Properties.Resources>(x => x.Name.StartsWith(typeof(MauiProgram).Namespace));
+                .ConfigureServices<App, Context, ExceptionHandlerService, Properties.Resources>(x => x.Name.StartsWith(typeof(MauiProgram).Namespace));
 
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 

@@ -263,7 +263,7 @@ namespace ISynergy.Framework.Mvvm.Commands
         }
 
         /// <inheritdoc/>
-        public Task ExecuteAsync(T? parameter)
+        public async Task ExecuteAsync(T? parameter)
         {
             try
             {
@@ -289,16 +289,16 @@ namespace ISynergy.Framework.Mvvm.Commands
                 if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
                     CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
-                return executionTask;
+                await executionTask;
             }
             catch (Exception ex)
             {
                 var exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
 
                 if (ex.InnerException != null)
-                    return exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
+                    await exceptionHandlerService.HandleExceptionAsync(ex.InnerException);
                 else
-                    return exceptionHandlerService.HandleExceptionAsync(ex);
+                    await exceptionHandlerService.HandleExceptionAsync(ex);
             }
         }
 

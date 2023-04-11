@@ -33,7 +33,7 @@ namespace Sample
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services.ConfigureServices<App, Context, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
+                    services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
 
                     services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
@@ -56,15 +56,13 @@ namespace Sample
                 })
                 .Build();
 
-            using (IServiceScope scope = host.Services.CreateScope())
-            {
-                ServiceLocator.SetLocatorProvider(scope.ServiceProvider);
+            using IServiceScope scope = host.Services.CreateScope();
+            ServiceLocator.SetLocatorProvider(scope.ServiceProvider);
 
-                App application = new();
-                application.InitializeComponent();
-                application.InitializeApplication();
-                application.Run();
-            }
+            App application = new();
+            application.InitializeComponent();
+            application.InitializeApplication();
+            application.Run();
         }
     }
 }
