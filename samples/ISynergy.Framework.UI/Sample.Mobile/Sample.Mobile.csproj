@@ -12,6 +12,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AssemblyName>Sample</AssemblyName>
 		<Product>Sample Maui Desktop</Product>
+		<NoWarn>1701;1702;CS1591;CS8002;NETSDK1023;</NoWarn>
 
 		<!-- Display name -->
 		<ApplicationTitle>Sample</ApplicationTitle>
@@ -31,6 +32,11 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<CodeAnalysisRuleSet>..\..\..\.sonarlint\i-synergy.frameworkcsharp.ruleset</CodeAnalysisRuleSet>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
 		<!--<DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION</DefineConstants>-->
 	</PropertyGroup>
 
@@ -60,6 +66,10 @@
 	  <AdditionalFiles Include="..\..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041.0'">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.1.0" />
@@ -67,7 +77,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Logging.AppCenter\ISynergy.Framework.Logging.AppCenter.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
