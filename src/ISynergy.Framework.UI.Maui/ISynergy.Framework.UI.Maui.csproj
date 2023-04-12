@@ -27,6 +27,10 @@
 	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.19041.0'">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.1.0" />

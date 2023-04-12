@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\project.props" />
+	<Import Project="..\..\project.props" />
 
-    <PropertyGroup>
+	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-        <PackageId>I-Synergy.Framework.Storage</PackageId>
-        <Description>I-Synergy Framework Storage for .net Standard 2.0</Description>
-        <PackageTags>I-Synergy, Framework, Storage</PackageTags>
-        <CodeAnalysisRuleSet>ISynergy.Framework.Storage.ruleset</CodeAnalysisRuleSet>
-    </PropertyGroup>
+		<PackageId>I-Synergy.Framework.Storage</PackageId>
+		<Description>I-Synergy Framework Storage for .net Standard 2.0</Description>
+		<PackageTags>I-Synergy, Framework, Storage</PackageTags>
+		<CodeAnalysisRuleSet>ISynergy.Framework.Storage.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\.sonarlint\i-synergy.framework\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	</ItemGroup>
 </Project>

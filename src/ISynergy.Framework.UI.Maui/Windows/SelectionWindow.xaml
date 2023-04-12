@@ -7,9 +7,8 @@
           Title="{Binding Title}">
 
     <ContentView 
-        ControlTemplate="{StaticResource DefaultDialogTemplate}"
-        MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
-        
+        ControlTemplate="{StaticResource DefaultDialogTemplate}" 
+        WidthRequest="{OnPlatform WinUI=600, Default=400}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -34,7 +33,6 @@
                 Grid.Column="1"
                 Command="{Binding Refresh_Command}"
                 CommandParameter="{Binding Query}"
-                Style="{StaticResource RefreshButtonStyle}"
                 Margin="2"/>
 
             <CollectionView
@@ -45,12 +43,9 @@
                 Grid.Row="1"
                 Grid.ColumnSpan="2">
                 
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"/>
-                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Description}" Margin="4" />
+                        <Label Text="{Binding Description}" Margin="10,0" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
