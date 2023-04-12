@@ -17,14 +17,15 @@ namespace Sample
         {
             await base.InitializeApplicationAsync();
             await Task.Delay(5000);
-            await ServiceLocator.Default.GetInstance<INavigationService>().ReplaceMainWindowAsync<IShellView>();
+
+            if (ServiceLocator.Default.GetInstance<IShellView>() is Shell shell)
+                MainPage = shell;
         }
 
         public override IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
             new List<ResourceDictionary>()
             {
-                //new Styles.Colors()
-                //new Styles.Style()
+                new Styles.Colors()
             };
     }
 }

@@ -24,7 +24,7 @@
 		<Version>0.0.0</Version>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<NoWarn>1701;1702;CS1591;CS8002</NoWarn>
+		<NoWarn>1701;1702;CS1591;CS8002;NETSDK1023;</NoWarn>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 		<UnoUIDisableLongPathWarning>true</UnoUIDisableLongPathWarning>

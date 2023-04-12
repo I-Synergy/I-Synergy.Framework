@@ -89,8 +89,6 @@ namespace Sample.ViewModels
             Startup = ((Context)context).Environment.ToString();
 
             BusyOn_Command = new RelayCommand(StartTimer);
-
-            //throw new Exception("Test exception for logging!");
         }
 
         private void StartTimer()
