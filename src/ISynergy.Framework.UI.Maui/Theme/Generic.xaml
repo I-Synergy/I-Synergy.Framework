@@ -556,15 +556,19 @@
 
     <ControlTemplate x:Key="DefaultDialogTemplate">
         <Border BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
-               BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
-               Padding="8"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"
-               Margin="10">
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="{TemplateBinding WidthRequest}"
+            HeightRequest="{TemplateBinding HeightRequest}"
+            MinimumWidthRequest="{TemplateBinding MinimumWidthRequest}"
+            MinimumHeightRequest="{TemplateBinding MinimumHeightRequest}"
+            MaximumWidthRequest="{TemplateBinding MaximumWidthRequest}"
+            MaximumHeightRequest="{TemplateBinding MaximumHeightRequest}">
             <Border.StrokeShape>
-                <RoundRectangle CornerRadius="8"/>
+                <RoundRectangle CornerRadius="{StaticResource DefaultCornerRadius}"/>
             </Border.StrokeShape>
-            <Grid>
+            <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -581,6 +585,27 @@
                         <Button Text="{m:GetString Ok}" Command="{Binding Submit_Command}" CommandParameter="{Binding SelectedItem}"/>
                     </HorizontalStackLayout>
                 </Grid>
+            </Grid>
+        </Border>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="DefaultCleanDialogTemplate">
+        <Border BindingContext="{Binding Source={RelativeSource AncestorType={x:Type controls:Window}}, Path=ViewModel}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="{TemplateBinding WidthRequest}"
+            HeightRequest="{TemplateBinding HeightRequest}"
+            MinimumWidthRequest="{TemplateBinding MinimumWidthRequest}"
+            MinimumHeightRequest="{TemplateBinding MinimumHeightRequest}"
+            MaximumWidthRequest="{TemplateBinding MaximumWidthRequest}"
+            MaximumHeightRequest="{TemplateBinding MaximumHeightRequest}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="{StaticResource DefaultCornerRadius}"/>
+            </Border.StrokeShape>
+
+            <Grid Margin="10">
+                <ContentPresenter Margin="{StaticResource DefaultMargin}"/>
             </Grid>
         </Border>
     </ControlTemplate>

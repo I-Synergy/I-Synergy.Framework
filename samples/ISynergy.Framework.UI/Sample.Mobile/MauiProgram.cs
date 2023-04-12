@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions.Services.Base;
-using ISynergy.Framework.Logging.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -17,7 +16,7 @@ using Sample.ViewModels;
 using Sample.Views;
 using System.Reflection;
 
-//[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
 namespace Sample
 {
@@ -57,8 +56,6 @@ namespace Sample
             builder.Services.AddTransient<IRegistrationView, RegistrationView>();
             builder.Services.AddTransient<IShellViewModel, AppShellViewModel>();
             builder.Services.AddTransient<IShellView, AppShell>();
-
-            builder.Logging.AddAppCenterLogging(builder.Configuration);
 
 #if DEBUG
             builder.Logging.AddDebug();

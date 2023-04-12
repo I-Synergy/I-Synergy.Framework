@@ -15,7 +15,7 @@
             <Entry Text="{Binding ProductName}" IsReadOnly="True"/>
 
             <Label Text="Version"/>
-            <Entry Text="{Binding Version}" IsReadOnly="True"/>
+            <!--<Entry Text="{Binding Version}" IsReadOnly="True"/>-->
 
             <Label Text="Copyrights"/>
             <Entry Text="{Binding Copyrights}" IsReadOnly="True"/>

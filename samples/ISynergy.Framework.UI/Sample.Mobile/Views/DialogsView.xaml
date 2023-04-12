@@ -9,38 +9,38 @@
     <VerticalStackLayout Spacing="10">
         <Button Command="{Binding SelectSingle_Command}" 
             Text="Select single item..." 
-            Width="200"
-            Height="35"
+            WidthRequest="200"
+            HeightRequest="35"
             Margin="1"/>
 
         <Button Command="{Binding SelectMultiple_Command}" 
             Text="Select multiple items..."
-            Width="200"
-            Height="35"
+            WidthRequest="200"
+            HeightRequest="35"
             Margin="1"/>
 
         <Button Command="{Binding ShowDialogYesNo}" 
             Text="Show Yes/No dialog..."
-            Width="200"
-            Height="35"
+            WidthRequest="200"
+            HeightRequest="35"
             Margin="1,20,1,1"/>
 
         <Button Command="{Binding ShowDialogOk}" 
             Text="Show Ok dialog..."
-            Width="200"
-            Height="35"
+            WidthRequest="200"
+            HeightRequest="35"
             Margin="1"/>
 
         <Button Command="{Binding ShowDialogOkCancel}" 
             Text="Show Ok/Cancel dialog..."
-            Width="200"
-            Height="35"
+            WidthRequest="200"
+            HeightRequest="35"
             Margin="1"/>
 
         <Button Command="{Binding ShowNoteDialog}" 
             Text="Show Note dialog..."
-            Width="200"
-            Height="35"
+            WidthRequest="200"
+            HeightRequest="35"
             Margin="1"/>
     </VerticalStackLayout>
 </c:View>
