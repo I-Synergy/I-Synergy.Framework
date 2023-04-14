@@ -205,7 +205,7 @@ namespace ISynergy.Framework.UI.Hosting
 
             try
             {
-                Application.Current.Exit();
+                Application.Current?.Exit();
                 await _hostLifetime.StopAsync(token).ConfigureAwait(false);
             }
             catch (Exception ex)
