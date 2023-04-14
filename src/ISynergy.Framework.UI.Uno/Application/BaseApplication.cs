@@ -7,6 +7,8 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions;
 using ISynergy.Framework.UI.Abstractions.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -51,27 +53,29 @@ namespace ISynergy.Framework.UI
         protected BaseApplication()
             : base()
         {
-            _logger = ServiceLocator.Default.GetInstance<ILogger>() ?? LoggerFactory.Create(builder =>
-            {
-                builder.AddDebug();
-                builder.SetMinimumLevel(LogLevel.Trace);
-            }).CreateLogger(AppDomain.CurrentDomain.FriendlyName);
+            var host = CreateHostBuilder()
+                .ConfigureLogging(logger =>
+                {
+                    logger.AddDebug();
+                    logger.SetMinimumLevel(LogLevel.Trace);
+                })
+                .Build();
 
+            ServiceLocator.SetLocatorProvider(host.Services);
+
+            _logger = ServiceLocator.Default.GetInstance<ILogger>();
             _logger.LogInformation("Starting application");
 
             // Pass a timeout to limit the execution time.
             // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
             AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
-            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
+            SetGlobalExceptionHandler();
+            
             _context = ServiceLocator.Default.GetInstance<IContext>();
             _authenticationService = ServiceLocator.Default.GetInstance<IAuthenticationService>();
             _themeService = ServiceLocator.Default.GetInstance<IThemeService>();
             _exceptionHandlerService = ServiceLocator.Default.GetInstance<IExceptionHandlerService>();
-
             _applicationSettingsService = ServiceLocator.Default.GetInstance<IBaseApplicationSettingsService>();
             _applicationSettingsService.LoadSettings();
 
@@ -85,6 +89,15 @@ namespace ISynergy.Framework.UI
             InitializeApplication();
 
             _logger.LogInformation("Finishing initialization of application");
+        }
+
+        protected abstract IHostBuilder CreateHostBuilder();
+
+        protected virtual void SetGlobalExceptionHandler()
+        {
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
 
         protected virtual void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
@@ -113,6 +126,18 @@ namespace ISynergy.Framework.UI
 
         public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
+        /// <summary>
+        /// Initialize the application.
+        /// </summary>
+        /// <example>
+        /// <code>
+        ///     await base.InitializeApplicationAsync();
+        ///     // wait 5 seconds before showing the main window...
+        ///     await Task.Delay(5000);
+        ///     await ServiceLocator.Default.GetInstance{INavigationService}().ReplaceMainWindowAsync{IShellView}();
+        /// </code>
+        /// </example>
+        /// <returns></returns>
         public virtual Task InitializeApplicationAsync()
         {
             var culture = CultureInfo.CurrentCulture;

@@ -12,18 +12,14 @@ namespace ISynergy.Framework.UI.Services
     {
         private Window _activeDialog = null;
 
-        private readonly IServiceProvider _serviceProvider;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogService"/> class.
         /// </summary>
-        /// <param name="serviceProvider"></param>
         /// <param name="languageService">The language service.</param>
         /// <param name="dispatcherService"></param>
-        public DialogService(IServiceProvider serviceProvider, ILanguageService languageService, IDispatcherService dispatcherService)
+        public DialogService(ILanguageService languageService, IDispatcherService dispatcherService)
             : base(languageService, dispatcherService)
         {
-            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
