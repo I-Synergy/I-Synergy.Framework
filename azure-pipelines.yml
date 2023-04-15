@@ -79,7 +79,7 @@ stages:
              src\ISynergy.Framework.Logging.ApplicationInsights\ISynergy.Framework.Logging.ApplicationInsights.csproj
              src\ISynergy.Framework.Logging.Sentry\ISynergy.Framework.Logging.Sentry.csproj
              src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj
-             src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj
+             src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj
              src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj
              src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj
              src\ISynergy.Framework.Update\ISynergy.Framework.Update.csproj
@@ -400,12 +400,20 @@ stages:
             projects: 'src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage)'
 
+        #- task: DotNetCoreCLI@2
+        #  displayName: 'Build WinUI UI Project'
+        #  inputs:
+        #    command: 'build'
+        #    projects: 'src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj'
+        #    arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage)'
+
         - task: DotNetCoreCLI@2
-          displayName: 'Build WinUI UI Project'
+          displayName: 'Build Uno UI Project'
           inputs:
-            command: 'build'
-            projects: 'src\ISynergy.Framework.UI.WinUI\ISynergy.Framework.UI.WinUI.csproj'
-            arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage)'
+            command: 'custom'
+            projects: 'src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj'
+            custom: 'msbuild'
+            arguments: '/p:Configuration=$(BuildConfiguration) /p:PackageOutputPath=$(Build.SourcesDirectory)\packages /p:PackageVersion=$(VersionPackage) /t:restore,build,pack'
 
         - task: DotNetCoreCLI@2
           displayName: 'Build Maui UI Project'
@@ -420,6 +428,55 @@ stages:
             command: 'build'
             projects: 'src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj'
             arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage)'
+
+        #- task: MSBuild@1
+        #  displayName: 'Build UWP UI x86'
+        #  inputs:
+        #    solution: 'src\I-Synergy.Framework.UI.Uwp\I-Synergy.Framework.Ui.Uwp.csproj'
+        #    platform: x86
+        #    configuration: '$(BuildConfiguration)'
+        #    msbuildArguments: '/p:VersionAssembly=$(build.buildNumber) /t:restore,build'
+      
+        #- task: MSBuild@1
+        #  displayName: 'Build UWP UI x64'
+        #  inputs:
+        #    solution: 'src\I-Synergy.Framework.UI.Uwp\I-Synergy.Framework.Ui.Uwp.csproj'
+        #    platform: x64
+        #    configuration: '$(BuildConfiguration)'
+        #    msbuildArguments: '/p:VersionAssembly=$(build.buildNumber) /t:restore,build'
+      
+        #- task: MSBuild@1
+        #  displayName: 'Build UWP UI ARM'
+        #  inputs:
+        #    solution: 'src\I-Synergy.Framework.UI.Uwp\I-Synergy.Framework.Ui.Uwp.csproj'
+        #    platform: ARM
+        #    configuration: '$(BuildConfiguration)'
+        #    msbuildArguments: '/p:VersionAssembly=$(build.buildNumber) /t:restore,build'
+      
+        #- task: MSBuild@1
+        #  displayName: 'Build UWP UI ARM64'
+        #  inputs:
+        #    solution: 'src\I-Synergy.Framework.UI.Uwp\I-Synergy.Framework.Ui.Uwp.csproj'
+        #    platform: ARM64
+        #    configuration: '$(BuildConfiguration)'
+        #    msbuildArguments: '/p:VersionAssembly=$(build.buildNumber) /t:restore,build'
+
+        #- task: CopyFiles@2
+        #  displayName: 'Copy Multi Platform File to Reference folder'
+        #  inputs:
+        #    SourceFolder: '$(Build.SourcesDirectory)\packages\I-Synergy.Framework.UI.Uwp\x86\$(BuildConfiguration)'
+        #    Contents: |
+        #      I-Synergy.Framework.UI.Uwp.dll
+        #      I-Synergy.Framework.UI.Uwp.pri
+        #    TargetFolder: '$(Build.SourcesDirectory)\packages\I-Synergy.Framework.UI.Uwp\$(BuildConfiguration)'
+      
+        #- task: PowerShell@2
+        #  displayName: 'Create Multi Platform Reference file'
+        #  inputs:
+        #    targetType: filePath
+        #    filePath: ./build/createplatformdll.ps1
+        #    arguments: '-file "$(Build.SourcesDirectory)\packages\I-Synergy.Framework.UI.Uwp\$(BuildConfiguration)\I-Synergy.Framework.UI.Uwp.dll"'
+
 
         - task: CopyFiles@2
           inputs:

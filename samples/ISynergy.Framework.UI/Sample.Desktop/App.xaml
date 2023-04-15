@@ -11,11 +11,6 @@
                 <ResourceDictionary Source="ms-appx:///Assets/Images.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Style.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary.ThemeDictionaries>
-                <ColorPaletteResources x:Key="Red" Accent="{ThemeResource SystemAccentColor}" />
-                <ColorPaletteResources x:Key="Dark" Accent="{ThemeResource SystemAccentColor}" />
-                <ColorPaletteResources x:Key="Default" Accent="{ThemeResource SystemAccentColor}"/>
-            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </app:BaseApplication.Resources>
 </app:BaseApplication>

@@ -27,20 +27,13 @@ namespace ISynergy.Framework.UI.Markup
         /// <returns>System.Object.</returns>
         protected override object ProvideValue()
         {
-            if (!string.IsNullOrEmpty(Key))
+            if (!string.IsNullOrEmpty(Key) && !DesignMode.DesignMode2Enabled)
             {
-                if (DesignMode.DesignMode2Enabled)
-                {
-                    return $"[{Key}]";
-                }
-                else
-                {
-                    return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
-                }
+                return ServiceLocator.Default.GetInstance<ILanguageService>().GetString(Key);
             }
             else
             {
-                return "[Empty]";
+                return $"[{Key}]";
             }
         }
     }

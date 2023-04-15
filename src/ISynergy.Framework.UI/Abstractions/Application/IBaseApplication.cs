@@ -3,5 +3,6 @@
     public interface IBaseApplication
     {
         Task InitializeApplicationAsync();
+        void InitializeApplication();
     }
 }

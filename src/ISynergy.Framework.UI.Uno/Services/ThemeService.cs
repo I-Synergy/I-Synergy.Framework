@@ -1,10 +1,13 @@
 ﻿using ISynergy.Framework.Core.Abstractions.Services.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 
-#if NET7_0_WINDOWS10_0_19041 && !HAS_UNO
+#if WINDOWS
 using WinRT.Interop;
+using Windows.ApplicationModel;
 #endif
 
 namespace ISynergy.Framework.UI.Services
@@ -131,7 +134,7 @@ namespace ISynergy.Framework.UI.Services
         /// </summary>
         public void SetTitlebar(Microsoft.UI.Xaml.Window window)
         {
-#if NET7_0_WINDOWS10_0_19041
+#if WINDOWS
             var appWindow = GetAppWindowForCurrentWindow(window);
 
             var iconPath = Path.Combine(Package.Current.InstalledLocation.Path, "icon.ico");
@@ -164,7 +167,7 @@ namespace ISynergy.Framework.UI.Services
 #endif
         }
 
-#if NET7_0_WINDOWS10_0_19041 && !HAS_UNO
+#if !HAS_UNO
         protected virtual AppWindow GetAppWindowForCurrentWindow(Microsoft.UI.Xaml.Window window)
         {
             var hWnd = WindowNative.GetWindowHandle(window);

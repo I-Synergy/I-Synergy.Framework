@@ -3,7 +3,7 @@ using ISynergy.Framework.Core.Base;
 
 namespace Sample.Models
 {
-    public class Setting : ModelBase, ISetting
+    public class Setting : ModelBase
     {
         public bool IsFirstRun
         {

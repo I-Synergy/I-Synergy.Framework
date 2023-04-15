@@ -2,7 +2,7 @@
 using ISynergy.Framework.Mvvm.Models;
 using Windows.Storage;
 
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
+#if HAS_UNO_WINUI
 using Windows.System;
 #else
 using System.Diagnostics;
@@ -38,7 +38,7 @@ namespace ISynergy.Framework.UI.Services
         {
             if (await _fileService.SaveFileAsync(filename, file) is FileResult savedFile)
             {
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
+#if HAS_UNO_WINUI
                 var storageFile = await StorageFile.GetFileFromPathAsync(savedFile.FilePath);
                 await Launcher.LaunchFileAsync(storageFile);
 #else
