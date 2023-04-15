@@ -2,7 +2,7 @@
 using ISynergy.Framework.Core.Base;
 using System;
 
-namespace NugetUnlister.Common.Models
+namespace NugetUnlister.Models
 {
     public class PackageVersion : ObservableClass
     {
@@ -51,7 +51,7 @@ namespace NugetUnlister.Common.Models
         {
             Id = Guid.NewGuid();
             PackageId = packageId;
-            Version = version;  
+            Version = version;
             Selected = selected;
         }
     }

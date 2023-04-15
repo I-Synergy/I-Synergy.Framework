@@ -1,9 +1,9 @@
 ﻿using Flurl;
 using Flurl.Http;
 using Microsoft.Extensions.Options;
-using NugetUnlister.Common.Abstractions;
-using NugetUnlister.Common.Models;
-using NugetUnlister.Common.Options;
+using NugetUnlister.Abstractions;
+using NugetUnlister.Models;
+using NugetUnlister.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,22 +11,22 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NugetUnlister.Common.Services
+namespace NugetUnlister.Services
 {
     internal class NugetService : INugetService
     {
         private readonly IFlurlClient _client;
-        private readonly ConfigurationOptions _configuration;
+        private readonly NugetOptions _nugetOptions;
 
-        public NugetService(IFlurlClient client, IOptions<ConfigurationOptions> options)
+        public NugetService(IFlurlClient client, IOptions<NugetOptions> options)
         {
             _client = client;
-            _configuration = options.Value;
+            _nugetOptions = options.Value;
         }
 
         public async Task<NugetResponse> GetIndexAsync(string packageId, CancellationToken cancellationToken = default)
         {
-            return await new Url($"https://api.nuget.org/v3-flatcontainer/{packageId}/index.json")
+            return await new Url($"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/index.json")
                    .WithClient(_client)
                    .GetJsonAsync<NugetResponse>(cancellationToken);
         }
@@ -51,7 +51,7 @@ namespace NugetUnlister.Common.Services
                 using (Process process = new Process())
                 {
                     process.StartInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nuget.exe");
-                    process.StartInfo.Arguments = $"delete {packageId} {version} -src https://api.nuget.org/v3/index.json  -apikey {_configuration.ApiKey} -NonInteractive";
+                    process.StartInfo.Arguments = $"delete {packageId} {version} -src https://api.nuget.org/v3/index.json  -apikey {_nugetOptions.ApiKey} -NonInteractive";
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.CreateNoWindow = true;
                     process.StartInfo.RedirectStandardError = true;
