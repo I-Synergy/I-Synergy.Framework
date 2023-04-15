@@ -23,7 +23,7 @@ using System.Text.RegularExpressions;
 
 namespace ISynergy.Framework.UI.Extensions
 {
-    public static class UnoAppBuilderExtensions
+    public static class WindowsAppBuilderExtensions
     {
         /// <summary>
         /// Gets the shellView model types.
@@ -88,11 +88,9 @@ namespace ISynergy.Framework.UI.Extensions
             services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
             services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
             services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
-            services.AddSingleton<IMessageService, MessageService>();
-
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseNavigationService, NavigationService>((s) => navigationService));
             services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
-
+            services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IContext, TContext>();
             services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
@@ -102,24 +100,15 @@ namespace ISynergy.Framework.UI.Extensions
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IDispatcherService, DispatcherService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
-
             services.AddTransient<IThemeService, ThemeService>();
             services.AddTransient<IFileService<FileResult>, FileService>();
 
             languageService.AddResourceManager(typeof(TResource));
 
-            services.RegisterAssemblies(mainAssembly, navigationService);
+            services.RegisterAssemblies(mainAssembly, navigationService, assemblyFilter);
 
             return services;
         }
-
-        /// <summary>
-        /// Registers the assemblies.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="mainAssembly">The main assembly.</param>
-        /// <param name="navigationService"></param>
-        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, INavigationService navigationService) => services.RegisterAssemblies(mainAssembly, navigationService, null);
 
         /// <summary>
         /// Registers the assemblies.
@@ -205,11 +194,11 @@ namespace ISynergy.Framework.UI.Extensions
 
                 if (abstraction is not null && !viewmodel.IsGenericType)
                 {
-                    services.AddSingleton(abstraction, viewmodel);
+                    services.AddScoped(abstraction, viewmodel);
                 }
                 else
                 {
-                    services.AddSingleton(viewmodel);
+                    services.AddScoped(viewmodel);
                 }
             }
 
@@ -223,11 +212,11 @@ namespace ISynergy.Framework.UI.Extensions
 
                 if (abstraction is not null)
                 {
-                    services.AddSingleton(abstraction, view);
+                    services.AddTransient(abstraction, view);
                 }
                 else
                 {
-                    services.AddSingleton(view);
+                    services.AddTransient(view);
                 }
             }
 
