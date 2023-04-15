@@ -9,6 +9,7 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Models;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
+using NugetUnlister.ViewModels;
 using Sample.Abstractions.Services;
 
 namespace Sample.ViewModels
@@ -39,25 +40,27 @@ namespace Sample.ViewModels
         /// Gets or sets the information command.
         /// </summary>
         /// <value>The information command.</value>
-        public RelayCommand Info_Command { get; set; }
+        public AsyncRelayCommand Info_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the browse command.
         /// </summary>
         /// <value>The browse command.</value>
-        public RelayCommand Browse_Command { get; set; }
+        public AsyncRelayCommand Browse_Command { get; set; }
 
-        public RelayCommand EditableCombo_Command { get; set; }
+        public AsyncRelayCommand EditableCombo_Command { get; set; }
 
         /// <summary>
         /// gets or sets the Unit Conversion command.
         /// </summary>
-        public RelayCommand UnitConversion_Command { get; set; }
+        public AsyncRelayCommand UnitConversion_Command { get; set; }
 
         /// <summary>
         /// Gets or sets the Validation test command.
         /// </summary>
-        public RelayCommand ValidationTest_Command { get; set; }
+        public AsyncRelayCommand ValidationTest_Command { get; set; }
+
+        public AsyncRelayCommand NugetUnlister_Command { get; set; } 
 
 
         /// <summary>
@@ -86,14 +89,18 @@ namespace Sample.ViewModels
             Version = commonServices.InfoService.ProductVersion;
             DisplayName = "User";
 
-            Info_Command = new RelayCommand(async () => await OpenInfoAsync());
-            Browse_Command = new RelayCommand(async () => await BrowseFileAsync());
-            EditableCombo_Command = new RelayCommand(async () => await OpenEditableComboAsync());
-            ValidationTest_Command = new RelayCommand(async () => await OpenValidationTestAsync());
-            UnitConversion_Command = new RelayCommand(async () => await OpenUnitConversionAsync());
+            Info_Command = new AsyncRelayCommand(OpenInfoAsync);
+            Browse_Command = new AsyncRelayCommand(BrowseFileAsync);
+            EditableCombo_Command = new AsyncRelayCommand(OpenEditableComboAsync);
+            ValidationTest_Command = new AsyncRelayCommand(OpenValidationTestAsync);
+            UnitConversion_Command = new AsyncRelayCommand(OpenUnitConversionAsync);
+            NugetUnlister_Command = new AsyncRelayCommand(UnlistNugetAsync);
 
             PopulateNavItems();
         }
+
+        private Task UnlistNugetAsync() =>
+            CommonServices.NavigationService.NavigateAsync<NugetViewModel>();
 
         /// <summary>
         /// Opens the Unit conversion view asynchronous.
@@ -147,6 +154,7 @@ namespace Sample.ViewModels
             PrimaryItems.Add(new NavigationItem("Editable Combobox", (Application.Current.Resources["combobox"] as string).ToPath(), _themeService.Style.Color, EditableCombo_Command));
             PrimaryItems.Add(new NavigationItem("Validation", (Application.Current.Resources["validation"] as string).ToPath(), _themeService.Style.Color, ValidationTest_Command));
             PrimaryItems.Add(new NavigationItem("Unit Conversion", (Application.Current.Resources["weight"] as string).ToPath(), _themeService.Style.Color, UnitConversion_Command));
+            PrimaryItems.Add(new NavigationItem("Nuget Unlister", (Application.Current.Resources["info"] as string).ToPath(), _themeService.Style.Color, NugetUnlister_Command));
 
             SecondaryItems.Clear();
             SecondaryItems.Add(new NavigationItem("Help", (Application.Current.Resources["help"] as string).ToPath(), _themeService.Style.Color, Help_Command));

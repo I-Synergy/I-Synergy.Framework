@@ -32,6 +32,7 @@
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	  <ProjectReference Include="..\..\..\tools\NugetUnlister\NugetUnlister.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

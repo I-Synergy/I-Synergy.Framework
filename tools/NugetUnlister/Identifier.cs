@@ -1,4 +1,4 @@
-﻿namespace NugetUnlister.Common.Assembly
+﻿namespace NugetUnlister
 {
     public sealed class Identifier
     {

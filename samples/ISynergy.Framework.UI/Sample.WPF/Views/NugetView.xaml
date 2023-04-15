@@ -1,7 +1,13 @@
-﻿<c:View xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Wpf"
-    x:Class="NugetUnlister.NugetView"
+﻿<c:View
+    x:Class="Sample.Views.NugetView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Wpf"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800"
+    Title="NugetView">
 
     <c:View.Resources>
         <DataTemplate x:Key="versionTpl">
@@ -11,7 +17,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="logTpl">
-            <TextBlock Text="{Binding}" Foreground="{Binding Converter={StaticResource logConv}}" />
+            <TextBlock Text="{Binding}" Foreground="Blue" />
         </DataTemplate>
     </c:View.Resources>
 

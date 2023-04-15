@@ -98,24 +98,22 @@ namespace ISynergy.Framework.UI.Controls
             {
                 var image = (BitmapImage)newSource;
 
+#if WINDOWS
                 // If the image is not a local resource or it was not cached
-                if (image.UriSource.Scheme != "ms-appx" && image.UriSource.Scheme != "ms-resource" && (image.PixelHeight * image.PixelWidth == 0))
+                if (image.UriSource.Scheme != "ms-appx" &&
+                    image.UriSource.Scheme != "ms-resource" &&
+                    (image.PixelHeight * image.PixelWidth == 0))
                 {
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
                     image.ImageOpened += (sender, args) => control.LoadImage(image);
                     control.StagingImage.Source = image;
-#else
-                    control.ActualImage.Source = image;
-#endif
                 }
                 else
                 {
-#if WINDOWS10_0_18362_0_OR_GREATER && !HAS_UNO
                     control.LoadImage(newSource);
-#else
-                    control.ActualImage.Source = image;
-#endif
                 }
+#else
+                control.ActualImage.Source = image;
+#endif
             }
         }
     }
