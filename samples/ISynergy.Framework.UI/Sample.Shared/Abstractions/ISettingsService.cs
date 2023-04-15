@@ -1,12 +1,10 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-
-namespace Sample.Abstractions.Services
+﻿namespace Sample.Abstractions.Services
 {
     /// <summary>
     /// Interface ISettingsService
     /// </summary>
     public interface ISettingsService<TSettings>
-        where TSettings : class, ISetting
+        where TSettings : class
     {
         /// <summary>
         /// Gets the settings.
@@ -32,15 +30,5 @@ namespace Sample.Abstractions.Services
         /// <param name="defaultvalue">The defaultvalue.</param>
         /// <returns>T.</returns>
         T GetSetting<T>(string name, T defaultvalue) where T : IComparable<T>;
-        /// <summary>
-        /// Gets a value indicating whether this instance is first run.
-        /// </summary>
-        /// <value><c>true</c> if this instance is first run; otherwise, <c>false</c>.</value>
-        bool IsFirstRun { get; }
-        /// <summary>
-        /// Gets the default currency identifier.
-        /// </summary>
-        /// <value>The default currency identifier.</value>
-        int DefaultCurrencyId { get; }
     }
 }

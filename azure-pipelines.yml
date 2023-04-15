@@ -408,7 +408,7 @@ stages:
         #    arguments: '-c $(BuildConfiguration) -p:Version=$(VersionPackage)'
 
         - task: DotNetCoreCLI@2
-          displayName: 'Build and pack UI Project'
+          displayName: 'Build Uno UI Project'
           inputs:
             command: 'custom'
             projects: 'src\ISynergy.Framework.UI.Uno\ISynergy.Framework.UI.Uno.csproj'
