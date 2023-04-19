@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Core.Utilities
         /// <param name="mask"></param>
         /// <returns></returns>
         public static Regex MaskToRegexConverter(string mask) =>
-            new Regex(MaskToRegexStringConverter(mask));
+            new Regex(MaskToRegexStringConverter(mask), RegexOptions.None, TimeSpan.FromMilliseconds(100));
 
         /// <summary>
         /// Converts Mask to Regex string.
