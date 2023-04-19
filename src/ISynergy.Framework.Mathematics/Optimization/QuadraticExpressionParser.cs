@@ -23,13 +23,13 @@ namespace ISynergy.Framework.Mathematics.Optimization
 
             var terms = new Dictionary<Tuple<string, string>, double>();
 
-            var replaceQuad = new Regex(@"([a-zA-Z])(²)");
+            var replaceQuad = new Regex(@"([a-zA-Z])(²)", RegexOptions.None, TimeSpan.FromMilliseconds(100));
             f = replaceQuad.Replace(f, "$1$1");
             var separator = culture.NumberFormat.NumberDecimalSeparator;
 
-            var r = new Regex(@"[\-\+]?[\s]*((\d*\" + separator + @"{0,1}\d+)|[a-zA-Z][²]?)+");
-            var number = new Regex(@"\d*\" + separator + @"{0,1}\d+");
-            var symbol = new Regex(@"[a-zA-Z]");
+            var r = new Regex(@"[\-\+]?[\s]*((\d*\" + separator + @"{0,1}\d+)|[a-zA-Z][²]?)+", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+            var number = new Regex(@"\d*\" + separator + @"{0,1}\d+", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+            var symbol = new Regex(@"[a-zA-Z]", RegexOptions.None, TimeSpan.FromMilliseconds(100));
             var matches = r.Matches(f, 0);
 
             foreach (Match m in matches)

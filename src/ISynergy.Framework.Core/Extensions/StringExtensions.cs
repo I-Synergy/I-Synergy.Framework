@@ -217,7 +217,7 @@ namespace ISynergy.Framework.Core.Extensions
         public static string ExtractHexDigits(this string self)
         {
             // remove any characters that are not digits (like #)
-            var isHexDigit = new Regex("[abcdefABCDEF\\d]+", RegexOptions.Compiled);
+            var isHexDigit = new Regex("[abcdefABCDEF\\d]+", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
             var result = new StringBuilder();
 
             foreach (var character in self.EnsureNotNull())
@@ -288,7 +288,7 @@ namespace ISynergy.Framework.Core.Extensions
         /// <returns><c>true</c> if [is alpha numeric] [the specified s]; otherwise, <c>false</c>.</returns>
         public static bool IsAlphaNumeric(this string s)
         {
-            return !new Regex("[^a-zA-Z0-9]").IsMatch(s);
+            return !new Regex("[^a-zA-Z0-9]", RegexOptions.None, TimeSpan.FromMilliseconds(100)).IsMatch(s);
         }
 
         /// <summary>
