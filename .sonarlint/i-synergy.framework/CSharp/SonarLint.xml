@@ -17,6 +17,14 @@
       <Key>sonar.cs.roslyn.ignoreIssues</Key>
       <Value>false</Value>
     </Setting>
+    <Setting>
+      <Key>sonar.exclusions</Key>
+      <Value>**/ISynergy.Framework.UI.Syncfusion/**/*,**/Samples/**/*</Value>
+    </Setting>
+    <Setting>
+      <Key>sonar.global.exclusions</Key>
+      <Value>**/build-wrapper-dump.json</Value>
+    </Setting>
   </Settings>
   <Rules>
     <Rule>

@@ -1,1 +1,10 @@
-{"sonar.exclusions":["**/ISynergy.Framework.UI.Syncfusion/**/*","**/Samples/**/*"],"sonar.global.exclusions":["**/build-wrapper-dump.json"],"sonar.inclusions":[]}
+{
+  "sonar.exclusions": [
+    "**/ISynergy.Framework.UI.Syncfusion/**/*",
+    "**/Samples/**/*"
+  ],
+  "sonar.global.exclusions": [
+    "**/build-wrapper-dump.json"
+  ],
+  "sonar.inclusions": []
+}
