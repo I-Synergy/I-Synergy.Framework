@@ -14,7 +14,6 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
-using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -110,18 +109,10 @@ namespace ISynergy.Framework.UI.Extensions
 
             languageService.AddResourceManager(typeof(TResource));
 
-            services.RegisterAssemblies(mainAssembly, navigationService);
+            services.RegisterAssemblies(mainAssembly, navigationService, assemblyFilter);
 
             return services;
         }
-
-        /// <summary>
-        /// Registers the assemblies.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="mainAssembly">The main assembly.</param>
-        /// <param name="navigationService"></param>
-        private static void RegisterAssemblies(this IServiceCollection services, Assembly mainAssembly, INavigationService navigationService) => services.RegisterAssemblies(mainAssembly, navigationService, null);
 
         /// <summary>
         /// Registers the assemblies.

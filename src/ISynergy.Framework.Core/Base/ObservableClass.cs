@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Validation;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -30,8 +30,7 @@ namespace ISynergy.Framework.Core.Base
         [DataTableIgnore]
         [XmlIgnore]
         [Display(AutoGenerateField = false)]
-        public ObservableConcurrentDictionary<string, IProperty> Properties { get; }
-            = new ObservableConcurrentDictionary<string, IProperty>();
+        public Dictionary<string, IProperty> Properties { get; } = new Dictionary<string, IProperty>();
 
         /// <summary>
         /// Gets or sets the validator.

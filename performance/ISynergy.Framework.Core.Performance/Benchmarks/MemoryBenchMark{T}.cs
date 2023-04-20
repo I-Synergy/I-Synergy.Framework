@@ -12,8 +12,8 @@ namespace ISynergy.Framework.Core.Performance.Benchmarks
         [Arguments(10)]
         [Arguments(100)]
         [Arguments(1000)]
-        [Arguments(10000)]
-        [Arguments(100000)]
+        //[Arguments(10000)]
+        //[Arguments(100000)]
         public List<T> CreateList(int count)
         {
             List<T> result = new();
@@ -30,8 +30,8 @@ namespace ISynergy.Framework.Core.Performance.Benchmarks
         [Arguments(10)]
         [Arguments(100)]
         [Arguments(1000)]
-        [Arguments(10000)]
-        [Arguments(100000)]
+        //[Arguments(10000)]
+        //[Arguments(100000)]
         public T[] CreateArray2(int count)
         {
             T[] result = new T[count];
@@ -49,8 +49,8 @@ namespace ISynergy.Framework.Core.Performance.Benchmarks
         [Arguments(10)]
         [Arguments(100)]
         [Arguments(1000)]
-        [Arguments(10000)]
-        [Arguments(100000)]
+        //[Arguments(10000)]
+        //[Arguments(100000)]
         public ObservableCollection<T> CreateObservableCollection(int count)
         {
             ObservableCollection<T> result = new();

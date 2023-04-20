@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Collections;
+using ISynergy.Framework.Core.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -30,7 +31,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base
         /// Gets the properties.
         /// </summary>
         /// <value>The properties.</value>
-        ObservableConcurrentDictionary<string, IProperty> Properties { get; }
+        Dictionary<string, IProperty> Properties { get; }
         /// <summary>
         /// Gets the errors.
         /// </summary>

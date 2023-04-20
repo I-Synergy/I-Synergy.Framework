@@ -32,13 +32,14 @@
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.Physics\ISynergy.Framework.Physics.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI.WPF\ISynergy.Framework.UI.WPF.csproj" />
 	  <ProjectReference Include="..\..\..\src\ISynergy.Framework.UI\ISynergy.Framework.UI.csproj" />
+	  <ProjectReference Include="..\..\..\tools\NugetUnlister\NugetUnlister.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-		<PackageReference Include="Syncfusion.SfInput.WPF" Version="21.1.39" />
-		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="21.1.39" />
+		<PackageReference Include="Syncfusion.SfInput.WPF" Version="21.1.41" />
+		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="21.1.41" />
 	</ItemGroup>
 
 	<ItemGroup>
