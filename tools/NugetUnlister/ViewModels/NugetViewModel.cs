@@ -1,26 +1,27 @@
-﻿using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Core.Abstractions;
+﻿using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Abstractions.Services.Base;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using NugetUnlister.Common.Abstractions;
-using NugetUnlister.Common.Models;
+using NugetUnlister.Abstractions;
+using NugetUnlister.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NugetUnlister.Common.ViewModels
+namespace NugetUnlister.ViewModels
 {
     public class NugetViewModel : ViewModelNavigation<PackageVersion>
     {
         private readonly INugetService _nugetService;
 
-        public Command ListVersionCommand { get; set; }
-        public Command SelectAllCommand { get; set; }
-        public Command DeselectAllCommand { get; set; }
-        public Command UnlistCommand { get; set; }
+        public AsyncRelayCommand ListVersionCommand { get; set; }
+        public RelayCommand SelectAllCommand { get; set; }
+        public RelayCommand DeselectAllCommand { get; set; }
+        public AsyncRelayCommand UnlistCommand { get; set; }
 
 
         /// <summary>
@@ -50,11 +51,11 @@ namespace NugetUnlister.Common.ViewModels
             set => SetValue(value);
         }
 
-        public Command Settings_Command { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public RelayCommand Settings_Command { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public NugetViewModel(
             IContext context,
-            ICommonServices commonServices,
+            IBaseCommonServices commonServices,
             INugetService nugetService,
             ILogger logger)
             : base(context, commonServices, logger)
@@ -64,16 +65,16 @@ namespace NugetUnlister.Common.ViewModels
 
             _nugetService = nugetService;
 
-            ListVersionCommand = new Command(async () => await ListVersionAsync());
-            UnlistCommand = new Command(async () => await UnlistPackageAsync());
-            SelectAllCommand = new Command(() =>
+            ListVersionCommand = new AsyncRelayCommand(async () => await ListVersionAsync());
+            UnlistCommand = new AsyncRelayCommand(async () => await UnlistPackageAsync());
+            SelectAllCommand = new RelayCommand(() =>
             {
                 foreach (var item in Items)
                 {
                     item.Selected = true;
                 }
             });
-            DeselectAllCommand = new Command(() =>
+            DeselectAllCommand = new RelayCommand(() =>
             {
                 foreach (var item in Items)
                 {

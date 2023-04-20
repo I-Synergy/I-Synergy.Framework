@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using NugetUnlister;
+using NugetUnlister.Extensions;
 using Sample.Abstractions.Services;
 using Sample.Models;
 using Sample.Services;
@@ -33,12 +35,11 @@ namespace Sample
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x => x.Name.StartsWith(typeof(App).Namespace));
+                    services.ConfigureServices<App, Context, ExceptionHandlerService, Sample.Properties.Resources>(context.Configuration, x =>
+                        x.Name.StartsWith(typeof(App).Namespace) ||
+                        x.FullName.Equals(typeof(Identifier).Assembly.FullName));
 
                     services.AddSingleton<IAuthenticationService, AuthenticationService>();
-
-                    //services.AddUpdatesIntegration(context.Configuration);
-
                     services.AddSingleton<IUnitConversionService, UnitConversionService>();
 
                     services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseApplicationSettingsService, AppSettingsService>());
@@ -49,10 +50,11 @@ namespace Sample
 
                     services.AddScoped<IShellViewModel, ShellViewModel>();
                     services.AddScoped<IShellView, ShellView>();
+
+                    services.AddNugetServiceIntegrations(context.Configuration);
                 })
                 .ConfigureLogging((context, logging) =>
                 {
-                    //logging.AddAppCenterLogging(context.Configuration);
                 })
                 .Build();
 

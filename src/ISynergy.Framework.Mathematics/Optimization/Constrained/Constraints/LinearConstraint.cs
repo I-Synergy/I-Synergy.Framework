@@ -345,10 +345,10 @@
 
             string separator = culture.NumberFormat.NumberDecimalSeparator;
 
-            Regex r = new Regex(@"[\-\+][\s]*(\d*\" + separator + @"{0,1}\d+)?[\s]*([a-zA-Z])*");
-            Regex number = new Regex(@"\d*\" + separator + @"{0,1}\d+");
-            Regex symbol = new Regex(@"[a-zA-Z]");
-            Regex comp = new Regex(@"(>=|<=|=)");
+            Regex r = new Regex(@"[\-\+][\s]*(\d*\" + separator + @"{0,1}\d+)?[\s]*([a-zA-Z])*", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+            Regex number = new Regex(@"\d*\" + separator + @"{0,1}\d+", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+            Regex symbol = new Regex(@"[a-zA-Z]", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+            Regex comp = new Regex(@"(>=|<=|=)", RegexOptions.None, TimeSpan.FromMilliseconds(100));
             var sides = comp.Split(f);
             lhs = sides[0];
             rhs = sides[2];
