@@ -55,14 +55,20 @@
         /// <exception cref="InvalidOperationException">Entity should have {_modelBaseNamespace} as namespace!</exception>
         private string GetPrefix(string typeNamespace)
         {
-            if (typeNamespace?.StartsWith(_modelBaseNamespace) != true)
-                throw new InvalidOperationException($"Entity should have {_modelBaseNamespace} as namespace!");
+            if (!string.IsNullOrEmpty(typeNamespace))
+            {
+                if (typeNamespace.StartsWith(_modelBaseNamespace) != true)
+                    throw new InvalidOperationException($"Entity should have {_modelBaseNamespace} as namespace!");
 
-            var result = typeNamespace
-                .Remove(0, _modelBaseNamespace.Length)
-                .Replace('.', '_');
+                var result = typeNamespace
+                    .Remove(0, _modelBaseNamespace.Length)
+                    .Replace('.', '_');
 
-            return result;
+                return result;
+            }
+
+
+            throw new InvalidOperationException($"{nameof(typeNamespace)} cannot be null or empty");
         }
     }
 }
