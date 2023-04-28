@@ -93,27 +93,6 @@ namespace ISynergy.Framework.Core.Base
             _automaticValidationTrigger = automaticValidationTrigger;
 
             ErrorsChanged += ObservableClass_ErrorsChanged;
-
-            Validator = new Action<IObservableClass>(_ =>
-            {
-                foreach (var item in GetType().GetProperties()
-                    .Where(q => 
-                        q.CanWrite &&
-                        !Attribute.IsDefined(q, typeof(JsonIgnoreAttribute)) &&
-                        !Attribute.IsDefined(q, typeof(DataTableIgnoreAttribute)) &&
-                        !Attribute.IsDefined(q, typeof(XmlIgnoreAttribute))))
-                {
-                    var value = item.GetValue(this);
-
-                    if (Attribute.IsDefined(item, typeof(RequiredAttribute)) && value is null)
-                    {
-                        if (!Properties.ContainsKey(item.Name))
-                            Properties.Add(item.Name, new Property<object>(item.Name, value));
-
-                        AddValidationError(item.Name, string.Format(Core.Properties.Resources.WarningMandatoryProperty, $"[{item.Name}]"));
-                    }
-                }
-            });
         }
 
         private void ObservableClass_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
