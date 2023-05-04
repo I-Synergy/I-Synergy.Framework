@@ -2,6 +2,6 @@
 {
     public class StringFormats
     {
-        public const string IsoDateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ";
+        public const string IsoDateTimeFormat = "o";
     }
 }
