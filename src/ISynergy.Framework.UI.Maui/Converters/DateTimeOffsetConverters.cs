@@ -225,7 +225,8 @@ namespace ISynergy.Framework.UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is DateTimeOffset datetime)
-                return DateTime.SpecifyKind(datetime.DateTime, DateTimeKind.Local).ToLocalTime();
+                return datetime.ToLocalTime().DateTime;
+
 
             return DateTime.Now.ToLocalTime();
         }
@@ -275,20 +276,17 @@ namespace ISynergy.Framework.UI.Converters
         {
             if (value is DateTimeOffset datetime)
             {
-                var offset = TimeZoneInfo.Local.BaseUtcOffset;
-
-                if (ServiceLocator.Default.GetInstance<IContext>() is IContext context)
-                {
-                    offset = context.CurrentTimeZone.BaseUtcOffset;
-                }
+                var context = ServiceLocator.Default.GetInstance<IContext>();
+                var timeZone = context.CurrentTimeZone;
+                var dt = TimeZoneInfo.ConvertTimeFromUtc(datetime.DateTime, timeZone);
 
                 if (parameter is not null)
-                    return datetime.ToLocalDateString(parameter.ToString(), offset, culture);
+                    return dt.ToString(parameter.ToString());
 
-                return datetime.ToLocalDateString("f", offset, culture);
+                return dt.ToString("f");
             }
 
-            return DateTimeOffset.Now.ToString("f");
+            return DateTimeOffset.Now.DateTime.ToString("f");
         }
 
         /// <summary>
