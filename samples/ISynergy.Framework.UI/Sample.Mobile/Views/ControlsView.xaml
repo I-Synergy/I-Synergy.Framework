@@ -11,6 +11,8 @@
         <converters:StringToDecimalConverter x:Key="StringToDecimalConverter" />
         <converters:StringToIntegerConverter x:Key="StringToIntegerConverter" />
         <converters:StringToDoubleConverter x:Key="StringToDoubleConverter" />
+        <converters:DateTimeOffsetToLocalDateTimeConverter x:Key="DateTimeOffsetToLocalDateTimeConverter"/>
+        <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter"/>
     </c:View.Resources>
     
     <VerticalStackLayout Spacing="10">
@@ -25,5 +27,11 @@
 
         <Label Text="Entry:"/>
         <Entry Text="Hello Entry..." />
+
+        <Label Text="DateTimeOffset"/>
+        <HorizontalStackLayout VerticalOptions="End">
+            <DatePicker Date="{Binding DateValue, Mode=TwoWay, Converter={StaticResource DateTimeOffsetToLocalDateTimeConverter}}"/>
+            <Label Text="{Binding DateValue, Mode=OneWay, Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}}"/>
+        </HorizontalStackLayout>
     </VerticalStackLayout>
 </c:View>
