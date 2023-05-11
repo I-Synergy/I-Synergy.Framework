@@ -28,6 +28,7 @@
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 		<UnoUIDisableLongPathWarning>true</UnoUIDisableLongPathWarning>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
