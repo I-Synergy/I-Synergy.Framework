@@ -17,6 +17,7 @@
 		<AssemblyName>Sample</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Views\Controls\BaseList.xaml" />
