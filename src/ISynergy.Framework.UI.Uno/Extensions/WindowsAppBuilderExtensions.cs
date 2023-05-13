@@ -74,7 +74,12 @@ namespace ISynergy.Framework.UI.Extensions
             services.Configure<ConfigurationOptions>(configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
             var navigationService = new NavigationService();
-            var languageService = new LanguageService();
+
+
+            var infoService = InfoService.Default;
+            infoService.LoadAssembly(mainAssembly);
+
+            var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
             languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
 
@@ -85,13 +90,15 @@ namespace ISynergy.Framework.UI.Extensions
                 builder.SetMinimumLevel(LogLevel.Trace);
             }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
 
-            services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
-            services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
-            services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
+            services.AddSingleton<IInfoService>(s => InfoService.Default);
+            services.AddSingleton<ILanguageService>(s => LanguageService.Default);
+            services.AddSingleton<IMessageService>(s => MessageService.Default);
+
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IBaseNavigationService, NavigationService>((s) => navigationService));
             services.TryAddEnumerable(ServiceDescriptor.Singleton<INavigationService, NavigationService>((s) => navigationService));
-            services.AddSingleton<IMessageService, MessageService>();
-            services.AddSingleton<IContext, TContext>();
+            
+            services.AddScoped<IContext, TContext>();
+            
             services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
             services.AddSingleton<ILocalizationService, LocalizationService>();
             services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();

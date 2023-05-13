@@ -166,7 +166,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
 
             if (Context.IsAuthenticated)
             {
-                DisplayName = Context.CurrentProfile.Username;
+                DisplayName = Context.Profile.Username;
 
                 if (PrimaryItems is not null && PrimaryItems.Count > 0)
                 {

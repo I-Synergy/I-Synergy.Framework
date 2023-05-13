@@ -51,7 +51,7 @@ namespace ISynergy.Framework.Core.Extensions
             HandleSafeFireAndForget(task, continueOnCapturedContext, onException);
 
         /// <summary>
-        /// Initialize SafeFireAndForget
+        /// LoadAssembly SafeFireAndForget
         ///
         /// Warning: When <c>true</c>, there is no way to catch this exception and it will always result in a crash. Recommended only for debugging purposes.
         /// </summary>

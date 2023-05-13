@@ -118,7 +118,7 @@ namespace ISynergy.Framework.UI
         public void InitializeApplication() => Initialize = InitializeApplicationAsync();
 
         /// <summary>
-        /// Initialize the application.
+        /// LoadAssembly the application.
         /// </summary>
         /// <example>
         /// <code>

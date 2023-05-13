@@ -74,8 +74,10 @@ namespace ISynergy.Framework.UI.Extensions
 
             appBuilder.Services.Configure<ConfigurationOptions>(appBuilder.Configuration.GetSection(nameof(ConfigurationOptions)).BindWithReload);
 
-            var navigationService = new NavigationService();
-            var languageService = new LanguageService();
+            var infoService = InfoService.Default;
+            infoService.LoadAssembly(mainAssembly);
+
+            var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
             languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
 
@@ -86,16 +88,16 @@ namespace ISynergy.Framework.UI.Extensions
                 builder.SetMinimumLevel(LogLevel.Trace);
             }).CreateLogger(AppDomain.CurrentDomain.FriendlyName));
 
-            appBuilder.Services.AddSingleton<IVersionService>((s) => new VersionService(mainAssembly));
-            appBuilder.Services.AddSingleton<IInfoService>((s) => new InfoService(mainAssembly));
-            appBuilder.Services.AddSingleton<ILanguageService, LanguageService>((s) => languageService);
-            appBuilder.Services.AddSingleton<INavigationService, NavigationService>((s) => navigationService);
-            appBuilder.Services.AddSingleton<IMessageService, MessageService>();
+            appBuilder.Services.AddSingleton<IInfoService>(s => InfoService.Default);
+            appBuilder.Services.AddSingleton<ILanguageService>(s => LanguageService.Default);
+            appBuilder.Services.AddSingleton<IMessageService>(s => MessageService.Default);
+
             appBuilder.Services.AddSingleton<IContext, TContext>();
-            appBuilder.Services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
+            appBuilder.Services.AddSingleton<INavigationService, NavigationService>();
             appBuilder.Services.AddSingleton<ILocalizationService, LocalizationService>();
-            appBuilder.Services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             appBuilder.Services.AddSingleton<IConverterService, ConverterService>();
+            appBuilder.Services.AddSingleton<IExceptionHandlerService, TExceptionHandler>();
+            appBuilder.Services.AddSingleton<IAuthenticationProvider, AuthenticationProvider>();
             appBuilder.Services.AddSingleton<IBusyService, BusyService>();
             appBuilder.Services.AddSingleton<IDialogService, DialogService>();
             appBuilder.Services.AddSingleton<IDispatcherService, DispatcherService>();
@@ -106,7 +108,7 @@ namespace ISynergy.Framework.UI.Extensions
 
             languageService.AddResourceManager(typeof(TResource));
 
-            appBuilder.RegisterAssemblies(mainAssembly, navigationService, assemblyFilter);
+            appBuilder.RegisterAssemblies(mainAssembly, assemblyFilter);
 
             return appBuilder
                 .UseMauiCommunityToolkit()
@@ -119,9 +121,8 @@ namespace ISynergy.Framework.UI.Extensions
         /// </summary>
         /// <param name="appBuilder"></param>
         /// <param name="mainAssembly">The main assembly.</param>
-        /// <param name="navigationService"></param>
         /// <param name="assemblyFilter">The assembly filter.</param>
-        private static void RegisterAssemblies(this MauiAppBuilder appBuilder, Assembly mainAssembly, INavigationService navigationService, Func<AssemblyName, bool> assemblyFilter)
+        private static void RegisterAssemblies(this MauiAppBuilder appBuilder, Assembly mainAssembly, Func<AssemblyName, bool> assemblyFilter)
         {
             var assemblies = new List<Assembly>();
             assemblies.Add(mainAssembly);
@@ -136,8 +137,6 @@ namespace ISynergy.Framework.UI.Extensions
                 assemblies.Add(Assembly.Load(item));
 
             appBuilder.RegisterAssemblies(assemblies);
-
-            ConfigureNavigationService(navigationService);
         }
 
         /// <summary>

@@ -1,12 +1,10 @@
 ﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Sample.Options;
-using Sample.Shared.Models;
-using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace Sample
@@ -24,48 +22,36 @@ namespace Sample
         /// The configuration options
         /// </summary>
         private readonly ConfigurationOptions _configurationOptions;
-        private readonly IInfoService _infoService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Context" /> class.
         /// </summary>
         /// <param name="configurationOptions">The configuration options.</param>
-        public Context(
-            IOptions<ConfigurationOptions> configurationOptions,
-            IInfoService infoService)
+        public Context(IOptions<ConfigurationOptions> configurationOptions)
         {
             _configurationOptions = configurationOptions.Value;
-            _infoService = infoService;
 
-            Profiles = new ObservableCollection<IProfile>() { new Profile() };
-            CurrentProfile = Profiles.FirstOrDefault();
             CurrencyCode = "EURO";
             CurrencySymbol = "€";
 
-            Title = $"{_infoService.ProductName} v{_infoService.ProductVersion}";
-        }
-
-        public string Title
-        {
-            get { return GetValue<string>(); }
-            private set { SetValue(value); }
+            ServiceScopes = new Dictionary<Guid, IServiceScope>();
         }
 
         /// <summary>
-        /// Gets or sets the profiles.
+        /// Collection of service scopes.
+        /// Key is determined by the user id.
         /// </summary>
-        /// <value>The profiles.</value>
-        public ObservableCollection<IProfile> Profiles
+        public Dictionary<Guid, IServiceScope> ServiceScopes
         {
-            get { return GetValue<ObservableCollection<IProfile>>(); }
-            set { SetValue(value); }
+            get => GetValue<Dictionary<Guid, IServiceScope>>();
+            private set => SetValue(value);
         }
 
         /// <summary>
         /// Gets or sets the current profile.
         /// </summary>
         /// <value>The current profile.</value>
-        public IProfile CurrentProfile
+        public IProfile Profile
         {
             get { return GetValue<IProfile>(); }
             set
@@ -80,13 +66,13 @@ namespace Sample
         /// Gets the current time zone.
         /// </summary>
         /// <value>The current time zone.</value>
-        public TimeZoneInfo CurrentTimeZone
+        public TimeZoneInfo TimeZone
         {
             get
             {
-                if (CurrentProfile != null)
+                if (Profile != null)
                 {
-                    return TimeZoneInfo.FindSystemTimeZoneById(CurrentProfile.TimeZoneId);
+                    return TimeZoneInfo.FindSystemTimeZoneById(Profile.TimeZoneId);
                 }
 
                 return TimeZoneInfo.Local;
@@ -113,8 +99,6 @@ namespace Sample
         /// <param name="value">The value.</param>
         private void ApplyEnvironment(SoftwareEnvironments value)
         {
-            Title = $"{_infoService.ProductName} v{_infoService.ProductVersion} ({value})";
-
             switch (value)
             {
                 case SoftwareEnvironments.Local:
@@ -179,9 +163,9 @@ namespace Sample
         {
             get
             {
-                if (CurrentProfile != null)
+                if (Profile != null)
                 {
-                    return CurrentProfile.IsAuthenticated();
+                    return Profile.IsAuthenticated();
                 }
 
                 return false;
@@ -196,9 +180,9 @@ namespace Sample
         {
             get
             {
-                if (CurrentProfile != null)
+                if (Profile != null)
                 {
-                    return CurrentProfile.IsInRole(nameof(RoleNames.Administrator));
+                    return Profile.IsInRole(nameof(RoleNames.Administrator));
                 }
 
                 return false;

@@ -245,7 +245,7 @@ namespace ISynergy.Framework.UI.Converters
 
                 if (ServiceLocator.Default.GetInstance<IContext>() is IContext context)
                 {
-                    offset = context.CurrentTimeZone.BaseUtcOffset;
+                    offset = context.TimeZone.BaseUtcOffset;
                 }
 
                 if (parameter is not null)

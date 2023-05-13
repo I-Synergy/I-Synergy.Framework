@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Logging.Services
         /// </summary>
         private void SetUserProfile()
         {
-            if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
+            if (_context.IsAuthenticated && _context.Profile is IProfile profile)
             {
                 SentrySdk.ConfigureScope(scope =>
                 {
@@ -96,7 +96,7 @@ namespace ISynergy.Framework.Logging.Services
         {
             var metrics = new Dictionary<string, object>();
 
-            if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
+            if (_context.IsAuthenticated && _context.Profile is IProfile profile)
             {
                 metrics.Add(nameof(profile.Username), profile.Username);
                 metrics.Add(nameof(profile.UserId), profile.UserId.ToString());

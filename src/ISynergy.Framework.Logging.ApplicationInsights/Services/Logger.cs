@@ -66,7 +66,7 @@ namespace ISynergy.Framework.Logging.Services
         {
             var metrics = new Dictionary<string, string>();
 
-            if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
+            if (_context.IsAuthenticated && _context.Profile is IProfile profile)
             {
                 metrics.Add(nameof(profile.Username), profile.Username);
                 metrics.Add(nameof(profile.UserId), profile.UserId.ToString());
@@ -85,7 +85,7 @@ namespace ISynergy.Framework.Logging.Services
         /// </summary>
         private void SetUserProfile()
         {
-            if (_context.IsAuthenticated && _context.CurrentProfile is IProfile profile)
+            if (_context.IsAuthenticated && _context.Profile is IProfile profile)
             {
                 _client.Context.User.Id = profile.Username;
                 _client.Context.User.AccountId = profile.AccountDescription;
